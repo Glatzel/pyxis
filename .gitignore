@@ -1,0 +1,13 @@
+target
+.VSCodeCounter
+__pycache__
+# pixi environments
+.pixi
+*.egg-info
+*.pyd
+dist
+draft
+.coverage
+vcpkg_deps/vcpkg
+vcpkg_deps/vcpkg_installed
+tests_report

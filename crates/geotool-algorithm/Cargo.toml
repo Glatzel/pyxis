@@ -1,0 +1,10 @@
+[package]
+name = "geotool-algorithm"
+version.workspace = true
+edition.workspace = true
+
+[dependencies] 
+miette={workspace=true}
+
+[dev-dependencies]
+float-cmp = {workspace=true} 

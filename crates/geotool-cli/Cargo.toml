@@ -1,0 +1,20 @@
+[package]
+name = "geotool-cli"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "geotool"
+path = "src/main.rs"
+
+[dependencies]
+miette = { workspace = true }
+proj = { workspace = true }
+tracing = { workspace = true }
+chrono = { workspace = true }
+tracing-subscriber = { workspace = true }
+console= { workspace = true }
+geotool-algorithm={ workspace = true }
+bpaf={ workspace = true } 
+[dev-dependencies] 
+float-cmp = { workspace = true } 

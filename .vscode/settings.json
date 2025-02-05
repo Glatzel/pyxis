@@ -1,0 +1,41 @@
+{
+    "VSCodeCounter.exclude": [
+        "**/.gitignore",
+        "**/.vscode/**",
+        "**/node_modules/**",
+        "tests_report",
+        "**/*.lock","**/vcpkg"
+    ],
+    "python.testing.pytestArgs": [
+        "crates/py-geotool/tests",
+        "--durations=0"
+    ],
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "rust-analyzer.cargo.extraEnv": {
+        "CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/dev",
+        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig",
+        "Path": "${env:PATH};${workspaceFolder}/.pixi/envs/dev/Library/bin;${workspaceFolder}/vcpkg_deps/vcpkg_installed/x64-windows/bin"
+    },
+    "rust-analyzer.check.extraEnv": {
+        "CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/dev",
+        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig",
+        "Path": "${workspaceFolder}/.pixi/envs/dev/Library/bin"
+    },
+    "rust-analyzer.runnables.extraEnv": {
+        "CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/dev",
+        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig"
+    },
+    "rust-analyzer.server.extraEnv": {
+        "CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/dev",
+        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig"
+    },
+    "rust-analyzer.testExplorer": true,
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "${workspaceFolder}"
+    },
+    "python.analysis.exclude": [
+        "**/vcpkg",
+        ".pixi"
+    ]
+}

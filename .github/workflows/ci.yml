@@ -24,7 +24,7 @@ jobs:
     uses: Glatzel/template/.github/workflows/ruff.yml@main
   
   cache-vcpkg:
-    if: ${{ github.event_name!='pull_request'}}
+    if: ${{ github.event_name=='pull_request'}}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4

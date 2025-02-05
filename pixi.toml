@@ -21,6 +21,8 @@ pip = "*"
 pytest = "*"
 pytest-cov = "*"
 pkg-config = "*"
+numpydoc = "*"
+git-cliff ="*"
 
 [environments]
 dev = ["dev"]

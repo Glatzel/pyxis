@@ -2,20 +2,18 @@ name: CI
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches: main
-  #   paths-ignore:
-  #     - "scripts/*"
-  #     - "*.md"
-  # pull_request:
-  #   types:
-  #     - opened
-  #     - edited
-  #     - synchronize
-  #     - ready_for_review
-  #   paths-ignore:
-  #     - "scripts/*"
-  #     - "*.md"
+  push:
+    branches: main
+    paths-ignore:
+      - "*.md"
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - ready_for_review
+    paths-ignore:
+      - "*.md"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

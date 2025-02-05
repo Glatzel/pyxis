@@ -37,7 +37,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./ocio_dep/vcpkg_installed
-          key: vcpkg-${{ hashFiles('./vcpkg_dep/vcpkg.json') }}
+          key: vcpkg-${{ hashFiles('./vcpkg_dep/vcpkg.json') }} 
 
       - name: set pkg-config path
         run: echo ${{github.workspace}}\.pixi\envs\dev\Library\bin >> $env:GITHUB_PATH 

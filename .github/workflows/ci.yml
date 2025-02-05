@@ -26,8 +26,8 @@ jobs:
   build-test:
     runs-on: windows-latest
     env:
-      CONDA_PREFIX: ./.pixi/envs/dev
-      PKG_CONFIG_PATH: ./vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
+      CONDA_PREFIX: ${{github.workspace}}/.pixi/envs/dev
+      PKG_CONFIG_PATH: ${{github.workspace}}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
 
     steps:
       - uses: actions/checkout@v4

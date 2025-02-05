@@ -32,7 +32,7 @@ jobs:
         id: cache-vcpkg
         uses: actions/cache@v4
         with:
-          path: ./ocio_dep/vcpkg_installed
+          path: ./vcpkg_deps/vcpkg_installed
           key: vcpkg-${{ hashFiles('./vcpkg_dep/vcpkg.json') }}
       
       - name: install vcpkg dependencies
@@ -53,7 +53,7 @@ jobs:
         id: cache-vcpkg
         uses: actions/cache/restore@v4
         with:
-          path: ./ocio_dep/vcpkg_installed
+          path: ./vcpkg_deps/vcpkg_installed
           key: vcpkg-${{ hashFiles('./vcpkg_dep/vcpkg.json') }} 
 
       - name: set pkg-config path

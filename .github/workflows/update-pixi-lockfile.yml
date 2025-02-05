@@ -1,5 +1,5 @@
 name: update-pixi-lockfile
-permissions: 
+permissions:
   contents: write
   pull-requests: write
 

@@ -216,7 +216,7 @@ pub enum TransformCommands {
     },
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Transform coordinate from one known coordinate reference systems to another.
-    ///  
+    ///
     ///  The `from` and `to` can be:
     ///  - an "AUTHORITY:CODE", like "EPSG:25832".
     ///  - a PROJ string, like "+proj=longlat +datum=WGS84". When using that syntax, the unit is expected to be degrees.

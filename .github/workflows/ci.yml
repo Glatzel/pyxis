@@ -22,8 +22,25 @@ concurrency:
 jobs:
   ruff-lint:
     uses: Glatzel/template/.github/workflows/ruff.yml@main
+  
+  cache-vcpkg:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache vcpkg
+        id: cache-vcpkg
+        uses: actions/cache@v4
+        with:
+          path: ./ocio_dep/vcpkg_installed
+          key: vcpkg-${{ hashFiles('./vcpkg_dep/vcpkg.json') }}
+      
+      - name: install vcpkg dependencies
+        if: ${{steps.cache-vcpkg.outputs.cache-hit==''}}
+        run: ./scripts/install-vcpkg-dep.ps1
 
   build-test:
+    needs: cache-vcpkg
     runs-on: windows-latest
     env:
       CONDA_PREFIX: ${{github.workspace }}/.pixi/envs/dev
@@ -34,7 +51,7 @@ jobs:
 
       - name: Cache vcpkg
         id: cache-vcpkg
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: ./ocio_dep/vcpkg_installed
           key: vcpkg-${{ hashFiles('./vcpkg_dep/vcpkg.json') }} 
@@ -49,9 +66,6 @@ jobs:
       
       - name: install pixi pkg
         run: pixi install --all
-      
-      - name: install vcpkg dependencies
-        run: ./scripts/install-vcpkg-dep.ps1
 
       - name: rust format and lint
         run: cargo clippy --all-targets --all-features

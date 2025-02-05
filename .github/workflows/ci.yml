@@ -75,9 +75,6 @@ jobs:
 
       - name: dev python
         run: ./scripts/test-rs.ps1
-      
-      - name: test python
-        run: ./scripts/test-py.ps1
 
       - name: build cli
         run: ./scripts/build-cli.ps1

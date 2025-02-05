@@ -99,7 +99,6 @@ def bd09_to_gcj02(lon, lat):
     lon, lat
         Coordinates of `BD09` coordinate system.
 
-
     Returns
     -------
     tuple[Any, Any]
@@ -139,7 +138,6 @@ def bd09_to_wgs84(lon, lat):
     ----------
     lon, lat
         Coordinates of `BD09` coordinate system.
-
 
     Returns
     -------
@@ -181,12 +179,10 @@ def gcj02_to_bd09(lon, lat):
     lon, lat
         Coordinates of `GCJ02` coordinate system.
 
-
     Returns
     -------
     tuple[Any, Any]
         Longitude and latitude of `BD09` coordinate system.
-
 
     Examples
     --------
@@ -222,7 +218,6 @@ def gcj02_to_wgs84(lon, lat):
     ----------
     lon, lat
         Coordinates of `GCJ02` coordinate system.
-
 
     Returns
     -------
@@ -264,7 +259,6 @@ def wgs84_to_gcj02(lon, lat):
     lon, lat
         Coordinates of `WGS84` coordinate system.
 
-
     Returns
     -------
     tuple[float,float]
@@ -304,7 +298,6 @@ def wgs84_to_bd09(lon, lat):
     ----------
     lon, lat
         Coordinates of `WGS84` coordinate system.
-
 
     Returns
     -------

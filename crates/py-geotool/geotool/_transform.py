@@ -216,7 +216,6 @@ def xyz2lbh(
     max_iterations
         Maximum number of iterations for latitude refinement.
 
-
     Returns
     -------
     longitude : float or ndarray

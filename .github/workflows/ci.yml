@@ -20,15 +20,5 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  cache-pixi:
-    strategy:
-      matrix:
-        # pixi_env: [default,vfx2025]
-        pixi_env: [default]
-    uses: Glatzel/template/.github/workflows/cache-pixi.yml@main
-    with:
-      machine: windows-latest
-      pixi_env: ${{matrix.pixi_env}}
-
   ruff-lint:
     uses: Glatzel/template/.github/workflows/ruff.yml@main

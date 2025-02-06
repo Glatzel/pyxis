@@ -110,6 +110,8 @@ jobs:
   out-cache:
     needs: [cache-vcpkg,cache-rust]
     runs-on: windows-latest
+    steps:
+      - run: echo "out cache."
 
   # region independent
   ruff-lint:

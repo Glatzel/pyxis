@@ -20,7 +20,6 @@ else {
 Set-Location $PSScriptRoot
 Set-Location ..
 Remove-Item ./dist/geotool -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item ./dist/geotool -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item ./dist/geotool*.zip -Recurse -Force -ErrorAction SilentlyContinue
 New-Item ./dist/geotool -ItemType Directory -ErrorAction SilentlyContinue
 Copy-Item "target/$config/geotool.exe" ./dist/geotool
@@ -29,4 +28,3 @@ Copy-Item "vcpkg_deps/vcpkg_installed/x64-windows/bin/*.dll" ./dist/geotool
 $version=cargo metadata --format-version=1 --no-deps | jq '.packages[0].version'
 $version="$version".Replace("""","")
 Compress-Archive ./dist/geotool "./dist/geotool-$version-win.zip"
-Remove-Item ./dist/geotool -Recurse -Force -ErrorAction SilentlyContinue

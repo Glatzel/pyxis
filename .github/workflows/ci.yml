@@ -145,11 +145,14 @@ jobs:
         run: ./scripts/cargo-clippy.ps1
 
   cargo-test:
-    needs: out-cache
+    needs: [cache-pixi, cache-vcpkg]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
+        with:
+          rust-cache: false
+      - uses: Swatinem/rust-cache@v2
 
       - name: Install nextest
         uses: taiki-e/install-action@nextest

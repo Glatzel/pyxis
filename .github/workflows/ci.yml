@@ -64,7 +64,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./vcpkg_deps/vcpkg_installed
-          key: vcpkg-${{ hashFiles('./vcpkg_dep/vcpkg.json') }}
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg_dep/vcpkg.json') }}
           lookup-only: true
 
       - name: install vcpkg dependencies
@@ -84,7 +84,7 @@ jobs:
           path: |
             ~/.cargo
             ./target
-          key: rust-debug-${{ hashFiles('**/Cargo.toml') }}
+          key: rust-${{ runner.os }}-${{ hashFiles('**/Cargo.toml') }}
           lookup-only: true
 
       - id: setup

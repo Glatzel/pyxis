@@ -117,6 +117,9 @@ jobs:
 
       - name: dev python
         run: ./scripts/develop.ps1
+      
+      - name: test python
+        run: ./scripts/test-py.ps1
 
   test-geotool-cli:
     needs: cache-rust

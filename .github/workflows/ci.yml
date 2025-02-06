@@ -42,6 +42,7 @@ jobs:
 
   ruff-lint:
     uses: Glatzel/template/.github/workflows/ruff.yml@main
+
   # Checks for dependencies that are not used in the codebase
   cargo-machete:
     name: Cargo Machete
@@ -72,7 +73,7 @@ jobs:
           cargo build
 
   cargo-clippy:
-    needs: cache-vcpkg
+    needs: [cache-vcpkg,cargo-build]
     runs-on: windows-latest
 
     steps:
@@ -110,7 +111,7 @@ jobs:
         run: ./scripts/cargo-clippy.ps1
 
   cargo-test:
-    needs: cache-vcpkg
+    needs: [cache-vcpkg,cargo-build]
     runs-on: windows-latest
     env:
       CONDA_PREFIX: ${{github.workspace }}/.pixi/envs/dev
@@ -151,7 +152,7 @@ jobs:
         run: ./scripts/test-rs.ps1
 
   test-py-geotool:
-    needs: cache-vcpkg
+    needs: [cache-vcpkg,cargo-build]
     runs-on: windows-latest
     env:
       CONDA_PREFIX: ${{github.workspace }}/.pixi/envs/dev
@@ -192,7 +193,7 @@ jobs:
         run: ./scripts/test-rs.ps1
 
   test-geotool-cli:
-    needs: cache-vcpkg
+    needs: [cache-vcpkg,cargo-build]
 
     runs-on: windows-latest
     env:

@@ -193,7 +193,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: py-geotool
-          path: dist/*.whl
+          path: dist/*.zip
           if-no-files-found: error
 
   out-check:

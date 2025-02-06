@@ -109,7 +109,7 @@ jobs:
       - name: rust test
         run: ./scripts/test-rs.ps1
 
-  py-geotool:
+  test-py-geotool:
     needs: cache-vcpkg
     runs-on: windows-latest
     env:
@@ -141,7 +141,7 @@ jobs:
       - name: dev python
         run: ./scripts/test-rs.ps1
 
-  geotool-cli:
+  test-geotool-cli:
     needs: cache-vcpkg
 
     runs-on: windows-latest
@@ -174,15 +174,12 @@ jobs:
       - name: build cli (debug)
         run: ./scripts/build-cli.ps1
       
-      - name: test cli
-        run: ./examples/cli.ps1
-      
-      - name: build cli (dist)
-        run: ./scripts/build-cli.ps1 -config dist
-      
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
-          name: geotool-cli
+          name: geotool-cli-debug
           path: dist/*.zip
           if-no-files-found: error
+
+      - name: test cli
+        run: ./examples/cli.ps1

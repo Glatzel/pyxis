@@ -170,18 +170,13 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: build python (pr)
-        if: ${{ github.event_name=='pull_request'}}
-        run: ./scripts/build-py.ps1
-
       - name: build python
-        if: ${{ github.event_name!='pull_request'}}
-        run: ./scripts/build-py.ps1 -config dist
+        run: ./scripts/build-py.ps1
 
       - name: upload whl
         uses: actions/upload-artifact@v4
         with:
-          name: py-geotool
+          name: py-geotool-debug
           path: dist/*.whl
           if-no-files-found: error
 
@@ -193,13 +188,8 @@ jobs:
       - uses: ./.github/actions/setup-ci-win
       - uses: Swatinem/rust-cache@v2
 
-      - name: build cli (pr)
-        if: ${{ github.event_name=='pull_request'}}
-        run: ./scripts/build-cli.ps1
-
       - name: build cli
-        if: ${{ github.event_name!='pull_request'}}
-        run: ./scripts/build-cli.ps1 -config dist
+        run: ./scripts/build-cli.ps1
 
       - name: test cli
         run: ./examples/cli.ps1
@@ -207,7 +197,7 @@ jobs:
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
-          name: geotool-cli
+          name: geotool-cli-debug
           path: dist/*.zip
           if-no-files-found: error
 

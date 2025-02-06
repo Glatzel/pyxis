@@ -20,8 +20,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
-
   # always cache vcpkg, rerun install if event is not pr.
   cache-vcpkg:
     runs-on: windows-latest

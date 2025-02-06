@@ -39,8 +39,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache pixi
-        uses: actions/cache@v4
+      - name: restore pixi
+        uses: actions/cache/restore@v4
         id: check-cache
         with:
           path: .pixi
@@ -58,6 +58,13 @@ jobs:
         if: ${{steps.check-cache.outputs.cache-hit!='true'}}
         run: pixi install -e dev
 
+      - name: save pixi
+        if: ${{steps.check-cache.outputs.cache-hit!='true'}}
+        uses: actions/cache/save@v4
+        with:
+          path: ./vcpkg_deps/vcpkg_installed
+          key: ${{steps.check-cache.outputs.cache-primary-key}}
+
 
   # always cache vcpkg, rerun install if event is not pr.
   cache-vcpkg:
@@ -65,17 +72,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache vcpkg
-        id: cache-vcpkg
-        uses: actions/cache@v4
+      - name: restore vcpkg
+        id: restore-vcpkg
+        uses: actions/cache/restore@v4
         with:
           path: ./vcpkg_deps/vcpkg_installed
           key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg_deps/vcpkg.json') }}
           lookup-only: true
 
       - name: install vcpkg dependencies
-        if: ${{steps.cache-vcpkg.outputs.cache-hit!='true'}}
+        if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
         run: ./scripts/install-vcpkg-dep.ps1
+
+      - name: save vcpkg
+        if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
+        uses: actions/cache/save@v4
+        with:
+          path: ./vcpkg_deps/vcpkg_installed
+          key: ${{steps.restore-vcpkg.outputs.cache-primary-key}}
 
   cache-rust:
     needs: [cache-pixi, cache-vcpkg]

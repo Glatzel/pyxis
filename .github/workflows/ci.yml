@@ -62,7 +62,7 @@ jobs:
         if: ${{steps.check-cache.outputs.cache-hit!='true'}}
         uses: actions/cache/save@v4
         with:
-          path: ./vcpkg_deps/vcpkg_installed
+          path: .pixi
           key: ${{steps.check-cache.outputs.cache-primary-key}}
 
 

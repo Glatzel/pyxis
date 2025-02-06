@@ -40,5 +40,5 @@ runs:
         path: |
           ~/.cargo
           ./target
-        key: rust-${{ runner.os }}-${{ hashFiles('**/Cargo.toml') }}
+        key: rust-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
 

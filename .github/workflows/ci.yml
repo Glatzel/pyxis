@@ -89,7 +89,7 @@ jobs:
           path: |
             ~/.cargo
             ./target
-          key: rust-${{ runner.os }}-${{ hashFiles('**/Cargo.toml') }}
+          key: rust-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
           lookup-only: true
 
       - id: setup
@@ -100,7 +100,7 @@ jobs:
         if: ${{steps.restore-rust.outputs.cache-hit!='true'}}
         run: |
           ./scripts/set-env.ps1
-          pixi run cargo build
+          pixi run cargo build --all-targets
       
       - name: save rust
         if: ${{steps.restore-rust.outputs.cache-hit!='true'}}

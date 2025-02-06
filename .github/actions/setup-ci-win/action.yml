@@ -26,7 +26,7 @@ runs:
       uses: actions/cache/restore@v4
       with:
         path: ./vcpkg_deps/vcpkg_installed
-        key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg_dep/vcpkg.json') }}
+        key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg_deps/vcpkg.json') }}
 
     - name: install vcpkg dependencies
       if: ${{ github.event_name!='pull_request'}}

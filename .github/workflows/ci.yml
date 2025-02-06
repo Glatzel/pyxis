@@ -155,8 +155,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
 
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
+      
+      - name: rust test
+        run: ./scripts/test-rs.ps1
       
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
@@ -165,8 +171,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN  }}
           slug: Glatzel/rs-geotool
 
-      - name: rust test
-        run: ./scripts/test-rs.ps1
+      
 
   py-geotool:
     needs: out-cache

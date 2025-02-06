@@ -2,7 +2,7 @@ name: Setup CI Windows
 outputs:
   rust-cache-hit:
     value: ${{ steps.restore-rust.outputs.cache-hit }}
-  rust-cache-primary-key
+  rust-cache-primary-key:
     value: ${{steps.restore-rust.outputs.cache-primary-key}}
 runs:
   using: "composite"

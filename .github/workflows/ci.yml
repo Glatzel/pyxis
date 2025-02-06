@@ -147,10 +147,6 @@ jobs:
   cargo-test:
     needs: out-cache
     runs-on: windows-latest
-    env:
-      CONDA_PREFIX: ${{github.workspace }}/.pixi/envs/dev
-      PKG_CONFIG_PATH: ${{github.workspace}}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
-
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
@@ -170,6 +166,13 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN  }}
           slug: Glatzel/rs-geotool
+          
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       
 

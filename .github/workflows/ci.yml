@@ -91,44 +91,8 @@ jobs:
           path: ./vcpkg_deps/vcpkg_installed
           key: ${{steps.restore-vcpkg.outputs.cache-primary-key}}
 
-  cache-rust:
-    needs: [cache-pixi, cache-vcpkg]
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: restore rust
-        id: restore-rust
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            ~/.cargo
-            ./target
-          key: rust-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
-          lookup-only: true
-
-      - id: setup
-        if: ${{steps.restore-rust.outputs.cache-hit!='true'}}
-        uses: ./.github/actions/setup-ci-win
-
-      - name: cargo build
-        if: ${{steps.restore-rust.outputs.cache-hit!='true'}}
-        run: |
-          ./scripts/set-env.ps1
-          pixi run cargo build --all-targets
-
-      - name: save rust
-        if: ${{steps.restore-rust.outputs.cache-hit!='true'}}
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            ~/.cargo
-            ./target
-          key: ${{steps.setup.outputs.rust-cache-primary-key}}
-
-
   out-cache:
-    needs: [cache-vcpkg,cache-rust]
+    needs: [cache-vcpkg,cache-pixi]
     runs-on: ubuntu-latest
     steps:
       - run: echo "out cache."
@@ -140,18 +104,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
+      - uses: Swatinem/rust-cache@v2
 
       - name: cargo-clippy
         run: ./scripts/cargo-clippy.ps1
 
   cargo-test:
-    needs: [cache-pixi, cache-vcpkg]
+    needs: out-cache
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
-        with:
-          rust-cache: false
       - uses: Swatinem/rust-cache@v2
 
       - name: Install nextest
@@ -185,6 +148,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
+      - uses: Swatinem/rust-cache@v2
 
       - name: dev python
         run: ./scripts/develop.ps1
@@ -206,18 +170,13 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: build python (pr)
-        if: ${{ github.event_name=='pull_request'}}
-        run: ./scripts/build-py.ps1
-
       - name: build python
-        if: ${{ github.event_name!='pull_request'}}
-        run: ./scripts/build-py.ps1 -config dist
+        run: ./scripts/build-py.ps1
 
       - name: upload whl
         uses: actions/upload-artifact@v4
         with:
-          name: py-geotool
+          name: py-geotool-debug
           path: dist/*.whl
           if-no-files-found: error
 
@@ -227,14 +186,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
-
-      - name: build cli (pr)
-        if: ${{ github.event_name=='pull_request'}}
-        run: ./scripts/build-cli.ps1
+      - uses: Swatinem/rust-cache@v2
 
       - name: build cli
-        if: ${{ github.event_name!='pull_request'}}
-        run: ./scripts/build-cli.ps1 -config dist
+        run: ./scripts/build-cli.ps1
 
       - name: test cli
         run: ./examples/cli.ps1
@@ -242,7 +197,7 @@ jobs:
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
-          name: geotool-cli
+          name: geotool-cli-debug
           path: dist/*.zip
           if-no-files-found: error
 

@@ -1,14 +1,4 @@
 name: Setup CI Windows
-inputs:
-  rust-cache:
-    description: 'Restore rust cache.'
-    required: false
-    default: 'true'
-outputs:
-  rust-cache-hit:
-    value: ${{ steps.restore-rust.outputs.cache-hit }}
-  rust-cache-primary-key:
-    value: ${{steps.restore-rust.outputs.cache-primary-key}}
 runs:
   using: "composite"
   steps:
@@ -32,13 +22,3 @@ runs:
       with:
         path: ./vcpkg_deps/vcpkg_installed
         key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg_deps/vcpkg.json') }}
-
-    - name: restore rust
-      if: ${{inputs.rust-cache=='true'}}
-      id: restore-rust
-      uses: actions/cache/restore@v4
-      with:
-        path: |
-          ~/.cargo
-          ./target
-        key: rust-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}

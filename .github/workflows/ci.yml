@@ -54,6 +54,7 @@ jobs:
         uses: bnjbvr/cargo-machete@main
 
   cargo-build:
+    needs: cache-vcpkg
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,6 +67,12 @@ jobs:
             ./target
           key: rust-debug-${{ hashFiles('**/Cargo.toml') }}
           lookup-only: true
+
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          cache: false
+          environments: dev
       
       - name: cargo build
         run: |
@@ -73,7 +80,7 @@ jobs:
           cargo build
 
   cargo-clippy:
-    needs: [cache-vcpkg,cargo-build]
+    needs: cargo-build
     runs-on: windows-latest
 
     steps:
@@ -111,7 +118,7 @@ jobs:
         run: ./scripts/cargo-clippy.ps1
 
   cargo-test:
-    needs: [cache-vcpkg,cargo-build]
+    needs: cargo-build
     runs-on: windows-latest
     env:
       CONDA_PREFIX: ${{github.workspace }}/.pixi/envs/dev
@@ -152,7 +159,7 @@ jobs:
         run: ./scripts/test-rs.ps1
 
   test-py-geotool:
-    needs: [cache-vcpkg,cargo-build]
+    needs: cargo-build
     runs-on: windows-latest
     env:
       CONDA_PREFIX: ${{github.workspace }}/.pixi/envs/dev
@@ -193,7 +200,7 @@ jobs:
         run: ./scripts/test-rs.ps1
 
   test-geotool-cli:
-    needs: [cache-vcpkg,cargo-build]
+    needs: cargo-build
 
     runs-on: windows-latest
     env:

@@ -56,7 +56,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - id: setup
-        uses: ./.github/actions/setup-ci-win@dev
+        uses: ./.github/actions/setup-ci-win
 
       - name: cargo build
         run: |
@@ -76,7 +76,7 @@ jobs:
     needs: cargo-build
     runs-on: windows-latest
     steps:
-      - uses: ./.github/actions/setup-ci-win@dev
+      - uses: ./.github/actions/setup-ci-win
 
       - name: cargo-clippy
         run: ./scripts/cargo-clippy.ps1
@@ -89,7 +89,7 @@ jobs:
       PKG_CONFIG_PATH: ${{github.workspace}}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
 
     steps:
-      - uses: ./.github/actions/setup-ci-win@dev
+      - uses: ./.github/actions/setup-ci-win
 
       - name: rust test
         run: ./scripts/test-rs.ps1
@@ -98,7 +98,7 @@ jobs:
     needs: cargo-build
     runs-on: windows-latest
     steps:
-      - uses: ./.github/actions/setup-ci-win@dev
+      - uses: ./.github/actions/setup-ci-win
 
       - name: dev python
         run: ./scripts/develop.ps1
@@ -107,7 +107,7 @@ jobs:
     needs: cargo-build
     runs-on: windows-latest
     steps:
-      - uses: ./.github/actions/setup-ci-win@dev
+      - uses: ./.github/actions/setup-ci-win
 
       - name: build cli (debug)
         run: ./scripts/build-cli.ps1

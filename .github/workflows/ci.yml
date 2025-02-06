@@ -38,6 +38,40 @@ jobs:
         if: ${{steps.cache-vcpkg.outputs.cache-hit!='true'}}
         run: ./scripts/install-vcpkg-dep.ps1
 
+  cache-rust:
+    needs: cache-vcpkg
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: restore rust
+        id: restore-rust
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.cargo
+            ./target
+          key: rust-debug-${{ hashFiles('**/Cargo.toml') }}
+          restore-keys: rust-debug-
+
+      - id: setup
+        if: ${{steps.restore-rust.outputs.cache-hit!='true'}}
+        uses: ./.github/actions/setup-ci-win
+
+      - name: cargo build
+        if: ${{steps.restore-rust.outputs.cache-hit!='true'}}
+        run: |
+          ./scripts/set-env.ps1
+          pixi run cargo build
+      
+      - name: save rust
+        if: ${{steps.restore-rust.outputs.cache-hit!='true'}}
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.cargo
+            ./target
+          key: ${{steps.setup.outputs.rust-cache-primary-key}}
   ruff-lint:
     uses: Glatzel/template/.github/workflows/ruff.yml@main
 
@@ -50,30 +84,8 @@ jobs:
       - name: Machete
         uses: bnjbvr/cargo-machete@main
 
-  cargo-build:
-    needs: cache-vcpkg
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: setup
-        uses: ./.github/actions/setup-ci-win
-
-      - name: cargo build
-        run: |
-          ./scripts/set-env.ps1
-          pixi run cargo build
-      
-      - name: save rust
-        if: ${{steps.setup.outputs.cache-hit!='true'}}
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            ~/.cargo
-            ./target
-          key: ${{steps.setup.outputs.cache-primary-key}}
-
   cargo-clippy:
-    needs: cargo-build
+    needs: cache-rust
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -83,7 +95,7 @@ jobs:
         run: ./scripts/cargo-clippy.ps1
 
   cargo-test:
-    needs: cargo-build
+    needs: cache-rust
     runs-on: windows-latest
     env:
       CONDA_PREFIX: ${{github.workspace }}/.pixi/envs/dev
@@ -97,7 +109,7 @@ jobs:
         run: ./scripts/test-rs.ps1
 
   test-py-geotool:
-    needs: cargo-build
+    needs: cache-rust
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -107,7 +119,7 @@ jobs:
         run: ./scripts/develop.ps1
 
   test-geotool-cli:
-    needs: cargo-build
+    needs: cache-rust
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4

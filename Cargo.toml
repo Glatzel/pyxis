@@ -1,0 +1,32 @@
+[workspace]
+members = ["crates/*"]
+resolver = "2"
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+
+[workspace.dependencies]
+geotool-algorithm = { path = "crates/geotool-algorithm" }
+
+bpaf = { version = "0.9.15", features = ["derive", "batteries"] }
+chrono = "0.4.30"
+console = "0.15.9"
+dialoguer = "0.11.0"
+float-cmp = "0.10.0"
+miette = "7.5.0"
+ndarray = "0.16.1"
+numpy = "0.23.0"
+proj = "0.28.0"
+pyo3 = { version = "0.23.4", features = ["extension-module", "abi3-py311"] }
+rayon = "1.10.0"
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+
+[profile.dist]
+inherits = "release"
+codegen-units = 1
+debug = false
+lto = "fat"
+opt-level = 3
+strip = true

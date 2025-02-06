@@ -1,0 +1,28 @@
+[project]
+authors = ["Glatzel <893016099@qq.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "rs-geotool"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = "3.11.*"
+numpy = "*"
+scipy="*"
+nomkl = "*"
+lazy-loader = "*"
+
+[feature.dev.dependencies]
+maturin = "*"
+pip = "*"
+pytest = "*"
+pytest-cov = "*"
+pkg-config = "*"
+numpydoc = "*"
+git-cliff ="*"
+
+[environments]
+dev = ["dev"]

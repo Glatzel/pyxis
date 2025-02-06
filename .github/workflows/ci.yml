@@ -178,7 +178,6 @@ jobs:
   # region build
   build-geotool-cli:
     runs-on: windows-latest
-    needs: test-geotool-cli
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
@@ -195,7 +194,6 @@ jobs:
 
   build-py-geotool:
     runs-on: windows-latest
-    needs: test-py-geotool
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win

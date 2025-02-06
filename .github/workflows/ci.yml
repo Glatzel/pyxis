@@ -73,7 +73,17 @@ jobs:
         with:
           cache: false
           environments: dev
-      
+  
+      - name: restore vcpkg
+        uses: actions/cache/restore@v4
+        with:
+          path: ./vcpkg_deps/vcpkg_installed
+          key: vcpkg-${{ hashFiles('./vcpkg_dep/vcpkg.json') }}
+  
+      - name: install vcpkg dependencies
+        if: ${{ github.event_name!='pull_request'}}
+        run: ./scripts/install-vcpkg-dep.ps1
+
       - name: cargo build
         run: |
           ./scripts/set-env.ps1

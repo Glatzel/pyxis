@@ -144,35 +144,7 @@ jobs:
       PKG_CONFIG_PATH: ${{github.workspace}}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: set pkg-config path
-        run: echo ${{github.workspace}}\.pixi\envs\dev\Library\bin >> $env:GITHUB_PATH 
-
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.1
-        with:
-          cache: false
-          environments: dev
-      
-      - name: restore vcpkg
-        uses: actions/cache/restore@v4
-        with:
-          path: ./vcpkg_deps/vcpkg_installed
-          key: vcpkg-${{ hashFiles('./vcpkg_dep/vcpkg.json') }}
-
-      - name: install vcpkg dependencies
-        if: ${{ github.event_name!='pull_request'}}
-        run: ./scripts/install-vcpkg-dep.ps1
-
-      - name: restore cargo
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            ~/.cargo
-            ./target
-          key: rust-debug-${{ hashFiles('**/Cargo.toml') }}
-          restore-keys: rust-debug-
+      - uses: ./.github/actions/setup-ci-win
 
       - name: build cli (debug)
         run: ./scripts/build-cli.ps1

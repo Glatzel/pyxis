@@ -14,8 +14,7 @@ runs:
     - name: Set up pixi
       uses: prefix-dev/setup-pixi@v0.8.1
       with:
-        cache: false
-        environments: dev
+        run-install: false
     
     - name: restore vcpkg
       uses: actions/cache/restore@v4

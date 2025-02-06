@@ -46,8 +46,7 @@ jobs:
     name: Cargo Machete
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Machete
         uses: bnjbvr/cargo-machete@main
 
@@ -55,6 +54,7 @@ jobs:
     needs: cache-vcpkg
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v4
       - id: setup
         uses: ./.github/actions/setup-ci-win
 
@@ -76,6 +76,7 @@ jobs:
     needs: cargo-build
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
 
       - name: cargo-clippy
@@ -89,6 +90,7 @@ jobs:
       PKG_CONFIG_PATH: ${{github.workspace}}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
 
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
 
       - name: rust test
@@ -98,6 +100,7 @@ jobs:
     needs: cargo-build
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
 
       - name: dev python
@@ -107,6 +110,7 @@ jobs:
     needs: cargo-build
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
 
       - name: build cli (debug)

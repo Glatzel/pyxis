@@ -7,8 +7,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
-
     - name: set pkg-config path
       run: echo ${{github.workspace}}\.pixi\envs\dev\Library\bin >> $env:GITHUB_PATH 
 

@@ -114,7 +114,7 @@ jobs:
 
   out-cache:
     needs: [cache-vcpkg,cache-rust]
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - run: echo "out cache."
 
@@ -166,12 +166,52 @@ jobs:
       - name: build cli (debug)
         run: ./scripts/build-cli.ps1
 
+      - name: test cli
+        run: ./examples/cli.ps1
+
+  out-check:
+    needs: [cargo-machete,ruff-lint,cargo-clippy,cargo-test,test-py-geotool,test-geotool-cli]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "out check."
+
+  # region build
+  build-geotool-cli:
+    runs-on: windows-latest
+    needs: test-geotool-cli
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci-win
+
+      - name: build cli (dist)
+        run: ./scripts/build-cli.ps1 -config dist
+
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
-          name: geotool-cli-debug
+          name: geotool-cli
           path: dist/*.zip
           if-no-files-found: error
 
-      - name: test cli
-        run: ./examples/cli.ps1
+  build-py-geotool:
+    runs-on: windows-latest
+    needs: test-py-geotool
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci-win
+
+      - name: build python
+        run: ./scripts/build-py.ps1 -config dist
+
+      - name: upload cli
+        uses: actions/upload-artifact@v4
+        with:
+          name: py-geotool
+          path: dist/*.whl
+          if-no-files-found: error
+
+  out-build:
+    needs: [build-geotool-cli,build-py-geotool]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "out build."

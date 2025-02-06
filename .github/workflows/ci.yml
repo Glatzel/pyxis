@@ -58,6 +58,7 @@ jobs:
         if: ${{steps.check-cache.outputs.cache-hit!='true'}}
         run: pixi install -e dev
 
+
   # always cache vcpkg, rerun install if event is not pr.
   cache-vcpkg:
     runs-on: windows-latest
@@ -155,6 +156,20 @@ jobs:
       
       - name: test python
         run: ./scripts/test-py.ps1
+
+      - name: Upload results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: Glatzel/rs-geotool
+        
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: build python (pr)
         if: ${{ github.event_name=='pull_request'}}

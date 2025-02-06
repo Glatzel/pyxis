@@ -52,7 +52,7 @@ jobs:
             ~/.cargo
             ./target
           key: rust-debug-${{ hashFiles('**/Cargo.toml') }}
-          restore-keys: rust-debug-
+          lookup-only: true
 
       - id: setup
         if: ${{steps.restore-rust.outputs.cache-hit!='true'}}

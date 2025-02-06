@@ -36,5 +36,4 @@ runs:
           ~/.cargo
           ./target
         key: rust-debug-${{ hashFiles('**/Cargo.toml') }}
-        restore-keys: rust-debug-
 

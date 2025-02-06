@@ -55,33 +55,8 @@ jobs:
     needs: cache-vcpkg
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: restore cargo
-        id: check-cache
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            ~/.cargo
-            ./target
-          key: rust-debug-${{ hashFiles('**/Cargo.toml') }}
-          restore-keys: rust-debug-
-
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.1
-        with:
-          cache: false
-          environments: dev
-  
-      - name: restore vcpkg
-        uses: actions/cache/restore@v4
-        with:
-          path: ./vcpkg_deps/vcpkg_installed
-          key: vcpkg-${{ hashFiles('./vcpkg_dep/vcpkg.json') }}
-  
-      - name: install vcpkg dependencies
-        if: ${{ github.event_name!='pull_request'}}
-        run: ./scripts/install-vcpkg-dep.ps1
+      - id: setup
+        uses: ./.github/actions/setup-ci-win@dev
 
       - name: cargo build
         run: |
@@ -89,20 +64,19 @@ jobs:
           pixi run cargo build
       
       - name: save rust
-        if: ${{steps.check-cache.outputs.cache-hit!='true'}}
+        if: ${{steps.setup.outputs.cache-hit!='true'}}
         uses: actions/cache/save@v4
         with:
           path: |
             ~/.cargo
             ./target
-          key: ${{steps.check-cache.outputs.cache-primary-key}}
+          key: ${{steps.setup.outputs.cache-primary-key}}
 
   cargo-clippy:
     needs: cargo-build
     runs-on: windows-latest
-
     steps:
-      - uses: ./.github/actions/setup-ci-win
+      - uses: ./.github/actions/setup-ci-win@dev
 
       - name: cargo-clippy
         run: ./scripts/cargo-clippy.ps1
@@ -115,7 +89,7 @@ jobs:
       PKG_CONFIG_PATH: ${{github.workspace}}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
 
     steps:
-      - uses: ./.github/actions/setup-ci-win
+      - uses: ./.github/actions/setup-ci-win@dev
 
       - name: rust test
         run: ./scripts/test-rs.ps1
@@ -123,26 +97,17 @@ jobs:
   test-py-geotool:
     needs: cargo-build
     runs-on: windows-latest
-    env:
-      CONDA_PREFIX: ${{github.workspace }}/.pixi/envs/dev
-      PKG_CONFIG_PATH: ${{github.workspace}}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
-
     steps:
-      - uses: ./.github/actions/setup-ci-win
+      - uses: ./.github/actions/setup-ci-win@dev
 
       - name: dev python
         run: ./scripts/develop.ps1
 
   test-geotool-cli:
     needs: cargo-build
-
     runs-on: windows-latest
-    env:
-      CONDA_PREFIX: ${{github.workspace }}/.pixi/envs/dev
-      PKG_CONFIG_PATH: ${{github.workspace}}/vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
-
     steps:
-      - uses: ./.github/actions/setup-ci-win
+      - uses: ./.github/actions/setup-ci-win@dev
 
       - name: build cli (debug)
         run: ./scripts/build-cli.ps1

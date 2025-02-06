@@ -10,4 +10,3 @@ if($env:CI)
 else{
     &./vcpkg/vcpkg.exe install --overlay-triplets=$triplet
 }
-

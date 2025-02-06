@@ -23,7 +23,7 @@ jobs:
   # region independent
   ruff-lint:
     uses: Glatzel/template/.github/workflows/ruff.yml@main
-  
+
   # Checks for dependencies that are not used in the codebase
   cargo-machete:
     name: Cargo Machete
@@ -46,14 +46,14 @@ jobs:
           path: .pixi
           key: pixi-${{ runner.os }}-${{ hashFiles('**/pixi.lock') }}
           lookup-only: true
-      
+
       - name: Set up pixi
         if: ${{steps.check-cache.outputs.cache-hit!='true'}}
         uses: prefix-dev/setup-pixi@v0.8.1
         with:
           cache: false
           environments: dev
-      
+
       - name: pixi install
         if: ${{steps.check-cache.outputs.cache-hit!='true'}}
         run: pixi install -e dev
@@ -76,7 +76,7 @@ jobs:
       - name: install vcpkg dependencies
         if: ${{steps.cache-vcpkg.outputs.cache-hit!='true'}}
         run: ./scripts/install-vcpkg-dep.ps1
-  
+
   cache-rust:
     needs: [cache-pixi, cache-vcpkg]
     runs-on: windows-latest
@@ -102,7 +102,7 @@ jobs:
         run: |
           ./scripts/set-env.ps1
           pixi run cargo build --all-targets
-      
+
       - name: save rust
         if: ${{steps.restore-rust.outputs.cache-hit!='true'}}
         uses: actions/cache/save@v4
@@ -111,7 +111,7 @@ jobs:
             ~/.cargo
             ./target
           key: ${{steps.setup.outputs.rust-cache-primary-key}}
-  
+
 
   out-cache:
     needs: [cache-vcpkg,cache-rust]
@@ -153,7 +153,7 @@ jobs:
 
       - name: dev python
         run: ./scripts/develop.ps1
-      
+
       - name: test python
         run: ./scripts/test-py.ps1
 
@@ -163,7 +163,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: Glatzel/rs-geotool
-        
+
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1

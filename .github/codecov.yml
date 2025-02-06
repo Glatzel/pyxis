@@ -5,6 +5,6 @@ coverage:
         # basic
         target: auto #default
         threshold: 0%
-        base: auto 
+        base: auto
 comment:
   behavior: new

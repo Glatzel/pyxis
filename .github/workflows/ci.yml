@@ -50,7 +50,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .pixi
-          key: ${{steps.check-cache.outputs.cache-primary-key}}
+          key: ${{steps.check-cache.outputs.cache-primary-key }}
 
   # always cache vcpkg, rerun install if event is not pr.
   cache-vcpkg:

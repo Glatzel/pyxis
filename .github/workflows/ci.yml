@@ -59,14 +59,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache rust
-        uses: actions/cache@v4
+      - name: restore cargo
+        id: check-cache
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.cargo
             ./target
           key: rust-debug-${{ hashFiles('**/Cargo.toml') }}
-          lookup-only: true
+          restore-keys: rust-debug-
 
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@v0.8.1
@@ -87,7 +88,16 @@ jobs:
       - name: cargo build
         run: |
           ./scripts/set-env.ps1
-          cargo build
+          pixi run cargo build
+      
+      - name: save rust
+        if: ${{steps.check-cache.outputs.cache-hit!='true'}}
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.cargo
+            ./target
+          key: ${{steps.check-cache.outputs.cache-primary-key}}
 
   cargo-clippy:
     needs: cargo-build

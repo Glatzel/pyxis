@@ -6,6 +6,8 @@ $env:PATH = $env:PATH + ";$pkg_config;$dll_path"
 $env:PKG_CONFIG_PATH = Resolve-Path vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
 
 if ($env:CI) {
+    pixi run cargo test
+    pixi run cargo llvm-cov nextest
     pixi run cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
 }
 else {

@@ -239,7 +239,6 @@ name = "geotool-algorithm"
 version = "0.0.1"
 dependencies = [
  "float-cmp",
- "miette",
 ]
 
 [[package]]
@@ -576,7 +575,6 @@ name = "py-geotool"
 version = "0.0.1"
 dependencies = [
  "geotool-algorithm",
- "ndarray",
  "numpy",
  "pyo3",
  "rayon",

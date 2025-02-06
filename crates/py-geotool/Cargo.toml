@@ -5,7 +5,6 @@ edition.workspace = true
 
 [dependencies]
 pyo3 = { workspace = true }
-ndarray ={ workspace = true }
 numpy={ workspace = true }
 geotool-algorithm={ workspace = true }
 rayon={ workspace = true }

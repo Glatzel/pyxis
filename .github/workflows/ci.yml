@@ -63,10 +63,8 @@ jobs:
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          run-install: false
-      
-      - name: install pixi pkg
-        run: pixi install --all
+          cache: false
+          environments: dev
       
       - name: restore vcpkg
         uses: actions/cache/restore@v4
@@ -98,10 +96,8 @@ jobs:
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          run-install: false
-      
-      - name: install pixi pkg
-        run: pixi install --all
+          cache: false
+          environments: dev
       
       - name: restore vcpkg
         uses: actions/cache/restore@v4
@@ -133,10 +129,8 @@ jobs:
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          run-install: false
-      
-      - name: install pixi pkg
-        run: pixi install --all
+          cache: false
+          environments: dev
       
       - name: restore vcpkg
         uses: actions/cache/restore@v4
@@ -168,10 +162,8 @@ jobs:
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          run-install: false
-      
-      - name: install pixi pkg
-        run: pixi install --all
+          cache: false
+          environments: dev
       
       - name: restore vcpkg
         uses: actions/cache/restore@v4

@@ -4,9 +4,9 @@ Set-Location ..
 & $PSScriptRoot/set-env.ps1
 
 if ($env:CI) {
-    cargo clippy --all-targets --all-features
+    pixi run cargo clippy --all-targets --all-features
 }
 else {
-    cargo fmt
-    cargo clippy --fix --all-targets
+    pixi run cargo fmt
+    pixi run cargo clippy --fix --all-targets
 }

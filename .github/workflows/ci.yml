@@ -110,7 +110,7 @@ jobs:
 
       - name: cargo-clippy
         run: ./scripts/cargo-clippy.ps1
-  
+
   cargo-doc:
     needs: out-cache
     runs-on: windows-latest

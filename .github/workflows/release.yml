@@ -2,7 +2,11 @@ name: Release
 
 on:
   workflow_dispatch:
-  push:
+    inputs:
+      tag:
+        type: string
+        required:  true
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -13,3 +17,12 @@ jobs:
     uses: ./.github/workflows/ci.yml
     with:
       build-dist: true
+
+  release:
+    needs: [check-and-build]
+    uses: Glatzel/template/.github/workflows/release.yml@main
+    with:
+      override: true
+      tag: ${{inputs.tag}}
+      have-changelog: true
+      assets: true

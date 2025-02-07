@@ -2,6 +2,11 @@ name: CI
 
 on:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      build-dist:
+        type: boolean
+        default: false
   push:
     branches: main
     paths-ignore:
@@ -16,7 +21,7 @@ on:
       - "*.md"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -163,8 +168,6 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-
-
   py-geotool:
     needs: out-cache
     runs-on: windows-latest
@@ -193,13 +196,18 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: build python
+      - name: build python (debug)
+        if: ${{inputs.build-dist!='true' && github.event_name!='push'}}
         run: ./scripts/build-py.ps1
+
+      - name: build python (dist)
+        if: ${{ inputs.build-dist=='true' || github.event_name=='push' }}
+        run: ./scripts/build-py.ps1 -config dist
 
       - name: upload whl
         uses: actions/upload-artifact@v4
         with:
-          name: py-geotool-debug
+          name: py-geotool
           path: dist/*.whl
           if-no-files-found: error
 
@@ -211,8 +219,13 @@ jobs:
       - uses: ./.github/actions/setup-ci-win
       - uses: Swatinem/rust-cache@v2
 
-      - name: build cli
+      - name: build cli (debug)
+        if: ${{inputs.build-dist!='true' && github.event_name!='push'}}
         run: ./scripts/build-cli.ps1
+
+      - name: build cli(dist)
+        if: ${{inputs.build-dist=='true' || github.event_name == 'push'}}
+        run: ./scripts/build-cli.ps1 -config dist
 
       - name: test cli
         run: ./examples/cli.ps1
@@ -220,7 +233,7 @@ jobs:
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
-          name: geotool-cli-debug
+          name: geotool-cli
           path: dist/*.zip
           if-no-files-found: error
 

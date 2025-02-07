@@ -15,7 +15,7 @@ runs:
       uses: actions/cache/restore@v4
       with:
         path: .pixi
-        key: pixi-${{ runner.os }}-${{ hashFiles('**/pixi.lock') }}
+        key: pixi-${{ runner.os }}-${{ hashFiles( '**/pixi.lock') }}
 
     - name: restore vcpkg
       uses: actions/cache/restore@v4

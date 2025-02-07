@@ -8,3 +8,5 @@ coverage:
         base: auto
 comment:
   behavior: new
+ignore:
+  - "crates/py-geotool"

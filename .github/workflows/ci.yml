@@ -56,7 +56,7 @@ jobs:
           name: rust-doc
           path: dist/*.zip
           if-no-files-found: error
-          
+
   cargo-machete:
     name: Cargo Machete
     runs-on: ubuntu-latest

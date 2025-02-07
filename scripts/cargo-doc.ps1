@@ -1,0 +1,5 @@
+Set-Location $PSScriptRoot
+Set-Location ..
+& $PSScriptRoot/set-env.ps1
+
+pixi run cargo doc --no-deps --all

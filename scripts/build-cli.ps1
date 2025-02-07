@@ -27,4 +27,4 @@ Copy-Item "vcpkg_deps/vcpkg_installed/x64-windows/share/proj/proj.db" ./dist/geo
 Copy-Item "vcpkg_deps/vcpkg_installed/x64-windows/bin/*.dll" ./dist/geotool
 $version=cargo metadata --format-version=1 --no-deps | jq '.packages[0].version'
 $version="$version".Replace("""","")
-Compress-Archive ./dist/geotool "./dist/geotool-$version-win.zip"
+Compress-Archive ./dist/geotool "./dist/geotool-windows-x64.zip"

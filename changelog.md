@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Python function return type for scalar array by @Glatzel in [#7](https://github.com/Glatzel/rs-geotool/pull/7)
+- Md format
 
 [unreleased]: https://github.com/Glatzel/rs-geotool/compare/v0.0.1..HEAD
 

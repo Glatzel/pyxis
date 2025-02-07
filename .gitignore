@@ -1,13 +1,19 @@
-target
+# dev
 .VSCodeCounter
+dist
+draft
+tests_report
+
+# python
 __pycache__
-# pixi environments
+.coverage
 .pixi
 *.egg-info
 *.pyd
-dist
-draft
-.coverage
+
+# rust
+target
+
+#vcpkg
 vcpkg_deps/vcpkg
 vcpkg_deps/vcpkg_installed
-tests_report

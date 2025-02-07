@@ -8,7 +8,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # region independent
   check-and-build:
     uses: ./.github/workflows/ci.yml
     with:

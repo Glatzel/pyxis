@@ -132,8 +132,8 @@ jobs:
       - name: upload doc
         uses: actions/upload-artifact@v4
         with:
-          name: cargo-doc
-          path: target/doc
+          name: rust-doc
+          path: dist/*.zip
           if-no-files-found: error
 
   cargo-test:

@@ -222,7 +222,7 @@ jobs:
       - name: build cli(debug)
         if: ${{inputs.build-dist!='true' && github.event_name!='push'}}
         run: ./scripts/build-cli.ps1
-      
+
       - name: build cli(debug)
         if: ${{inputs.build-dist=='true' || github.event_name == 'push'}}
         run: ./scripts/build-cli.ps1

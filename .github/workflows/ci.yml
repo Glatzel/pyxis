@@ -197,7 +197,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: build python (debug)
-        if: ${{inputs.build-dist!='true'}}
+        if: ${{inputs.build-dist!='true' && github.event_name!='push'}}
         run: ./scripts/build-py.ps1
 
       - name: build python (dist)
@@ -219,13 +219,13 @@ jobs:
       - uses: ./.github/actions/setup-ci-win
       - uses: Swatinem/rust-cache@v2
 
-      - name: build cli(debug)
+      - name: build cli (debug)
         if: ${{inputs.build-dist!='true' && github.event_name!='push'}}
         run: ./scripts/build-cli.ps1
       
-      - name: build cli(debug)
+      - name: build cli (dist)
         if: ${{inputs.build-dist=='true' || github.event_name == 'push'}}
-        run: ./scripts/build-cli.ps1
+        run: ./scripts/build-cli.ps1 -config dist
 
       - name: test cli
         run: ./examples/cli.ps1

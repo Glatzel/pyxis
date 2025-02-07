@@ -225,7 +225,14 @@ jobs:
           if-no-files-found: error
 
   out-check:
-    needs: [cargo-machete,ruff-lint,cargo-clippy,cargo-test,py-geotool,geotool-cli]
+    needs: 
+      - cargo-clippy
+      - cargo-doc
+      - cargo-machete
+      - cargo-test 
+      - geotool-cli
+      - py-geotool
+      - ruff-lint
     runs-on: ubuntu-latest
     steps:
       - run: echo "out check."

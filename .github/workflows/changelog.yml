@@ -30,7 +30,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: update changelog.md"
           title: "chore: update changelog.md"
-          branch: update-pixi
+          branch: update-changelog
           base: main
           labels: action
           delete-branch: true

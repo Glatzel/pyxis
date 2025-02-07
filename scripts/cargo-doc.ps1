@@ -6,6 +6,6 @@ if(-not $env:CI){
 
 pixi run cargo doc --no-deps --all
 
-Remove-Item ./dist/rust-doc-*.zip -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item ./dist/rust-doc.zip -Force -ErrorAction SilentlyContinue
 New-Item ./dist -ItemType Directory -ErrorAction SilentlyContinue
 Compress-Archive ./target/doc "./dist/rust-doc.zip"

@@ -240,7 +240,7 @@ jobs:
     steps:
       - run: echo "out check."
 
-# region build 
+# region build
   build-geotool-cli:
     needs: geotool-cli
     if: ${{inputs.build-dist=='true'}}
@@ -269,7 +269,7 @@ jobs:
 
       - name: build python
         run: ./scripts/build-py.ps1 -config dist
-  
+
       - name: upload whl
         uses: actions/upload-artifact@v4
         with:

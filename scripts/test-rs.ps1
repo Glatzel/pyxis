@@ -10,7 +10,7 @@ if ( $env:CI ) {
     pixi run cargo llvm-cov nextest
     Write-Output "::endgroup::"
 
-    Write-Output "::group::nextest"
+    Write-Output "::group::doctest"
     pixi run cargo llvm-cov --doc
     Write-Output "::endgroup::"
 

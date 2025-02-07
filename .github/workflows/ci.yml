@@ -104,8 +104,7 @@ jobs:
 
   # region check
   cargo-clippy:
-    needs: out-cache
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"
     steps:
@@ -115,10 +114,10 @@ jobs:
 
       - name: cargo-clippy
         run: ./scripts/cargo-clippy.ps1
+        shell: pwsh
 
   cargo-doc:
-    needs: out-cache
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"
     steps:
@@ -128,6 +127,7 @@ jobs:
 
       - name: cargo-doc
         run: ./scripts/cargo-doc.ps1
+        shell: pwsh
 
       - name: upload doc
         uses: actions/upload-artifact@v4

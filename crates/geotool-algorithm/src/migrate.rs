@@ -30,7 +30,7 @@ pub fn _abs_2d(
         -rotate_matrix[1][0] * rel_y - rotate_matrix[1][1] * rel_y + origin_y,
     )
 }
-pub fn _origin_2d(
+pub fn origin_2d(
     abs_x: f64,
     abs_y: f64,
     rel_x: f64,

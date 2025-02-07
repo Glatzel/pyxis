@@ -101,6 +101,8 @@ jobs:
   cargo-clippy:
     needs: out-cache
     runs-on: windows-latest
+    env:
+      RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win

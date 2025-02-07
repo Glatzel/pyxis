@@ -75,8 +75,8 @@ def datum_compense(
     """
     from .py_geotool import py_datum_compense  # type: ignore
 
-    xc = coord_util("cx", xc)
-    yc = coord_util("yx", yc)
+    xc = coord_util("xc", xc)
+    yc = coord_util("yc", yc)
 
     xc, yc = py_datum_compense(xc, yc, hb, radius, x0, y0)
 

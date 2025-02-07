@@ -110,6 +110,25 @@ jobs:
 
       - name: cargo-clippy
         run: ./scripts/cargo-clippy.ps1
+  cargo-doc:
+    needs: out-cache
+    runs-on: windows-latest
+    env:
+      RUSTFLAGS: "-Dwarnings"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci-win
+      - uses: Swatinem/rust-cache@v2
+
+      - name: cargo-doc
+        run: ./scripts/cargo-doc.ps1
+
+      - name: upload doc
+        uses: actions/upload-artifact@v4
+        with:
+          name: cargo-doc
+          path: target/doc
+          if-no-files-found: error
 
   cargo-test:
     needs: out-cache

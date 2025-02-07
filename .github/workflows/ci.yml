@@ -3,6 +3,10 @@ name: CI
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      build-dist:
+        type: boolean
+        default: false
   push:
     branches: main
     paths-ignore:
@@ -164,8 +168,6 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-
-
   py-geotool:
     needs: out-cache
     runs-on: windows-latest
@@ -237,3 +239,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "out check."
+
+# region build 
+  build-geotool-cli:
+    needs: geotool-cli
+    if: ${{inputs.build-dist=='true'}}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci-win
+
+      - name: build cli
+        run: ./scripts/build-cli.ps1 -config dist
+
+      - name: upload cli
+        uses: actions/upload-artifact@v4
+        with:
+          name: geotool-cli
+          path: dist/*.zip
+          if-no-files-found: error
+
+  build-py-geotool:
+    needs: py-geotool
+    if: ${{inputs.build-dist=='true'}}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci-win
+
+      - name: build python
+        run: ./scripts/build-py.ps1 -config dist
+  
+      - name: upload whl
+        uses: actions/upload-artifact@v4
+        with:
+          name: py-geotool
+          path: dist/*.whl
+          if-no-files-found: error

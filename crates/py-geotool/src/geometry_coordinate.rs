@@ -33,7 +33,7 @@ pub fn py_cartesian_to_cylindrical(
         z_py.extract::<f64>(py),
     ) {
         geotool_algorithm::cartesian_to_cylindrical(x, y, z).into_pyobject(py)
-    }else {
+    } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
         ))
@@ -69,7 +69,7 @@ pub fn py_cartesian_to_spherical(
         z_py.extract::<f64>(py),
     ) {
         geotool_algorithm::cartesian_to_spherical(x, y, z).into_pyobject(py)
-    }else {
+    } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
         ))

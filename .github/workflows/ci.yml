@@ -225,11 +225,11 @@ jobs:
           if-no-files-found: error
 
   out-check:
-    needs: 
+    needs:
       - cargo-clippy
       - cargo-doc
       - cargo-machete
-      - cargo-test 
+      - cargo-test
       - geotool-cli
       - py-geotool
       - ruff-lint

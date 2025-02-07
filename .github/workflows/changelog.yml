@@ -25,7 +25,7 @@ jobs:
 
       - run: |
           try
-          {
+          { 
             git config user.name  "Glatzel"
             git config user.email "chenzelin9794@gmail.com"
             git add changelog.md

@@ -197,11 +197,11 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: build python (debug)
-        if: ${{inputs.build-dist!='true' && github.event_name!='push'}}
+        if: ${{!inputs.build-dist}}
         run: ./scripts/build-py.ps1
 
       - name: build python (dist)
-        if: ${{ inputs.build-dist=='true' || github.event_name=='push' }}
+        if: ${{ inputs.build-dist}}
         run: ./scripts/build-py.ps1 -config dist
 
       - name: upload whl
@@ -220,11 +220,11 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: build cli (debug)
-        if: ${{inputs.build-dist!='true' && github.event_name!='push'}}
+        if: ${{!inputs.build-dist}}
         run: ./scripts/build-cli.ps1
 
       - name: build cli(dist)
-        if: ${{inputs.build-dist=='true' || github.event_name == 'push'}}
+        if: ${{inputs.build-dist}}
         run: ./scripts/build-cli.ps1 -config dist
 
       - name: test cli

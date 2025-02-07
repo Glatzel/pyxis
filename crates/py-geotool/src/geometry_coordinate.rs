@@ -10,13 +10,7 @@ pub fn py_cartesian_to_cylindrical(
     y_py: PyObject,
     z_py: PyObject,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(x), Ok(y), Ok(z)) = (
-        x_py.extract::<f64>(py),
-        y_py.extract::<f64>(py),
-        z_py.extract::<f64>(py),
-    ) {
-        geotool_algorithm::cartesian_to_cylindrical(x, y, z).into_pyobject(py)
-    } else if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
+    if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
         x_py.downcast_bound::<PyArrayDyn<f64>>(py),
         y_py.downcast_bound::<PyArrayDyn<f64>>(py),
         z_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -33,7 +27,13 @@ pub fn py_cartesian_to_cylindrical(
                 (*x, *y, *z) = geotool_algorithm::cartesian_to_cylindrical(*x, *y, *z);
             });
         (x_ref, y_ref, z_ref).into_pyobject(py) // r,u,z
-    } else {
+    } else if let (Ok(x), Ok(y), Ok(z)) = (
+        x_py.extract::<f64>(py),
+        y_py.extract::<f64>(py),
+        z_py.extract::<f64>(py),
+    ) {
+        geotool_algorithm::cartesian_to_cylindrical(x, y, z).into_pyobject(py)
+    }else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
         ))
@@ -46,13 +46,7 @@ pub fn py_cartesian_to_spherical(
     y_py: PyObject,
     z_py: PyObject,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(x), Ok(y), Ok(z)) = (
-        x_py.extract::<f64>(py),
-        y_py.extract::<f64>(py),
-        z_py.extract::<f64>(py),
-    ) {
-        geotool_algorithm::cartesian_to_spherical(x, y, z).into_pyobject(py)
-    } else if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
+    if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
         x_py.downcast_bound::<PyArrayDyn<f64>>(py),
         y_py.downcast_bound::<PyArrayDyn<f64>>(py),
         z_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -69,7 +63,13 @@ pub fn py_cartesian_to_spherical(
                 (*x, *y, *z) = geotool_algorithm::cartesian_to_spherical(*x, *y, *z);
             });
         (x_ref, y_ref, z_ref).into_pyobject(py) // u,v,r
-    } else {
+    } else if let (Ok(x), Ok(y), Ok(z)) = (
+        x_py.extract::<f64>(py),
+        y_py.extract::<f64>(py),
+        z_py.extract::<f64>(py),
+    ) {
+        geotool_algorithm::cartesian_to_spherical(x, y, z).into_pyobject(py)
+    }else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
         ))
@@ -82,13 +82,7 @@ pub fn py_cylindrical_to_cartesian(
     u_py: PyObject,
     z_py: PyObject,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(r), Ok(u), Ok(z)) = (
-        r_py.extract::<f64>(py),
-        u_py.extract::<f64>(py),
-        z_py.extract::<f64>(py),
-    ) {
-        geotool_algorithm::cylindrical_to_cartesian(r, u, z).into_pyobject(py)
-    } else if let (Ok(r_ref), Ok(u_ref), Ok(z_ref)) = (
+    if let (Ok(r_ref), Ok(u_ref), Ok(z_ref)) = (
         r_py.downcast_bound::<PyArrayDyn<f64>>(py),
         u_py.downcast_bound::<PyArrayDyn<f64>>(py),
         z_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -105,6 +99,12 @@ pub fn py_cylindrical_to_cartesian(
                 (*r, *u, *z) = geotool_algorithm::cylindrical_to_cartesian(*r, *u, *z);
             });
         (r_ref, u_ref, z_ref).into_pyobject(py) // x,y,z
+    } else if let (Ok(r), Ok(u), Ok(z)) = (
+        r_py.extract::<f64>(py),
+        u_py.extract::<f64>(py),
+        z_py.extract::<f64>(py),
+    ) {
+        geotool_algorithm::cylindrical_to_cartesian(r, u, z).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
@@ -119,13 +119,7 @@ pub fn py_cylindrical_to_spherical(
     u_py: PyObject,
     z_py: PyObject,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(r), Ok(u), Ok(z)) = (
-        r_py.extract::<f64>(py),
-        u_py.extract::<f64>(py),
-        z_py.extract::<f64>(py),
-    ) {
-        geotool_algorithm::cylindrical_to_spherical(r, u, z).into_pyobject(py)
-    } else if let (Ok(r_ref), Ok(u_ref), Ok(z_ref)) = (
+    if let (Ok(r_ref), Ok(u_ref), Ok(z_ref)) = (
         r_py.downcast_bound::<PyArrayDyn<f64>>(py),
         u_py.downcast_bound::<PyArrayDyn<f64>>(py),
         z_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -142,6 +136,12 @@ pub fn py_cylindrical_to_spherical(
                 (*r, *u, *z) = geotool_algorithm::cylindrical_to_spherical(*r, *u, *z);
             });
         (r_ref, u_ref, z_ref).into_pyobject(py) // u,v,r
+    } else if let (Ok(r), Ok(u), Ok(z)) = (
+        r_py.extract::<f64>(py),
+        u_py.extract::<f64>(py),
+        z_py.extract::<f64>(py),
+    ) {
+        geotool_algorithm::cylindrical_to_spherical(r, u, z).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
@@ -155,13 +155,7 @@ pub fn py_spherical_to_cartesian(
     v_py: PyObject,
     r_py: PyObject,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(u), Ok(v), Ok(r)) = (
-        u_py.extract::<f64>(py),
-        v_py.extract::<f64>(py),
-        r_py.extract::<f64>(py),
-    ) {
-        geotool_algorithm::spherical_to_cartesian(u, v, r).into_pyobject(py)
-    } else if let (Ok(u_ref), Ok(v_ref), Ok(r_ref)) = (
+    if let (Ok(u_ref), Ok(v_ref), Ok(r_ref)) = (
         u_py.downcast_bound::<PyArrayDyn<f64>>(py),
         v_py.downcast_bound::<PyArrayDyn<f64>>(py),
         r_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -178,6 +172,12 @@ pub fn py_spherical_to_cartesian(
                 (*u, *v, *z) = geotool_algorithm::spherical_to_cartesian(*u, *v, *z);
             });
         (u_ref, v_ref, r_ref).into_pyobject(py) // x,y,z
+    } else if let (Ok(u), Ok(v), Ok(r)) = (
+        u_py.extract::<f64>(py),
+        v_py.extract::<f64>(py),
+        r_py.extract::<f64>(py),
+    ) {
+        geotool_algorithm::spherical_to_cartesian(u, v, r).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
@@ -191,13 +191,7 @@ pub fn py_spherical_to_cylindrical(
     v_py: PyObject,
     r_py: PyObject,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(u), Ok(v), Ok(r)) = (
-        u_py.extract::<f64>(py),
-        v_py.extract::<f64>(py),
-        r_py.extract::<f64>(py),
-    ) {
-        geotool_algorithm::spherical_to_cylindrical(u, v, r).into_pyobject(py)
-    } else if let (Ok(u_ref), Ok(v_ref), Ok(r_ref)) = (
+    if let (Ok(u_ref), Ok(v_ref), Ok(r_ref)) = (
         u_py.downcast_bound::<PyArrayDyn<f64>>(py),
         v_py.downcast_bound::<PyArrayDyn<f64>>(py),
         r_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -214,6 +208,12 @@ pub fn py_spherical_to_cylindrical(
                 (*u, *v, *z) = geotool_algorithm::spherical_to_cylindrical(*u, *v, *z);
             });
         (u_ref, v_ref, r_ref).into_pyobject(py) // x,y,z
+    } else if let (Ok(u), Ok(v), Ok(r)) = (
+        u_py.extract::<f64>(py),
+        v_py.extract::<f64>(py),
+        r_py.extract::<f64>(py),
+    ) {
+        geotool_algorithm::spherical_to_cylindrical(u, v, r).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",

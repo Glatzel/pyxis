@@ -11,10 +11,15 @@ concurrency:
 
 jobs:
   update:
-    if: ${{github.event.issue.pull_request != null}}
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, 'update changelog')
     runs-on: ubuntu-latest
     steps:
+      - uses: xt0rted/pull-request-comment-branch@v3
+        id: comment-branch
+
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.comment-branch.outputs.head_ref }}
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@v0.8.1
         with:

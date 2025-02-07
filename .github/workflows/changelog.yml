@@ -12,7 +12,7 @@ concurrency:
 jobs:
   update:
     if: github.event.issue.pull_request && startsWith(github.event.comment.body, 'update changelog')
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     steps:
       - uses: xt0rted/pull-reques-comment-branch@v3
         id: comment-branch
@@ -30,7 +30,7 @@ jobs:
 
       - run: |
           try
-          { 
+          {
             git config user.name  "Glatzel"
             git config user.email "chenzelin9794@gmail.com"
             git add changelog.md

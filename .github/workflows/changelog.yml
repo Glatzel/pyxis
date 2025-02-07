@@ -33,7 +33,7 @@ jobs:
           run-install: false
       - run: pixi global install git-cliff
 
-      - run: echo git-cliff > changelog.md
+      - run: git-cliff > changelog.md
 
       - run: |
           try

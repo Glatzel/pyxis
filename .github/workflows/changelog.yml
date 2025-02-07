@@ -2,8 +2,9 @@ name: changelog
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: 0 16 1 * *
+
+  release:
+    types: [released]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

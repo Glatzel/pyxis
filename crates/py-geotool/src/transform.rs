@@ -13,9 +13,7 @@ pub fn py_datum_compense(
     x0: f64,
     y0: f64,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(xc), Ok(yc)) = (xc_py.extract::<f64>(py), yc_py.extract::<f64>(py)) {
-        geotool_algorithm::datum_compense(xc, yc, hb, r, x0, y0).into_pyobject(py)
-    } else if let (Ok(xc_ref), Ok(yc_ref)) = (
+    if let (Ok(xc_ref), Ok(yc_ref)) = (
         xc_py.downcast_bound::<PyArrayDyn<f64>>(py),
         yc_py.downcast_bound::<PyArrayDyn<f64>>(py),
     ) {
@@ -28,6 +26,8 @@ pub fn py_datum_compense(
                 (*x, *y) = geotool_algorithm::datum_compense(*x, *y, hb, r, x0, y0);
             });
         (xc_ref, yc_ref).into_pyobject(py)
+    } else if let (Ok(xc), Ok(yc)) = (xc_py.extract::<f64>(py), yc_py.extract::<f64>(py)) {
+        geotool_algorithm::datum_compense(xc, yc, hb, r, x0, y0).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
@@ -43,14 +43,7 @@ pub fn py_lbh2xyz(
     semi_major_axis: f64,
     inverse_flattening: f64,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(lon), Ok(lat), Ok(height)) = (
-        lon_py.extract::<f64>(py),
-        lat_py.extract::<f64>(py),
-        height_py.extract::<f64>(py),
-    ) {
-        geotool_algorithm::lbh2xyz(lon, lat, height, semi_major_axis, inverse_flattening)
-            .into_pyobject(py)
-    } else if let (Ok(lon_ref), Ok(lat_ref), Ok(height_ref)) = (
+    if let (Ok(lon_ref), Ok(lat_ref), Ok(height_ref)) = (
         lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
         lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
         height_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -73,6 +66,13 @@ pub fn py_lbh2xyz(
                 );
             });
         (lon_ref, lat_ref, height_ref).into_pyobject(py)
+    } else if let (Ok(lon), Ok(lat), Ok(height)) = (
+        lon_py.extract::<f64>(py),
+        lat_py.extract::<f64>(py),
+        height_py.extract::<f64>(py),
+    ) {
+        geotool_algorithm::lbh2xyz(lon, lat, height, semi_major_axis, inverse_flattening)
+            .into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
@@ -90,22 +90,7 @@ pub fn py_xyz2lbh(
     tolerance: f64,
     max_iterations: u32,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(x), Ok(y), Ok(z)) = (
-        x_py.extract::<f64>(py),
-        y_py.extract::<f64>(py),
-        z_py.extract::<f64>(py),
-    ) {
-        geotool_algorithm::xyz2lbh(
-            x,
-            y,
-            z,
-            semi_major_axis,
-            inverse_flattening,
-            Some(tolerance),
-            Some(max_iterations),
-        )
-        .into_pyobject(py)
-    } else if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
+    if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
         x_py.downcast_bound::<PyArrayDyn<f64>>(py),
         y_py.downcast_bound::<PyArrayDyn<f64>>(py),
         z_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -130,6 +115,21 @@ pub fn py_xyz2lbh(
                 );
             });
         (x_ref, y_ref, z_ref).into_pyobject(py)
+    } else if let (Ok(x), Ok(y), Ok(z)) = (
+        x_py.extract::<f64>(py),
+        y_py.extract::<f64>(py),
+        z_py.extract::<f64>(py),
+    ) {
+        geotool_algorithm::xyz2lbh(
+            x,
+            y,
+            z,
+            semi_major_axis,
+            inverse_flattening,
+            Some(tolerance),
+            Some(max_iterations),
+        )
+        .into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",

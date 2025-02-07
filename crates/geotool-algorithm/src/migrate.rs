@@ -1,10 +1,10 @@
-pub fn rotate_matrix_2d(radians: f64) -> [[f64; 2]; 2] {
+pub fn _rotate_matrix_2d(radians: f64) -> [[f64; 2]; 2] {
     [
         [radians.cos(), radians.sin()],
         [-radians.sin(), radians.cos()],
     ]
 }
-pub fn rel_2d(
+pub fn _rel_2d(
     origin_x: f64,
     origin_y: f64,
     abs_x: f64,
@@ -18,7 +18,7 @@ pub fn rel_2d(
         rotate_matrix[1][0] * temp_x + rotate_matrix[1][1] * temp_y,
     )
 }
-pub fn abs_2d(
+pub fn _abs_2d(
     origin_x: f64,
     origin_y: f64,
     rel_x: f64,
@@ -30,7 +30,7 @@ pub fn abs_2d(
         -rotate_matrix[1][0] * rel_y - rotate_matrix[1][1] * rel_y + origin_y,
     )
 }
-pub fn origin_2d(
+pub fn _origin_2d(
     abs_x: f64,
     abs_y: f64,
     rel_x: f64,
@@ -42,13 +42,13 @@ pub fn origin_2d(
         -rotate_matrix[1][0] * rel_y - rotate_matrix[1][1] * rel_y + abs_y,
     )
 }
-pub enum RotareOrder {
-    XYZ,
-    XZY,
-    YXZ,
-    YZX,
-    ZXY,
-    ZYX,
+pub enum _RotareOrder {
+    Xyz,
+    Xzy,
+    Yxz,
+    Yzx,
+    Zxy,
+    Zyx,
 }
 // pub fn rotate_matrix_3d(rx: f64, ry: f64, rz: f64, order: RotareOrder) -> [[f64; 3]; 3] {
 //     [

@@ -1,9 +1,9 @@
 use bpaf::batteries;
 use bpaf::Bpaf;
 mod transform;
-use bpaf::Parser;
-
 use crate::config_logger;
+use bpaf::Parser;
+use transform::transform_commands;
 #[derive(Clone, Debug, Bpaf)]
 #[bpaf(options, version, fallback_to_usage)]
 struct Args {
@@ -37,12 +37,12 @@ pub enum Commands {
         #[bpaf(
             short,
             long,
-            fallback(transfrom::OutputFormat::Simple),
+            fallback(transform::OutputFormat::Simple),
             display_fallback
         )]
-        output_format: transfrom::OutputFormat,
+        output_format: transform::OutputFormat,
         #[bpaf(external, many)]
-        transform_commands: Vec<transfrom::TransformCommands>,
+        transform_commands: Vec<transform::TransformCommands>,
     },
 }
 

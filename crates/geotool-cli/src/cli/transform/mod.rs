@@ -5,6 +5,7 @@ mod context;
 use context::ContextTransform;
 mod record;
 use record::Record;
+mod output_fn;
 #[derive(Bpaf, Clone, Debug)]
 pub enum TransformCommands {
     #[bpaf(command, adjacent, fallback_to_usage)]
@@ -79,7 +80,6 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
         oy_name: "y".to_string(),
         oz_name: "z".to_string(),
     }];
-    println!("x: {}, y: {}, z:{}", ctx.x, ctx.y, ctx.z);
     for (i, cmd) in cmds.iter().enumerate() {
         match cmd {
             TransformCommands::Crypto { from, to } => {
@@ -173,6 +173,12 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 };
                 records.push(record);
             }
+        }
+        // output
+        match output_format {
+            OutputFormat::Simple => output_fn::output_simple(records.last().unwrap()),
+            OutputFormat::Plain => output_fn::output_plain(&records),
+            OutputFormat::Json => output_fn::output_json(&records),
         }
     }
 }

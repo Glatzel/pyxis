@@ -174,11 +174,11 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 records.push(record);
             }
         }
-        // output
-        match output_format {
-            OutputFormat::Simple => output_fn::output_simple(records.last().unwrap()),
-            OutputFormat::Plain => output_fn::output_plain(&records),
-            OutputFormat::Json => output_fn::output_json(&records),
-        }
+    }
+    // output
+    match output_format {
+        OutputFormat::Simple => output_fn::output_simple(records.last().unwrap()),
+        OutputFormat::Plain => output_fn::output_plain(&records),
+        OutputFormat::Json => output_fn::output_json(&records),
     }
 }

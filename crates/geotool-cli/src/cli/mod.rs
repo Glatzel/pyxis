@@ -71,6 +71,7 @@ pub fn main() {
         Level::Trace => tracing::level_filters::LevelFilter::TRACE,
     };
     config_logger::init_logger(log_level);
+    tracing::debug!("{:?}", crate::cli::args().run());
     //run
     match args.commands {
         Commands::Transform {

@@ -11,7 +11,7 @@ Set-Location ..
 
 # jxws
 & ./dist/geotool/geotool.exe `
-    transform  -x 121.091701 -y 30.610765 -z 0 -o plain `
+    transform  -x 121.091701 -y 30.610765 -z 0 -o json `
     crypto --from "wgs84" --to "gcj02"
 
 Set-Location $PSScriptRoot

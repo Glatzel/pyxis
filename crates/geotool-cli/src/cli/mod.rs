@@ -59,6 +59,18 @@ fn verbose() -> impl Parser<Level> {
     use Level::*;
     batteries::verbose_by_slice(1, [Quiet, Error, Warning, Info, Debug, Trace])
 }
+fn execute(cmd: Commands) {
+    //run
+    match cmd {
+        Commands::Transform {
+            x,
+            y,
+            z,
+            output_format,
+            transform_commands,
+        } => transform::execute(x, y, z, output_format, transform_commands),
+    }
+}
 pub fn main() {
     let args = args().run();
     //config logger
@@ -72,14 +84,5 @@ pub fn main() {
     };
     config_logger::init_logger(log_level);
     tracing::debug!("{:?}", crate::cli::args().run());
-    //run
-    match args.commands {
-        Commands::Transform {
-            x,
-            y,
-            z,
-            output_format,
-            transform_commands,
-        } => transform::execute(x, y, z, output_format, transform_commands),
-    }
+    execute(args.commands);
 }

@@ -1,9 +1,7 @@
 use bpaf::batteries;
 use bpaf::Bpaf;
-mod transfrom;
+mod transform;
 use bpaf::Parser;
-use transfrom::transform_commands;
-use transfrom::OutputFormat;
 
 use crate::config_logger;
 #[derive(Clone, Debug, Bpaf)]
@@ -81,6 +79,6 @@ pub fn main() {
             z,
             output_format,
             transform_commands,
-        } => transfrom::execute(x, y, z, output_format, transform_commands),
+        } => transform::execute(x, y, z, output_format, transform_commands),
     }
 }

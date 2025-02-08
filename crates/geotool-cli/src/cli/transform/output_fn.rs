@@ -2,7 +2,7 @@ use super::record::Record;
 
 pub fn output_simple(record: &Record) {
     println!(
-        "{}:{}, {}:{}, {}:{}\n",
+        "{}: {}, {}: {}, {}: {}\n",
         record.ox_name, record.ox, record.oy_name, record.oy, record.oz_name, record.oz,
     )
 }
@@ -11,17 +11,17 @@ pub fn output_plain(records: &[Record]) {
     println!("=================");
     if let Some(input) = records.first() {
         println!(
-            "{}:{}, {}:{}, {}:{}",
+            "{}: {}, {}: {}, {}: {}",
             input.ox_name, input.ox, input.oy_name, input.oy, input.oz_name, input.oz,
         )
     }
     for record in records.iter().skip(1) {
         println!(
-            r#"    step:{}
+            r#"    step: {}
     method: {}
     from: {}
     to: {}
-{}:{}, {}:{}, {}:{}"#,
+{}: {}, {}: {}, {}: {}"#,
             record.idx,
             record.method,
             record.from,

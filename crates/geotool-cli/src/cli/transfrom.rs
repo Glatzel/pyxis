@@ -4,7 +4,46 @@ use bpaf::Bpaf;
 use miette::IntoDiagnostic;
 
 use std::sync::LazyLock;
+pub struct Record {
+    pub idx: u8,
+    pub method: String,
+    pub from: String,
+    pub to: String,
 
+    pub ox: f64,
+    pub oy: f64,
+    pub oz: f64,
+    pub ox_name: String,
+    pub oy_name: String,
+    pub oz_name: String,
+}
+#[derive(Debug, Clone, Copy)]
+pub enum OutputFormat {
+    Simple,
+    Plain,
+    Json,
+}
+impl FromStr for OutputFormat {
+    type Err = miette::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "simple" => Ok(Self::Simple),
+            "plain" => Ok(Self::Plain),
+            "json" => Ok(Self::Json),
+            _ => miette::bail!(""),
+        }
+    }
+}
+impl fmt::Display for OutputFormat {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Simple => write!(f, "simple"),
+            Self::Plain => write!(f, "plain"),
+            Self::Json => write!(f, "json"),
+        }
+    }
+}
 #[derive(Debug, Clone, Copy)]
 pub enum CoordSpace {
     Cartesian,
@@ -128,36 +167,20 @@ impl ContextTransform {
                 (self.x, self.y)
             }
         };
-        println!("    Crypto from: {}", from);
-        println!("    Crypto to: {}", to);
-        println!(
-            "longitude: {}, latitude: {}, elevation:{}",
-            self.x, self.y, self.z
-        );
     }
     pub fn cvt_proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
         let transformer = Self::init_proj_builder()
             .proj_known_crs(from, to, None)
             .into_diagnostic()?;
         (self.x, self.y) = transformer.convert((self.x, self.y)).into_diagnostic()?;
-        println!("    Proj from: {}", from);
-        println!("    Proj to: {}", to);
-        println!("x: {}, y: {}, z: {}", self.x, self.y, self.z);
         Ok(())
     }
     pub fn datum_compense(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
         (self.x, self.y) = geotool_algorithm::datum_compense(self.x, self.y, hb, r, x0, y0);
-        println!("    datum_compense: hb[{hb}] , r[{r}] , x0[{x0}], y0[{y0}]");
-        println!("x: {}, y: {}, elevation: {}", self.x, self.y, self.z);
     }
     pub fn lbh2xyz(&mut self, semi_major_axis: f64, inverse_flattening: f64) {
         (self.x, self.y, self.z) =
             geotool_algorithm::lbh2xyz(self.x, self.y, self.z, semi_major_axis, inverse_flattening);
-        println!("    From Geodetic to Geocentric");
-        println!(
-            "longitude: {}, latitude: {}, elevation: {}",
-            self.x, self.y, self.z
-        );
     }
     pub fn xyz2lbh(
         &mut self,
@@ -238,29 +261,114 @@ pub enum TransformCommands {
         inverse_flattening: f64,
     },
 }
-pub fn execute(x: f64, y: f64, z: f64, cmds: Vec<TransformCommands>) {
+pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<TransformCommands>) {
     let mut ctx = ContextTransform { x, y, z };
+    let mut records: Vec<Record> = vec![Record {
+        idx: 0,
+        method: "input".to_string(),
+        from: "".to_string(),
+        to: "".to_string(),
+        ox: ctx.x,
+        oy: ctx.y,
+        oz: ctx.z,
+        ox_name: "x".to_string(),
+        oy_name: "y".to_string(),
+        oz_name: "z".to_string(),
+    }];
     println!("x: {}, y: {}, z:{}", ctx.x, ctx.y, ctx.z);
-    for cmd in cmds {
+    for (i, cmd) in cmds.iter().enumerate() {
         match cmd {
-            TransformCommands::Crypto { from, to } => ctx.crypto(from, to),
+            TransformCommands::Crypto { from, to } => {
+                ctx.crypto(*from, *to);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "crypto".to_string(),
+                    from: from.to_string(),
+                    to: to.to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "longitude".to_string(),
+                    oy_name: "latitude".to_string(),
+                    oz_name: "elevation".to_string(),
+                };
+                records.push(record);
+            }
             TransformCommands::DatumCompense {
                 hb,
                 radius: r,
                 x0,
                 y0,
-            } => ctx.datum_compense(hb, r, x0, y0),
+            } => {
+                ctx.datum_compense(*hb, *r, *x0, *y0);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "datum compense".to_string(),
+                    from: "".to_string(),
+                    to: "".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "elevation".to_string(),
+                };
+                records.push(record);
+            }
             TransformCommands::Lbh2xyz {
                 major_radius: semi_major_axis,
                 inverse_flattening,
-            } => ctx.lbh2xyz(semi_major_axis, inverse_flattening),
+            } => {
+                ctx.lbh2xyz(*semi_major_axis, *inverse_flattening);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "lbh2xyz".to_string(),
+                    from: "lbh".to_string(),
+                    to: "xyz".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "z".to_string(),
+                };
+                records.push(record);
+            }
             TransformCommands::Proj { from, to } => {
-                ctx.cvt_proj(from.as_str(), to.as_str()).unwrap()
+                ctx.cvt_proj(from.as_str(), to.as_str()).unwrap();
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "proj".to_string(),
+                    from: from.to_string(),
+                    to: to.to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "z".to_string(),
+                };
+                records.push(record);
             }
             TransformCommands::Xyz2lbh {
                 major_radius: semi_major_axis,
                 inverse_flattening,
-            } => ctx.xyz2lbh(semi_major_axis, inverse_flattening, None, None),
+            } => {
+                ctx.xyz2lbh(*semi_major_axis, *inverse_flattening, None, None);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "xyz2lbh".to_string(),
+                    from: "xyz".to_string(),
+                    to: "lbh".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "longitude".to_string(),
+                    oy_name: "latitude".to_string(),
+                    oz_name: "elevation".to_string(),
+                };
+                records.push(record);
+            }
         }
     }
 }

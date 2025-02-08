@@ -236,14 +236,14 @@ dependencies = [
 
 [[package]]
 name = "geotool-algorithm"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "float-cmp",
 ]
 
 [[package]]
 name = "geotool-cli"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "bpaf",
  "chrono",
@@ -572,7 +572,7 @@ dependencies = [
 
 [[package]]
 name = "py-geotool"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "geotool-algorithm",
  "numpy",

@@ -3,6 +3,7 @@ use bpaf::Bpaf;
 mod transfrom;
 use bpaf::Parser;
 use transfrom::transform_commands;
+use transfrom::OutputFormat;
 
 use crate::config_logger;
 #[derive(Clone, Debug, Bpaf)]
@@ -35,6 +36,13 @@ pub enum Commands {
         ///  - z of cylindrical (in meters).
         ///  - radius of spherical (in meters).
         z: f64,
+        #[bpaf(
+            short,
+            long,
+            fallback(transfrom::OutputFormat::Simple),
+            display_fallback
+        )]
+        output_format: transfrom::OutputFormat,
         #[bpaf(external, many)]
         transform_commands: Vec<transfrom::TransformCommands>,
     },
@@ -71,7 +79,8 @@ pub fn main() {
             x,
             y,
             z,
+            output_format,
             transform_commands,
-        } => transfrom::execute(x, y, z, transform_commands),
+        } => transfrom::execute(x, y, z, output_format, transform_commands),
     }
 }

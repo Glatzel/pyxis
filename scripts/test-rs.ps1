@@ -11,7 +11,7 @@ if ( $env:CI ) {
     Write-Output "::endgroup::"
 
     Write-Output "::group::doctest"
-    pixi run cargo llvm-cov --doc
+    pixi run cargo llvm-cov
     Write-Output "::endgroup::"
 
     Write-Output "::group::cov"

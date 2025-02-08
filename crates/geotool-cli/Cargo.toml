@@ -13,8 +13,13 @@ proj = { workspace = true }
 tracing = { workspace = true }
 chrono = { workspace = true }
 tracing-subscriber = { workspace = true }
-console= { workspace = true }
-geotool-algorithm={ workspace = true }
-bpaf={ workspace = true }
+console = { workspace = true }
+geotool-algorithm = { workspace = true }
+bpaf = { workspace = true }
+serde_json = { workspace = true }
+serde={ workspace = true }
+
 [dev-dependencies]
 float-cmp = { workspace = true }
+assert_cmd = "2.0"
+predicates = "2.1"

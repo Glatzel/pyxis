@@ -1,10 +1,9 @@
 use bpaf::batteries;
 use bpaf::Bpaf;
-mod transfrom;
-use bpaf::Parser;
-use transfrom::transform_commands;
-
+mod transform;
 use crate::config_logger;
+use bpaf::Parser;
+use transform::transform_commands;
 #[derive(Clone, Debug, Bpaf)]
 #[bpaf(options, version, fallback_to_usage)]
 struct Args {
@@ -35,8 +34,15 @@ pub enum Commands {
         ///  - z of cylindrical (in meters).
         ///  - radius of spherical (in meters).
         z: f64,
+        #[bpaf(
+            short,
+            long,
+            fallback(transform::OutputFormat::Simple),
+            display_fallback
+        )]
+        output_format: transform::OutputFormat,
         #[bpaf(external, many)]
-        transform_commands: Vec<transfrom::TransformCommands>,
+        transform_commands: Vec<transform::TransformCommands>,
     },
 }
 
@@ -53,6 +59,18 @@ fn verbose() -> impl Parser<Level> {
     use Level::*;
     batteries::verbose_by_slice(1, [Quiet, Error, Warning, Info, Debug, Trace])
 }
+fn execute(cmd: Commands) {
+    //run
+    match cmd {
+        Commands::Transform {
+            x,
+            y,
+            z,
+            output_format,
+            transform_commands,
+        } => transform::execute(x, y, z, output_format, transform_commands),
+    }
+}
 pub fn main() {
     let args = args().run();
     //config logger
@@ -65,13 +83,6 @@ pub fn main() {
         Level::Trace => tracing::level_filters::LevelFilter::TRACE,
     };
     config_logger::init_logger(log_level);
-    //run
-    match args.commands {
-        Commands::Transform {
-            x,
-            y,
-            z,
-            transform_commands,
-        } => transfrom::execute(x, y, z, transform_commands),
-    }
+    tracing::debug!("{:?}", crate::cli::args().run());
+    execute(args.commands);
 }

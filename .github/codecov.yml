@@ -9,4 +9,4 @@ coverage:
 comment:
   behavior: new
 ignore:
-  - "crates/py-geotool"
+  - "crates/py-geotool/src"

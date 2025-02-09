@@ -22,4 +22,4 @@ serde={ workspace = true }
 [dev-dependencies]
 float-cmp = { workspace = true }
 assert_cmd = "2.0"
-predicates = "2.1"
+predicates = "3.1"

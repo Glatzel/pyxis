@@ -121,7 +121,7 @@ impl FromStr for RotateUnit {
     type Err = miette::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s.to_uppercase().as_str() {
+        match s.to_lowercase().as_str() {
             "angle" => Ok(Self::Angle),
             "radians" => Ok(Self::Radians),
             _ => miette::bail!(""),

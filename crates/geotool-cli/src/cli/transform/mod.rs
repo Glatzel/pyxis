@@ -57,10 +57,7 @@ pub enum TransformCommands {
     },
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Transforms coordinates between Cartesian, cylindrical, and spherical coordinate systems.
-    Space{
-        from:CoordSpace,
-        to:CoordSpace,
-    }
+    Space { from: CoordSpace, to: CoordSpace },
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Converts Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
     Xyz2lbh {
@@ -157,6 +154,22 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                     ox_name: "x".to_string(),
                     oy_name: "y".to_string(),
                     oz_name: "z".to_string(),
+                };
+                records.push(record);
+            }
+            TransformCommands::Space { from, to } => {
+                ctx.transform_space(*from, *to);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "space".to_string(),
+                    from: "xyz".to_string(),
+                    to: "lbh".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "longitude".to_string(),
+                    oy_name: "latitude".to_string(),
+                    oz_name: "elevation".to_string(),
                 };
                 records.push(record);
             }

@@ -56,6 +56,12 @@ pub enum TransformCommands {
         to: String,
     },
     #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Transforms coordinates between Cartesian, cylindrical, and spherical coordinate systems.
+    Space{
+        from:CoordSpace,
+        to:CoordSpace,
+    }
+    #[bpaf(command, adjacent, fallback_to_usage)]
     /// Converts Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
     Xyz2lbh {
         #[bpaf(short('a'), long)]

@@ -1,5 +1,5 @@
 use super::{CoordSpace, CryptoSpace};
-use miette::{IntoDiagnostic, SpanContents};
+use miette::IntoDiagnostic;
 use std::{path::PathBuf, sync::LazyLock};
 pub struct ContextTransform {
     pub x: f64,

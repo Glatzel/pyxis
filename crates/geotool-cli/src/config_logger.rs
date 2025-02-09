@@ -1,8 +1,9 @@
 use super::constants::{DEBUG_STYLE, ERROR_STYLE, INFO_STYLE, TRACE_STYLE, WARN_STYLE};
 use std::fmt;
 use tracing::{Event, Subscriber};
+use tracing_subscriber::fmt::format;
 use tracing_subscriber::fmt::{
-    format::{self, FormatEvent, FormatFields},
+    format::{FormatEvent, FormatFields},
     FmtContext,
 };
 use tracing_subscriber::registry::LookupSpan;

@@ -1,11 +1,11 @@
-mod options;
-use bpaf::Bpaf;
-pub use options::*;
 mod context;
-use context::ContextTransform;
-mod record;
-use record::Record;
+mod options;
 mod output_fn;
+mod record;
+use bpaf::Bpaf;
+use context::ContextTransform;
+pub use options::*;
+use record::Record;
 #[derive(Bpaf, Clone, Debug)]
 pub enum TransformCommands {
     #[bpaf(command, adjacent, fallback_to_usage)]
@@ -43,6 +43,9 @@ pub enum TransformCommands {
         inverse_flattening: f64,
     },
     #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Normalize.
+    Normalize,
+    #[bpaf(command, adjacent, fallback_to_usage)]
     /// Transform coordinate from one known coordinate reference systems to another.
     ///
     ///  The `from` and `to` can be:
@@ -54,6 +57,44 @@ pub enum TransformCommands {
         from: String,
         #[bpaf(short, long, argument("PROJ"))]
         to: String,
+    },
+    #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Rotate Coordinate.
+    Rotate {
+        #[bpaf(short, long)]
+        value: f64,
+        #[bpaf(short, long)]
+        axis: RotateAxis,
+        #[bpaf(short, long)]
+        unit: options::RotateUnit,
+    },
+    #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Scale Coordinate.
+    Scale {
+        #[bpaf(short('x'), long)]
+        x_scale: f64,
+        #[bpaf(short('y'), long)]
+        y_scale: f64,
+        #[bpaf(short('z'), long)]
+        z_scale: f64,
+    },
+    #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Transforms coordinates between Cartesian, cylindrical, and spherical coordinate systems.
+    Space {
+        #[bpaf(short, long)]
+        from: CoordSpace,
+        #[bpaf(short, long)]
+        to: CoordSpace,
+    },
+    #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Translate Coordinate.
+    Translate {
+        #[bpaf(short('x'), long)]
+        x_translate: f64,
+        #[bpaf(short('y'), long)]
+        y_translate: f64,
+        #[bpaf(short('z'), long)]
+        z_translate: f64,
     },
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Converts Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
@@ -138,13 +179,101 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 };
                 records.push(record);
             }
+            TransformCommands::Normalize => {
+                ctx.normalize();
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "normalize".to_string(),
+                    from: "".to_string(),
+                    to: "".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "z".to_string(),
+                };
+                records.push(record);
+            }
             TransformCommands::Proj { from, to } => {
-                ctx.cvt_proj(from.as_str(), to.as_str()).unwrap();
+                ctx.proj(from.as_str(), to.as_str()).unwrap();
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "proj".to_string(),
                     from: from.to_string(),
                     to: to.to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "z".to_string(),
+                };
+                records.push(record);
+            }
+            TransformCommands::Rotate { value, axis, unit } => {
+                ctx.rotate(*value, *axis, *unit);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "rotate".to_string(),
+                    from: "".to_string(),
+                    to: "".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "z".to_string(),
+                };
+                records.push(record);
+            }
+            TransformCommands::Scale {
+                x_scale,
+                y_scale,
+                z_scale,
+            } => {
+                ctx.scale(*x_scale, *y_scale, *z_scale);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "scale".to_string(),
+                    from: "".to_string(),
+                    to: "".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "z".to_string(),
+                };
+                records.push(record);
+            }
+            TransformCommands::Space { from, to } => {
+                ctx.space(*from, *to);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "space".to_string(),
+                    from: "xyz".to_string(),
+                    to: "lbh".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "longitude".to_string(),
+                    oy_name: "latitude".to_string(),
+                    oz_name: "elevation".to_string(),
+                };
+                records.push(record);
+            }
+            TransformCommands::Translate {
+                x_translate,
+                y_translate,
+                z_translate,
+            } => {
+                ctx.translate(*x_translate, *y_translate, *z_translate);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "scale".to_string(),
+                    from: "".to_string(),
+                    to: "".to_string(),
                     ox: ctx.x,
                     oy: ctx.y,
                     oz: ctx.z,

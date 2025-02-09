@@ -1,5 +1,5 @@
 use super::{CoordSpace, CryptoSpace};
-use miette::IntoDiagnostic;
+use miette::{IntoDiagnostic, SpanContents};
 use std::{path::PathBuf, sync::LazyLock};
 pub struct ContextTransform {
     pub x: f64,
@@ -17,32 +17,6 @@ impl ContextTransform {
             .set_search_paths(PROJ_RESOURCE_PATH.as_path())
             .unwrap();
         builder
-    }
-    pub fn transform_space(&mut self, from: CoordSpace, to: CoordSpace) {
-        (self.x, self.y, self.z) = match (from, to) {
-            (CoordSpace::Cartesian, CoordSpace::Cylindrical) => {
-                geotool_algorithm::cartesian_to_cylindrical(self.x, self.y, self.z)
-            }
-            (CoordSpace::Cartesian, CoordSpace::Spherical) => {
-                geotool_algorithm::cartesian_to_spherical(self.x, self.y, self.z)
-            }
-            (CoordSpace::Cylindrical, CoordSpace::Cartesian) => {
-                geotool_algorithm::cylindrical_to_cartesian(self.x, self.y, self.z)
-            }
-            (CoordSpace::Cylindrical, CoordSpace::Spherical) => {
-                geotool_algorithm::cylindrical_to_spherical(self.x, self.y, self.z)
-            }
-            (CoordSpace::Spherical, CoordSpace::Cartesian) => {
-                geotool_algorithm::spherical_to_cartesian(self.x, self.y, self.z)
-            }
-            (CoordSpace::Spherical, CoordSpace::Cylindrical) => {
-                geotool_algorithm::spherical_to_cylindrical(self.x, self.y, self.z)
-            }
-            _ => {
-                tracing::warn!("Nothing changes from <{from}> to <{to}>.");
-                (self.x, self.y, self.z)
-            }
-        };
     }
     pub fn crypto(&mut self, from: CryptoSpace, to: CryptoSpace) {
         (self.x, self.y) = match (from, to) {
@@ -70,19 +44,62 @@ impl ContextTransform {
             }
         };
     }
-    pub fn cvt_proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
-        let transformer = Self::init_proj_builder()
-            .proj_known_crs(from, to, None)
-            .into_diagnostic()?;
-        (self.x, self.y) = transformer.convert((self.x, self.y)).into_diagnostic()?;
-        Ok(())
-    }
+
     pub fn datum_compense(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
         (self.x, self.y) = geotool_algorithm::datum_compense(self.x, self.y, hb, r, x0, y0);
     }
     pub fn lbh2xyz(&mut self, semi_major_axis: f64, inverse_flattening: f64) {
         (self.x, self.y, self.z) =
             geotool_algorithm::lbh2xyz(self.x, self.y, self.z, semi_major_axis, inverse_flattening);
+    }
+    pub fn normalize(&mut self) {
+        let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
+        self.x /= length;
+        self.y /= length;
+        self.z /= length;
+    }
+    pub fn proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
+        let transformer = Self::init_proj_builder()
+            .proj_known_crs(from, to, None)
+            .into_diagnostic()?;
+        (self.x, self.y) = transformer.convert((self.x, self.y)).into_diagnostic()?;
+        Ok(())
+    }
+    pub fn scale(&mut self, x: f64, y: f64, z: f64) {
+        self.x *= x;
+        self.y *= y;
+        self.z *= z;
+    }
+    pub fn space(&mut self, from: CoordSpace, to: CoordSpace) {
+        (self.x, self.y, self.z) = match (from, to) {
+            (CoordSpace::Cartesian, CoordSpace::Cylindrical) => {
+                geotool_algorithm::cartesian_to_cylindrical(self.x, self.y, self.z)
+            }
+            (CoordSpace::Cartesian, CoordSpace::Spherical) => {
+                geotool_algorithm::cartesian_to_spherical(self.x, self.y, self.z)
+            }
+            (CoordSpace::Cylindrical, CoordSpace::Cartesian) => {
+                geotool_algorithm::cylindrical_to_cartesian(self.x, self.y, self.z)
+            }
+            (CoordSpace::Cylindrical, CoordSpace::Spherical) => {
+                geotool_algorithm::cylindrical_to_spherical(self.x, self.y, self.z)
+            }
+            (CoordSpace::Spherical, CoordSpace::Cartesian) => {
+                geotool_algorithm::spherical_to_cartesian(self.x, self.y, self.z)
+            }
+            (CoordSpace::Spherical, CoordSpace::Cylindrical) => {
+                geotool_algorithm::spherical_to_cylindrical(self.x, self.y, self.z)
+            }
+            _ => {
+                tracing::warn!("Nothing changes from <{from}> to <{to}>.");
+                (self.x, self.y, self.z)
+            }
+        };
+    }
+    pub fn translate(&mut self, x: f64, y: f64, z: f64) {
+        self.x += x;
+        self.y += y;
+        self.z += z;
     }
     pub fn xyz2lbh(
         &mut self,
@@ -116,7 +133,7 @@ mod tests {
             z: 0.0,
         };
         ctx.datum_compense(400.0, 6_378_137.0, 500_000.0, 0.0);
-        ctx.cvt_proj("+proj=tmerc +lat_0=0 +lon_0=118.5 +k=1 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs", "+proj=longlat +datum=WGS84 +no_defs +type=crs").unwrap();
+        ctx.proj("+proj=tmerc +lat_0=0 +lon_0=118.5 +k=1 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs", "+proj=longlat +datum=WGS84 +no_defs +type=crs").unwrap();
         println!("x:{}, y:{}, z:{}", ctx.x, ctx.y, ctx.z);
         assert!(approx_eq!(f64, ctx.x, 118.19868034481004, epsilon = 1e-6));
         assert!(approx_eq!(f64, ctx.y, 25.502591181714727, epsilon = 1e-6));

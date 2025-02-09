@@ -43,6 +43,9 @@ pub enum TransformCommands {
         inverse_flattening: f64,
     },
     #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Normalize.
+    Normalize,
+    #[bpaf(command, adjacent, fallback_to_usage)]
     /// Transform coordinate from one known coordinate reference systems to another.
     ///
     ///  The `from` and `to` can be:
@@ -56,8 +59,33 @@ pub enum TransformCommands {
         to: String,
     },
     #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Scale Coordinate.
+    Scale {
+        #[bpaf(short('x'), long)]
+        x_scale: f64,
+        #[bpaf(short('y'), long)]
+        y_scale: f64,
+        #[bpaf(short('z'), long)]
+        z_scale: f64,
+    },
+    #[bpaf(command, adjacent, fallback_to_usage)]
     /// Transforms coordinates between Cartesian, cylindrical, and spherical coordinate systems.
-    Space { from: CoordSpace, to: CoordSpace },
+    Space {
+        #[bpaf(short, long)]
+        from: CoordSpace,
+        #[bpaf(short, long)]
+        to: CoordSpace,
+    },
+    #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Translate Coordinate.
+    Translate {
+        #[bpaf(short('x'), long)]
+        x_translate: f64,
+        #[bpaf(short('y'), long)]
+        y_translate: f64,
+        #[bpaf(short('z'), long)]
+        z_translate: f64,
+    },
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Converts Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
     Xyz2lbh {
@@ -141,8 +169,24 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 };
                 records.push(record);
             }
+            TransformCommands::Normalize => {
+                ctx.normalize();
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "normalize".to_string(),
+                    from: "".to_string(),
+                    to: "".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "z".to_string(),
+                };
+                records.push(record);
+            }
             TransformCommands::Proj { from, to } => {
-                ctx.cvt_proj(from.as_str(), to.as_str()).unwrap();
+                ctx.proj(from.as_str(), to.as_str()).unwrap();
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "proj".to_string(),
@@ -157,8 +201,28 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 };
                 records.push(record);
             }
+            TransformCommands::Scale {
+                x_scale,
+                y_scale,
+                z_scale,
+            } => {
+                ctx.scale(*x_scale, *y_scale, *z_scale);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "scale".to_string(),
+                    from: "".to_string(),
+                    to: "".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "z".to_string(),
+                };
+                records.push(record);
+            }
             TransformCommands::Space { from, to } => {
-                ctx.transform_space(*from, *to);
+                ctx.space(*from, *to);
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "space".to_string(),
@@ -170,6 +234,26 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                     ox_name: "longitude".to_string(),
                     oy_name: "latitude".to_string(),
                     oz_name: "elevation".to_string(),
+                };
+                records.push(record);
+            }
+            TransformCommands::Translate {
+                x_translate,
+                y_translate,
+                z_translate,
+            } => {
+                ctx.translate(*x_translate, *y_translate, *z_translate);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "scale".to_string(),
+                    from: "".to_string(),
+                    to: "".to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "z".to_string(),
                 };
                 records.push(record);
             }

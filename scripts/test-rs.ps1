@@ -19,5 +19,5 @@ if ( $env:CI ) {
     Write-Output "::endgroup::"
 }
 else {
-    pixi run cargo test
+    pixi run cargo llvm-cov --all-features
 }

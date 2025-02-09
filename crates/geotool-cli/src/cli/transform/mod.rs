@@ -1,11 +1,11 @@
-mod options;
-use bpaf::Bpaf;
-pub use options::*;
 mod context;
-use context::ContextTransform;
-mod record;
-use record::Record;
+mod options;
 mod output_fn;
+mod record;
+use bpaf::Bpaf;
+use context::ContextTransform;
+pub use options::*;
+use record::Record;
 #[derive(Bpaf, Clone, Debug)]
 pub enum TransformCommands {
     #[bpaf(command, adjacent, fallback_to_usage)]

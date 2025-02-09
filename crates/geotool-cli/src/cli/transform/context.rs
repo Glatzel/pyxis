@@ -1,8 +1,6 @@
-use miette::IntoDiagnostic;
-
-use std::{path::PathBuf, sync::LazyLock};
-
 use super::{CoordSpace, CryptoSpace};
+use miette::IntoDiagnostic;
+use std::{path::PathBuf, sync::LazyLock};
 pub struct ContextTransform {
     pub x: f64,
     pub y: f64,

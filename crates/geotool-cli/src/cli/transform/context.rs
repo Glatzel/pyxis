@@ -1,4 +1,4 @@
-use super::{CoordSpace, CryptoSpace};
+use super::{options, CoordSpace, CryptoSpace};
 use miette::IntoDiagnostic;
 use std::{path::PathBuf, sync::LazyLock};
 pub struct ContextTransform {
@@ -64,6 +64,24 @@ impl ContextTransform {
             .into_diagnostic()?;
         (self.x, self.y) = transformer.convert((self.x, self.y)).into_diagnostic()?;
         Ok(())
+    }
+    pub fn rotate(&mut self, r: f64, axis: options::RotateAxis, unit: options::RotateUnit) {
+        let r = match unit {
+            options::RotateUnit::Angle => r.to_radians(),
+            _ => r,
+        };
+        let m = geotool_algorithm::rotate_matrix_2d(r);
+        match axis {
+            super::RotateAxis::Xy => {
+                (self.x, self.y) = geotool_algorithm::rotate_2d(self.x, self.y, &m);
+            }
+            super::RotateAxis::Zx => {
+                (self.z, self.x) = geotool_algorithm::rotate_2d(self.z, self.x, &m);
+            }
+            super::RotateAxis::Yz => {
+                (self.y, self.z) = geotool_algorithm::rotate_2d(self.x, self.y, &m);
+            }
+        }
     }
     pub fn scale(&mut self, x: f64, y: f64, z: f64) {
         self.x *= x;

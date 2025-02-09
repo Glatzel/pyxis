@@ -59,6 +59,16 @@ pub enum TransformCommands {
         to: String,
     },
     #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Rotate Coordinate.
+    Rotate {
+        #[bpaf(short, long)]
+        value: f64,
+        #[bpaf(short, long)]
+        axis: RotateAxis,
+        #[bpaf(short, long)]
+        unit: options::RotateUnit,
+    },
+    #[bpaf(command, adjacent, fallback_to_usage)]
     /// Scale Coordinate.
     Scale {
         #[bpaf(short('x'), long)]
@@ -192,6 +202,22 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                     method: "proj".to_string(),
                     from: from.to_string(),
                     to: to.to_string(),
+                    ox: ctx.x,
+                    oy: ctx.y,
+                    oz: ctx.z,
+                    ox_name: "x".to_string(),
+                    oy_name: "y".to_string(),
+                    oz_name: "z".to_string(),
+                };
+                records.push(record);
+            }
+            TransformCommands::Rotate { value, axis, unit } => {
+                ctx.rotate(*value, *axis, *unit);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "rotate".to_string(),
+                    from: "".to_string(),
+                    to: "".to_string(),
                     ox: ctx.x,
                     oy: ctx.y,
                     oz: ctx.z,

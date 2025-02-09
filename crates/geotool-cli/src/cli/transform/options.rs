@@ -83,39 +83,31 @@ impl fmt::Display for CryptoSpace {
     }
 }
 #[derive(Debug, Clone, Copy, Bpaf)]
-pub enum RotateOrder {
-    Xyz,
-    Xzy,
-    Yzx,
-    Yxz,
-    Zxy,
-    Zyx,
+pub enum RotateAxis {
+    Xy,
+    Zx,
+    Yz,
 }
 
-impl FromStr for RotateOrder {
+impl FromStr for RotateAxis {
     type Err = miette::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
-            "xyz" => Ok(Self::Xyz),
-            "xzy" => Ok(Self::Xzy),
-            "yzx" => Ok(Self::Yzx),
-            "yxz" => Ok(Self::Yxz),
-            "zxy" => Ok(Self::Zxy),
-            "zyx" => Ok(Self::Zyx),
+            "xyz" => Ok(Self::Xy),
+            "xzy" => Ok(Self::Zx),
+            "yzx" => Ok(Self::Yz),
+
             _ => miette::bail!(""),
         }
     }
 }
-impl fmt::Display for RotateOrder {
+impl fmt::Display for RotateAxis {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            RotateOrder::Xyz => write!(f, "Xyz"),
-            RotateOrder::Xzy => write!(f, "Xzy"),
-            RotateOrder::Yzx => write!(f, "Yzx"),
-            RotateOrder::Yxz => write!(f, "Yxz"),
-            RotateOrder::Zxy => write!(f, "Zxy"),
-            RotateOrder::Zyx => write!(f, "Zyx"),
+            RotateAxis::Xy => write!(f, "XY"),
+            RotateAxis::Zx => write!(f, "XZ"),
+            RotateAxis::Yz => write!(f, "YZ"),
         }
     }
 }

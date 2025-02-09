@@ -82,3 +82,65 @@ impl fmt::Display for CryptoSpace {
         }
     }
 }
+#[derive(Debug, Clone, Copy, Bpaf)]
+pub enum RotateOrder {
+    Xyz,
+    Xzy,
+    Yzx,
+    Yxz,
+    Zxy,
+    Zyx,
+}
+
+impl FromStr for RotateOrder {
+    type Err = miette::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "xyz" => Ok(Self::Xyz),
+            "xzy" => Ok(Self::Xzy),
+            "yzx" => Ok(Self::Yzx),
+            "yxz" => Ok(Self::Yxz),
+            "zxy" => Ok(Self::Zxy),
+            "zyx" => Ok(Self::Zyx),
+            _ => miette::bail!(""),
+        }
+    }
+}
+impl fmt::Display for RotateOrder {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            RotateOrder::Xyz => write!(f, "Xyz"),
+            RotateOrder::Xzy => write!(f, "Xzy"),
+            RotateOrder::Yzx => write!(f, "Yzx"),
+            RotateOrder::Yxz => write!(f, "Yxz"),
+            RotateOrder::Zxy => write!(f, "Zxy"),
+            RotateOrder::Zyx => write!(f, "Zyx"),
+        }
+    }
+}
+#[derive(Debug, Clone, Copy, Bpaf)]
+pub enum RotateUnit {
+    Angle,
+    Radians,
+}
+
+impl FromStr for RotateUnit {
+    type Err = miette::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_uppercase().as_str() {
+            "angle" => Ok(Self::Angle),
+            "radians" => Ok(Self::Radians),
+            _ => miette::bail!(""),
+        }
+    }
+}
+impl fmt::Display for RotateUnit {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Angle => write!(f, "Angle"),
+            Self::Radians => write!(f, "Radians"),
+        }
+    }
+}

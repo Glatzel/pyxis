@@ -20,7 +20,7 @@ impl ContextTransform {
             .unwrap();
         builder
     }
-    pub fn _to_space(&mut self, from: CoordSpace, to: CoordSpace) {
+    pub fn transform_space(&mut self, from: CoordSpace, to: CoordSpace) {
         (self.x, self.y, self.z) = match (from, to) {
             (CoordSpace::Cartesian, CoordSpace::Cylindrical) => {
                 geotool_algorithm::cartesian_to_cylindrical(self.x, self.y, self.z)

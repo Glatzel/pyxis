@@ -1,4 +1,5 @@
 use super::{options, CoordSpace, CryptoSpace};
+use geotool_algorithm::Ellipsoid;
 use miette::IntoDiagnostic;
 use std::{path::PathBuf, sync::LazyLock};
 pub struct ContextTransform {
@@ -49,8 +50,8 @@ impl ContextTransform {
         (self.x, self.y) = geotool_algorithm::datum_compense(self.x, self.y, hb, r, x0, y0);
     }
     pub fn lbh2xyz(&mut self, semi_major_axis: f64, inverse_flattening: f64) {
-        (self.x, self.y, self.z) =
-            geotool_algorithm::lbh2xyz(self.x, self.y, self.z, semi_major_axis, inverse_flattening);
+        let ellipsoid = Ellipsoid::from(semi_major_axis, inverse_flattening);
+        (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, &ellipsoid);
     }
     pub fn normalize(&mut self) {
         let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
@@ -119,22 +120,9 @@ impl ContextTransform {
         self.y += y;
         self.z += z;
     }
-    pub fn xyz2lbh(
-        &mut self,
-        semi_major_axis: f64,
-        inverse_flattening: f64,
-        tolerance: Option<f64>,
-        max_iterations: Option<u32>,
-    ) {
-        (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(
-            self.x,
-            self.y,
-            self.z,
-            semi_major_axis,
-            inverse_flattening,
-            tolerance,
-            max_iterations,
-        );
+    pub fn xyz2lbh(&mut self, semi_major_axis: f64, inverse_flattening: f64) {
+        let ellipsoid = Ellipsoid::from(semi_major_axis, inverse_flattening);
+        (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, &ellipsoid);
     }
 }
 #[cfg(test)]

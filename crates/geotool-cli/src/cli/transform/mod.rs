@@ -287,7 +287,7 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 major_radius: semi_major_axis,
                 inverse_flattening,
             } => {
-                ctx.xyz2lbh(*semi_major_axis, *inverse_flattening, None, None);
+                ctx.xyz2lbh(*semi_major_axis, *inverse_flattening);
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "xyz2lbh".to_string(),

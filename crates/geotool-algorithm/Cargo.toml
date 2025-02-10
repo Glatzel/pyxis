@@ -4,6 +4,7 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
+miette = { workspace = true }
 
 [dev-dependencies]
-float-cmp = {workspace=true}
+float-cmp = { workspace = true }

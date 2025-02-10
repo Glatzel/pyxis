@@ -43,7 +43,8 @@ pub fn py_lbh2xyz(
     semi_major_axis: f64,
     inverse_flattening: f64,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    let ellipsoid = geotool_algorithm::Ellipsoid::from(semi_major_axis, inverse_flattening);
+    let ellipsoid =
+        geotool_algorithm::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
     if let (Ok(lon_ref), Ok(lat_ref), Ok(height_ref)) = (
         lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
         lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -82,7 +83,8 @@ pub fn py_xyz2lbh(
     semi_major_axis: f64,
     inverse_flattening: f64,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    let ellipsoid = geotool_algorithm::Ellipsoid::from(semi_major_axis, inverse_flattening);
+    let ellipsoid =
+        geotool_algorithm::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
     if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
         x_py.downcast_bound::<PyArrayDyn<f64>>(py),
         y_py.downcast_bound::<PyArrayDyn<f64>>(py),

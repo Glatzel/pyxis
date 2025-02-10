@@ -6,4 +6,4 @@ edition.workspace = true
 [dependencies]
 
 [dev-dependencies]
-float-cmp = {workspace=true}
+float-cmp = { workspace = true }

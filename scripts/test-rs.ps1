@@ -5,19 +5,13 @@ $dll_path = Resolve-Path vcpkg_deps/vcpkg_installed/x64-windows/bin
 $env:PATH = $env:PATH + ";$pkg_config;$dll_path"
 $env:PKG_CONFIG_PATH = Resolve-Path vcpkg_deps/vcpkg_installed/x64-windows/lib/pkgconfig
 
+pixi run cargo +nightly llvm-cov --no-report --all-features --workspace nextest
+pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --doc
+
 if ( $env:CI ) {
-    Write-Output "::group::nextest"
-    pixi run cargo llvm-cov nextest
-    Write-Output "::endgroup::"
-
-    Write-Output "::group::doctest"
-    pixi run cargo llvm-cov --doc
-    Write-Output "::endgroup::"
-
-    Write-Output "::group::cov"
-    pixi run cargo llvm-cov --doctests --all-features --workspace --lcov --output-path lcov.info
-    Write-Output "::endgroup::"
+    pixi run cargo +nightly llvm-cov report
+    pixi run cargo +nightly llvm-cov report --lcov --output-path lcov.info
 }
 else {
-    pixi run cargo test
+    pixi run cargo +nightly llvm-cov report
 }

@@ -284,7 +284,6 @@ name = "geotool-algorithm"
 version = "0.0.2"
 dependencies = [
  "float-cmp",
- "miette",
 ]
 
 [[package]]

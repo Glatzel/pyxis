@@ -205,10 +205,6 @@ def xyz2lbh(
         Semi major axis.
     invf
         Inverse flattening.
-    tolerance
-        Convergence criterion for iterative latitude computation.
-    max_iterations
-        Maximum number of iterations for latitude refinement.
 
     Returns
     -------

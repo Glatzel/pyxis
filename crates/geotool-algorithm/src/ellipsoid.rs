@@ -30,12 +30,12 @@ impl Ellipsoid {
     ///
     /// # Arguments
     ///
-    /// * `semi_major_axis` - The semi-major axis (`a`).
-    /// * `inverse_flattening` - The inverse flattening (`1/f`).
+    /// - `semi_major_axis` - The semi-major axis (`a`).
+    /// - `inverse_flattening` - The inverse flattening (`1/f`).
     ///
     /// # Returns
     ///
-    /// * A new `Ellipsoid` instance with all calculated properties.
+    /// - A new `Ellipsoid` instance with all calculated properties.
     ///
     /// # Examples
     ///

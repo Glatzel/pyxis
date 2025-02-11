@@ -1,7 +1,10 @@
-use super::{options, CoordSpace, CryptoSpace};
+use std::path::PathBuf;
+use std::sync::LazyLock;
+
 use geotool_algorithm::Ellipsoid;
 use miette::IntoDiagnostic;
-use std::{path::PathBuf, sync::LazyLock};
+
+use super::{options, CoordSpace, CryptoSpace};
 pub struct ContextTransform {
     pub x: f64,
     pub y: f64,
@@ -127,7 +130,7 @@ impl ContextTransform {
 }
 #[cfg(test)]
 mod tests {
-    use float_cmp::approx_eq;
+    use float_cmp::assert_approx_eq;
 
     use super::*;
 
@@ -141,9 +144,9 @@ mod tests {
         ctx.datum_compense(400.0, 6_378_137.0, 500_000.0, 0.0);
         ctx.proj("+proj=tmerc +lat_0=0 +lon_0=118.5 +k=1 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs", "+proj=longlat +datum=WGS84 +no_defs +type=crs").unwrap();
         println!("x:{}, y:{}, z:{}", ctx.x, ctx.y, ctx.z);
-        assert!(approx_eq!(f64, ctx.x, 118.19868034481004, epsilon = 1e-6));
-        assert!(approx_eq!(f64, ctx.y, 25.502591181714727, epsilon = 1e-6));
-        assert!(approx_eq!(f64, ctx.z, 0.0, epsilon = 1e-6));
+        assert_approx_eq!(f64, ctx.x, 118.19868034481004, epsilon = 1e-6);
+        assert_approx_eq!(f64, ctx.y, 25.502591181714727, epsilon = 1e-6);
+        assert_approx_eq!(f64, ctx.z, 0.0, epsilon = 1e-6);
     }
     #[test]
     fn test_jxws() {
@@ -155,8 +158,8 @@ mod tests {
         ctx.crypto(CryptoSpace::WGS84, CryptoSpace::GCJ02);
 
         println!("x:{}, y:{}, z:{}", ctx.x, ctx.y, ctx.z);
-        assert!(approx_eq!(f64, ctx.x, 121.09626257405186, epsilon = 1e-6));
-        assert!(approx_eq!(f64, ctx.y, 30.608591461324128, epsilon = 1e-6));
-        assert!(approx_eq!(f64, ctx.z, 0.0, epsilon = 1e-6));
+        assert_approx_eq!(f64, ctx.x, 121.09626257405186, epsilon = 1e-6);
+        assert_approx_eq!(f64, ctx.y, 30.608591461324128, epsilon = 1e-6);
+        assert_approx_eq!(f64, ctx.z, 0.0, epsilon = 1e-6);
     }
 }

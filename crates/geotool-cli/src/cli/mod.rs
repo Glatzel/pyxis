@@ -1,9 +1,9 @@
-use bpaf::batteries;
-use bpaf::Bpaf;
+use bpaf::{batteries, Bpaf};
 mod transform;
-use crate::config_logger;
 use bpaf::Parser;
 use transform::transform_commands;
+
+use crate::config_logger;
 #[derive(Clone, Debug, Bpaf)]
 #[bpaf(options, version, fallback_to_usage)]
 struct Args {

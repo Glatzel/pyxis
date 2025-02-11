@@ -1,5 +1,6 @@
-use console::Style;
 use std::sync::LazyLock;
+
+use console::Style;
 // console style
 pub static TRACE_STYLE: LazyLock<Style> = LazyLock::new(|| Style::new().color256(99));
 pub static DEBUG_STYLE: LazyLock<Style> = LazyLock::new(|| Style::new().blue());

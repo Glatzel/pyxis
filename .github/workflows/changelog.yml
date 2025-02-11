@@ -40,4 +40,4 @@ jobs:
           delete-branch: true
           add-paths: changelog.md
           assignees: Glatzel
-          draft: true
+          draft: false

@@ -68,7 +68,59 @@ impl Ellipsoid {
             inverse_flattening,
         }
     }
+    /// Create an Ellipsoid from the semi-major axis and semi-minor axis.
+    ///
+    /// # Parameters
+    ///
+    /// - `semi_major_axis`: The semi-major axis (`a`) of the ellipsoid (in meters).
+    /// - `semi_minor_axis`: The semi-minor axis (`b`) of the ellipsoid (in meters).
+    ///
+    /// # Returns
+    ///
+    /// Returns an `Ellipsoid` instance with the provided semi-major axis and semi-minor axis,
+    /// along with the calculated values for flattening, eccentricity, and inverse flattening.
+    ///
+    /// # Calculation
+    ///
+    /// The function computes:
+    /// - Flattening `f = (a - b) / a`
+    /// - Inverse flattening `1/f`
+    /// - Eccentricity squared `e² = 2f - f²`
+    /// - Eccentricity `e = sqrt(e²)`
+    ///
+    /// # Example
+    ///
+    /// Create an `Ellipsoid` from semi-major axis and semi-minor axis:
+    ///
+    /// ```rust
+    /// let ellipsoid = Ellipsoid::from_semi_axis(6378137.0, 6356752.314245);
+    /// assert_eq!(ellipsoid.semi_major_axis, 6378137.0);
+    /// assert_eq!(ellipsoid.semi_minor_axis, 6356752.314245);
+    /// assert!(float_cmp::approx_eq!(f64, ellipsoid.eccentricity, 0.081819190842622, epsilon = 1e-6));
+    /// assert!(float_cmp::approx_eq!(f64, ellipsoid.flattening, 0.0033528106647474805, epsilon = 1e-10));
+    /// ```
+    ///
+    /// # Notes
+    /// This function is useful when you only know the semi-major axis and semi-minor axis and need to compute the rest of the ellipsoid parameters.
+    pub fn from_semi_axis(semi_major_axis: f64, semi_minor_axis: f64) -> Self {
+        // Calculate flattening
+        let flattening = (semi_major_axis - semi_minor_axis) / semi_major_axis;
+        // Calculate inverse flattening
+        let inverse_flattening = 1.0 / flattening;
+        // Calculate eccentricity²
+        let eccentricity2 = 2.0 * flattening - flattening.powi(2);
+        // Calculate eccentricity
+        let eccentricity = eccentricity2.sqrt();
 
+        Ellipsoid {
+            semi_major_axis,
+            semi_minor_axis,
+            flattening,
+            inverse_flattening,
+            eccentricity,
+            eccentricity2,
+        }
+    }
     /// Returns the semi-major axis of the ellipsoid.
     pub fn semi_major_axis(&self) -> f64 {
         self.semi_major_axis

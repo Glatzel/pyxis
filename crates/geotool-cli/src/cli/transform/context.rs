@@ -1,7 +1,10 @@
-use super::{options, CoordSpace, CryptoSpace};
+use std::path::PathBuf;
+use std::sync::LazyLock;
+
 use geotool_algorithm::Ellipsoid;
 use miette::IntoDiagnostic;
-use std::{path::PathBuf, sync::LazyLock};
+
+use super::{options, CoordSpace, CryptoSpace};
 pub struct ContextTransform {
     pub x: f64,
     pub y: f64,

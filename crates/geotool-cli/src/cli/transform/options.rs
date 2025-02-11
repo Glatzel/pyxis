@@ -1,5 +1,7 @@
+use std::fmt;
+use std::str::FromStr;
+
 use bpaf::Bpaf;
-use std::{fmt, str::FromStr};
 #[derive(Debug, Clone, Copy)]
 pub enum OutputFormat {
     Simple,

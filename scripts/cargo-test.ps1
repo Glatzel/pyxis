@@ -9,7 +9,7 @@ $env:PKG_CONFIG_PATH = Resolve-Path vcpkg_deps/vcpkg_installed/x64-windows/lib/p
 pixi run cargo +nightly llvm-cov --no-report --all-features --workspace nextest
 $code=$LASTEXITCODE
 pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --doc
-$code=$code -and $LASTEXITCODE
+$code=$code + $LASTEXITCODE
 if ( $env:CI ) {
     pixi run cargo +nightly llvm-cov report
     pixi run cargo +nightly llvm-cov report --lcov --output-path lcov.info
@@ -17,7 +17,6 @@ if ( $env:CI ) {
 else {
     pixi run cargo +nightly llvm-cov report
 }
-$code=$code -and $LASTEXITCODE
-if (-not $code){
-    exit 1
-}
+$code = $code + $LASTEXITCODE
+Write-Output $code
+exit $code

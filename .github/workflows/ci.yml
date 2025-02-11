@@ -159,7 +159,7 @@ jobs:
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
 
-      - name: /cargo-test
+      - name: cargo-test
         run: ./scripts/cargo-test.ps1
 
       - name: Upload results to Codecov

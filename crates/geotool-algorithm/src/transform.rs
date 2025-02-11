@@ -20,8 +20,8 @@
 /// use float_cmp::assert_approx_eq;
 /// let p = (469704.6693, 2821940.796);
 /// let p = geotool_algorithm::datum_compense(p.0, p.1, 400.0, 6378_137.0, 500_000.0, 0.0);
-/// assert_approx_eq!(f64, p.0, 469706.56912942, epsilon = 1e-6));
-/// assert_approx_eq!(f64, p.1, 2821763.83123231, epsilon = 1e-6));
+/// assert_approx_eq!(f64, p.0, 469706.56912942, epsilon = 1e-6);
+/// assert_approx_eq!(f64, p.1, 2821763.83123231, epsilon = 1e-6);
 /// ```
 pub fn datum_compense(xc: f64, yc: f64, hb: f64, radius: f64, x0: f64, y0: f64) -> (f64, f64) {
     let ratio = hb / radius;
@@ -57,12 +57,12 @@ pub fn datum_compense(xc: f64, yc: f64, hb: f64, radius: f64, x0: f64, y0: f64) 
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use geotool_algorithm::Ellipsoid;
-/// let ellipsoid = Ellipsoid::from(6378137.0, 298.257223563);
+/// let ellipsoid = Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257223563);
 /// let (x, y, z) = geotool_algorithm::lbh2xyz(48.8566, 2.3522, 35.0, &ellipsoid);
 /// println!("{},{},{}", x, y, z);
-/// assert_approx_eq!(f64, x, 4192979.6198897623, epsilon = 1e-6));
-/// assert_approx_eq!(f64, y, 4799159.563725418, epsilon = 1e-6));
-/// assert_approx_eq!(f64, z, 260022.66015989496, epsilon = 1e-6));
+/// assert_approx_eq!(f64, x, 4192979.6198897623, epsilon = 1e-6);
+/// assert_approx_eq!(f64, y, 4799159.563725418, epsilon = 1e-6);
+/// assert_approx_eq!(f64, z, 260022.66015989496, epsilon = 1e-6);
 /// ```
 pub fn lbh2xyz(lon: f64, lat: f64, height: f64, ellipsoid: &crate::Ellipsoid) -> (f64, f64, f64) {
     // Constants from the ellipsoid
@@ -105,7 +105,7 @@ pub fn lbh2xyz(lon: f64, lat: f64, height: f64, ellipsoid: &crate::Ellipsoid) ->
 /// use float_cmp::assert_approx_eq;
 /// use geotool_algorithm::Ellipsoid;
 ///
-/// let ellipsoid = Ellipsoid::from(6378137.0, 298.257223563);
+/// let ellipsoid = Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257223563);
 /// let (x, y, z) = geotool_algorithm::xyz2lbh(
 ///     4192979.6198897623,
 ///     4799159.563725418,
@@ -113,9 +113,9 @@ pub fn lbh2xyz(lon: f64, lat: f64, height: f64, ellipsoid: &crate::Ellipsoid) ->
 ///     &ellipsoid,
 /// );
 /// println!("{},{},{}", x, y, z);
-/// assert_approx_eq!(f64, x, 48.8566, epsilon = 1e-6));
-/// assert_approx_eq!(f64, y, 2.3522, epsilon = 1e-6));
-/// assert_approx_eq!(f64, z, 35.0, epsilon = 1e-6));
+/// assert_approx_eq!(f64, x, 48.8566, epsilon = 1e-6);
+/// assert_approx_eq!(f64, y, 2.3522, epsilon = 1e-6);
+/// assert_approx_eq!(f64, z, 35.0, epsilon = 1e-6);
 /// ```
 pub fn xyz2lbh(x: f64, y: f64, z: f64, ellipsoid: &crate::Ellipsoid) -> (f64, f64, f64) {
     let tolerance = 1e-17;

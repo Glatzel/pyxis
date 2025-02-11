@@ -248,6 +248,7 @@ jobs:
     needs:
       - cargo-clippy
       - cargo-doc
+      - cargo-fmt
       - cargo-machete
       - cargo-test
       - geotool-cli

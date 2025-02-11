@@ -176,7 +176,49 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  py-geotool:
+  pytest:
+    needs: out-cache
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci-win
+      - uses: Swatinem/rust-cache@v2
+
+      - name: dev python
+        run: ./scripts/develop.ps1
+
+      - name: test python
+        run: ./scripts/pytest.ps1
+
+      - name: Upload results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: Glatzel/rs-geotool
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  out-check:
+    needs:
+      - cargo-clippy
+      - cargo-doc
+      - cargo-fmt
+      - cargo-machete
+      - cargo-test
+      - ruff-lint
+      - pytest
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "out check."
+
+  # region build
+  build-py-geotool:
     needs: out-cache
     runs-on: windows-latest
     steps:
@@ -219,7 +261,7 @@ jobs:
           path: dist/*.whl
           if-no-files-found: error
 
-  geotool-cli:
+  build-geotool-cli:
     needs: out-cache
     runs-on: windows-latest
     steps:
@@ -245,16 +287,11 @@ jobs:
           path: dist/*.zip
           if-no-files-found: error
 
-  out-check:
+  out-build:
     needs:
-      - cargo-clippy
-      - cargo-doc
-      - cargo-fmt
-      - cargo-machete
-      - cargo-test
-      - geotool-cli
-      - py-geotool
-      - ruff-lint
+      - build-geotool-cli
+      - build-py-geotool
     runs-on: ubuntu-latest
     steps:
-      - run: echo "out check."
+      - run: echo "out build."
+        

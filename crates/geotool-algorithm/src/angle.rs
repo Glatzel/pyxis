@@ -2,12 +2,12 @@
 ///
 /// # Example
 /// ```
-/// use float_cmp::approx_eq;
+/// use float_cmp::assert_approx_eq;
 /// let angle: f64 = 30.76;
 /// let dms = geotool_algorithm::angle_to_dms(angle);
 /// assert_eq!(dms.0, 30);
 /// assert_eq!(dms.1, 45);
-/// assert!(approx_eq!(f64, dms.2, 36.0, epsilon = 1e-6));
+/// assert_approx_eq!(f64, dms.2, 36.0, epsilon = 1e-6);
 /// ```
 pub fn angle_to_dms(angle: f64) -> (i32, i32, f64) {
     let degree = angle.trunc() as i32; // Get degrees
@@ -25,9 +25,9 @@ pub fn angle_to_dms(angle: f64) -> (i32, i32, f64) {
 ///
 /// # Example
 /// ```
-/// use float_cmp::approx_eq;
+/// use float_cmp::assert_approx_eq;
 /// let angle = geotool_algorithm::dms_to_angle(30,45,36.0);
-/// assert!(approx_eq!(f64, angle, 30.76, epsilon = 1e-6));
+/// assert_approx_eq!(f64, angle, 30.76, epsilon = 1e-6);
 /// ```
 pub fn dms_to_angle(degree: i32, minute: i32, second: f64) -> f64 {
     degree as f64 + minute as f64 / 60.0 + second / 3600.0

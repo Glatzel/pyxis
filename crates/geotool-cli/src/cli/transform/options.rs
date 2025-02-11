@@ -1,5 +1,7 @@
+use std::fmt;
+use std::str::FromStr;
+
 use bpaf::Bpaf;
-use std::{fmt, str::FromStr};
 #[derive(Debug, Clone, Copy)]
 pub enum OutputFormat {
     Simple,
@@ -79,6 +81,60 @@ impl fmt::Display for CryptoSpace {
             Self::BD09 => write!(f, "BD09"),
             Self::GCJ02 => write!(f, "GCJ02"),
             Self::WGS84 => write!(f, "WGS84"),
+        }
+    }
+}
+#[derive(Debug, Clone, Copy, Bpaf)]
+pub enum RotateAxis {
+    Xy,
+    Zx,
+    Yz,
+}
+
+impl FromStr for RotateAxis {
+    type Err = miette::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "xyz" => Ok(Self::Xy),
+            "xzy" => Ok(Self::Zx),
+            "yzx" => Ok(Self::Yz),
+
+            _ => miette::bail!(""),
+        }
+    }
+}
+impl fmt::Display for RotateAxis {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            RotateAxis::Xy => write!(f, "XY"),
+            RotateAxis::Zx => write!(f, "XZ"),
+            RotateAxis::Yz => write!(f, "YZ"),
+        }
+    }
+}
+#[derive(Debug, Clone, Copy, Bpaf)]
+pub enum RotateUnit {
+    Angle,
+    Radians,
+}
+
+impl FromStr for RotateUnit {
+    type Err = miette::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "angle" => Ok(Self::Angle),
+            "radians" => Ok(Self::Radians),
+            _ => miette::bail!(""),
+        }
+    }
+}
+impl fmt::Display for RotateUnit {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Angle => write!(f, "Angle"),
+            Self::Radians => write!(f, "Radians"),
         }
     }
 }

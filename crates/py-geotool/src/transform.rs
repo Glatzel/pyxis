@@ -43,6 +43,8 @@ pub fn py_lbh2xyz(
     semi_major_axis: f64,
     inverse_flattening: f64,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
+    let ellipsoid =
+        geotool_algorithm::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
     if let (Ok(lon_ref), Ok(lat_ref), Ok(height_ref)) = (
         lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
         lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -57,13 +59,7 @@ pub fn py_lbh2xyz(
             .zip(lat_array.par_iter_mut())
             .zip(height_array.par_iter_mut())
             .for_each(|((lon, lat), height)| {
-                (*lon, *lat, *height) = geotool_algorithm::lbh2xyz(
-                    *lon,
-                    *lat,
-                    *height,
-                    semi_major_axis,
-                    inverse_flattening,
-                );
+                (*lon, *lat, *height) = geotool_algorithm::lbh2xyz(*lon, *lat, *height, &ellipsoid);
             });
         (lon_ref, lat_ref, height_ref).into_pyobject(py)
     } else if let (Ok(lon), Ok(lat), Ok(height)) = (
@@ -71,8 +67,7 @@ pub fn py_lbh2xyz(
         lat_py.extract::<f64>(py),
         height_py.extract::<f64>(py),
     ) {
-        geotool_algorithm::lbh2xyz(lon, lat, height, semi_major_axis, inverse_flattening)
-            .into_pyobject(py)
+        geotool_algorithm::lbh2xyz(lon, lat, height, &ellipsoid).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
@@ -87,9 +82,9 @@ pub fn py_xyz2lbh(
     z_py: PyObject,
     semi_major_axis: f64,
     inverse_flattening: f64,
-    tolerance: f64,
-    max_iterations: u32,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
+    let ellipsoid =
+        geotool_algorithm::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
     if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
         x_py.downcast_bound::<PyArrayDyn<f64>>(py),
         y_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -104,15 +99,7 @@ pub fn py_xyz2lbh(
             .zip(y_array.par_iter_mut())
             .zip(z_array.par_iter_mut())
             .for_each(|((l, b), h)| {
-                (*l, *b, *h) = geotool_algorithm::xyz2lbh(
-                    *l,
-                    *b,
-                    *h,
-                    semi_major_axis,
-                    inverse_flattening,
-                    Some(tolerance),
-                    Some(max_iterations),
-                );
+                (*l, *b, *h) = geotool_algorithm::xyz2lbh(*l, *b, *h, &ellipsoid);
             });
         (x_ref, y_ref, z_ref).into_pyobject(py)
     } else if let (Ok(x), Ok(y), Ok(z)) = (
@@ -120,16 +107,7 @@ pub fn py_xyz2lbh(
         y_py.extract::<f64>(py),
         z_py.extract::<f64>(py),
     ) {
-        geotool_algorithm::xyz2lbh(
-            x,
-            y,
-            z,
-            semi_major_axis,
-            inverse_flattening,
-            Some(tolerance),
-            Some(max_iterations),
-        )
-        .into_pyobject(py)
+        geotool_algorithm::xyz2lbh(x, y, z, &ellipsoid).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",

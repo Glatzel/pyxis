@@ -6,6 +6,5 @@ if ($env:CI) {
 }
 else {
     & $PSScriptRoot/set-env.ps1
-    pixi run cargo fmt
-    pixi run cargo clippy --fix --all-targets
+    pixi run cargo clippy --fix --all-targets --all-features
 }

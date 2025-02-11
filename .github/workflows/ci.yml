@@ -28,6 +28,7 @@ jobs:
   # region global
   ruff-lint:
     uses: Glatzel/template/.github/workflows/ruff.yml@main
+
   cargo-clippy:
     runs-on: ubuntu-latest
     env:
@@ -57,8 +58,21 @@ jobs:
           path: dist/*.zip
           if-no-files-found: error
 
+  cargo-fmt:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-Dwarnings"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+
+      - name: cargo-fmt
+        run: ./scripts/cargo-fmt.ps1
+        shell: pwsh
+
   cargo-machete:
-    name: Cargo Machete
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -145,8 +159,8 @@ jobs:
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
 
-      - name: rust test
-        run: ./scripts/test-rs.ps1
+      - name: cargo-test
+        run: ./scripts/cargo-test.ps1
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
@@ -162,7 +176,7 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  py-geotool:
+  pytest:
     needs: out-cache
     runs-on: windows-latest
     steps:
@@ -174,7 +188,7 @@ jobs:
         run: ./scripts/develop.ps1
 
       - name: test python
-        run: ./scripts/test-py.ps1
+        run: ./scripts/pytest.ps1
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
@@ -189,6 +203,28 @@ jobs:
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  out-check:
+    needs:
+      - cargo-clippy
+      - cargo-doc
+      - cargo-fmt
+      - cargo-machete
+      - cargo-test
+      - ruff-lint
+      - pytest
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "out check."
+
+  # region build
+  build-py-geotool:
+    needs: out-cache
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci-win
+      - uses: Swatinem/rust-cache@v2
 
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
@@ -205,7 +241,7 @@ jobs:
           path: dist/*.whl
           if-no-files-found: error
 
-  geotool-cli:
+  build-geotool-cli:
     needs: out-cache
     runs-on: windows-latest
     steps:
@@ -231,15 +267,10 @@ jobs:
           path: dist/*.zip
           if-no-files-found: error
 
-  out-check:
+  out-build:
     needs:
-      - cargo-clippy
-      - cargo-doc
-      - cargo-machete
-      - cargo-test
-      - geotool-cli
-      - py-geotool
-      - ruff-lint
+      - build-geotool-cli
+      - build-py-geotool
     runs-on: ubuntu-latest
     steps:
-      - run: echo "out check."
+      - run: echo "out build."

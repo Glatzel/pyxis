@@ -1,9 +1,3 @@
-pub fn _rotate_matrix_2d(radians: f64) -> [[f64; 2]; 2] {
-    [
-        [radians.cos(), radians.sin()],
-        [-radians.sin(), radians.cos()],
-    ]
-}
 pub fn _rel_2d(
     origin_x: f64,
     origin_y: f64,

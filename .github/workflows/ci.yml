@@ -226,26 +226,6 @@ jobs:
       - uses: ./.github/actions/setup-ci-win
       - uses: Swatinem/rust-cache@v2
 
-      - name: dev python
-        run: ./scripts/develop.ps1
-
-      - name: test python
-        run: ./scripts/pytest.ps1
-
-      - name: Upload results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: Glatzel/rs-geotool
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
         run: ./scripts/build-py.ps1

@@ -64,6 +64,7 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
 
       - name: cargo-fmt
         run: ./scripts/cargo-fmt.ps1

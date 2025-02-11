@@ -65,6 +65,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
 
       - name: cargo-fmt
         run: ./scripts/cargo-fmt.ps1

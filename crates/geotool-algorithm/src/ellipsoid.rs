@@ -92,8 +92,9 @@ impl Ellipsoid {
     ///
     /// Create an `Ellipsoid` from semi-major axis and semi-minor axis:
     ///
-    /// ```rust
-    /// let ellipsoid = crate::Ellipsoid::from_semi_axis(6378137.0, 6356752.314245);
+    /// ```
+    /// use geotool_algorithm::Ellipsoid;
+    /// let ellipsoid = Ellipsoid::from_semi_axis(6378137.0, 6356752.314245);
     /// assert_eq!(ellipsoid.semi_major_axis, 6378137.0);
     /// assert_eq!(ellipsoid.semi_minor_axis, 6356752.314245);
     /// float_cmp::assert_approx_eq!(f64, ellipsoid.eccentricity, 0.081819190842622, epsilon = 1e-6);

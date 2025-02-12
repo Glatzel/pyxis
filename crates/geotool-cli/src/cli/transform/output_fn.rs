@@ -35,7 +35,7 @@ pub fn output_plain(name: &str, records: &[Record]) {
         println!(
             r#"|-- step: {}
 |-- method: {}
-|-- parameter: 
+|-- parameter:
 {}
 {}
 {}: {}, {}: {}, {}: {}"#,

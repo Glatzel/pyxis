@@ -3,39 +3,61 @@ use super::record::Record;
 pub fn output_simple(record: &Record) {
     println!(
         "{}: {}, {}: {}, {}: {}",
-        record.ox_name, record.ox, record.oy_name, record.oy, record.oz_name, record.oz,
+        record.output_x_name,
+        record.output_x,
+        record.output_y_name,
+        record.output_y,
+        record.output_z_name,
+        record.output_z,
     )
 }
-pub fn output_plain(records: &[Record]) {
-    println!("Transform Records");
-    println!("=================");
+pub fn output_plain(name: &str, records: &[Record]) {
+    if name == "" {
+        println!("Transform Records");
+        println!("=================");
+    } else {
+        println!("{name}");
+        println!("{}", "=".repeat(name.len()));
+    }
+
     if let Some(input) = records.first() {
         println!(
             "{}: {}, {}: {}, {}: {}",
-            input.ox_name, input.ox, input.oy_name, input.oy, input.oz_name, input.oz,
+            input.output_x_name,
+            input.output_x,
+            input.output_y_name,
+            input.output_y,
+            input.output_z_name,
+            input.output_z,
         )
     }
     for record in records.iter().skip(1) {
         println!(
-            r#"    step: {}
-    method: {}
-    from: {}
-    to: {}
+            r#"|-- step: {}
+|-- method: {}
+|-- parameter: 
+{}
+{}
 {}: {}, {}: {}, {}: {}"#,
             record.idx,
             record.method,
-            record.from,
-            record.to,
-            record.ox_name,
-            record.ox,
-            record.oy_name,
-            record.oy,
-            record.oz_name,
-            record.oz,
+            serde_json::to_string_pretty(&record.parameter)
+                .unwrap()
+                .lines()
+                .map(|line| format!("|       {}", line))
+                .collect::<Vec<String>>()
+                .join("\n"),
+            "\u{25BC}",
+            record.output_x_name,
+            record.output_x,
+            record.output_y_name,
+            record.output_y,
+            record.output_z_name,
+            record.output_z,
         )
     }
 }
-pub fn output_json(records: &[Record]) {
+pub fn output_json(name: &str, records: &[Record]) {
     let json_txt = serde_json::to_string_pretty(records).unwrap();
     println!("{json_txt}")
 }

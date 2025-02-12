@@ -16,6 +16,9 @@ struct Args {
 pub enum Commands {
     #[bpaf(command, fallback_to_usage)]
     Transform {
+        #[bpaf(short, long,fallback("".to_string()),)]
+        /// Transform task name.
+        name: String,
         #[bpaf(short, long)]
         /// - X coordinate (in meters).
         ///  - longitude (in degrees).
@@ -57,18 +60,19 @@ enum Level {
 }
 fn verbose() -> impl Parser<Level> {
     use Level::*;
-    batteries::verbose_by_slice(1, [Quiet, Error, Warning, Info, Debug, Trace])
+    batteries::verbose_by_slice(2, [Quiet, Error, Warning, Info, Debug, Trace])
 }
 fn execute(cmd: Commands) {
     //run
     match cmd {
         Commands::Transform {
+            name,
             x,
             y,
             z,
             output_format,
             transform_commands,
-        } => transform::execute(x, y, z, output_format, transform_commands),
+        } => transform::execute(&name, x, y, z, output_format, transform_commands),
     }
 }
 pub fn main() {

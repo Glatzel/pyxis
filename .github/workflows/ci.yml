@@ -247,9 +247,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
 
-      - name: dev python
-        run: ./scripts/develop.ps1
-
       - name: test python
         run: ./scripts/sphinx.ps1
       

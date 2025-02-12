@@ -43,10 +43,6 @@ def dms2angle(deg, min, sec):
     Any
         Float Angle.
 
-    See Also
-    --------
-    glatzel.polars_glatzel.Geotool.dms2angle
-
     Examples
     --------
     >>> from glatzel import geotool

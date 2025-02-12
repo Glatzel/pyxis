@@ -5,5 +5,3 @@
 
 .. autoclass:: {{ name }}
     :members:
-
-

@@ -53,10 +53,6 @@ def datum_compense(
     tuple[Any, Any]
         Projected XY coordinates of sea level plane.
 
-    See Also
-    --------
-    glatzel.polars_glatzel.Geotool.datum_compense
-
     References
     ----------
     .. [1] 杨元兴.抵偿高程面的选择与计算[J].城市勘测,2008(02):72-74.

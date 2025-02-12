@@ -17,10 +17,6 @@ def angle2dms(angle) -> tuple[Any, Any, Any]:
     tuple[Any,Any,Any]
         Degree, minute, second.
 
-    See Also
-    --------
-    glatzel.polars_glatzel.Geotool.angle2dms
-
     Examples
     --------
     >>> from glatzel import geotool

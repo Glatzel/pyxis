@@ -58,6 +58,7 @@ pub fn output_plain(name: &str, records: &[Record]) {
     }
 }
 pub fn output_json(name: &str, records: &[Record]) {
-    let json_txt = serde_json::to_string_pretty(records).unwrap();
+    let json_txt =
+        serde_json::to_string_pretty(&serde_json::json!({"name":name, "record":records })).unwrap();
     println!("{json_txt}")
 }

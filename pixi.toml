@@ -8,21 +8,31 @@ version = "0.1.0"
 
 [tasks]
 
-[dependencies]
+[feature.py311.dependencies]
 python = "3.11.*"
-numpy = "*"
-scipy="*"
-nomkl = "*"
-lazy-loader = "*"
 
-[feature.dev.dependencies]
+[feature.build.dependencies]
 maturin = "*"
 pip = "*"
+pkg-config = "*"
+
+[feature.py-deps.dependencies]
+lazy-loader = "*"
+nomkl = "*"
+numpy = "*"
+scipy="*"
+
+[feature.py-test.dependencies]
 pytest = "*"
 pytest-cov = "*"
-pkg-config = "*"
+
+[feature.py-doc.dependencies]
+autodocsumm = "*"
 numpydoc = "*"
-git-cliff ="*"
+pydata-sphinx-theme = "*"
+sphinx = "*"
+sphinx-autosummary-accessors = "*"
+sphinx-copybutton = "*"
 
 [environments]
-dev = ["dev"]
+default=["py311","build","py-deps","py-test","py-doc"]

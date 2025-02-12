@@ -1,8 +1,8 @@
-Crypto
-=======
+Transform
+=========
 .. currentmodule:: geotool
 .. autosummary::
-   :toctree: ./api/crypto
+   :toctree: ./api/transform
 
    datum_compense
    lbh2xyz

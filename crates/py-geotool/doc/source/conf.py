@@ -17,7 +17,7 @@ import sphinx_autosummary_accessors
 sys.path.insert(0, str(Path(__file__).parents[2]))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-import geotool
+# import geotool
 
 project = "geotool"
 copyright = "2024, Glatzel"

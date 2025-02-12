@@ -246,11 +246,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
+      - uses: Swatinem/rust-cache@v2
 
       - name: test python
         run: ./scripts/sphinx.ps1
       
       - name: upload-doc
+        if: ${{!inputs.build-dist}}
         uses: actions/upload-artifact@v4
         with:
           name: python-doc

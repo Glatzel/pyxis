@@ -1,6 +1,7 @@
 from ._angle import angle2dms, dms2angle
 from ._crypto import bd09_to_gcj02, bd09_to_wgs84, crypto, gcj02_to_bd09, gcj02_to_wgs84, wgs84_to_bd09, wgs84_to_gcj02
-from ._geometry_coordinate import (
+from ._migrate import CoordMigrate
+from ._space import (
     cartesian_to_cylindrical,
     cartesian_to_spherical,
     cylindrical_to_cartesian,
@@ -8,7 +9,6 @@ from ._geometry_coordinate import (
     spherical_to_cartesian,
     spherical_to_cylindrical,
 )
-from ._migrate import CoordMigrate
 from ._transform import datum_compense, lbh2xyz, xyz2lbh
 from ._transformation_residuals import transformation_residuals3, transformation_residuals6, transformation_residuals7
 

@@ -1,8 +1,13 @@
-Angle
+Crypto
 =======
 .. currentmodule:: geotool
 .. autosummary::
-   :toctree: ./api/angle
+   :toctree: ./api/crypto
 
-   angle2dms
-   dms2angle
+   crypto
+   bd09_to_gcj02
+   bd09_to_wgs84
+   gcj02_to_bd09
+   gcj02_to_wgs84
+   wgs84_to_bd09
+   wgs84_to_gcj02

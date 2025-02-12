@@ -6,3 +6,6 @@ Geotool API reference
    :maxdepth: 2
 
    angle
+   crypto
+   space
+   transform

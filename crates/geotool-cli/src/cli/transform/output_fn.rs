@@ -13,9 +13,11 @@ pub fn output_simple(record: &Record) {
 }
 pub fn output_plain(name: &str, records: &[Record]) {
     if name.is_empty() {
+        println!("=================");
         println!("Transform Records");
         println!("=================");
     } else {
+        println!("{}", "=".repeat(name.len()));
         println!("{name}");
         println!("{}", "=".repeat(name.len()));
     }

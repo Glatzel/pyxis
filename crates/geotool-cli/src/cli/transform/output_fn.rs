@@ -2,7 +2,7 @@ use super::record::Record;
 
 pub fn output_simple(record: &Record) {
     println!(
-        "{}: {}, {}: {}, {}: {}\n",
+        "{}: {}, {}: {}, {}: {}",
         record.ox_name, record.ox, record.oy_name, record.oy, record.oz_name, record.oz,
     )
 }
@@ -34,9 +34,8 @@ pub fn output_plain(records: &[Record]) {
             record.oz,
         )
     }
-    println!();
 }
 pub fn output_json(records: &[Record]) {
     let json_txt = serde_json::to_string_pretty(records).unwrap();
-    println!("{json_txt}\n")
+    println!("{json_txt}")
 }

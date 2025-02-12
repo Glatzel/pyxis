@@ -12,7 +12,7 @@ Remove-Item dist/geotool -Recurse -ErrorAction SilentlyContinue
 if ($clean) { cargo clean }
 Write-Host "Build in $config mode."
 if ($config -ne "debug") {
-    pixi run cargo build --profile $config --bin geotool
+    pixi run -e ci-cli cargo build --profile $config --bin geotool
 }
 else {
     pixi run cargo build --bin geotool

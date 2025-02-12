@@ -102,7 +102,7 @@ jobs:
 
       - name: pixi install
         if: ${{steps.check-cache.outputs.cache-hit!='true'}}
-        run: pixi install -e dev
+        run: pixi install -e default
 
       - name: save pixi
         if: ${{steps.check-cache.outputs.cache-hit!='true'}}

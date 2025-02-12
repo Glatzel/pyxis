@@ -245,10 +245,10 @@ jobs:
       - uses: ./.github/actions/setup-ci-win
       - uses: Swatinem/rust-cache@v2
 
-      - name: test python
+      - name: sphinx build
         run: ./scripts/sphinx.ps1
 
-      - name: upload-doc
+      - name: upload doc
         if: ${{!inputs.build-dist}}
         uses: actions/upload-artifact@v4
         with:

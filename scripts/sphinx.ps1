@@ -9,4 +9,4 @@ pixi run sphinx-build -M html ./doc/source ./doc/build --fail-on-warning
 
 Remove-Item $PSScriptRoot/../dist/python-doc.zip -Force -ErrorAction SilentlyContinue
 New-Item $PSScriptRoot/../dist -ItemType Directory -ErrorAction SilentlyContinue
-Compress-Archive ./target/doc "$PSScriptRoot/../dist/python-doc.zip"
+Compress-Archive ./doc/build "$PSScriptRoot/../dist/python-doc.zip"

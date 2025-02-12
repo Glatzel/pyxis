@@ -13,9 +13,9 @@ Remove-Item crates/py-geotool/geotool/**__pycache__ -Recurse -ErrorAction Silent
 if ($clean) { cargo clean }
 Write-Host "Build in $config mode."
 if ($config -ne "debug") {
-    pixi run -e ci-py cargo build --profile $config --lib
+    pixi run cargo build --profile $config --lib
     Set-Location crates/py-geotool
-    pixi run -e ci-py maturin build --out ../../dist --profile $config
+    pixi run maturin build --out ../../dist --profile $config
 }
 else {
     pixi run cargo build --lib

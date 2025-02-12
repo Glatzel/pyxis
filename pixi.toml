@@ -36,5 +36,3 @@ sphinx-copybutton = "*"
 
 [environments]
 default=["py311","build","py-deps","py-test","py-doc"]
-ci-cli=["build"]
-ci-py=["py311","build","py-deps","py-test","py-doc"]

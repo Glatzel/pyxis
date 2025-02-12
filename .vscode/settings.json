@@ -4,7 +4,8 @@
         "**/.vscode/**",
         "**/node_modules/**",
         "tests_report",
-        "**/*.lock","**/vcpkg"
+        "**/*.lock","**/vcpkg",
+        "**/changelog.md"
     ],
     "python.testing.pytestArgs": [
         "crates/py-geotool/tests",

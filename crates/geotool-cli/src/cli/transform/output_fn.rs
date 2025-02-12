@@ -12,7 +12,7 @@ pub fn output_simple(record: &Record) {
     )
 }
 pub fn output_plain(name: &str, records: &[Record]) {
-    if name == "" {
+    if name.is_empty() {
         println!("Transform Records");
         println!("=================");
     } else {

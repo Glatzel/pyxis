@@ -17,24 +17,24 @@ pip = "*"
 pkg-config = "*"
 
 [feature.py-deps.dependencies]
+lazy-loader = "*"
+nomkl = "*"
 numpy = "*"
 scipy="*"
-nomkl = "*"
-lazy-loader = "*"
 
 [feature.py-test.dependencies]
 pytest = "*"
 pytest-cov = "*"
 
 [feature.py-doc.dependencies]
-sphinx = "*"
-pydata-sphinx-theme = "*"
-sphinx-copybutton = "*"
-numpydoc = "*"
 autodocsumm = "*"
+numpydoc = "*"
+pydata-sphinx-theme = "*"
+sphinx = "*"
 sphinx-autosummary-accessors = "*"
+sphinx-copybutton = "*"
 
 [environments]
-default=["py311","build","check","py-deps","py-test","py-doc"]
+default=["py311","build","py-deps","py-test","py-doc"]
 ci-cli=["build"]
 ci-py=["py311","build","py-deps","py-test","py-doc"]

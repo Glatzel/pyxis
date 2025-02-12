@@ -4,13 +4,12 @@ use serde::{Deserialize, Serialize};
 pub struct Record {
     pub idx: u8,
     pub method: String,
-    pub from: String,
-    pub to: String,
+    pub parameter: serde_json::Value,
 
-    pub ox: f64,
-    pub oy: f64,
-    pub oz: f64,
-    pub ox_name: String,
-    pub oy_name: String,
-    pub oz_name: String,
+    pub output_x: f64,
+    pub output_y: f64,
+    pub output_z: f64,
+    pub output_x_name: String,
+    pub output_y_name: String,
+    pub output_z_name: String,
 }

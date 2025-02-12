@@ -6,8 +6,16 @@ use tracing_subscriber::fmt::format::{FormatEvent, FormatFields};
 use tracing_subscriber::fmt::{format, FmtContext};
 use tracing_subscriber::registry::LookupSpan;
 use tracing_subscriber::EnvFilter;
+use std::sync::LazyLock;
+use console::Style;
 
-use super::constants::{DEBUG_STYLE, ERROR_STYLE, INFO_STYLE, TRACE_STYLE, WARN_STYLE};
+// console style
+pub static TRACE_STYLE: LazyLock<Style> = LazyLock::new(|| Style::new().color256(99));
+pub static DEBUG_STYLE: LazyLock<Style> = LazyLock::new(|| Style::new().blue());
+pub static INFO_STYLE: LazyLock<Style> = LazyLock::new(|| Style::new().green());
+pub static WARN_STYLE: LazyLock<Style> = LazyLock::new(|| Style::new().yellow().bold());
+pub static ERROR_STYLE: LazyLock<Style> = LazyLock::new(|| Style::new().red().bold());
+
 pub fn init_logger(level: LevelFilter) {
     let subscriber = tracing_subscriber::fmt::Subscriber::builder()
         .with_env_filter(

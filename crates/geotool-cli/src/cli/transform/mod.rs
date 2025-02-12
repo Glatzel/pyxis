@@ -107,19 +107,25 @@ pub enum TransformCommands {
         inverse_flattening: f64,
     },
 }
-pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<TransformCommands>) {
+pub fn execute(
+    name: &str,
+    x: f64,
+    y: f64,
+    z: f64,
+    output_format: OutputFormat,
+    cmds: Vec<TransformCommands>,
+) {
     let mut ctx = ContextTransform { x, y, z };
     let mut records: Vec<Record> = vec![Record {
         idx: 0,
         method: "input".to_string(),
-        from: "".to_string(),
-        to: "".to_string(),
-        ox: ctx.x,
-        oy: ctx.y,
-        oz: ctx.z,
-        ox_name: "x".to_string(),
-        oy_name: "y".to_string(),
-        oz_name: "z".to_string(),
+        parameter: serde_json::json!({}),
+        output_x: ctx.x,
+        output_y: ctx.y,
+        output_z: ctx.z,
+        output_x_name: "x".to_string(),
+        output_y_name: "y".to_string(),
+        output_z_name: "z".to_string(),
     }];
     for (i, cmd) in cmds.iter().enumerate() {
         match cmd {
@@ -128,14 +134,16 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "crypto".to_string(),
-                    from: from.to_string(),
-                    to: to.to_string(),
-                    ox: ctx.x,
-                    oy: ctx.y,
-                    oz: ctx.z,
-                    ox_name: "longitude".to_string(),
-                    oy_name: "latitude".to_string(),
-                    oz_name: "elevation".to_string(),
+                    parameter: serde_json::json!({
+                        "from": from.to_string(),
+                        "to": to.to_string()
+                    }),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "longitude".to_string(),
+                    output_y_name: "latitude".to_string(),
+                    output_z_name: "elevation".to_string(),
                 };
                 records.push(record);
             }
@@ -149,14 +157,18 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "datum compense".to_string(),
-                    from: "".to_string(),
-                    to: "".to_string(),
-                    ox: ctx.x,
-                    oy: ctx.y,
-                    oz: ctx.z,
-                    ox_name: "x".to_string(),
-                    oy_name: "y".to_string(),
-                    oz_name: "elevation".to_string(),
+                    parameter: serde_json::json!({
+                        "hb": hb,
+                        "r": r,
+                        "x0":x0,
+                        "y0":y0
+                    }),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "x".to_string(),
+                    output_y_name: "y".to_string(),
+                    output_z_name: "elevation".to_string(),
                 };
                 records.push(record);
             }
@@ -168,14 +180,16 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "lbh2xyz".to_string(),
-                    from: "lbh".to_string(),
-                    to: "xyz".to_string(),
-                    ox: ctx.x,
-                    oy: ctx.y,
-                    oz: ctx.z,
-                    ox_name: "x".to_string(),
-                    oy_name: "y".to_string(),
-                    oz_name: "z".to_string(),
+                    parameter: serde_json::json!({
+                        "semi_major_axis": semi_major_axis,
+                        "inverse_flattening": inverse_flattening
+                    }),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "x".to_string(),
+                    output_y_name: "y".to_string(),
+                    output_z_name: "z".to_string(),
                 };
                 records.push(record);
             }
@@ -184,30 +198,32 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "normalize".to_string(),
-                    from: "".to_string(),
-                    to: "".to_string(),
-                    ox: ctx.x,
-                    oy: ctx.y,
-                    oz: ctx.z,
-                    ox_name: "x".to_string(),
-                    oy_name: "y".to_string(),
-                    oz_name: "z".to_string(),
+                    parameter: serde_json::json!({}),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "x".to_string(),
+                    output_y_name: "y".to_string(),
+                    output_z_name: "z".to_string(),
                 };
                 records.push(record);
             }
             TransformCommands::Proj { from, to } => {
+                tracing::warn!("Proj currently support 2D convert only.");
                 ctx.proj(from.as_str(), to.as_str()).unwrap();
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "proj".to_string(),
-                    from: from.to_string(),
-                    to: to.to_string(),
-                    ox: ctx.x,
-                    oy: ctx.y,
-                    oz: ctx.z,
-                    ox_name: "x".to_string(),
-                    oy_name: "y".to_string(),
-                    oz_name: "z".to_string(),
+                    parameter: serde_json::json!({
+                        "from": from.to_string(),
+                        "to": to.to_string()
+                    }),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "x".to_string(),
+                    output_y_name: "y".to_string(),
+                    output_z_name: "z".to_string(),
                 };
                 records.push(record);
             }
@@ -216,14 +232,17 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "rotate".to_string(),
-                    from: "".to_string(),
-                    to: "".to_string(),
-                    ox: ctx.x,
-                    oy: ctx.y,
-                    oz: ctx.z,
-                    ox_name: "x".to_string(),
-                    oy_name: "y".to_string(),
-                    oz_name: "z".to_string(),
+                    parameter: serde_json::json!({
+                        "value": value,
+                        "axis": axis.to_string(),
+                        "unit": unit.to_string()
+                    }),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "x".to_string(),
+                    output_y_name: "y".to_string(),
+                    output_z_name: "z".to_string(),
                 };
                 records.push(record);
             }
@@ -236,14 +255,17 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "scale".to_string(),
-                    from: "".to_string(),
-                    to: "".to_string(),
-                    ox: ctx.x,
-                    oy: ctx.y,
-                    oz: ctx.z,
-                    ox_name: "x".to_string(),
-                    oy_name: "y".to_string(),
-                    oz_name: "z".to_string(),
+                    parameter: serde_json::json!({
+                        "x_scale": x_scale,
+                        "y_scale": y_scale,
+                        "z_scale": z_scale
+                    }),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "x".to_string(),
+                    output_y_name: "y".to_string(),
+                    output_z_name: "z".to_string(),
                 };
                 records.push(record);
             }
@@ -252,14 +274,16 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "space".to_string(),
-                    from: "xyz".to_string(),
-                    to: "lbh".to_string(),
-                    ox: ctx.x,
-                    oy: ctx.y,
-                    oz: ctx.z,
-                    ox_name: "longitude".to_string(),
-                    oy_name: "latitude".to_string(),
-                    oz_name: "elevation".to_string(),
+                    parameter: serde_json::json!({
+                        "from": from.to_string(),
+                        "to": to.to_string()
+                    }),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "longitude".to_string(),
+                    output_y_name: "latitude".to_string(),
+                    output_z_name: "elevation".to_string(),
                 };
                 records.push(record);
             }
@@ -272,14 +296,17 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "scale".to_string(),
-                    from: "".to_string(),
-                    to: "".to_string(),
-                    ox: ctx.x,
-                    oy: ctx.y,
-                    oz: ctx.z,
-                    ox_name: "x".to_string(),
-                    oy_name: "y".to_string(),
-                    oz_name: "z".to_string(),
+                    parameter: serde_json::json!({
+                        "x_translate": x_translate,
+                        "y_translate": y_translate,
+                        "z_translate": z_translate
+                    }),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "x".to_string(),
+                    output_y_name: "y".to_string(),
+                    output_z_name: "z".to_string(),
                 };
                 records.push(record);
             }
@@ -291,14 +318,16 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "xyz2lbh".to_string(),
-                    from: "xyz".to_string(),
-                    to: "lbh".to_string(),
-                    ox: ctx.x,
-                    oy: ctx.y,
-                    oz: ctx.z,
-                    ox_name: "longitude".to_string(),
-                    oy_name: "latitude".to_string(),
-                    oz_name: "elevation".to_string(),
+                    parameter: serde_json::json!({
+                        "semi_major_axis": semi_major_axis,
+                        "inverse_flattening": inverse_flattening
+                    }),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "longitude".to_string(),
+                    output_y_name: "latitude".to_string(),
+                    output_z_name: "elevation".to_string(),
                 };
                 records.push(record);
             }
@@ -307,7 +336,7 @@ pub fn execute(x: f64, y: f64, z: f64, output_format: OutputFormat, cmds: Vec<Tr
     // output
     match output_format {
         OutputFormat::Simple => output_fn::output_simple(records.last().unwrap()),
-        OutputFormat::Plain => output_fn::output_plain(&records),
-        OutputFormat::Json => output_fn::output_json(&records),
+        OutputFormat::Plain => output_fn::output_plain(name, &records),
+        OutputFormat::Json => output_fn::output_json(name, &records),
     }
 }

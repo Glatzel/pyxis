@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 pub struct Record {
     pub idx: u8,
     pub method: String,
-    pub parameter:serde_json::Value,
+    pub parameter: serde_json::Value,
 
     pub output_x: f64,
     pub output_y: f64,

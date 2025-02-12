@@ -1,13 +1,13 @@
 use std::fmt;
+use std::sync::LazyLock;
 
+use console::Style;
 use tracing::{Event, Subscriber};
 use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::fmt::format::{FormatEvent, FormatFields};
 use tracing_subscriber::fmt::{format, FmtContext};
 use tracing_subscriber::registry::LookupSpan;
 use tracing_subscriber::EnvFilter;
-use std::sync::LazyLock;
-use console::Style;
 
 // console style
 pub static TRACE_STYLE: LazyLock<Style> = LazyLock::new(|| Style::new().color256(99));

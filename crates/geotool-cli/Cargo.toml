@@ -8,16 +8,16 @@ name = "geotool"
 path = "src/main.rs"
 
 [dependencies]
-miette = { workspace = true }
-proj = { workspace = true }
-tracing = { workspace = true }
-chrono = { workspace = true }
-tracing-subscriber = { workspace = true }
+bpaf = { workspace = true }
 console = { workspace = true }
 geotool-algorithm = { workspace = true }
-bpaf = { workspace = true }
+log-template = { workspace = true }
+miette = { workspace = true }
+proj = { workspace = true }
 serde_json = { workspace = true }
-serde={ workspace = true }
+serde = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
 
 [dev-dependencies]
 float-cmp = { workspace = true }

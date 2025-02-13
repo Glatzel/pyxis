@@ -9,7 +9,6 @@ path = "src/main.rs"
 
 [dependencies]
 bpaf = { workspace = true }
-console = { workspace = true }
 geotool-algorithm = { workspace = true }
 log-template = { workspace = true }
 miette = { workspace = true }

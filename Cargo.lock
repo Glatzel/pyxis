@@ -108,9 +108,9 @@ dependencies = [
 
 [[package]]
 name = "bumpalo"
-version = "3.16.0"
+version = "3.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "79296716171880943b8470b5f8d03aa55eb2e645a4874bdbb28adb49162e012c"
+checksum = "1628fb46dfa0b37568d12e5edd512553eccf6a22a78e8bde00bb4aed84d5bdbf"
 
 [[package]]
 name = "cc"
@@ -148,19 +148,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e24a03c8b52922d68a1589ad61032f2c1aa5a8158d2aa0d93c6e9534944bbad6"
 dependencies = [
  "cc",
-]
-
-[[package]]
-name = "console"
-version = "0.15.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ea3c6ecd8059b57859df5c69830340ed3c41d30e3da0c1cbed90a96ac853041b"
-dependencies = [
- "encode_unicode",
- "libc",
- "once_cell",
- "unicode-width 0.2.0",
- "windows-sys",
 ]
 
 [[package]]
@@ -222,12 +209,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0"
 
 [[package]]
-name = "encode_unicode"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
-
-[[package]]
 name = "errno"
 version = "0.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -281,21 +262,20 @@ dependencies = [
 
 [[package]]
 name = "geotool-algorithm"
-version = "0.0.3"
+version = "0.0.4"
 dependencies = [
  "float-cmp",
 ]
 
 [[package]]
 name = "geotool-cli"
-version = "0.0.3"
+version = "0.0.4"
 dependencies = [
  "assert_cmd",
  "bpaf",
- "chrono",
- "console",
  "float-cmp",
  "geotool-algorithm",
+ "log-template",
  "miette",
  "predicates",
  "proj",
@@ -417,6 +397,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "04cbf5b083de1c7e0222a7a51dbfdba1cbe1c6ab0b15e29fff3f6c077fd9cd9f"
 
 [[package]]
+name = "log-template"
+version = "0.0.4"
+source = "git+https://github.com/Glatzel/rs-log-template?tag=v0.0.1#ba697b1db7b3f6ca0cb3832fa0419d13e5e792c3"
+dependencies = [
+ "chrono",
+ "owo-colors",
+ "tracing",
+ "tracing-core",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "matchers"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -459,7 +451,7 @@ dependencies = [
  "cfg-if",
  "miette-derive",
  "thiserror",
- "unicode-width 0.1.14",
+ "unicode-width",
 ]
 
 [[package]]
@@ -569,6 +561,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 
 [[package]]
+name = "owo-colors"
+version = "4.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb37767f6569cd834a413442455e0f066d0d522de8630436e2a1761d9726ba56"
+
+[[package]]
 name = "pin-project-lite"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -663,7 +661,7 @@ dependencies = [
 
 [[package]]
 name = "py-geotool"
-version = "0.0.3"
+version = "0.0.4"
 dependencies = [
  "geotool-algorithm",
  "numpy",
@@ -1042,12 +1040,6 @@ name = "unicode-width"
 version = "0.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7dd6e30e90baa6f72411720665d41d89b9a3d039dc45b8faea1ddd07f617f6af"
-
-[[package]]
-name = "unicode-width"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1fc81956842c57dac11422a97c3b8195a1ff727f06e85c84ed2e8aa277c9a0fd"
 
 [[package]]
 name = "unindent"

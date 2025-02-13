@@ -1,9 +1,10 @@
 use bpaf::{batteries, Bpaf};
 mod transform;
 use bpaf::Parser;
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::util::SubscriberInitExt;
 use transform::transform_commands;
 
-use crate::config_logger;
 #[derive(Clone, Debug, Bpaf)]
 #[bpaf(options, version, fallback_to_usage)]
 struct Args {
@@ -75,10 +76,8 @@ fn execute(cmd: Commands) {
         } => transform::execute(&name, x, y, z, output_format, transform_commands),
     }
 }
-pub fn main() {
-    let args = args().run();
-    //config logger
-    let log_level = match args.verbose {
+fn init_log(level: Level) {
+    let tracing_level = match level {
         Level::Quiet => tracing::level_filters::LevelFilter::OFF,
         Level::Error => tracing::level_filters::LevelFilter::ERROR,
         Level::Warning => tracing::level_filters::LevelFilter::WARN,
@@ -86,7 +85,13 @@ pub fn main() {
         Level::Debug => tracing::level_filters::LevelFilter::DEBUG,
         Level::Trace => tracing::level_filters::LevelFilter::TRACE,
     };
-    config_logger::init_logger(log_level);
+    tracing_subscriber::registry()
+        .with(log_template::terminal_layer(tracing_level))
+        .init();
+}
+pub fn main() {
+    let args = args().run();
+    init_log(args.verbose);
     tracing::debug!("{:?}", args);
     execute(args.commands);
 }

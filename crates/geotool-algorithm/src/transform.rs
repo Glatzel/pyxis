@@ -1,6 +1,6 @@
 /// Converts projected XY coordinates from the height compensation plane to the sea level plane.
 ///
-/// # Parameters
+/// # Arguments
 ///
 /// - `xc`, `yc`: Coordinates on the height compensation plane (in meters).
 /// - `hb`: Elevation of the height compensation plane (in meters).
@@ -32,7 +32,7 @@ pub fn datum_compense(xc: f64, yc: f64, hb: f64, radius: f64, x0: f64, y0: f64) 
 }
 /// Converts geodetic coordinates (longitude/L, latitude/B, height/H) to Cartesian coordinates (X, Y, Z).
 ///
-/// # Parameters
+/// # Arguments
 ///
 /// - `lon`: Geodetic longitude(s) in degrees. Can be a single value or an array of values.
 /// - `lat`: Geodetic latitude(s) in degrees. Can be a single value or an array of values.
@@ -81,7 +81,7 @@ pub fn lbh2xyz(lon: f64, lat: f64, height: f64, ellipsoid: &crate::Ellipsoid) ->
 }
 /// Converts Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
 ///
-/// # Parameters
+/// # Arguments
 ///
 /// - `x`: Cartesian X-coordinate(s) in meters.
 /// - `y`: Cartesian Y-coordinate(s) in meters.

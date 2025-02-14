@@ -100,7 +100,7 @@ commit_parsers = [
     { message = "^build", skip = true },
     { message = "^ci", skip = true },
     { message = "^chore", skip = true },
-    { message = "^.*: ^.*", group = "Changed" },
+    { message = "^.*:", group = "Changed" },
 ]
 # filter out the commits that are not matched by commit parsers
 filter_commits = false

@@ -70,7 +70,7 @@ impl Ellipsoid {
     }
     /// Create an Ellipsoid from the semi-major axis and semi-minor axis.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
     /// - `semi_major_axis`: The semi-major axis (`a`) of the ellipsoid (in meters).
     /// - `semi_minor_axis`: The semi-minor axis (`b`) of the ellipsoid (in meters).

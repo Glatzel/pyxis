@@ -26,7 +26,7 @@ fn transform_lat(lon: f64, lat: f64) -> f64 {
 }
 /// Converts coordinates from `BD09` to `GCJ02` coordinate system.
 ///
-/// # Parameters
+/// # Arguments
 ///
 /// - `lon`: Longitude in `BD09` coordinate system.
 /// - `lat`: Latitude in `BD09` coordinate system.
@@ -56,7 +56,7 @@ pub fn bd09_to_gcj02(lon: f64, lat: f64) -> (f64, f64) {
 }
 /// Converts coordinates from `GCJ02` to `WGS84` coordinate system.
 ///
-/// # Parameters
+/// # Arguments
 ///
 /// - `lon`: Longitude in `GCJ02` coordinate system.
 /// - `lat`: Latitude in `GCJ02` coordinate system.
@@ -90,7 +90,7 @@ pub fn gcj02_to_wgs84(lon: f64, lat: f64) -> (f64, f64) {
 }
 /// Converts coordinates from `BD09` to `WGS84` coordinate system.
 ///
-/// # Parameters
+/// # Arguments
 ///
 /// - `lon`: Longitude in `BD09` coordinate system.
 /// - `lat`: Latitude in `BD09` coordinate system.
@@ -115,7 +115,7 @@ pub fn bd09_to_wgs84(lon: f64, lat: f64) -> (f64, f64) {
 }
 /// Converts coordinates from `GCJ02` to `BD09` coordinate system.
 ///
-/// # Parameters
+/// # Arguments
 ///
 /// - `lon`: Longitude in `GCJ02` coordinate system.
 /// - `lat`: Latitude in `GCJ02` coordinate system.
@@ -143,7 +143,7 @@ pub fn gcj02_to_bd09(lon: f64, lat: f64) -> (f64, f64) {
 }
 /// Converts coordinates from `WGS84` to `GCJ02` coordinate system.
 ///
-/// # Parameters
+/// # Arguments
 ///
 /// - `lon`: Longitude in `WGS84` coordinate system.
 /// - `lat`: Latitude in `WGS84` coordinate system.
@@ -177,7 +177,7 @@ pub fn wgs84_to_gcj02(lon: f64, lat: f64) -> (f64, f64) {
 }
 /// Converts coordinates from `BD09` to `WGS84` coordinate system.
 ///
-/// # Parameters
+/// # Arguments
 ///
 /// - `lon`: Longitude in `BD09` coordinate system.
 /// - `lat`: Latitude in `BD09` coordinate system.

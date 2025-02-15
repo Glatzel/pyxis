@@ -11,12 +11,12 @@ pub enum CryptoSpace {
 
 const EARTH_R: f64 = 6378137.0;
 const _X_PI: f64 = PI * 3000.0 / 180.0;
-const EE: f64 = 0.00669342162296594323;
+const EE: f64 = 0.006_693_421_622_965_943;
 fn out_of_china(lon: f64, lat: f64) -> bool {
-    if lon < 72.004 || lon > 137.8347 {
+    if !(72.004..=137.8347).contains(&lon) {
         return true;
     }
-    if lat < 0.8293 || lat > 55.8271 {
+    if !(0.8293..=55.8271).contains(&lat) {
         return true;
     }
     false
@@ -281,13 +281,7 @@ pub fn distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
     let arc_lat_b = lat_b * PI / 180.0;
     let x = (arc_lat_a).cos() * (arc_lat_b).cos() * ((lon_a - lon_b) * PI / 180.0).cos();
     let y = (arc_lat_a).sin() * (arc_lat_b).sin();
-    let mut s = x + y;
-    if s > 1.0 {
-        s = 1.0
-    }
-    if s < -1.0 {
-        s = -1.0
-    }
+    let s = (x + y).clamp(-1.0, 1.0);
     let alpha = s.acos();
     alpha * EARTH_R
 }

@@ -3,12 +3,5 @@ name = "geotool-algorithm"
 version.workspace = true
 edition.workspace = true
 
-[dependencies]
-
 [dev-dependencies]
 float-cmp = { workspace = true }
-
-[target.'cfg(debug_assertions)'.dependencies]
-tracing = { workspace = true }
-log-template = { workspace = true }
-tracing-subscriber = { workspace = true }

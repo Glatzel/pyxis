@@ -407,7 +407,7 @@ mod tests {
     fn test_crypto() {
         let (lon, lat) = (121.0917077, 30.6107779);
         let (test_lon, test_lat) = super::wgs84_to_bd09(lon, lat);
-        let (test_lon, test_lat) = super::bd09_to_wgs84_exact(test_lon, test_lat, 1e-13, 1000);
+        let (test_lon, test_lat) = super::bd09_to_wgs84_exact(test_lon, test_lat, 1e-13, 35);
         println!("{test_lon},{test_lat}");
         let d = super::distance_geo(121.0917077, 30.6107779, test_lon, test_lat);
         println!("distance: {d}");

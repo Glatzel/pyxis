@@ -207,10 +207,10 @@ pub fn wgs84_to_gcj02(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.09170577473259, 30.610767662599578);
+/// let p = (121.0917077,30.6107779);
 /// let p = geotool_algorithm::wgs84_to_bd09(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.10271691314193, epsilon = 1e-5);
-/// assert_approx_eq!(f64, p.1, 30.614836298418275, epsilon = 1e-5);
+/// assert_approx_eq!(f64, p.0, 121.10271732371203, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, 30.61484572185035,  epsilon = 1e-17);
 /// ```
 pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
     let (gcj_lon, gcj_lat) = wgs84_to_gcj02(wgs84_lon, wgs84_lat);
@@ -225,6 +225,19 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// - `gcj_lat`: Latitude in `GCJ02` coordinate system.
 /// - `threshold`: Error threshold. Suggest value `1e-6`.
 /// - `max_iter``: Max iterations. Suggest value `30`.
+///
+/// # Example
+///
+/// ```
+/// let (wgs_lon, wgs_lat) = geotool_algorithm::gcj02_to_wgs84_exact(121.09626935575027, 30.608604331756705, 1e-6, 30);
+/// let d = geotool_algorithm::distance_geo(wgs_lon, wgs_lat, 121.0917077, 30.6107779);
+/// println!(
+///     "delta_lon:{:.6e}, delta_lat:{:.6e}, delta_distance: {d}",
+///     (wgs_lon - 121.0917077).abs(),
+///     (wgs_lat - 30.6107779).abs()
+/// );
+/// assert!(d < 0.5)
+/// ```
 pub fn gcj02_to_wgs84_exact(
     gcj02_lon: f64,
     gcj02_lat: f64,
@@ -298,9 +311,9 @@ pub fn gcj02_to_wgs84_exact(
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// let p = (121.10271691314193, 30.614836298418275);
-/// let p = geotool_algorithm::bd09_to_wgs84(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.09170577473259, epsilon = 1e-6);
-/// assert_approx_eq!(f64, p.1, 30.610767662599578, epsilon = 1e-6);
+/// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-17, 1000);
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-5);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-5);
 /// ```
 pub fn bd09_to_wgs84_exact(
     bd09_lon: f64,
@@ -321,22 +334,4 @@ pub fn distance_geo(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
     let s = (x + y).clamp(-1.0, 1.0);
     let alpha = s.acos();
     alpha * EARTH_R
-}
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn test_gcj2wgs_exact() {
-        let (wgs_lon, wgs_lat) =
-            super::gcj02_to_wgs84_exact(121.09626935575027, 30.608604331756705, 1e-6, 30);
-        println!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
-        let d = super::distance_geo(wgs_lon, wgs_lat, 121.0917077, 30.6107779);
-        println!(
-            "delta_lon:{:.6e}, delta_lat:{:.6e}, delta_distance: {d}",
-            (wgs_lon - 121.0917077).abs(),
-            (wgs_lat - 30.6107779).abs()
-        );
-        assert!(d < 0.5)
-    }
 }

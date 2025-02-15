@@ -223,16 +223,14 @@ pub fn wgs84_to_bd09(lon: f64, lat: f64) -> (f64, f64) {
     gcj02_to_bd09(gcj_lon, gcj_lat)
 }
 
-// gcj2wgs_exact convert GCJ-02 coordinate(gcj_lat, gcj_lon) to WGS-84 coordinate.
-///
-/// To output WGS-84 coordinate's accuracy is less than 0.5m, set `threshold = 1e-6` and `max_iter = 30`.
+/// gcj2wgs_exact convert GCJ-02 coordinate(gcj_lat, gcj_lon) to WGS-84 coordinate.
 ///
 /// # Arguments
 ///
 /// - `gcj_lon`: Longitude in `GCJ02` coordinate system.
 /// - `gcj_lat`: Latitude in `GCJ02` coordinate system.
-/// - `threshold`: Error threshold.
-/// - `max_iter``: Max iterations.
+/// - `threshold`: Error threshold. Suggest value `1e-6`.
+/// - `max_iter``: Max iterations. Suggest value `30`.
 pub fn gcj02_to_wgs84_exact(
     gcj_lon: f64,
     gcj_lat: f64,

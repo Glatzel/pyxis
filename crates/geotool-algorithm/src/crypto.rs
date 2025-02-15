@@ -223,20 +223,16 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 ///
 /// - `gcj_lon`: Longitude in `GCJ02` coordinate system.
 /// - `gcj_lat`: Latitude in `GCJ02` coordinate system.
-/// - `threshold`: Error threshold. Suggest value `1e-6`.
-/// - `max_iter``: Max iterations. Suggest value `30`.
+/// - `threshold`: Error threshold. Suggest value `1e-10`.
+/// - `max_iter``: Max iterations. Suggest value `100`.
 ///
 /// # Example
 ///
 /// ```
-/// let (wgs_lon, wgs_lat) = geotool_algorithm::gcj02_to_wgs84_exact(121.09626935575027, 30.608604331756705, 1e-6, 30);
-/// let d = geotool_algorithm::distance_geo(wgs_lon, wgs_lat, 121.0917077, 30.6107779);
-/// println!(
-///     "delta_lon:{:.6e}, delta_lat:{:.6e}, delta_distance: {d}",
-///     (wgs_lon - 121.0917077).abs(),
-///     (wgs_lat - 30.6107779).abs()
-/// );
-/// assert!(d < 0.5)
+/// use float_cmp::assert_approx_eq;
+/// let p = geotool_algorithm::gcj02_to_wgs84_exact(121.09626935575027, 30.608604331756705, 1e-17, 100);
+/// assert_approx_eq!(f64, p.0,  121.0917077, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, 30.6107779,  epsilon = 1e-17);
 /// ```
 pub fn gcj02_to_wgs84_exact(
     gcj02_lon: f64,
@@ -291,7 +287,76 @@ pub fn gcj02_to_wgs84_exact(
     }
     ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
 }
+/// gcj2wgs_exact convert GCJ-02 coordinate(gcj_lat, gcj_lon) to WGS-84 coordinate.
+///
+/// # Arguments
+///
+/// - `gcj_lon`: Longitude in `GCJ02` coordinate system.
+/// - `gcj_lat`: Latitude in `GCJ02` coordinate system.
+/// - `threshold`: Error threshold. Suggest value `1e-10`.
+/// - `max_iter``: Max iterations. Suggest value `100`.
+///
+/// # Example
+///
+/// ```
+/// use float_cmp::assert_approx_eq;
+/// let p = geotool_algorithm::bd09_to_gcj02_exact(121.10271732371203, 30.61484572185035, 1e-17, 1000);
+/// assert_approx_eq!(f64, p.0,  121.09626935575027, epsilon = 1e-13);
+/// assert_approx_eq!(f64, p.1, 30.608604331756705,  epsilon = 1e-14);
+/// ```
+pub fn bd09_to_gcj02_exact(
+    bd09_lon: f64,
+    bd09_lat: f64,
+    threshold: f64,
+    max_iter: usize,
+) -> (f64, f64) {
+    let (mut gcj02_lon, mut gcj02_lat) = bd09_to_gcj02(bd09_lon, bd09_lat);
 
+    let mut d_lon = (gcj02_lon - bd09_lon).abs();
+    let mut d_lat = (gcj02_lat - bd09_lat).abs();
+
+    let mut m_lon = gcj02_lon - d_lon;
+    let mut m_lat = gcj02_lat - d_lat;
+    let mut p_lon = gcj02_lon + d_lon;
+    let mut p_lat = gcj02_lat + d_lat;
+
+    for _i in 0..max_iter {
+        (gcj02_lon, gcj02_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
+        let (tmp_lon, tmp_lat) = gcj02_to_bd09(gcj02_lon, gcj02_lat);
+        d_lon = tmp_lon - bd09_lon;
+        d_lat = tmp_lat - bd09_lat;
+
+        // print message only under debug mode
+        #[cfg(debug_assertions)]
+        {
+            println!("step: {_i}");
+            println!("gcj02_lon: {gcj02_lon}, gcj02_lat: {gcj02_lat}");
+            println!("d_lon: {d_lon:.6e}, d_lat: {d_lat:.6e}");
+            println!("p_lon: {p_lon}, p_lat: {p_lat}");
+            println!("m_lon: {m_lon}, m_lat: {m_lat}");
+        }
+
+        if d_lat.abs() < threshold && d_lon.abs() < threshold {
+            return (gcj02_lon, gcj02_lat);
+        }
+        if d_lon > 0.0 {
+            p_lon = gcj02_lon;
+        } else {
+            m_lon = gcj02_lon;
+        }
+        if d_lat > 0.0 {
+            p_lat = gcj02_lat;
+        } else {
+            m_lat = gcj02_lat;
+        }
+    }
+    // print message only under debug mode
+    #[cfg(debug_assertions)]
+    {
+        println!("Exeed max iteration number: {max_iter}");
+    }
+    ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
+}
 /// Converts coordinates from `BD09` to `WGS84` coordinate system.
 ///
 /// # Arguments
@@ -304,16 +369,16 @@ pub fn gcj02_to_wgs84_exact(
 /// A tuple `(lon, lat)` representing the coordinates in the `WGS84` coordinate system:
 /// - `lon`: Longitude in the `WGS84` coordinate system.
 /// - `lat`: Latitude in the `WGS84` coordinate system.
-/// - `threshold`: Error threshold. Suggest value `1e-6`.
-/// - `max_iter``: Max iterations. Suggest value `30`.
+/// - `threshold`: Error threshold. Suggest value `1e-10`.
+/// - `max_iter``: Max iterations. Suggest value `100`.
 ///
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.10271691314193, 30.614836298418275);
+/// let p = (121.10271732371203, 30.61484572185035);
 /// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-17, 1000);
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-4);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-4);
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-13);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-14);
 /// ```
 pub fn bd09_to_wgs84_exact(
     bd09_lon: f64,
@@ -321,7 +386,8 @@ pub fn bd09_to_wgs84_exact(
     threshold: f64,
     max_iter: usize,
 ) -> (f64, f64) {
-    let (gcj_lon, gcj_lat) = bd09_to_gcj02(bd09_lon, bd09_lat);
+    let (gcj_lon, gcj_lat) = bd09_to_gcj02_exact(bd09_lon, bd09_lat, threshold, max_iter);
+    println!("{gcj_lon},{gcj_lat}");
     gcj02_to_wgs84_exact(gcj_lon, gcj_lat, threshold, max_iter)
 }
 

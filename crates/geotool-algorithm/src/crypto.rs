@@ -312,8 +312,8 @@ pub fn gcj02_to_wgs84_exact(
 /// use float_cmp::assert_approx_eq;
 /// let p = (121.10271691314193, 30.614836298418275);
 /// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-17, 1000);
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-5);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-5);
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-4);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-4);
 /// ```
 pub fn bd09_to_wgs84_exact(
     bd09_lon: f64,

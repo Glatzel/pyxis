@@ -257,7 +257,7 @@ pub fn gcj02_to_wgs84_exact(
     let mut p_lon = wgs_lon + d_lon;
     let mut p_lat = wgs_lat + d_lat;
 
-    for i in 0..max_iter {
+    for _i in 0..max_iter {
         (wgs_lon, wgs_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
         let (tmp_lon, tmp_lat) = wgs84_to_gcj02(wgs_lon, wgs_lat);
         d_lon = tmp_lon - gcj02_lon;
@@ -266,7 +266,7 @@ pub fn gcj02_to_wgs84_exact(
         // print message only under debug mode
         #[cfg(debug_assertions)]
         {
-            println!("step: {i}");
+            println!("step: {_i}");
             println!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
             println!("d_lon: {d_lon:.6e}, d_lat: {d_lat:.6e}");
             println!("p_lon: {p_lon}, p_lat: {p_lat}");

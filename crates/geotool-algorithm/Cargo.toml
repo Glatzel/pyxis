@@ -3,7 +3,5 @@ name = "geotool-algorithm"
 version.workspace = true
 edition.workspace = true
 
-[dependencies]
-
 [dev-dependencies]
 float-cmp = { workspace = true }

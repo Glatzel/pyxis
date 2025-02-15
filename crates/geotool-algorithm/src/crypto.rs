@@ -255,8 +255,6 @@ pub fn gcj02_to_wgs84_exact(
         d_lat = tmp_lat - gcj_lat;
         d_lon = tmp_lon - gcj_lon;
 
-        println!("{wgs_lon},{m_lon},{p_lon},{}", d_lon.abs());
-        // println!("{wgs_lat},{m_lat} + {p_lat}");
         if d_lat.abs() < threshold && d_lon.abs() < threshold {
             return (wgs_lon, wgs_lat);
         }
@@ -271,7 +269,7 @@ pub fn gcj02_to_wgs84_exact(
             m_lat = wgs_lat;
         }
     }
-    println!("exeed!!!!");
+
     ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
 }
 
@@ -285,6 +283,7 @@ pub fn distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
     let alpha = s.acos();
     alpha * EARTH_R
 }
+
 #[cfg(test)]
 mod tests {
 
@@ -294,7 +293,7 @@ mod tests {
             super::gcj02_to_wgs84_exact(121.09626935575027, 30.608604331756705, 1e-6, 30);
         println!("{wgs_lon},{wgs_lat}");
         let d = super::distance(wgs_lon, wgs_lat, 121.0917077, 30.6107779);
-        println!("{d}");
+        println!("delta: {d}");
         assert!(d < 0.5)
     }
 }

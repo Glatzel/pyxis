@@ -25,7 +25,7 @@ impl ContextTransform {
     pub fn crypto(&mut self, from: CryptoSpace, to: CryptoSpace) {
         (self.x, self.y) = match (from, to) {
             (CryptoSpace::BD09, CryptoSpace::GCJ02) => {
-                geotool_algorithm::bd09_to_gcj02(self.x, self.y)
+                geotool_algorithm::bd09_to_gcj02_exact(self.x, self.y, 1e-17, 1000)
             }
             (CryptoSpace::BD09, CryptoSpace::WGS84) => {
                 geotool_algorithm::bd09_to_wgs84_exact(self.x, self.y, 1e-17, 1000)

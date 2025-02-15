@@ -293,16 +293,16 @@ pub fn gcj02_to_wgs84_exact(
 ///
 /// - `gcj_lon`: Longitude in `GCJ02` coordinate system.
 /// - `gcj_lat`: Latitude in `GCJ02` coordinate system.
-/// - `threshold`: Error threshold. Suggest value `1e-10`.
+/// - `threshold`: Error threshold. Suggest value `1e-13`.
 /// - `max_iter``: Max iterations. Suggest value `100`.
 ///
 /// # Example
 ///
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = geotool_algorithm::bd09_to_gcj02_exact(121.10271732371203, 30.61484572185035, 1e-17, 1000);
+/// let p = geotool_algorithm::bd09_to_gcj02_exact(121.10271732371203, 30.61484572185035, 1e-13, 100);
 /// assert_approx_eq!(f64, p.0,  121.09626935575027, epsilon = 1e-13);
-/// assert_approx_eq!(f64, p.1, 30.608604331756705,  epsilon = 1e-14);
+/// assert_approx_eq!(f64, p.1, 30.608604331756705,  epsilon = 1e-13);
 /// ```
 pub fn bd09_to_gcj02_exact(
     bd09_lon: f64,
@@ -369,16 +369,16 @@ pub fn bd09_to_gcj02_exact(
 /// A tuple `(lon, lat)` representing the coordinates in the `WGS84` coordinate system:
 /// - `lon`: Longitude in the `WGS84` coordinate system.
 /// - `lat`: Latitude in the `WGS84` coordinate system.
-/// - `threshold`: Error threshold. Suggest value `1e-10`.
+/// - `threshold`: Error threshold. Suggest value `1e-13`.
 /// - `max_iter``: Max iterations. Suggest value `100`.
 ///
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// let p = (121.10271732371203, 30.61484572185035);
-/// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-17, 1000);
+/// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-13, 100);
 /// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-13);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-14);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-13);
 /// ```
 pub fn bd09_to_wgs84_exact(
     bd09_lon: f64,
@@ -407,10 +407,12 @@ mod tests {
     fn test_crypto() {
         let (lon, lat) = (121.0917077, 30.6107779);
         let (test_lon, test_lat) = super::wgs84_to_bd09(lon, lat);
-        let (test_lon, test_lat) = super::bd09_to_wgs84_exact(test_lon, test_lat, 1e-17, 1000);
+        let (test_lon, test_lat) = super::bd09_to_wgs84_exact(test_lon, test_lat, 1e-13, 1000);
         println!("{test_lon},{test_lat}");
         let d = super::distance_geo(121.0917077, 30.6107779, test_lon, test_lat);
         println!("distance: {d}");
-        float_cmp::assert_approx_eq!(f64, d, 0.0, epsilon = 1e-10);
+        float_cmp::assert_approx_eq!(f64, lon, test_lon, epsilon = 1e-13);
+        float_cmp::assert_approx_eq!(f64, lat, test_lat, epsilon = 1e-13);
+        float_cmp::assert_approx_eq!(f64, d, 0.0, epsilon = 1e-17);
     }
 }

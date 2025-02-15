@@ -98,11 +98,7 @@ jobs:
         uses: prefix-dev/setup-pixi@v0.8.1
         with:
           cache: false
-          environments: dev
-
-      - name: pixi install
-        if: ${{steps.check-cache.outputs.cache-hit!='true'}}
-        run: pixi install -e dev
+          environments: default
 
       - name: save pixi
         if: ${{steps.check-cache.outputs.cache-hit!='true'}}
@@ -112,7 +108,6 @@ jobs:
           key: ${{steps.check-cache.outputs.cache-primary-key}}
 
 
-  # always cache vcpkg, rerun install if event is not pr.
   cache-vcpkg:
     runs-on: windows-latest
     steps:
@@ -138,7 +133,7 @@ jobs:
           key: ${{steps.restore-vcpkg.outputs.cache-primary-key}}
 
   out-cache:
-    needs: [cache-vcpkg,cache-pixi]
+    needs: [cache-pixi,cache-vcpkg]
     runs-on: ubuntu-latest
     steps:
       - run: echo "out cache."
@@ -167,7 +162,6 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN  }}
-          slug: Glatzel/rs-geotool
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
@@ -195,7 +189,6 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: Glatzel/rs-geotool
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
@@ -241,6 +234,25 @@ jobs:
           path: dist/*.whl
           if-no-files-found: error
 
+  sphinx:
+    needs: out-cache
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci-win
+      - uses: Swatinem/rust-cache@v2
+
+      - name: sphinx build
+        run: ./scripts/sphinx.ps1
+
+      - name: upload doc
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-doc
+          path: dist/*.zip
+          if-no-files-found: error
+
+
   build-geotool-cli:
     needs: out-cache
     runs-on: windows-latest
@@ -271,6 +283,7 @@ jobs:
     needs:
       - build-geotool-cli
       - build-py-geotool
+      - sphinx
     runs-on: ubuntu-latest
     steps:
       - run: echo "out build."

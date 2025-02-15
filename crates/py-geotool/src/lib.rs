@@ -1,5 +1,5 @@
 mod crypto;
-mod geometry_coordinate;
+mod space;
 mod transform;
 use pyo3::prelude::*;
 
@@ -14,24 +14,12 @@ fn py_geotool(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_wrapped(wrap_pyfunction!(crypto::py_wgs84_to_gcj02))?;
 
     // geometry_coordinate
-    m.add_wrapped(wrap_pyfunction!(
-        geometry_coordinate::py_cartesian_to_cylindrical
-    ))?;
-    m.add_wrapped(wrap_pyfunction!(
-        geometry_coordinate::py_cartesian_to_spherical
-    ))?;
-    m.add_wrapped(wrap_pyfunction!(
-        geometry_coordinate::py_cylindrical_to_cartesian
-    ))?;
-    m.add_wrapped(wrap_pyfunction!(
-        geometry_coordinate::py_cylindrical_to_spherical
-    ))?;
-    m.add_wrapped(wrap_pyfunction!(
-        geometry_coordinate::py_spherical_to_cartesian
-    ))?;
-    m.add_wrapped(wrap_pyfunction!(
-        geometry_coordinate::py_spherical_to_cylindrical
-    ))?;
+    m.add_wrapped(wrap_pyfunction!(space::py_cartesian_to_cylindrical))?;
+    m.add_wrapped(wrap_pyfunction!(space::py_cartesian_to_spherical))?;
+    m.add_wrapped(wrap_pyfunction!(space::py_cylindrical_to_cartesian))?;
+    m.add_wrapped(wrap_pyfunction!(space::py_cylindrical_to_spherical))?;
+    m.add_wrapped(wrap_pyfunction!(space::py_spherical_to_cartesian))?;
+    m.add_wrapped(wrap_pyfunction!(space::py_spherical_to_cylindrical))?;
 
     // transform
     m.add_wrapped(wrap_pyfunction!(transform::py_datum_compense))?;

@@ -1,0 +1,23 @@
+/* add subtle gradients to sidebar and card elements */
+div.bd-page-width {
+    max-width: none;
+}
+/* modify sidebar width */
+div.bd-sidebar-primary.bd-sidebar {
+    max-width: 30em;
+}
+/* disable sidebar secondary*/
+/* div.bd-sidebar-secondary {
+    display: none;
+}
+label.sidebar-toggle.secondary-toggle {
+    display: none !important;
+} */
+/* modify title */
+div.col-lg-3 {
+    width:auto;
+}
+/* main page width */
+.bd-main .bd-content .bd-article-container {
+    max-width:none;
+}

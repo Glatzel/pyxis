@@ -1,6 +1,6 @@
 /// Converts Cartesian coordinates (x, y, z) to cylindrical coordinates (r, u, z).
 ///
-/// # Parameters
+/// # Arguments
 /// - `x`: The x-coordinate in Cartesian space (in any unit).
 /// - `y`: The y-coordinate in Cartesian space (in any unit).
 /// - `z`: The z-coordinate in Cartesian space (in any unit).
@@ -25,7 +25,7 @@ pub fn cartesian_to_cylindrical(x: f64, y: f64, z: f64) -> (f64, f64, f64) {
 
 /// Converts Cartesian coordinates (x, y, z) to spherical coordinates (u, v, r).
 ///
-/// # Parameters
+/// # Arguments
 /// - `x`: The x-coordinate in Cartesian space (in any unit).
 /// - `y`: The y-coordinate in Cartesian space (in any unit).
 /// - `z`: The z-coordinate in Cartesian space (in any unit).
@@ -51,7 +51,7 @@ pub fn cartesian_to_spherical(x: f64, y: f64, z: f64) -> (f64, f64, f64) {
 
 /// Converts cylindrical coordinates (r, u, z) to Cartesian coordinates (x, y, z).
 ///
-/// # Parameters
+/// # Arguments
 /// - `r`: The radial distance from the z-axis in the x-y plane.
 /// - `u`: The azimuthal angle in the x-y plane (in radians).
 /// - `z`: The z-coordinate (same as in cylindrical and Cartesian systems).
@@ -76,7 +76,7 @@ pub fn cylindrical_to_cartesian(r: f64, u: f64, z: f64) -> (f64, f64, f64) {
 
 /// Converts cylindrical coordinates (r, u, z) to spherical coordinates (u, v, r).
 ///
-/// # Parameters
+/// # Arguments
 /// - `r`: The radial distance in the x-y plane.
 /// - `u`: The azimuthal angle in the x-y plane (in radians).
 /// - `z`: The z-coordinate (same as in cylindrical and spherical systems).
@@ -101,7 +101,7 @@ pub fn cylindrical_to_spherical(r: f64, u: f64, z: f64) -> (f64, f64, f64) {
 
 /// Converts spherical coordinates (u, v, r) to Cartesian coordinates (x, y, z).
 ///
-/// # Parameters
+/// # Arguments
 /// - `u`: The azimuthal angle in the x-y plane (in radians).
 /// - `v`: The polar angle from the z-axis (in radians).
 /// - `r`: The radial distance from the origin.
@@ -126,7 +126,7 @@ pub fn spherical_to_cartesian(u: f64, v: f64, r: f64) -> (f64, f64, f64) {
 
 /// Converts spherical coordinates (u, v, r) to cylindrical coordinates (r, u, z).
 ///
-/// # Parameters
+/// # Arguments
 /// - `u`: The azimuthal angle in the x-y plane (in radians).
 /// - `v`: The polar angle from the z-axis (in radians).
 /// - `r`: The radial distance from the origin.

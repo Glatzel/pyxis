@@ -15,10 +15,10 @@ Write-Host "Build in $config mode."
 if ($config -ne "debug") {
     pixi run cargo build --profile $config --lib
     Set-Location crates/py-geotool
-    pixi run -e dev maturin build --out ../../dist --profile $config
+    pixi run maturin build --out ../../dist --profile $config
 }
 else {
     pixi run cargo build --lib
     Set-Location crates/py-geotool
-    pixi run -e dev maturin build --out ../../dist
+    pixi run maturin build --out ../../dist
 }

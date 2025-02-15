@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.5] - 2025-02-15
+
+### Documentation
+
+- Replace parameters with arguments in rust doc by @Glatzel in [#57](https://github.com/Glatzel/rs-geotool/pull/57)
+
+### Performance
+
+- Raise precision of `gcj02_to_wgs84` by @Glatzel in [#59](https://github.com/Glatzel/rs-geotool/pull/59)
+
+### Refactor
+
+- Migrate log to independent repo by @Glatzel in [#54](https://github.com/Glatzel/rs-geotool/pull/54)
+
+### Removed
+
+- Delete slug parameter in codecov by @Glatzel in [#55](https://github.com/Glatzel/rs-geotool/pull/55)
+
+## [0.0.4] - 2025-02-12
+
+### Changed
+
+- Prettify cli output by @Glatzel in [#47](https://github.com/Glatzel/rs-geotool/pull/47)
+
+### Documentation
+
+- Add python doc by @Glatzel in [#50](https://github.com/Glatzel/rs-geotool/pull/50)
+- Fix some python docs by @Glatzel in [#51](https://github.com/Glatzel/rs-geotool/pull/51)
+
 ## [0.0.3] - 2025-02-11
 
 ### Added
@@ -51,6 +80,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/rs-geotool/pull/14)
 
+[0.0.5]: https://github.com/Glatzel/rs-geotool/compare/v0.0.4..v0.0.5
+[0.0.4]: https://github.com/Glatzel/rs-geotool/compare/v0.0.3..v0.0.4
 [0.0.3]: https://github.com/Glatzel/rs-geotool/compare/v0.0.2..v0.0.3
 [0.0.2]: https://github.com/Glatzel/rs-geotool/compare/v0.0.1..v0.0.2
 

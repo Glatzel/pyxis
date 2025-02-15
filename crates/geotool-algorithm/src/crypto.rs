@@ -151,8 +151,8 @@ pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 ///
 /// # Arguments
 ///
-/// - `lon`: Longitude in `GCJ02` coordinate system.
-/// - `lat`: Latitude in `GCJ02` coordinate system.
+/// - `gcj02_lon`: Longitude in `GCJ02` coordinate system.
+/// - `gcj02_lat`: Latitude in `GCJ02` coordinate system.
 ///
 /// # Returns
 ///
@@ -168,20 +168,21 @@ pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.0, 121.10271691314193, epsilon = 1e-6);
 /// assert_approx_eq!(f64, p.1, 30.614836298418275, epsilon = 1e-6);
 /// ```
-pub fn gcj02_to_bd09(lon: f64, lat: f64) -> (f64, f64) {
-    let z = (lon * lon + lat * lat).sqrt() + 0.00002 * (lat * _X_PI).sin();
-    let theta = lat.atan2(lon) + 0.000003 * (lon * _X_PI).cos();
-    let dest_lon = z * (theta).cos() + 0.0065;
-    let dest_lat = z * (theta).sin() + 0.006;
-    (dest_lon, dest_lat)
+pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
+    let z = (gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat).sqrt()
+        + 0.00002 * (gcj02_lat * _X_PI).sin();
+    let theta = gcj02_lat.atan2(gcj02_lon) + 0.000003 * (gcj02_lon * _X_PI).cos();
+    let bd09_lon = z * (theta).cos() + 0.0065;
+    let bd09_lat = z * (theta).sin() + 0.006;
+    (bd09_lon, bd09_lat)
 }
 
 /// Converts coordinates from `WGS84` to `GCJ02` coordinate system.
 ///
 /// # Arguments
 ///
-/// - `lon`: Longitude in `WGS84` coordinate system.
-/// - `lat`: Latitude in `WGS84` coordinate system.
+/// - `wgs84_lon`: Longitude in `WGS84` coordinate system.
+/// - `wgs84_lat`: Latitude in `WGS84` coordinate system.
 ///
 /// # Returns
 ///
@@ -198,12 +199,12 @@ pub fn gcj02_to_bd09(lon: f64, lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-6);
 /// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-6);
 /// ```
-pub fn wgs84_to_gcj02(lon: f64, lat: f64) -> (f64, f64) {
-    if out_of_china(lon, lat) {
-        return (lon, lat);
+pub fn wgs84_to_gcj02(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
+    if out_of_china(wgs84_lon, wgs84_lat) {
+        return (wgs84_lon, wgs84_lat);
     }
-    let (d_lon, d_lat) = delta(lon, lat);
-    (lon + d_lon, lat + d_lat)
+    let (d_lon, d_lat) = delta(wgs84_lon, wgs84_lat);
+    (wgs84_lon + d_lon, wgs84_lat + d_lat)
 }
 
 /// Converts coordinates from `BD09` to `WGS84` coordinate system.
@@ -241,15 +242,15 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// - `threshold`: Error threshold. Suggest value `1e-6`.
 /// - `max_iter``: Max iterations. Suggest value `30`.
 pub fn gcj02_to_wgs84_exact(
-    gcj_lon: f64,
-    gcj_lat: f64,
+    gcj02_lon: f64,
+    gcj02_lat: f64,
     threshold: f64,
     max_iter: usize,
 ) -> (f64, f64) {
-    let (mut wgs_lon, mut wgs_lat) = gcj02_to_wgs84(gcj_lon, gcj_lat);
+    let (mut wgs_lon, mut wgs_lat) = gcj02_to_wgs84(gcj02_lon, gcj02_lat);
 
-    let mut d_lon = (wgs_lon - gcj_lon).abs();
-    let mut d_lat = (wgs_lat - gcj_lat).abs();
+    let mut d_lon = (wgs_lon - gcj02_lon).abs();
+    let mut d_lat = (wgs_lat - gcj02_lat).abs();
 
     let mut m_lon = wgs_lon - d_lon;
     let mut m_lat = wgs_lat - d_lat;
@@ -259,8 +260,8 @@ pub fn gcj02_to_wgs84_exact(
     for i in 0..max_iter {
         (wgs_lon, wgs_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
         let (tmp_lon, tmp_lat) = wgs84_to_gcj02(wgs_lon, wgs_lat);
-        d_lon = tmp_lon - gcj_lon;
-        d_lat = tmp_lat - gcj_lat;
+        d_lon = tmp_lon - gcj02_lon;
+        d_lat = tmp_lat - gcj02_lat;
 
         // print message only under debug mode
         #[cfg(debug_assertions)]

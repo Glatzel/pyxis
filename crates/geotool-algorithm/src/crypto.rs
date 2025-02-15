@@ -13,16 +13,6 @@ const EARTH_R: f64 = 6378137.0;
 const _X_PI: f64 = PI * 3000.0 / 180.0;
 const EE: f64 = 0.006_693_421_622_965_943;
 
-fn out_of_china(lon: f64, lat: f64) -> bool {
-    if !(72.004..=137.8347).contains(&lon) {
-        return true;
-    }
-    if !(0.8293..=55.8271).contains(&lat) {
-        return true;
-    }
-    false
-}
-
 fn transform(x: f64, y: f64) -> (f64, f64) {
     let xy = x * y;
     let abs_x = x.abs().sqrt();
@@ -114,9 +104,6 @@ pub fn bd09_to_gcj02(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.1, 30.6107779 , epsilon = 1e-5);
 /// ```
 pub fn gcj02_to_wgs84(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
-    if out_of_china(gcj02_lon, gcj02_lat) {
-        return (gcj02_lon, gcj02_lat);
-    }
     let (d_lon, d_lat) = delta(gcj02_lon, gcj02_lat);
     (gcj02_lon - d_lon, gcj02_lat - d_lat)
 }
@@ -200,9 +187,6 @@ pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-6);
 /// ```
 pub fn wgs84_to_gcj02(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
-    if out_of_china(wgs84_lon, wgs84_lat) {
-        return (wgs84_lon, wgs84_lat);
-    }
     let (d_lon, d_lat) = delta(wgs84_lon, wgs84_lat);
     (wgs84_lon + d_lon, wgs84_lat + d_lat)
 }
@@ -293,6 +277,39 @@ pub fn gcj02_to_wgs84_exact(
         println!("Exeed max iteration number: {max_iter}");
     }
     ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
+}
+
+/// Converts coordinates from `BD09` to `WGS84` coordinate system.
+///
+/// # Arguments
+///
+/// - `bd09_lon`: Longitude in `BD09` coordinate system.
+/// - `bd09_lat`: Latitude in `BD09` coordinate system.
+///
+/// # Returns
+///
+/// A tuple `(lon, lat)` representing the coordinates in the `WGS84` coordinate system:
+/// - `lon`: Longitude in the `WGS84` coordinate system.
+/// - `lat`: Latitude in the `WGS84` coordinate system.
+/// - `threshold`: Error threshold. Suggest value `1e-6`.
+/// - `max_iter``: Max iterations. Suggest value `30`.
+///
+/// # Example
+/// ```
+/// use float_cmp::assert_approx_eq;
+/// let p = (121.10271691314193, 30.614836298418275);
+/// let p = geotool_algorithm::bd09_to_wgs84(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, 121.09170577473259, epsilon = 1e-6);
+/// assert_approx_eq!(f64, p.1, 30.610767662599578, epsilon = 1e-6);
+/// ```
+pub fn bd09_to_wgs84_exact(
+    bd09_lon: f64,
+    bd09_lat: f64,
+    threshold: f64,
+    max_iter: usize,
+) -> (f64, f64) {
+    let (gcj_lon, gcj_lat) = bd09_to_gcj02(bd09_lon, bd09_lat);
+    gcj02_to_wgs84_exact(gcj_lon, gcj_lat, threshold, max_iter)
 }
 
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.

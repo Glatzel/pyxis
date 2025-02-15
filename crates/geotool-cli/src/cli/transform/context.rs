@@ -28,13 +28,13 @@ impl ContextTransform {
                 geotool_algorithm::bd09_to_gcj02(self.x, self.y)
             }
             (CryptoSpace::BD09, CryptoSpace::WGS84) => {
-                geotool_algorithm::bd09_to_wgs84(self.x, self.y)
+                geotool_algorithm::bd09_to_wgs84_exact(self.x, self.y, 1e-17, 1000)
             }
             (CryptoSpace::GCJ02, CryptoSpace::BD09) => {
                 geotool_algorithm::gcj02_to_bd09(self.x, self.y)
             }
             (CryptoSpace::GCJ02, CryptoSpace::WGS84) => {
-                geotool_algorithm::gcj02_to_wgs84(self.x, self.y)
+                geotool_algorithm::gcj02_to_wgs84_exact(self.x, self.y, 1e-17, 1000)
             }
             (CryptoSpace::WGS84, CryptoSpace::BD09) => {
                 geotool_algorithm::wgs84_to_bd09(self.x, self.y)

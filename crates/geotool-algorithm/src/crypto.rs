@@ -1,3 +1,7 @@
+/// # References
+/// - https://github.com/googollee/eviltransform/blob/master/rust/src/lib.rs
+/// - https://github.com/billtian/wgtochina_lb-php/tree/master
+/// - https://github.com/Leask/EvilTransform
 use std::f64::consts::PI;
 pub enum CryptoSpace {
     WGS84,
@@ -42,7 +46,7 @@ fn transform(x: f64, y: f64) -> (f64, f64) {
     (lon, lat)
 }
 fn delta(lon: f64, lat: f64) -> (f64, f64) {
-    let ( d_lon,d_lat) = transform(lon - 105.0, lat - 35.0);
+    let (d_lon, d_lat) = transform(lon - 105.0, lat - 35.0);
     let mut d_lat = d_lat;
     let mut d_lon = d_lon;
     let rad_lat = lat / 180.0 * PI;
@@ -108,8 +112,8 @@ pub fn gcj02_to_wgs84(lon: f64, lat: f64) -> (f64, f64) {
     if out_of_china(lon, lat) {
         return (lon, lat);
     }
-    let (d_lng, d_lat) = delta(lon, lat);
-    (lon - d_lng, lat - d_lat)
+    let (d_lon, d_lat) = delta(lon, lat);
+    (lon - d_lon, lat - d_lat)
 }
 /// Converts coordinates from `BD09` to `WGS84` coordinate system.
 ///
@@ -217,4 +221,86 @@ pub fn wgs84_to_gcj02(lon: f64, lat: f64) -> (f64, f64) {
 pub fn wgs84_to_bd09(lon: f64, lat: f64) -> (f64, f64) {
     let (gcj_lon, gcj_lat) = wgs84_to_gcj02(lon, lat);
     gcj02_to_bd09(gcj_lon, gcj_lat)
+}
+
+// gcj2wgs_exact convert GCJ-02 coordinate(gcj_lat, gcj_lon) to WGS-84 coordinate.
+///
+/// To output WGS-84 coordinate's accuracy is less than 0.5m, set `threshold = 1e-6` and `max_iter = 30`.
+///
+/// # Arguments
+///
+/// - `gcj_lon`: Longitude in `BD09` coordinate system.
+/// - `gcj_lat`: Latitude in `BD09` coordinate system.
+/// - `threshold`: Error threshold.
+/// - `max_iter``: Max iterations. suggested value: 30
+pub fn gcj02_to_wgs84_exact(
+    gcj_lon: f64,
+    gcj_lat: f64,
+    threshold: f64,
+    max_iter: usize,
+) -> (f64, f64) {
+    const INIT_DELTA: f64 = 0.1;
+
+    let mut d_lon = INIT_DELTA;
+    let mut d_lat = INIT_DELTA;
+
+    let mut m_lon = gcj_lon - d_lon;
+    let mut m_lat = gcj_lat - d_lat;
+    let mut p_lon = gcj_lon + d_lon;
+    let mut p_lat = gcj_lat + d_lat;
+
+    for _ in 0..max_iter {
+        let (wgs_lon, wgs_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
+        let (tmp_lon, tmp_lat) = wgs84_to_gcj02(wgs_lon, wgs_lat);
+        d_lat = tmp_lat - gcj_lat;
+        d_lon = tmp_lon - gcj_lon;
+
+        println!("{wgs_lon},{m_lon},{p_lon},{}", d_lon.abs());
+        // println!("{wgs_lat},{m_lat} + {p_lat}");
+        if d_lat.abs() < threshold && d_lon.abs() < threshold {
+            return (wgs_lon, wgs_lat);
+        }
+        if d_lon > 0.0 {
+            p_lon = wgs_lon;
+        } else {
+            m_lon = wgs_lon;
+        }
+        if d_lat > 0.0 {
+            p_lat = wgs_lat;
+        } else {
+            m_lat = wgs_lat;
+        }
+    }
+    println!("exeed!!!!");
+    ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
+}
+
+// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
+pub fn distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
+    let arc_lat_a = lat_a * PI / 180.0;
+    let arc_lat_b = lat_b * PI / 180.0;
+    let x = (arc_lat_a).cos() * (arc_lat_b).cos() * ((lon_a - lon_b) * PI / 180.0).cos();
+    let y = (arc_lat_a).sin() * (arc_lat_b).sin();
+    let mut s = x + y;
+    if s > 1.0 {
+        s = 1.0
+    }
+    if s < -1.0 {
+        s = -1.0
+    }
+    let alpha = s.acos();
+    alpha * EARTH_R
+}
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn test_gcj2wgs_exact() {
+        let (wgs_lon, wgs_lat) =
+            super::gcj02_to_wgs84_exact(121.09626935575027, 30.608604331756705, 1e-6, 30);
+        println!("{wgs_lon},{wgs_lat}");
+        let d = super::distance(wgs_lon, wgs_lat, 121.0917077, 30.6107779);
+        println!("{d}");
+        assert!(d < 0.5)
+    }
 }

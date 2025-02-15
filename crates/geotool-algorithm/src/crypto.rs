@@ -183,8 +183,8 @@ pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
 /// let p = (121.0917077,30.6107779 );
 /// let p = geotool_algorithm::wgs84_to_gcj02(p.0, p.1);
 /// println!("{},{}",p.0,p.1);
-/// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-6);
-/// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-6);
+/// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-17);
 /// ```
 pub fn wgs84_to_gcj02(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
     let (d_lon, d_lat) = delta(wgs84_lon, wgs84_lat);
@@ -400,4 +400,17 @@ pub fn distance_geo(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
     let s = (x + y).clamp(-1.0, 1.0);
     let alpha = s.acos();
     alpha * EARTH_R
+}
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_crypto() {
+        let (lon, lat) = (121.0917077, 30.6107779);
+        let (test_lon, test_lat) = super::wgs84_to_bd09(lon, lat);
+        let (test_lon, test_lat) = super::bd09_to_wgs84_exact(test_lon, test_lat, 1e-17, 1000);
+        println!("{test_lon},{test_lat}");
+        let d = super::distance_geo(121.0917077, 30.6107779, test_lon, test_lat);
+        println!("distance: {d}");
+        float_cmp::assert_approx_eq!(f64, d, 0.0, epsilon = 1e-10);
+    }
 }

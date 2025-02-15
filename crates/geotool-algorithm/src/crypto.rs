@@ -239,7 +239,7 @@ pub fn gcj02_to_wgs84_exact(
     threshold: f64,
     max_iter: usize,
 ) -> (f64, f64) {
-    const INIT_DELTA: f64 = 0.1;
+    const INIT_DELTA: f64 = 1.0;
 
     let mut d_lon = INIT_DELTA;
     let mut d_lat = INIT_DELTA;

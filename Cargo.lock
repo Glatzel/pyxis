@@ -265,6 +265,9 @@ name = "geotool-algorithm"
 version = "0.0.4"
 dependencies = [
  "float-cmp",
+ "log-template",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]

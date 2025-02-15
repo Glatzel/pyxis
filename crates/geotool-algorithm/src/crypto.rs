@@ -229,31 +229,40 @@ pub fn wgs84_to_bd09(lon: f64, lat: f64) -> (f64, f64) {
 ///
 /// # Arguments
 ///
-/// - `gcj_lon`: Longitude in `BD09` coordinate system.
-/// - `gcj_lat`: Latitude in `BD09` coordinate system.
+/// - `gcj_lon`: Longitude in `GCJ02` coordinate system.
+/// - `gcj_lat`: Latitude in `GCJ02` coordinate system.
 /// - `threshold`: Error threshold.
-/// - `max_iter``: Max iterations. suggested value: 30
+/// - `max_iter``: Max iterations.
 pub fn gcj02_to_wgs84_exact(
     gcj_lon: f64,
     gcj_lat: f64,
     threshold: f64,
     max_iter: usize,
 ) -> (f64, f64) {
-    const INIT_DELTA: f64 = 1.0;
+    let (mut wgs_lon, mut wgs_lat) = gcj02_to_wgs84(gcj_lon, gcj_lat);
 
-    let mut d_lon = INIT_DELTA;
-    let mut d_lat = INIT_DELTA;
+    let mut d_lon = (wgs_lon - gcj_lon).abs();
+    let mut d_lat = (wgs_lat - gcj_lat).abs();
 
-    let mut m_lon = gcj_lon - d_lon;
-    let mut m_lat = gcj_lat - d_lat;
-    let mut p_lon = gcj_lon + d_lon;
-    let mut p_lat = gcj_lat + d_lat;
+    let mut m_lon = wgs_lon - d_lon;
+    let mut m_lat = wgs_lat - d_lat;
+    let mut p_lon = wgs_lon + d_lon;
+    let mut p_lat = wgs_lat + d_lat;
 
-    for _ in 0..max_iter {
-        let (wgs_lon, wgs_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
+    for i in 0..max_iter {
+        (wgs_lon, wgs_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
         let (tmp_lon, tmp_lat) = wgs84_to_gcj02(wgs_lon, wgs_lat);
-        d_lat = tmp_lat - gcj_lat;
         d_lon = tmp_lon - gcj_lon;
+        d_lat = tmp_lat - gcj_lat;
+
+        #[cfg(debug_assertions)]
+        {
+            tracing::debug!("step: {i}");
+            tracing::debug!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
+            tracing::debug!("d_lon: {d_lon:.6e}, d_lat: {d_lat:.6e}");
+            tracing::debug!("p_lon: {p_lon}, p_lat: {p_lat}");
+            tracing::debug!("m_lon: {m_lon}, m_lat: {m_lat}");
+        }
 
         if d_lat.abs() < threshold && d_lon.abs() < threshold {
             return (wgs_lon, wgs_lat);
@@ -274,7 +283,7 @@ pub fn gcj02_to_wgs84_exact(
 }
 
 // distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
-pub fn distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
+pub fn distance_geo(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
     let arc_lat_a = lat_a * PI / 180.0;
     let arc_lat_b = lat_b * PI / 180.0;
     let x = (arc_lat_a).cos() * (arc_lat_b).cos() * ((lon_a - lon_b) * PI / 180.0).cos();
@@ -286,14 +295,23 @@ pub fn distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
 
 #[cfg(test)]
 mod tests {
-
+    use tracing_subscriber::filter::LevelFilter;
+    use tracing_subscriber::layer::SubscriberExt;
+    use tracing_subscriber::util::SubscriberInitExt;
     #[test]
     fn test_gcj2wgs_exact() {
+        tracing_subscriber::registry()
+            .with(log_template::terminal_layer(LevelFilter::TRACE))
+            .init();
         let (wgs_lon, wgs_lat) =
             super::gcj02_to_wgs84_exact(121.09626935575027, 30.608604331756705, 1e-6, 30);
         println!("{wgs_lon},{wgs_lat}");
-        let d = super::distance(wgs_lon, wgs_lat, 121.0917077, 30.6107779);
-        println!("delta: {d}");
+        let d = super::distance_geo(wgs_lon, wgs_lat, 121.0917077, 30.6107779);
+        println!(
+            "delta_lon:{:.6e}, delta_lat:{:.6e}, delta_distance: {d}",
+            (wgs_lon - 121.0917077).abs(),
+            (wgs_lat - 30.6107779).abs()
+        );
         assert!(d < 0.5)
     }
 }

@@ -77,10 +77,10 @@ fn delta(lon: f64, lat: f64) -> (f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.10271691314193, 30.614836298418275);
+/// let p = (121.10271732371203, 30.61484572185035);
 /// let p = geotool_algorithm::bd09_to_gcj02(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.09626892329175, epsilon = 1e-6);
-/// assert_approx_eq!(f64, p.1, 30.608594105135296, epsilon = 1e-6);
+/// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-6);
+/// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-6);
 /// ```
 pub fn bd09_to_gcj02(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
     let x = bd09_lon - 0.0065;
@@ -163,10 +163,10 @@ pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.09626892329175, 30.608594105135296);
+/// let p = (121.09626935575027, 30.608604331756705);
 /// let p = geotool_algorithm::gcj02_to_bd09(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.10271691314193, epsilon = 1e-6);
-/// assert_approx_eq!(f64, p.1, 30.614836298418275, epsilon = 1e-6);
+/// assert_approx_eq!(f64, p.0, 121.10271732371203, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, 30.61484572185035, epsilon = 1e-17);
 /// ```
 pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
     let z = (gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat).sqrt()

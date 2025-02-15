@@ -253,13 +253,14 @@ pub fn gcj02_to_wgs84_exact(
         d_lon = tmp_lon - gcj_lon;
         d_lat = tmp_lat - gcj_lat;
 
+        // log message only under debug mode
         #[cfg(debug_assertions)]
         {
-            tracing::debug!("step: {i}");
-            tracing::debug!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
-            tracing::debug!("d_lon: {d_lon:.6e}, d_lat: {d_lat:.6e}");
-            tracing::debug!("p_lon: {p_lon}, p_lat: {p_lat}");
-            tracing::debug!("m_lon: {m_lon}, m_lat: {m_lat}");
+            tracing::trace!("step: {i}");
+            tracing::trace!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
+            tracing::trace!("d_lon: {d_lon:.6e}, d_lat: {d_lat:.6e}");
+            tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
+            tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
         }
 
         if d_lat.abs() < threshold && d_lon.abs() < threshold {
@@ -276,7 +277,11 @@ pub fn gcj02_to_wgs84_exact(
             m_lat = wgs_lat;
         }
     }
-
+    // log message only under debug mode
+    #[cfg(debug_assertions)]
+    {
+        tracing::warn!("Exeed max iteration number: {max_iter}");
+    }
     ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
 }
 

@@ -123,7 +123,7 @@ jobs:
 
       - name: install vcpkg dependencies
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./scripts/install-vcpkg-dep.ps1
+        run: ./scripts/vcpkg-install.ps1
 
       - name: save vcpkg
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}

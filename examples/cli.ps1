@@ -13,11 +13,18 @@ Write-Output ""
 & ./dist/geotool/geotool.exe `
     transform -n "Jiaxing bump station" -x 121.091701 -y 30.610765 -z 0 -o json `
     crypto --from "wgs84" --to "gcj02"
+Write-Output ""
 
 # Tian'anmen national flag
 & ./dist/geotool/geotool.exe `
-transform -n "Tian'anmen national flag" -x 116.3913318 -y 39.9055625 -z 0 `
+transform -n "Tian'anmen national flag" -x 116.3913318 -y 39.9055625 -z 0 -o plain `
 crypto --from "wgs84" --to "gcj02"
+Write-Output ""
+
+# proj crate
+& ./dist/geotool/geotool.exe `
+transform -n "proj crate" -x 4760096.421921 -y 3744293.729449 -z 0 -o plain `
+proj --from "EPSG:2230" --to "EPSG:26946"
 
 Set-Location $PSScriptRoot
 Set-Location ..

@@ -16,6 +16,7 @@ pub enum TransformCommands {
         #[bpaf(short, long)]
         to: CryptoSpace,
     },
+
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Converts projected XY coordinates from the height compensation plane to the sea level plane.
     DatumCompense {
@@ -32,6 +33,7 @@ pub enum TransformCommands {
         /// Y coordinate system origin (in meters).
         y0: f64,
     },
+
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Converts geodetic coordinates (longitude/L, latitude/B, height/H) to Cartesian coordinates (X, Y, Z).
     Lbh2xyz {
@@ -42,9 +44,28 @@ pub enum TransformCommands {
         /// Inverse flattening of the ellipsoid.
         inverse_flattening: f64,
     },
+
+    #[bpaf(command, adjacent, fallback_to_usage)]
+    /// Migrate2d.
+    Migrate2d {
+        #[bpaf(short, long)]
+        given: MigrateOption2d,
+        #[bpaf(short, long)]
+        another: MigrateOption2d,
+        #[bpaf(short('x'), long)]
+        another_x: f64,
+        #[bpaf(short('y'), long)]
+        another_y: f64,
+        #[bpaf(short, long)]
+        rotate: f64,
+        #[bpaf(short, long)]
+        unit: options::RotateUnit,
+    },
+
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Normalize.
     Normalize,
+
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Transform coordinate from one known coordinate reference systems to another.
     ///
@@ -58,6 +79,7 @@ pub enum TransformCommands {
         #[bpaf(short, long, argument("PROJ"))]
         to: String,
     },
+
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Rotate Coordinate.
     Rotate {
@@ -68,6 +90,7 @@ pub enum TransformCommands {
         #[bpaf(short, long)]
         unit: options::RotateUnit,
     },
+
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Scale Coordinate.
     Scale {
@@ -78,6 +101,7 @@ pub enum TransformCommands {
         #[bpaf(short('z'), long)]
         z_scale: f64,
     },
+
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Transforms coordinates between Cartesian, cylindrical, and spherical coordinate systems.
     Space {
@@ -86,6 +110,7 @@ pub enum TransformCommands {
         #[bpaf(short, long)]
         to: CoordSpace,
     },
+
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Translate Coordinate.
     Translate {
@@ -96,6 +121,7 @@ pub enum TransformCommands {
         #[bpaf(short('z'), long)]
         z_translate: f64,
     },
+
     #[bpaf(command, adjacent, fallback_to_usage)]
     /// Converts Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
     Xyz2lbh {
@@ -193,6 +219,35 @@ pub fn execute(
                     output_x_name: "x".to_string(),
                     output_y_name: "y".to_string(),
                     output_z_name: "z".to_string(),
+                };
+                records.push(record);
+            }
+            TransformCommands::Migrate2d {
+                given,
+                another,
+                another_x,
+                another_y,
+                rotate,
+                unit,
+            } => {
+                ctx.migrate2d(*given, *another, *another_x, *another_y, *rotate, *unit);
+                let record = Record {
+                    idx: (i + 1) as u8,
+                    method: "crypto".to_string(),
+                    parameter: serde_json::json!({
+                        "given": given.to_string(),
+                        "another": another.to_string(),
+                        "another_x":another_x.to_string(),
+                        "another_y":another_y.to_string(),
+                        "rotate":rotate.to_string(),
+                        "rotate_unit": unit.to_string()
+                    }),
+                    output_x: ctx.x,
+                    output_y: ctx.y,
+                    output_z: ctx.z,
+                    output_x_name: "longitude".to_string(),
+                    output_y_name: "latitude".to_string(),
+                    output_z_name: "elevation".to_string(),
                 };
                 records.push(record);
             }

@@ -22,11 +22,11 @@
 /// ```rust
 /// let radians = std::f64::consts::PI / 2.0; // 90 degrees in radians
 /// let rotation_matrix = rotate_matrix_2d(radians);
-/// 
+///
 /// // Print the rotation matrix
 /// println!("{:?}", rotation_matrix);
 /// ```
-/// 
+///
 /// This will output:
 /// ```text
 /// [[6.123233995736766e-17, -1.0], [1.0, 6.123233995736766e-17]]

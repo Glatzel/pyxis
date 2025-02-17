@@ -16,6 +16,7 @@
 /// assert_approx_eq!(f64, ellipsoid.eccentricity(), 0.081819190842622, epsilon = 1e-12);
 /// assert_approx_eq!(f64, ellipsoid.flattening(), 0.0033528106647474805, epsilon = 1e-12);
 /// ```
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Ellipsoid {
     semi_major_axis: f64,    // Semi-major axis `a`
     semi_minor_axis: f64,    // Semi-minor axis `b`

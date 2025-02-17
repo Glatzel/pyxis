@@ -177,8 +177,8 @@ pub fn execute(
                 inverse_flattening,
             } => {
                 let ellipsoid = geotool_algorithm::Ellipsoid::from_semi_major_and_invf(
-                    semi_major_axis,
-                    inverse_flattening,
+                    *semi_major_axis,
+                    *inverse_flattening,
                 );
                 ctx.lbh2xyz(&ellipsoid);
                 let record = Record {
@@ -319,8 +319,8 @@ pub fn execute(
                 inverse_flattening,
             } => {
                 let ellipsoid = geotool_algorithm::Ellipsoid::from_semi_major_and_invf(
-                    semi_major_axis,
-                    inverse_flattening,
+                    *semi_major_axis,
+                    *inverse_flattening,
                 );
                 ctx.xyz2lbh(&ellipsoid);
                 let record = Record {

@@ -138,3 +138,31 @@ impl fmt::Display for RotateUnit {
         }
     }
 }
+#[derive(Debug, Clone, Copy, Bpaf)]
+pub enum MigrateOption2d {
+    Absolute,
+    Origin,
+    Relative,
+}
+
+impl FromStr for MigrateOption2d {
+    type Err = miette::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "absolute" => Ok(Self::Absolute),
+            "origin" => Ok(Self::Origin),
+            "relative" => Ok(Self::Relative),
+            _ => miette::bail!(""),
+        }
+    }
+}
+impl fmt::Display for MigrateOption2d {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Absolute => write!(f, "Absolute"),
+            Self::Origin => write!(f, "Origin"),
+            Self::Relative => write!(f, "Relative"),
+        }
+    }
+}

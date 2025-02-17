@@ -4,7 +4,7 @@ use std::sync::LazyLock;
 use geotool_algorithm::Ellipsoid;
 use miette::IntoDiagnostic;
 
-use super::{options, CoordSpace, CryptoSpace};
+use super::{options, CoordSpace, CryptoSpace, MigrateOption2d, RotateUnit};
 pub struct ContextTransform {
     pub x: f64,
     pub y: f64,
@@ -54,6 +54,83 @@ impl ContextTransform {
     }
     pub fn lbh2xyz(&mut self, ellipsoid: &Ellipsoid) {
         (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, ellipsoid);
+    }
+    pub fn migrate2d(
+        &mut self,
+        given: MigrateOption2d,
+        another: MigrateOption2d,
+        another_x: f64,
+        another_y: f64,
+        rotate: f64,
+        unit: RotateUnit,
+    ) {
+        let rotate = match unit {
+            options::RotateUnit::Angle => rotate.to_radians(),
+            _ => rotate,
+        };
+
+        let rotate_matrix = geotool_algorithm::rotate_matrix_2d(rotate);
+        (self.x, self.y) = match (given, another) {
+            (MigrateOption2d::Absolute, MigrateOption2d::Origin) => {
+                geotool_algorithm::migrate::rel_2d(
+                    another_x,
+                    another_y,
+                    self.x,
+                    self.y,
+                    &rotate_matrix,
+                )
+            }
+            (MigrateOption2d::Origin, MigrateOption2d::Absolute) => {
+                geotool_algorithm::migrate::rel_2d(
+                    self.x,
+                    self.y,
+                    another_x,
+                    another_y,
+                    &rotate_matrix,
+                )
+            }
+            (MigrateOption2d::Absolute, MigrateOption2d::Relative) => {
+                geotool_algorithm::migrate::origin_2d(
+                    self.x,
+                    self.y,
+                    another_x,
+                    another_y,
+                    &rotate_matrix,
+                )
+            }
+            (MigrateOption2d::Relative, MigrateOption2d::Absolute) => {
+                geotool_algorithm::migrate::origin_2d(
+                    another_x,
+                    another_y,
+                    self.x,
+                    self.y,
+                    &rotate_matrix,
+                )
+            }
+            (MigrateOption2d::Relative, MigrateOption2d::Origin) => {
+                geotool_algorithm::migrate::abs_2d(
+                    another_x,
+                    another_y,
+                    self.x,
+                    self.y,
+                    &rotate_matrix,
+                )
+            }
+            (MigrateOption2d::Origin, MigrateOption2d::Relative) => {
+                geotool_algorithm::migrate::abs_2d(
+                    self.x,
+                    self.y,
+                    another_x,
+                    another_y,
+                    &rotate_matrix,
+                )
+            }
+
+            (given, another) => {
+                tracing::warn!("Given and anther is the same. Given: {given}, Another: {another}.");
+                (self.x, self.y)
+            }
+        }
     }
     pub fn normalize(&mut self) {
         let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();

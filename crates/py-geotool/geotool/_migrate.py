@@ -137,3 +137,4 @@ class CoordMigrate:
             np.array([abs_x, abs_y], np.float64) - np.dot(cls.rotate_matrix(-angle), [rel_x, rel_y])
         ).tolist()
         return origin_x, origin_y
+print(CoordMigrate.abs(10, 20, 2, -1, 150.0))

@@ -8,7 +8,7 @@ pub use angle::*;
 pub use crypto::*;
 pub use geometry_coordinate::*;
 pub use linear_transform::*;
-pub use migrate::*;
+
 pub use transform::*;
 mod ellipsoid;
 pub use ellipsoid::*;

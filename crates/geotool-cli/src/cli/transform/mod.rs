@@ -185,8 +185,7 @@ pub fn execute(
                     idx: (i + 1) as u8,
                     method: "lbh2xyz".to_string(),
                     parameter: serde_json::json!({
-                        "semi_major_axis": semi_major_axis,
-                        "inverse_flattening": inverse_flattening
+                        "ellipsoid": ellipsoid
                     }),
                     output_x: ctx.x,
                     output_y: ctx.y,
@@ -327,8 +326,7 @@ pub fn execute(
                     idx: (i + 1) as u8,
                     method: "xyz2lbh".to_string(),
                     parameter: serde_json::json!({
-                        "semi_major_axis": semi_major_axis,
-                        "inverse_flattening": inverse_flattening
+                         "ellipsoid": ellipsoid
                     }),
                     output_x: ctx.x,
                     output_y: ctx.y,

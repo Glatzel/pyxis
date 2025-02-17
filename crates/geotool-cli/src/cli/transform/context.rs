@@ -53,7 +53,7 @@ impl ContextTransform {
         (self.x, self.y) = geotool_algorithm::datum_compense(self.x, self.y, hb, r, x0, y0);
     }
     pub fn lbh2xyz(&mut self, ellipsoid: &Ellipsoid) {
-        (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, &ellipsoid);
+        (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, ellipsoid);
     }
     pub fn normalize(&mut self) {
         let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
@@ -123,7 +123,7 @@ impl ContextTransform {
         self.z += z;
     }
     pub fn xyz2lbh(&mut self, ellipsoid: &Ellipsoid) {
-        (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, &ellipsoid);
+        (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid);
     }
 }
 #[cfg(test)]

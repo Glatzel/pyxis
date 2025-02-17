@@ -3,5 +3,11 @@ name = "geotool-algorithm"
 version.workspace = true
 edition.workspace = true
 
+[dependencies]
+serde =  { workspace = true, optional = true }
+
 [dev-dependencies]
 float-cmp = { workspace = true }
+
+[features]
+serde = ["dep:serde"]

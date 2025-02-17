@@ -12,6 +12,7 @@ __pycache__
 *.pyd
 crates/py-geotool/doc/build
 crates/py-geotool/doc/source/reference/api
+diff.md
 
 # rust
 target

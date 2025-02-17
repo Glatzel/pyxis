@@ -265,6 +265,7 @@ name = "geotool-algorithm"
 version = "0.0.5"
 dependencies = [
  "float-cmp",
+ "serde",
 ]
 
 [[package]]

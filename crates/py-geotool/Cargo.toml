@@ -5,9 +5,9 @@ edition.workspace = true
 
 [dependencies]
 pyo3 = { workspace = true }
-numpy={ workspace = true }
-geotool-algorithm={ workspace = true }
-rayon={ workspace = true }
+numpy = { workspace = true }
+geotool-algorithm = { workspace = true }
+rayon = { workspace = true }
 
 [lib]
 name = "py_geotool"

@@ -52,9 +52,8 @@ impl ContextTransform {
     pub fn datum_compense(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
         (self.x, self.y) = geotool_algorithm::datum_compense(self.x, self.y, hb, r, x0, y0);
     }
-    pub fn lbh2xyz(&mut self, semi_major_axis: f64, inverse_flattening: f64) {
-        let ellipsoid = Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
-        (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, &ellipsoid);
+    pub fn lbh2xyz(&mut self, ellipsoid: &Ellipsoid) {
+        (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, ellipsoid);
     }
     pub fn normalize(&mut self) {
         let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
@@ -123,9 +122,8 @@ impl ContextTransform {
         self.y += y;
         self.z += z;
     }
-    pub fn xyz2lbh(&mut self, semi_major_axis: f64, inverse_flattening: f64) {
-        let ellipsoid = Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
-        (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, &ellipsoid);
+    pub fn xyz2lbh(&mut self, ellipsoid: &Ellipsoid) {
+        (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid);
     }
 }
 #[cfg(test)]

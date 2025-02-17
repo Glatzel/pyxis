@@ -1,4 +1,4 @@
-pub fn _rel_2d(
+pub fn rel_2d(
     origin_x: f64,
     origin_y: f64,
     abs_x: f64,
@@ -12,7 +12,7 @@ pub fn _rel_2d(
         -rotate_matrix[1][0] * temp_x + rotate_matrix[1][1] * temp_y,
     )
 }
-pub fn _abs_2d(
+pub fn abs_2d(
     origin_x: f64,
     origin_y: f64,
     rel_x: f64,
@@ -24,7 +24,7 @@ pub fn _abs_2d(
         rotate_matrix[1][0] * rel_y - rotate_matrix[1][1] * rel_y + origin_y,
     )
 }
-pub fn _origin_2d(
+pub fn origin_2d(
     abs_x: f64,
     abs_y: f64,
     rel_x: f64,

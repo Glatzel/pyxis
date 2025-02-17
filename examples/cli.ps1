@@ -14,5 +14,10 @@ Write-Output ""
     transform -n jxws -x 121.091701 -y 30.610765 -z 0 -o json `
     crypto --from "wgs84" --to "gcj02"
 
+# 
+& ./dist/geotool/geotool.exe `
+transform -x 116.3913318 -y 39.9055625 -z 0 `
+crypto --from "wgs84" --to "gcj02"
+
 Set-Location $PSScriptRoot
 Set-Location ..

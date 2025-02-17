@@ -10,12 +10,10 @@
 /// # Returns
 ///
 /// A 2x2 rotation matrix as a 2D array:
-/// $$
 /// [
 ///     [cos(angle), -sin(angle)],
 ///     [sin(angle), cos(angle)]
 /// ]
-/// $$
 ///
 /// # Example
 ///

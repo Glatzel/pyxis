@@ -114,12 +114,12 @@ pub enum TransformCommands {
     #[bpaf(command, adjacent)]
     /// Translate Coordinate.
     Translate {
-        #[bpaf(short('x'), long)]
-        x_translate: f64,
-        #[bpaf(short('y'), long)]
-        y_translate: f64,
-        #[bpaf(short('z'), long)]
-        z_translate: f64,
+        #[bpaf(short, long)]
+        tx: f64,
+        #[bpaf(short, long)]
+        ty: f64,
+        #[bpaf(short, long)]
+        tz: f64,
     },
 
     #[bpaf(command, adjacent)]
@@ -346,9 +346,9 @@ pub fn execute(
                 records.push(record);
             }
             TransformCommands::Translate {
-                x_translate,
-                y_translate,
-                z_translate,
+                tx: x_translate,
+                ty: y_translate,
+                tz: z_translate,
             } => {
                 ctx.translate(*x_translate, *y_translate, *z_translate);
                 let record = Record {

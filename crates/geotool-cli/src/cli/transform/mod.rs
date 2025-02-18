@@ -94,11 +94,11 @@ pub enum TransformCommands {
     #[bpaf(command, adjacent)]
     /// Scale Coordinate.
     Scale {
-        #[bpaf( long)]
+        #[bpaf(long)]
         sx: f64,
-        #[bpaf( long)]
+        #[bpaf(long)]
         sy: f64,
-        #[bpaf( long)]
+        #[bpaf(long)]
         sz: f64,
     },
 

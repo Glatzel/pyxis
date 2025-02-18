@@ -29,7 +29,7 @@ fn test_wgs84_to_gcj02() {
         ));
 }
 #[test]
-fn test_gcj02_to_wgs84_() {
+fn test_gcj02_to_wgs84() {
     Command::cargo_bin("geotool")
         .unwrap()
         .args([

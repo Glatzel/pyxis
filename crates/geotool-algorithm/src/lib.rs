@@ -1,13 +1,13 @@
 mod angle;
 mod crypto;
 mod ellipsoid;
-mod geometry_coordinate;
+mod space;
 mod linear_transform;
 pub mod migrate;
 mod transform;
 pub use angle::*;
 pub use crypto::*;
 pub use ellipsoid::*;
-pub use geometry_coordinate::*;
+pub use space::*;
 pub use linear_transform::*;
 pub use transform::*;

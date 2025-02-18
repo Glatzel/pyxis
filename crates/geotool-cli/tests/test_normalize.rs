@@ -2,7 +2,7 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 #[test]
 fn test_normalize() {
-    let length: f64 = (1.0f64.powi(2) + 1.0f64.powi(2) + 1.0f64.powi(2)).sqrt();
+    let length: f64 = (1.0f64.powi(2) + 2.0f64.powi(2) + 3.0f64.powi(2)).sqrt();
     Command::cargo_bin("geotool")
         .unwrap()
         .args(["transform", "-x", "1", "-y", "2", "-z", "3"])

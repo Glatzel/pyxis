@@ -15,9 +15,9 @@
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// let (r, u, z) = geotool_algorithm::cartesian_to_cylindrical(1.2, 3.4, -5.6);
-/// assert_approx_eq!(f64, r, 3.60555127546399, epsilon = 1e-6);
-/// assert_approx_eq!(f64, u, 1.23150371234085, epsilon = 1e-6);
-/// assert_approx_eq!(f64, z, -5.60000000000000, epsilon = 1e-6);
+/// assert_approx_eq!(f64, r, 3.605551275463989, epsilon = 1e-17);
+/// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-17);
+/// assert_approx_eq!(f64, z, -5.60000000000000, epsilon = 1e-17);
 /// ```
 pub fn cartesian_to_cylindrical(x: f64, y: f64, z: f64) -> (f64, f64, f64) {
     ((x.powf(2.0) + y.powf(2.0)).sqrt(), y.atan2(x), z)
@@ -40,9 +40,9 @@ pub fn cartesian_to_cylindrical(x: f64, y: f64, z: f64) -> (f64, f64, f64) {
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// let (u, v, r) = geotool_algorithm::cartesian_to_spherical(1.2, 3.4, -5.6);
-/// assert_approx_eq!(f64, u, 1.23150371234085, epsilon = 1e-6);
-/// assert_approx_eq!(f64, v, 2.5695540653144073, epsilon = 1e-6);
-/// assert_approx_eq!(f64, r, 6.66033032213868, epsilon = 1e-6);
+/// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-15);
+/// assert_approx_eq!(f64, v, 2.5695540653144073, epsilon = 1e-15);
+/// assert_approx_eq!(f64, r, 6.660330322138685, epsilon = 1e-15);
 /// ```
 pub fn cartesian_to_spherical(x: f64, y: f64, z: f64) -> (f64, f64, f64) {
     let r = (x.powf(2.0) + y.powf(2.0) + z.powf(2.0)).sqrt();
@@ -65,10 +65,10 @@ pub fn cartesian_to_spherical(x: f64, y: f64, z: f64) -> (f64, f64, f64) {
 /// # Example
 /// ```
 ///  use float_cmp::assert_approx_eq;
-/// let (x, y, z) = geotool_algorithm::cylindrical_to_cartesian(3.60555127546399, 1.23150371234085, -5.60000000000000);
-/// assert_approx_eq!(f64, x, 1.2,epsilon = 1e-6);
-/// assert_approx_eq!(f64, y, 3.4, epsilon = 1e-6);
-/// assert_approx_eq!(f64, z, -5.6,epsilon = 1e-6);
+/// let (x, y, z) = geotool_algorithm::cylindrical_to_cartesian(3.605551275463989, 1.2315037123408519, -5.60000000000000);
+/// assert_approx_eq!(f64, x, 1.2,epsilon = 1e-15);
+/// assert_approx_eq!(f64, y, 3.4, epsilon = 1e-15);
+/// assert_approx_eq!(f64, z, -5.6,epsilon = 1e-15);
 /// ```
 pub fn cylindrical_to_cartesian(r: f64, u: f64, z: f64) -> (f64, f64, f64) {
     (r * u.cos(), r * u.sin(), z)
@@ -90,10 +90,10 @@ pub fn cylindrical_to_cartesian(r: f64, u: f64, z: f64) -> (f64, f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let (u, v, r) = geotool_algorithm::cylindrical_to_spherical(3.60555127546399, 1.23150371234085, -5.60000000000000);
-/// assert_approx_eq!(f64, u, 1.23150371234085, epsilon = 1e-6);
-/// assert_approx_eq!(f64, v, 2.5695540653144073, epsilon = 1e-6);
-/// assert_approx_eq!(f64, r, 6.66033032213868, epsilon = 1e-6);
+/// let (u, v, r) = geotool_algorithm::cylindrical_to_spherical(3.605551275463989, 1.2315037123408519, -5.60000000000000);
+/// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-15);
+/// assert_approx_eq!(f64, v, 2.5695540653144073, epsilon = 1e-15);
+/// assert_approx_eq!(f64, r, 6.660330322138685, epsilon = 1e-15);
 /// ```
 pub fn cylindrical_to_spherical(r: f64, u: f64, z: f64) -> (f64, f64, f64) {
     (u, r.atan2(z), (r.powf(2.0) + z.powf(2.0)).sqrt())
@@ -115,10 +115,10 @@ pub fn cylindrical_to_spherical(r: f64, u: f64, z: f64) -> (f64, f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let (x, y, z) = geotool_algorithm::spherical_to_cartesian(1.23150371234085, 2.5695540653144073, 6.66033032213868);
-/// assert_approx_eq!(f64, x, 1.2,epsilon = 1e-6);
-/// assert_approx_eq!(f64, y, 3.4, epsilon = 1e-6);
-/// assert_approx_eq!(f64, z, -5.6,epsilon = 1e-6);
+/// let (x, y, z) = geotool_algorithm::spherical_to_cartesian(1.2315037123408519, 2.5695540653144073, 6.660330322138685);
+/// assert_approx_eq!(f64, x, 1.2,epsilon = 1e-15);
+/// assert_approx_eq!(f64, y, 3.4, epsilon = 1e-15);
+/// assert_approx_eq!(f64, z, -5.6,epsilon = 1e-15);
 /// ```
 pub fn spherical_to_cartesian(u: f64, v: f64, r: f64) -> (f64, f64, f64) {
     (r * v.sin() * u.cos(), r * v.sin() * u.sin(), r * v.cos())
@@ -140,10 +140,10 @@ pub fn spherical_to_cartesian(u: f64, v: f64, r: f64) -> (f64, f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let (r, u, z) = geotool_algorithm::spherical_to_cylindrical(1.23150371234085, 2.5695540653144073, 6.66033032213868);
-/// assert_approx_eq!(f64, r, 3.60555127546399,epsilon = 1e-6);
-/// assert_approx_eq!(f64, u, 1.23150371234085, epsilon = 1e-6);
-/// assert_approx_eq!(f64, z, -5.60000000000000,epsilon = 1e-6);
+/// let (r, u, z) = geotool_algorithm::spherical_to_cylindrical(1.2315037123408519, 2.5695540653144073, 6.660330322138685);
+/// assert_approx_eq!(f64, r, 3.605551275463989,epsilon = 1e-15);
+/// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-15);
+/// assert_approx_eq!(f64, z, -5.60000000000000,epsilon = 1e-15);
 /// ```
 pub fn spherical_to_cylindrical(u: f64, v: f64, r: f64) -> (f64, f64, f64) {
     (r * v.sin(), u, r * v.cos())

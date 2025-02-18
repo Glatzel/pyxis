@@ -8,7 +8,7 @@ pub use options::*;
 use record::Record;
 #[derive(Bpaf, Clone, Debug)]
 pub enum TransformCommands {
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Crypto coordinates between `BD09`, `GCJ02` and `WGS84`.
     Crypto {
         #[bpaf(short, long)]
@@ -17,7 +17,7 @@ pub enum TransformCommands {
         to: CryptoSpace,
     },
 
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Converts projected XY coordinates from the height compensation plane to the sea level plane.
     DatumCompense {
         #[bpaf(long)]
@@ -34,7 +34,7 @@ pub enum TransformCommands {
         y0: f64,
     },
 
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Converts geodetic coordinates (longitude/L, latitude/B, height/H) to Cartesian coordinates (X, Y, Z).
     Lbh2xyz {
         #[bpaf(short('a'), long)]
@@ -45,16 +45,16 @@ pub enum TransformCommands {
         inverse_flattening: f64,
     },
 
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Migrate2d.
     Migrate2d {
         #[bpaf(short, long)]
         given: MigrateOption2d,
         #[bpaf(short, long)]
         another: MigrateOption2d,
-        #[bpaf(short('x'), long)]
+        #[bpaf(long)]
         another_x: f64,
-        #[bpaf(short('y'), long)]
+        #[bpaf(long)]
         another_y: f64,
         #[bpaf(short, long)]
         rotate: f64,
@@ -62,11 +62,11 @@ pub enum TransformCommands {
         unit: options::RotateUnit,
     },
 
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Normalize.
-    Normalize,
+    Normalize {},
 
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Transform coordinate from one known coordinate reference systems to another.
     ///
     ///  The `from` and `to` can be:
@@ -80,7 +80,7 @@ pub enum TransformCommands {
         to: String,
     },
 
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Rotate Coordinate.
     Rotate {
         #[bpaf(short, long)]
@@ -91,18 +91,18 @@ pub enum TransformCommands {
         unit: options::RotateUnit,
     },
 
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Scale Coordinate.
     Scale {
-        #[bpaf(short('x'), long)]
-        x_scale: f64,
-        #[bpaf(short('y'), long)]
-        y_scale: f64,
-        #[bpaf(short('z'), long)]
-        z_scale: f64,
+        #[bpaf(long)]
+        sx: f64,
+        #[bpaf(long)]
+        sy: f64,
+        #[bpaf(long)]
+        sz: f64,
     },
 
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Transforms coordinates between Cartesian, cylindrical, and spherical coordinate systems.
     Space {
         #[bpaf(short, long)]
@@ -111,18 +111,18 @@ pub enum TransformCommands {
         to: CoordSpace,
     },
 
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Translate Coordinate.
     Translate {
-        #[bpaf(short('x'), long)]
-        x_translate: f64,
-        #[bpaf(short('y'), long)]
-        y_translate: f64,
-        #[bpaf(short('z'), long)]
-        z_translate: f64,
+        #[bpaf(short, long)]
+        tx: f64,
+        #[bpaf(short, long)]
+        ty: f64,
+        #[bpaf(short, long)]
+        tz: f64,
     },
 
-    #[bpaf(command, adjacent, fallback_to_usage)]
+    #[bpaf(command, adjacent)]
     /// Converts Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
     Xyz2lbh {
         #[bpaf(short('a'), long)]
@@ -245,13 +245,13 @@ pub fn execute(
                     output_x: ctx.x,
                     output_y: ctx.y,
                     output_z: ctx.z,
-                    output_x_name: "longitude".to_string(),
-                    output_y_name: "latitude".to_string(),
-                    output_z_name: "elevation".to_string(),
+                    output_x_name: "x".to_string(),
+                    output_y_name: "y".to_string(),
+                    output_z_name: "z".to_string(),
                 };
                 records.push(record);
             }
-            TransformCommands::Normalize => {
+            TransformCommands::Normalize {} => {
                 ctx.normalize();
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -305,9 +305,9 @@ pub fn execute(
                 records.push(record);
             }
             TransformCommands::Scale {
-                x_scale,
-                y_scale,
-                z_scale,
+                sx: x_scale,
+                sy: y_scale,
+                sz: z_scale,
             } => {
                 ctx.scale(*x_scale, *y_scale, *z_scale);
                 let record = Record {
@@ -346,9 +346,9 @@ pub fn execute(
                 records.push(record);
             }
             TransformCommands::Translate {
-                x_translate,
-                y_translate,
-                z_translate,
+                tx: x_translate,
+                ty: y_translate,
+                tz: z_translate,
             } => {
                 ctx.translate(*x_translate, *y_translate, *z_translate);
                 let record = Record {

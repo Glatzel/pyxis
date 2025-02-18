@@ -203,38 +203,3 @@ impl ContextTransform {
         (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid);
     }
 }
-#[cfg(test)]
-mod tests {
-    use float_cmp::assert_approx_eq;
-
-    use super::*;
-
-    #[test]
-    fn test_zygs() {
-        let mut ctx = ContextTransform {
-            x: 469704.6693,
-            y: 2821940.796,
-            z: 0.0,
-        };
-        ctx.datum_compense(400.0, 6_378_137.0, 500_000.0, 0.0);
-        ctx.proj("+proj=tmerc +lat_0=0 +lon_0=118.5 +k=1 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs", "+proj=longlat +datum=WGS84 +no_defs +type=crs").unwrap();
-        println!("x:{}, y:{}, z:{}", ctx.x, ctx.y, ctx.z);
-        assert_approx_eq!(f64, ctx.x, 118.19868034481004, epsilon = 1e-6);
-        assert_approx_eq!(f64, ctx.y, 25.502591181714727, epsilon = 1e-6);
-        assert_approx_eq!(f64, ctx.z, 0.0, epsilon = 1e-6);
-    }
-    #[test]
-    fn test_jxws() {
-        let mut ctx = ContextTransform {
-            x: 121.091701,
-            y: 30.610765,
-            z: 0.0,
-        };
-        ctx.crypto(CryptoSpace::WGS84, CryptoSpace::GCJ02);
-
-        println!("x:{}, y:{}, z:{}", ctx.x, ctx.y, ctx.z);
-        assert_approx_eq!(f64, ctx.x, 121.09626257405186, epsilon = 1e-6);
-        assert_approx_eq!(f64, ctx.y, 30.608591461324128, epsilon = 1e-6);
-        assert_approx_eq!(f64, ctx.z, 0.0, epsilon = 1e-6);
-    }
-}

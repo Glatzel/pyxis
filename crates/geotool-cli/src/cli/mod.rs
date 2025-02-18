@@ -20,14 +20,14 @@ pub enum Commands {
         #[bpaf(short, long,fallback("".to_string()),)]
         /// Transform task name.
         name: String,
-        #[bpaf(short, long, fallback(0.0))]
+        #[bpaf(short, long, fallback(0.0), display_fallback)]
         /// - X coordinate (in meters).
         ///  - longitude (in degrees).
         ///  - radius of cylindrical (in meters).
         ///  - u of spherical (in radians).
         ///
         x: f64,
-        #[bpaf(short, long, fallback(0.0))]
+        #[bpaf(short, long, fallback(0.0), display_fallback)]
         /// - Y coordinate (in meters).
         ///  - latitude (in degrees).
         ///  - u of cylindrical (in radians).

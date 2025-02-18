@@ -1,0 +1,18 @@
+use assert_cmd::Command;
+use predicates::prelude::*;
+#[test]
+fn test_normalize() {
+    let length: f64 = (1.0f64.powi(2) + 1.0f64.powi(2) + 1.0f64.powi(2)).sqrt();
+    Command::cargo_bin("geotool")
+        .unwrap()
+        .args(["transform", "-x", "1", "-y", "2", "-z", "3"])
+        .args(["normalize"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(format!(
+            "x: {}, y: {}, z: {}",
+            1.0 / length,
+            2.0 / length,
+            3.0 / length,
+        )));
+}

@@ -1,5 +1,5 @@
 use assert_cmd::Command;
-use predicates::prelude::*; 
+use predicates::prelude::*;
 
 const WGS84_LON: f64 = 121.0917077;
 const WGS84_LAT: f64 = 30.6107779;

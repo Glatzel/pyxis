@@ -1,5 +1,5 @@
 use assert_cmd::Command;
-use predicates::prelude::*; 
+use predicates::prelude::*;
 #[test]
 fn test_datum_compense() {
     Command::cargo_bin("geotool")
@@ -18,5 +18,7 @@ fn test_datum_compense() {
         ])
         .assert()
         .success()
-        .stdout(predicate::str::contains("x: 469706.56912942487, y: 2821763.831232311"));
+        .stdout(predicate::str::contains(
+            "x: 469706.56912942487, y: 2821763.831232311",
+        ));
 }

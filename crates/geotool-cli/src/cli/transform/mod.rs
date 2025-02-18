@@ -52,9 +52,9 @@ pub enum TransformCommands {
         given: MigrateOption2d,
         #[bpaf(short, long)]
         another: MigrateOption2d,
-        #[bpaf(short('x'), long)]
+        #[bpaf(long)]
         another_x: f64,
-        #[bpaf(short('y'), long)]
+        #[bpaf(long)]
         another_y: f64,
         #[bpaf(short, long)]
         rotate: f64,
@@ -94,12 +94,12 @@ pub enum TransformCommands {
     #[bpaf(command, adjacent)]
     /// Scale Coordinate.
     Scale {
-        #[bpaf(short('x'), long)]
-        x_scale: f64,
-        #[bpaf(short('y'), long)]
-        y_scale: f64,
-        #[bpaf(short('z'), long)]
-        z_scale: f64,
+        #[bpaf( long)]
+        sx: f64,
+        #[bpaf( long)]
+        sy: f64,
+        #[bpaf( long)]
+        sz: f64,
     },
 
     #[bpaf(command, adjacent)]
@@ -305,9 +305,9 @@ pub fn execute(
                 records.push(record);
             }
             TransformCommands::Scale {
-                x_scale,
-                y_scale,
-                z_scale,
+                sx: x_scale,
+                sy: y_scale,
+                sz: z_scale,
             } => {
                 ctx.scale(*x_scale, *y_scale, *z_scale);
                 let record = Record {

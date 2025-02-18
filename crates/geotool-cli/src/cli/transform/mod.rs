@@ -245,9 +245,9 @@ pub fn execute(
                     output_x: ctx.x,
                     output_y: ctx.y,
                     output_z: ctx.z,
-                    output_x_name: "longitude".to_string(),
-                    output_y_name: "latitude".to_string(),
-                    output_z_name: "elevation".to_string(),
+                    output_x_name: "x".to_string(),
+                    output_y_name: "y".to_string(),
+                    output_z_name: "z".to_string(),
                 };
                 records.push(record);
             }

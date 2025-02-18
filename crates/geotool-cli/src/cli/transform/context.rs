@@ -4,7 +4,7 @@ use std::sync::LazyLock;
 use geotool_algorithm::Ellipsoid;
 use miette::IntoDiagnostic;
 
-use super::{options, CoordSpace, CryptoSpace};
+use super::{options, CoordSpace, CryptoSpace, MigrateOption2d, RotateUnit};
 pub struct ContextTransform {
     pub x: f64,
     pub y: f64,
@@ -25,7 +25,7 @@ impl ContextTransform {
     pub fn crypto(&mut self, from: CryptoSpace, to: CryptoSpace) {
         (self.x, self.y) = match (from, to) {
             (CryptoSpace::BD09, CryptoSpace::GCJ02) => {
-                geotool_algorithm::bd09_to_gcj02(self.x, self.y)
+                geotool_algorithm::bd09_to_gcj02_exact(self.x, self.y, 1e-17, 1000)
             }
             (CryptoSpace::BD09, CryptoSpace::WGS84) => {
                 geotool_algorithm::bd09_to_wgs84_exact(self.x, self.y, 1e-17, 1000)
@@ -52,9 +52,85 @@ impl ContextTransform {
     pub fn datum_compense(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
         (self.x, self.y) = geotool_algorithm::datum_compense(self.x, self.y, hb, r, x0, y0);
     }
-    pub fn lbh2xyz(&mut self, semi_major_axis: f64, inverse_flattening: f64) {
-        let ellipsoid = Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
-        (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, &ellipsoid);
+    pub fn lbh2xyz(&mut self, ellipsoid: &Ellipsoid) {
+        (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, ellipsoid);
+    }
+    pub fn migrate2d(
+        &mut self,
+        given: MigrateOption2d,
+        another: MigrateOption2d,
+        another_x: f64,
+        another_y: f64,
+        rotate: f64,
+        unit: RotateUnit,
+    ) {
+        let rotate = match unit {
+            options::RotateUnit::Angle => rotate.to_radians(),
+            _ => rotate,
+        };
+
+        let rotate_matrix = geotool_algorithm::rotate_matrix_2d(rotate);
+        (self.x, self.y) = match (given, another) {
+            (MigrateOption2d::Absolute, MigrateOption2d::Origin) => {
+                geotool_algorithm::migrate::rel_2d(
+                    another_x,
+                    another_y,
+                    self.x,
+                    self.y,
+                    &rotate_matrix,
+                )
+            }
+            (MigrateOption2d::Origin, MigrateOption2d::Absolute) => {
+                geotool_algorithm::migrate::rel_2d(
+                    self.x,
+                    self.y,
+                    another_x,
+                    another_y,
+                    &rotate_matrix,
+                )
+            }
+            (MigrateOption2d::Absolute, MigrateOption2d::Relative) => {
+                geotool_algorithm::migrate::origin_2d(
+                    self.x,
+                    self.y,
+                    another_x,
+                    another_y,
+                    &rotate_matrix,
+                )
+            }
+            (MigrateOption2d::Relative, MigrateOption2d::Absolute) => {
+                geotool_algorithm::migrate::origin_2d(
+                    another_x,
+                    another_y,
+                    self.x,
+                    self.y,
+                    &rotate_matrix,
+                )
+            }
+            (MigrateOption2d::Relative, MigrateOption2d::Origin) => {
+                geotool_algorithm::migrate::abs_2d(
+                    another_x,
+                    another_y,
+                    self.x,
+                    self.y,
+                    &rotate_matrix,
+                )
+            }
+            (MigrateOption2d::Origin, MigrateOption2d::Relative) => {
+                geotool_algorithm::migrate::abs_2d(
+                    self.x,
+                    self.y,
+                    another_x,
+                    another_y,
+                    &rotate_matrix,
+                )
+            }
+
+            (given, another) => {
+                tracing::warn!("Given and anther is the same. Given: {given}, Another: {another}.");
+                (self.x, self.y)
+            }
+        }
     }
     pub fn normalize(&mut self) {
         let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
@@ -123,9 +199,8 @@ impl ContextTransform {
         self.y += y;
         self.z += z;
     }
-    pub fn xyz2lbh(&mut self, semi_major_axis: f64, inverse_flattening: f64) {
-        let ellipsoid = Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
-        (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, &ellipsoid);
+    pub fn xyz2lbh(&mut self, ellipsoid: &Ellipsoid) {
+        (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid);
     }
 }
 #[cfg(test)]

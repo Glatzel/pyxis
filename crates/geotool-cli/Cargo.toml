@@ -9,7 +9,7 @@ path = "src/main.rs"
 
 [dependencies]
 bpaf = { workspace = true }
-geotool-algorithm = { workspace = true }
+geotool-algorithm = { workspace = true,features=["serde"] }
 log-template = { workspace = true }
 miette = { workspace = true }
 proj = { workspace = true }

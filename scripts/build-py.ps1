@@ -1,7 +1,6 @@
 param (
     [ValidateSet("dist", "release", "debug")]
-    [string]$config = "debug",
-    [switch]$clean
+    [string]$config = "debug"
 )
 
 Set-Location $PSScriptRoot
@@ -10,7 +9,6 @@ Remove-Item dist/geotool*.whl -ErrorAction SilentlyContinue
 Remove-Item crates/py-geotool/geotool/py_geotool.pyd -ErrorAction SilentlyContinue
 Remove-Item crates/py-geotool/geotool/**__pycache__ -Recurse -ErrorAction SilentlyContinue
 
-if ($clean) { cargo clean }
 Write-Host "Build in $config mode."
 if ($config -ne "debug") {
     pixi run cargo build --profile $config --lib

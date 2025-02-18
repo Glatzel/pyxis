@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Performance
 
 - Raise precision of `gcj02_to_wgs84` by @Glatzel in [#59](https://github.com/Glatzel/rs-geotool/pull/59)
+- Raise precision of `bd09_to_gcj02` by @Glatzel in [#62](https://github.com/Glatzel/rs-geotool/pull/62)
 
 ### Refactor
 

@@ -262,14 +262,15 @@ dependencies = [
 
 [[package]]
 name = "geotool-algorithm"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "float-cmp",
+ "serde",
 ]
 
 [[package]]
 name = "geotool-cli"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "assert_cmd",
  "bpaf",
@@ -661,7 +662,7 @@ dependencies = [
 
 [[package]]
 name = "py-geotool"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "geotool-algorithm",
  "numpy",

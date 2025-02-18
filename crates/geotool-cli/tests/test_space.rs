@@ -27,9 +27,7 @@ fn test_cartesian_to_cylindrical() {
         .stdout(predicate::str::contains(
             CYLINDRICAL.1.to_string().get(0..10).unwrap(),
         ))
-        .stdout(predicate::str::contains(
-            CYLINDRICAL.2.to_string(),
-        ));
+        .stdout(predicate::str::contains(CYLINDRICAL.2.to_string()));
 }
 #[test]
 fn test_cartesian_to_spherical() {
@@ -73,15 +71,9 @@ fn test_cylindrical_to_cartesian() {
         .args(["space", "-f", "cylindrical", "-t", "cartesian"])
         .assert()
         .success()
-        .stdout(predicate::str::contains(
-            CARTESIAN.0.to_string(),
-        ))
-        .stdout(predicate::str::contains(
-            CARTESIAN.1.to_string(),
-        ))
-        .stdout(predicate::str::contains(
-            CARTESIAN.2.to_string(),
-        ));
+        .stdout(predicate::str::contains(CARTESIAN.0.to_string()))
+        .stdout(predicate::str::contains(CARTESIAN.1.to_string()))
+        .stdout(predicate::str::contains(CARTESIAN.2.to_string()));
 }
 #[test]
 fn test_cylindrical_to_spherical() {
@@ -125,15 +117,9 @@ fn test_spherical_to_cartesian() {
         .args(["space", "-f", "spherical", "-t", "cartesian"])
         .assert()
         .success()
-        .stdout(predicate::str::contains(
-            CARTESIAN.0.to_string(),
-        ))
-        .stdout(predicate::str::contains(
-            CARTESIAN.1.to_string(),
-        ))
-        .stdout(predicate::str::contains(
-            "-5.5999".to_string(),
-        ));
+        .stdout(predicate::str::contains(CARTESIAN.0.to_string()))
+        .stdout(predicate::str::contains(CARTESIAN.1.to_string()))
+        .stdout(predicate::str::contains("-5.5999".to_string()));
 }
 #[test]
 fn test_spherical_to_cylindrical() {
@@ -157,7 +143,5 @@ fn test_spherical_to_cylindrical() {
         .stdout(predicate::str::contains(
             CYLINDRICAL.1.to_string().get(0..10).unwrap(),
         ))
-        .stdout(predicate::str::contains(
-            "-5.5999999".to_string(),
-        ));
+        .stdout(predicate::str::contains("-5.5999999".to_string()));
 }

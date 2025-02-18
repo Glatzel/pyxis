@@ -2,9 +2,9 @@ Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
 
-pixi run cargo +nightly llvm-cov --no-report --all-features --workspace nextest
+pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --branch nextest
 $code = $LASTEXITCODE
-pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --doc
+pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --branch --doc
 $code = $code + $LASTEXITCODE
 pixi run cargo +nightly llvm-cov report
 

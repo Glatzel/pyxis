@@ -1,11 +1,45 @@
 use assert_cmd::Command;
-use predicates::prelude::*; // For more readable assertions
+use predicates::prelude::*; 
 #[test]
-fn test_output_plain() {
+fn test_output_plain_no_name() {
     Command::cargo_bin("geotool")
         .unwrap()
         .args([
             "transform",
+            "-x",
+            "4760096.421921",
+            "-y",
+            "3744293.729449",
+            "-z",
+            "0",
+            "-o",
+            "plain",
+        ])
+        .args(["proj", "--from", "EPSG:2230", "--to", "EPSG:26946"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            r#"
+x: 4760096.421921, y: 3744293.729449, z: 0
+|-- step: 1
+|-- method: proj
+|-- parameter:
+|       {
+|         "from": "EPSG:2230",
+|         "to": "EPSG:26946"
+|       }
+▼
+x: 1450880.2910605022, y: 1141263.0111604782, z: 0"#,
+        ));
+}
+#[test]
+fn test_output_plain_with_name() {
+    Command::cargo_bin("geotool")
+        .unwrap()
+        .args([
+            "transform",
+            "-n",
+            "Test",
             "-x",
             "4760096.421921",
             "-y",
@@ -38,6 +72,8 @@ fn test_json() {
         .unwrap()
         .args([
             "transform",
+            "-n",
+            "Test",
             "-x",
             "4760096.421921",
             "-y",
@@ -52,7 +88,7 @@ fn test_json() {
         .success()
         .stdout(predicate::str::contains(
             r#"{
-  "name": "",
+  "name": "Test",
   "record": [
     {
       "idx": 0,

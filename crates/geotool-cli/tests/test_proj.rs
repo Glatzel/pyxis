@@ -1,5 +1,5 @@
 use assert_cmd::Command;
-use predicates::prelude::*; // For more readable assertions
+use predicates::prelude::*;
 #[test]
 fn test_proj() {
     Command::cargo_bin("geotool")

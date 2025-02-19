@@ -149,23 +149,46 @@ impl ContextTransform {
         (self.x, self.y) = transformer.convert((self.x, self.y)).into_diagnostic()?;
         Ok(())
     }
-    pub fn rotate(&mut self, r: f64, axis: options::RotateAxis, unit: options::RotateUnit) {
-        let r = match unit {
-            options::RotateUnit::Angle => r.to_radians(),
-            _ => r,
+    pub fn rotate(
+        &mut self,
+        r: f64,
+        axis: options::RotateAxis,
+        unit: options::RotateUnit,
+        ox: f64,
+        oy: f64,
+        oz: f64,
+    ) {
+        let m = match unit {
+            options::RotateUnit::Angle => geotool_algorithm::rotate_matrix_2d(r.to_radians()),
+            _ => geotool_algorithm::rotate_matrix_2d(r),
         };
-        let m = geotool_algorithm::rotate_matrix_2d(r);
-        match axis {
-            super::RotateAxis::Xy => {
-                (self.x, self.y) = geotool_algorithm::rotate_2d(self.x, self.y, &m);
+
+        match (axis, unit) {
+            (_, RotateUnit::Angle) if r % 360.0 == 0.0 => tracing::warn!(
+                "Rotate angle mod 360 equals 0. The Coordinate is not modified after rotate."
+            ),
+            (_, RotateUnit::Radians) if r % 360.0 == 0.0 => tracing::warn!(
+                "Rotate radians mod PI equals 0. The Coordinate is not modified after rotate."
+            ),
+            (super::RotateAxis::Xy, _) if ox == self.x && oy == self.y => tracing::warn!(
+                "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
+            ),
+            (super::RotateAxis::Zx, _) if ox == self.x && oz == self.z => tracing::warn!(
+                "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
+            ),
+            (super::RotateAxis::Yz, _) if oy == self.y && oz == self.z => tracing::warn!(
+                "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
+            ),
+            (super::RotateAxis::Xy, _) => {
+                (self.x, self.y) = geotool_algorithm::rotate_2d(self.x, self.y, &m)
             }
-            super::RotateAxis::Zx => {
-                (self.z, self.x) = geotool_algorithm::rotate_2d(self.z, self.x, &m);
+            (super::RotateAxis::Zx, _) => {
+                (self.z, self.x) = geotool_algorithm::rotate_2d(self.z, self.x, &m)
             }
-            super::RotateAxis::Yz => {
-                (self.y, self.z) = geotool_algorithm::rotate_2d(self.x, self.y, &m);
+            (super::RotateAxis::Yz, _) => {
+                (self.y, self.z) = geotool_algorithm::rotate_2d(self.x, self.y, &m)
             }
-        }
+        };
     }
     pub fn scale(&mut self, sx: f64, sy: f64, sz: f64, ox: f64, oy: f64, oz: f64) {
         if sx == 1.0f64 && sy == 1.0f64 && sz == 1.0f64 {

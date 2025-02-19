@@ -133,10 +133,14 @@ impl ContextTransform {
         }
     }
     pub fn normalize(&mut self) {
-        let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
-        self.x /= length;
-        self.y /= length;
-        self.z /= length;
+        if self.x == 0.0f64 && self.y == 0.0f64 && self.z == 0.0f64 {
+            tracing::warn!("Length of coordinate vector is 0.")
+        } else {
+            let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
+            self.x /= length;
+            self.y /= length;
+            self.z /= length;
+        }
     }
     pub fn proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
         let transformer = Self::init_proj_builder()
@@ -195,6 +199,9 @@ impl ContextTransform {
         };
     }
     pub fn translate(&mut self, x: f64, y: f64, z: f64) {
+        if x == 0.0f64 && y == 0.0f64 && z == 0.0f64 {
+            tracing::warn!("Translation parameters are all 0. The Coordinate is not modified after translation.")
+        }
         self.x += x;
         self.y += y;
         self.z += z;

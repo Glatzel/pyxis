@@ -167,10 +167,13 @@ impl ContextTransform {
             }
         }
     }
-    pub fn scale(&mut self, x: f64, y: f64, z: f64) {
-        self.x *= x;
-        self.y *= y;
-        self.z *= z;
+    pub fn scale(&mut self, sx: f64, sy: f64, sz: f64, ox: f64, oy: f64, oz: f64) {
+        if ox == 0.0f64 && oy == 0.0f64 && oz == 0.0f64 {
+            tracing::warn!("Translation parameters are all 0. The Coordinate is not modified after translation.")
+        }
+        self.x = ox + (self.x - ox) * sx;
+        self.y = oy + (self.y - oy) * sy;
+        self.z = oz + (self.z - oz) * sz;
     }
     pub fn space(&mut self, from: CoordSpace, to: CoordSpace) {
         (self.x, self.y, self.z) = match (from, to) {
@@ -198,13 +201,13 @@ impl ContextTransform {
             }
         };
     }
-    pub fn translate(&mut self, x: f64, y: f64, z: f64) {
-        if x == 0.0f64 && y == 0.0f64 && z == 0.0f64 {
+    pub fn translate(&mut self, tx: f64, ty: f64, tz: f64) {
+        if tx == 0.0f64 && ty == 0.0f64 && tz == 0.0f64 {
             tracing::warn!("Translation parameters are all 0. The Coordinate is not modified after translation.")
         }
-        self.x += x;
-        self.y += y;
-        self.z += z;
+        self.x += tx;
+        self.y += ty;
+        self.z += tz;
     }
     pub fn xyz2lbh(&mut self, ellipsoid: &Ellipsoid) {
         (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid);

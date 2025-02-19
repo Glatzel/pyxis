@@ -318,7 +318,7 @@ pub fn execute(
                 oy,
                 oz,
             } => {
-                ctx.scale(*sx, *sy, *sz);
+                ctx.scale(*sx, *sy, *sz, *ox, *oy, *oz);
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "scale".to_string(),

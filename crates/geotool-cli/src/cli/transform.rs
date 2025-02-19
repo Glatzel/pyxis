@@ -20,7 +20,7 @@ pub enum TransformCommands {
     #[bpaf(command, adjacent)]
     /// Converts projected XY coordinates from the height compensation plane to the sea level plane.
     DatumCompense {
-        #[bpaf(long)]
+        #[bpaf(short, long)]
         /// Elevation of the height compensation plane (in meters).
         hb: f64,
         #[bpaf(short, long)]
@@ -94,12 +94,18 @@ pub enum TransformCommands {
     #[bpaf(command, adjacent)]
     /// Scale Coordinate.
     Scale {
-        #[bpaf(long)]
+        #[bpaf(long, fallback(1.0))]
         sx: f64,
-        #[bpaf(long)]
+        #[bpaf(long, fallback(1.0))]
         sy: f64,
-        #[bpaf(long)]
+        #[bpaf(long, fallback(1.0))]
         sz: f64,
+        #[bpaf(long, fallback(0.0))]
+        ox: f64,
+        #[bpaf(long, fallback(0.0))]
+        oy: f64,
+        #[bpaf(long, fallback(0.0))]
+        oz: f64,
     },
 
     #[bpaf(command, adjacent)]
@@ -114,11 +120,11 @@ pub enum TransformCommands {
     #[bpaf(command, adjacent)]
     /// Translate Coordinate.
     Translate {
-        #[bpaf(short, long)]
+        #[bpaf(short, long, fallback(0.0))]
         tx: f64,
-        #[bpaf(short, long)]
+        #[bpaf(short, long, fallback(0.0))]
         ty: f64,
-        #[bpaf(short, long)]
+        #[bpaf(short, long, fallback(0.0))]
         tz: f64,
     },
 
@@ -305,18 +311,24 @@ pub fn execute(
                 records.push(record);
             }
             TransformCommands::Scale {
-                sx: x_scale,
-                sy: y_scale,
-                sz: z_scale,
+                sx,
+                sy,
+                sz,
+                ox,
+                oy,
+                oz,
             } => {
-                ctx.scale(*x_scale, *y_scale, *z_scale);
+                ctx.scale(*sx, *sy, *sz, *ox, *oy, *oz);
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "scale".to_string(),
                     parameter: serde_json::json!({
-                        "x_scale": x_scale,
-                        "y_scale": y_scale,
-                        "z_scale": z_scale
+                        "scale_x": sx,
+                        "scale_y": sy,
+                        "scale_z": sz,
+                        "origin_x":ox,
+                        "origin_y":oy,
+                        "origin_z":oz
                     }),
                     output_x: ctx.x,
                     output_y: ctx.y,
@@ -345,19 +357,15 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Translate {
-                tx: x_translate,
-                ty: y_translate,
-                tz: z_translate,
-            } => {
-                ctx.translate(*x_translate, *y_translate, *z_translate);
+            TransformCommands::Translate { tx, ty, tz } => {
+                ctx.translate(*tx, *ty, *tz);
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "scale".to_string(),
                     parameter: serde_json::json!({
-                        "x_translate": x_translate,
-                        "y_translate": y_translate,
-                        "z_translate": z_translate
+                        "translate_x": tx,
+                        "translate_y": ty,
+                        "translate_z": tz
                     }),
                     output_x: ctx.x,
                     output_y: ctx.y,

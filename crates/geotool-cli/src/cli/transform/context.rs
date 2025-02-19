@@ -133,10 +133,14 @@ impl ContextTransform {
         }
     }
     pub fn normalize(&mut self) {
-        let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
-        self.x /= length;
-        self.y /= length;
-        self.z /= length;
+        if self.x == 0.0f64 && self.y == 0.0f64 && self.z == 0.0f64 {
+            tracing::warn!("Length of coordinate vector is 0.")
+        } else {
+            let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
+            self.x /= length;
+            self.y /= length;
+            self.z /= length;
+        }
     }
     pub fn proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
         let transformer = Self::init_proj_builder()
@@ -163,10 +167,16 @@ impl ContextTransform {
             }
         }
     }
-    pub fn scale(&mut self, x: f64, y: f64, z: f64) {
-        self.x *= x;
-        self.y *= y;
-        self.z *= z;
+    pub fn scale(&mut self, sx: f64, sy: f64, sz: f64, ox: f64, oy: f64, oz: f64) {
+        if sx == 1.0f64 && sy == 1.0f64 && sz == 1.0f64 {
+            tracing::warn!("Scale parameters are all 1.");
+        }
+        if sx == self.x && sy == self.x && sz == self.x {
+            tracing::warn!("Scale origin is equal to coordinate.");
+        }
+        self.x = ox + (self.x - ox) * sx;
+        self.y = oy + (self.y - oy) * sy;
+        self.z = oz + (self.z - oz) * sz;
     }
     pub fn space(&mut self, from: CoordSpace, to: CoordSpace) {
         (self.x, self.y, self.z) = match (from, to) {
@@ -194,12 +204,16 @@ impl ContextTransform {
             }
         };
     }
-    pub fn translate(&mut self, x: f64, y: f64, z: f64) {
-        self.x += x;
-        self.y += y;
-        self.z += z;
+    pub fn translate(&mut self, tx: f64, ty: f64, tz: f64) {
+        if tx == 0.0f64 && ty == 0.0f64 && tz == 0.0f64 {
+            tracing::warn!("Translation parameters are all 0. The Coordinate is not modified after translation.")
+        }
+        self.x += tx;
+        self.y += ty;
+        self.z += tz;
     }
     pub fn xyz2lbh(&mut self, ellipsoid: &Ellipsoid) {
-        (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid);
+        (self.x, self.y, self.z) =
+            geotool_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid, 1e-17, 1000);
     }
 }

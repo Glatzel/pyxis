@@ -170,6 +170,8 @@ def xyz2lbh(
     z: TCoordScalar,
     major_radius: float = 6378137.0,
     invf: float = 298.257223563,
+    threshold: float = 1e-17,
+    max_iter: int = 100,
 ) -> tuple[float, float, float]: ...
 @overload
 def xyz2lbh(
@@ -178,6 +180,8 @@ def xyz2lbh(
     z: TCoordArray,
     major_radius: float = 6378137.0,
     invf: float = 298.257223563,
+    threshold: float = 1e-17,
+    max_iter: int = 100,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 def xyz2lbh(
     x,
@@ -185,6 +189,8 @@ def xyz2lbh(
     z,
     major_radius: float = 6378137.0,
     invf: float = 298.257223563,
+    threshold: float = 1e-17,
+    max_iter: int = 100,
 ):
     """
     Convert Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
@@ -201,6 +207,10 @@ def xyz2lbh(
         Semi major axis.
     invf
         Inverse flattening.
+    threshold
+        Error threshold.
+    max_iter
+        Max iterations.
 
     Returns
     -------
@@ -229,6 +239,6 @@ def xyz2lbh(
     y = coord_util("y", y)
     z = coord_util("z", z)
 
-    lon, lat, h = py_xyz2lbh(x, y, z, major_radius, invf)
+    lon, lat, h = py_xyz2lbh(x, y, z, major_radius, invf, threshold, max_iter)
 
     return lon, lat, h

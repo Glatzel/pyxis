@@ -370,7 +370,7 @@ pub fn bd09_to_gcj02_exact(
 /// - `lon`: Longitude in the `WGS84` coordinate system.
 /// - `lat`: Latitude in the `WGS84` coordinate system.
 /// - `threshold`: Error threshold. Suggest value `1e-13`.
-/// - `max_iter``: Max iterations. Suggest value `100`.
+/// - `max_iter`: Max iterations. Suggest value `100`.
 ///
 /// # Example
 /// ```

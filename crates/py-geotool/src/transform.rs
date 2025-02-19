@@ -82,6 +82,8 @@ pub fn py_xyz2lbh(
     z_py: PyObject,
     semi_major_axis: f64,
     inverse_flattening: f64,
+    threshold: f64,
+    max_iter: usize,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
     let ellipsoid =
         geotool_algorithm::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
@@ -99,7 +101,8 @@ pub fn py_xyz2lbh(
             .zip(y_array.par_iter_mut())
             .zip(z_array.par_iter_mut())
             .for_each(|((l, b), h)| {
-                (*l, *b, *h) = geotool_algorithm::xyz2lbh(*l, *b, *h, &ellipsoid);
+                (*l, *b, *h) =
+                    geotool_algorithm::xyz2lbh(*l, *b, *h, &ellipsoid, threshold, max_iter);
             });
         (x_ref, y_ref, z_ref).into_pyobject(py)
     } else if let (Ok(x), Ok(y), Ok(z)) = (
@@ -107,7 +110,7 @@ pub fn py_xyz2lbh(
         y_py.extract::<f64>(py),
         z_py.extract::<f64>(py),
     ) {
-        geotool_algorithm::xyz2lbh(x, y, z, &ellipsoid).into_pyobject(py)
+        geotool_algorithm::xyz2lbh(x, y, z, &ellipsoid, threshold, max_iter).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",

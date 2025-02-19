@@ -185,6 +185,8 @@ def xyz2lbh(
     z,
     major_radius: float = 6378137.0,
     invf: float = 298.257223563,
+    threshold: float = 1e-17,
+    max_iter: int = 100,
 ):
     """
     Convert Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
@@ -229,6 +231,6 @@ def xyz2lbh(
     y = coord_util("y", y)
     z = coord_util("z", z)
 
-    lon, lat, h = py_xyz2lbh(x, y, z, major_radius, invf)
+    lon, lat, h = py_xyz2lbh(x, y, z, major_radius, invf, threshold, max_iter)
 
     return lon, lat, h

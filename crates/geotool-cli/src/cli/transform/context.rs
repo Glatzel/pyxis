@@ -168,8 +168,11 @@ impl ContextTransform {
         }
     }
     pub fn scale(&mut self, sx: f64, sy: f64, sz: f64, ox: f64, oy: f64, oz: f64) {
-        if ox == 0.0f64 && oy == 0.0f64 && oz == 0.0f64 {
-            tracing::warn!("Translation parameters are all 0. The Coordinate is not modified after translation.")
+        if sx == 1.0f64 && sy == 1.0f64 && sz == 1.0f64 {
+            tracing::warn!("Scale parameters are all 1.");
+        }
+        if sx == self.x && sy == self.x && sz == self.x {
+            tracing::warn!("Scale origin is equal to coordinate.");
         }
         self.x = ox + (self.x - ox) * sx;
         self.y = oy + (self.y - oy) * sy;

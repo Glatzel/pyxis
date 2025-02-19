@@ -190,7 +190,7 @@ impl ContextTransform {
                 self.x += ox;
             }
             (super::RotatePlane::Yz, _) => {
-                (self.y, self.z) = geotool_algorithm::rotate_2d(self.y - ox, self.z - oz, &m);
+                (self.y, self.z) = geotool_algorithm::rotate_2d(self.y - oy, self.z - oz, &m);
                 self.y += oy;
                 self.z += oz;
             }

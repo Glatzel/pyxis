@@ -213,6 +213,7 @@ impl ContextTransform {
         self.z += tz;
     }
     pub fn xyz2lbh(&mut self, ellipsoid: &Ellipsoid) {
-        (self.x, self.y, self.z) = geotool_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid);
+        (self.x, self.y, self.z) =
+            geotool_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid, 1e-17, 1000);
     }
 }

@@ -111,16 +111,22 @@ pub fn lbh2xyz(lon: f64, lat: f64, height: f64, ellipsoid: &crate::Ellipsoid) ->
 ///     4799159.563725418,
 ///     260022.66015989496,
 ///     &ellipsoid,
+///     1e-17,
+///     100
 /// );
 /// println!("{},{},{}", x, y, z);
 /// assert_approx_eq!(f64, x, 48.8566, epsilon = 1e-6);
 /// assert_approx_eq!(f64, y, 2.3522, epsilon = 1e-6);
 /// assert_approx_eq!(f64, z, 35.0, epsilon = 1e-6);
 /// ```
-pub fn xyz2lbh(x: f64, y: f64, z: f64, ellipsoid: &crate::Ellipsoid) -> (f64, f64, f64) {
-    let tolerance = 1e-17;
-    let max_iterations = 100;
-
+pub fn xyz2lbh(
+    x: f64,
+    y: f64,
+    z: f64,
+    ellipsoid: &crate::Ellipsoid,
+    threshold: f64,
+    max_iter: usize,
+) -> (f64, f64, f64) {
     // Constants from the ellipsoid
     let a = ellipsoid.semi_major_axis(); // Semi-major axis
     let e2 = ellipsoid.eccentricity2(); // Squared eccentricity
@@ -135,12 +141,12 @@ pub fn xyz2lbh(x: f64, y: f64, z: f64, ellipsoid: &crate::Ellipsoid) -> (f64, f6
     let mut height = p / latitude.cos() - n;
 
     // Iterative refinement of latitude
-    for _ in 0..max_iterations {
+    for _ in 0..max_iter {
         let sin_lat = latitude.sin();
         n = a / (1.0 - e2 * sin_lat.powi(2)).sqrt();
         let new_latitude = z.atan2(p * (1.0 - e2 * n / (n + height)));
         height = p / new_latitude.cos() - n;
-        if (new_latitude - latitude).abs() < tolerance {
+        if (new_latitude - latitude).abs() < threshold {
             break;
         }
         latitude = new_latitude;

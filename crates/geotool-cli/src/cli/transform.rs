@@ -86,7 +86,7 @@ pub enum TransformCommands {
         #[bpaf(short, long)]
         value: f64,
         #[bpaf(short, long)]
-        axis: RotateAxis,
+        plane: RotatePlane,
         #[bpaf(short, long)]
         unit: options::RotateUnit,
         #[bpaf(long, fallback(0.0))]
@@ -299,19 +299,19 @@ pub fn execute(
             }
             TransformCommands::Rotate {
                 value,
-                axis,
+                plane,
                 unit,
                 ox,
                 oy,
                 oz,
             } => {
-                ctx.rotate(*value, *axis, *unit,*ox, *oy, *oz);
+                ctx.rotate(*value, *plane, *unit, *ox, *oy, *oz);
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "rotate".to_string(),
                     parameter: serde_json::json!({
                         "value": value,
-                        "axis": axis.to_string(),
+                        "plane": plane.to_string(),
                         "unit": unit.to_string(),
                         "origin_x":ox,
                         "origin_y":oy,

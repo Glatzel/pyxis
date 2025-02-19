@@ -152,7 +152,7 @@ impl ContextTransform {
     pub fn rotate(
         &mut self,
         r: f64,
-        axis: options::RotateAxis,
+        axis: options::RotatePlane,
         unit: options::RotateUnit,
         ox: f64,
         oy: f64,
@@ -170,26 +170,26 @@ impl ContextTransform {
             (_, RotateUnit::Radians) if r % 360.0 == 0.0 => tracing::warn!(
                 "Rotate radians mod PI equals 0. The Coordinate is not modified after rotate."
             ),
-            (super::RotateAxis::Xy, _) if ox == self.x && oy == self.y => tracing::warn!(
+            (super::RotatePlane::Xy, _) if ox == self.x && oy == self.y => tracing::warn!(
                 "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
             ),
-            (super::RotateAxis::Zx, _) if ox == self.x && oz == self.z => tracing::warn!(
+            (super::RotatePlane::Zx, _) if ox == self.x && oz == self.z => tracing::warn!(
                 "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
             ),
-            (super::RotateAxis::Yz, _) if oy == self.y && oz == self.z => tracing::warn!(
+            (super::RotatePlane::Yz, _) if oy == self.y && oz == self.z => tracing::warn!(
                 "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
             ),
-            (super::RotateAxis::Xy, _) => {
+            (super::RotatePlane::Xy, _) => {
                 (self.x, self.y) = geotool_algorithm::rotate_2d(self.x - ox, self.y - oy, &m);
                 self.x += ox;
                 self.y += oy;
             }
-            (super::RotateAxis::Zx, _) => {
+            (super::RotatePlane::Zx, _) => {
                 (self.z, self.x) = geotool_algorithm::rotate_2d(self.z - oz, self.x - ox, &m);
                 self.z += oz;
                 self.x += ox;
             }
-            (super::RotateAxis::Yz, _) => {
+            (super::RotatePlane::Yz, _) => {
                 (self.y, self.z) = geotool_algorithm::rotate_2d(self.y - ox, self.z - oz, &m);
                 self.y += oy;
                 self.z += oz;

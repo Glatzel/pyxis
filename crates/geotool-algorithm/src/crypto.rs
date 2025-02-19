@@ -326,14 +326,13 @@ pub fn bd09_to_gcj02_exact(
         d_lon = tmp_lon - bd09_lon;
         d_lat = tmp_lat - bd09_lat;
 
-        // print message only under debug mode
-        #[cfg(debug_assertions)]
+        #[cfg(feature = "log")]
         {
-            println!("step: {_i}");
-            println!("gcj02_lon: {gcj02_lon}, gcj02_lat: {gcj02_lat}");
-            println!("d_lon: {d_lon:.6e}, d_lat: {d_lat:.6e}");
-            println!("p_lon: {p_lon}, p_lat: {p_lat}");
-            println!("m_lon: {m_lon}, m_lat: {m_lat}");
+            tracing::debug!("step: {_i}");
+            tracing::debug!("gcj02_lon: {gcj02_lon}, gcj02_lat: {gcj02_lat}");
+            tracing::debug!("d_lon: {d_lon:.6e}, d_lat: {d_lat:.6e}");
+            tracing::debug!("p_lon: {p_lon}, p_lat: {p_lat}");
+            tracing::debug!("m_lon: {m_lon}, m_lat: {m_lat}");
         }
 
         if d_lat.abs() < threshold && d_lon.abs() < threshold {
@@ -350,10 +349,9 @@ pub fn bd09_to_gcj02_exact(
             m_lat = gcj02_lat;
         }
     }
-    // print message only under debug mode
-    #[cfg(debug_assertions)]
+    #[cfg(feature = "log")]
     {
-        println!("Exeed max iteration number: {max_iter}");
+        tracing::debug!("Exeed max iteration number: {max_iter}");
     }
     ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
 }

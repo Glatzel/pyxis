@@ -4,18 +4,18 @@ use std::sync::LazyLock;
 const A: f64 = 4.0;
 const OA: f64 = 1.0;
 const OB: f64 = 2.0;
-const ANGLE: f64 = 30.0;
+const DEGREES: f64 = 30.0;
 static RADIANS: LazyLock<f64> = LazyLock::new(|| 30.0f64.to_radians());
 static A1: LazyLock<f64> =
     LazyLock::new(|| (A - OA) * RADIANS.cos() - (A - OB) * RADIANS.sin() + OA);
 static B1: LazyLock<f64> =
     LazyLock::new(|| (A - OA) * RADIANS.sin() + (A - OB) * RADIANS.cos() + OB);
 #[test]
-fn test_rotate_angle_0() {
+fn test_rotate_degrees_0() {
     Command::cargo_bin("geotool")
         .unwrap()
         .args(["transform", "-x", "2", "-y", "4", "-z", "6"])
-        .args(["rotate", "--value", "0", "-p", "xy", "-u", "angle"])
+        .args(["rotate", "--value", "0", "-p", "xy", "-u", "degrees"])
         .assert()
         .success()
         .stderr(predicate::str::contains("WARN"));
@@ -61,11 +61,11 @@ fn test_rotate_xy() {
         .args([
             "rotate",
             "--value",
-            &ANGLE.to_string(),
+            &DEGREES.to_string(),
             "-p",
             "xy",
             "-u",
-            "angle",
+            "degrees",
             "--ox",
             &OA.to_string(),
             "--oy",
@@ -96,11 +96,11 @@ fn test_rotate_yz() {
         .args([
             "rotate",
             "--value",
-            &ANGLE.to_string(),
+            &DEGREES.to_string(),
             "-p",
             "yz",
             "-u",
-            "angle",
+            "degrees",
             "--oy",
             &OA.to_string(),
             "--oz",
@@ -131,11 +131,11 @@ fn test_rotate_zx() {
         .args([
             "rotate",
             "--value",
-            &ANGLE.to_string(),
+            &DEGREES.to_string(),
             "-p",
             "zx",
             "-u",
-            "angle",
+            "degrees",
             "--oz",
             &OA.to_string(),
             "--ox",

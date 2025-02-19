@@ -65,7 +65,7 @@ impl ContextTransform {
         unit: RotateUnit,
     ) {
         let rotate = match unit {
-            options::RotateUnit::Angle => rotate.to_radians(),
+            options::RotateUnit::Degrees => rotate.to_radians(),
             _ => rotate,
         };
 
@@ -152,19 +152,19 @@ impl ContextTransform {
     pub fn rotate(
         &mut self,
         r: f64,
-        axis: options::RotatePlane,
+        plane: options::RotatePlane,
         unit: options::RotateUnit,
         ox: f64,
         oy: f64,
         oz: f64,
     ) {
         let m = match unit {
-            options::RotateUnit::Angle => geotool_algorithm::rotate_matrix_2d(r.to_radians()),
+            options::RotateUnit::Degrees => geotool_algorithm::rotate_matrix_2d(r.to_radians()),
             _ => geotool_algorithm::rotate_matrix_2d(r),
         };
 
-        match (axis, unit) {
-            (_, RotateUnit::Angle) if r % 360.0 == 0.0 => tracing::warn!(
+        match (plane, unit) {
+            (_, RotateUnit::Degrees) if r % 360.0 == 0.0 => tracing::warn!(
                 "Rotate angle mod 360 equals 0. The Coordinate is not modified after rotate."
             ),
             (_, RotateUnit::Radians) if r % 360.0 == 0.0 => tracing::warn!(

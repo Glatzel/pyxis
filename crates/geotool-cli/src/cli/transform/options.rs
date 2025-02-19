@@ -115,7 +115,7 @@ impl fmt::Display for RotatePlane {
 }
 #[derive(Debug, Clone, Copy, Bpaf)]
 pub enum RotateUnit {
-    Angle,
+    Degrees,
     Radians,
 }
 
@@ -124,7 +124,7 @@ impl FromStr for RotateUnit {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
-            "angle" => Ok(Self::Angle),
+            "degrees" => Ok(Self::Degrees),
             "radians" => Ok(Self::Radians),
             _ => miette::bail!(""),
         }
@@ -133,7 +133,7 @@ impl FromStr for RotateUnit {
 impl fmt::Display for RotateUnit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Angle => write!(f, "Angle"),
+            Self::Degrees => write!(f, "Angle"),
             Self::Radians => write!(f, "Radians"),
         }
     }

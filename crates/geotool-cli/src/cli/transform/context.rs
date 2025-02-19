@@ -180,13 +180,19 @@ impl ContextTransform {
                 "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
             ),
             (super::RotateAxis::Xy, _) => {
-                (self.x, self.y) = geotool_algorithm::rotate_2d(self.x, self.y, &m)
+                (self.x, self.y) = geotool_algorithm::rotate_2d(self.x - ox, self.y - oy, &m);
+                self.x += ox;
+                self.y += oy;
             }
             (super::RotateAxis::Zx, _) => {
-                (self.z, self.x) = geotool_algorithm::rotate_2d(self.z, self.x, &m)
+                (self.z, self.x) = geotool_algorithm::rotate_2d(self.z - oz, self.x - ox, &m);
+                self.z += oz;
+                self.x += ox;
             }
             (super::RotateAxis::Yz, _) => {
-                (self.y, self.z) = geotool_algorithm::rotate_2d(self.x, self.y, &m)
+                (self.y, self.z) = geotool_algorithm::rotate_2d(self.y - ox, self.z - oz, &m);
+                self.y += oy;
+                self.z += oz;
             }
         };
     }

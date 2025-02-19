@@ -96,9 +96,9 @@ impl FromStr for RotateAxis {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
-            "xyz" => Ok(Self::Xy),
-            "xzy" => Ok(Self::Zx),
-            "yzx" => Ok(Self::Yz),
+            "xy" => Ok(Self::Xy),
+            "zx" => Ok(Self::Zx),
+            "yz" => Ok(Self::Yz),
 
             _ => miette::bail!(""),
         }

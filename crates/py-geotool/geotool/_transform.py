@@ -170,6 +170,8 @@ def xyz2lbh(
     z: TCoordScalar,
     major_radius: float = 6378137.0,
     invf: float = 298.257223563,
+    threshold: float = 1e-17,
+    max_iter: int = 100,
 ) -> tuple[float, float, float]: ...
 @overload
 def xyz2lbh(
@@ -178,6 +180,8 @@ def xyz2lbh(
     z: TCoordArray,
     major_radius: float = 6378137.0,
     invf: float = 298.257223563,
+    threshold: float = 1e-17,
+    max_iter: int = 100,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 def xyz2lbh(
     x,

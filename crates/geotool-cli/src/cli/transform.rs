@@ -86,9 +86,15 @@ pub enum TransformCommands {
         #[bpaf(short, long)]
         value: f64,
         #[bpaf(short, long)]
-        axis: RotateAxis,
+        plane: RotatePlane,
         #[bpaf(short, long)]
         unit: options::RotateUnit,
+        #[bpaf(long, fallback(0.0))]
+        ox: f64,
+        #[bpaf(long, fallback(0.0))]
+        oy: f64,
+        #[bpaf(long, fallback(0.0))]
+        oz: f64,
     },
 
     #[bpaf(command, adjacent)]
@@ -291,15 +297,25 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Rotate { value, axis, unit } => {
-                ctx.rotate(*value, *axis, *unit);
+            TransformCommands::Rotate {
+                value,
+                plane,
+                unit,
+                ox,
+                oy,
+                oz,
+            } => {
+                ctx.rotate(*value, *plane, *unit, *ox, *oy, *oz);
                 let record = Record {
                     idx: (i + 1) as u8,
                     method: "rotate".to_string(),
                     parameter: serde_json::json!({
                         "value": value,
-                        "axis": axis.to_string(),
-                        "unit": unit.to_string()
+                        "plane": plane.to_string(),
+                        "unit": unit.to_string(),
+                        "origin_x":ox,
+                        "origin_y":oy,
+                        "origin_z":oz
                     }),
                     output_x: ctx.x,
                     output_y: ctx.y,

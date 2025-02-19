@@ -25,7 +25,7 @@ fn test_rel_2d() {
             "-r",
             &PARM.4.to_string(),
             "-u",
-            "angle",
+            "degrees",
         ])
         .assert()
         .success()
@@ -51,7 +51,7 @@ fn test_rel_2d() {
             "-r",
             &PARM.4.to_string(),
             "-u",
-            "angle",
+            "degrees",
         ])
         .assert()
         .success()
@@ -80,7 +80,7 @@ fn test_abs_2d() {
             "-r",
             &PARM.4.to_string(),
             "-u",
-            "angle",
+            "degrees",
         ])
         .assert()
         .success()
@@ -106,7 +106,7 @@ fn test_abs_2d() {
             "-r",
             &PARM.4.to_string(),
             "-u",
-            "angle",
+            "degrees",
         ])
         .assert()
         .success()
@@ -135,7 +135,7 @@ fn test_origin_2d() {
             "-r",
             &PARM.4.to_string(),
             "-u",
-            "angle",
+            "degrees",
         ])
         .assert()
         .success()
@@ -161,7 +161,7 @@ fn test_origin_2d() {
             "-r",
             &PARM.4.to_string(),
             "-u",
-            "angle",
+            "degrees",
         ])
         .assert()
         .success()

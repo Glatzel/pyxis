@@ -18,16 +18,13 @@
 /// # Example
 ///
 /// ```rust
-/// let radians = std::f64::consts::PI / 2.0; // 90 degrees in radians
-/// let rotation_matrix = geotool_algorithm::rotate_matrix_2d(radians);
-///
-/// // Print the rotation matrix
-/// println!("{:?}", rotation_matrix);
-/// ```
-///
-/// This will output:
-/// ```text
-/// [[6.123233995736766e-17, -1.0], [1.0, 6.123233995736766e-17]]
+/// use float_cmp::assert_approx_eq;
+/// let radians = 30.0f64.to_radians(); // 90 degrees in radians
+/// let m = geotool_algorithm::rotate_matrix_2d(radians);
+/// assert_approx_eq!(f64, m[0][0], radians.cos(), epsilon = 1e-17);
+/// assert_approx_eq!(f64, m[0][1], -radians.sin(), epsilon = 1e-17);
+/// assert_approx_eq!(f64, m[1][0], radians.sin(), epsilon = 1e-17);
+/// assert_approx_eq!(f64, m[1][1], radians.cos(), epsilon = 1e-17);
 /// ```
 pub fn rotate_matrix_2d(radians: f64) -> [[f64; 2]; 2] {
     [
@@ -35,6 +32,17 @@ pub fn rotate_matrix_2d(radians: f64) -> [[f64; 2]; 2] {
         [radians.sin(), radians.cos()],
     ]
 }
+
+/// # Example
+///
+/// ```rust
+/// use float_cmp::assert_approx_eq;
+/// let radians = 30.0f64.to_radians(); // 90 degrees in radians
+/// let m = geotool_algorithm::rotate_matrix_2d(radians);
+/// let result=geotool_algorithm::rotate_2d (3.0,2.0,&m);
+/// assert_approx_eq!(f64, result.0, 3.0 * radians.cos() - 2.0 * radians.sin(), epsilon = 1e-17);
+/// assert_approx_eq!(f64, result.1, 3.0 * radians.sin() + 2.0 * radians.cos(), epsilon = 1e-17);
+/// ```
 pub fn rotate_2d(x: f64, y: f64, rotate_matrix: &[[f64; 2]; 2]) -> (f64, f64) {
     let out_x = rotate_matrix[0][0] * x + rotate_matrix[0][1] * y;
     let out_y = rotate_matrix[1][0] * x + rotate_matrix[1][1] * y;

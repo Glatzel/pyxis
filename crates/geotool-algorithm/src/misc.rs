@@ -87,7 +87,8 @@ pub fn lbh2xyz(lon: f64, lat: f64, height: f64, ellipsoid: &crate::Ellipsoid) ->
 /// - `y`: Cartesian Y-coordinate(s) in meters.
 /// - `z`: Cartesian Z-coordinate(s) in meters.
 /// - `ellipsoid`: The ellipsoid parameters, which include the semi-major axis and inverse flattening.
-///
+/// - `threshold`: Error threshold
+/// - `max_iter`: Max iterations
 /// # Returns
 ///
 /// A tuple containing:

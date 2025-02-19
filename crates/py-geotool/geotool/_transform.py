@@ -207,6 +207,10 @@ def xyz2lbh(
         Semi major axis.
     invf
         Inverse flattening.
+    threshold
+        Error threshold.
+    max_iter
+        Max iterations.
 
     Returns
     -------

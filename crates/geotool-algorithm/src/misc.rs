@@ -154,9 +154,8 @@ pub fn xyz2lbh(
             tracing::debug!("new_latitude: {}", new_latitude.to_degrees());
             tracing::debug!(
                 "delta: {}",
-                new_latitude.to_degrees() - latitude.to_degrees()
-            )
-            .abs();
+                (new_latitude.to_degrees() - latitude.to_degrees()).abs()
+            );
         }
         if (new_latitude.to_degrees() - latitude.to_degrees()).abs() < threshold {
             break;

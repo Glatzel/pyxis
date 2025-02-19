@@ -113,7 +113,7 @@ pub fn lbh2xyz(lon: f64, lat: f64, height: f64, ellipsoid: &crate::Ellipsoid) ->
 ///     260022.66015989496,
 ///     &ellipsoid,
 ///     1e-17,
-///     100
+///     20
 /// );
 /// println!("{},{},{}", x, y, z);
 /// assert_approx_eq!(f64, x, 48.8566, epsilon = 1e-6);
@@ -142,17 +142,30 @@ pub fn xyz2lbh(
     let mut height = p / latitude.cos() - n;
 
     // Iterative refinement of latitude
-    for _ in 0..max_iter {
+    for _i in 0..max_iter {
         let sin_lat = latitude.sin();
         n = a / (1.0 - e2 * sin_lat.powi(2)).sqrt();
         let new_latitude = z.atan2(p * (1.0 - e2 * n / (n + height)));
         height = p / new_latitude.cos() - n;
-        if (new_latitude - latitude).abs() < threshold {
+        #[cfg(feature = "log")]
+        {
+            tracing::debug!("step: {_i}");
+            tracing::debug!("latitude: {}", latitude.to_degrees());
+            tracing::debug!("new_latitude: {}", new_latitude.to_degrees());
+            tracing::debug!(
+                "delta: {}",
+                (new_latitude.to_degrees() - latitude.to_degrees()).abs()
+            );
+        }
+        if (new_latitude.to_degrees() - latitude.to_degrees()).abs() < threshold {
             break;
         }
         latitude = new_latitude;
     }
-
+    #[cfg(feature = "log")]
+    {
+        tracing::debug!("Exeed max iteration number: {max_iter}");
+    }
     // Convert radians to degrees
     let longitude = longitude.to_degrees();
     let latitude = latitude.to_degrees();

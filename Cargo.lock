@@ -266,6 +266,7 @@ version = "0.0.5"
 dependencies = [
  "float-cmp",
  "serde",
+ "tracing",
 ]
 
 [[package]]

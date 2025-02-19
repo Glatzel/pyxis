@@ -76,9 +76,7 @@ fn test_rotate_xy() {
         .success()
         .stdout(predicate::str::contains(format!(
             "x: {}, y: {}, z: {}",
-            *A1,
-            *B1,
-            A
+            *A1, *B1, A
         )));
 }
 #[test]
@@ -111,9 +109,7 @@ fn test_rotate_yz() {
         .success()
         .stdout(predicate::str::contains(format!(
             "x: {}, y: {}, z: {}",
-            A,
-            *A1,
-            *B1,
+            A, *A1, *B1,
         )));
 }
 #[test]
@@ -146,8 +142,6 @@ fn test_rotate_zx() {
         .success()
         .stdout(predicate::str::contains(format!(
             "x: {}, y: {}, z: {}",
-            *B1,
-            A,
-            *A1,
+            *B1, A, *A1,
         )));
 }

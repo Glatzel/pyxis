@@ -113,7 +113,7 @@ pub fn lbh2xyz(lon: f64, lat: f64, height: f64, ellipsoid: &crate::Ellipsoid) ->
 ///     260022.66015989496,
 ///     &ellipsoid,
 ///     1e-17,
-///     100
+///     20
 /// );
 /// println!("{},{},{}", x, y, z);
 /// assert_approx_eq!(f64, x, 48.8566, epsilon = 1e-6);

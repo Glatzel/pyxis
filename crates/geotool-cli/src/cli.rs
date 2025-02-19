@@ -6,7 +6,7 @@ use tracing_subscriber::util::SubscriberInitExt;
 use transform::transform_commands;
 
 #[derive(Clone, Debug, Bpaf)]
-#[bpaf(options, version, fallback_to_usage)]
+#[bpaf(options, version)]
 struct Args {
     #[bpaf(external(verbose))]
     verbose: Level,
@@ -15,7 +15,7 @@ struct Args {
 }
 #[derive(Bpaf, Clone, Debug)]
 pub enum Commands {
-    #[bpaf(command, fallback_to_usage)]
+    #[bpaf(command)]
     Transform {
         #[bpaf(short, long,fallback("".to_string()),)]
         /// Transform task name.

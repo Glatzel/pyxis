@@ -7,7 +7,7 @@ fn bench_datum_compense(c: &mut Criterion) {
                 black_box(469704.6693),
                 black_box(2821940.796),
                 black_box(400.0),
-                black_box(6378_137.0),
+                black_box(6_378_137.0),
                 black_box(500_000.0),
                 black_box(0.0),
             )

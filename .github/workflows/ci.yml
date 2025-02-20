@@ -214,6 +214,7 @@ jobs:
 
   out-check:
     needs:
+      - cargo-bench
       - cargo-clippy
       - cargo-doc
       - cargo-fmt

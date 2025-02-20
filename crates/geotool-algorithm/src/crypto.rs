@@ -258,11 +258,11 @@ pub fn gcj02_to_wgs84_exact(
 
         #[cfg(feature = "log")]
         {
-            tracing::debug!("step: {_i}");
-            tracing::debug!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
-            tracing::debug!("d_lon: {d_lon:.3e}, d_lat: {d_lat:.3e}");
-            tracing::debug!("p_lon: {p_lon}, p_lat: {p_lat}");
-            tracing::debug!("m_lon: {m_lon}, m_lat: {m_lat}");
+            tracing::trace!("iteration: {_i}");
+            tracing::trace!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
+            tracing::trace!("d_lon: {d_lon:.3e}, d_lat: {d_lat:.3e}");
+            tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
+            tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
         }
 
         if d_lat.abs() < threshold && d_lon.abs() < threshold {
@@ -326,11 +326,11 @@ pub fn bd09_to_gcj02_exact(
 
         #[cfg(feature = "log")]
         {
-            tracing::debug!("step: {_i}");
-            tracing::debug!("gcj02_lon: {gcj02_lon}, gcj02_lat: {gcj02_lat}");
-            tracing::debug!("d_lon: {d_lon:.3e}, d_lat: {d_lat:.3e}");
-            tracing::debug!("p_lon: {p_lon}, p_lat: {p_lat}");
-            tracing::debug!("m_lon: {m_lon}, m_lat: {m_lat}");
+            tracing::trace!("iteration: {_i}");
+            tracing::trace!("gcj02_lon: {gcj02_lon}, gcj02_lat: {gcj02_lat}");
+            tracing::trace!("d_lon: {d_lon:.3e}, d_lat: {d_lat:.3e}");
+            tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
+            tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
         }
 
         if d_lat.abs() < threshold && d_lon.abs() < threshold {

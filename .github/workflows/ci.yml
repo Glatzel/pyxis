@@ -79,6 +79,21 @@ jobs:
       - name: Machete
         uses: bnjbvr/cargo-machete@main
 
+  cargo-bench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo install cargo-codspeed --locked
+
+      - name: Build the benchmark target(s)
+        run: cargo codspeed build
+
+      - name: Run the benchmarks
+        uses: CodSpeedHQ/action@v3
+        with:
+          run: cargo codspeed run
+          token: ${{ secrets.CODSPEED_TOKEN }}
+
   # region cache
   cache-pixi:
     runs-on: windows-latest

@@ -149,10 +149,10 @@ pub fn xyz2lbh(
         height = p / new_latitude.cos() - n;
         #[cfg(feature = "log")]
         {
-            tracing::debug!("step: {_i}");
-            tracing::debug!("latitude: {}", latitude.to_degrees());
-            tracing::debug!("new_latitude: {}", new_latitude.to_degrees());
-            tracing::debug!(
+            tracing::trace!("iteration: {_i}");
+            tracing::trace!("latitude: {}", latitude.to_degrees());
+            tracing::trace!("new_latitude: {}", new_latitude.to_degrees());
+            tracing::trace!(
                 "delta: {}",
                 (new_latitude.to_degrees() - latitude.to_degrees()).abs()
             );

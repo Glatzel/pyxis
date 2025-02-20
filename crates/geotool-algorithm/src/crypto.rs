@@ -383,7 +383,6 @@ pub fn bd09_to_wgs84_exact(
     max_iter: usize,
 ) -> (f64, f64) {
     let (gcj_lon, gcj_lat) = bd09_to_gcj02_exact(bd09_lon, bd09_lat, threshold, max_iter);
-    println!("{gcj_lon},{gcj_lat}");
     gcj02_to_wgs84_exact(gcj_lon, gcj_lat, threshold, max_iter)
 }
 

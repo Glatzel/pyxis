@@ -10,7 +10,7 @@ edition = "2021"
 geotool-algorithm = { path = "crates/geotool-algorithm" }
 
 assert_cmd = "2.0"
-bpaf = { version = "0.9.15", features = ["derive", "batteries"] }
+bpaf = { version = "0.9.16", features = ["derive", "batteries"] }
 dialoguer = "0.11.0"
 float-cmp = "0.10.0"
 log-template = { git = "https://github.com/Glatzel/rs-log-template", tag = "v0.0.2" }

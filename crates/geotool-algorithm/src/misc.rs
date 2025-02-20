@@ -19,7 +19,7 @@
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// let p = (469704.6693, 2821940.796);
-/// let p = geotool_algorithm::datum_compense(p.0, p.1, 400.0, 6378_137.0, 500_000.0, 0.0);
+/// let p = geotool_algorithm::datum_compense(p.0, p.1, 400.0, 6_378_137.0, 500_000.0, 0.0);
 /// assert_approx_eq!(f64, p.0, 469706.56912942, epsilon = 1e-6);
 /// assert_approx_eq!(f64, p.1, 2821763.83123231, epsilon = 1e-6);
 /// ```

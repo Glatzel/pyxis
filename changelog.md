@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.6] - 2025-02-20
+
+### Added
+
+- Add cargo-clean script by @Glatzel in [#64](https://github.com/Glatzel/rs-geotool/pull/64)
+- Add example by @Glatzel in [#68](https://github.com/Glatzel/rs-geotool/pull/68)
+- Add ellipsoid to cli record by @Glatzel in [#69](https://github.com/Glatzel/rs-geotool/pull/69)
+- Add cli example by @Glatzel in [#70](https://github.com/Glatzel/rs-geotool/pull/70)
+- Add log feature to recursion algorithm by @Glatzel in [#78](https://github.com/Glatzel/rs-geotool/pull/78)
+- Add some cli log message by @Glatzel in [#79](https://github.com/Glatzel/rs-geotool/pull/79)
+
+### Changed
+
+- Implement coordinate syetem migrate 2d by @Glatzel in [#71](https://github.com/Glatzel/rs-geotool/pull/71)
+
+### Refactor
+
+- Rename file, parameters by @Glatzel in [#74](https://github.com/Glatzel/rs-geotool/pull/74)
+
+### Testing
+
+- Add cli tests by @Glatzel in [#73](https://github.com/Glatzel/rs-geotool/pull/73)
+- Add cli scale test by @Glatzel in [#75](https://github.com/Glatzel/rs-geotool/pull/75)
+- Add algorithm rotate 2d test by @Glatzel in [#76](https://github.com/Glatzel/rs-geotool/pull/76)
+- Add cli rotate test by @Glatzel in [#77](https://github.com/Glatzel/rs-geotool/pull/77)
+
 ## [0.0.5] - 2025-02-15
 
 ### Documentation
@@ -81,6 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/rs-geotool/pull/14)
 
+[0.0.6]: https://github.com/Glatzel/rs-geotool/compare/v0.0.5..v0.0.6
 [0.0.5]: https://github.com/Glatzel/rs-geotool/compare/v0.0.4..v0.0.5
 [0.0.4]: https://github.com/Glatzel/rs-geotool/compare/v0.0.3..v0.0.4
 [0.0.3]: https://github.com/Glatzel/rs-geotool/compare/v0.0.2..v0.0.3

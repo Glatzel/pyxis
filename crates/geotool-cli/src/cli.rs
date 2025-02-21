@@ -1,4 +1,4 @@
-use bpaf::{batteries, Bpaf};
+use bpaf::{Bpaf, batteries};
 mod transform;
 use bpaf::Parser;
 use tracing_subscriber::layer::SubscriberExt;

@@ -4,7 +4,7 @@ use std::sync::LazyLock;
 use geotool_algorithm::Ellipsoid;
 use miette::IntoDiagnostic;
 
-use super::{options, CoordSpace, CryptoSpace, MigrateOption2d, RotateUnit};
+use super::{CoordSpace, CryptoSpace, MigrateOption2d, RotateUnit, options};
 pub struct ContextTransform {
     pub x: f64,
     pub y: f64,
@@ -235,7 +235,9 @@ impl ContextTransform {
     }
     pub fn translate(&mut self, tx: f64, ty: f64, tz: f64) {
         if tx == 0.0f64 && ty == 0.0f64 && tz == 0.0f64 {
-            tracing::warn!("Translation parameters are all 0. The Coordinate is not modified after translation.")
+            tracing::warn!(
+                "Translation parameters are all 0. The Coordinate is not modified after translation."
+            )
         }
         self.x += tx;
         self.y += ty;

@@ -1,4 +1,4 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, black_box, criterion_group, criterion_main};
 
 fn bench_datum_compense(c: &mut Criterion) {
     c.bench_function("datum_compense", |b| {

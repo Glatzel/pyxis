@@ -1,7 +1,7 @@
 use numpy::{PyArrayDyn, PyArrayMethods};
 use pyo3::prelude::*;
 use pyo3::types::PyTuple;
-use pyo3::{pyfunction, PyObject, Python};
+use pyo3::{PyObject, Python, pyfunction};
 use rayon::prelude::*;
 #[pyfunction]
 pub fn py_datum_compense(

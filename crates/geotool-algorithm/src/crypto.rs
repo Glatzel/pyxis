@@ -14,7 +14,7 @@ pub enum CryptoThresholdMode {
 }
 
 const EARTH_R: f64 = 6378137.0;
-const _X_PI: f64 = PI * 3000.0 / 180.0;
+const X_PI: f64 = PI * 3000.0 / 180.0;
 const EE: f64 = 0.006_693_421_622_965_943;
 
 fn transform(x: f64, y: f64) -> (f64, f64) {
@@ -79,8 +79,8 @@ fn delta(lon: f64, lat: f64) -> (f64, f64) {
 pub fn bd09_to_gcj02(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
     let x = bd09_lon - 0.0065;
     let y = bd09_lat - 0.006;
-    let z = (x * x + y * y).sqrt() - 0.00002 * (y * _X_PI).sin();
-    let theta = y.atan2(x) - 0.000003 * (x * _X_PI).cos();
+    let z = (x * x + y * y).sqrt() - 0.00002 * (y * X_PI).sin();
+    let theta = y.atan2(x) - 0.000003 * (x * X_PI).cos();
     let gcj02_lon = z * theta.cos();
     let gcj02_lat = z * theta.sin();
     (gcj02_lon, gcj02_lat)
@@ -161,8 +161,8 @@ pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 /// ```
 pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
     let z = (gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat).sqrt()
-        + 0.00002 * (gcj02_lat * _X_PI).sin();
-    let theta = gcj02_lat.atan2(gcj02_lon) + 0.000003 * (gcj02_lon * _X_PI).cos();
+        + 0.00002 * (gcj02_lat * X_PI).sin();
+    let theta = gcj02_lat.atan2(gcj02_lon) + 0.000003 * (gcj02_lon * X_PI).cos();
     let bd09_lon = z * (theta).cos() + 0.0065;
     let bd09_lat = z * (theta).sin() + 0.006;
     (bd09_lon, bd09_lat)

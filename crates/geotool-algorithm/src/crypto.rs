@@ -160,8 +160,8 @@ pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.1, 30.61484572185035, epsilon = 1e-17);
 /// ```
 pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
-    let z = (gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat).sqrt()
-        + 0.00002 * (gcj02_lat * X_PI).sin();
+    let z =
+        (gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat).sqrt() + 0.00002 * (gcj02_lat * X_PI).sin();
     let theta = gcj02_lat.atan2(gcj02_lon) + 0.000003 * (gcj02_lon * X_PI).cos();
     let bd09_lon = z * (theta).cos() + 0.0065;
     let bd09_lat = z * (theta).sin() + 0.006;

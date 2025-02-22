@@ -243,6 +243,28 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-17);
 /// ```
+/// 
+/// ```
+/// use float_cmp::assert_approx_eq;
+/// use tracing_subscriber::layer::SubscriberExt;
+/// use tracing_subscriber::util::SubscriberInitExt;
+/// use tracing_subscriber::filter::LevelFilter;
+/// tracing_subscriber::registry()
+///     .with(log_template::terminal_layer(LevelFilter::TRACE))
+///     .init();
+/// let p = (121.10271732371203, 30.61484572185035);
+/// let p = geotool_algorithm::crypto_exact(
+///             p.0,
+///             p.1,
+///             geotool_algorithm::bd09_to_wgs84,
+///             geotool_algorithm::wgs84_to_bd09,
+///             1e-3,
+///             geotool_algorithm::CryptoThresholdMode::Distance,
+///             1000,
+///         );
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-8);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-8);
+/// ```
 pub fn crypto_exact(
     src_lon: f64,
     src_lat: f64,

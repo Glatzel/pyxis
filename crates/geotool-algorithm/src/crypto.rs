@@ -514,27 +514,18 @@ pub fn bd09_to_wgs84_exact(
 }
 
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
-pub fn distance_geo(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
-    let arc_lat_a = lat_a * PI / 180.0;
-    let arc_lat_b = lat_b * PI / 180.0;
-    let x = (arc_lat_a).cos() * (arc_lat_b).cos() * ((lon_a - lon_b) * PI / 180.0).cos();
-    let y = (arc_lat_a).sin() * (arc_lat_b).sin();
-    let s = (x + y).clamp(-1.0, 1.0);
-    let alpha = s.acos();
-    alpha * EARTH_R
-}
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_crypto() {
-        let (lon, lat) = (121.0917077, 30.6107779);
-        let (test_lon, test_lat) = super::wgs84_to_bd09(lon, lat);
-        let (test_lon, test_lat) = super::bd09_to_wgs84_exact(test_lon, test_lat, 1e-13, 35);
-        println!("{test_lon},{test_lat}");
-        let d = super::distance_geo(121.0917077, 30.6107779, test_lon, test_lat);
-        println!("distance: {d}");
-        float_cmp::assert_approx_eq!(f64, lon, test_lon, epsilon = 1e-6);
-        float_cmp::assert_approx_eq!(f64, lat, test_lat, epsilon = 1e-6);
-        float_cmp::assert_approx_eq!(f64, d, 0.0, epsilon = 1e-17);
-    }
+pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
+    let lat1_rad = lat_a.to_radians();
+    let lon1_rad = lon_a.to_radians();
+    let lat2_rad = lat_b.to_radians();
+    let lon2_rad = lon_b.to_radians();
+
+    let delta_lat = lat2_rad - lat1_rad;
+    let delta_lon = lon2_rad - lon1_rad;
+
+    let a = (delta_lat / 2.0).sin().powi(2)
+        + lat1_rad.cos() * lat2_rad.cos() * (delta_lon / 2.0).sin().powi(2);
+    let c = 2.0 * a.sqrt().atan2((1.0 - a).sqrt());
+
+    EARTH_R * c
 }

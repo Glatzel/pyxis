@@ -85,6 +85,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
       - run: cargo install cargo-codspeed --locked
 
       - name: Build the benchmark target(s)

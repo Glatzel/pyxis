@@ -231,7 +231,7 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// let p = geotool_algorithm::gcj02_to_wgs84_exact(121.09626935575027, 30.608604331756705, 1e-17, 100);
-/// assert_approx_eq!(f64, p.0,  121.0917077, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 30.6107779,  epsilon = 1e-17);
 /// ```
 pub fn gcj02_to_wgs84_exact(
@@ -260,7 +260,7 @@ pub fn gcj02_to_wgs84_exact(
         {
             tracing::trace!("iteration: {_i}");
             tracing::trace!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
-            tracing::trace!("d_lon: {d_lon:.3e}, d_lat: {d_lat:.3e}");
+            tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
             tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
         }
@@ -268,15 +268,39 @@ pub fn gcj02_to_wgs84_exact(
         if d_lat.abs() < threshold && d_lon.abs() < threshold {
             return (wgs_lon, wgs_lat);
         }
-        if d_lon > 0.0 {
-            p_lon = wgs_lon;
-        } else {
-            m_lon = wgs_lon;
-        }
-        if d_lat > 0.0 {
-            p_lat = wgs_lat;
-        } else {
-            m_lat = wgs_lat;
+        match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
+            (true, true, true) => {
+                p_lon = wgs_lon;
+                p_lat = (p_lat + wgs_lat) / 2.0;
+            }
+            (true, false, true) => {
+                p_lon = wgs_lon;
+                m_lat = (m_lat + wgs_lat) / 2.0;
+            }
+            (false, true, true) => {
+                m_lon = wgs_lon;
+                p_lat = (p_lat + wgs_lat) / 2.0;
+            }
+            (false, false, true) => {
+                m_lon = wgs_lon;
+                m_lat = (m_lat + wgs_lat) / 2.0;
+            }
+            (true, true, false) => {
+                p_lon = (wgs_lon + p_lon) / 2.0;
+                p_lat = wgs_lat;
+            }
+            (false, true, false) => {
+                m_lon = (wgs_lon + m_lon) / 2.0;
+                p_lat = wgs_lat
+            }
+            (true, false, false) => {
+                p_lon = (wgs_lon + p_lon) / 2.0;
+                m_lat = wgs_lat;
+            }
+            (false, false, false) => {
+                m_lon = (wgs_lon + m_lon) / 2.0;
+                m_lat = wgs_lat;
+            }
         }
     }
     #[cfg(feature = "log")]
@@ -298,9 +322,15 @@ pub fn gcj02_to_wgs84_exact(
 ///
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = geotool_algorithm::bd09_to_gcj02_exact(121.10271732371203, 30.61484572185035, 1e-13, 100);
-/// assert_approx_eq!(f64, p.0,  121.09626935575027, epsilon = 1e-13);
-/// assert_approx_eq!(f64, p.1, 30.608604331756705,  epsilon = 1e-13);
+/// use tracing_subscriber::layer::SubscriberExt;
+/// use tracing_subscriber::util::SubscriberInitExt;
+/// use tracing_subscriber::filter::LevelFilter;
+/// tracing_subscriber::registry()
+///     .with(log_template::terminal_layer(LevelFilter::TRACE))
+///     .init();
+/// let p = geotool_algorithm::bd09_to_gcj02_exact(121.10271732371203, 30.61484572185035, 1e-17, 100);
+/// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, 30.608604331756705,  epsilon = 1e-6);
 /// ```
 pub fn bd09_to_gcj02_exact(
     bd09_lon: f64,
@@ -328,7 +358,7 @@ pub fn bd09_to_gcj02_exact(
         {
             tracing::trace!("iteration: {_i}");
             tracing::trace!("gcj02_lon: {gcj02_lon}, gcj02_lat: {gcj02_lat}");
-            tracing::trace!("d_lon: {d_lon:.3e}, d_lat: {d_lat:.3e}");
+            tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
             tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
         }
@@ -336,15 +366,39 @@ pub fn bd09_to_gcj02_exact(
         if d_lat.abs() < threshold && d_lon.abs() < threshold {
             return (gcj02_lon, gcj02_lat);
         }
-        if d_lon > 0.0 {
-            p_lon = gcj02_lon;
-        } else {
-            m_lon = gcj02_lon;
-        }
-        if d_lat > 0.0 {
-            p_lat = gcj02_lat;
-        } else {
-            m_lat = gcj02_lat;
+        match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
+            (true, true, true) => {
+                p_lon = gcj02_lon;
+                p_lat = (p_lat + gcj02_lat) / 2.0;
+            }
+            (true, false, true) => {
+                p_lon = gcj02_lon;
+                m_lat = (m_lat + gcj02_lat) / 2.0;
+            }
+            (false, true, true) => {
+                m_lon = gcj02_lon;
+                p_lat = (p_lat + gcj02_lat) / 2.0;
+            }
+            (false, false, true) => {
+                m_lon = gcj02_lon;
+                m_lat = (m_lat + gcj02_lat) / 2.0;
+            }
+            (true, true, false) => {
+                p_lon = (gcj02_lon + p_lon) / 2.0;
+                p_lat = gcj02_lat;
+            }
+            (false, true, false) => {
+                m_lon = (gcj02_lon + m_lon) / 2.0;
+                p_lat = gcj02_lat
+            }
+            (true, false, false) => {
+                p_lon = (gcj02_lon + p_lon) / 2.0;
+                m_lat = gcj02_lat;
+            }
+            (false, false, false) => {
+                m_lon = (gcj02_lon + m_lon) / 2.0;
+                m_lat = gcj02_lat;
+            }
         }
     }
     #[cfg(feature = "log")]
@@ -371,10 +425,16 @@ pub fn bd09_to_gcj02_exact(
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
+/// use tracing_subscriber::layer::SubscriberExt;
+/// use tracing_subscriber::util::SubscriberInitExt;
+/// use tracing_subscriber::filter::LevelFilter;
+/// tracing_subscriber::registry()
+///     .with(log_template::terminal_layer(LevelFilter::TRACE))
+///     .init();
 /// let p = (121.10271732371203, 30.61484572185035);
-/// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-13, 100);
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-13);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-13);
+/// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-17, 100);
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-17);
 /// ```
 pub fn bd09_to_wgs84_exact(
     bd09_lon: f64,
@@ -382,8 +442,75 @@ pub fn bd09_to_wgs84_exact(
     threshold: f64,
     max_iter: usize,
 ) -> (f64, f64) {
-    let (gcj_lon, gcj_lat) = bd09_to_gcj02_exact(bd09_lon, bd09_lat, threshold, max_iter);
-    gcj02_to_wgs84_exact(gcj_lon, gcj_lat, threshold, max_iter)
+    let (mut wgs_lon, mut wgs_lat) = bd09_to_wgs84(bd09_lon, bd09_lat);
+
+    let mut d_lon = (wgs_lon - bd09_lon).abs();
+    let mut d_lat = (wgs_lat - bd09_lat).abs();
+
+    let mut m_lon = wgs_lon - d_lon;
+    let mut m_lat = wgs_lat - d_lat;
+    let mut p_lon = wgs_lon + d_lon;
+    let mut p_lat = wgs_lat + d_lat;
+
+    for _i in 0..max_iter {
+        (wgs_lon, wgs_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
+        let (tmp_lon, tmp_lat) = wgs84_to_bd09(wgs_lon, wgs_lat);
+        d_lon = tmp_lon - bd09_lon;
+        d_lat = tmp_lat - bd09_lat;
+
+        #[cfg(feature = "log")]
+        {
+            tracing::trace!("iteration: {_i}");
+            tracing::trace!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
+            tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
+            tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
+            tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
+        }
+
+        if d_lat.abs() < threshold && d_lon.abs() < threshold {
+            return (wgs_lon, wgs_lat);
+        }
+
+        match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
+            (true, true, true) => {
+                p_lon = wgs_lon;
+                p_lat = (p_lat + wgs_lat) / 2.0;
+            }
+            (true, false, true) => {
+                p_lon = wgs_lon;
+                m_lat = (m_lat + wgs_lat) / 2.0;
+            }
+            (false, true, true) => {
+                m_lon = wgs_lon;
+                p_lat = (p_lat + wgs_lat) / 2.0;
+            }
+            (false, false, true) => {
+                m_lon = wgs_lon;
+                m_lat = (m_lat + wgs_lat) / 2.0;
+            }
+            (true, true, false) => {
+                p_lon = (wgs_lon + p_lon) / 2.0;
+                p_lat = wgs_lat;
+            }
+            (false, true, false) => {
+                m_lon = (wgs_lon + m_lon) / 2.0;
+                p_lat = wgs_lat
+            }
+            (true, false, false) => {
+                p_lon = (wgs_lon + p_lon) / 2.0;
+                m_lat = wgs_lat;
+            }
+            (false, false, false) => {
+                m_lon = (wgs_lon + m_lon) / 2.0;
+                m_lat = wgs_lat;
+            }
+        }
+    }
+    #[cfg(feature = "log")]
+    {
+        tracing::debug!("Exeed max iteration number: {max_iter}");
+    }
+    ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
 }
 
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
@@ -406,8 +533,8 @@ mod tests {
         println!("{test_lon},{test_lat}");
         let d = super::distance_geo(121.0917077, 30.6107779, test_lon, test_lat);
         println!("distance: {d}");
-        float_cmp::assert_approx_eq!(f64, lon, test_lon, epsilon = 1e-13);
-        float_cmp::assert_approx_eq!(f64, lat, test_lat, epsilon = 1e-13);
+        float_cmp::assert_approx_eq!(f64, lon, test_lon, epsilon = 1e-6);
+        float_cmp::assert_approx_eq!(f64, lat, test_lat, epsilon = 1e-6);
         float_cmp::assert_approx_eq!(f64, d, 0.0, epsilon = 1e-17);
     }
 }

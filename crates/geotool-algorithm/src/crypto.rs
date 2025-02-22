@@ -366,11 +366,39 @@ pub fn bd09_to_gcj02_exact(
         if d_lat.abs() < threshold && d_lon.abs() < threshold {
             return (gcj02_lon, gcj02_lat);
         }
-        match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
-            (true, _, true) => p_lon = gcj02_lon,
-            (false, _, true) => m_lon = gcj02_lon,
-            (_, true, false) => p_lat = gcj02_lat,
-            (_, false, false) => m_lat = gcj02_lat,
+       match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
+            (true, true, true) => {
+                p_lon = gcj02_lon;
+                p_lat = (p_lat + gcj02_lat) / 2.0;
+            }
+            (true, false, true) => {
+                p_lon = gcj02_lon;
+                m_lat = (m_lat + gcj02_lat) / 2.0;
+            }
+            (false, true, true) => {
+                m_lon = gcj02_lon;
+                p_lat = (p_lat + gcj02_lat) / 2.0;
+            }
+            (false, false, true) => {
+                m_lon = gcj02_lon;
+                m_lat = (m_lat + gcj02_lat) / 2.0;
+            }
+            (true, true, false) => {
+                p_lon = (gcj02_lon + p_lon) / 2.0;
+                p_lat = gcj02_lat;
+            }
+            (false, true, false) => {
+                m_lon = (gcj02_lon + m_lon) / 2.0;
+                p_lat = gcj02_lat
+            }
+            (true, false, false) => {
+                p_lon = (gcj02_lon + p_lon) / 2.0;
+                m_lat = gcj02_lat;
+            }
+            (false, false, false) => {
+                m_lon = (gcj02_lon + m_lon) / 2.0;
+                m_lat = gcj02_lat;
+            }
         }
     }
     #[cfg(feature = "log")]

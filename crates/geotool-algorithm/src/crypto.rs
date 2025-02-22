@@ -342,16 +342,7 @@ pub fn crypto_exact(
                 p_lat -= d_lat;
             }
         }
-        // if d_lon > 0.0 {
-        //     p_lon = dst_lon / 2.0 + p_lon / 2.0;
-        // } else {
-        //     m_lon = dst_lon / 2.0 + m_lon / 2.0;
-        // }
-        // if d_lat > 0.0 {
-        //     p_lat = dst_lat / 2.0 + p_lat / 2.0;
-        // } else {
-        //     m_lat = dst_lat / 2.0 + m_lat / 2.0;
-        // }
+        
         d_lon = temp_d_lon;
         d_lat = temp_d_lat;
     }

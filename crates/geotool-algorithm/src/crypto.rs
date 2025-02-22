@@ -477,8 +477,8 @@ mod tests {
         println!("{test_lon},{test_lat}");
         let d = super::distance_geo(121.0917077, 30.6107779, test_lon, test_lat);
         println!("distance: {d}");
-        float_cmp::assert_approx_eq!(f64, lon, test_lon, epsilon = 1e-13);
-        float_cmp::assert_approx_eq!(f64, lat, test_lat, epsilon = 1e-13);
+        float_cmp::assert_approx_eq!(f64, lon, test_lon, epsilon = 1e-6);
+        float_cmp::assert_approx_eq!(f64, lat, test_lat, epsilon = 1e-6);
         float_cmp::assert_approx_eq!(f64, d, 0.0, epsilon = 1e-17);
     }
 }

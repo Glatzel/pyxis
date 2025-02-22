@@ -240,7 +240,7 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 ///             geotool_algorithm::CryptoThresholdMode::LonLat,
 ///             200,
 ///         );
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-13);
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-15);
 /// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-14);
 /// ```
 ///

@@ -43,6 +43,7 @@ fn bench_crypto_exact(c: &mut Criterion) {
                     black_box(121.10271732371203),
                     black_box(30.61484572185035),
                     threshold,
+                    geotool_algorithm::CryptoThresholdMode::LonLat,
                     1000,
                 )
             })

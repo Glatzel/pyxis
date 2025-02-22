@@ -26,7 +26,7 @@ fn bench_crypto_exact(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto_exact");
     for i in [5, 8, 11, 14].iter() {
         let threshold = 10.0f64.powi(-i);
-        group.bench_with_input(BenchmarkId::new("bd2wgs-exact-lonlat", i), i, |b, _| {
+        group.bench_with_input(BenchmarkId::new("lonlat", i), i, |b, _| {
             b.iter(|| {
                 geotool_algorithm::crypto_exact(
                     black_box(121.10271732371203),
@@ -42,7 +42,7 @@ fn bench_crypto_exact(c: &mut Criterion) {
     }
     for i in [-1, 0, 1, 2].iter() {
         let threshold = 10.0f64.powi(-i);
-        group.bench_with_input(BenchmarkId::new("bd2wgs-exact-distance", i), i, |b, _| {
+        group.bench_with_input(BenchmarkId::new("distance", i), i, |b, _| {
             b.iter(|| {
                 geotool_algorithm::crypto_exact(
                     black_box(121.10271732371203),

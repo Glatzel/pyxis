@@ -318,14 +318,14 @@ pub fn crypto_exact(
             _ => (),
         }
         if d_lon > 0.0 {
-            p_lon = dst_lon / 2.0 + p_lon / 2.0;
+            p_lon = dst_lon + d_lon * 10.0;
         } else {
-            m_lon = dst_lon / 2.0 + m_lon / 2.0;
+            m_lon = dst_lon - d_lon * 10.0;
         }
         if d_lat > 0.0 {
-            p_lat = dst_lat / 2.0 + p_lat / 2.0;
+            p_lat = dst_lat + d_lat * 10.0;
         } else {
-            m_lat = dst_lat / 2.0 + m_lat / 2.0;
+            m_lat = dst_lat - d_lat * 10.0;
         }
     }
 

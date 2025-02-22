@@ -468,11 +468,11 @@ pub fn bd09_to_wgs84_exact(
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
             tracing::trace!(
                 "delta: {}",
-                distance_geo(bd09_lon, bd09_lat, tmp_lon, tmp_lat)
+                haversine_distance(bd09_lon, bd09_lat, tmp_lon, tmp_lat)
             );
         }
 
-        if distance_geo(bd09_lon, bd09_lat, tmp_lon, tmp_lat) < threshold {
+        if haversine_distance(bd09_lon, bd09_lat, tmp_lon, tmp_lat) < threshold {
             return (wgs_lon, wgs_lat);
         }
 
@@ -519,7 +519,7 @@ pub fn bd09_to_wgs84_exact(
 }
 
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
-pub fn distance_geo(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
+pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
     let lat1_rad = lat_a.to_radians();
     let lon1_rad = lon_a.to_radians();
     let lat2_rad = lat_b.to_radians();

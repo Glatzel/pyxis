@@ -319,16 +319,28 @@ pub fn crypto_exact(
         }
 
         match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs()) {
-            (true, true) => p_lon = dst_lon ,
+            (true, true) => p_lon = dst_lon,
             (false, true) => m_lon = dst_lon,
-            (true, false) => m_lon -= d_lon,
-            (false, false) => p_lon -= d_lon,
+            (true, false) => {
+                p_lon = dst_lon;
+                m_lon -= d_lon;
+            }
+            (false, false) => {
+                m_lon = dst_lon;
+                p_lon -= d_lon;
+            }
         }
         match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs()) {
-            (true, true) => p_lat = dst_lat ,
+            (true, true) => p_lat = dst_lat,
             (false, true) => m_lat = dst_lat,
-            (true, false) => m_lat -= d_lat,
-            (false, false) => p_lat -= d_lat,
+            (true, false) => {
+                p_lat = dst_lat;
+                m_lat -= d_lat;
+            }
+            (false, false) => {
+                m_lat = dst_lat;
+                p_lat -= d_lat;
+            }
         }
         // if d_lon > 0.0 {
         //     p_lon = dst_lon / 2.0 + p_lon / 2.0;

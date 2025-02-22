@@ -8,6 +8,10 @@ pub enum CryptoSpace {
     GCJ02,
     BD09,
 }
+pub enum CryptoThresholdMode {
+    Distance,
+    LonLat,
+}
 
 const EARTH_R: f64 = 6378137.0;
 const _X_PI: f64 = PI * 3000.0 / 180.0;
@@ -440,6 +444,7 @@ pub fn bd09_to_wgs84_exact(
     bd09_lon: f64,
     bd09_lat: f64,
     threshold: f64,
+    threshold_mode: CryptoThresholdMode,
     max_iter: usize,
 ) -> (f64, f64) {
     let (mut wgs_lon, mut wgs_lat) = bd09_to_wgs84(bd09_lon, bd09_lat);
@@ -467,8 +472,16 @@ pub fn bd09_to_wgs84_exact(
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
         }
 
-        if d_lat.abs() < threshold && d_lon.abs() < threshold {
-            return (wgs_lon, wgs_lat);
+        match threshold_mode {
+            CryptoThresholdMode::Distance
+                if haversine_distance(bd09_lon, bd09_lat, tmp_lon, tmp_lat) < threshold =>
+            {
+                return (wgs_lon, wgs_lat);
+            }
+            CryptoThresholdMode::LonLat if d_lat.abs() < threshold && d_lon.abs() < threshold => {
+                return (wgs_lon, wgs_lat);
+            }
+            _ => (),
         }
 
         match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {

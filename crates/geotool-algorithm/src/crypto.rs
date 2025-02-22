@@ -284,6 +284,8 @@ pub fn crypto_exact(
     let mut p_lon = dst_lon + d_lon;
     let mut p_lat = dst_lat + d_lat;
 
+    d_lon += 1.0;
+    d_lat += 1.0;
 
     for _i in 0..max_iter {
         (dst_lon, dst_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
@@ -305,6 +307,9 @@ pub fn crypto_exact(
             if _i == max_iter - 1 {
                 tracing::warn!("Exeed max iteration number: {max_iter}");
             }
+        }
+        if temp_d_lon == d_lon && temp_d_lat == d_lat {
+            break;
         }
 
         match threshold_mode {

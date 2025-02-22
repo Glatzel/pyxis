@@ -26,7 +26,7 @@ fn bench_crypto_exact(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto_exact");
     for i in [5, 8, 11, 14].iter() {
         let threshold = 10.0f64.powi(-i);
-        group.bench_with_input(BenchmarkId::new("bd2wgs-exact", i), i, |b, i| {
+        group.bench_with_input(BenchmarkId::new("bd2wgs-exact", i), i, |b, _| {
             b.iter(|| {
                 geotool_algorithm::bd09_to_wgs84_exact(
                     black_box(121.10271732371203),
@@ -36,7 +36,7 @@ fn bench_crypto_exact(c: &mut Criterion) {
                 )
             })
         });
-        group.bench_with_input(BenchmarkId::new("bd2gcj-exact", i), i, |b, i| {
+        group.bench_with_input(BenchmarkId::new("bd2gcj-exact", i), i, |b, _| {
             b.iter(|| {
                 geotool_algorithm::bd09_to_gcj02_exact(
                     black_box(121.10271732371203),
@@ -46,7 +46,7 @@ fn bench_crypto_exact(c: &mut Criterion) {
                 )
             })
         });
-        group.bench_with_input(BenchmarkId::new("gcj2wgs-exact", i), i, |b, i| {
+        group.bench_with_input(BenchmarkId::new("gcj2wgs-exact", i), i, |b, _| {
             b.iter(|| {
                 geotool_algorithm::gcj02_to_wgs84_exact(
                     black_box(121.09626935575027),

@@ -24,7 +24,7 @@ fn bench_crypto(c: &mut Criterion) {
 }
 fn bench_crypto_exact(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto_exact");
-    for i in [1e-5, 1e-8, 1e-11].iter() {
+    for i in [1e-5, 1e-8, 1e-11, 1e-14].iter() {
         group.bench_with_input(BenchmarkId::new("bd2wgs-exact", i), i, |b, i| {
             b.iter(|| {
                 geotool_algorithm::bd09_to_wgs84_exact(black_box(121.0), black_box(30.0), *i, 1000)

@@ -317,18 +317,25 @@ pub fn crypto_exact(
             }
             _ => (),
         }
-        if d_lon > 0.0 {
-            p_lon = dst_lon / 2.0 + p_lon / 2.0;
-        } else {
-            m_lon = dst_lon / 2.0 + m_lon / 2.0;
-        }
-        if d_lat > 0.0 {
-            p_lat = dst_lat / 2.0 + p_lat / 2.0;
-        } else {
-            m_lat = dst_lat / 2.0 + m_lat / 2.0;
-        }
+        match (d_lon > 0.0, d_lat > 0.0) {
+            (true, true) => {
+                p_lon = (p_lon + dst_lon) / 2.0;
+                p_lat = (p_lat + dst_lat) / 2.0;
+            }
+            (true, false) => {
+                p_lon = (p_lon + dst_lon) / 2.0;
+                m_lat = (m_lat + dst_lat) / 2.0;
+            }
+            (false, true) => {
+                m_lon = (m_lon + dst_lon) / 2.0;
+                p_lat = (p_lat + dst_lat) / 2.0;
+            }
+            (false, false) => {
+                m_lon = (m_lon + dst_lon) / 2.0;
+                m_lat = (m_lat + dst_lat) / 2.0;
+            }
+        };
     }
-
     (dst_lon, dst_lat)
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.

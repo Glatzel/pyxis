@@ -366,7 +366,7 @@ pub fn bd09_to_gcj02_exact(
         if d_lat.abs() < threshold && d_lon.abs() < threshold {
             return (gcj02_lon, gcj02_lat);
         }
-       match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
+        match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
             (true, true, true) => {
                 p_lon = gcj02_lon;
                 p_lat = (p_lat + gcj02_lat) / 2.0;

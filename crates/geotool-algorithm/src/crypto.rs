@@ -377,11 +377,12 @@ pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64
 #[cfg(test)]
 mod test {
 
-    use super::*;
     use rand::prelude::*;
     use tracing_subscriber::filter::LevelFilter;
     use tracing_subscriber::layer::SubscriberExt;
     use tracing_subscriber::util::SubscriberInitExt;
+
+    use super::*;
     #[test]
     fn test_exact() {
         tracing_subscriber::registry()

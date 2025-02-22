@@ -27,17 +27,32 @@ fn bench_crypto_exact(c: &mut Criterion) {
     for i in [1e-5, 1e-8, 1e-11, 1e-14].iter() {
         group.bench_with_input(BenchmarkId::new("bd2wgs-exact", i), i, |b, i| {
             b.iter(|| {
-                geotool_algorithm::bd09_to_wgs84_exact(black_box(121.0), black_box(30.0), *i, 1000)
+                geotool_algorithm::bd09_to_wgs84_exact(
+                    black_box(121.10271732371203),
+                    black_box(30.61484572185035),
+                    *i,
+                    1000,
+                )
             })
         });
         group.bench_with_input(BenchmarkId::new("bd2gcj-exact", i), i, |b, i| {
             b.iter(|| {
-                geotool_algorithm::bd09_to_gcj02_exact(black_box(121.0), black_box(30.0), *i, 1000)
+                geotool_algorithm::bd09_to_gcj02_exact(
+                    black_box(121.10271732371203),
+                    black_box(30.61484572185035),
+                    *i,
+                    1000,
+                )
             })
         });
         group.bench_with_input(BenchmarkId::new("gcj2wgs-exact", i), i, |b, i| {
             b.iter(|| {
-                geotool_algorithm::gcj02_to_wgs84_exact(black_box(121.0), black_box(30.0), *i, 1000)
+                geotool_algorithm::gcj02_to_wgs84_exact(
+                    black_box(121.09626935575027),
+                    black_box(30.608604331756705),
+                    *i,
+                    1000,
+                )
             })
         });
     }

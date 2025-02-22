@@ -297,6 +297,10 @@ pub fn crypto_exact(
             tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
             tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
+            tracing::trace!(
+                "distance: {}",
+                haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
+            );
         }
 
         match threshold_mode {

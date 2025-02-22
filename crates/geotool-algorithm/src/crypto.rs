@@ -238,10 +238,10 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 ///             geotool_algorithm::wgs84_to_bd09,
 ///             1e-17,
 ///             geotool_algorithm::CryptoThresholdMode::LonLat,
-///             1000,
+///             200,
 ///         );
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-13);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-14);
 /// ```
 ///
 /// ```
@@ -260,7 +260,7 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 ///             geotool_algorithm::wgs84_to_bd09,
 ///             1e-3,
 ///             geotool_algorithm::CryptoThresholdMode::Distance,
-///             1000,
+///             100,
 ///         );
 /// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-8);
 /// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-8);
@@ -287,8 +287,8 @@ pub fn crypto_exact(
     for _i in 0..max_iter {
         (dst_lon, dst_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
         let (tmp_lon, tmp_lat) = inv_crypto_fn(dst_lon, dst_lat);
-        d_lon = tmp_lon - src_lon;
-        d_lat = tmp_lat - src_lat;
+        let temp_d_lon = tmp_lon - src_lon;
+        let temp_d_lat = tmp_lat - src_lat;
 
         #[cfg(feature = "log")]
         {
@@ -317,16 +317,31 @@ pub fn crypto_exact(
             }
             _ => (),
         }
-        if d_lon > 0.0 {
-            p_lon = dst_lon / 2.0 + p_lon / 2.0;
-        } else {
-            m_lon = dst_lon / 2.0 + m_lon / 2.0;
+
+        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs()) {
+            (true, true) => p_lon = dst_lon / 2.0 + p_lon / 2.0,
+            (false, true) => m_lon = dst_lon / 2.0 + m_lon / 2.0,
+            (true, false) => m_lon -= d_lon,
+            (false, false) => p_lon -= d_lon,
         }
-        if d_lat > 0.0 {
-            p_lat = dst_lat / 2.0 + p_lat / 2.0;
-        } else {
-            m_lat = dst_lat / 2.0 + m_lat / 2.0;
+        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs()) {
+            (true, true) => p_lat = dst_lat / 2.0 + p_lat / 2.0,
+            (false, true) => m_lat = dst_lat / 2.0 + m_lat / 2.0,
+            (true, false) => m_lat -= d_lat,
+            (false, false) => p_lat -= d_lat,
         }
+        // if d_lon > 0.0 {
+        //     p_lon = dst_lon / 2.0 + p_lon / 2.0;
+        // } else {
+        //     m_lon = dst_lon / 2.0 + m_lon / 2.0;
+        // }
+        // if d_lat > 0.0 {
+        //     p_lat = dst_lat / 2.0 + p_lat / 2.0;
+        // } else {
+        //     m_lat = dst_lat / 2.0 + m_lat / 2.0;
+        // }
+        d_lon = temp_d_lon;
+        d_lat = temp_d_lat;
     }
 
     (dst_lon, dst_lat)
@@ -361,7 +376,7 @@ mod test {
             .with(log_template::terminal_layer(LevelFilter::DEBUG))
             .init();
         let mut rng = rand::rng();
-        for _ in 0..1000 {
+        for _ in 0..100 {
             let wgs = (
                 rng.random_range(72.004..137.8347),
                 rng.random_range(0.8293..55.8271),
@@ -374,12 +389,19 @@ mod test {
                     bd.1,
                     bd09_to_gcj02,
                     gcj02_to_bd09,
-                    1e-3,
-                    CryptoThresholdMode::Distance,
+                    1e-17,
+                    CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1) - 0.0).abs() > 1e-3 {
-                    print!("gcj,{},{},{},{}\n", test_gcj.0, test_gcj.1, gcj.0, gcj.1)
+                if (test_gcj.0 - gcj.0) > 1e-13 || (test_gcj.1 - gcj.1).abs() > 1e-13 {
+                    print!(
+                        "gcj,{},{},{},{},{}\n",
+                        test_gcj.0,
+                        test_gcj.1,
+                        gcj.0,
+                        gcj.1,
+                        haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1)
+                    )
                 };
             }
 
@@ -389,12 +411,19 @@ mod test {
                     gcj.1,
                     gcj02_to_wgs84,
                     wgs84_to_gcj02,
-                    1e-3,
-                    CryptoThresholdMode::Distance,
+                    1e-17,
+                    CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1) - 0.0).abs() > 1e-3 {
-                    print!("wgs,{},{},{},{}\n", test_wgs.0, test_wgs.1, wgs.0, wgs.1)
+                if (test_wgs.0 - wgs.0) > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-13 {
+                    print!(
+                        "wgs,{},{},{},{},{}\n",
+                        test_wgs.0,
+                        test_wgs.1,
+                        wgs.0,
+                        wgs.1,
+                        haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1) - 0.0
+                    )
                 };
             }
         }

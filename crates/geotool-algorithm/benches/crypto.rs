@@ -26,32 +26,32 @@ fn bench_crypto_exact(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto_exact");
     for i in [5, 8, 11, 14].iter() {
         let threshold = 10.0f64.powi(-i);
-        group.bench_with_input(BenchmarkId::new("bd2wgs-exact", i), i, |b, _| {
+        group.bench_with_input(BenchmarkId::new("lonlat", i), i, |b, _| {
             b.iter(|| {
-                geotool_algorithm::bd09_to_wgs84_exact(
+                geotool_algorithm::crypto_exact(
                     black_box(121.10271732371203),
                     black_box(30.61484572185035),
+                    geotool_algorithm::bd09_to_wgs84,
+                    geotool_algorithm::wgs84_to_bd09,
                     threshold,
+                    geotool_algorithm::CryptoThresholdMode::LonLat,
                     1000,
                 )
             })
         });
-        group.bench_with_input(BenchmarkId::new("bd2gcj-exact", i), i, |b, _| {
+    }
+    for i in [0, 2, 3].iter() {
+        // [1m, 1cm, 1mm]
+        let threshold = 10.0f64.powi(-i);
+        group.bench_with_input(BenchmarkId::new("distance", i), i, |b, _| {
             b.iter(|| {
-                geotool_algorithm::bd09_to_gcj02_exact(
+                geotool_algorithm::crypto_exact(
                     black_box(121.10271732371203),
                     black_box(30.61484572185035),
+                    geotool_algorithm::bd09_to_wgs84,
+                    geotool_algorithm::wgs84_to_bd09,
                     threshold,
-                    1000,
-                )
-            })
-        });
-        group.bench_with_input(BenchmarkId::new("gcj2wgs-exact", i), i, |b, _| {
-            b.iter(|| {
-                geotool_algorithm::gcj02_to_wgs84_exact(
-                    black_box(121.09626935575027),
-                    black_box(30.608604331756705),
-                    threshold,
+                    geotool_algorithm::CryptoThresholdMode::Distance,
                     1000,
                 )
             })

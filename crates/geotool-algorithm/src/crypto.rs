@@ -8,9 +8,13 @@ pub enum CryptoSpace {
     GCJ02,
     BD09,
 }
+pub enum CryptoThresholdMode {
+    Distance,
+    LonLat,
+}
 
 const EARTH_R: f64 = 6378137.0;
-const _X_PI: f64 = PI * 3000.0 / 180.0;
+const X_PI: f64 = PI * 3000.0 / 180.0;
 const EE: f64 = 0.006_693_421_622_965_943;
 
 fn transform(x: f64, y: f64) -> (f64, f64) {
@@ -75,8 +79,8 @@ fn delta(lon: f64, lat: f64) -> (f64, f64) {
 pub fn bd09_to_gcj02(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
     let x = bd09_lon - 0.0065;
     let y = bd09_lat - 0.006;
-    let z = (x * x + y * y).sqrt() - 0.00002 * (y * _X_PI).sin();
-    let theta = y.atan2(x) - 0.000003 * (x * _X_PI).cos();
+    let z = (x * x + y * y).sqrt() - 0.00002 * (y * X_PI).sin();
+    let theta = y.atan2(x) - 0.000003 * (x * X_PI).cos();
     let gcj02_lon = z * theta.cos();
     let gcj02_lat = z * theta.sin();
     (gcj02_lon, gcj02_lat)
@@ -156,9 +160,9 @@ pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.1, 30.61484572185035, epsilon = 1e-17);
 /// ```
 pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
-    let z = (gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat).sqrt()
-        + 0.00002 * (gcj02_lat * _X_PI).sin();
-    let theta = gcj02_lat.atan2(gcj02_lon) + 0.000003 * (gcj02_lon * _X_PI).cos();
+    let z =
+        (gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat).sqrt() + 0.00002 * (gcj02_lat * X_PI).sin();
+    let theta = gcj02_lat.atan2(gcj02_lon) + 0.000003 * (gcj02_lon * X_PI).cos();
     let bd09_lon = z * (theta).cos() + 0.0065;
     let bd09_lat = z * (theta).sin() + 0.006;
     (bd09_lon, bd09_lat)
@@ -217,211 +221,6 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
     gcj02_to_bd09(gcj_lon, gcj_lat)
 }
 
-/// gcj2wgs_exact convert GCJ-02 coordinate(gcj_lat, gcj_lon) to WGS-84 coordinate.
-///
-/// # Arguments
-///
-/// - `gcj_lon`: Longitude in `GCJ02` coordinate system.
-/// - `gcj_lat`: Latitude in `GCJ02` coordinate system.
-/// - `threshold`: Error threshold. Suggest value `1e-10`.
-/// - `max_iter``: Max iterations. Suggest value `100`.
-///
-/// # Example
-///
-/// ```
-/// use float_cmp::assert_approx_eq;
-/// let p = geotool_algorithm::gcj02_to_wgs84_exact(121.09626935575027, 30.608604331756705, 1e-17, 100);
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.6107779,  epsilon = 1e-17);
-/// ```
-pub fn gcj02_to_wgs84_exact(
-    gcj02_lon: f64,
-    gcj02_lat: f64,
-    threshold: f64,
-    max_iter: usize,
-) -> (f64, f64) {
-    let (mut wgs_lon, mut wgs_lat) = gcj02_to_wgs84(gcj02_lon, gcj02_lat);
-
-    let mut d_lon = (wgs_lon - gcj02_lon).abs();
-    let mut d_lat = (wgs_lat - gcj02_lat).abs();
-
-    let mut m_lon = wgs_lon - d_lon;
-    let mut m_lat = wgs_lat - d_lat;
-    let mut p_lon = wgs_lon + d_lon;
-    let mut p_lat = wgs_lat + d_lat;
-
-    for _i in 0..max_iter {
-        (wgs_lon, wgs_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
-        let (tmp_lon, tmp_lat) = wgs84_to_gcj02(wgs_lon, wgs_lat);
-        d_lon = tmp_lon - gcj02_lon;
-        d_lat = tmp_lat - gcj02_lat;
-
-        #[cfg(feature = "log")]
-        {
-            tracing::trace!("iteration: {_i}");
-            tracing::trace!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
-            tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
-            tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
-            tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
-        }
-
-        if d_lat.abs() < threshold && d_lon.abs() < threshold {
-            return (wgs_lon, wgs_lat);
-        }
-        match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
-            (true, true, true) => {
-                p_lon = wgs_lon;
-                p_lat = (p_lat + wgs_lat) / 2.0;
-            }
-            (true, false, true) => {
-                p_lon = wgs_lon;
-                m_lat = (m_lat + wgs_lat) / 2.0;
-            }
-            (false, true, true) => {
-                m_lon = wgs_lon;
-                p_lat = (p_lat + wgs_lat) / 2.0;
-            }
-            (false, false, true) => {
-                m_lon = wgs_lon;
-                m_lat = (m_lat + wgs_lat) / 2.0;
-            }
-            (true, true, false) => {
-                p_lon = (wgs_lon + p_lon) / 2.0;
-                p_lat = wgs_lat;
-            }
-            (false, true, false) => {
-                m_lon = (wgs_lon + m_lon) / 2.0;
-                p_lat = wgs_lat
-            }
-            (true, false, false) => {
-                p_lon = (wgs_lon + p_lon) / 2.0;
-                m_lat = wgs_lat;
-            }
-            (false, false, false) => {
-                m_lon = (wgs_lon + m_lon) / 2.0;
-                m_lat = wgs_lat;
-            }
-        }
-    }
-    #[cfg(feature = "log")]
-    {
-        tracing::debug!("Exeed max iteration number: {max_iter}");
-    }
-    ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
-}
-/// gcj2wgs_exact convert GCJ-02 coordinate(gcj_lat, gcj_lon) to WGS-84 coordinate.
-///
-/// # Arguments
-///
-/// - `gcj_lon`: Longitude in `GCJ02` coordinate system.
-/// - `gcj_lat`: Latitude in `GCJ02` coordinate system.
-/// - `threshold`: Error threshold. Suggest value `1e-13`.
-/// - `max_iter``: Max iterations. Suggest value `100`.
-///
-/// # Example
-///
-/// ```
-/// use float_cmp::assert_approx_eq;
-/// use tracing_subscriber::layer::SubscriberExt;
-/// use tracing_subscriber::util::SubscriberInitExt;
-/// use tracing_subscriber::filter::LevelFilter;
-/// tracing_subscriber::registry()
-///     .with(log_template::terminal_layer(LevelFilter::TRACE))
-///     .init();
-/// let p = geotool_algorithm::bd09_to_gcj02_exact(121.10271732371203, 30.61484572185035, 1e-17, 100);
-/// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.608604331756705,  epsilon = 1e-14);
-/// ```
-pub fn bd09_to_gcj02_exact(
-    bd09_lon: f64,
-    bd09_lat: f64,
-    threshold: f64,
-    max_iter: usize,
-) -> (f64, f64) {
-    let (mut gcj02_lon, mut gcj02_lat) = bd09_to_gcj02(bd09_lon, bd09_lat);
-
-    let mut d_lon = (gcj02_lon - bd09_lon).abs();
-    let mut d_lat = (gcj02_lat - bd09_lat).abs();
-
-    let mut m_lon = gcj02_lon - d_lon;
-    let mut m_lat = gcj02_lat - d_lat;
-    let mut p_lon = gcj02_lon + d_lon;
-    let mut p_lat = gcj02_lat + d_lat;
-
-    for _i in 0..max_iter {
-        (gcj02_lon, gcj02_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
-        let (tmp_lon, tmp_lat) = gcj02_to_bd09(gcj02_lon, gcj02_lat);
-        d_lon = tmp_lon - bd09_lon;
-        d_lat = tmp_lat - bd09_lat;
-
-        #[cfg(feature = "log")]
-        {
-            tracing::trace!("iteration: {_i}");
-            tracing::trace!("gcj02_lon: {gcj02_lon}, gcj02_lat: {gcj02_lat}");
-            tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
-            tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
-            tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
-        }
-
-        if d_lat.abs() < threshold && d_lon.abs() < threshold {
-            return (gcj02_lon, gcj02_lat);
-        }
-        match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
-            (true, true, true) => {
-                p_lon = gcj02_lon;
-                p_lat = (p_lat + gcj02_lat) / 2.0;
-            }
-            (true, false, true) => {
-                p_lon = gcj02_lon;
-                m_lat = (m_lat + gcj02_lat) / 2.0;
-            }
-            (false, true, true) => {
-                m_lon = gcj02_lon;
-                p_lat = (p_lat + gcj02_lat) / 2.0;
-            }
-            (false, false, true) => {
-                m_lon = gcj02_lon;
-                m_lat = (m_lat + gcj02_lat) / 2.0;
-            }
-            (true, true, false) => {
-                p_lon = (gcj02_lon + p_lon) / 2.0;
-                p_lat = gcj02_lat;
-            }
-            (false, true, false) => {
-                m_lon = (gcj02_lon + m_lon) / 2.0;
-                p_lat = gcj02_lat
-            }
-            (true, false, false) => {
-                p_lon = (gcj02_lon + p_lon) / 2.0;
-                m_lat = gcj02_lat;
-            }
-            (false, false, false) => {
-                m_lon = (gcj02_lon + m_lon) / 2.0;
-                m_lat = gcj02_lat;
-            }
-        }
-    }
-    #[cfg(feature = "log")]
-    {
-        tracing::debug!("Exeed max iteration number: {max_iter}");
-    }
-    ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
-}
-/// Converts coordinates from `BD09` to `WGS84` coordinate system.
-///
-/// # Arguments
-///
-/// - `bd09_lon`: Longitude in `BD09` coordinate system.
-/// - `bd09_lat`: Latitude in `BD09` coordinate system.
-///
-/// # Returns
-///
-/// A tuple `(lon, lat)` representing the coordinates in the `WGS84` coordinate system:
-/// - `lon`: Longitude in the `WGS84` coordinate system.
-/// - `lat`: Latitude in the `WGS84` coordinate system.
-/// - `threshold`: Error threshold. Suggest value `1e-13`.
-/// - `max_iter`: Max iterations. Suggest value `100`.
-///
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
@@ -432,77 +231,122 @@ pub fn bd09_to_gcj02_exact(
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (121.10271732371203, 30.61484572185035);
-/// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-17, 100);
+/// let p = geotool_algorithm::crypto_exact(
+///             p.0,
+///             p.1,
+///             geotool_algorithm::bd09_to_wgs84,
+///             geotool_algorithm::wgs84_to_bd09,
+///             1e-17,
+///             geotool_algorithm::CryptoThresholdMode::LonLat,
+///             1000,
+///         );
 /// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-17);
 /// ```
-pub fn bd09_to_wgs84_exact(
-    bd09_lon: f64,
-    bd09_lat: f64,
+///
+/// ```
+/// use float_cmp::assert_approx_eq;
+/// use tracing_subscriber::layer::SubscriberExt;
+/// use tracing_subscriber::util::SubscriberInitExt;
+/// use tracing_subscriber::filter::LevelFilter;
+/// tracing_subscriber::registry()
+///     .with(log_template::terminal_layer(LevelFilter::TRACE))
+///     .init();
+/// let p = (121.10271732371203, 30.61484572185035);
+/// let p = geotool_algorithm::crypto_exact(
+///             p.0,
+///             p.1,
+///             geotool_algorithm::bd09_to_wgs84,
+///             geotool_algorithm::wgs84_to_bd09,
+///             1e-3,
+///             geotool_algorithm::CryptoThresholdMode::Distance,
+///             1000,
+///         );
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-8);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-8);
+/// ```
+pub fn crypto_exact(
+    src_lon: f64,
+    src_lat: f64,
+    crypto_fn: impl Fn(f64, f64) -> (f64, f64),
+    inv_crypto_fn: impl Fn(f64, f64) -> (f64, f64),
     threshold: f64,
+    threshold_mode: CryptoThresholdMode,
     max_iter: usize,
 ) -> (f64, f64) {
-    let (mut wgs_lon, mut wgs_lat) = bd09_to_wgs84(bd09_lon, bd09_lat);
+    let (mut dst_lon, mut dst_lat) = crypto_fn(src_lon, src_lat);
 
-    let mut d_lon = (wgs_lon - bd09_lon).abs();
-    let mut d_lat = (wgs_lat - bd09_lat).abs();
+    let mut d_lon = (dst_lon - src_lon).abs();
+    let mut d_lat = (dst_lat - src_lat).abs();
 
-    let mut m_lon = wgs_lon - d_lon;
-    let mut m_lat = wgs_lat - d_lat;
-    let mut p_lon = wgs_lon + d_lon;
-    let mut p_lat = wgs_lat + d_lat;
+    let mut m_lon = dst_lon - d_lon;
+    let mut m_lat = dst_lat - d_lat;
+    let mut p_lon = dst_lon + d_lon;
+    let mut p_lat = dst_lat + d_lat;
 
     for _i in 0..max_iter {
-        (wgs_lon, wgs_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
-        let (tmp_lon, tmp_lat) = wgs84_to_bd09(wgs_lon, wgs_lat);
-        d_lon = tmp_lon - bd09_lon;
-        d_lat = tmp_lat - bd09_lat;
+        (dst_lon, dst_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
+        let (tmp_lon, tmp_lat) = inv_crypto_fn(dst_lon, dst_lat);
+        d_lon = tmp_lon - src_lon;
+        d_lat = tmp_lat - src_lat;
 
         #[cfg(feature = "log")]
         {
             tracing::trace!("iteration: {_i}");
-            tracing::trace!("wgs_lon: {wgs_lon}, wgs_lat: {wgs_lat}");
+            tracing::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
             tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
             tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
+            tracing::trace!(
+                "distance: {}",
+                haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
+            );
         }
 
-        if d_lat.abs() < threshold && d_lon.abs() < threshold {
-            return (wgs_lon, wgs_lat);
+        match threshold_mode {
+            CryptoThresholdMode::Distance
+                if haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat) < threshold =>
+            {
+                return (dst_lon, dst_lat);
+            }
+            CryptoThresholdMode::LonLat if d_lat.abs() < threshold && d_lon.abs() < threshold => {
+                return (dst_lon, dst_lat);
+            }
+            _ => (),
         }
 
         match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
             (true, true, true) => {
-                p_lon = wgs_lon;
-                p_lat = (p_lat + wgs_lat) / 2.0;
+                p_lon = dst_lon;
+                p_lat = (p_lat + dst_lat) / 2.0;
             }
             (true, false, true) => {
-                p_lon = wgs_lon;
-                m_lat = (m_lat + wgs_lat) / 2.0;
+                p_lon = dst_lon;
+                m_lat = (m_lat + dst_lat) / 2.0;
             }
             (false, true, true) => {
-                m_lon = wgs_lon;
-                p_lat = (p_lat + wgs_lat) / 2.0;
+                m_lon = dst_lon;
+                p_lat = (p_lat + dst_lat) / 2.0;
             }
             (false, false, true) => {
-                m_lon = wgs_lon;
-                m_lat = (m_lat + wgs_lat) / 2.0;
+                m_lon = dst_lon;
+                m_lat = (m_lat + dst_lat) / 2.0;
             }
             (true, true, false) => {
-                p_lon = (wgs_lon + p_lon) / 2.0;
-                p_lat = wgs_lat;
+                p_lon = (dst_lon + p_lon) / 2.0;
+                p_lat = dst_lat;
             }
             (false, true, false) => {
-                m_lon = (wgs_lon + m_lon) / 2.0;
-                p_lat = wgs_lat
+                m_lon = (dst_lon + m_lon) / 2.0;
+                p_lat = dst_lat
             }
             (true, false, false) => {
-                p_lon = (wgs_lon + p_lon) / 2.0;
-                m_lat = wgs_lat;
+                p_lon = (dst_lon + p_lon) / 2.0;
+                m_lat = dst_lat;
             }
             (false, false, false) => {
-                m_lon = (wgs_lon + m_lon) / 2.0;
-                m_lat = wgs_lat;
+                m_lon = (dst_lon + m_lon) / 2.0;
+                m_lat = dst_lat;
             }
         }
     }
@@ -512,29 +356,19 @@ pub fn bd09_to_wgs84_exact(
     }
     ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
 }
-
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
-pub fn distance_geo(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
-    let arc_lat_a = lat_a * PI / 180.0;
-    let arc_lat_b = lat_b * PI / 180.0;
-    let x = (arc_lat_a).cos() * (arc_lat_b).cos() * ((lon_a - lon_b) * PI / 180.0).cos();
-    let y = (arc_lat_a).sin() * (arc_lat_b).sin();
-    let s = (x + y).clamp(-1.0, 1.0);
-    let alpha = s.acos();
-    alpha * EARTH_R
-}
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_crypto() {
-        let (lon, lat) = (121.0917077, 30.6107779);
-        let (test_lon, test_lat) = super::wgs84_to_bd09(lon, lat);
-        let (test_lon, test_lat) = super::bd09_to_wgs84_exact(test_lon, test_lat, 1e-13, 35);
-        println!("{test_lon},{test_lat}");
-        let d = super::distance_geo(121.0917077, 30.6107779, test_lon, test_lat);
-        println!("distance: {d}");
-        float_cmp::assert_approx_eq!(f64, lon, test_lon, epsilon = 1e-6);
-        float_cmp::assert_approx_eq!(f64, lat, test_lat, epsilon = 1e-6);
-        float_cmp::assert_approx_eq!(f64, d, 0.0, epsilon = 1e-17);
-    }
+pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
+    let lat1_rad = lat_a.to_radians();
+    let lon1_rad = lon_a.to_radians();
+    let lat2_rad = lat_b.to_radians();
+    let lon2_rad = lon_b.to_radians();
+
+    let delta_lat = lat2_rad - lat1_rad;
+    let delta_lon = lon2_rad - lon1_rad;
+
+    let a = (delta_lat / 2.0).sin().powi(2)
+        + lat1_rad.cos() * lat2_rad.cos() * (delta_lon / 2.0).sin().powi(2);
+    let c = 2.0 * a.sqrt().atan2((1.0 - a).sqrt());
+
+    EARTH_R * c
 }

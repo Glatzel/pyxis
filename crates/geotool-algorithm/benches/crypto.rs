@@ -40,7 +40,7 @@ fn bench_crypto_exact(c: &mut Criterion) {
             })
         });
     }
-    for i in [-1, 0, 1, 2].iter() {
+    for i in [0, 2, 3].iter() {// [1m, 1cm, 1mm]
         let threshold = 10.0f64.powi(-i);
         group.bench_with_input(BenchmarkId::new("distance", i), i, |b, _| {
             b.iter(|| {

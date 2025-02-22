@@ -302,8 +302,8 @@ pub fn crypto_exact(
                 haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
             );
             if _i == max_iter - 1 {
-                tracing::debug!("Exeed max iteration number: {max_iter}")
-            };
+                tracing::error!("Exeed max iteration number: {max_iter}");
+            }
         }
 
         match threshold_mode {
@@ -317,40 +317,15 @@ pub fn crypto_exact(
             }
             _ => (),
         }
-
-        match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
-            (true, true, true) => {
-                p_lon = dst_lon;
-                p_lat = (p_lat + dst_lat) / 2.0;
-            }
-            (true, false, true) => {
-                p_lon = dst_lon;
-                m_lat = (m_lat + dst_lat) / 2.0;
-            }
-            (false, true, true) => {
-                m_lon = dst_lon;
-                p_lat = (p_lat + dst_lat) / 2.0;
-            }
-            (false, false, true) => {
-                m_lon = dst_lon;
-                m_lat = (m_lat + dst_lat) / 2.0;
-            }
-            (true, true, false) => {
-                p_lon = (dst_lon + p_lon) / 2.0;
-                p_lat = dst_lat;
-            }
-            (false, true, false) => {
-                m_lon = (dst_lon + m_lon) / 2.0;
-                p_lat = dst_lat
-            }
-            (true, false, false) => {
-                p_lon = (dst_lon + p_lon) / 2.0;
-                m_lat = dst_lat;
-            }
-            (false, false, false) => {
-                m_lon = (dst_lon + m_lon) / 2.0;
-                m_lat = dst_lat;
-            }
+        if d_lon > 0.0 {
+            p_lon = dst_lon / 2.0 + p_lon / 2.0;
+        } else {
+            m_lon = dst_lon / 2.0 + m_lon / 2.0;
+        }
+        if d_lat > 0.0 {
+            p_lat = dst_lat / 2.0 + p_lat / 2.0;
+        } else {
+            m_lat = dst_lat / 2.0 + m_lat / 2.0;
         }
     }
 
@@ -371,4 +346,57 @@ pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64
     let c = 2.0 * a.sqrt().atan2((1.0 - a).sqrt());
 
     EARTH_R * c
+}
+#[cfg(test)]
+mod test {
+
+    use super::*;
+    use rand::prelude::*;
+    use tracing_subscriber::filter::LevelFilter;
+    use tracing_subscriber::layer::SubscriberExt;
+    use tracing_subscriber::util::SubscriberInitExt;
+    #[test]
+    fn test_exact() {
+        tracing_subscriber::registry()
+            .with(log_template::terminal_layer(LevelFilter::DEBUG))
+            .init();
+        let mut rng = rand::rng();
+        for _ in 0..1000 {
+            let wgs = (
+                rng.random_range(72.004..137.8347),
+                rng.random_range(0.8293..55.8271),
+            );
+            let gcj = wgs84_to_gcj02(wgs.0, wgs.1);
+            let bd = wgs84_to_bd09(wgs.0, wgs.1);
+            {
+                let test_gcj = crypto_exact(
+                    bd.0,
+                    bd.1,
+                    bd09_to_gcj02,
+                    gcj02_to_bd09,
+                    1e-3,
+                    CryptoThresholdMode::Distance,
+                    1000,
+                );
+                if (haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1) - 0.0).abs() > 1e-3 {
+                    print!("gcj,{},{},{},{}\n", test_gcj.0, test_gcj.1, gcj.0, gcj.1)
+                };
+            }
+
+            {
+                let test_wgs = crypto_exact(
+                    gcj.0,
+                    gcj.1,
+                    gcj02_to_wgs84,
+                    wgs84_to_gcj02,
+                    1e-3,
+                    CryptoThresholdMode::Distance,
+                    1000,
+                );
+                if (haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1) - 0.0).abs() > 1e-3 {
+                    print!("wgs,{},{},{},{}\n", test_wgs.0, test_wgs.1, wgs.0, wgs.1)
+                };
+            }
+        }
+    }
 }

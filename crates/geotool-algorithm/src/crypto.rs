@@ -284,6 +284,7 @@ pub fn crypto_exact(
     let mut p_lon = dst_lon + d_lon;
     let mut p_lat = dst_lat + d_lat;
 
+
     for _i in 0..max_iter {
         (dst_lon, dst_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
         let (tmp_lon, tmp_lat) = inv_crypto_fn(dst_lon, dst_lat);
@@ -342,7 +343,7 @@ pub fn crypto_exact(
                 p_lat -= d_lat;
             }
         }
-        
+
         d_lon = temp_d_lon;
         d_lat = temp_d_lat;
     }
@@ -393,11 +394,11 @@ mod test {
                     bd.1,
                     bd09_to_gcj02,
                     gcj02_to_bd09,
-                    1e-5,
-                    CryptoThresholdMode::Distance,
+                    1e-20,
+                    CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1) - 0.0).abs() > 1e-3 {
+                if (test_gcj.0 - gcj.0).abs() > 1e-13 || (test_gcj.1 - gcj.1).abs() > 1e-13 {
                     print!(
                         "gcj,{},{},{},{},{}\n",
                         test_gcj.0,
@@ -415,11 +416,11 @@ mod test {
                     gcj.1,
                     gcj02_to_wgs84,
                     wgs84_to_gcj02,
-                    1e-5,
-                    CryptoThresholdMode::Distance,
+                    1e-20,
+                    CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1) - 0.0).abs() > 1e-3 {
+                if (test_wgs.0 - wgs.0).abs() > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-14 {
                     print!(
                         "wgs,{},{},{},{},{}\n",
                         test_wgs.0,

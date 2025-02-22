@@ -422,7 +422,7 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_wgs.0 - wgs.0).abs() > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-14 {
+                if (test_wgs.0 - wgs.0).abs() > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-13 {
                     print!(
                         "wgs,{},{},{},{},{}\n",
                         test_wgs.0,

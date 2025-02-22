@@ -354,7 +354,7 @@ pub fn crypto_exact(
         }
     }
 
-    ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
+    (dst_lon, dst_lat)
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
 pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {

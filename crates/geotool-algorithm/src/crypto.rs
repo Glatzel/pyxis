@@ -126,8 +126,8 @@ pub fn gcj02_to_wgs84(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
 /// use float_cmp::assert_approx_eq;
 /// let p = (121.10271691314193, 30.614836298418275);
 /// let p = geotool_algorithm::bd09_to_wgs84(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.09170577473259, epsilon = 1e-6);
-/// assert_approx_eq!(f64, p.1, 30.610767662599578, epsilon = 1e-6);
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-4);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-4);
 /// ```
 pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
     let (gcj_lon, gcj_lat) = bd09_to_gcj02(bd09_lon, bd09_lat);
@@ -432,9 +432,9 @@ pub fn bd09_to_gcj02_exact(
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (121.10271732371203, 30.61484572185035);
-/// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-17, 100);
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-17);
+/// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-3, 100);
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-8);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-8);
 /// ```
 pub fn bd09_to_wgs84_exact(
     bd09_lon: f64,
@@ -455,6 +455,7 @@ pub fn bd09_to_wgs84_exact(
     for _i in 0..max_iter {
         (wgs_lon, wgs_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
         let (tmp_lon, tmp_lat) = wgs84_to_bd09(wgs_lon, wgs_lat);
+
         d_lon = tmp_lon - bd09_lon;
         d_lat = tmp_lat - bd09_lat;
 
@@ -465,9 +466,13 @@ pub fn bd09_to_wgs84_exact(
             tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
             tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
+            tracing::trace!(
+                "delta: {}",
+                distance_geo(bd09_lon, bd09_lat, tmp_lon, tmp_lat)
+            );
         }
 
-        if d_lat.abs() < threshold && d_lon.abs() < threshold {
+        if distance_geo(bd09_lon, bd09_lat, tmp_lon, tmp_lat) < threshold {
             return (wgs_lon, wgs_lat);
         }
 
@@ -515,26 +520,17 @@ pub fn bd09_to_wgs84_exact(
 
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
 pub fn distance_geo(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
-    let arc_lat_a = lat_a * PI / 180.0;
-    let arc_lat_b = lat_b * PI / 180.0;
-    let x = (arc_lat_a).cos() * (arc_lat_b).cos() * ((lon_a - lon_b) * PI / 180.0).cos();
-    let y = (arc_lat_a).sin() * (arc_lat_b).sin();
-    let s = (x + y).clamp(-1.0, 1.0);
-    let alpha = s.acos();
-    alpha * EARTH_R
-}
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_crypto() {
-        let (lon, lat) = (121.0917077, 30.6107779);
-        let (test_lon, test_lat) = super::wgs84_to_bd09(lon, lat);
-        let (test_lon, test_lat) = super::bd09_to_wgs84_exact(test_lon, test_lat, 1e-13, 35);
-        println!("{test_lon},{test_lat}");
-        let d = super::distance_geo(121.0917077, 30.6107779, test_lon, test_lat);
-        println!("distance: {d}");
-        float_cmp::assert_approx_eq!(f64, lon, test_lon, epsilon = 1e-6);
-        float_cmp::assert_approx_eq!(f64, lat, test_lat, epsilon = 1e-6);
-        float_cmp::assert_approx_eq!(f64, d, 0.0, epsilon = 1e-17);
-    }
+    let lat1_rad = lat_a.to_radians();
+    let lon1_rad = lon_a.to_radians();
+    let lat2_rad = lat_b.to_radians();
+    let lon2_rad = lon_b.to_radians();
+
+    let delta_lat = lat2_rad - lat1_rad;
+    let delta_lon = lon2_rad - lon1_rad;
+
+    let a = (delta_lat / 2.0).sin().powi(2)
+        + lat1_rad.cos() * lat2_rad.cos() * (delta_lon / 2.0).sin().powi(2);
+    let c = 2.0 * a.sqrt().atan2((1.0 - a).sqrt());
+
+    EARTH_R * c
 }

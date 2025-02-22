@@ -436,7 +436,7 @@ pub fn bd09_to_gcj02_exact(
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (121.10271732371203, 30.61484572185035);
-/// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-17, 100);
+/// let p = geotool_algorithm::bd09_to_wgs84_exact(p.0, p.1,1e-17,geotool_algorithm::CryptoThresholdMode::LonLat, 100);
 /// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-17);
 /// ```

@@ -243,7 +243,7 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-17);
 /// ```
-/// 
+///
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use tracing_subscriber::layer::SubscriberExt;

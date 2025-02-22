@@ -156,16 +156,16 @@ pub fn xyz2lbh(
                 "delta: {}",
                 (new_latitude.to_degrees() - latitude.to_degrees()).abs()
             );
+            if _i == max_iter - 1 {
+                tracing::debug!("Exeed max iteration number: {max_iter}")
+            };
         }
         if (new_latitude.to_degrees() - latitude.to_degrees()).abs() < threshold {
             break;
         }
         latitude = new_latitude;
     }
-    #[cfg(feature = "log")]
-    {
-        tracing::debug!("Exeed max iteration number: {max_iter}");
-    }
+
     // Convert radians to degrees
     let longitude = longitude.to_degrees();
     let latitude = latitude.to_degrees();

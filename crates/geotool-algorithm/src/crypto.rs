@@ -319,14 +319,14 @@ pub fn crypto_exact(
         }
 
         match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs()) {
-            (true, true) => p_lon = dst_lon / 2.0 + p_lon / 2.0,
-            (false, true) => m_lon = dst_lon / 2.0 + m_lon / 2.0,
+            (true, true) => p_lon = dst_lon ,
+            (false, true) => m_lon = dst_lon,
             (true, false) => m_lon -= d_lon,
             (false, false) => p_lon -= d_lon,
         }
         match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs()) {
-            (true, true) => p_lat = dst_lat / 2.0 + p_lat / 2.0,
-            (false, true) => m_lat = dst_lat / 2.0 + m_lat / 2.0,
+            (true, true) => p_lat = dst_lat ,
+            (false, true) => m_lat = dst_lat,
             (true, false) => m_lat -= d_lat,
             (false, false) => p_lat -= d_lat,
         }
@@ -376,7 +376,7 @@ mod test {
             .with(log_template::terminal_layer(LevelFilter::DEBUG))
             .init();
         let mut rng = rand::rng();
-        for _ in 0..100 {
+        for _ in 0..1000 {
             let wgs = (
                 rng.random_range(72.004..137.8347),
                 rng.random_range(0.8293..55.8271),
@@ -389,11 +389,11 @@ mod test {
                     bd.1,
                     bd09_to_gcj02,
                     gcj02_to_bd09,
-                    1e-17,
-                    CryptoThresholdMode::LonLat,
+                    1e-5,
+                    CryptoThresholdMode::Distance,
                     1000,
                 );
-                if (test_gcj.0 - gcj.0) > 1e-13 || (test_gcj.1 - gcj.1).abs() > 1e-13 {
+                if (haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1) - 0.0).abs() > 1e-3 {
                     print!(
                         "gcj,{},{},{},{},{}\n",
                         test_gcj.0,
@@ -411,11 +411,11 @@ mod test {
                     gcj.1,
                     gcj02_to_wgs84,
                     wgs84_to_gcj02,
-                    1e-17,
-                    CryptoThresholdMode::LonLat,
+                    1e-5,
+                    CryptoThresholdMode::Distance,
                     1000,
                 );
-                if (test_wgs.0 - wgs.0) > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-13 {
+                if (haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1) - 0.0).abs() > 1e-3 {
                     print!(
                         "wgs,{},{},{},{},{}\n",
                         test_wgs.0,

@@ -301,16 +301,19 @@ pub fn crypto_exact(
                 "distance: {}",
                 haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
             );
+            if _i == max_iter - 1 {
+                tracing::debug!("Exeed max iteration number: {max_iter}")
+            };
         }
 
         match threshold_mode {
             CryptoThresholdMode::Distance
                 if haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat) < threshold =>
             {
-                return (dst_lon, dst_lat);
+                break;
             }
             CryptoThresholdMode::LonLat if d_lat.abs() < threshold && d_lon.abs() < threshold => {
-                return (dst_lon, dst_lat);
+                break;
             }
             _ => (),
         }
@@ -350,11 +353,8 @@ pub fn crypto_exact(
             }
         }
     }
-    #[cfg(feature = "log")]
-    {
-        tracing::debug!("Exeed max iteration number: {max_iter}");
-    }
-    ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0)
+
+    (dst_lon, dst_lat)
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
 pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {

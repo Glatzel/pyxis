@@ -302,7 +302,7 @@ pub fn crypto_exact(
                 haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
             );
             if _i == max_iter - 1 {
-                tracing::error!("Exeed max iteration number: {max_iter}");
+                tracing::warn!("Exeed max iteration number: {max_iter}");
             }
         }
 
@@ -386,7 +386,7 @@ mod test {
     #[test]
     fn test_exact() {
         tracing_subscriber::registry()
-            .with(log_template::terminal_layer(LevelFilter::DEBUG))
+            .with(log_template::terminal_layer(LevelFilter::ERROR))
             .init();
         let mut rng = rand::rng();
         for _ in 0..1000 {

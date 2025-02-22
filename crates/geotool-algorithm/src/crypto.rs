@@ -308,9 +308,6 @@ pub fn crypto_exact(
                 tracing::warn!("Exeed max iteration number: {max_iter}");
             }
         }
-        if temp_d_lon == d_lon && temp_d_lat == d_lat {
-            break;
-        }
 
         match threshold_mode {
             CryptoThresholdMode::Distance

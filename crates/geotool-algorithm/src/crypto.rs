@@ -330,7 +330,7 @@ pub fn gcj02_to_wgs84_exact(
 ///     .init();
 /// let p = geotool_algorithm::bd09_to_gcj02_exact(121.10271732371203, 30.61484572185035, 1e-17, 100);
 /// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.608604331756705,  epsilon = 1e-6);
+/// assert_approx_eq!(f64, p.1, 30.608604331756705,  epsilon = 1e-14);
 /// ```
 pub fn bd09_to_gcj02_exact(
     bd09_lon: f64,

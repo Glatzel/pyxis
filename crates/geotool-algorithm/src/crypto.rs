@@ -324,7 +324,7 @@ pub fn crypto_exact(
             _ => (),
         }
 
-        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs() ) {
+        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs()) {
             (true, true) => p_lon = dst_lon,
             (false, true) => m_lon = dst_lon,
             (true, false) => {
@@ -336,7 +336,7 @@ pub fn crypto_exact(
                 p_lon -= d_lon;
             }
         }
-        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs() ) {
+        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs()) {
             (true, true) => p_lat = dst_lat,
             (false, true) => m_lat = dst_lat,
             (true, false) => {
@@ -373,7 +373,9 @@ pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64
 }
 #[cfg(test)]
 mod test {
+    use std::f32::EPSILON;
 
+    use float_cmp::assert_approx_eq;
     use rand::prelude::*;
     use tracing_subscriber::filter::LevelFilter;
     use tracing_subscriber::layer::SubscriberExt;
@@ -416,6 +418,8 @@ mod test {
                         test_gcj.1 - gcj.1
                     )
                 };
+                assert_approx_eq!(f64, test_gcj.0, gcj.0, epsilon = 1e-13);
+                assert_approx_eq!(f64, test_gcj.1, gcj.1, epsilon = 1e-13);
             }
             {
                 let test_wgs = crypto_exact(
@@ -439,6 +443,8 @@ mod test {
                         test_wgs.1 - wgs.1,
                     )
                 };
+                assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = 1e-13);
+                assert_approx_eq!(f64, test_wgs.1, wgs.1, epsilon = 1e-13);
             }
             {
                 let test_wgs = crypto_exact(
@@ -462,6 +468,8 @@ mod test {
                         test_wgs.1 - wgs.1,
                     )
                 };
+                assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = 1e-13);
+                assert_approx_eq!(f64, test_wgs.1, wgs.1, epsilon = 1e-13);
             }
         }
     }

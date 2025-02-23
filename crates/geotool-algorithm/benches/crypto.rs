@@ -1,4 +1,6 @@
 use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
+use geotool_algorithm::*;
+use rand::Rng;
 fn bench_crypto(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto");
 
@@ -24,36 +26,120 @@ fn bench_crypto(c: &mut Criterion) {
 }
 fn bench_crypto_exact(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto_exact");
-    for i in [5, 8, 11, 14].iter() {
+    let mut rng = rand::rng();
+    for i in [4, 7, 10, 13].iter() {
         let threshold = 10.0f64.powi(-i);
-        group.bench_with_input(BenchmarkId::new("lonlat", i), i, |b, _| {
+        group.bench_with_input(BenchmarkId::new("bd2gcj-lonlat", i), i, |b, _| {
             b.iter(|| {
-                geotool_algorithm::crypto_exact(
-                    black_box(121.10271732371203),
-                    black_box(30.61484572185035),
-                    geotool_algorithm::bd09_to_wgs84,
-                    geotool_algorithm::wgs84_to_bd09,
+                let bd = (
+                    rng.random_range(72.004..137.8347),
+                    rng.random_range(0.8293..55.8271),
+                );
+
+                crypto_exact(
+                    bd.0,
+                    bd.1,
+                    bd09_to_gcj02,
+                    gcj02_to_bd09,
                     threshold,
-                    geotool_algorithm::CryptoThresholdMode::LonLat,
+                    CryptoThresholdMode::LonLat,
                     1000,
-                )
+                );
+            })
+        });
+        group.bench_with_input(BenchmarkId::new("bd2wgs-lonlat", i), i, |b, _| {
+            b.iter(|| {
+                let bd = (
+                    rng.random_range(72.004..137.8347),
+                    rng.random_range(0.8293..55.8271),
+                );
+
+                crypto_exact(
+                    bd.0,
+                    bd.1,
+                    bd09_to_wgs84,
+                    wgs84_to_bd09,
+                    threshold,
+                    CryptoThresholdMode::LonLat,
+                    1000,
+                );
+            })
+        });
+        group.bench_with_input(BenchmarkId::new("gcj2wgs-lonlat", i), i, |b, _| {
+            b.iter(|| {
+                let gcj = (
+                    rng.random_range(72.004..137.8347),
+                    rng.random_range(0.8293..55.8271),
+                );
+
+                crypto_exact(
+                    gcj.0,
+                    gcj.1,
+                    gcj02_to_wgs84,
+                    wgs84_to_gcj02,
+                    threshold,
+                    CryptoThresholdMode::LonLat,
+                    1000,
+                );
             })
         });
     }
-    for i in [0, 2, 3].iter() {
+    for i in [3, 6].iter() {
         // [1m, 1cm, 1mm]
         let threshold = 10.0f64.powi(-i);
-        group.bench_with_input(BenchmarkId::new("distance", i), i, |b, _| {
+
+        group.bench_with_input(BenchmarkId::new("bd2gcj-dist", i), i, |b, _| {
             b.iter(|| {
-                geotool_algorithm::crypto_exact(
-                    black_box(121.10271732371203),
-                    black_box(30.61484572185035),
-                    geotool_algorithm::bd09_to_wgs84,
-                    geotool_algorithm::wgs84_to_bd09,
+                let bd = (
+                    rng.random_range(72.004..137.8347),
+                    rng.random_range(0.8293..55.8271),
+                );
+
+                crypto_exact(
+                    bd.0,
+                    bd.1,
+                    bd09_to_gcj02,
+                    gcj02_to_bd09,
                     threshold,
-                    geotool_algorithm::CryptoThresholdMode::Distance,
+                    CryptoThresholdMode::Distance,
                     1000,
-                )
+                );
+            })
+        });
+        group.bench_with_input(BenchmarkId::new("bd2wgs-dist", i), i, |b, _| {
+            b.iter(|| {
+                let bd = (
+                    rng.random_range(72.004..137.8347),
+                    rng.random_range(0.8293..55.8271),
+                );
+
+                crypto_exact(
+                    bd.0,
+                    bd.1,
+                    bd09_to_wgs84,
+                    wgs84_to_bd09,
+                    threshold,
+                    CryptoThresholdMode::Distance,
+                    1000,
+                );
+            })
+        });
+        group.bench_with_input(BenchmarkId::new("bd2gcj-dist", i), i, |b, _| {
+            b.iter(|| {
+                let gcj = (
+                    rng.random_range(72.004..137.8347),
+                    rng.random_range(0.8293..55.8271),
+                );
+
+                crypto_exact(
+                    gcj.0,
+                    gcj.1,
+                    gcj02_to_wgs84,
+                    wgs84_to_gcj02,
+                    threshold,
+                    CryptoThresholdMode::Distance,
+                    1000,
+                );
             })
         });
     }

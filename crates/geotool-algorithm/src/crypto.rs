@@ -390,10 +390,7 @@ mod test {
         tracing_subscriber::registry()
             .with(log_template::terminal_layer(LevelFilter::ERROR))
             .init();
-        let is_ci = match std::env::var("CI") {
-            Ok(_) => true,
-            Err(_) => false,
-        };
+        let is_ci = std::env::var("CI").is_ok();
         let mut rng = rand::rng();
         let threshold = 1e-13;
         let mut max_dist: f64 = 0.0;

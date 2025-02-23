@@ -372,3 +372,98 @@ pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64
 
     EARTH_R * c
 }
+#[cfg(test)]
+mod test {
+
+    use rand::prelude::*;
+    use tracing_subscriber::filter::LevelFilter;
+    use tracing_subscriber::layer::SubscriberExt;
+    use tracing_subscriber::util::SubscriberInitExt;
+
+    use super::*;
+
+    #[test]
+    fn test_exact() {
+        tracing_subscriber::registry()
+            .with(log_template::terminal_layer(LevelFilter::ERROR))
+            .init();
+        let mut rng = rand::rng();
+        for _ in 0..100 {
+            let wgs = (
+                rng.random_range(72.004..137.8347),
+                rng.random_range(0.8293..55.8271),
+            );
+            let gcj = wgs84_to_gcj02(wgs.0, wgs.1);
+            let bd = wgs84_to_bd09(wgs.0, wgs.1);
+            {
+                let test_gcj = crypto_exact(
+                    bd.0,
+                    bd.1,
+                    bd09_to_gcj02,
+                    gcj02_to_bd09,
+                    1e-20,
+                    CryptoThresholdMode::LonLat,
+                    1000,
+                );
+                if (test_gcj.0 - gcj.0).abs() > 1e-13 || (test_gcj.1 - gcj.1).abs() > 1e-13 {
+                    println!(
+                        "gcj,{},{},{},{},{},{:.2e},{:.2e}",
+                        test_gcj.0,
+                        test_gcj.1,
+                        gcj.0,
+                        gcj.1,
+                        haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1),
+                        test_gcj.0 - gcj.0,
+                        test_gcj.1 - gcj.1
+                    )
+                };
+            }
+            {
+                let test_wgs = crypto_exact(
+                    bd.0,
+                    bd.1,
+                    bd09_to_wgs84,
+                    wgs84_to_bd09,
+                    1e-20,
+                    CryptoThresholdMode::LonLat,
+                    1000,
+                );
+                if (test_wgs.0 - wgs.0).abs() > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-13 {
+                    println!(
+                        "wgs,{},{},{},{},{},{:.2e},{:.2e}",
+                        test_wgs.0,
+                        test_wgs.1,
+                        wgs.0,
+                        wgs.1,
+                        haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1),
+                        test_wgs.0 - wgs.0,
+                        test_wgs.1 - wgs.1,
+                    )
+                };
+            }
+            {
+                let test_wgs = crypto_exact(
+                    gcj.0,
+                    gcj.1,
+                    gcj02_to_wgs84,
+                    wgs84_to_gcj02,
+                    1e-20,
+                    CryptoThresholdMode::LonLat,
+                    1000,
+                );
+                if (test_wgs.0 - wgs.0).abs() > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-13 {
+                    println!(
+                        "wgs,{},{},{},{},{},{:.2e},{:.2e}",
+                        test_wgs.0,
+                        test_wgs.1,
+                        wgs.0,
+                        wgs.1,
+                        haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1),
+                        test_wgs.0 - wgs.0,
+                        test_wgs.1 - wgs.1,
+                    )
+                };
+            }
+        }
+    }
+}

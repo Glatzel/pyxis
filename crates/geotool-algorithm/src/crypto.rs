@@ -324,7 +324,7 @@ pub fn crypto_exact(
             _ => (),
         }
 
-        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs() && d_lon < 1e-11) {
+        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs() ) {
             (true, true) => p_lon = dst_lon,
             (false, true) => m_lon = dst_lon,
             (true, false) => {
@@ -336,7 +336,7 @@ pub fn crypto_exact(
                 p_lon -= d_lon;
             }
         }
-        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs() && d_lon < 1e-11) {
+        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs() ) {
             (true, true) => p_lat = dst_lat,
             (false, true) => m_lat = dst_lat,
             (true, false) => {

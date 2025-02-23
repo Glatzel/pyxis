@@ -327,41 +327,6 @@ pub fn crypto_exact(
         } else {
             m_lon = dst_lon;
         }
-
-        // match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
-        //     (true, true, true) => {
-        //         p_lon = dst_lon;
-        //         p_lat = (p_lat + dst_lat) / 2.0;
-        //     }
-        //     (true, false, true) => {
-        //         p_lon = dst_lon;
-        //         m_lat = (m_lat + dst_lat) / 2.0;
-        //     }
-        //     (false, true, true) => {
-        //         m_lon = dst_lon;
-        //         p_lat = (p_lat + dst_lat) / 2.0;
-        //     }
-        //     (false, false, true) => {
-        //         m_lon = dst_lon;
-        //         m_lat = (m_lat + dst_lat) / 2.0;
-        //     }
-        //     (true, true, false) => {
-        //         p_lon = (dst_lon + p_lon) / 2.0;
-        //         p_lat = dst_lat;
-        //     }
-        //     (false, true, false) => {
-        //         m_lon = (dst_lon + m_lon) / 2.0;
-        //         p_lat = dst_lat
-        //     }
-        //     (true, false, false) => {
-        //         p_lon = (dst_lon + p_lon) / 2.0;
-        //         m_lat = dst_lat;
-        //     }
-        //     (false, false, false) => {
-        //         m_lon = (dst_lon + m_lon) / 2.0;
-        //         m_lat = dst_lat;
-        //     }
-        // }
     }
 
     (dst_lon, dst_lat)

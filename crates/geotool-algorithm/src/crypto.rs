@@ -324,7 +324,7 @@ pub fn crypto_exact(
             _ => (),
         }
 
-        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs()) {
+        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs() && d_lon < 1e-11) {
             (true, true) => p_lon = dst_lon,
             (false, true) => m_lon = dst_lon,
             (true, false) => {
@@ -336,7 +336,7 @@ pub fn crypto_exact(
                 p_lon -= d_lon;
             }
         }
-        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs()) {
+        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs() && d_lon < 1e-11) {
             (true, true) => p_lat = dst_lat,
             (false, true) => m_lat = dst_lat,
             (true, false) => {
@@ -387,7 +387,7 @@ mod test {
             .with(log_template::terminal_layer(LevelFilter::ERROR))
             .init();
         let mut rng = rand::rng();
-        for _ in 0..100 {
+        for _ in 0..100000 {
             let wgs = (
                 rng.random_range(72.004..137.8347),
                 rng.random_range(0.8293..55.8271),

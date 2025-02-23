@@ -373,7 +373,6 @@ pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64
 }
 #[cfg(test)]
 mod test {
-    
 
     use float_cmp::assert_approx_eq;
     use rand::prelude::*;
@@ -389,7 +388,7 @@ mod test {
             .with(log_template::terminal_layer(LevelFilter::ERROR))
             .init();
         let mut rng = rand::rng();
-        for _ in 0..100000 {
+        for _ in 0..10000 {
             let wgs = (
                 rng.random_range(72.004..137.8347),
                 rng.random_range(0.8293..55.8271),

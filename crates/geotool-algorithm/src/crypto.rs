@@ -299,6 +299,7 @@ pub fn crypto_exact(
             tracing::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
             tracing::trace!("src_lon: {tmp_lon}, src_lat: {tmp_lat}");
             tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
+            tracing::trace!("range_lon: {}, range_lat: {}", p_lon - m_lon, p_lat - m_lat);
             tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
             tracing::trace!(
@@ -388,6 +389,7 @@ mod test {
             .with(log_template::terminal_layer(LevelFilter::ERROR))
             .init();
         let mut rng = rand::rng();
+        let threshold = 1e-13;
         for _ in 0..10000 {
             let wgs = (
                 rng.random_range(72.004..137.8347),
@@ -405,7 +407,8 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_gcj.0 - gcj.0).abs() > 1e-13 || (test_gcj.1 - gcj.1).abs() > 1e-13 {
+                if (test_gcj.0 - gcj.0).abs() > threshold || (test_gcj.1 - gcj.1).abs() > threshold
+                {
                     println!(
                         "gcj,{},{},{},{},{},{:.2e},{:.2e}",
                         test_gcj.0,
@@ -417,8 +420,8 @@ mod test {
                         test_gcj.1 - gcj.1
                     )
                 };
-                assert_approx_eq!(f64, test_gcj.0, gcj.0, epsilon = 1e-13);
-                assert_approx_eq!(f64, test_gcj.1, gcj.1, epsilon = 1e-13);
+                assert_approx_eq!(f64, test_gcj.0, gcj.0, epsilon = threshold);
+                assert_approx_eq!(f64, test_gcj.1, gcj.1, epsilon = threshold);
             }
             {
                 let test_wgs = crypto_exact(
@@ -430,7 +433,8 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_wgs.0 - wgs.0).abs() > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-13 {
+                if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
+                {
                     println!(
                         "wgs,{},{},{},{},{},{:.2e},{:.2e}",
                         test_wgs.0,
@@ -442,8 +446,8 @@ mod test {
                         test_wgs.1 - wgs.1,
                     )
                 };
-                assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = 1e-13);
-                assert_approx_eq!(f64, test_wgs.1, wgs.1, epsilon = 1e-13);
+                assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = threshold);
+                assert_approx_eq!(f64, test_wgs.1, wgs.1, epsilon = threshold);
             }
             {
                 let test_wgs = crypto_exact(
@@ -455,7 +459,8 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_wgs.0 - wgs.0).abs() > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-13 {
+                if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
+                {
                     println!(
                         "wgs,{},{},{},{},{},{:.2e},{:.2e}",
                         test_wgs.0,
@@ -467,8 +472,8 @@ mod test {
                         test_wgs.1 - wgs.1,
                     )
                 };
-                assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = 1e-13);
-                assert_approx_eq!(f64, test_wgs.1, wgs.1, epsilon = 1e-13);
+                assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = threshold);
+                assert_approx_eq!(f64, test_wgs.1, wgs.1, epsilon = threshold);
             }
         }
     }

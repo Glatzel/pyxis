@@ -375,6 +375,8 @@ pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64
 #[cfg(test)]
 mod test {
 
+    use core::f64;
+
     use float_cmp::assert_approx_eq;
     use rand::prelude::*;
     use tracing_subscriber::filter::LevelFilter;
@@ -390,7 +392,12 @@ mod test {
             .init();
         let mut rng = rand::rng();
         let threshold = 1e-13;
-        for _ in 0..10000 {
+        let mut max_dist: f64 = 0.0;
+        let mut max_lonlat: f64 = 0.0;
+        let mut all_dist = 0.0;
+        let mut all_lonlat = 0.0;
+        let count = 10000;
+        for _ in 0..count {
             let wgs = (
                 rng.random_range(72.004..137.8347),
                 rng.random_range(0.8293..55.8271),
@@ -420,6 +427,13 @@ mod test {
                         test_gcj.1 - gcj.1
                     )
                 };
+                max_dist =
+                    max_dist.max(haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1).abs());
+                max_lonlat = max_lonlat
+                    .max((test_gcj.0 - gcj.0).abs())
+                    .max((test_gcj.1 - gcj.1).abs());
+                all_dist += haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1).abs();
+                all_lonlat += (test_gcj.0 - gcj.0).abs() + (test_gcj.1 - gcj.1).abs();
                 assert_approx_eq!(f64, test_gcj.0, gcj.0, epsilon = threshold);
                 assert_approx_eq!(f64, test_gcj.1, gcj.1, epsilon = threshold);
             }
@@ -446,6 +460,13 @@ mod test {
                         test_wgs.1 - wgs.1,
                     )
                 };
+                max_dist =
+                    max_dist.max(haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs());
+                max_lonlat = max_lonlat
+                    .max((test_wgs.0 - wgs.0).abs())
+                    .max((test_wgs.1 - wgs.1).abs());
+                all_dist += haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs();
+                all_lonlat += (test_wgs.0 - wgs.0).abs() + (test_wgs.1 - wgs.1).abs();
                 assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = threshold);
                 assert_approx_eq!(f64, test_wgs.1, wgs.1, epsilon = threshold);
             }
@@ -472,9 +493,20 @@ mod test {
                         test_wgs.1 - wgs.1,
                     )
                 };
+                max_dist =
+                    max_dist.max(haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs());
+                max_lonlat = max_lonlat
+                    .max((test_wgs.0 - wgs.0).abs())
+                    .max((test_wgs.1 - wgs.1).abs());
+                all_dist += haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs();
+                all_lonlat += (test_wgs.0 - wgs.0).abs() + (test_wgs.1 - wgs.1).abs();
                 assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = threshold);
                 assert_approx_eq!(f64, test_wgs.1, wgs.1, epsilon = threshold);
             }
         }
+        println!("average distance: {:.2e}", all_dist / count as f64);
+        println!("max distance: {:.2e}", max_dist);
+        println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 2.0);
+        println!("max lonlat: {:.2e}", max_lonlat);
     }
 }

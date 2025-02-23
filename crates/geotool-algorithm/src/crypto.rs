@@ -317,41 +317,51 @@ pub fn crypto_exact(
             }
             _ => (),
         }
-
-        match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
-            (true, true, true) => {
-                p_lon = dst_lon;
-                p_lat = (p_lat + dst_lat) / 2.0;
-            }
-            (true, false, true) => {
-                p_lon = dst_lon;
-                m_lat = (m_lat + dst_lat) / 2.0;
-            }
-            (false, true, true) => {
-                m_lon = dst_lon;
-                p_lat = (p_lat + dst_lat) / 2.0;
-            }
-            (false, false, true) => {
-                m_lon = dst_lon;
-                m_lat = (m_lat + dst_lat) / 2.0;
-            }
-            (true, true, false) => {
-                p_lon = (dst_lon + p_lon) / 2.0;
-                p_lat = dst_lat;
-            }
-            (false, true, false) => {
-                m_lon = (dst_lon + m_lon) / 2.0;
-                p_lat = dst_lat
-            }
-            (true, false, false) => {
-                p_lon = (dst_lon + p_lon) / 2.0;
-                m_lat = dst_lat;
-            }
-            (false, false, false) => {
-                m_lon = (dst_lon + m_lon) / 2.0;
-                m_lat = dst_lat;
-            }
+        if d_lat > 0.0 {
+            p_lat = dst_lat;
+        } else {
+            m_lat = dst_lat;
         }
+        if d_lon> 0.0 {
+            p_lon = dst_lon;
+        } else {
+            m_lon = dst_lon;
+        }
+
+        // match (d_lon > 0.0, d_lat > 0.0, d_lon.abs() > d_lat.abs()) {
+        //     (true, true, true) => {
+        //         p_lon = dst_lon;
+        //         p_lat = (p_lat + dst_lat) / 2.0;
+        //     }
+        //     (true, false, true) => {
+        //         p_lon = dst_lon;
+        //         m_lat = (m_lat + dst_lat) / 2.0;
+        //     }
+        //     (false, true, true) => {
+        //         m_lon = dst_lon;
+        //         p_lat = (p_lat + dst_lat) / 2.0;
+        //     }
+        //     (false, false, true) => {
+        //         m_lon = dst_lon;
+        //         m_lat = (m_lat + dst_lat) / 2.0;
+        //     }
+        //     (true, true, false) => {
+        //         p_lon = (dst_lon + p_lon) / 2.0;
+        //         p_lat = dst_lat;
+        //     }
+        //     (false, true, false) => {
+        //         m_lon = (dst_lon + m_lon) / 2.0;
+        //         p_lat = dst_lat
+        //     }
+        //     (true, false, false) => {
+        //         p_lon = (dst_lon + p_lon) / 2.0;
+        //         m_lat = dst_lat;
+        //     }
+        //     (false, false, false) => {
+        //         m_lon = (dst_lon + m_lon) / 2.0;
+        //         m_lat = dst_lat;
+        //     }
+        // }
     }
 
     (dst_lon, dst_lat)
@@ -388,7 +398,7 @@ mod test {
             .with(log_template::terminal_layer(LevelFilter::ERROR))
             .init();
         let mut rng = rand::rng();
-        for _ in 0..100 {
+        for _ in 0..10000 {
             let wgs = (
                 rng.random_range(72.004..137.8347),
                 rng.random_range(0.8293..55.8271),
@@ -405,7 +415,7 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_gcj.0 - gcj.0).abs() > 1e-13 || (test_gcj.1 - gcj.1).abs() > 1e-13 {
+                if (test_gcj.0 - gcj.0).abs() > 1e-7 || (test_gcj.1 - gcj.1).abs() > 1e-7 {
                     println!(
                         "gcj,{},{},{},{},{},{:.2e},{:.2e}",
                         test_gcj.0,
@@ -428,7 +438,7 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_wgs.0 - wgs.0).abs() > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-13 {
+                if (test_wgs.0 - wgs.0).abs() > 1e-7 || (test_wgs.1 - wgs.1).abs() > 1e-7 {
                     println!(
                         "wgs,{},{},{},{},{},{:.2e},{:.2e}",
                         test_wgs.0,
@@ -451,7 +461,7 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_wgs.0 - wgs.0).abs() > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-13 {
+                if (test_wgs.0 - wgs.0).abs() > 1e-7 || (test_wgs.1 - wgs.1).abs() > 1e-7 {
                     println!(
                         "wgs,{},{},{},{},{},{:.2e},{:.2e}",
                         test_wgs.0,

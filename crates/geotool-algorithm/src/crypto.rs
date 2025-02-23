@@ -297,6 +297,7 @@ pub fn crypto_exact(
         {
             tracing::trace!("iteration: {_i}");
             tracing::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
+            tracing::trace!("src_lon: {tmp_lon}, src_lat: {tmp_lat}");
             tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
             tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
@@ -315,7 +316,9 @@ pub fn crypto_exact(
             {
                 break;
             }
-            CryptoThresholdMode::LonLat if d_lat.abs() < threshold && d_lon.abs() < threshold => {
+            CryptoThresholdMode::LonLat
+                if temp_d_lat.abs() < threshold && temp_d_lon.abs() < threshold =>
+            {
                 break;
             }
             _ => (),
@@ -378,12 +381,34 @@ mod test {
 
     use super::*;
     #[test]
+    fn test_play() {
+        tracing_subscriber::registry()
+            .with(log_template::terminal_layer(LevelFilter::TRACE))
+            .init();
+
+        let wgs = (79.15469525838058,36.800998847410106);
+        let gcj = wgs84_to_gcj02(wgs.0, wgs.1);
+        println!("{},{}", gcj.0, gcj.1);
+        {
+            let test_wgs = crypto_exact(
+                gcj.0,
+                gcj.1,
+                gcj02_to_wgs84,
+                wgs84_to_gcj02,
+                1e-20,
+                CryptoThresholdMode::LonLat,
+                100,
+            );
+            assert!((test_wgs.0 - wgs.0).abs() < 1e-13 && (test_wgs.1 - wgs.1).abs() < 1e-13)
+        }
+    }
+    #[test]
     fn test_exact() {
         tracing_subscriber::registry()
             .with(log_template::terminal_layer(LevelFilter::ERROR))
             .init();
         let mut rng = rand::rng();
-        for _ in 0..1000 {
+        for _ in 0..10000 {
             let wgs = (
                 rng.random_range(72.004..137.8347),
                 rng.random_range(0.8293..55.8271),
@@ -400,14 +425,16 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_gcj.0 - gcj.0).abs() > 1e-13 || (test_gcj.1 - gcj.1).abs() > 1e-13 {
-                    print!(
-                        "gcj,{},{},{},{},{}\n",
+                if (test_gcj.0 - gcj.0).abs() > 1e-14 || (test_gcj.1 - gcj.1).abs() > 1e-14 {
+                    println!(
+                        "gcj,{},{},{},{},{},{:.2e},{:.2e}",
                         test_gcj.0,
                         test_gcj.1,
                         gcj.0,
                         gcj.1,
-                        haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1)
+                        haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1),
+                        test_gcj.0 - gcj.0,
+                        test_gcj.1 - gcj.1
                     )
                 };
             }
@@ -422,14 +449,16 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_wgs.0 - wgs.0).abs() > 1e-13 || (test_wgs.1 - wgs.1).abs() > 1e-13 {
-                    print!(
-                        "wgs,{},{},{},{},{}\n",
+                if (test_wgs.0 - wgs.0).abs() > 1e-14 || (test_wgs.1 - wgs.1).abs() > 1e-14 {
+                    println!(
+                        "wgs,{},{},{},{},{},{:.2e},{:.2e}",
                         test_wgs.0,
                         test_wgs.1,
                         wgs.0,
                         wgs.1,
-                        haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1) - 0.0
+                        haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1),
+                        test_wgs.0 - wgs.0,
+                        test_wgs.1 - wgs.1,
                     )
                 };
             }

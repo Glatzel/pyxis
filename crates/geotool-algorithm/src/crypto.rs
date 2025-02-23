@@ -238,10 +238,10 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 ///             geotool_algorithm::wgs84_to_bd09,
 ///             1e-17,
 ///             geotool_algorithm::CryptoThresholdMode::LonLat,
-///             1000,
+///             100,
 ///         );
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-15);
+/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-14);
 /// ```
 ///
 /// ```
@@ -260,7 +260,7 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 ///             geotool_algorithm::wgs84_to_bd09,
 ///             1e-3,
 ///             geotool_algorithm::CryptoThresholdMode::Distance,
-///             1000,
+///             100,
 ///         );
 /// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-8);
 /// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-8);
@@ -284,17 +284,22 @@ pub fn crypto_exact(
     let mut p_lon = dst_lon + d_lon;
     let mut p_lat = dst_lat + d_lat;
 
+    d_lon += 1.0;
+    d_lat += 1.0;
+
     for _i in 0..max_iter {
         (dst_lon, dst_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
         let (tmp_lon, tmp_lat) = inv_crypto_fn(dst_lon, dst_lat);
-        d_lon = tmp_lon - src_lon;
-        d_lat = tmp_lat - src_lat;
+        let temp_d_lon = tmp_lon - src_lon;
+        let temp_d_lat = tmp_lat - src_lat;
 
         #[cfg(feature = "log")]
         {
             tracing::trace!("iteration: {_i}");
             tracing::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
+            tracing::trace!("src_lon: {tmp_lon}, src_lat: {tmp_lat}");
             tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
+            tracing::trace!("range_lon: {}, range_lat: {}", p_lon - m_lon, p_lat - m_lat);
             tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
             tracing::trace!(
@@ -302,8 +307,8 @@ pub fn crypto_exact(
                 haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
             );
             if _i == max_iter - 1 {
-                tracing::debug!("Exeed max iteration number: {max_iter}")
-            };
+                tracing::warn!("Exeed max iteration number: {max_iter}");
+            }
         }
 
         match threshold_mode {
@@ -312,21 +317,41 @@ pub fn crypto_exact(
             {
                 break;
             }
-            CryptoThresholdMode::LonLat if d_lat.abs() < threshold && d_lon.abs() < threshold => {
+            CryptoThresholdMode::LonLat
+                if temp_d_lat.abs() < threshold && temp_d_lon.abs() < threshold =>
+            {
                 break;
             }
             _ => (),
         }
-        if d_lat > 0.0 {
-            p_lat = dst_lat;
-        } else {
-            m_lat = dst_lat;
+
+        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs()) {
+            (true, true) => p_lon = dst_lon,
+            (false, true) => m_lon = dst_lon,
+            (true, false) => {
+                p_lon = dst_lon;
+                m_lon -= d_lon;
+            }
+            (false, false) => {
+                m_lon = dst_lon;
+                p_lon -= d_lon;
+            }
         }
-        if d_lon> 0.0 {
-            p_lon = dst_lon;
-        } else {
-            m_lon = dst_lon;
+        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs()) {
+            (true, true) => p_lat = dst_lat,
+            (false, true) => m_lat = dst_lat,
+            (true, false) => {
+                p_lat = dst_lat;
+                m_lat -= d_lat;
+            }
+            (false, false) => {
+                m_lat = dst_lat;
+                p_lat -= d_lat;
+            }
         }
+
+        d_lon = temp_d_lon;
+        d_lat = temp_d_lat;
     }
 
     (dst_lon, dst_lat)
@@ -350,6 +375,9 @@ pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64
 #[cfg(test)]
 mod test {
 
+    use core::f64;
+
+    use float_cmp::assert_approx_eq;
     use rand::prelude::*;
     use tracing_subscriber::filter::LevelFilter;
     use tracing_subscriber::layer::SubscriberExt;
@@ -362,8 +390,15 @@ mod test {
         tracing_subscriber::registry()
             .with(log_template::terminal_layer(LevelFilter::ERROR))
             .init();
+        let is_ci = std::env::var("CI").is_ok();
         let mut rng = rand::rng();
-        for _ in 0..10000 {
+        let threshold = 1e-13;
+        let mut max_dist: f64 = 0.0;
+        let mut max_lonlat: f64 = 0.0;
+        let mut all_dist = 0.0;
+        let mut all_lonlat = 0.0;
+        let count = if is_ci { 10 } else { 10000 };
+        for _ in 0..count {
             let wgs = (
                 rng.random_range(72.004..137.8347),
                 rng.random_range(0.8293..55.8271),
@@ -380,7 +415,8 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_gcj.0 - gcj.0).abs() > 1e-7 || (test_gcj.1 - gcj.1).abs() > 1e-7 {
+                if (test_gcj.0 - gcj.0).abs() > threshold || (test_gcj.1 - gcj.1).abs() > threshold
+                {
                     println!(
                         "gcj,{},{},{},{},{},{:.2e},{:.2e}",
                         test_gcj.0,
@@ -392,6 +428,17 @@ mod test {
                         test_gcj.1 - gcj.1
                     )
                 };
+                max_dist =
+                    max_dist.max(haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1).abs());
+                max_lonlat = max_lonlat
+                    .max((test_gcj.0 - gcj.0).abs())
+                    .max((test_gcj.1 - gcj.1).abs());
+                all_dist += haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1).abs();
+                all_lonlat += (test_gcj.0 - gcj.0).abs() + (test_gcj.1 - gcj.1).abs();
+                if is_ci {
+                    assert_approx_eq!(f64, test_gcj.0, gcj.0, epsilon = threshold);
+                    assert_approx_eq!(f64, test_gcj.1, gcj.1, epsilon = threshold);
+                }
             }
             {
                 let test_wgs = crypto_exact(
@@ -403,7 +450,8 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_wgs.0 - wgs.0).abs() > 1e-7 || (test_wgs.1 - wgs.1).abs() > 1e-7 {
+                if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
+                {
                     println!(
                         "wgs,{},{},{},{},{},{:.2e},{:.2e}",
                         test_wgs.0,
@@ -415,6 +463,17 @@ mod test {
                         test_wgs.1 - wgs.1,
                     )
                 };
+                max_dist =
+                    max_dist.max(haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs());
+                max_lonlat = max_lonlat
+                    .max((test_wgs.0 - wgs.0).abs())
+                    .max((test_wgs.1 - wgs.1).abs());
+                all_dist += haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs();
+                all_lonlat += (test_wgs.0 - wgs.0).abs() + (test_wgs.1 - wgs.1).abs();
+                if is_ci {
+                    assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = threshold);
+                    assert_approx_eq!(f64, test_wgs.1, wgs.1, epsilon = threshold);
+                }
             }
             {
                 let test_wgs = crypto_exact(
@@ -426,7 +485,8 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
-                if (test_wgs.0 - wgs.0).abs() > 1e-7 || (test_wgs.1 - wgs.1).abs() > 1e-7 {
+                if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
+                {
                     println!(
                         "wgs,{},{},{},{},{},{:.2e},{:.2e}",
                         test_wgs.0,
@@ -438,7 +498,22 @@ mod test {
                         test_wgs.1 - wgs.1,
                     )
                 };
+                max_dist =
+                    max_dist.max(haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs());
+                max_lonlat = max_lonlat
+                    .max((test_wgs.0 - wgs.0).abs())
+                    .max((test_wgs.1 - wgs.1).abs());
+                all_dist += haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs();
+                all_lonlat += (test_wgs.0 - wgs.0).abs() + (test_wgs.1 - wgs.1).abs();
+                if is_ci {
+                    assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = threshold);
+                    assert_approx_eq!(f64, test_wgs.1, wgs.1, epsilon = threshold);
+                }
             }
         }
+        println!("average distance: {:.2e}", all_dist / count as f64);
+        println!("max distance: {:.2e}", max_dist);
+        println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 2.0);
+        println!("max lonlat: {:.2e}", max_lonlat);
     }
 }

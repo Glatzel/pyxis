@@ -284,22 +284,17 @@ pub fn crypto_exact(
     let mut p_lon = dst_lon + d_lon;
     let mut p_lat = dst_lat + d_lat;
 
-    d_lon += 1.0;
-    d_lat += 1.0;
-
     for _i in 0..max_iter {
         (dst_lon, dst_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
         let (tmp_lon, tmp_lat) = inv_crypto_fn(dst_lon, dst_lat);
-        let temp_d_lon = tmp_lon - src_lon;
-        let temp_d_lat = tmp_lat - src_lat;
+        d_lon = tmp_lon - src_lon;
+        d_lat = tmp_lat - src_lat;
 
         #[cfg(feature = "log")]
         {
             tracing::trace!("iteration: {_i}");
             tracing::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
-            tracing::trace!("src_lon: {tmp_lon}, src_lat: {tmp_lat}");
             tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
-            tracing::trace!("range_lon: {}, range_lat: {}", p_lon - m_lon, p_lat - m_lat);
             tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
             tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
             tracing::trace!(
@@ -307,8 +302,8 @@ pub fn crypto_exact(
                 haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
             );
             if _i == max_iter - 1 {
-                tracing::warn!("Exeed max iteration number: {max_iter}");
-            }
+                tracing::debug!("Exeed max iteration number: {max_iter}")
+            };
         }
 
         match threshold_mode {
@@ -317,41 +312,21 @@ pub fn crypto_exact(
             {
                 break;
             }
-            CryptoThresholdMode::LonLat
-                if temp_d_lat.abs() < threshold && temp_d_lon.abs() < threshold =>
-            {
+            CryptoThresholdMode::LonLat if d_lat.abs() < threshold && d_lon.abs() < threshold => {
                 break;
             }
             _ => (),
         }
-
-        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs()) {
-            (true, true) => p_lon = dst_lon,
-            (false, true) => m_lon = dst_lon,
-            (true, false) => {
-                p_lon = dst_lon;
-                m_lon -= d_lon;
-            }
-            (false, false) => {
-                m_lon = dst_lon;
-                p_lon -= d_lon;
-            }
+        if d_lat > 0.0 {
+            p_lat = dst_lat;
+        } else {
+            m_lat = dst_lat;
         }
-        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs()) {
-            (true, true) => p_lat = dst_lat,
-            (false, true) => m_lat = dst_lat,
-            (true, false) => {
-                p_lat = dst_lat;
-                m_lat -= d_lat;
-            }
-            (false, false) => {
-                m_lat = dst_lat;
-                p_lat -= d_lat;
-            }
+        if d_lon > 0.0 {
+            p_lon = dst_lon;
+        } else {
+            m_lon = dst_lon;
         }
-
-        d_lon = temp_d_lon;
-        d_lat = temp_d_lat;
     }
 
     (dst_lon, dst_lat)

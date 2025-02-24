@@ -2,7 +2,7 @@ use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_ma
 use geotool_algorithm::*;
 use std::sync::LazyLock;
 static COORDS: LazyLock<Vec<(f64, f64)>> = LazyLock::new(|| {
-    let num_points = 1000;
+    let num_points = 100;
     let x_min = 72.004;
     let x_max = 137.8347;
     let y_min = 0.8293;

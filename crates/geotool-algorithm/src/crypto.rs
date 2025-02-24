@@ -415,6 +415,7 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
+                #[cfg_attr(coverage_nightly, coverage(off))]
                 if (test_gcj.0 - gcj.0).abs() > threshold || (test_gcj.1 - gcj.1).abs() > threshold
                 {
                     println!(
@@ -450,6 +451,7 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
+                #[cfg_attr(coverage_nightly, coverage(off))]
                 if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
                 {
                     println!(
@@ -485,6 +487,7 @@ mod test {
                     CryptoThresholdMode::LonLat,
                     1000,
                 );
+                #[cfg_attr(coverage_nightly, coverage(off))]
                 if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
                 {
                     println!(

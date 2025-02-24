@@ -51,7 +51,7 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
 
     for i in [4, 7, 10, 13].iter() {
         let threshold = 10.0f64.powi(-i);
-        group.bench_with_input(BenchmarkId::new("bd2gcj-lonlat", i), i, |b, _| {
+        group.bench_with_input(BenchmarkId::new("bd2gcj", i), i, |b, _| {
             b.iter(|| {
                 for p in COORDS.iter() {
                     crypto_exact(
@@ -66,7 +66,7 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
                 }
             })
         });
-        group.bench_with_input(BenchmarkId::new("bd2wgs-lonlat", i), i, |b, _| {
+        group.bench_with_input(BenchmarkId::new("bd2wgs", i), i, |b, _| {
             b.iter(|| {
                 for p in COORDS.iter() {
                     crypto_exact(
@@ -81,7 +81,7 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
                 }
             })
         });
-        group.bench_with_input(BenchmarkId::new("gcj2wgs-lonlat", i), i, |b, _| {
+        group.bench_with_input(BenchmarkId::new("gcj2wgs", i), i, |b, _| {
             b.iter(|| {
                 for p in COORDS.iter() {
                     crypto_exact(

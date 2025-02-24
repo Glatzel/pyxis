@@ -1,6 +1,28 @@
 use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
 use geotool_algorithm::*;
-use rand::Rng;
+use std::sync::LazyLock;
+static COORDS: LazyLock<Vec<(f64, f64)>> = LazyLock::new(|| {
+    let num_points = 1000;
+    let x_min = 72.004;
+    let x_max = 137.8347;
+    let y_min = 0.8293;
+    let y_max = 55.8271;
+
+    let x_step = (x_max - x_min) / (num_points as f64).sqrt(); // sqrt(num_points) for equal distribution
+    let y_step = (y_max - y_min) / (num_points as f64).sqrt();
+
+    let mut coordinates = Vec::new();
+
+    for i in 0..(num_points as f64).sqrt() as usize {
+        for j in 0..(num_points as f64).sqrt() as usize {
+            let x = x_min + i as f64 * x_step;
+            let y = y_min + j as f64 * y_step;
+            coordinates.push((x, y));
+        }
+    }
+
+    coordinates
+});
 fn bench_crypto(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto");
 
@@ -26,61 +48,52 @@ fn bench_crypto(c: &mut Criterion) {
 }
 fn bench_crypto_exact_lonlat(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto_exact");
-    let mut rng = rand::rng();
+
     for i in [4, 7, 10, 13].iter() {
         let threshold = 10.0f64.powi(-i);
         group.bench_with_input(BenchmarkId::new("bd2gcj-lonlat", i), i, |b, _| {
             b.iter(|| {
-                let bd = (
-                    rng.random_range(72.004..137.8347),
-                    rng.random_range(0.8293..55.8271),
-                );
-
-                crypto_exact(
-                    bd.0,
-                    bd.1,
-                    bd09_to_gcj02,
-                    gcj02_to_bd09,
-                    threshold,
-                    CryptoThresholdMode::LonLat,
-                    1000,
-                );
+                for p in COORDS.iter() {
+                    crypto_exact(
+                        p.0,
+                        p.1,
+                        bd09_to_gcj02,
+                        gcj02_to_bd09,
+                        threshold,
+                        CryptoThresholdMode::LonLat,
+                        1000,
+                    );
+                }
             })
         });
         group.bench_with_input(BenchmarkId::new("bd2wgs-lonlat", i), i, |b, _| {
             b.iter(|| {
-                let bd = (
-                    rng.random_range(72.004..137.8347),
-                    rng.random_range(0.8293..55.8271),
-                );
-
-                crypto_exact(
-                    bd.0,
-                    bd.1,
-                    bd09_to_wgs84,
-                    wgs84_to_bd09,
-                    threshold,
-                    CryptoThresholdMode::LonLat,
-                    1000,
-                );
+                for p in COORDS.iter() {
+                    crypto_exact(
+                        p.0,
+                        p.1,
+                        bd09_to_wgs84,
+                        wgs84_to_bd09,
+                        threshold,
+                        CryptoThresholdMode::LonLat,
+                        1000,
+                    );
+                }
             })
         });
         group.bench_with_input(BenchmarkId::new("gcj2wgs-lonlat", i), i, |b, _| {
             b.iter(|| {
-                let gcj = (
-                    rng.random_range(72.004..137.8347),
-                    rng.random_range(0.8293..55.8271),
-                );
-
-                crypto_exact(
-                    gcj.0,
-                    gcj.1,
-                    gcj02_to_wgs84,
-                    wgs84_to_gcj02,
-                    threshold,
-                    CryptoThresholdMode::LonLat,
-                    1000,
-                );
+                for p in COORDS.iter() {
+                    crypto_exact(
+                        p.0,
+                        p.1,
+                        gcj02_to_wgs84,
+                        wgs84_to_gcj02,
+                        threshold,
+                        CryptoThresholdMode::LonLat,
+                        1000,
+                    );
+                }
             })
         });
     }
@@ -88,63 +101,52 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
 }
 fn bench_crypto_exact_distance(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto-exact-distance");
-    let mut rng = rand::rng();
     for i in [3, 6].iter() {
         // [1m, 1cm, 1mm]
         let threshold = 10.0f64.powi(-i);
-
         group.bench_with_input(BenchmarkId::new("bd2gcj", i), i, |b, _| {
             b.iter(|| {
-                let bd = (
-                    rng.random_range(72.004..137.8347),
-                    rng.random_range(0.8293..55.8271),
-                );
-
-                crypto_exact(
-                    bd.0,
-                    bd.1,
-                    bd09_to_gcj02,
-                    gcj02_to_bd09,
-                    threshold,
-                    CryptoThresholdMode::Distance,
-                    1000,
-                );
+                for p in COORDS.iter() {
+                    crypto_exact(
+                        p.0,
+                        p.1,
+                        bd09_to_gcj02,
+                        gcj02_to_bd09,
+                        threshold,
+                        CryptoThresholdMode::Distance,
+                        1000,
+                    );
+                }
             })
         });
         group.bench_with_input(BenchmarkId::new("bd2wgs", i), i, |b, _| {
             b.iter(|| {
-                let bd = (
-                    rng.random_range(72.004..137.8347),
-                    rng.random_range(0.8293..55.8271),
-                );
-
-                crypto_exact(
-                    bd.0,
-                    bd.1,
-                    bd09_to_wgs84,
-                    wgs84_to_bd09,
-                    threshold,
-                    CryptoThresholdMode::Distance,
-                    1000,
-                );
+                for p in COORDS.iter() {
+                    crypto_exact(
+                        p.0,
+                        p.1,
+                        bd09_to_wgs84,
+                        wgs84_to_bd09,
+                        threshold,
+                        CryptoThresholdMode::Distance,
+                        1000,
+                    );
+                }
             })
         });
         group.bench_with_input(BenchmarkId::new("gcj2wgs", i), i, |b, _| {
             b.iter(|| {
-                let gcj = (
-                    rng.random_range(72.004..137.8347),
-                    rng.random_range(0.8293..55.8271),
-                );
-
-                crypto_exact(
-                    gcj.0,
-                    gcj.1,
-                    gcj02_to_wgs84,
-                    wgs84_to_gcj02,
-                    threshold,
-                    CryptoThresholdMode::Distance,
-                    1000,
-                );
+                for p in COORDS.iter() {
+                    crypto_exact(
+                        p.0,
+                        p.1,
+                        gcj02_to_wgs84,
+                        wgs84_to_gcj02,
+                        threshold,
+                        CryptoThresholdMode::Distance,
+                        1000,
+                    );
+                }
             })
         });
     }

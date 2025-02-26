@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.7] - 2025-02-26
+
+### Changed
+
+- Initial bench by @Glatzel in [#83](https://github.com/Glatzel/rs-geotool/pull/83)
+- Complete bench for crypto by @Glatzel in [#85](https://github.com/Glatzel/rs-geotool/pull/85)
+- Modify crypto exact recursion exit by @Glatzel in [#94](https://github.com/Glatzel/rs-geotool/pull/94)
+
+### Performance
+
+- Raise crypto precision by @Glatzel in [#89](https://github.com/Glatzel/rs-geotool/pull/89)
+- Revert to original crypto algorithm by @Glatzel in [#98](https://github.com/Glatzel/rs-geotool/pull/98)
+- Improve crypto exact precision by @Glatzel in [#97](https://github.com/Glatzel/rs-geotool/pull/97)
+
+### Refactor
+
+- Use closures in crypto exact by @Glatzel in [#93](https://github.com/Glatzel/rs-geotool/pull/93)
+
+### Testing
+
+- Optimize crypto bench by @Glatzel in [#87](https://github.com/Glatzel/rs-geotool/pull/87)
+- Revert to use threshold to bench crypto exact by @Glatzel in [#88](https://github.com/Glatzel/rs-geotool/pull/88)
+- Add new thershold to crypto bench by @Glatzel in [#90](https://github.com/Glatzel/rs-geotool/pull/90)
+- Modify some test precision assert by @Glatzel in [#91](https://github.com/Glatzel/rs-geotool/pull/91)
+- Optimize crypto exact bench input value by @Glatzel in [#100](https://github.com/Glatzel/rs-geotool/pull/100)
+
 ## [0.0.6] - 2025-02-20
 
 ### Added
@@ -107,6 +133,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/rs-geotool/pull/14)
 
+[0.0.7]: https://github.com/Glatzel/rs-geotool/compare/v0.0.6..v0.0.7
 [0.0.6]: https://github.com/Glatzel/rs-geotool/compare/v0.0.5..v0.0.6
 [0.0.5]: https://github.com/Glatzel/rs-geotool/compare/v0.0.4..v0.0.5
 [0.0.4]: https://github.com/Glatzel/rs-geotool/compare/v0.0.3..v0.0.4

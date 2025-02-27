@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rust-doc
-          path: dist/*.zip
+          path: dist/*.7z
           if-no-files-found: error
 
   cargo-fmt:
@@ -276,7 +276,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: python-doc
-          path: dist/*.zip
+          path: dist/*.7z
           if-no-files-found: error
 
 
@@ -298,15 +298,15 @@ jobs:
         if: ${{inputs.build-dist}}
         run: ./scripts/build-cli.ps1 -config dist
 
-      - name: test cli
-        run: ./examples/cli.ps1
-
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
           name: geotool-cli-windows
-          path: dist/*.zip
+          path: dist/*.7z
           if-no-files-found: error
+          
+      - name: test cli
+        run: ./examples/cli.ps1
 
   out-build:
     needs:

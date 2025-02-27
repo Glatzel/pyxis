@@ -22,5 +22,4 @@ Remove-Item ./dist/geotool*.zip -Recurse -Force -ErrorAction SilentlyContinue
 New-Item ./dist/geotool -ItemType Directory -ErrorAction SilentlyContinue
 Copy-Item "target/$config/geotool.exe" ./dist/geotool
 Copy-Item "vcpkg_deps/vcpkg_installed/x64-windows/share/proj/proj.db" ./dist/geotool
-Copy-Item "vcpkg_deps/vcpkg_installed/x64-windows/bin/*.dll" ./dist/geotool
 Compress-Archive ./dist/geotool "./dist/geotool-windows-x64.zip"

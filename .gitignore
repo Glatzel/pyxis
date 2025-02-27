@@ -20,3 +20,6 @@ target
 #vcpkg
 vcpkg_deps/vcpkg
 vcpkg_deps/vcpkg_installed
+
+#misc
+proj.db

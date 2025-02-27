@@ -1,6 +1,3 @@
-use std::path::PathBuf;
-use std::sync::LazyLock;
-
 use geotool_algorithm::Ellipsoid;
 use miette::IntoDiagnostic;
 
@@ -10,18 +7,8 @@ pub struct ContextTransform {
     pub y: f64,
     pub z: f64,
 }
-static PROJ_RESOURCE_PATH: LazyLock<PathBuf> = LazyLock::new(|| {
-    let exe_path = std::env::current_exe().unwrap();
-    PathBuf::from(exe_path.parent().unwrap())
-});
+
 impl ContextTransform {
-    fn init_proj_builder() -> proj::ProjBuilder {
-        let mut builder = proj::ProjBuilder::new();
-        builder
-            .set_search_paths(PROJ_RESOURCE_PATH.as_path())
-            .unwrap();
-        builder
-    }
     pub fn crypto(&mut self, from: CryptoSpace, to: CryptoSpace) {
         (self.x, self.y) = match (from, to) {
             (CryptoSpace::BD09, CryptoSpace::GCJ02) => geotool_algorithm::crypto_exact(
@@ -161,7 +148,7 @@ impl ContextTransform {
         }
     }
     pub fn proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
-        let transformer = Self::init_proj_builder()
+        let transformer = crate::proj_util::init_proj_builder()
             .proj_known_crs(from, to, None)
             .into_diagnostic()?;
         (self.x, self.y) = transformer.convert((self.x, self.y)).into_diagnostic()?;

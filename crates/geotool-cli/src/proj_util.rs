@@ -11,13 +11,10 @@ pub fn init_proj_builder() -> proj::ProjBuilder {
         let exe_root = std::env::current_exe().unwrap();
         exe_root.parent().unwrap();
         if !exe_root.clone().join("proj.db").exists() {
-            match std::env::consts::OS {
-                "windows" => {
-                    let mut db_file =
-                        std::fs::File::create("proj.db").unwrap();
-                    db_file.write_all(PROJ_DB).unwrap();
-                }
-                _ => (),
+            #[cfg(target_os = "windows")]
+            {
+                let mut db_file = std::fs::File::create("proj.db").unwrap();
+                db_file.write_all(PROJ_DB).unwrap();
             }
         }
         builder

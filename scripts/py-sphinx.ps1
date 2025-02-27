@@ -1,4 +1,4 @@
-& $PSScriptRoot/develop.ps1
+& $PSScriptRoot/py-develop.ps1
 Set-Location -Path $PSScriptRoot
 Set-Location -Path ..
 Set-Location -Path crates/py-geotool

@@ -139,6 +139,10 @@ jobs:
           key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg_deps/vcpkg.json') }}
           lookup-only: true
 
+      - name: setup vcpkg
+        if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
+        run: ./scripts/vcpkg-setup.ps1
+
       - name: install vcpkg dependencies
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
         run: ./scripts/vcpkg-install.ps1
@@ -198,10 +202,10 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: dev python
-        run: ./scripts/develop.ps1
+        run: ./scripts/py-develop.ps1
 
       - name: test python
-        run: ./scripts/pytest.ps1
+        run: ./scripts/py-pytest.ps1
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
@@ -242,11 +246,11 @@ jobs:
 
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
-        run: ./scripts/build-py.ps1
+        run: ./scripts/py-build-wheel.ps1
 
       - name: build python (dist)
         if: ${{ inputs.build-dist}}
-        run: ./scripts/build-py.ps1 -config dist
+        run: ./scripts/py-build-wheel.ps1 -config dist
 
       - name: upload whl
         uses: actions/upload-artifact@v4
@@ -265,7 +269,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: sphinx build
-        run: ./scripts/sphinx.ps1
+        run: ./scripts/py-sphinx.ps1
 
       - name: upload doc
         uses: actions/upload-artifact@v4

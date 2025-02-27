@@ -3,4 +3,5 @@ Set-Location ..
 
 Set-Location vcpkg_deps
 $triplet=Resolve-Path ./triplet
-&./vcpkg/vcpkg.exe install --overlay-triplets=$triplet
+&./vcpkg/vcpkg.exe install --overlay-triplets=$triplet --triplet x64-windows
+&./vcpkg/vcpkg.exe install --overlay-triplets=$triplet --triplet x64-windows-static

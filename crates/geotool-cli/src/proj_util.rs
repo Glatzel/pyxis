@@ -14,11 +14,11 @@ pub fn init_proj_builder() -> proj::ProjBuilder {
         let exe_path = std::env::current_exe().unwrap();
         let exe_root = exe_path.parent().unwrap();
         if !exe_root.join("proj.db").exists() {
-            tracing::info!("proj.db is not found. Use bundled file.");
+            tracing::warn!("proj.db is not found. Use bundled file.");
             #[cfg(target_os = "windows")]
             {
                 tracing::info!(
-                    "Write proj.d to: {}",
+                    "Write to: {}",
                     exe_root.join("proj.db").to_str().unwrap()
                 );
                 let mut db_file = std::fs::File::create(exe_root.join("proj.db")).unwrap();

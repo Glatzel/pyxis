@@ -20,4 +20,4 @@ Set-Location ..
 Remove-Item ./dist/geotool*.zip -Recurse -Force -ErrorAction SilentlyContinue
 New-Item ./dist -ItemType Directory -ErrorAction SilentlyContinue
 Copy-Item "target/$config/geotool.exe" ./dist/geotool.exe
-Compress-Archive ./dist/geotool.exe "./dist/geotool-windows-x64.zip"
+7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 "-wdist" -mtc=on -mta=on "dist\geotool.7z" "dist\geotool.exe"

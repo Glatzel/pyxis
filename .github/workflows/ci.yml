@@ -166,6 +166,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - run: choco install pkgconfiglite
       - uses: ./.github/actions/setup-ci-win
       - uses: dtolnay/rust-toolchain@nightly
       - uses: Swatinem/rust-cache@v2
@@ -284,6 +285,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - run: choco install pkgconfiglite
       - uses: ./.github/actions/setup-ci-win
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2

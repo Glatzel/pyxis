@@ -161,11 +161,12 @@ jobs:
       - run: echo "out cache."
 
   # region check
-  cargo-test:
+  cargo-test-windows:
     needs: out-cache
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - run: choco install pkgconfiglite
       - uses: ./.github/actions/setup-ci-win
       - uses: dtolnay/rust-toolchain@nightly
       - uses: Swatinem/rust-cache@v2
@@ -227,7 +228,7 @@ jobs:
       - cargo-doc
       - cargo-fmt
       - cargo-machete
-      - cargo-test
+      - cargo-test-windows
       - ruff-lint
       - pytest
     runs-on: ubuntu-latest
@@ -246,7 +247,7 @@ jobs:
 
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
-        run: ./scripts/py-build-wheel.ps1
+        run: ./scripts/build-wheel.ps1
 
       - name: build python (dist)
         if: ${{ inputs.build-dist}}
@@ -284,6 +285,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - run: choco install pkgconfiglite
       - uses: ./.github/actions/setup-ci-win
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2

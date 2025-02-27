@@ -228,7 +228,7 @@ jobs:
       - cargo-doc
       - cargo-fmt
       - cargo-machete
-      - cargo-test
+      - cargo-test-windows
       - ruff-lint
       - pytest
     runs-on: ubuntu-latest

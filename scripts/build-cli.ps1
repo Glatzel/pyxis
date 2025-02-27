@@ -17,9 +17,7 @@ else {
 }
 Set-Location $PSScriptRoot
 Set-Location ..
-Remove-Item ./dist/geotool -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item ./dist/geotool*.zip -Recurse -Force -ErrorAction SilentlyContinue
-New-Item ./dist/geotool -ItemType Directory -ErrorAction SilentlyContinue
-Copy-Item "target/$config/geotool.exe" ./dist/geotool
-Copy-Item "vcpkg_deps/vcpkg_installed/static/x64-windows-static/share/proj/proj.db" ./dist/geotool
-Compress-Archive ./dist/geotool "./dist/geotool-windows-x64.zip"
+New-Item ./dist-ItemType Directory -ErrorAction SilentlyContinue
+Copy-Item "target/$config/geotool.exe" ./dist/geotool.exe
+Compress-Archive ./dist/geotool.exe "./dist/geotool-windows-x64.zip"

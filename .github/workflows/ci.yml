@@ -246,7 +246,7 @@ jobs:
 
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
-        run: ./scripts/py-build-wheel.ps1
+        run: ./scripts/build-wheel.ps1
 
       - name: build python (dist)
         if: ${{ inputs.build-dist}}

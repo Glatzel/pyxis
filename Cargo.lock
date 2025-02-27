@@ -408,7 +408,7 @@ dependencies = [
 
 [[package]]
 name = "geotool-algorithm"
-version = "0.0.7"
+version = "0.0.8"
 dependencies = [
  "codspeed-criterion-compat",
  "float-cmp",
@@ -421,7 +421,7 @@ dependencies = [
 
 [[package]]
 name = "geotool-cli"
-version = "0.0.7"
+version = "0.0.8"
 dependencies = [
  "assert_cmd",
  "bpaf",
@@ -904,7 +904,7 @@ dependencies = [
 
 [[package]]
 name = "py-geotool"
-version = "0.0.7"
+version = "0.0.8"
 dependencies = [
  "geotool-algorithm",
  "numpy",

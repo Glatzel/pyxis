@@ -251,7 +251,7 @@ jobs:
 
       - name: build python (dist)
         if: ${{ inputs.build-dist}}
-        run: ./scripts/py-build-wheel.ps1 -config dist
+        run: ./scripts/build-wheel.ps1 -config dist
 
       - name: upload whl
         uses: actions/upload-artifact@v4

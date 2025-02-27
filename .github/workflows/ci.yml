@@ -161,7 +161,7 @@ jobs:
       - run: echo "out cache."
 
   # region check
-  cargo-test:
+  cargo-test-windows:
     needs: out-cache
     runs-on: windows-latest
     steps:

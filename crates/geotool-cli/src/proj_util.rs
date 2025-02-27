@@ -17,7 +17,8 @@ pub fn init_proj_builder() -> proj::ProjBuilder {
             tracing::info!("proj.db is not found. Use bundled file.");
             #[cfg(target_os = "windows")]
             {
-                let mut db_file = std::fs::File::create("proj.db").unwrap();
+                tracing::info!("Write proj.db");
+                let mut db_file = std::fs::File::create(exe_root.clone().join("proj.db")).unwrap();
                 db_file.write_all(PROJ_DB).unwrap();
             }
         }

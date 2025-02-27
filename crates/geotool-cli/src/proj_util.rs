@@ -11,14 +11,17 @@ pub fn init_proj_builder() -> proj::ProjBuilder {
         builder.set_search_paths(PathBuf::from(proj_data)).unwrap();
     } else {
         tracing::info!("PROJ_DATA environment variable is not found");
-        let exe_root = std::env::current_exe().unwrap();
-        exe_root.parent().unwrap();
-        if !exe_root.clone().join("proj.db").exists() {
+        let exe_path = std::env::current_exe().unwrap();
+        let exe_root = exe_path.parent().unwrap();
+        if !exe_root.join("proj.db").exists() {
             tracing::info!("proj.db is not found. Use bundled file.");
             #[cfg(target_os = "windows")]
             {
-                tracing::info!("Write proj.db");
-                let mut db_file = std::fs::File::create(exe_root.clone().join("proj.db")).unwrap();
+                tracing::info!(
+                    "Write proj.d to: {}",
+                    exe_root.join("proj.db").to_str().unwrap()
+                );
+                let mut db_file = std::fs::File::create(exe_root.join("proj.db")).unwrap();
                 db_file.write_all(PROJ_DB).unwrap();
             }
         }

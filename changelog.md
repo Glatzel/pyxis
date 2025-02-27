@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.8] - 2025-02-27
+
+### Added
+
+- Add vcpkg baseline and specify proj version by @Glatzel in [#107](https://github.com/Glatzel/rs-geotool/pull/107)
+
+### Changed
+
+- Embed proj.db into cli by @Glatzel in [#109](https://github.com/Glatzel/rs-geotool/pull/109)
+
 ## [0.0.7] - 2025-02-26
 
 ### Changed
@@ -133,6 +143,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/rs-geotool/pull/14)
 
+[0.0.8]: https://github.com/Glatzel/rs-geotool/compare/v0.0.7..v0.0.8
 [0.0.7]: https://github.com/Glatzel/rs-geotool/compare/v0.0.6..v0.0.7
 [0.0.6]: https://github.com/Glatzel/rs-geotool/compare/v0.0.5..v0.0.6
 [0.0.5]: https://github.com/Glatzel/rs-geotool/compare/v0.0.4..v0.0.5

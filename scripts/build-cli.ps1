@@ -65,7 +65,7 @@ elseif ($IsLinux) {
     Write-Output "::endgroup::"
 
     Write-Output "::group::Pack geotool-linux-x64-self-contained.7z"
-    Copy-Item "target/$config/geotool" ./dist/cli/static/geotool
+    Copy-Item "target/$config/geotool" ./dist/cli/static
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
         "-wdist/cli/static" -mtc=on -mta=on "dist/geotool-linux-x64-self-contained.7z" "./dist/cli/static/*"
     Write-Output "::endgroup::"
@@ -79,7 +79,7 @@ elseif ($IsLinux) {
         cargo build --bin geotool
     }
     New-Item ./dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue
-    Copy-Item "target/$config/geotool" ./dist/cli/dynamic/geotool
+    Copy-Item "target/$config/geotool" ./dist/cli/dynamic
     Write-Output "::endgroup::"
 
     Write-Output "::group::Pack geotool-linux-x64.7z"

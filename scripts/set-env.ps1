@@ -1,6 +1,4 @@
-$os = (Get-OperatingSystem).OS
-
-switch -Wildcard ($os) {
+switch -Wildcard ($Env:OS) {
     "*Windows*" {
         $current_dir = Resolve-Path $PWD
         Set-Location $PSScriptRoot

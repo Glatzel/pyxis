@@ -256,7 +256,7 @@ jobs:
       - name: upload whl
         uses: actions/upload-artifact@v4
         with:
-          name: py-geotool
+          name: py-geotool-windows
           path: dist/*.whl
           if-no-files-found: error
 

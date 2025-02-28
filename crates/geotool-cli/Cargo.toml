@@ -22,3 +22,6 @@ tracing-subscriber = { workspace = true }
 float-cmp = { workspace = true }
 assert_cmd = { workspace = true }
 predicates = { workspace = true }
+
+[features]
+static = []

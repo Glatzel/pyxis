@@ -1,7 +1,7 @@
-#[cfg(target_os = "windows")]
+#[cfg(all(target_os = "windows", feature = "static"))]
 use std::io::Write;
 use std::path::PathBuf;
-#[cfg(target_os = "windows")]
+#[cfg(all(target_os = "windows", feature = "static"))]
 const PROJ_DB: &[u8] = include_bytes!("proj.db");
 
 pub fn init_proj_builder() -> proj::ProjBuilder {
@@ -14,8 +14,8 @@ pub fn init_proj_builder() -> proj::ProjBuilder {
         let exe_path = std::env::current_exe().unwrap();
         let exe_root = exe_path.parent().unwrap();
         if !exe_root.join("proj.db").exists() {
-            tracing::warn!("proj.db is not found. Use bundled file.");
-            #[cfg(target_os = "windows")]
+            tracing::warn!("proj.db is not found.");
+            #[cfg(all(target_os = "windows", feature = "static"))]
             {
                 tracing::info!("Write to: {}", exe_root.join("proj.db").to_str().unwrap());
                 let mut db_file = std::fs::File::create(exe_root.join("proj.db")).unwrap();

@@ -254,6 +254,7 @@ jobs:
 
   # region build
   cargo-doc:
+    needs: out-cache
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"

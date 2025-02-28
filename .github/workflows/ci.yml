@@ -268,30 +268,6 @@ jobs:
       - run: echo "out check."
 
   # region build
-  build-py-geotool-win:
-    needs: out-cache
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-ci-win
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-
-      - name: build python (debug)
-        if: ${{!inputs.build-dist}}
-        run: ./scripts/build-wheel.ps1
-
-      - name: build python (dist)
-        if: ${{ inputs.build-dist}}
-        run: ./scripts/build-wheel.ps1 -config dist
-
-      - name: upload whl
-        uses: actions/upload-artifact@v4
-        with:
-          name: py-geotool-windows
-          path: dist/*.whl
-          if-no-files-found: error
-
   build-py-geotool-linux:
     runs-on: ubuntu-latest
     steps:
@@ -315,6 +291,30 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: py-geotool-linux
+          path: dist/*.whl
+          if-no-files-found: error
+
+  build-py-geotool-win:
+    needs: out-cache
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci-win
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: build python (debug)
+        if: ${{!inputs.build-dist}}
+        run: ./scripts/build-wheel.ps1
+
+      - name: build python (dist)
+        if: ${{ inputs.build-dist}}
+        run: ./scripts/build-wheel.ps1 -config dist
+
+      - name: upload whl
+        uses: actions/upload-artifact@v4
+        with:
+          name: py-geotool-windows
           path: dist/*.whl
           if-no-files-found: error
 

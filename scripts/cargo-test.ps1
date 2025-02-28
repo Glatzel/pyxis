@@ -2,7 +2,10 @@ Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
 New-Item ./target/llvm-cov-target/debug -ItemType Directory -ErrorAction SilentlyContinue
-Copy-Item "./vcpkg_deps/vcpkg_installed/static/x64-windows-static/share/proj/proj.db" ./target/llvm-cov-target/debug
+if ($env:OS -like "*Windows*")
+{
+    Copy-Item "./vcpkg_deps/vcpkg_installed/static/x64-windows-static/share/proj/proj.db" ./target/llvm-cov-target/debug
+}
 
 Write-Output "::group::nextest"
 pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --branch nextest

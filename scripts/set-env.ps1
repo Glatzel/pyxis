@@ -16,6 +16,6 @@ if ($IsWindows) {
 }
 if ($IsLinux) {
     pixi install
-    Copy-Item .pixi/envs/default/**/proj.db ./crates/geotool-cli/src/proj.db
+    Copy-Item .pixi/envs/default/share/proj/proj.db ./crates/geotool-cli/src/proj.db
 }
 Set-Location $current_dir

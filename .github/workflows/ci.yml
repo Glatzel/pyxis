@@ -396,6 +396,13 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
+      - name: upload vcpkg
+        uses: actions/upload-artifact@v4
+        with:
+          name: vcpkg-linux
+          path: vcpkg_deps/**
+          if-no-files-found: error
+
       - name: build cli (debug)
         if: ${{!inputs.build-dist}}
         run: ./scripts/build-cli.ps1

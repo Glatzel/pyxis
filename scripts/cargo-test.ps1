@@ -36,7 +36,6 @@ if ($IsWindows) {
     exit $code
 }
 elseif ($IsLinux) {
-
     Write-Output "::group::nextest"
     cargo +nightly llvm-cov --no-report --all-features --workspace --branch nextest
     $code = $LASTEXITCODE

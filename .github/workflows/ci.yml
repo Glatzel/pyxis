@@ -19,6 +19,9 @@ on:
       - ready_for_review
     paths-ignore:
       - "*.md"
+  schedule:
+    - cron: 0 16 * * *
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
@@ -182,7 +185,6 @@ jobs:
       - run: choco install pkgconfiglite
       - uses: ./.github/actions/setup-ci-win
       - uses: dtolnay/rust-toolchain@nightly
-      - uses: Swatinem/rust-cache@v2
 
       - name: Install nextest
         uses: taiki-e/install-action@nextest

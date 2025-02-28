@@ -14,7 +14,7 @@ python = "3.11.*"
 [feature.build.dependencies]
 maturin = "*"
 pip = "*"
-proj = "9.4.1"
+proj = "9.4.*"
 [feature.py-deps.dependencies]
 lazy-loader = "*"
 nomkl = "*"

@@ -11,7 +11,6 @@ Remove-Item ./dist/geotool*.7z -Recurse -Force -ErrorAction SilentlyContinue
 Write-Host "Build in $config mode."
 
 if ($IsWindows) {
-
     Write-Output "::group::Build static"
     if ($config -ne "debug") {
         pixi run cargo build --profile $config --bin geotool --features static

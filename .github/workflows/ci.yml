@@ -106,7 +106,6 @@ jobs:
           path: .pixi
           key: ${{steps.check-cache.outputs.cache-primary-key}}
 
-
   cache-vcpkg:
     runs-on: windows-latest
     steps:
@@ -136,7 +135,7 @@ jobs:
           key: ${{steps.restore-vcpkg.outputs.cache-primary-key}}
 
   out-cache:
-    needs: [cache-pixi,cache-vcpkg]
+    needs: [cache-pixi, cache-vcpkg]
     runs-on: ubuntu-latest
     steps:
       - run: echo "out cache."
@@ -388,7 +387,7 @@ jobs:
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
-          name: geotool-cli-windows
+          name: geotool-cli-linux
           path: dist/*.7z
           if-no-files-found: error
 

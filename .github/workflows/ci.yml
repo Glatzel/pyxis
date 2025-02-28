@@ -107,7 +107,10 @@ jobs:
           key: ${{steps.check-cache.outputs.cache-primary-key}}
 
   cache-vcpkg:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{ matrix.machine }}
     steps:
       - uses: actions/checkout@v4
 
@@ -340,10 +343,17 @@ jobs:
           if-no-files-found: error
 
   build-geotool-cli-linux:
+    needs: out-cache
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      - run: choco install pkgconfiglite
+      - name: restore vcpkg
+        uses: actions/cache/restore@v4
+        with:
+          path: ./vcpkg_deps/vcpkg_installed
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg_deps/vcpkg.json') }}
 
       - name: build cli (debug)
         if: ${{!inputs.build-dist}}

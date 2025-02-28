@@ -2,6 +2,7 @@ Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
 New-Item ./target/llvm-cov-target/debug -ItemType Directory -ErrorAction SilentlyContinue
+
 $os= Get-ComputerInfo -Property OsName
 switch -Wildcard ($os) {
     "*Windows*" {

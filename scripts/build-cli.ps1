@@ -10,7 +10,8 @@ Remove-Item dist/cli -Recurse -ErrorAction SilentlyContinue
 Remove-Item ./dist/geotool*.7z -Recurse -Force -ErrorAction SilentlyContinue
 Write-Host "Build in $config mode."
 
-switch -Wildcard ($Env:OS) {
+$os= Get-ComputerInfo -Property OsName
+switch -Wildcard ($os) {
     "*Windows*" {
         Write-Output "::group::Build static"
         if ($config -ne "debug") {
@@ -72,7 +73,7 @@ switch -Wildcard ($Env:OS) {
         # Write-Output "::endgroup::"
     }    
     default {
-        Write-Error "Unsupported system $Env:OS"
+        Write-Error "Unsupported system $os"
         exit 1
     }
 }

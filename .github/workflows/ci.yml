@@ -238,8 +238,8 @@ jobs:
       - cargo-machete
       - cargo-test-linux
       - cargo-test-win
-      - ruff-lint
       - pytest-win
+      - ruff-lint
     runs-on: ubuntu-latest
     steps:
       - run: echo "out check."
@@ -358,7 +358,7 @@ jobs:
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
-          name: geotool-cli-windows
+          name: geotool-cli-linux
           path: dist/*.7z
           if-no-files-found: error
 
@@ -387,7 +387,7 @@ jobs:
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
-          name: geotool-cli-linux
+          name: geotool-cli-win
           path: dist/*.7z
           if-no-files-found: error
 
@@ -396,11 +396,11 @@ jobs:
 
   out-build:
     needs:
-      - cargo-doc
+      - build-geotool-cli-linux
       - build-geotool-cli-win
       - build-py-geotool-linux
       - build-py-geotool-win
-      - build-py-geotool-linux
+      - cargo-doc
       - sphinx
     runs-on: ubuntu-latest
     steps:

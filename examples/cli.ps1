@@ -1,9 +1,16 @@
 Set-Location $PSScriptRoot
 Set-Location ..
 
-if ($IsWindows) { $geotool = "./geotool.exe" }
-elseif ($IsLinux) { $geotool = "./geotool" }
-foreach ($link in "static", "dynamic") {
+if ($IsWindows) {
+    $geotool = "./geotool.exe"
+    $links = "static", "dynamic"
+}
+elseif ($IsLinux) {
+    $geotool = "./geotool" 
+    $links = "static" 
+}
+
+foreach ($link in $links) {
     Set-Location "dist/cli/$link"
     Write-Output "::group::Run $link cli"
 

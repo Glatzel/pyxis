@@ -69,31 +69,6 @@ elseif ($IsLinux) {
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
         "-wdist/cli/static" -mtc=on -mta=on "dist/geotool-linux-x64-self-contained.7z" "./dist/cli/static/*"
     Write-Output "::endgroup::"
-
-    Write-Output "::group::Build dynamic"
-    & $PSScriptRoot/set-env.ps1 -link dynamic
-    if ($config -ne "debug") {
-        cargo build --profile $config --bin geotool
-    }
-    else {
-        cargo build --bin geotool
-    }
-    New-Item ./dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue
-    Copy-Item "target/$config/geotool" ./dist/cli/dynamic
-    Write-Output "::endgroup::"
-
-    Write-Output "::group::Pack geotool-linux-x64.7z"
-    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
-        "-wdist/cli/dynamic" -mtc=on -mta=on "dist/geotool-linux-x64.7z" "./dist/cli/dynamic/geotool"
-    Write-Output "::endgroup::"
-
-    Write-Output "::group::Pack geotool-linux-x64-proj.7z"
-    Copy-Item ./vcpkg_deps/vcpkg_installed/dynamic/x64-linux/lib/*.so* ./dist/cli/dynamic
-    Copy-Item ./vcpkg_deps/vcpkg_installed/dynamic/x64-linux/share/proj/proj.db ./dist/cli/dynamic
-    New-Item ./dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue
-    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
-        "-wdist/cli/dynamic" -mtc=on -mta=on "dist/geotool-linux-x64-proj.7z" "./dist/cli/dynamic/*"
-    Write-Output "::endgroup::"
 }    
 else {
     Write-Error "Unsupported system $os"

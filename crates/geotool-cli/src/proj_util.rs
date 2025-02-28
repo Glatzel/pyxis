@@ -14,7 +14,7 @@ pub fn init_proj_builder() -> proj::ProjBuilder {
         let exe_path = std::env::current_exe().unwrap();
         let exe_root = exe_path.parent().unwrap();
         if !exe_root.join("proj.db").exists() {
-            tracing::warn!("proj.db is not found. Use bundled file.");
+            tracing::warn!("proj.db is not found.");
             #[cfg(all(target_os = "windows", feature = "static"))]
             {
                 tracing::info!("Write to: {}", exe_root.join("proj.db").to_str().unwrap());

@@ -161,6 +161,38 @@ jobs:
       - run: echo "out cache."
 
   # region check
+  cargo-test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
+        with:
+          run-install: false
+
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
+      - name: cargo-test
+        run: ./scripts/cargo-test.ps1
+
+      - name: Upload results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN  }}
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
   cargo-test-win:
     needs: out-cache
     runs-on: windows-latest
@@ -260,6 +292,32 @@ jobs:
           path: dist/*.whl
           if-no-files-found: error
 
+  build-py-geotool-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
+        with:
+          cache: false
+          environments: default
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: build python (debug)
+        if: ${{!inputs.build-dist}}
+        run: ./scripts/build-wheel.ps1
+
+      - name: build python (dist)
+        if: ${{ inputs.build-dist}}
+        run: ./scripts/build-wheel.ps1 -config dist
+
+      - name: upload whl
+        uses: actions/upload-artifact@v4
+        with:
+          name: py-geotool-linux
+          path: dist/*.whl
+          if-no-files-found: error
+
   sphinx:
     runs-on: ubuntu-latest
     steps:
@@ -315,6 +373,7 @@ jobs:
   out-build:
     needs:
       - build-geotool-cli-win
+      - build-py-geotool-linux
       - build-py-geotool-win
       - sphinx
     runs-on: ubuntu-latest

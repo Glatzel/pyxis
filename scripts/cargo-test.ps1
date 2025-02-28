@@ -2,7 +2,8 @@ Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
 New-Item ./target/llvm-cov-target/debug -ItemType Directory -ErrorAction SilentlyContinue
-switch -Wildcard ($Env:OS) {
+$os= Get-ComputerInfo -Property OsName
+switch -Wildcard ($os) {
     "*Windows*" {
         Copy-Item "./vcpkg_deps/vcpkg_installed/static/x64-windows-static/share/proj/proj.db" ./target/llvm-cov-target/debug
         Write-Output "::group::nextest"
@@ -69,8 +70,7 @@ switch -Wildcard ($Env:OS) {
         exit $code
     }
     default {
-        Write-Output $Env:OS
-        Write-Error "Unsupported system $Env:OS"
+        Write-Error "Unsupported system $os"
         exit 1
     }
 }

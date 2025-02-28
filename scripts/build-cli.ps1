@@ -9,9 +9,10 @@ Set-Location ..
 Remove-Item dist/cli -Recurse -ErrorAction SilentlyContinue
 Remove-Item ./dist/geotool*.7z -Recurse -Force -ErrorAction SilentlyContinue
 Write-Host "Build in $config mode."
-Write-Output "::group::Build static"
+
 switch -Wildcard ($Env:OS) {
     "*Windows*" {
+        Write-Output "::group::Build static"
         if ($config -ne "debug") {
             pixi run cargo build --profile $config --bin geotool --features static
         }
@@ -43,6 +44,35 @@ switch -Wildcard ($Env:OS) {
         Write-Output "::endgroup::"
     }
     "*Linux*" {
-        
+        Write-Output "::group::Build static"
+        if ($config -ne "debug") {
+            cargo build --profile $config --bin geotool --features static
+        }
+        else {
+            cargo build --bin geotool --features static
+        }
+        New-Item ./dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
+        Copy-Item "target/$config/*" ./dist/cli/static
+        7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
+            "-wdist/cli/static" -mtc=on -mta=on "dist/geotool-windows-x64-self-contained.7z" "./dist/cli/static/*"
+        Write-Output "::endgroup::"
+
+        # Write-Output "::group::Build dynamic"
+        # if ($config -ne "debug") {
+        #     cargo build --profile $config --bin geotool
+        # }
+        # else {
+        #     cargo build --bin geotool
+        # }
+        # New-Item ./dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue
+        # 7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
+        #     "-wdist/cli/dynamic" -mtc=on -mta=on "dist/geotool-windows-x64.7z" "./dist/cli/dynamic/geotool.exe"
+        # 7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
+        #     "-wdist/cli/dynamic" -mtc=on -mta=on "dist/geotool-windows-x64.7z" "./dist/cli/dynamic/geotool.exe"
+        # Write-Output "::endgroup::"
+    }    
+    default {
+        Write-Error "Unsupported system $Env:OS"
+        exit 1
     }
 }

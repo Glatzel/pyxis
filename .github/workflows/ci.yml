@@ -179,6 +179,7 @@ jobs:
 
       - name: cargo-test
         run: ./scripts/cargo-test.ps1
+        shell: pwsh
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
@@ -283,10 +284,12 @@ jobs:
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
         run: ./scripts/build-wheel.ps1
+        shell: pwsh
 
       - name: build python (dist)
         if: ${{ inputs.build-dist}}
         run: ./scripts/build-wheel.ps1 -config dist
+        shell: pwsh
 
       - name: upload whl
         uses: actions/upload-artifact@v4

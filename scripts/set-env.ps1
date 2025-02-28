@@ -1,5 +1,5 @@
 param (
-    [ValidateSet("static", "dynamic")]
+    [ValidateSet("static", "dynamic", "bundled")]
     [string]$link = "static"
 )
 if ($IsWindows) {

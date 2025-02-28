@@ -69,7 +69,7 @@ elseif ($IsLinux) {
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
         "-wdist/cli/static" -mtc=on -mta=on "dist/geotool-linux-x64-self-contained.7z" "./dist/cli/static/*"
     Write-Output "::endgroup::"
-}    
+}
 else {
     Write-Error "Unsupported system $os"
     exit 1

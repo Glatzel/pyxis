@@ -6,8 +6,8 @@ if ($IsWindows) {
     $links = "static", "dynamic"
 }
 elseif ($IsLinux) {
-    $geotool = "./geotool" 
-    $links = "static" 
+    $geotool = "./geotool"
+    $links = "static"
 }
 
 foreach ($link in $links) {

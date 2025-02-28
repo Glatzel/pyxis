@@ -15,6 +15,7 @@ if ($IsWindows) {
     Copy-Item ./vcpkg_deps/vcpkg_installed/static/x64-windows-static/share/proj/proj.db ./crates/geotool-cli/src
 }
 if ($IsLinux) {
+    pixi install
     Copy-Item .pixi/envs/default/Lib/share/proj/proj.db ./crates/geotool-cli/src
 }
 Set-Location $current_dir

@@ -40,25 +40,6 @@ jobs:
         run: ./scripts/cargo-clippy.ps1
         shell: pwsh
 
-  cargo-doc:
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-
-      - name: cargo-doc
-        run: ./scripts/cargo-doc.ps1
-        shell: pwsh
-
-      - name: upload doc
-        uses: actions/upload-artifact@v4
-        with:
-          name: rust-doc
-          path: dist/*.7z
-          if-no-files-found: error
-
   cargo-fmt:
     runs-on: ubuntu-latest
     env:
@@ -258,7 +239,6 @@ jobs:
     needs:
       - cargo-bench
       - cargo-clippy
-      - cargo-doc
       - cargo-fmt
       - cargo-machete
       - cargo-test-linux
@@ -270,6 +250,24 @@ jobs:
       - run: echo "out check."
 
   # region build
+  cargo-doc:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-Dwarnings"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: cargo-doc
+        run: ./scripts/cargo-doc.ps1
+        shell: pwsh
+
+      - name: upload doc
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-doc
+          path: dist/*.7z
+          if-no-files-found: error
   build-py-geotool-linux:
     runs-on: ubuntu-latest
     steps:
@@ -345,6 +343,33 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
+  build-geotool-cli-linux:
+    needs: out-cache
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      
+      - name: build cli (debug)
+        if: ${{!inputs.build-dist}}
+        run: ./scripts/build-cli.ps1
+        shell: pwsh
+
+      - name: build cli(dist)
+        if: ${{inputs.build-dist}}
+        run: ./scripts/build-cli.ps1 -config dist
+        shell: pwsh
+
+      - name: upload cli
+        uses: actions/upload-artifact@v4
+        with:
+          name: geotool-cli-windows
+          path: dist/*.7z
+          if-no-files-found: error
+
+      - name: test cli
+        run: ./examples/cli.ps1
+        shell: pwsh
 
   build-geotool-cli-win:
     needs: out-cache
@@ -376,9 +401,11 @@ jobs:
 
   out-build:
     needs:
+      - cargo-doc
       - build-geotool-cli-win
       - build-py-geotool-linux
       - build-py-geotool-win
+      - build-py-geotool-linux
       - sphinx
     runs-on: ubuntu-latest
     steps:

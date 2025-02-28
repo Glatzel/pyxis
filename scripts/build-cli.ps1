@@ -87,7 +87,7 @@ elseif ($IsLinux) {
         "-wdist/cli/dynamic" -mtc=on -mta=on "dist/geotool-linux-x64.7z" "./dist/cli/dynamic/geotool"
     Write-Output "::endgroup::"
 
-    Write-Output "::group::geotool-linux-x64-proj.7z"
+    Write-Output "::group::Pack geotool-linux-x64-proj.7z"
     Copy-Item ./vcpkg_deps/vcpkg_installed/dynamic/x64-linux/bin/*.so ./dist/cli/dynamic
     Copy-Item ./vcpkg_deps/vcpkg_installed/dynamic/x64-linux/share/proj/proj.db ./dist/cli/dynamic
     New-Item ./dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue

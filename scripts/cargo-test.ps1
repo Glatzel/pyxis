@@ -69,6 +69,7 @@ switch -Wildcard ($Env:OS) {
         exit $code
     }
     default {
+        Write-Output "system: $Env:OS"
         Write-Error "Unsupported system $Env:OS"
         exit 1
     }

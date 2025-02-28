@@ -277,6 +277,7 @@ jobs:
 
       - name: sphinx build
         run: ./scripts/py-sphinx.ps1
+        shell: pwsh
 
       - name: upload doc
         uses: actions/upload-artifact@v4

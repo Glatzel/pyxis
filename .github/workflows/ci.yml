@@ -360,13 +360,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/setup-ci-linux
 
-      - name: upload vcpkg
-        uses: actions/upload-artifact@v4
-        with:
-          name: vcpkg-linux
-          path: vcpkg_deps/**
-          if-no-files-found: error
-
       - name: build cli (debug)
         if: ${{!inputs.build-dist}}
         run: ./scripts/build-cli.ps1

@@ -147,6 +147,7 @@ jobs:
 
   # region check
   cargo-test-linux:
+    needs: out-cache
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

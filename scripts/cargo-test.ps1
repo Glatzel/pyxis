@@ -1,9 +1,8 @@
 Set-Location $PSScriptRoot
 Set-Location ..
 New-Item ./target/llvm-cov-target/debug -ItemType Directory -ErrorAction SilentlyContinue
-
+& $PSScriptRoot/set-env.ps1
 if ($IsWindows) {
-    & $PSScriptRoot/set-env.ps1
     Copy-Item "./vcpkg_deps/vcpkg_installed/static/x64-windows-static/share/proj/proj.db" ./target/llvm-cov-target/debug
     Write-Output "::group::nextest"
     pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --branch nextest
@@ -37,8 +36,7 @@ if ($IsWindows) {
     exit $code
 }
 elseif ($IsLinux) {
-    & $PSScriptRoot/set-env.ps1
-    Copy-Item "./vcpkg_deps/vcpkg_installed/static/x64-linux-static/share/proj/proj.db" ./target/llvm-cov-target/debug
+    
     Write-Output "::group::nextest"
     cargo +nightly llvm-cov --no-report --all-features --workspace --branch nextest
     $code = $LASTEXITCODE

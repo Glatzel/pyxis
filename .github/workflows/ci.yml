@@ -161,7 +161,7 @@ jobs:
       - run: echo "out cache."
 
   # region check
-  cargo-test-windows:
+  cargo-test-win:
     needs: out-cache
     runs-on: windows-latest
     steps:
@@ -193,7 +193,7 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  pytest:
+  pytest-win:
     needs: out-cache
     runs-on: windows-latest
     steps:
@@ -228,15 +228,15 @@ jobs:
       - cargo-doc
       - cargo-fmt
       - cargo-machete
-      - cargo-test-windows
+      - cargo-test-win
       - ruff-lint
-      - pytest
+      - pytest-win
     runs-on: ubuntu-latest
     steps:
       - run: echo "out check."
 
   # region build
-  build-py-geotool:
+  build-py-geotool-win:
     needs: out-cache
     runs-on: windows-latest
     steps:
@@ -284,7 +284,7 @@ jobs:
           if-no-files-found: error
 
 
-  build-geotool-cli:
+  build-geotool-cli-win:
     needs: out-cache
     runs-on: windows-latest
     steps:
@@ -314,8 +314,8 @@ jobs:
 
   out-build:
     needs:
-      - build-geotool-cli
-      - build-py-geotool
+      - build-geotool-cli-win
+      - build-py-geotool-win
       - sphinx
     runs-on: ubuntu-latest
     steps:

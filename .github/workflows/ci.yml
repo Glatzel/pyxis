@@ -54,10 +54,7 @@ jobs:
           key: ${{steps.check-cache.outputs.cache-primary-key}}
 
   cache-vcpkg:
-    strategy:
-      matrix:
-        machine: [windows-latest, ubuntu-latest]
-    runs-on: ${{ matrix.machine }}
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -98,7 +95,6 @@ jobs:
 
   cargo-clippy:
     runs-on: ubuntu-latest
-    needs: out-cache
     env:
       RUSTFLAGS: "-Dwarnings"
     steps:
@@ -111,7 +107,6 @@ jobs:
 
   cargo-fmt:
     runs-on: ubuntu-latest
-    needs: out-cache
     env:
       RUSTFLAGS: "-Dwarnings"
     steps:
@@ -127,7 +122,6 @@ jobs:
 
   cargo-machete:
     runs-on: ubuntu-latest
-    needs: out-cache
     steps:
       - uses: actions/checkout@v4
       - name: Machete
@@ -135,7 +129,6 @@ jobs:
 
   cargo-bench:
     runs-on: ubuntu-latest
-    needs: out-cache
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -150,8 +143,8 @@ jobs:
         with:
           run: cargo codspeed run
           token: ${{ secrets.CODSPEED_TOKEN }}
+
   cargo-test-linux:
-    needs: out-cache
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -257,7 +250,6 @@ jobs:
 
   # region build
   cargo-doc:
-    needs: out-cache
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"
@@ -353,7 +345,6 @@ jobs:
           if-no-files-found: error
 
   build-geotool-cli-linux:
-    needs: out-cache
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

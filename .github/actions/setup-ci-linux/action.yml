@@ -1,9 +1,8 @@
-name: Setup CI Windows
+name: Setup CI linux
 runs:
   using: "composite"
   steps:
-    - name: restore vcpkg
-      uses: actions/cache/restore@v4
+    - name: Set up pixi
+      uses: prefix-dev/setup-pixi@v0.8.1
       with:
-        path: ./vcpkg_deps/vcpkg_installed
-        key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg_deps/vcpkg.json') }}
+        run-install: false

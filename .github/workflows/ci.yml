@@ -260,6 +260,7 @@ jobs:
       - cargo-doc
       - cargo-fmt
       - cargo-machete
+      - cargo-test-linux
       - cargo-test-win
       - ruff-lint
       - pytest-win

@@ -1,10 +1,10 @@
 Set-Location $PSScriptRoot
 Set-Location ..
+& $PSScriptRoot/set-env.ps1
 if($env:CI){
     cargo doc --no-deps --all-features --package geotool-algorithm
 }
 else{
-    & $PSScriptRoot/set-env.ps1
     pixi run cargo doc --no-deps --all-features --package geotool-algorithm
 }
 

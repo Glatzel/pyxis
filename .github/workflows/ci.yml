@@ -25,59 +25,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # region global
-  ruff-lint:
-    uses: Glatzel/template/.github/workflows/ruff.yml@main
-
-  cargo-clippy:
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - name: cargo-clippy
-        run: ./scripts/cargo-clippy.ps1
-        shell: pwsh
-
-  cargo-fmt:
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
-        with:
-          components: rustfmt
-
-      - name: cargo-fmt
-        run: ./scripts/cargo-fmt.ps1
-        shell: pwsh
-
-  cargo-machete:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Machete
-        uses: bnjbvr/cargo-machete@main
-
-  cargo-bench:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-      - run: cargo install cargo-codspeed --locked
-
-      - name: Build the benchmark target(s)
-        run: cargo codspeed build
-
-      - name: Run the benchmarks
-        uses: CodSpeedHQ/action@v3
-        with:
-          run: cargo codspeed run
-          token: ${{ secrets.CODSPEED_TOKEN }}
-
   # region cache
   cache-pixi:
     runs-on: windows-latest
@@ -109,7 +56,7 @@ jobs:
   cache-vcpkg:
     strategy:
       matrix:
-        machine: [windows-latest,ubuntu-latest]
+        machine: [windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.machine }}
     steps:
       - uses: actions/checkout@v4
@@ -146,6 +93,61 @@ jobs:
       - run: echo "out cache."
 
   # region check
+  ruff-lint:
+    uses: Glatzel/template/.github/workflows/ruff.yml@main
+
+  cargo-clippy:
+    runs-on: ubuntu-latest
+    needs: out-cache
+    env:
+      RUSTFLAGS: "-Dwarnings"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: cargo-clippy
+        run: ./scripts/cargo-clippy.ps1
+        shell: pwsh
+
+  cargo-fmt:
+    runs-on: ubuntu-latest
+    needs: out-cache
+    env:
+      RUSTFLAGS: "-Dwarnings"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+
+      - name: cargo-fmt
+        run: ./scripts/cargo-fmt.ps1
+        shell: pwsh
+
+  cargo-machete:
+    runs-on: ubuntu-latest
+    needs: out-cache
+    steps:
+      - uses: actions/checkout@v4
+      - name: Machete
+        uses: bnjbvr/cargo-machete@main
+
+  cargo-bench:
+    runs-on: ubuntu-latest
+    needs: out-cache
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-codspeed --locked
+
+      - name: Build the benchmark target(s)
+        run: cargo codspeed build
+
+      - name: Run the benchmarks
+        uses: CodSpeedHQ/action@v3
+        with:
+          run: cargo codspeed run
+          token: ${{ secrets.CODSPEED_TOKEN }}
   cargo-test-linux:
     needs: out-cache
     runs-on: ubuntu-latest

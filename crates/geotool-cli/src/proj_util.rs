@@ -1,7 +1,7 @@
 #[cfg(feature = "static")]
 use std::io::Write;
 use std::path::PathBuf;
-#[cfg(all(feature = "static"))]
+#[cfg(feature = "static")]
 const PROJ_DB: &[u8] = include_bytes!("proj.db");
 
 pub fn init_proj_builder() -> proj::ProjBuilder {

@@ -10,7 +10,6 @@ Remove-Item dist/cli -Recurse -ErrorAction SilentlyContinue
 Remove-Item ./dist/geotool*.7z -Recurse -Force -ErrorAction SilentlyContinue
 Write-Host "Build in $config mode."
 
-$os = Get-ComputerInfo -Property OsName
 if ($IsWindows) {
 
     Write-Output "::group::Build static"

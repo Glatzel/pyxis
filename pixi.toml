@@ -37,5 +37,3 @@ sphinx-copybutton = "*"
 
 [environments]
 default = ["py311", "build", "py-deps", "py-test", "py-doc"]
-py311 = ["py311", "build", "py-deps", "py-test", "py-doc"]
-py312 = ["py312", "build", "py-deps", "py-test", "py-doc"]

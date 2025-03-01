@@ -1,7 +1,6 @@
 param (
     [ValidateSet("dist", "release", "debug")]
-    [string]$config = "debug",
-    [string]$version = "default"
+    [string]$config = "debug"
 )
 
 Set-Location $PSScriptRoot
@@ -11,10 +10,10 @@ Remove-Item geotool/geotool.pyd -ErrorAction SilentlyContinue
 
 Write-Host "Build in $config mode."
 if ($config -ne "debug") {
-    pixi run -e $version cargo build --profile $config --lib
-    pixi run -e $version maturin develop --profile $config
+    pixi run cargo build --profile $config --lib
+    pixi run maturin develop --profile $config
 }
 else {
-    pixi run -e $version cargo build --lib
-    pixi run -e $version maturin develop
+    pixi run cargo build --lib
+    pixi run maturin develop
 }

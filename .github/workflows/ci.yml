@@ -27,21 +27,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  get-pixi-envs:
-    runs-on: ubuntu-latest
-    outputs:
-      versions: ${{steps.main.outputs.versions}}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.1
-        with:
-          run-install: false
-      - run: |
-          v=$(pixi info --json | jq -c  '[.environments_info.[] | select(.name | startswith("py")).name]')
-          echo "versions=${v}"
-          echo "versions=${v}" >> "$GITHUB_OUTPUT"
-        id: main
   cache-vcpkg:
     runs-on: windows-latest
     steps:
@@ -195,22 +180,18 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   pytest-linux:
-    needs: [get-pixi-envs]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: ${{fromJSON(needs.get-pixi-envs.outputs.versions)}}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-linux
       - uses: dtolnay/rust-toolchain@stable
 
       - name: dev python
-        run: ./scripts/py-develop.ps1 -version ${{matrix.version}}
+        run: ./scripts/py-develop.ps1
         shell: pwsh
 
       - name: test python
-        run: ./scripts/py-pytest.ps1 -version ${{matrix.version}}
+        run: ./scripts/py-pytest.ps1
         shell: pwsh
 
       - name: Upload results to Codecov
@@ -227,21 +208,18 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   pytest-win:
-    needs: [out-cache, get-pixi-envs]
+    needs: out-cache
     runs-on: windows-latest
-    strategy:
-      matrix:
-        version: ${{fromJSON(needs.get-pixi-envs.outputs.versions)}}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
       - uses: dtolnay/rust-toolchain@stable
 
       - name: dev python
-        run: ./scripts/py-develop.ps1 -version ${{matrix.version}}
+        run: ./scripts/py-develop.ps1
 
       - name: test python
-        run: ./scripts/py-pytest.ps1 -version ${{matrix.version}}
+        run: ./scripts/py-pytest.ps1
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
@@ -293,11 +271,7 @@ jobs:
           if-no-files-found: error
 
   build-py-geotool-linux:
-    needs: [get-pixi-envs]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: ${{fromJSON(needs.get-pixi-envs.outputs.versions)}}
     steps:
       - uses: actions/checkout@v4
       - name: Set up pixi
@@ -320,16 +294,13 @@ jobs:
       - name: upload whl
         uses: actions/upload-artifact@v4
         with:
-          name: py-geotool-linux-${{matrix.version}}
+          name: py-geotool-linux
           path: dist/*.whl
           if-no-files-found: error
 
   build-py-geotool-win:
-    needs: [out-cache, get-pixi-envs]
+    needs: out-cache
     runs-on: windows-latest
-    strategy:
-      matrix:
-        version: ${{fromJSON(needs.get-pixi-envs.outputs.versions)}}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
@@ -346,7 +317,7 @@ jobs:
       - name: upload whl
         uses: actions/upload-artifact@v4
         with:
-          name: py-geotool-windows-${{matrix.version}}
+          name: py-geotool-windows
           path: dist/*.whl
           if-no-files-found: error
 

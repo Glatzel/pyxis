@@ -3,40 +3,26 @@ use pyo3::prelude::*;
 use pyo3::types::PyTuple;
 use pyo3::{PyObject, Python, pyfunction};
 use rayon::prelude::*;
-
-#[pyfunction]
-pub fn py_bd09_to_gcj02(
-    py: Python,
-    lon_py: PyObject,
-    lat_py: PyObject,
-) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(lon_ref), Ok(lat_ref)) = (
-        lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
-        lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
-    ) {
-        let lon_array = unsafe { lon_ref.as_slice_mut().unwrap() };
-        let lat_array = unsafe { lat_ref.as_slice_mut().unwrap() };
-        lon_array
-            .par_iter_mut()
-            .zip(lat_array.par_iter_mut())
-            .for_each(|(x, y)| {
-                (*x, *y) = geotool_algorithm::bd09_to_gcj02(*x, *y);
-            });
-        (lon_ref, lat_ref).into_pyobject(py)
-    } else if let (Ok(lon), Ok(lat)) = (lon_py.extract::<f64>(py), lat_py.extract::<f64>(py)) {
-        geotool_algorithm::bd09_to_gcj02(lon, lat).into_pyobject(py)
-    } else {
-        Err(pyo3::exceptions::PyTypeError::new_err(
-            "Input must be a float or a 1D numpy.ndarray of floats.",
-        ))
+fn get_crypto_fn(from: &str, to: &str) -> miette::Result<impl Fn(f64, f64) -> (f64, f64)> {
+    match (from.to_lowercase().as_str(), to.to_lowercase().as_str()) {
+        ("bd09", "gcj02") => Ok(geotool_algorithm::bd09_to_gcj02 as fn(f64, f64) -> (f64, f64)),
+        ("bd09", "wgs84") => Ok(geotool_algorithm::bd09_to_wgs84 as fn(f64, f64) -> (f64, f64)),
+        ("gcj02", "bd09") => Ok(geotool_algorithm::gcj02_to_bd09 as fn(f64, f64) -> (f64, f64)),
+        ("gcj02", "wgs84") => Ok(geotool_algorithm::gcj02_to_wgs84 as fn(f64, f64) -> (f64, f64)),
+        ("wgs84", "bd09") => Ok(geotool_algorithm::wgs84_to_bd09 as fn(f64, f64) -> (f64, f64)),
+        ("wgs84", "gcj02") => Ok(geotool_algorithm::wgs84_to_gcj02 as fn(f64, f64) -> (f64, f64)),
+        _ => miette::bail!("unknow from to"),
     }
 }
 #[pyfunction]
-pub fn py_bd09_to_wgs84(
+pub fn py_crypto(
     py: Python,
     lon_py: PyObject,
     lat_py: PyObject,
+    from: String,
+    to: String,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
+    let crypto_fn = get_crypto_fn(&from, &to).unwrap();
     if let (Ok(lon_ref), Ok(lat_ref)) = (
         lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
         lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -47,119 +33,11 @@ pub fn py_bd09_to_wgs84(
             .par_iter_mut()
             .zip(lat_array.par_iter_mut())
             .for_each(|(x, y)| {
-                (*x, *y) = geotool_algorithm::bd09_to_wgs84(*x, *y);
+                (*x, *y) = crypto_fn(*x, *y);
             });
         (lon_ref, lat_ref).into_pyobject(py)
     } else if let (Ok(lon), Ok(lat)) = (lon_py.extract::<f64>(py), lat_py.extract::<f64>(py)) {
-        geotool_algorithm::bd09_to_wgs84(lon, lat).into_pyobject(py)
-    } else {
-        Err(pyo3::exceptions::PyTypeError::new_err(
-            "Input must be a float or a 1D numpy.ndarray of floats.",
-        ))
-    }
-}
-#[pyfunction]
-pub fn py_gcj02_to_bd09(
-    py: Python,
-    lon_py: PyObject,
-    lat_py: PyObject,
-) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(lon_ref), Ok(lat_ref)) = (
-        lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
-        lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
-    ) {
-        let lon_array = unsafe { lon_ref.as_slice_mut().unwrap() };
-        let lat_array = unsafe { lat_ref.as_slice_mut().unwrap() };
-        lon_array
-            .par_iter_mut()
-            .zip(lat_array.par_iter_mut())
-            .for_each(|(x, y)| {
-                (*x, *y) = geotool_algorithm::gcj02_to_bd09(*x, *y);
-            });
-        (lon_ref, lat_ref).into_pyobject(py)
-    } else if let (Ok(lon), Ok(lat)) = (lon_py.extract::<f64>(py), lat_py.extract::<f64>(py)) {
-        geotool_algorithm::gcj02_to_bd09(lon, lat).into_pyobject(py)
-    } else {
-        Err(pyo3::exceptions::PyTypeError::new_err(
-            "Input must be a float or a 1D numpy.ndarray of floats.",
-        ))
-    }
-}
-#[pyfunction]
-pub fn py_gcj02_to_wgs84(
-    py: Python,
-    lon_py: PyObject,
-    lat_py: PyObject,
-) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(lon_ref), Ok(lat_ref)) = (
-        lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
-        lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
-    ) {
-        let lon_array = unsafe { lon_ref.as_slice_mut().unwrap() };
-        let lat_array = unsafe { lat_ref.as_slice_mut().unwrap() };
-        lon_array
-            .par_iter_mut()
-            .zip(lat_array.par_iter_mut())
-            .for_each(|(x, y)| {
-                (*x, *y) = geotool_algorithm::gcj02_to_wgs84(*x, *y);
-            });
-        (lon_ref, lat_ref).into_pyobject(py)
-    } else if let (Ok(lon), Ok(lat)) = (lon_py.extract::<f64>(py), lat_py.extract::<f64>(py)) {
-        geotool_algorithm::gcj02_to_wgs84(lon, lat).into_pyobject(py)
-    } else {
-        Err(pyo3::exceptions::PyTypeError::new_err(
-            "Input must be a float or a 1D numpy.ndarray of floats.",
-        ))
-    }
-}
-#[pyfunction]
-pub fn py_wgs84_to_bd09(
-    py: Python,
-    lon_py: PyObject,
-    lat_py: PyObject,
-) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(lon_ref), Ok(lat_ref)) = (
-        lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
-        lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
-    ) {
-        let lon_array = unsafe { lon_ref.as_slice_mut().unwrap() };
-        let lat_array = unsafe { lat_ref.as_slice_mut().unwrap() };
-        lon_array
-            .par_iter_mut()
-            .zip(lat_array.par_iter_mut())
-            .for_each(|(x, y)| {
-                (*x, *y) = geotool_algorithm::wgs84_to_bd09(*x, *y);
-            });
-        (lon_ref, lat_ref).into_pyobject(py)
-    } else if let (Ok(lon), Ok(lat)) = (lon_py.extract::<f64>(py), lat_py.extract::<f64>(py)) {
-        geotool_algorithm::wgs84_to_bd09(lon, lat).into_pyobject(py)
-    } else {
-        Err(pyo3::exceptions::PyTypeError::new_err(
-            "Input must be a float or a 1D numpy.ndarray of floats.",
-        ))
-    }
-}
-#[pyfunction]
-pub fn py_wgs84_to_gcj02(
-    py: Python,
-    lon_py: PyObject,
-    lat_py: PyObject,
-) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    if let (Ok(lon_ref), Ok(lat_ref)) = (
-        lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
-        lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
-    ) {
-        let lon_array = unsafe { lon_ref.as_slice_mut().unwrap() };
-        let lat_array = unsafe { lat_ref.as_slice_mut().unwrap() };
-        lon_array
-            .par_iter_mut()
-            .zip(lat_array.par_iter_mut())
-            .for_each(|(x, y)| {
-                (*x, *y) = geotool_algorithm::wgs84_to_gcj02(*x, *y);
-            });
-        (lon_ref, lat_ref).into_pyobject(py)
-    } else if let (Ok(lon), Ok(lat)) = (lon_py.extract::<f64>(py), lat_py.extract::<f64>(py)) {
-        geotool_algorithm::wgs84_to_gcj02(lon, lat).into_pyobject(py)
+        crypto_fn(lon, lat).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",

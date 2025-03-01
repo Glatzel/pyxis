@@ -1,27 +1,9 @@
 import geotool
 import pytest
 
-bd09 = (121.10271691314193, 30.614836298418275)
-gcj02 = (121.09626892329175, 30.608594105135296)
-wgs84 = (121.09170577473259, 30.610767662599578)
-
-
-@pytest.mark.parametrize(
-    ("func", "input", "expected"),
-    [
-        (geotool.wgs84_to_bd09, wgs84, bd09),
-        (geotool.wgs84_to_gcj02, wgs84, gcj02),
-        (geotool.gcj02_to_bd09, gcj02, bd09),
-        (geotool.gcj02_to_wgs84, gcj02, wgs84),
-        (geotool.bd09_to_gcj02, bd09, gcj02),
-        (geotool.bd09_to_wgs84, bd09, wgs84),
-    ],
-)
-def test_geotool(func, input, expected):
-    lon, lat = func(*input)
-
-    assert lon == pytest.approx(expected[0])
-    assert lat == pytest.approx(expected[1])
+bd09 = (121.10271732371203, 30.61484572185035)
+gcj02 = (121.09626935575027, 30.608604331756705)
+wgs84 = (121.0917077, 30.6107779)
 
 
 @pytest.mark.parametrize(

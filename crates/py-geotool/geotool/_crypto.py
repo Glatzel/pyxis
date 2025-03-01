@@ -59,6 +59,7 @@ def crypto(lon, lat, crypto_from, crypto_to):
     (121.09626895522744, 30.608594904771056)
     """
     from .py_geotool import py_crypto  # type: ignore
+
     lon = coord_util("lon", lon)
     lat = coord_util("lat", lat)
     match crypto_from, crypto_to:

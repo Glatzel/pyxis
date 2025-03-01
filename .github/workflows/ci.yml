@@ -208,6 +208,33 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
+  pytest-linux:
+    needs: out-cache
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci-linux
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: dev python
+        run: ./scripts/py-develop.ps1
+
+      - name: test python
+        run: ./scripts/py-pytest.ps1
+
+      - name: Upload results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
   pytest-win:
     needs: out-cache
     runs-on: windows-latest
@@ -244,6 +271,7 @@ jobs:
       - cargo-machete
       - cargo-test-linux
       - cargo-test-win
+      - pytest-linux
       - pytest-win
       - ruff-lint
     runs-on: ubuntu-latest

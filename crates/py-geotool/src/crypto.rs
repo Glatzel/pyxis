@@ -3,14 +3,63 @@ use pyo3::prelude::*;
 use pyo3::types::PyTuple;
 use pyo3::{PyObject, Python, pyfunction};
 use rayon::prelude::*;
-fn get_crypto_fn(from: &str, to: &str) -> miette::Result<impl Fn(f64, f64) -> (f64, f64)> {
-    match (from.to_lowercase().as_str(), to.to_lowercase().as_str()) {
-        ("bd09", "gcj02") => Ok(geotool_algorithm::bd09_to_gcj02 as fn(f64, f64) -> (f64, f64)),
-        ("bd09", "wgs84") => Ok(geotool_algorithm::bd09_to_wgs84 as fn(f64, f64) -> (f64, f64)),
-        ("gcj02", "bd09") => Ok(geotool_algorithm::gcj02_to_bd09 as fn(f64, f64) -> (f64, f64)),
-        ("gcj02", "wgs84") => Ok(geotool_algorithm::gcj02_to_wgs84 as fn(f64, f64) -> (f64, f64)),
-        ("wgs84", "bd09") => Ok(geotool_algorithm::wgs84_to_bd09 as fn(f64, f64) -> (f64, f64)),
-        ("wgs84", "gcj02") => Ok(geotool_algorithm::wgs84_to_gcj02 as fn(f64, f64) -> (f64, f64)),
+fn get_crypto_fn(
+    from: &str,
+    to: &str,
+    exact: bool,
+) -> miette::Result<impl Fn(f64, f64) -> (f64, f64)> {
+    match (
+        from.to_lowercase().as_str(),
+        to.to_lowercase().as_str(),
+        exact,
+    ) {
+        ("bd09", "gcj02", false) => {
+            Ok(geotool_algorithm::bd09_to_gcj02 as fn(f64, f64) -> (f64, f64))
+        }
+        ("bd09", "gcj02", true) => Ok(|src_lon, src_lat| {
+            geotool_algorithm::crypto_exact(
+                src_lon,
+                src_lat,
+                geotool_algorithm::bd09_to_gcj02,
+                geotool_algorithm::gcj02_to_bd09,
+                1e-5,
+                geotool_algorithm::CryptoThresholdMode::Distance,
+                100,
+            )
+        }),
+        ("bd09", "wgs84", false) => {
+            Ok(geotool_algorithm::bd09_to_wgs84 as fn(f64, f64) -> (f64, f64))
+        }
+        ("bd09", "wgs84", true) => Ok(|src_lon, src_lat| {
+            geotool_algorithm::crypto_exact(
+                src_lon,
+                src_lat,
+                geotool_algorithm::bd09_to_wgs84,
+                geotool_algorithm::wgs84_to_bd09,
+                1e-5,
+                geotool_algorithm::CryptoThresholdMode::Distance,
+                100,
+            )
+        }),
+        ("gcj02", "bd09", _) => Ok(geotool_algorithm::gcj02_to_bd09 as fn(f64, f64) -> (f64, f64)),
+        ("gcj02", "wgs84", false) => {
+            Ok(geotool_algorithm::gcj02_to_wgs84 as fn(f64, f64) -> (f64, f64))
+        }
+        ("gcj02", "wgs84", true) => Ok(|src_lon, src_lat| {
+            geotool_algorithm::crypto_exact(
+                src_lon,
+                src_lat,
+                geotool_algorithm::gcj02_to_wgs84,
+                geotool_algorithm::wgs84_to_gcj02,
+                1e-5,
+                geotool_algorithm::CryptoThresholdMode::Distance,
+                100,
+            )
+        }),
+        ("wgs84", "bd09", _) => Ok(geotool_algorithm::wgs84_to_bd09 as fn(f64, f64) -> (f64, f64)),
+        ("wgs84", "gcj02", _) => {
+            Ok(geotool_algorithm::wgs84_to_gcj02 as fn(f64, f64) -> (f64, f64))
+        }
         _ => miette::bail!("unknow from to"),
     }
 }
@@ -21,8 +70,9 @@ pub fn py_crypto(
     lat_py: PyObject,
     from: String,
     to: String,
+    exact: bool,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    let crypto_fn = get_crypto_fn(&from, &to).unwrap();
+    let crypto_fn = get_crypto_fn(&from, &to, exact).unwrap();
     if let (Ok(lon_ref), Ok(lat_ref)) = (
         lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
         lat_py.downcast_bound::<PyArrayDyn<f64>>(py),

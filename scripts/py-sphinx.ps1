@@ -1,3 +1,6 @@
+$ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $true
+
 & $PSScriptRoot/py-develop.ps1
 Set-Location -Path $PSScriptRoot
 Set-Location -Path ..

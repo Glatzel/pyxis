@@ -1,7 +1,7 @@
 import geotool
 import numpy as np
 import pytest
-
+import copy
 bd09 = (121.10271732371203, 30.61484572185035)
 gcj02 = (121.09626935575027, 30.608604331756705)
 wgs84 = (121.0917077, 30.6107779)

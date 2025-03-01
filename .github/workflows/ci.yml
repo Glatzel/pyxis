@@ -28,34 +28,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # region cache
-  cache-pixi:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: restore pixi
-        uses: actions/cache/restore@v4
-        id: check-cache
-        with:
-          path: .pixi
-          key: pixi-${{ runner.os }}-${{ hashFiles('**/pixi.lock') }}
-          lookup-only: true
-
-      - name: Set up pixi
-        if: ${{steps.check-cache.outputs.cache-hit!='true'}}
-        uses: prefix-dev/setup-pixi@v0.8.3
-        with:
-          cache: false
-          environments: default
-
-      - name: save pixi
-        if: ${{steps.check-cache.outputs.cache-hit!='true'}}
-        uses: actions/cache/save@v4
-        with:
-          path: .pixi
-          key: ${{steps.check-cache.outputs.cache-primary-key}}
-
   cache-vcpkg:
     runs-on: windows-latest
     steps:
@@ -87,7 +59,7 @@ jobs:
           key: ${{steps.restore-vcpkg.outputs.cache-primary-key}}
 
   out-cache:
-    needs: [cache-pixi, cache-vcpkg]
+    needs: [cache-vcpkg]
     runs-on: ubuntu-latest
     steps:
       - run: echo "out cache."

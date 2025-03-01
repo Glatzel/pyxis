@@ -3,13 +3,15 @@ authors = ["Glatzel <893016099@qq.com>"]
 channels = ["conda-forge"]
 description = "Add a short description here"
 name = "rs-geotool"
-platforms = ["win-64","linux-64"]
+platforms = ["win-64", "linux-64"]
 version = "0.1.0"
 
 [tasks]
 
 [feature.py311.dependencies]
 python = "3.11.*"
+[feature.py312.dependencies]
+python = "3.12.*"
 
 [feature.build.dependencies]
 maturin = "*"
@@ -19,7 +21,7 @@ proj = "9.4.*"
 lazy-loader = "*"
 nomkl = "*"
 numpy = "*"
-scipy="*"
+scipy = "*"
 
 [feature.py-test.dependencies]
 pytest = "*"
@@ -34,4 +36,6 @@ sphinx-autosummary-accessors = "*"
 sphinx-copybutton = "*"
 
 [environments]
-default=["py311","build","py-deps","py-test","py-doc"]
+default = ["py311", "build", "py-deps", "py-test", "py-doc"]
+py311 = ["py311", "build", "py-deps", "py-test", "py-doc"]
+py312 = ["py312", "build", "py-deps", "py-test", "py-doc"]

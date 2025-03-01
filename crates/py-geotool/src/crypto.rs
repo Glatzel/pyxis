@@ -10,7 +10,7 @@ fn get_crypto_fn(from: &str, to: &str) -> miette::Result<impl Fn(f64, f64) -> (f
         ("gcj02", "bd09") => Ok(geotool_algorithm::gcj02_to_bd09 as fn(f64, f64) -> (f64, f64)),
         ("gcj02", "wgs84") => Ok(geotool_algorithm::gcj02_to_wgs84 as fn(f64, f64) -> (f64, f64)),
         ("wgs84", "bd09") => Ok(geotool_algorithm::wgs84_to_bd09 as fn(f64, f64) -> (f64, f64)),
-        ("wgs84", "gcj02") => Ok(geotool_algorithm::bd09_to_wgs84 as fn(f64, f64) -> (f64, f64)),
+        ("wgs84", "gcj02") => Ok(geotool_algorithm::wgs84_to_gcj02 as fn(f64, f64) -> (f64, f64)),
         _ => miette::bail!("unknow from to"),
     }
 }

@@ -217,9 +217,11 @@ jobs:
 
       - name: dev python
         run: ./scripts/py-develop.ps1
+        shell: pwsh
 
       - name: test python
         run: ./scripts/py-pytest.ps1
+        shell: pwsh
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}

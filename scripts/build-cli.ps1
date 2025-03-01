@@ -24,8 +24,8 @@ if ($IsWindows) {
     Write-Output "::endgroup::"
 
     Write-Output "::group::Pack geotool-windows-x64-self-contained.7z"
-    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
-        "-wdist/cli/static" -mtc=on -mta=on "dist/geotool-windows-x64-self-contained.7z" "./dist/cli/static/geotool.exe"
+    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
+        "dist/geotool-windows-x64-self-contained.7z" "./dist/cli/static/geotool.exe"
     Write-Output "::endgroup::"
 
     Write-Output "::group::Build dynamic"
@@ -41,15 +41,15 @@ if ($IsWindows) {
     Write-Output "::endgroup::"
 
     Write-Output "::group::Pack geotool-windows-x64.7z"
-    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
-        "-wdist/cli/dynamic" -mtc=on -mta=on "dist/geotool-windows-x64.7z" "./dist/cli/dynamic/geotool.exe"
+    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
+        "dist/geotool-windows-x64.7z" "./dist/cli/dynamic/geotool.exe"
     Write-Output "::endgroup::"
 
     Write-Output "::group::Pack geotool-windows-x64-proj.7z.7z"
     Copy-Item ./vcpkg_deps/vcpkg_installed/dynamic/x64-windows/bin/*.dll ./dist/cli/dynamic
     Copy-Item ./vcpkg_deps/vcpkg_installed/dynamic/x64-windows/share/proj/proj.db ./dist/cli/dynamic
-    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
-        "-wdist/cli/dynamic" -mtc=on -mta=on "dist/geotool-windows-x64-proj.7z" "./dist/cli/dynamic/*"
+    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
+        "dist/geotool-windows-x64-proj.7z" "./dist/cli/dynamic/*"
     Write-Output "::endgroup::"
 }
 elseif ($IsLinux) {
@@ -66,8 +66,8 @@ elseif ($IsLinux) {
 
     Write-Output "::group::Pack geotool-linux-x64-self-contained.7z"
     Copy-Item "target/$config/geotool" ./dist/cli/static
-    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on -sccUTF-8 -bb0 -bse0 -bsp2 `
-        "-wdist/cli/static" -mtc=on -mta=on "dist/geotool-linux-x64-self-contained.7z" "./dist/cli/static/*"
+    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
+        "dist/geotool-linux-x64-self-contained.7z" "./dist/cli/static/*"
     Write-Output "::endgroup::"
 }
 else {

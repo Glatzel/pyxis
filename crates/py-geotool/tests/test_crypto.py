@@ -29,8 +29,11 @@ def test_convert(src, dst, exact, input, expected):
 
 
 bd09_array = (np.array([121.10271732371203, 121.10271732371203]), np.array([30.61484572185035, 30.61484572185035]))
-gcj02_array = (np.array([121.10271732371203, 121.10271732371203]), np.array([30.61484572185035, 30.61484572185035]))
-wgs84_array = (np.array([121.10271732371203, 121.10271732371203]), np.array([30.61484572185035, 30.61484572185035]))
+gcj02_array = (np.array([121.09626935575027, 121.09626935575027]), np.array([30.608604331756705, 30.608604331756705]))
+wgs84_array = (
+    np.array([121.0917077, 121.0917077], dtype=np.float64),
+    np.array([30.6107779, 30.6107779], dtype=np.float64),
+)
 
 
 @pytest.mark.parametrize(
@@ -45,8 +48,7 @@ wgs84_array = (np.array([121.10271732371203, 121.10271732371203]), np.array([30.
     ],
 )
 @pytest.mark.parametrize("exact", [True, False])
-def test_convert_array(src, dst, exact, input, expected):
+def test_convert_array(src, dst, input, expected, exact):
     lon, lat = geotool.crypto(input[0], input[1], src, dst, exact)
-
     assert lon[0] == pytest.approx(expected[0])
     assert lat[0] == pytest.approx(expected[1])

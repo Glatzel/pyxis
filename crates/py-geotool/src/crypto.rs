@@ -22,8 +22,8 @@ fn get_crypto_fn(
                 src_lat,
                 geotool_algorithm::bd09_to_gcj02,
                 geotool_algorithm::gcj02_to_bd09,
-                1e-5,
-                geotool_algorithm::CryptoThresholdMode::Distance,
+                1e-17,
+                geotool_algorithm::CryptoThresholdMode::LonLat,
                 100,
             )
         }),
@@ -36,8 +36,8 @@ fn get_crypto_fn(
                 src_lat,
                 geotool_algorithm::bd09_to_wgs84,
                 geotool_algorithm::wgs84_to_bd09,
-                1e-5,
-                geotool_algorithm::CryptoThresholdMode::Distance,
+                1e-17,
+                geotool_algorithm::CryptoThresholdMode::LonLat,
                 100,
             )
         }),
@@ -51,8 +51,8 @@ fn get_crypto_fn(
                 src_lat,
                 geotool_algorithm::gcj02_to_wgs84,
                 geotool_algorithm::wgs84_to_gcj02,
-                1e-5,
-                geotool_algorithm::CryptoThresholdMode::Distance,
+                1e-17,
+                geotool_algorithm::CryptoThresholdMode::LonLat,
                 100,
             )
         }),

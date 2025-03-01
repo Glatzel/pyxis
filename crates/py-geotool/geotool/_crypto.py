@@ -42,7 +42,7 @@ def crypto(lon, lat, crypto_from, crypto_to, exact=False):
     crypto_from, crypto_to
         From a coordinate system to another coordinate system.
     exact
-        Use exact mode. Max Error is 1e-5 meters.
+        Use exact mode. Max Error is 1e-13.
 
     Returns
     -------
@@ -73,5 +73,6 @@ def crypto(lon, lat, crypto_from, crypto_to, exact=False):
     ):
         msg = f"from `{crypto_from}` to `{crypto_to}`."
         raise TypeError(msg)
+    lon, lat = py_crypto(lon, lat, crypto_from, crypto_to, exact)
 
-    return py_crypto(lon, lat, crypto_from, crypto_to, exact)
+    return lon, lat

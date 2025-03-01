@@ -907,6 +907,7 @@ name = "py-geotool"
 version = "0.0.8"
 dependencies = [
  "geotool-algorithm",
+ "miette",
  "numpy",
  "pyo3",
  "rayon",

@@ -19,8 +19,9 @@ wgs84 = (121.0917077, 30.6107779)
         pytest.param("cgcs", "WGS84", bd09, wgs84, marks=pytest.mark.xfail(strict=True)),
     ],
 )
-def test_convert(src, dst, input, expected):
-    lon, lat = geotool.crypto(input[0], input[1], src, dst)
+@pytest.mark.parametrize("exact", [True, False])
+def test_convert(src, dst, exact, input, expected):
+    lon, lat = geotool.crypto(input[0], input[1], src, dst,exact)
 
     assert lon == pytest.approx(expected[0])
     assert lat == pytest.approx(expected[1])

@@ -40,7 +40,7 @@ jobs:
           run-install: false
       - run: |
           v=$(pixi info --json | jq -c  '[.environments_info.[] | select(.name | startswith("py")).name]')
-          v=echo "$v" | tr -d '"'
+          v=$(echo "$v" | tr -d '"')
           echo "versions=${v}"
           echo "versions=${v}" >> "$GITHUB_OUTPUT"
         id: main

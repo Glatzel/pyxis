@@ -1,3 +1,4 @@
+import copy
 from typing import Union, overload
 
 import numpy as np
@@ -13,6 +14,7 @@ def coord_util(name: str, coord: TCoordScalar) -> float: ...
 @overload
 def coord_util(name: str, coord: TCoordArray) -> NDArray[np.float64]: ...
 def coord_util(name: str, coord: TCoord) -> float | NDArray[np.float64]:
+    coord = copy.deepcopy(coord)
     match coord:
         case float():
             pass

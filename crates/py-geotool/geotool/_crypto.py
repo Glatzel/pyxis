@@ -21,6 +21,7 @@ def crypto(
     lat: TCoordScalar,
     crypto_from: COORD_CRYPTO_SPACE,
     crypto_to: COORD_CRYPTO_SPACE,
+    exact: bool = False,
 ) -> tuple[float, float]: ...
 @overload
 def crypto(
@@ -28,8 +29,9 @@ def crypto(
     lat: TCoordArray,
     crypto_from: COORD_CRYPTO_SPACE,
     crypto_to: COORD_CRYPTO_SPACE,
+    exact: bool = False,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]: ...
-def crypto(lon, lat, crypto_from, crypto_to):
+def crypto(lon, lat, crypto_from, crypto_to, exact=False):
     r"""
     Convert coordinates between `WGS84`, `GCJ02` and `BD09`.
 
@@ -39,6 +41,8 @@ def crypto(lon, lat, crypto_from, crypto_to):
         Coordinates of `BD09` coordinate system.
     crypto_from, crypto_to
         From a coordinate system to another coordinate system.
+    exact
+        Use exact mode. Max Error is 1e-13.
 
     Returns
     -------
@@ -69,5 +73,6 @@ def crypto(lon, lat, crypto_from, crypto_to):
     ):
         msg = f"from `{crypto_from}` to `{crypto_to}`."
         raise TypeError(msg)
+    lon, lat = py_crypto(lon, lat, crypto_from, crypto_to, exact)
 
-    return py_crypto(lon, lat, crypto_from, crypto_to)
+    return lon, lat

@@ -22,7 +22,6 @@ on:
   schedule:
     - cron: 0 16 * * *
 
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
@@ -40,7 +39,6 @@ jobs:
           run-install: false
       - run: |
           v=$(pixi info --json | jq -c  '[.environments_info.[] | select(.name | startswith("py")).name]')
-          v=$(echo "$v" | tr -d '"')
           echo "versions=${v}"
           echo "versions=${v}" >> "$GITHUB_OUTPUT"
         id: main
@@ -201,7 +199,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: ${{needs.get-pixi-envs.outputs.versions}}
+        version: ${{fromJSON(needs.get-pixi-envs.outputs.versions)}}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-linux
@@ -229,11 +227,11 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   pytest-win:
-    needs: [out-cache,get-pixi-envs]
+    needs: [out-cache, get-pixi-envs]
     runs-on: windows-latest
     strategy:
       matrix:
-        version: ${{needs.get-pixi-envs.outputs.versions}}
+        version: ${{fromJSON(needs.get-pixi-envs.outputs.versions)}}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win
@@ -299,7 +297,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: ${{needs.get-pixi-envs.outputs.versions}}
+        version: ${{fromJSON(needs.get-pixi-envs.outputs.versions)}}
     steps:
       - uses: actions/checkout@v4
       - name: Set up pixi
@@ -327,11 +325,11 @@ jobs:
           if-no-files-found: error
 
   build-py-geotool-win:
-    needs: [out-cache,get-pixi-envs]
+    needs: [out-cache, get-pixi-envs]
     runs-on: windows-latest
     strategy:
       matrix:
-        version: ${{needs.get-pixi-envs.outputs.versions}}
+        version: ${{fromJSON(needs.get-pixi-envs.outputs.versions)}}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci-win

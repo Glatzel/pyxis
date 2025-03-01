@@ -62,21 +62,12 @@ def crypto(lon, lat, crypto_from, crypto_to):
 
     lon = coord_util("lon", lon)
     lat = coord_util("lat", lat)
-    match crypto_from, crypto_to:
-        case "WGS84", "GCJ02":
-            result_lon, result_lat = py_crypto(lon, lat)
-        case "GCJ02", "WGS84":
-            result_lon, result_lat = py_crypto(lon, lat)
-        case "WGS84", "BD09":
-            result_lon, result_lat = py_crypto(lon, lat)
-        case "BD09", "WGS84":
-            result_lon, result_lat = py_crypto(lon, lat)
-        case "GCJ02", "BD09":
-            result_lon, result_lat = py_crypto(lon, lat)
-        case "BD09", "GCJ02":
-            result_lon, result_lat = py_crypto(lon, lat)
-        case _:
-            msg = f"from `{crypto_from}` to `{crypto_to}`."
-            raise TypeError(msg)
+    if (
+        (str(crypto_from).lower() not in ("wgs84", "bd09", "gcj02"))
+        or (str(crypto_to).lower() not in ("wgs84", "bd09", "gcj02"))
+        or str(crypto_to).lower() == str(crypto_from).lower()
+    ):
+        msg = f"from `{crypto_from}` to `{crypto_to}`."
+        raise TypeError(msg)
 
-    return result_lon, result_lat
+    return py_crypto(lon, lat, crypto_from, crypto_to)

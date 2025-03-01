@@ -39,7 +39,7 @@ jobs:
         with:
           run-install: false
       - run: |
-          v=$(echo pixi info --json | jq -c  '[.environments_info.[] | select(.name | startswith("py")).name]')
+          v=$(pixi info --json | jq -c  '[.environments_info.[] | select(.name | startswith("py")).name]')
           echo "versions=${v}" >> "$GITHUB_OUTPUT"
         id: main
   cache-vcpkg:

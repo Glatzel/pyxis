@@ -101,7 +101,7 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// use geotool_algorithm::*;
+/// use geotool_algorithm::crypto::*;
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = bd09_to_gcj02(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-6);
@@ -137,7 +137,7 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// use geotool_algorithm::*;
+/// use geotool_algorithm::crypto::*;
 /// let p = (GCJ02_LON, GCJ02_LAT);
 /// let p = gcj02_to_wgs84(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, WGS84_LON , epsilon = 1e-5);
@@ -167,7 +167,7 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// use geotool_algorithm::*;
+/// use geotool_algorithm::crypto::*;
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = bd09_to_wgs84(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-5);
@@ -197,7 +197,7 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// use geotool_algorithm::*;
+/// use geotool_algorithm::crypto::*;
 /// let p = (GCJ02_LON, GCJ02_LAT);
 /// let p = gcj02_to_bd09(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
@@ -232,7 +232,7 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// use geotool_algorithm::*;
+/// use geotool_algorithm::crypto::*;
 /// let p = (WGS84_LON,WGS84_LAT );
 /// let p = wgs84_to_gcj02(p.0, p.1);
 /// println!("{},{}",p.0,p.1);
@@ -263,7 +263,7 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// use geotool_algorithm::*;
+/// use geotool_algorithm::crypto::*;
 /// let p = (WGS84_LON,WGS84_LAT );
 /// let p = wgs84_to_bd09(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
@@ -283,12 +283,12 @@ where
 /// use tracing_subscriber::layer::SubscriberExt;
 /// use tracing_subscriber::util::SubscriberInitExt;
 /// use tracing_subscriber::filter::LevelFilter;
-/// use geotool_algorithm::*;
+/// use geotool_algorithm::crypto::*;
 /// tracing_subscriber::registry()
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
-/// let p = geotool_algorithm::crypto_exact(
+/// let p = crypto_exact(
 ///             p.0,
 ///             p.1,
 ///             bd09_to_wgs84,
@@ -306,12 +306,12 @@ where
 /// use tracing_subscriber::layer::SubscriberExt;
 /// use tracing_subscriber::util::SubscriberInitExt;
 /// use tracing_subscriber::filter::LevelFilter;
-/// use geotool_algorithm::*;
+/// use geotool_algorithm::crypto::*;
 /// tracing_subscriber::registry()
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
-/// let p = geotool_algorithm::crypto_exact(
+/// let p = crypto_exact(
 ///             p.0,
 ///             p.1,
 ///             bd09_to_wgs84,

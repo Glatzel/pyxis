@@ -42,7 +42,7 @@ where
     lon = lon * num!(2.0) / num!(3.0);
 
     lat = lat
-        + num!(-100)
+        + num!(-100.0)
         + T::TWO * x
         + num!(3.0) * y
         + num!(0.2) * y * y

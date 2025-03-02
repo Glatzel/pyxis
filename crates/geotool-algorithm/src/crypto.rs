@@ -2,6 +2,9 @@
 /// - https://github.com/googollee/eviltransform/blob/master/rust/src/lib.rs
 /// - https://github.com/billtian/wgtochina_lb-php/tree/master
 /// - https://github.com/Leask/EvilTransform
+/// - https://github.com/wandergis/coordtransform
+/// - https://blog.csdn.net/coolypf/article/details/8569813
+/// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
 use std::f64::consts::PI;
 
 use crate::num;
@@ -15,8 +18,6 @@ pub enum CryptoThresholdMode {
     Distance,
     LonLat,
 }
-
-const X_PI: f64 = PI * 3000.0 / 180.0;
 
 fn transform<T>(x: T, y: T) -> (T, T)
 where
@@ -93,11 +94,15 @@ where
 /// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-6);
 /// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-6);
 /// ```
-pub fn bd09_to_gcj02(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
-    let x = bd09_lon - 0.0065;
-    let y = bd09_lat - 0.006;
-    let z = (x * x + y * y).sqrt() - 0.00002 * (y * X_PI).sin();
-    let theta = y.atan2(x) - 0.000003 * (x * X_PI).cos();
+pub fn bd09_to_gcj02<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
+    let x_pi = num!(PI) * num!(3000.0) / num!(180.0);
+    let x = bd09_lon - num!(0.0065);
+    let y = bd09_lat - num!(0.006);
+    let z = (x.powi(2) + y * y).sqrt() - num!(0.00002) * (y * x_pi).sin();
+    let theta = y.atan2(x) - num!(0.000003) * (x * x_pi).cos();
     let gcj02_lon = z * theta.cos();
     let gcj02_lat = z * theta.sin();
     (gcj02_lon, gcj02_lat)
@@ -124,7 +129,10 @@ pub fn bd09_to_gcj02(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.0, 121.0917077 , epsilon = 1e-5);
 /// assert_approx_eq!(f64, p.1, 30.6107779 , epsilon = 1e-5);
 /// ```
-pub fn gcj02_to_wgs84(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
+pub fn gcj02_to_wgs84<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let (d_lon, d_lat) = delta(gcj02_lon, gcj02_lat);
     (gcj02_lon - d_lon, gcj02_lat - d_lat)
 }
@@ -150,7 +158,10 @@ pub fn gcj02_to_wgs84(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.0, 121.09170577473259, epsilon = 1e-6);
 /// assert_approx_eq!(f64, p.1, 30.610767662599578, epsilon = 1e-6);
 /// ```
-pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
+pub fn bd09_to_wgs84<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let (gcj_lon, gcj_lat) = bd09_to_gcj02(bd09_lon, bd09_lat);
     gcj02_to_wgs84(gcj_lon, gcj_lat)
 }
@@ -176,12 +187,16 @@ pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.0, 121.10271732371203, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 30.61484572185035, epsilon = 1e-17);
 /// ```
-pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
+pub fn gcj02_to_bd09<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
+    let x_pi = num!(PI) * num!(3000.0) / num!(180.0);
     let z =
-        (gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat).sqrt() + 0.00002 * (gcj02_lat * X_PI).sin();
-    let theta = gcj02_lat.atan2(gcj02_lon) + 0.000003 * (gcj02_lon * X_PI).cos();
-    let bd09_lon = z * (theta).cos() + 0.0065;
-    let bd09_lat = z * (theta).sin() + 0.006;
+        (gcj02_lon.powi(2) + gcj02_lat.powi(2)).sqrt() + num!(0.00002) * (gcj02_lat * x_pi).sin();
+    let theta = gcj02_lat.atan2(gcj02_lon) + num!(0.000003) * (gcj02_lon * x_pi).cos();
+    let bd09_lon = z * (theta).cos() + num!(0.0065);
+    let bd09_lat = z * (theta).sin() + num!(0.006);
     (bd09_lon, bd09_lat)
 }
 
@@ -207,7 +222,10 @@ pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-17);
 /// ```
-pub fn wgs84_to_gcj02(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
+pub fn wgs84_to_gcj02<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let (d_lon, d_lat) = delta(wgs84_lon, wgs84_lat);
     (wgs84_lon + d_lon, wgs84_lat + d_lat)
 }
@@ -233,7 +251,10 @@ pub fn wgs84_to_gcj02(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.0, 121.10271732371203, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 30.61484572185035,  epsilon = 1e-17);
 /// ```
-pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
+pub fn wgs84_to_bd09<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let (gcj_lon, gcj_lat) = wgs84_to_gcj02(wgs84_lon, wgs84_lat);
     gcj02_to_bd09(gcj_lon, gcj_lat)
 }
@@ -282,15 +303,18 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-8);
 /// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-8);
 /// ```
-pub fn crypto_exact(
-    src_lon: f64,
-    src_lat: f64,
-    crypto_fn: impl Fn(f64, f64) -> (f64, f64),
-    inv_crypto_fn: impl Fn(f64, f64) -> (f64, f64),
-    threshold: f64,
+pub fn crypto_exact<T>(
+    src_lon: T,
+    src_lat: T,
+    crypto_fn: impl Fn(T, T) -> (T, T),
+    inv_crypto_fn: impl Fn(T, T) -> (T, T),
+    threshold: T,
     threshold_mode: CryptoThresholdMode,
     max_iter: usize,
-) -> (f64, f64) {
+) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let (mut dst_lon, mut dst_lat) = crypto_fn(src_lon, src_lat);
 
     let mut d_lon = (dst_lon - src_lon).abs();
@@ -301,11 +325,11 @@ pub fn crypto_exact(
     let mut p_lon = dst_lon + d_lon;
     let mut p_lat = dst_lat + d_lat;
 
-    d_lon += 1.0;
-    d_lat += 1.0;
+    d_lon = d_lon + num!(1.0);
+    d_lat = d_lat + num!(1.0);
 
     for _i in 0..max_iter {
-        (dst_lon, dst_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
+        (dst_lon, dst_lat) = ((m_lon + p_lon) / T::TWO, (m_lat + p_lat) / T::TWO);
         let (tmp_lon, tmp_lat) = inv_crypto_fn(dst_lon, dst_lat);
         let temp_d_lon = tmp_lon - src_lon;
         let temp_d_lat = tmp_lat - src_lat;
@@ -342,28 +366,28 @@ pub fn crypto_exact(
             _ => (),
         }
 
-        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs()) {
+        match (d_lon > T::zero(), d_lon.abs() > temp_d_lon.abs()) {
             (true, true) => p_lon = dst_lon,
             (false, true) => m_lon = dst_lon,
             (true, false) => {
                 p_lon = dst_lon;
-                m_lon -= d_lon;
+                m_lon = m_lon - d_lon;
             }
             (false, false) => {
                 m_lon = dst_lon;
-                p_lon -= d_lon;
+                p_lon = p_lon - d_lon;
             }
         }
-        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs()) {
+        match (d_lat > T::zero(), d_lat.abs() > temp_d_lat.abs()) {
             (true, true) => p_lat = dst_lat,
             (false, true) => m_lat = dst_lat,
             (true, false) => {
                 p_lat = dst_lat;
-                m_lat -= d_lat;
+                m_lat = m_lat - d_lat;
             }
             (false, false) => {
                 m_lat = dst_lat;
-                p_lat -= d_lat;
+                p_lat = p_lat - d_lat;
             }
         }
 
@@ -419,7 +443,7 @@ mod test {
         let mut all_lonlat = 0.0;
         let count = if is_ci { 10 } else { 10000 };
         for _ in 0..count {
-            let wgs = (
+            let wgs: (f64, f64) = (
                 rng.random_range(72.004..137.8347),
                 rng.random_range(0.8293..55.8271),
             );

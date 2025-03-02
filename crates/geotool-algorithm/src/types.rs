@@ -1,10 +1,12 @@
-use std::fmt::{Debug, Display};
+use std::fmt::{Debug, Display, LowerExp};
 use std::sync::LazyLock;
 
 use num_traits::{ConstOne, Float, FloatConst, FromPrimitive};
 
 use crate::Ellipsoid;
-pub trait GeoFloat: Float + FromPrimitive + FloatConst + ConstOne + Debug + Display {
+pub trait GeoFloat:
+    Float + FromPrimitive + FloatConst + ConstOne + Debug + Display + LowerExp
+{
     const TWO: Self;
 }
 #[macro_export]

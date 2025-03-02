@@ -33,7 +33,7 @@ pub enum CryptoThresholdMode {
 
 fn transform<T>(x: T, y: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T>,
+    T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let xy = x * y;
     let abs_x = x.abs().sqrt();
@@ -66,9 +66,9 @@ where
     (lon, lat)
 }
 
-fn delta<T: 'static>(lon: T, lat: T) -> (T, T)
+fn delta<T>(lon: T, lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T>,
+    T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let (d_lon, d_lat) = transform(lon - num!(105.0), lat - num!(35.0));
     let mut d_lat = d_lat;
@@ -109,7 +109,7 @@ where
 /// ```
 pub fn bd09_to_gcj02<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T>,
+    T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let x_pi = num!(PI) * num!(3000.0) / num!(180.0);
     let x = bd09_lon - num!(0.0065);
@@ -143,9 +143,9 @@ where
 /// assert_approx_eq!(f64, p.0, WGS84_LON , epsilon = 1e-5);
 /// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-7);
 /// ```
-pub fn gcj02_to_wgs84<T: 'static>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
+pub fn gcj02_to_wgs84<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T>,
+    T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let (d_lon, d_lat) = delta(gcj02_lon, gcj02_lat);
     (gcj02_lon - d_lon, gcj02_lat - d_lat)
@@ -173,9 +173,9 @@ where
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-5);
 /// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-5);
 /// ```
-pub fn bd09_to_wgs84<T: 'static>(bd09_lon: T, bd09_lat: T) -> (T, T)
+pub fn bd09_to_wgs84<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T>,
+    T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let (gcj_lon, gcj_lat) = bd09_to_gcj02(bd09_lon, bd09_lat);
     gcj02_to_wgs84(gcj_lon, gcj_lat)
@@ -205,7 +205,7 @@ where
 /// ```
 pub fn gcj02_to_bd09<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T>,
+    T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let x_pi = num!(PI) * num!(3000.0) / num!(180.0);
     let z =
@@ -239,9 +239,9 @@ where
 /// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, GCJ02_LAT, epsilon = 1e-17);
 /// ```
-pub fn wgs84_to_gcj02<T: 'static>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
+pub fn wgs84_to_gcj02<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T>,
+    T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let (d_lon, d_lat) = delta(wgs84_lon, wgs84_lat);
     (wgs84_lon + d_lon, wgs84_lat + d_lat)
@@ -269,9 +269,9 @@ where
 /// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, BD09_LAT,  epsilon = 1e-17);
 /// ```
-pub fn wgs84_to_bd09<T: 'static>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
+pub fn wgs84_to_bd09<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T>,
+    T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let (gcj_lon, gcj_lat) = wgs84_to_gcj02(wgs84_lon, wgs84_lat);
     gcj02_to_bd09(gcj_lon, gcj_lat)
@@ -323,7 +323,7 @@ where
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-8);
 /// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-8);
 /// ```
-pub fn crypto_exact<T: 'static>(
+pub fn crypto_exact<T>(
     src_lon: T,
     src_lat: T,
     crypto_fn: impl Fn(T, T) -> (T, T),
@@ -333,7 +333,7 @@ pub fn crypto_exact<T: 'static>(
     max_iter: usize,
 ) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T>,
+    T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let (mut dst_lon, mut dst_lat) = crypto_fn(src_lon, src_lat);
 
@@ -418,9 +418,9 @@ where
     (dst_lon, dst_lat)
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
-pub fn haversine_distance<T: 'static>(lon_a: T, lat_a: T, lon_b: T, lat_b: T) -> T
+pub fn haversine_distance<T>(lon_a: T, lat_a: T, lon_b: T, lat_b: T) -> T
 where
-    T: GeoFloat + ConstEllipsoid<T>,
+    T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let lat1_rad = lat_a.to_radians();
     let lon1_rad = lon_a.to_radians();

@@ -288,7 +288,7 @@ where
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
-/// let p = geotool_algorithm::crypto_exact(
+/// let p = crypto_exact(
 ///             p.0,
 ///             p.1,
 ///             bd09_to_wgs84,
@@ -311,7 +311,7 @@ where
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
-/// let p = geotool_algorithm::crypto_exact(
+/// let p = crypto_exact(
 ///             p.0,
 ///             p.1,
 ///             bd09_to_wgs84,

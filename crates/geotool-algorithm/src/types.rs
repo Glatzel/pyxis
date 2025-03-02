@@ -34,7 +34,7 @@ where
 
 impl ConstEllipsoid<f32> for f32 {
     fn grs1980() -> LazyLock<Ellipsoid<f32>> {
-        LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378245.0, 298.3))
+        LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257222101))
     }
     fn krasovsky1940() -> LazyLock<Ellipsoid<f32>> {
         LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378245.0, 298.3))
@@ -44,9 +44,13 @@ impl ConstEllipsoid<f32> for f32 {
     }
 }
 impl ConstEllipsoid<f64> for f64 {
-    fn grs1980() -> LazyLock<Ellipsoid<T>>;
+    fn grs1980() -> LazyLock<Ellipsoid<f64>> {
+        LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257222101))
+    }
     fn krasovsky1940() -> LazyLock<Ellipsoid<f64>> {
-        LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378245.0, 298.3))
+        let e: LazyLock<Ellipsoid<f64>> =
+            LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378245.0, 298.3));
+        e
     }
     fn wgs84() -> LazyLock<Ellipsoid<f64>> {
         LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257223563))

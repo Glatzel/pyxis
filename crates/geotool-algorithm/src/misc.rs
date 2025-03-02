@@ -1,6 +1,5 @@
+use num_traits::Float;
 use num_traits::identities::ConstOne;
-use num_traits::{Float, FromPrimitive};
-use std::fmt::Display;
 
 use crate::GeoFloat;
 /// Converts projected XY coordinates from the height compensation plane to the sea level plane.

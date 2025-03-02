@@ -1,5 +1,4 @@
 use crate::GeoFloat;
-use std::{marker::PhantomData, sync::LazyLock};
 
 /// Represents an ellipsoid with semi-major axis `a`, semi-minor axis `b`, eccentricity `e`,
 /// squared eccentricity `e²`, flattening `f`, and inverse flattening `1/f` in the `geotool_algorithm` crate.
@@ -154,29 +153,5 @@ impl<T: GeoFloat> Ellipsoid<T> {
     /// Returns the inverse flattening (`1/f`) of the ellipsoid.
     pub fn inverse_flattening(&self) -> T {
         self.inverse_flattening
-    }
-}
-pub trait IConstEllipsoid<T> {
-    fn krasovsky1940() -> LazyLock<Ellipsoid<T>>;
-    fn wgs84() -> LazyLock<Ellipsoid<T>>;
-}
-pub struct ConstEllipsoid<T>(PhantomData<T>)
-where
-    T: GeoFloat;
-
-impl IConstEllipsoid<f32> for ConstEllipsoid<f32> {
-    fn krasovsky1940() -> LazyLock<Ellipsoid<f32>> {
-        LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378245.0, 298.3))
-    }
-    fn wgs84() -> LazyLock<Ellipsoid<f32>> {
-        LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257223563))
-    }
-}
-impl IConstEllipsoid<f64> for ConstEllipsoid<f64> {
-    fn krasovsky1940() -> LazyLock<Ellipsoid<f64>> {
-        LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378245.0, 298.3))
-    }
-    fn wgs84() -> LazyLock<Ellipsoid<f64>> {
-        LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257223563))
     }
 }

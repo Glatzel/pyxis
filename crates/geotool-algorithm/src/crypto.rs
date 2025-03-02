@@ -3,6 +3,8 @@
 /// - https://github.com/billtian/wgtochina_lb-php/tree/master
 /// - https://github.com/Leask/EvilTransform
 use std::f64::consts::PI;
+
+use crate::types::{ConstEllipsoid, GeoFloat};
 pub enum CryptoSpace {
     WGS84,
     GCJ02,
@@ -357,7 +359,10 @@ pub fn crypto_exact(
     (dst_lon, dst_lat)
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
-pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
+pub fn haversine_distance<T>(lon_a: T, lat_a: T, lon_b: T, lat_b: T) -> T
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let lat1_rad = lat_a.to_radians();
     let lon1_rad = lon_a.to_radians();
     let lat2_rad = lat_b.to_radians();
@@ -366,11 +371,11 @@ pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64
     let delta_lat = lat2_rad - lat1_rad;
     let delta_lon = lon2_rad - lon1_rad;
 
-    let a = (delta_lat / 2.0).sin().powi(2)
-        + lat1_rad.cos() * lat2_rad.cos() * (delta_lon / 2.0).sin().powi(2);
-    let c = 2.0 * a.sqrt().atan2((1.0 - a).sqrt());
+    let a = (delta_lat / T::TWO).sin().powi(2)
+        + lat1_rad.cos() * lat2_rad.cos() * (delta_lon / T::TWO).sin().powi(2);
+    let c = T::TWO * a.sqrt().atan2((T::ONE - a).sqrt());
 
-    EARTH_R * c
+    T::krasovsky1940().semi_major_axis() * c
 }
 #[cfg(test)]
 mod test {

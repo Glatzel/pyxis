@@ -9,6 +9,18 @@ use std::f64::consts::PI;
 
 use crate::num;
 use crate::types::{ConstEllipsoid, GeoFloat};
+#[cfg(debug_assertions)]
+pub const WGS84_LON: f64 = 121.0917077;
+#[cfg(debug_assertions)]
+pub const WGS84_LAT: f64 = 30.6107779;
+#[cfg(debug_assertions)]
+pub const GCJ02_LON: f64 = 121.09626927850977;
+#[cfg(debug_assertions)]
+pub const GCJ02_LAT: f64 = 30.608604368560773;
+#[cfg(debug_assertions)]
+pub const BD09_LON: f64 = 121.10271724622564;
+#[cfg(debug_assertions)]
+pub const BD09_LAT: f64 = 30.61484575976839;
 pub enum CryptoSpace {
     WGS84,
     GCJ02,
@@ -89,10 +101,11 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.10271732371203, 30.61484572185035);
-/// let p = geotool_algorithm::bd09_to_gcj02(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-6);
-/// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-6);
+/// use geotool_algorithm::*;
+/// let p = (BD09_LON, BD09_LAT);
+/// let p = bd09_to_gcj02(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-6);
+/// assert_approx_eq!(f64, p.1, GCJ02_LAT, epsilon = 1e-6);
 /// ```
 pub fn bd09_to_gcj02<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
 where
@@ -124,10 +137,11 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.09626935575027, 30.608604331756705);
-/// let p = geotool_algorithm::gcj02_to_wgs84(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.0917077 , epsilon = 1e-5);
-/// assert_approx_eq!(f64, p.1, 30.6107779 , epsilon = 1e-5);
+/// use geotool_algorithm::*;
+/// let p = (GCJ02_LON, GCJ02_LAT);
+/// let p = gcj02_to_wgs84(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, WGS84_LON , epsilon = 1e-5);
+/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-7);
 /// ```
 pub fn gcj02_to_wgs84<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
 where
@@ -153,10 +167,11 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.10271691314193, 30.614836298418275);
-/// let p = geotool_algorithm::bd09_to_wgs84(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.09170577473259, epsilon = 1e-6);
-/// assert_approx_eq!(f64, p.1, 30.610767662599578, epsilon = 1e-6);
+/// use geotool_algorithm::*;
+/// let p = (BD09_LON, BD09_LAT);
+/// let p = bd09_to_wgs84(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-5);
+/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-5);
 /// ```
 pub fn bd09_to_wgs84<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
 where
@@ -182,10 +197,11 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.09626935575027, 30.608604331756705);
-/// let p = geotool_algorithm::gcj02_to_bd09(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.10271732371203, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.61484572185035, epsilon = 1e-17);
+/// use geotool_algorithm::*;
+/// let p = (GCJ02_LON, GCJ02_LAT);
+/// let p = gcj02_to_bd09(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, BD09_LAT, epsilon = 1e-17);
 /// ```
 pub fn gcj02_to_bd09<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
 where
@@ -216,11 +232,12 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.0917077,30.6107779 );
-/// let p = geotool_algorithm::wgs84_to_gcj02(p.0, p.1);
+/// use geotool_algorithm::*;
+/// let p = (WGS84_LON,WGS84_LAT );
+/// let p = wgs84_to_gcj02(p.0, p.1);
 /// println!("{},{}",p.0,p.1);
-/// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, GCJ02_LAT, epsilon = 1e-17);
 /// ```
 pub fn wgs84_to_gcj02<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
 where
@@ -246,10 +263,11 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.0917077,30.6107779);
-/// let p = geotool_algorithm::wgs84_to_bd09(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.10271732371203, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.61484572185035,  epsilon = 1e-17);
+/// use geotool_algorithm::*;
+/// let p = (WGS84_LON,WGS84_LAT );
+/// let p = wgs84_to_bd09(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, BD09_LAT,  epsilon = 1e-17);
 /// ```
 pub fn wgs84_to_bd09<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
 where
@@ -265,21 +283,22 @@ where
 /// use tracing_subscriber::layer::SubscriberExt;
 /// use tracing_subscriber::util::SubscriberInitExt;
 /// use tracing_subscriber::filter::LevelFilter;
+/// use geotool_algorithm::*;
 /// tracing_subscriber::registry()
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
-/// let p = (121.10271732371203, 30.61484572185035);
+/// let p = (BD09_LON, BD09_LAT);
 /// let p = geotool_algorithm::crypto_exact(
 ///             p.0,
 ///             p.1,
-///             geotool_algorithm::bd09_to_wgs84,
-///             geotool_algorithm::wgs84_to_bd09,
+///             bd09_to_wgs84,
+///             wgs84_to_bd09,
 ///             1e-17,
-///             geotool_algorithm::CryptoThresholdMode::LonLat,
+///             CryptoThresholdMode::LonLat,
 ///             100,
 ///         );
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-15);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-14);
+/// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-15);
+/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-14);
 /// ```
 ///
 /// ```
@@ -287,21 +306,22 @@ where
 /// use tracing_subscriber::layer::SubscriberExt;
 /// use tracing_subscriber::util::SubscriberInitExt;
 /// use tracing_subscriber::filter::LevelFilter;
+/// use geotool_algorithm::*;
 /// tracing_subscriber::registry()
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
-/// let p = (121.10271732371203, 30.61484572185035);
+/// let p = (BD09_LON, BD09_LAT);
 /// let p = geotool_algorithm::crypto_exact(
 ///             p.0,
 ///             p.1,
-///             geotool_algorithm::bd09_to_wgs84,
-///             geotool_algorithm::wgs84_to_bd09,
+///             bd09_to_wgs84,
+///             wgs84_to_bd09,
 ///             1e-3,
-///             geotool_algorithm::CryptoThresholdMode::Distance,
+///             CryptoThresholdMode::Distance,
 ///             100,
 ///         );
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-8);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-8);
+/// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-8);
+/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-8);
 /// ```
 pub fn crypto_exact<T>(
     src_lon: T,

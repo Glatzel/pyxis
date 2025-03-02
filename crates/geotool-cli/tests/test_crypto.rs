@@ -1,7 +1,7 @@
 use assert_cmd::Command;
-use predicates::prelude::{predicate::str, *};
+use predicates::prelude::predicate::str;
 
-use geotool_algorithm::{BD09_LAT, BD09_LON, GCJ02_LAT, GCJ02_LON, WGS84_LAT, WGS84_LON}
+use geotool_algorithm::{BD09_LAT, BD09_LON, GCJ02_LAT, GCJ02_LON, WGS84_LAT, WGS84_LON};
 #[test]
 fn test_wgs84_to_gcj02() {
     Command::cargo_bin("geotool")

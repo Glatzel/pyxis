@@ -9,7 +9,7 @@ pub trait GeoFloat:
 {
     const TWO: Self;
 }
-#[macro_export]
+#[macro_use]
 macro_rules! num {
     ($value:expr) => {
         T::from($value).unwrap()

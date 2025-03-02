@@ -1,6 +1,4 @@
-use std::fmt::Display;
-
-use num_traits::{ConstOne, Float, FromPrimitive};
+use crate::GeoFloat;
 /// Represents an ellipsoid with semi-major axis `a`, semi-minor axis `b`, eccentricity `e`,
 /// squared eccentricity `e²`, flattening `f`, and inverse flattening `1/f` in the `geotool_algorithm` crate.
 ///
@@ -20,10 +18,7 @@ use num_traits::{ConstOne, Float, FromPrimitive};
 /// assert_approx_eq!(f64, ellipsoid.flattening(), 0.0033528106647474805, epsilon = 1e-12);
 /// ```
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct Ellipsoid<T>
-where
-    T: Float + ConstOne + FromPrimitive + Display,
-{
+pub struct Ellipsoid<T> {
     semi_major_axis: T,    // Semi-major axis `a`
     semi_minor_axis: T,    // Semi-minor axis `b`
     eccentricity: T,       // Eccentricity `e`
@@ -32,7 +27,7 @@ where
     inverse_flattening: T, // Inverse flattening `1/f`
 }
 
-impl<T: Float + ConstOne + FromPrimitive + Display> Ellipsoid<T> {
+impl<T: GeoFloat> Ellipsoid<T> {
     /// Creates a new `Ellipsoid` from semi-major axis (`a`) and inverse flattening (`1/f`).
     ///
     /// # Arguments
@@ -61,9 +56,9 @@ impl<T: Float + ConstOne + FromPrimitive + Display> Ellipsoid<T> {
     /// assert_approx_eq!(f64, ellipsoid.flattening(), 0.0033528106647474805, epsilon = 1e-12);
     /// ```
     pub fn from_semi_major_and_invf(semi_major_axis: T, inverse_flattening: T) -> Self {
-        let flattening: T = <T as ConstOne>::ONE / inverse_flattening;
-        let semi_minor_axis = semi_major_axis * (<T as ConstOne>::ONE - flattening);
-        let eccentricity2: T = T::from_f64(2.0).unwrap() * flattening - flattening * flattening;
+        let flattening: T = T::ONE / inverse_flattening;
+        let semi_minor_axis = semi_major_axis * (T::ONE - flattening);
+        let eccentricity2: T = T::TWO * flattening - flattening * flattening;
         let eccentricity = eccentricity2.sqrt();
 
         Ellipsoid {
@@ -114,9 +109,9 @@ impl<T: Float + ConstOne + FromPrimitive + Display> Ellipsoid<T> {
         // Calculate flattening
         let flattening = (semi_major_axis - semi_minor_axis) / semi_major_axis;
         // Calculate inverse flattening
-        let inverse_flattening = <T as ConstOne>::ONE / flattening;
+        let inverse_flattening: T = T::ONE / flattening;
         // Calculate eccentricity²
-        let eccentricity2: T = T::from_f64(2.0).unwrap() * flattening - flattening.powi(2);
+        let eccentricity2: T = T::TWO * flattening - flattening.powi(2);
         // Calculate eccentricity
         let eccentricity = eccentricity2.sqrt();
 

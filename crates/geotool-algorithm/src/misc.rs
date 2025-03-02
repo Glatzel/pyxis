@@ -1,7 +1,8 @@
-use std::fmt::Display;
-
 use num_traits::identities::ConstOne;
 use num_traits::{Float, FromPrimitive};
+use std::fmt::Display;
+
+use crate::GeoFloat;
 /// Converts projected XY coordinates from the height compensation plane to the sea level plane.
 ///
 /// # Arguments
@@ -32,7 +33,7 @@ where
     T: Float + ConstOne,
 {
     let ratio = hb / radius;
-    let factor = ratio / (<T as ConstOne>::ONE + ratio);
+    let factor = ratio / (T::ONE + ratio);
     let xc = xc - factor * (xc - x0);
     let yc = yc - factor * (yc - y0);
     (xc, yc)
@@ -73,7 +74,7 @@ where
 /// ```
 pub fn lbh2xyz<T>(lon: T, lat: T, height: T, ellipsoid: &crate::Ellipsoid<T>) -> (T, T, T)
 where
-    T: Float + ConstOne + FromPrimitive + Display,
+    T: GeoFloat,
 {
     // Constants from the ellipsoid
     let a = ellipsoid.semi_major_axis(); // Semi-major axis
@@ -83,10 +84,10 @@ where
     let lat_rad = lat.to_radians();
     let lon_rad = lon.to_radians();
 
-    let n = a / (<T as ConstOne>::ONE - e2 * lat_rad.sin().powi(2)).sqrt();
+    let n = a / (T::ONE - e2 * lat_rad.sin().powi(2)).sqrt();
     let x = (n + height) * lat_rad.cos() * lon_rad.cos();
     let y = (n + height) * lat_rad.cos() * lon_rad.sin();
-    let z = ((<T as ConstOne>::ONE - e2) * n + height) * lat_rad.sin();
+    let z = ((T::ONE - e2) * n + height) * lat_rad.sin();
     (x, y, z)
 }
 /// Converts Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
@@ -139,26 +140,26 @@ pub fn xyz2lbh<T>(
     max_iter: usize,
 ) -> (T, T, T)
 where
-    T: Float + ConstOne + FromPrimitive + Display,
+    T: GeoFloat,
 {
     // Constants from the ellipsoid
     let a = ellipsoid.semi_major_axis(); // Semi-major axis
-    let e2 = ellipsoid.eccentricity2(); // Squared eccentricity
+    let e2: T = ellipsoid.eccentricity2(); // Squared eccentricity
 
     // Longitude
     let longitude = y.atan2(x);
 
     // Initial calculations
     let p = (x.powi(2) + y.powi(2)).sqrt(); // Projection on equatorial plane
-    let mut latitude = z.atan2(p * (<T as ConstOne>::ONE - e2)); // Initial latitude estimate
-    let mut n: T = a / (<T as ConstOne>::ONE - e2 * latitude.sin().powi(2)).sqrt(); // Radius of curvature
+    let mut latitude = z.atan2(p * (T::ONE - e2)); // Initial latitude estimate
+    let mut n: T = a / (T::ONE - e2 * latitude.sin().powi(2)).sqrt(); // Radius of curvature
     let mut height = p / latitude.cos() - n;
 
     // Iterative refinement of latitude
     for _i in 0..max_iter {
         let sin_lat = latitude.sin();
-        n = a / (<T as ConstOne>::ONE - e2 * sin_lat.powi(2)).sqrt();
-        let new_latitude = z.atan2(p * (<T as ConstOne>::ONE - e2 * n / (n + height)));
+        n = a / (T::ONE - e2 * sin_lat.powi(2)).sqrt();
+        let new_latitude = z.atan2(p * (T::ONE - e2 * n / (n + height)));
         height = p / new_latitude.cos() - n;
         #[cfg(feature = "log")]
         {

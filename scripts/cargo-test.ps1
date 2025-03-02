@@ -1,5 +1,3 @@
-$ErrorActionPreference = "Stop"
-$PSNativeCommandUseErrorActionPreference = $true
 Set-Location $PSScriptRoot
 Set-Location ..
 New-Item ./target/llvm-cov-target/debug -ItemType Directory -ErrorAction SilentlyContinue
@@ -8,10 +6,12 @@ if ($IsWindows) {
     Copy-Item "./vcpkg_deps/vcpkg_installed/static/x64-windows-static/share/proj/proj.db" ./target/llvm-cov-target/debug
     Write-Output "::group::nextest"
     pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --branch nextest
+    $code = $LASTEXITCODE
     Write-Output "::endgroup::"
 
     Write-Output "::group::doctest"
     pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --branch --doc
+    $code = $code + $LASTEXITCODE
     Write-Output "::endgroup::"
 
     Write-Output "::group::report"
@@ -25,6 +25,7 @@ if ($IsWindows) {
     Write-Output "::endgroup::"
 
     Write-Output "::group::result"
+    $code = $code + $LASTEXITCODE
     if ($code -ne 0) {
         Write-Output "Test failed."
     }
@@ -32,14 +33,17 @@ if ($IsWindows) {
         Write-Output "Test successed."
     }
     Write-Output "::endgroup::"
+    exit $code
 }
 elseif ($IsLinux) {
     Write-Output "::group::nextest"
     cargo +nightly llvm-cov --no-report --all-features --workspace --branch nextest
+    $code = $LASTEXITCODE
     Write-Output "::endgroup::"
 
     Write-Output "::group::doctest"
     cargo +nightly llvm-cov --no-report --all-features --workspace --branch --doc
+    $code = $code + $LASTEXITCODE
     Write-Output "::endgroup::"
 
     Write-Output "::group::report"
@@ -53,6 +57,7 @@ elseif ($IsLinux) {
     Write-Output "::endgroup::"
 
     Write-Output "::group::result"
+    $code = $code + $LASTEXITCODE
     if ($code -ne 0) {
         Write-Output "Test failed."
     }
@@ -60,6 +65,7 @@ elseif ($IsLinux) {
         Write-Output "Test successed."
     }
     Write-Output "::endgroup::"
+    exit $code
 }
 else {
     Write-Error "Unsupported system $os"

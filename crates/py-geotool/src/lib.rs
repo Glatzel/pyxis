@@ -1,6 +1,6 @@
 mod crypto;
-mod space;
 mod misc;
+mod space;
 use pyo3::prelude::*;
 
 #[pymodule]

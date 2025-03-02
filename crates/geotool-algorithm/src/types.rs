@@ -1,7 +1,5 @@
-use std::{
-    fmt::{Debug, Display},
-    sync::LazyLock,
-};
+use std::fmt::{Debug, Display};
+use std::sync::LazyLock;
 
 use num_traits::{ConstOne, Float, FloatConst, FromPrimitive};
 

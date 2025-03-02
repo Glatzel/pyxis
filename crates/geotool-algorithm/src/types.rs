@@ -1,9 +1,7 @@
 use std::fmt::{Debug, Display};
 
 use num_traits::{ConstOne, Float, FloatConst, FromPrimitive};
-pub trait GeoFloat:
-    Float + FromPrimitive + FloatConst + ConstOne + Debug + Display
-{
+pub trait GeoFloat: Float + FromPrimitive + FloatConst + ConstOne + Debug + Display {
     const TWO: Self;
 }
 

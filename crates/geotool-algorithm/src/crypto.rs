@@ -19,27 +19,51 @@ const EARTH_R: f64 = 6378137.0;
 const X_PI: f64 = PI * 3000.0 / 180.0;
 const EE: f64 = 0.006_693_421_622_965_943;
 
-fn transform(x: f64, y: f64) -> (f64, f64) {
+fn transform<T>(x: T, y: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let xy = x * y;
     let abs_x = x.abs().sqrt();
-    let x_pi = x * PI;
-    let y_pi = y * PI;
-    let d = 20.0 * (6.0 * x_pi).sin() + 20.0 * (2.0 * x_pi).sin();
+    let x_pi = x * T::PI();
+    let y_pi = y * T::PI();
+    let d: T = T::from(20).unwrap() * (T::from(6).unwrap() * x_pi).sin()
+        + T::from(20).unwrap() * (T::TWO * x_pi).sin();
 
     let mut lat = d;
     let mut lon = d;
 
-    lat += 20.0 * (y_pi).sin() + 40.0 * (y_pi / 3.0).sin();
-    lon += 20.0 * (x_pi).sin() + 40.0 * (x_pi / 3.0).sin();
+    lat = lat
+        + T::from(20).unwrap() * (y_pi).sin()
+        + T::from(40).unwrap() * (y_pi / T::from(3).unwrap()).sin();
+    lon = lon
+        + T::from(20).unwrap() * (x_pi).sin()
+        + T::from(40).unwrap() * (x_pi / T::from(3).unwrap()).sin();
 
-    lat += 160.0 * (y_pi / 12.0).sin() + 320.0 * (y_pi / 30.0).sin();
-    lon += 150.0 * (x_pi / 12.0).sin() + 300.0 * (x_pi / 30.0).sin();
+    lat = lat
+        + T::from(160).unwrap() * (y_pi / T::from(12).unwrap()).sin()
+        + T::from(320).unwrap() * (y_pi / T::from(30).unwrap()).sin();
+    lon = lon
+        + T::from(150).unwrap() * (x_pi / T::from(12).unwrap()).sin()
+        + T::from(300).unwrap() * (x_pi / T::from(30).unwrap()).sin();
 
-    lat *= 2.0 / 3.0;
-    lon *= 2.0 / 3.0;
+    lat = lat + T::from(2).unwrap() / T::from(3).unwrap();
+    lon = lon + T::from(2).unwrap() / T::from(3).unwrap();
 
-    lat += -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * xy + 0.2 * abs_x;
-    lon += 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * xy + 0.1 * abs_x;
+    lat = lat
+        + T::from(-100).unwrap()
+        + T::TWO * x
+        + T::from(3).unwrap() * y
+        + T::from(0.2).unwrap() * y * y
+        + T::from(0.1).unwrap() * xy
+        + T::from(0.2).unwrap() * abs_x;
+    lon = lon
+        + T::from(300).unwrap()
+        + x
+        + T::TWO * y
+        + T::from(0.1).unwrap() * x * x
+        + T::from(0.1).unwrap() * xy
+        + T::from(0.1).unwrap() * abs_x;
 
     (lon, lat)
 }

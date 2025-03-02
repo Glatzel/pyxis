@@ -7,6 +7,12 @@ use crate::Ellipsoid;
 pub trait GeoFloat: Float + FromPrimitive + FloatConst + ConstOne + Debug + Display {
     const TWO: Self;
 }
+#[macro_export]
+macro_rules! num {
+    ($value:expr) => {
+        T::from($value).unwrap()
+    };
+}
 
 impl GeoFloat for f32 {
     const TWO: Self = 2.0;

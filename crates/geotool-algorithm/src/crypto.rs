@@ -4,7 +4,7 @@
 /// - https://github.com/Leask/EvilTransform
 use std::f64::consts::PI;
 
-use crate::types::{ConstEllipsoid, GeoFloat};
+use crate::{num, types::{ConstEllipsoid, GeoFloat}};
 pub enum CryptoSpace {
     WGS84,
     GCJ02,
@@ -27,43 +27,29 @@ where
     let abs_x = x.abs().sqrt();
     let x_pi = x * T::PI();
     let y_pi = y * T::PI();
-    let d: T = T::from(20).unwrap() * (T::from(6).unwrap() * x_pi).sin()
-        + T::from(20).unwrap() * (T::TWO * x_pi).sin();
+    let d: T = num!(20.0) * (num!(6.0) * x_pi).sin() + num!(20.0) * (T::TWO * x_pi).sin();
 
     let mut lat = d;
     let mut lon = d;
 
-    lat = lat
-        + T::from(20).unwrap() * (y_pi).sin()
-        + T::from(40).unwrap() * (y_pi / T::from(3).unwrap()).sin();
-    lon = lon
-        + T::from(20).unwrap() * (x_pi).sin()
-        + T::from(40).unwrap() * (x_pi / T::from(3).unwrap()).sin();
+    lat = lat + num!(20.0) * (y_pi).sin() + num!(40.0) * (y_pi / num!(3.0)).sin();
+    lon = lon + num!(20.0) * (x_pi).sin() + num!(40.0) * (x_pi / num!(3.0)).sin();
+
+    lat = lat + num!(160.0) * (y_pi / num!(12.0)).sin() + num!(320.0) * (y_pi / num!(30.0)).sin();
+    lon = lon + num!(150.0) * (x_pi / num!(12.0)).sin() + num!(300.0) * (x_pi / num!(30.0)).sin();
+
+    lat = lat * num!(2.0) / num!(3.0);
+    lon = lon * num!(2.0) / num!(3.0);
 
     lat = lat
-        + T::from(160).unwrap() * (y_pi / T::from(12).unwrap()).sin()
-        + T::from(320).unwrap() * (y_pi / T::from(30).unwrap()).sin();
-    lon = lon
-        + T::from(150).unwrap() * (x_pi / T::from(12).unwrap()).sin()
-        + T::from(300).unwrap() * (x_pi / T::from(30).unwrap()).sin();
-
-    lat = lat + T::from(2).unwrap() / T::from(3).unwrap();
-    lon = lon + T::from(2).unwrap() / T::from(3).unwrap();
-
-    lat = lat
-        + T::from(-100).unwrap()
+        + num!(-100)
         + T::TWO * x
-        + T::from(3).unwrap() * y
-        + T::from(0.2).unwrap() * y * y
-        + T::from(0.1).unwrap() * xy
-        + T::from(0.2).unwrap() * abs_x;
-    lon = lon
-        + T::from(300).unwrap()
-        + x
-        + T::TWO * y
-        + T::from(0.1).unwrap() * x * x
-        + T::from(0.1).unwrap() * xy
-        + T::from(0.1).unwrap() * abs_x;
+        + num!(3.0) * y
+        + num!(0.2) * y * y
+        + num!(0.1) * xy
+        + num!(0.2) * abs_x;
+    lon =
+        lon + num!(300.0) + x + T::TWO * y + num!(0.1) * x * x + num!(0.1) * xy + num!(0.1) * abs_x;
 
     (lon, lat)
 }
@@ -333,7 +319,7 @@ pub fn crypto_exact(
                 haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
             );
             if _i == max_iter - 1 {
-                tracing::warn!("Exeed max iteration number: {max_iter}");
+                tracing::warn!("Exeed max iteration num!ber: {max_iter}");
             }
         }
 

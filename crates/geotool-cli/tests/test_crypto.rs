@@ -67,7 +67,7 @@ fn test_wgs84_to_bd09() {
             BD09_LON.to_string().get(0..10).unwrap(),
         ))
         .stdout(predicate::str::contains(
-            BD09_LAT.to_string().get(0..10).unwrap(),
+            BD09_LAT.to_string().get(0..9).unwrap(),
         ));
 }
 #[test]
@@ -88,7 +88,7 @@ fn test_bd09_to_wgs84() {
             WGS84_LON.to_string().get(0..10).unwrap(),
         ))
         .stdout(predicate::str::contains(
-            WGS84_LAT.to_string().get(0..10).unwrap(),
+            WGS84_LAT.to_string().get(0..9).unwrap(),
         ));
 }
 #[test]

@@ -4,10 +4,8 @@
 /// - https://github.com/Leask/EvilTransform
 use std::f64::consts::PI;
 
-use crate::{
-    num,
-    types::{ConstEllipsoid, GeoFloat},
-};
+use crate::num;
+use crate::types::{ConstEllipsoid, GeoFloat};
 pub enum CryptoSpace {
     WGS84,
     GCJ02,

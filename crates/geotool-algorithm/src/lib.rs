@@ -11,3 +11,5 @@ pub use ellipsoid::*;
 pub use linear::*;
 pub use misc::*;
 pub use space::*;
+mod types;
+use types::GeoFloat;

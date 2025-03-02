@@ -413,6 +413,7 @@ dependencies = [
  "codspeed-criterion-compat",
  "float-cmp",
  "log-template",
+ "num-traits",
  "rand",
  "serde",
  "tracing",

@@ -2,7 +2,25 @@
 /// - https://github.com/googollee/eviltransform/blob/master/rust/src/lib.rs
 /// - https://github.com/billtian/wgtochina_lb-php/tree/master
 /// - https://github.com/Leask/EvilTransform
+/// - https://github.com/wandergis/coordtransform
+/// - https://blog.csdn.net/coolypf/article/details/8569813
+/// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
 use std::f64::consts::PI;
+
+use crate::num;
+use crate::types::{ConstEllipsoid, GeoFloat};
+#[cfg(debug_assertions)]
+pub const WGS84_LON: f64 = 121.0917077;
+#[cfg(debug_assertions)]
+pub const WGS84_LAT: f64 = 30.6107779;
+#[cfg(debug_assertions)]
+pub const GCJ02_LON: f64 = 121.09626927850977;
+#[cfg(debug_assertions)]
+pub const GCJ02_LAT: f64 = 30.608604368560773;
+#[cfg(debug_assertions)]
+pub const BD09_LON: f64 = 121.10271724622564;
+#[cfg(debug_assertions)]
+pub const BD09_LAT: f64 = 30.61484575976839;
 pub enum CryptoSpace {
     WGS84,
     GCJ02,
@@ -13,45 +31,57 @@ pub enum CryptoThresholdMode {
     LonLat,
 }
 
-const EARTH_R: f64 = 6378137.0;
-const X_PI: f64 = PI * 3000.0 / 180.0;
-const EE: f64 = 0.006_693_421_622_965_943;
-
-fn transform(x: f64, y: f64) -> (f64, f64) {
+fn transform<T>(x: T, y: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let xy = x * y;
     let abs_x = x.abs().sqrt();
-    let x_pi = x * PI;
-    let y_pi = y * PI;
-    let d = 20.0 * (6.0 * x_pi).sin() + 20.0 * (2.0 * x_pi).sin();
+    let x_pi = x * T::PI();
+    let y_pi = y * T::PI();
+    let d: T = num!(20.0) * (num!(6.0) * x_pi).sin() + num!(20.0) * (T::TWO * x_pi).sin();
 
     let mut lat = d;
     let mut lon = d;
 
-    lat += 20.0 * (y_pi).sin() + 40.0 * (y_pi / 3.0).sin();
-    lon += 20.0 * (x_pi).sin() + 40.0 * (x_pi / 3.0).sin();
+    lat = lat + num!(20.0) * (y_pi).sin() + num!(40.0) * (y_pi / num!(3.0)).sin();
+    lon = lon + num!(20.0) * (x_pi).sin() + num!(40.0) * (x_pi / num!(3.0)).sin();
 
-    lat += 160.0 * (y_pi / 12.0).sin() + 320.0 * (y_pi / 30.0).sin();
-    lon += 150.0 * (x_pi / 12.0).sin() + 300.0 * (x_pi / 30.0).sin();
+    lat = lat + num!(160.0) * (y_pi / num!(12.0)).sin() + num!(320.0) * (y_pi / num!(30.0)).sin();
+    lon = lon + num!(150.0) * (x_pi / num!(12.0)).sin() + num!(300.0) * (x_pi / num!(30.0)).sin();
 
-    lat *= 2.0 / 3.0;
-    lon *= 2.0 / 3.0;
+    lat = lat * num!(2.0) / num!(3.0);
+    lon = lon * num!(2.0) / num!(3.0);
 
-    lat += -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * xy + 0.2 * abs_x;
-    lon += 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * xy + 0.1 * abs_x;
+    lat = lat
+        + num!(-100.0)
+        + T::TWO * x
+        + num!(3.0) * y
+        + num!(0.2) * y * y
+        + num!(0.1) * xy
+        + num!(0.2) * abs_x;
+    lon =
+        lon + num!(300.0) + x + T::TWO * y + num!(0.1) * x * x + num!(0.1) * xy + num!(0.1) * abs_x;
 
     (lon, lat)
 }
 
-fn delta(lon: f64, lat: f64) -> (f64, f64) {
-    let (d_lon, d_lat) = transform(lon - 105.0, lat - 35.0);
+fn delta<T>(lon: T, lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
+    let (d_lon, d_lat) = transform(lon - num!(105.0), lat - num!(35.0));
     let mut d_lat = d_lat;
     let mut d_lon = d_lon;
-    let rad_lat = lat / 180.0 * PI;
+    let rad_lat = lat / num!(180.0) * T::PI();
     let mut magic = (rad_lat).sin();
-    magic = 1.0 - EE * magic * magic;
+    let ee = T::krasovsky1940().eccentricity2();
+    let earth_r = T::krasovsky1940().semi_major_axis();
+
+    magic = T::ONE - ee * magic * magic;
     let sqrt_magic = (magic).sqrt();
-    d_lat = (d_lat * 180.0) / ((EARTH_R * (1.0 - EE)) / (magic * sqrt_magic) * PI);
-    d_lon = (d_lon * 180.0) / (EARTH_R / sqrt_magic * (rad_lat).cos() * PI);
+    d_lat = (d_lat * num!(180.0)) / ((earth_r * (T::ONE - ee)) / (magic * sqrt_magic) * T::PI());
+    d_lon = (d_lon * num!(180.0)) / (earth_r / sqrt_magic * (rad_lat).cos() * T::PI());
     (d_lon, d_lat)
 }
 
@@ -71,16 +101,21 @@ fn delta(lon: f64, lat: f64) -> (f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.10271732371203, 30.61484572185035);
-/// let p = geotool_algorithm::bd09_to_gcj02(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-6);
-/// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-6);
+/// use geotool_algorithm::*;
+/// let p = (BD09_LON, BD09_LAT);
+/// let p = bd09_to_gcj02(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-6);
+/// assert_approx_eq!(f64, p.1, GCJ02_LAT, epsilon = 1e-6);
 /// ```
-pub fn bd09_to_gcj02(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
-    let x = bd09_lon - 0.0065;
-    let y = bd09_lat - 0.006;
-    let z = (x * x + y * y).sqrt() - 0.00002 * (y * X_PI).sin();
-    let theta = y.atan2(x) - 0.000003 * (x * X_PI).cos();
+pub fn bd09_to_gcj02<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
+    let x_pi = num!(PI) * num!(3000.0) / num!(180.0);
+    let x = bd09_lon - num!(0.0065);
+    let y = bd09_lat - num!(0.006);
+    let z = (x.powi(2) + y * y).sqrt() - num!(0.00002) * (y * x_pi).sin();
+    let theta = y.atan2(x) - num!(0.000003) * (x * x_pi).cos();
     let gcj02_lon = z * theta.cos();
     let gcj02_lat = z * theta.sin();
     (gcj02_lon, gcj02_lat)
@@ -102,12 +137,16 @@ pub fn bd09_to_gcj02(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.09626935575027, 30.608604331756705);
-/// let p = geotool_algorithm::gcj02_to_wgs84(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.0917077 , epsilon = 1e-5);
-/// assert_approx_eq!(f64, p.1, 30.6107779 , epsilon = 1e-5);
+/// use geotool_algorithm::*;
+/// let p = (GCJ02_LON, GCJ02_LAT);
+/// let p = gcj02_to_wgs84(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, WGS84_LON , epsilon = 1e-5);
+/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-7);
 /// ```
-pub fn gcj02_to_wgs84(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
+pub fn gcj02_to_wgs84<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let (d_lon, d_lat) = delta(gcj02_lon, gcj02_lat);
     (gcj02_lon - d_lon, gcj02_lat - d_lat)
 }
@@ -128,12 +167,16 @@ pub fn gcj02_to_wgs84(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.10271691314193, 30.614836298418275);
-/// let p = geotool_algorithm::bd09_to_wgs84(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.09170577473259, epsilon = 1e-6);
-/// assert_approx_eq!(f64, p.1, 30.610767662599578, epsilon = 1e-6);
+/// use geotool_algorithm::*;
+/// let p = (BD09_LON, BD09_LAT);
+/// let p = bd09_to_wgs84(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-5);
+/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-5);
 /// ```
-pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
+pub fn bd09_to_wgs84<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let (gcj_lon, gcj_lat) = bd09_to_gcj02(bd09_lon, bd09_lat);
     gcj02_to_wgs84(gcj_lon, gcj_lat)
 }
@@ -154,17 +197,22 @@ pub fn bd09_to_wgs84(bd09_lon: f64, bd09_lat: f64) -> (f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.09626935575027, 30.608604331756705);
-/// let p = geotool_algorithm::gcj02_to_bd09(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.10271732371203, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.61484572185035, epsilon = 1e-17);
+/// use geotool_algorithm::*;
+/// let p = (GCJ02_LON, GCJ02_LAT);
+/// let p = gcj02_to_bd09(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, BD09_LAT, epsilon = 1e-17);
 /// ```
-pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
+pub fn gcj02_to_bd09<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
+    let x_pi = num!(PI) * num!(3000.0) / num!(180.0);
     let z =
-        (gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat).sqrt() + 0.00002 * (gcj02_lat * X_PI).sin();
-    let theta = gcj02_lat.atan2(gcj02_lon) + 0.000003 * (gcj02_lon * X_PI).cos();
-    let bd09_lon = z * (theta).cos() + 0.0065;
-    let bd09_lat = z * (theta).sin() + 0.006;
+        (gcj02_lon.powi(2) + gcj02_lat.powi(2)).sqrt() + num!(0.00002) * (gcj02_lat * x_pi).sin();
+    let theta = gcj02_lat.atan2(gcj02_lon) + num!(0.000003) * (gcj02_lon * x_pi).cos();
+    let bd09_lon = z * (theta).cos() + num!(0.0065);
+    let bd09_lat = z * (theta).sin() + num!(0.006);
     (bd09_lon, bd09_lat)
 }
 
@@ -184,13 +232,17 @@ pub fn gcj02_to_bd09(gcj02_lon: f64, gcj02_lat: f64) -> (f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.0917077,30.6107779 );
-/// let p = geotool_algorithm::wgs84_to_gcj02(p.0, p.1);
+/// use geotool_algorithm::*;
+/// let p = (WGS84_LON,WGS84_LAT );
+/// let p = wgs84_to_gcj02(p.0, p.1);
 /// println!("{},{}",p.0,p.1);
-/// assert_approx_eq!(f64, p.0, 121.09626935575027, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.608604331756705, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, GCJ02_LAT, epsilon = 1e-17);
 /// ```
-pub fn wgs84_to_gcj02(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
+pub fn wgs84_to_gcj02<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let (d_lon, d_lat) = delta(wgs84_lon, wgs84_lat);
     (wgs84_lon + d_lon, wgs84_lat + d_lat)
 }
@@ -211,12 +263,16 @@ pub fn wgs84_to_gcj02(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (121.0917077,30.6107779);
-/// let p = geotool_algorithm::wgs84_to_bd09(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, 121.10271732371203, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, 30.61484572185035,  epsilon = 1e-17);
+/// use geotool_algorithm::*;
+/// let p = (WGS84_LON,WGS84_LAT );
+/// let p = wgs84_to_bd09(p.0, p.1);
+/// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, BD09_LAT,  epsilon = 1e-17);
 /// ```
-pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
+pub fn wgs84_to_bd09<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let (gcj_lon, gcj_lat) = wgs84_to_gcj02(wgs84_lon, wgs84_lat);
     gcj02_to_bd09(gcj_lon, gcj_lat)
 }
@@ -227,21 +283,22 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// use tracing_subscriber::layer::SubscriberExt;
 /// use tracing_subscriber::util::SubscriberInitExt;
 /// use tracing_subscriber::filter::LevelFilter;
+/// use geotool_algorithm::*;
 /// tracing_subscriber::registry()
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
-/// let p = (121.10271732371203, 30.61484572185035);
+/// let p = (BD09_LON, BD09_LAT);
 /// let p = geotool_algorithm::crypto_exact(
 ///             p.0,
 ///             p.1,
-///             geotool_algorithm::bd09_to_wgs84,
-///             geotool_algorithm::wgs84_to_bd09,
+///             bd09_to_wgs84,
+///             wgs84_to_bd09,
 ///             1e-17,
-///             geotool_algorithm::CryptoThresholdMode::LonLat,
+///             CryptoThresholdMode::LonLat,
 ///             100,
 ///         );
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-15);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-14);
+/// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-15);
+/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-14);
 /// ```
 ///
 /// ```
@@ -249,31 +306,35 @@ pub fn wgs84_to_bd09(wgs84_lon: f64, wgs84_lat: f64) -> (f64, f64) {
 /// use tracing_subscriber::layer::SubscriberExt;
 /// use tracing_subscriber::util::SubscriberInitExt;
 /// use tracing_subscriber::filter::LevelFilter;
+/// use geotool_algorithm::*;
 /// tracing_subscriber::registry()
 ///     .with(log_template::terminal_layer(LevelFilter::TRACE))
 ///     .init();
-/// let p = (121.10271732371203, 30.61484572185035);
+/// let p = (BD09_LON, BD09_LAT);
 /// let p = geotool_algorithm::crypto_exact(
 ///             p.0,
 ///             p.1,
-///             geotool_algorithm::bd09_to_wgs84,
-///             geotool_algorithm::wgs84_to_bd09,
+///             bd09_to_wgs84,
+///             wgs84_to_bd09,
 ///             1e-3,
-///             geotool_algorithm::CryptoThresholdMode::Distance,
+///             CryptoThresholdMode::Distance,
 ///             100,
 ///         );
-/// assert_approx_eq!(f64, p.0, 121.0917077, epsilon = 1e-8);
-/// assert_approx_eq!(f64, p.1, 30.6107779, epsilon = 1e-8);
+/// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-8);
+/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-8);
 /// ```
-pub fn crypto_exact(
-    src_lon: f64,
-    src_lat: f64,
-    crypto_fn: impl Fn(f64, f64) -> (f64, f64),
-    inv_crypto_fn: impl Fn(f64, f64) -> (f64, f64),
-    threshold: f64,
+pub fn crypto_exact<T>(
+    src_lon: T,
+    src_lat: T,
+    crypto_fn: impl Fn(T, T) -> (T, T),
+    inv_crypto_fn: impl Fn(T, T) -> (T, T),
+    threshold: T,
     threshold_mode: CryptoThresholdMode,
     max_iter: usize,
-) -> (f64, f64) {
+) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let (mut dst_lon, mut dst_lat) = crypto_fn(src_lon, src_lat);
 
     let mut d_lon = (dst_lon - src_lon).abs();
@@ -284,11 +345,11 @@ pub fn crypto_exact(
     let mut p_lon = dst_lon + d_lon;
     let mut p_lat = dst_lat + d_lat;
 
-    d_lon += 1.0;
-    d_lat += 1.0;
+    d_lon = d_lon + num!(1.0);
+    d_lat = d_lat + num!(1.0);
 
     for _i in 0..max_iter {
-        (dst_lon, dst_lat) = ((m_lon + p_lon) / 2.0, (m_lat + p_lat) / 2.0);
+        (dst_lon, dst_lat) = ((m_lon + p_lon) / T::TWO, (m_lat + p_lat) / T::TWO);
         let (tmp_lon, tmp_lat) = inv_crypto_fn(dst_lon, dst_lat);
         let temp_d_lon = tmp_lon - src_lon;
         let temp_d_lat = tmp_lat - src_lat;
@@ -307,7 +368,7 @@ pub fn crypto_exact(
                 haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
             );
             if _i == max_iter - 1 {
-                tracing::warn!("Exeed max iteration number: {max_iter}");
+                tracing::warn!("Exeed max iteration num!ber: {max_iter}");
             }
         }
 
@@ -325,28 +386,28 @@ pub fn crypto_exact(
             _ => (),
         }
 
-        match (d_lon > 0.0, d_lon.abs() > temp_d_lon.abs()) {
+        match (d_lon > T::zero(), d_lon.abs() > temp_d_lon.abs()) {
             (true, true) => p_lon = dst_lon,
             (false, true) => m_lon = dst_lon,
             (true, false) => {
                 p_lon = dst_lon;
-                m_lon -= d_lon;
+                m_lon = m_lon - d_lon;
             }
             (false, false) => {
                 m_lon = dst_lon;
-                p_lon -= d_lon;
+                p_lon = p_lon - d_lon;
             }
         }
-        match (d_lat > 0.0, d_lat.abs() > temp_d_lat.abs()) {
+        match (d_lat > T::zero(), d_lat.abs() > temp_d_lat.abs()) {
             (true, true) => p_lat = dst_lat,
             (false, true) => m_lat = dst_lat,
             (true, false) => {
                 p_lat = dst_lat;
-                m_lat -= d_lat;
+                m_lat = m_lat - d_lat;
             }
             (false, false) => {
                 m_lat = dst_lat;
-                p_lat -= d_lat;
+                p_lat = p_lat - d_lat;
             }
         }
 
@@ -357,7 +418,10 @@ pub fn crypto_exact(
     (dst_lon, dst_lat)
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
-pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64 {
+pub fn haversine_distance<T>(lon_a: T, lat_a: T, lon_b: T, lat_b: T) -> T
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
     let lat1_rad = lat_a.to_radians();
     let lon1_rad = lon_a.to_radians();
     let lat2_rad = lat_b.to_radians();
@@ -366,11 +430,11 @@ pub fn haversine_distance(lon_a: f64, lat_a: f64, lon_b: f64, lat_b: f64) -> f64
     let delta_lat = lat2_rad - lat1_rad;
     let delta_lon = lon2_rad - lon1_rad;
 
-    let a = (delta_lat / 2.0).sin().powi(2)
-        + lat1_rad.cos() * lat2_rad.cos() * (delta_lon / 2.0).sin().powi(2);
-    let c = 2.0 * a.sqrt().atan2((1.0 - a).sqrt());
+    let a = (delta_lat / T::TWO).sin().powi(2)
+        + lat1_rad.cos() * lat2_rad.cos() * (delta_lon / T::TWO).sin().powi(2);
+    let c = T::TWO * a.sqrt().atan2((T::ONE - a).sqrt());
 
-    EARTH_R * c
+    T::krasovsky1940().semi_major_axis() * c
 }
 #[cfg(test)]
 mod test {
@@ -399,7 +463,7 @@ mod test {
         let mut all_lonlat = 0.0;
         let count = if is_ci { 10 } else { 10000 };
         for _ in 0..count {
-            let wgs = (
+            let wgs: (f64, f64) = (
                 rng.random_range(72.004..137.8347),
                 rng.random_range(0.8293..55.8271),
             );

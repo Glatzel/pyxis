@@ -7,6 +7,6 @@ coverage:
       default:
         informational: true
 comment:
-  behavior: new
+  behavior: default
 ignore:
   - "crates/py-geotool/src"

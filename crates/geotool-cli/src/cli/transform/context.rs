@@ -57,7 +57,7 @@ impl ContextTransform {
     pub fn datum_compense(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
         (self.x, self.y) = geotool_algorithm::datum_compense(self.x, self.y, hb, r, x0, y0);
     }
-    pub fn lbh2xyz(&mut self, ellipsoid: &Ellipsoid) {
+    pub fn lbh2xyz(&mut self, ellipsoid: &Ellipsoid<f64>) {
         (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, ellipsoid);
     }
     pub fn migrate2d(
@@ -248,7 +248,7 @@ impl ContextTransform {
         self.y += ty;
         self.z += tz;
     }
-    pub fn xyz2lbh(&mut self, ellipsoid: &Ellipsoid) {
+    pub fn xyz2lbh(&mut self, ellipsoid: &Ellipsoid<f64>) {
         (self.x, self.y, self.z) =
             geotool_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid, 1e-17, 1000);
     }

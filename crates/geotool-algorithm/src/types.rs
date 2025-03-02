@@ -28,7 +28,7 @@ where
     T: GeoFloat,
 {
     fn grs1980() -> LazyLock<Ellipsoid<T>>;
-    fn krasovsky1940() -> LazyLock<Ellipsoid<T>>;
+    fn krasovsky1940() -> &'static Ellipsoid<T>;
     fn wgs84() -> LazyLock<Ellipsoid<T>>;
 }
 
@@ -36,8 +36,8 @@ impl ConstEllipsoid<f32> for f32 {
     fn grs1980() -> LazyLock<Ellipsoid<f32>> {
         LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257222101))
     }
-    fn krasovsky1940() -> LazyLock<Ellipsoid<f32>> {
-        LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378245.0, 298.3))
+    fn krasovsky1940() -> &'static Ellipsoid<f32> {
+        &*E32
     }
     fn wgs84() -> LazyLock<Ellipsoid<f32>> {
         LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257223563))
@@ -47,12 +47,14 @@ impl ConstEllipsoid<f64> for f64 {
     fn grs1980() -> LazyLock<Ellipsoid<f64>> {
         LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257222101))
     }
-    fn krasovsky1940() -> LazyLock<Ellipsoid<f64>> {
-        let e: LazyLock<Ellipsoid<f64>> =
-            LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378245.0, 298.3));
-        e
+    fn krasovsky1940() -> &'static Ellipsoid<f64> {
+        &*E64
     }
     fn wgs84() -> LazyLock<Ellipsoid<f64>> {
         LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257223563))
     }
 }
+static E32: LazyLock<Ellipsoid<f32>> =
+    LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378245.0, 298.3));
+static E64: LazyLock<Ellipsoid<f64>> =
+    LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378245.0, 298.3));

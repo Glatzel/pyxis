@@ -434,7 +434,7 @@ where
         + lat1_rad.cos() * lat2_rad.cos() * (delta_lon / T::TWO).sin().powi(2);
     let c = T::TWO * a.sqrt().atan2((T::ONE - a).sqrt());
 
-    T::krasovsky1940().semi_major_axis() * c
+    T::wgs84().semi_major_axis() * c
 }
 #[cfg(test)]
 mod test {

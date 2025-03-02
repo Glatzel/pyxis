@@ -1,3 +1,4 @@
+use num_traits::{Float, identities::ConstOne};
 /// Converts projected XY coordinates from the height compensation plane to the sea level plane.
 ///
 /// # Arguments
@@ -23,9 +24,12 @@
 /// assert_approx_eq!(f64, p.0, 469706.56912942487, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 2821763.831232311, epsilon = 1e-17);
 /// ```
-pub fn datum_compense(xc: f64, yc: f64, hb: f64, radius: f64, x0: f64, y0: f64) -> (f64, f64) {
+pub fn datum_compense<T>(xc: T, yc: T, hb: T, radius: T, x0: T, y0: T) -> (T, T)
+where
+    T: Float + ConstOne,
+{
     let ratio = hb / radius;
-    let factor = ratio / (1.0 + ratio);
+    let factor = ratio / (<T as ConstOne>::ONE + ratio);
     let xc = xc - factor * (xc - x0);
     let yc = yc - factor * (yc - y0);
     (xc, yc)

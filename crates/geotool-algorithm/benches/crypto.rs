@@ -1,7 +1,7 @@
 use std::sync::LazyLock;
 
 use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
-use geotool_algorithm::*;
+use geotool_algorithm::crypto::*;
 static COORDS: LazyLock<Vec<(f64, f64)>> = LazyLock::new(|| {
     let num_points = 100;
     let x_min = 72.004;
@@ -28,22 +28,22 @@ fn bench_crypto(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto");
 
     group.bench_function("bd2gcj", |b| {
-        b.iter(|| geotool_algorithm::bd09_to_gcj02(black_box(121.0), black_box(30.0)))
+        b.iter(|| bd09_to_gcj02(black_box(121.0), black_box(30.0)))
     });
     group.bench_function("bd2wgs", |b| {
-        b.iter(|| geotool_algorithm::bd09_to_wgs84(black_box(121.0), black_box(30.0)))
+        b.iter(|| bd09_to_wgs84(black_box(121.0), black_box(30.0)))
     });
     group.bench_function("gcj2wgs", |b| {
-        b.iter(|| geotool_algorithm::gcj02_to_wgs84(black_box(121.0), black_box(30.0)))
+        b.iter(|| gcj02_to_wgs84(black_box(121.0), black_box(30.0)))
     });
     group.bench_function("gcj2bd", |b| {
-        b.iter(|| geotool_algorithm::gcj02_to_bd09(black_box(121.0), black_box(30.0)))
+        b.iter(|| gcj02_to_bd09(black_box(121.0), black_box(30.0)))
     });
     group.bench_function("wgs2bd", |b| {
-        b.iter(|| geotool_algorithm::wgs84_to_bd09(black_box(121.0), black_box(30.0)))
+        b.iter(|| wgs84_to_bd09(black_box(121.0), black_box(30.0)))
     });
     group.bench_function("wgs2gcj", |b| {
-        b.iter(|| geotool_algorithm::wgs84_to_gcj02(black_box(121.0), black_box(30.0)))
+        b.iter(|| wgs84_to_gcj02(black_box(121.0), black_box(30.0)))
     });
     group.finish();
 }

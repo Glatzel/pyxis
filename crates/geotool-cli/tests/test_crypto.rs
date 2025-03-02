@@ -1,5 +1,5 @@
 use assert_cmd::Command;
-use geotool_algorithm::{BD09_LAT, BD09_LON, GCJ02_LAT, GCJ02_LON, WGS84_LAT, WGS84_LON};
+use geotool_algorithm::crypto::{BD09_LAT, BD09_LON, GCJ02_LAT, GCJ02_LON, WGS84_LAT, WGS84_LON};
 use predicates::prelude::*;
 #[test]
 fn test_wgs84_to_gcj02() {

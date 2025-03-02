@@ -11,41 +11,41 @@ pub struct ContextTransform {
 impl ContextTransform {
     pub fn crypto(&mut self, from: CryptoSpace, to: CryptoSpace) {
         (self.x, self.y) = match (from, to) {
-            (CryptoSpace::BD09, CryptoSpace::GCJ02) => geotool_algorithm::crypto_exact(
+            (CryptoSpace::BD09, CryptoSpace::GCJ02) => geotool_algorithm::crypto::crypto_exact(
                 self.x,
                 self.y,
-                geotool_algorithm::bd09_to_gcj02,
-                geotool_algorithm::gcj02_to_bd09,
+                geotool_algorithm::crypto::bd09_to_gcj02,
+                geotool_algorithm::crypto::gcj02_to_bd09,
                 1e-17,
-                geotool_algorithm::CryptoThresholdMode::LonLat,
+                geotool_algorithm::crypto::CryptoThresholdMode::LonLat,
                 1000,
             ),
-            (CryptoSpace::BD09, CryptoSpace::WGS84) => geotool_algorithm::crypto_exact(
+            (CryptoSpace::BD09, CryptoSpace::WGS84) => geotool_algorithm::crypto::crypto_exact(
                 self.x,
                 self.y,
-                geotool_algorithm::bd09_to_wgs84,
-                geotool_algorithm::wgs84_to_bd09,
+                geotool_algorithm::crypto::bd09_to_wgs84,
+                geotool_algorithm::crypto::wgs84_to_bd09,
                 1e-17,
-                geotool_algorithm::CryptoThresholdMode::LonLat,
+                geotool_algorithm::crypto::CryptoThresholdMode::LonLat,
                 1000,
             ),
             (CryptoSpace::GCJ02, CryptoSpace::BD09) => {
-                geotool_algorithm::gcj02_to_bd09(self.x, self.y)
+                geotool_algorithm::crypto::gcj02_to_bd09(self.x, self.y)
             }
-            (CryptoSpace::GCJ02, CryptoSpace::WGS84) => geotool_algorithm::crypto_exact(
+            (CryptoSpace::GCJ02, CryptoSpace::WGS84) => geotool_algorithm::crypto::crypto_exact(
                 self.x,
                 self.y,
-                geotool_algorithm::gcj02_to_wgs84,
-                geotool_algorithm::wgs84_to_gcj02,
+                geotool_algorithm::crypto::gcj02_to_wgs84,
+                geotool_algorithm::crypto::wgs84_to_gcj02,
                 1e-17,
-                geotool_algorithm::CryptoThresholdMode::LonLat,
+                geotool_algorithm::crypto::CryptoThresholdMode::LonLat,
                 1000,
             ),
             (CryptoSpace::WGS84, CryptoSpace::BD09) => {
-                geotool_algorithm::wgs84_to_bd09(self.x, self.y)
+                geotool_algorithm::crypto::wgs84_to_bd09(self.x, self.y)
             }
             (CryptoSpace::WGS84, CryptoSpace::GCJ02) => {
-                geotool_algorithm::wgs84_to_gcj02(self.x, self.y)
+                geotool_algorithm::crypto::wgs84_to_gcj02(self.x, self.y)
             }
             _ => {
                 tracing::warn!("Nothing changes from <{from}> to <{to}>.");

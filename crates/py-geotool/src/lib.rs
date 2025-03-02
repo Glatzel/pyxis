@@ -1,6 +1,6 @@
 mod crypto;
+mod misc;
 mod space;
-mod transform;
 use pyo3::prelude::*;
 
 #[pymodule]
@@ -17,9 +17,9 @@ fn py_geotool(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_wrapped(wrap_pyfunction!(space::py_spherical_to_cylindrical))?;
 
     // transform
-    m.add_wrapped(wrap_pyfunction!(transform::py_datum_compense))?;
-    m.add_wrapped(wrap_pyfunction!(transform::py_lbh2xyz))?;
-    m.add_wrapped(wrap_pyfunction!(transform::py_xyz2lbh))?;
+    m.add_wrapped(wrap_pyfunction!(misc::py_datum_compense))?;
+    m.add_wrapped(wrap_pyfunction!(misc::py_lbh2xyz))?;
+    m.add_wrapped(wrap_pyfunction!(misc::py_xyz2lbh))?;
 
     Ok(())
 }

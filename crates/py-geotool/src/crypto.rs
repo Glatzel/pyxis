@@ -1,3 +1,4 @@
+use geotool_algorithm::crypto::*;
 use numpy::{PyArrayDyn, PyArrayMethods};
 use pyo3::prelude::*;
 use pyo3::types::PyTuple;
@@ -13,53 +14,45 @@ fn get_crypto_fn(
         to.to_lowercase().as_str(),
         exact,
     ) {
-        ("bd09", "gcj02", false) => {
-            Ok(geotool_algorithm::bd09_to_gcj02 as fn(f64, f64) -> (f64, f64))
-        }
+        ("bd09", "gcj02", false) => Ok(bd09_to_gcj02 as fn(f64, f64) -> (f64, f64)),
         ("bd09", "gcj02", true) => Ok(|src_lon, src_lat| {
-            geotool_algorithm::crypto_exact(
+            crypto_exact(
                 src_lon,
                 src_lat,
-                geotool_algorithm::bd09_to_gcj02,
-                geotool_algorithm::gcj02_to_bd09,
+                bd09_to_gcj02,
+                gcj02_to_bd09,
                 1e-17,
-                geotool_algorithm::CryptoThresholdMode::LonLat,
+                CryptoThresholdMode::LonLat,
                 100,
             )
         }),
-        ("bd09", "wgs84", false) => {
-            Ok(geotool_algorithm::bd09_to_wgs84 as fn(f64, f64) -> (f64, f64))
-        }
+        ("bd09", "wgs84", false) => Ok(bd09_to_wgs84 as fn(f64, f64) -> (f64, f64)),
         ("bd09", "wgs84", true) => Ok(|src_lon, src_lat| {
-            geotool_algorithm::crypto_exact(
+            crypto_exact(
                 src_lon,
                 src_lat,
-                geotool_algorithm::bd09_to_wgs84,
-                geotool_algorithm::wgs84_to_bd09,
+                bd09_to_wgs84,
+                wgs84_to_bd09,
                 1e-17,
-                geotool_algorithm::CryptoThresholdMode::LonLat,
+                CryptoThresholdMode::LonLat,
                 100,
             )
         }),
-        ("gcj02", "bd09", _) => Ok(geotool_algorithm::gcj02_to_bd09 as fn(f64, f64) -> (f64, f64)),
-        ("gcj02", "wgs84", false) => {
-            Ok(geotool_algorithm::gcj02_to_wgs84 as fn(f64, f64) -> (f64, f64))
-        }
+        ("gcj02", "bd09", _) => Ok(gcj02_to_bd09 as fn(f64, f64) -> (f64, f64)),
+        ("gcj02", "wgs84", false) => Ok(gcj02_to_wgs84 as fn(f64, f64) -> (f64, f64)),
         ("gcj02", "wgs84", true) => Ok(|src_lon, src_lat| {
-            geotool_algorithm::crypto_exact(
+            crypto_exact(
                 src_lon,
                 src_lat,
-                geotool_algorithm::gcj02_to_wgs84,
-                geotool_algorithm::wgs84_to_gcj02,
+                gcj02_to_wgs84,
+                wgs84_to_gcj02,
                 1e-17,
-                geotool_algorithm::CryptoThresholdMode::LonLat,
+                CryptoThresholdMode::LonLat,
                 100,
             )
         }),
-        ("wgs84", "bd09", _) => Ok(geotool_algorithm::wgs84_to_bd09 as fn(f64, f64) -> (f64, f64)),
-        ("wgs84", "gcj02", _) => {
-            Ok(geotool_algorithm::wgs84_to_gcj02 as fn(f64, f64) -> (f64, f64))
-        }
+        ("wgs84", "bd09", _) => Ok(wgs84_to_bd09 as fn(f64, f64) -> (f64, f64)),
+        ("wgs84", "gcj02", _) => Ok(wgs84_to_gcj02 as fn(f64, f64) -> (f64, f64)),
         _ => miette::bail!("unknow from to"),
     }
 }

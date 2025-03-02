@@ -4,7 +4,10 @@
 /// - https://github.com/Leask/EvilTransform
 use std::f64::consts::PI;
 
-use crate::{num, types::{ConstEllipsoid, GeoFloat}};
+use crate::{
+    num,
+    types::{ConstEllipsoid, GeoFloat},
+};
 pub enum CryptoSpace {
     WGS84,
     GCJ02,
@@ -15,9 +18,7 @@ pub enum CryptoThresholdMode {
     LonLat,
 }
 
-const EARTH_R: f64 = 6378137.0;
 const X_PI: f64 = PI * 3000.0 / 180.0;
-const EE: f64 = 0.006_693_421_622_965_943;
 
 fn transform<T>(x: T, y: T) -> (T, T)
 where
@@ -54,16 +55,22 @@ where
     (lon, lat)
 }
 
-fn delta(lon: f64, lat: f64) -> (f64, f64) {
-    let (d_lon, d_lat) = transform(lon - 105.0, lat - 35.0);
+fn delta<T>(lon: T, lat: T) -> (T, T)
+where
+    T: GeoFloat + ConstEllipsoid<T>,
+{
+    let (d_lon, d_lat) = transform(lon - num!(105.0), lat - num!(35.0));
     let mut d_lat = d_lat;
     let mut d_lon = d_lon;
-    let rad_lat = lat / 180.0 * PI;
+    let rad_lat = lat / num!(180.0) * T::PI();
     let mut magic = (rad_lat).sin();
-    magic = 1.0 - EE * magic * magic;
+    let ee = T::krasovsky1940().eccentricity2();
+    let earth_r = T::krasovsky1940().semi_major_axis();
+
+    magic = T::ONE - ee * magic * magic;
     let sqrt_magic = (magic).sqrt();
-    d_lat = (d_lat * 180.0) / ((EARTH_R * (1.0 - EE)) / (magic * sqrt_magic) * PI);
-    d_lon = (d_lon * 180.0) / (EARTH_R / sqrt_magic * (rad_lat).cos() * PI);
+    d_lat = (d_lat * num!(180.0)) / ((earth_r * (T::ONE - ee)) / (magic * sqrt_magic) * T::PI());
+    d_lon = (d_lon * num!(180.0)) / (earth_r / sqrt_magic * (rad_lat).cos() * T::PI());
     (d_lon, d_lat)
 }
 

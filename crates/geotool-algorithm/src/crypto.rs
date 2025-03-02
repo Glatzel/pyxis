@@ -66,7 +66,7 @@ where
     (lon, lat)
 }
 
-fn delta<T>(lon: T, lat: T) -> (T, T)
+fn delta<T: 'static>(lon: T, lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T>,
 {
@@ -143,7 +143,7 @@ where
 /// assert_approx_eq!(f64, p.0, WGS84_LON , epsilon = 1e-5);
 /// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-7);
 /// ```
-pub fn gcj02_to_wgs84<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
+pub fn gcj02_to_wgs84<T: 'static>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T>,
 {
@@ -173,7 +173,7 @@ where
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-5);
 /// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-5);
 /// ```
-pub fn bd09_to_wgs84<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
+pub fn bd09_to_wgs84<T: 'static>(bd09_lon: T, bd09_lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T>,
 {
@@ -239,7 +239,7 @@ where
 /// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, GCJ02_LAT, epsilon = 1e-17);
 /// ```
-pub fn wgs84_to_gcj02<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
+pub fn wgs84_to_gcj02<T: 'static>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T>,
 {
@@ -269,7 +269,7 @@ where
 /// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, BD09_LAT,  epsilon = 1e-17);
 /// ```
-pub fn wgs84_to_bd09<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
+pub fn wgs84_to_bd09<T: 'static>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T>,
 {
@@ -323,7 +323,7 @@ where
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-8);
 /// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-8);
 /// ```
-pub fn crypto_exact<T>(
+pub fn crypto_exact<T: 'static>(
     src_lon: T,
     src_lat: T,
     crypto_fn: impl Fn(T, T) -> (T, T),
@@ -418,7 +418,7 @@ where
     (dst_lon, dst_lat)
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
-pub fn haversine_distance<T>(lon_a: T, lat_a: T, lon_b: T, lat_b: T) -> T
+pub fn haversine_distance<T: 'static>(lon_a: T, lat_a: T, lon_b: T, lat_b: T) -> T
 where
     T: GeoFloat + ConstEllipsoid<T>,
 {

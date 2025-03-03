@@ -344,8 +344,8 @@ where
     let mut p_lon = dst_lon + d_lon;
     let mut p_lat = dst_lat + d_lat;
 
-    d_lon = d_lon + num!(1.0);
-    d_lat = d_lat + num!(1.0);
+    d_lon += num!(1.0);
+    d_lat += num!(1.0);
 
     for _i in 0..max_iter {
         (dst_lon, dst_lat) = ((m_lon + p_lon) / T::TWO, (m_lat + p_lat) / T::TWO);

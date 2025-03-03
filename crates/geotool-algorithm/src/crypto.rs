@@ -5,8 +5,6 @@
 /// - https://github.com/wandergis/coordtransform
 /// - https://blog.csdn.net/coolypf/article/details/8569813
 /// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
-use std::f64::consts::PI;
-
 use crate::num;
 use crate::types::{ConstEllipsoid, GeoFloat};
 #[cfg(debug_assertions)]
@@ -113,7 +111,7 @@ pub fn bd09_to_gcj02<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
-    let x_pi = num!(PI) * num!(3000.0) / num!(180.0);
+    let x_pi = T::PI() * num!(3000.0) / num!(180.0);
     let x = bd09_lon - num!(0.0065);
     let y = bd09_lat - num!(0.006);
     let z = (x.powi(2) + y * y).sqrt() - num!(0.00002) * (y * x_pi).sin();
@@ -209,7 +207,7 @@ pub fn gcj02_to_bd09<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
-    let x_pi = num!(PI) * num!(3000.0) / num!(180.0);
+    let x_pi = T::PI() * num!(3000.0) / num!(180.0);
     let z =
         (gcj02_lon.powi(2) + gcj02_lat.powi(2)).sqrt() + num!(0.00002) * (gcj02_lat * x_pi).sin();
     let theta = gcj02_lat.atan2(gcj02_lon) + num!(0.000003) * (gcj02_lon * x_pi).cos();

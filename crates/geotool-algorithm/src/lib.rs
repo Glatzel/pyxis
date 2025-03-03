@@ -11,4 +11,4 @@ pub use ellipsoid::*;
 pub use linear::*;
 pub use misc::*;
 pub use space::*;
-pub use types::*;
+pub use types::{ConstEllipsoid, GeoFloat};

@@ -44,24 +44,26 @@ where
     let mut lat = d;
     let mut lon = d;
 
-    lat = lat + num!(20.0) * (y_pi).sin() + num!(40.0) * (y_pi / num!(3.0)).sin();
-    lon = lon + num!(20.0) * (x_pi).sin() + num!(40.0) * (x_pi / num!(3.0)).sin();
+    lat += num!(20.0) * (y_pi).sin()
+        + num!(40.0) * (y_pi / num!(3.0)).sin()
+        + num!(160.0) * (y_pi / num!(12.0)).sin()
+        + num!(320.0) * (y_pi / num!(30.0)).sin();
+    lon += num!(20.0) * (x_pi).sin()
+        + num!(40.0) * (x_pi / num!(3.0)).sin()
+        + num!(150.0) * (x_pi / num!(12.0)).sin()
+        + num!(300.0) * (x_pi / num!(30.0)).sin();
 
-    lat = lat + num!(160.0) * (y_pi / num!(12.0)).sin() + num!(320.0) * (y_pi / num!(30.0)).sin();
-    lon = lon + num!(150.0) * (x_pi / num!(12.0)).sin() + num!(300.0) * (x_pi / num!(30.0)).sin();
+    lat *= num!(2.0) / num!(3.0);
+    lon *= num!(2.0) / num!(3.0);
 
-    lat = lat * num!(2.0) / num!(3.0);
-    lon = lon * num!(2.0) / num!(3.0);
-
-    lat = lat
-        + num!(-100.0)
+    lat += num!(-100.0)
         + T::TWO * x
         + num!(3.0) * y
-        + num!(0.2) * y * y
+        + num!(0.2) * y.powi(2)
         + num!(0.1) * xy
         + num!(0.2) * abs_x;
-    lon =
-        lon + num!(300.0) + x + T::TWO * y + num!(0.1) * x * x + num!(0.1) * xy + num!(0.1) * abs_x;
+    lon +=
+        num!(300.0) + x + T::TWO * y + num!(0.1) * x.powi(2) + num!(0.1) * xy + num!(0.1) * abs_x;
 
     (lon, lat)
 }
@@ -391,11 +393,11 @@ where
             (false, true) => m_lon = dst_lon,
             (true, false) => {
                 p_lon = dst_lon;
-                m_lon = m_lon - d_lon;
+                m_lon -= d_lon;
             }
             (false, false) => {
                 m_lon = dst_lon;
-                p_lon = p_lon - d_lon;
+                p_lon -= d_lon;
             }
         }
         match (d_lat > T::zero(), d_lat.abs() > temp_d_lat.abs()) {
@@ -403,11 +405,11 @@ where
             (false, true) => m_lat = dst_lat,
             (true, false) => {
                 p_lat = dst_lat;
-                m_lat = m_lat - d_lat;
+                m_lat -= d_lat;
             }
             (false, false) => {
                 m_lat = dst_lat;
-                p_lat = p_lat - d_lat;
+                p_lat -= d_lat;
             }
         }
 

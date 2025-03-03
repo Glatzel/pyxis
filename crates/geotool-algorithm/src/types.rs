@@ -9,13 +9,12 @@ pub trait GeoFloat:
 {
     const TWO: Self;
 }
-#[macro_export]
 macro_rules! num {
     ($value:expr) => {
         T::from($value).unwrap()
     };
 }
-
+pub(crate) use num;
 impl GeoFloat for f32 {
     const TWO: Self = 2.0;
 }

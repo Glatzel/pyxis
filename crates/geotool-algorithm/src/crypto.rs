@@ -5,8 +5,7 @@
 /// - https://github.com/wandergis/coordtransform
 /// - https://blog.csdn.net/coolypf/article/details/8569813
 /// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
-use crate::num;
-use crate::types::{ConstEllipsoid, GeoFloat};
+use crate::types::{ConstEllipsoid, GeoFloat, num};
 #[cfg(debug_assertions)]
 pub const WGS84_LON: f64 = 121.0917077;
 #[cfg(debug_assertions)]

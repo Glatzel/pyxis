@@ -1,3 +1,5 @@
+use crate::GeoFloat;
+
 /// # Examples
 /// ```
 /// use float_cmp::assert_approx_eq;
@@ -6,13 +8,16 @@
 /// assert_approx_eq!(f64, result.0, -3.5717967697244886, epsilon = 1e-17);
 /// assert_approx_eq!(f64, result.1, 22.186533479473212, epsilon = 1e-18);
 /// ```
-pub fn rel_2d(
-    origin_x: f64,
-    origin_y: f64,
-    abs_x: f64,
-    abs_y: f64,
-    rotate_matrix: &[[f64; 2]; 2],
-) -> (f64, f64) {
+pub fn rel_2d<T>(
+    origin_x: T,
+    origin_y: T,
+    abs_x: T,
+    abs_y: T,
+    rotate_matrix: &[[T; 2]; 2],
+) -> (T, T)
+where
+    T: GeoFloat,
+{
     let temp_x = abs_x - origin_x;
     let temp_y = abs_y - origin_y;
     (
@@ -28,13 +33,16 @@ pub fn rel_2d(
 /// assert_approx_eq!(f64, result.0, 8.767949192431123, epsilon = 1e-17);
 /// assert_approx_eq!(f64, result.1, 21.866025403784437, epsilon = 1e-17);
 /// ```
-pub fn abs_2d(
-    origin_x: f64,
-    origin_y: f64,
-    rel_x: f64,
-    rel_y: f64,
-    rotate_matrix: &[[f64; 2]; 2],
-) -> (f64, f64) {
+pub fn abs_2d<T>(
+    origin_x: T,
+    origin_y: T,
+    rel_x: T,
+    rel_y: T,
+    rotate_matrix: &[[T; 2]; 2],
+) -> (T, T)
+where
+    T: GeoFloat,
+{
     (
         rotate_matrix[0][0] * rel_x + rotate_matrix[0][1] * rel_y + origin_x,
         rotate_matrix[1][0] * rel_x + rotate_matrix[1][1] * rel_y + origin_y,
@@ -48,13 +56,10 @@ pub fn abs_2d(
 /// assert_approx_eq!(f64, result.0, 11.232050807568877, epsilon = 1e-17);
 /// assert_approx_eq!(f64, result.1, 18.133974596215563, epsilon = 1e-17);
 /// ```
-pub fn origin_2d(
-    abs_x: f64,
-    abs_y: f64,
-    rel_x: f64,
-    rel_y: f64,
-    rotate_matrix: &[[f64; 2]; 2],
-) -> (f64, f64) {
+pub fn origin_2d<T>(abs_x: T, abs_y: T, rel_x: T, rel_y: T, rotate_matrix: &[[T; 2]; 2]) -> (T, T)
+where
+    T: GeoFloat,
+{
     (
         -rotate_matrix[0][0] * rel_x - rotate_matrix[0][1] * rel_y + abs_x,
         -rotate_matrix[1][0] * rel_x - rotate_matrix[1][1] * rel_y + abs_y,

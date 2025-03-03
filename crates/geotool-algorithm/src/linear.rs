@@ -1,3 +1,5 @@
+use crate::GeoFloat;
+
 /// Creates a 2D rotation matrix for a given angle in radians.
 ///
 /// This function generates the 2x2 rotation matrix that can be used to rotate
@@ -26,7 +28,10 @@
 /// assert_approx_eq!(f64, m[1][0], radians.sin(), epsilon = 1e-17);
 /// assert_approx_eq!(f64, m[1][1], radians.cos(), epsilon = 1e-17);
 /// ```
-pub fn rotate_matrix_2d(radians: f64) -> [[f64; 2]; 2] {
+pub fn rotate_matrix_2d<T>(radians: T) -> [[T; 2]; 2]
+where
+    T: GeoFloat,
+{
     [
         [radians.cos(), -radians.sin()],
         [radians.sin(), radians.cos()],
@@ -43,7 +48,10 @@ pub fn rotate_matrix_2d(radians: f64) -> [[f64; 2]; 2] {
 /// assert_approx_eq!(f64, result.0, 3.0 * radians.cos() - 2.0 * radians.sin(), epsilon = 1e-17);
 /// assert_approx_eq!(f64, result.1, 3.0 * radians.sin() + 2.0 * radians.cos(), epsilon = 1e-17);
 /// ```
-pub fn rotate_2d(x: f64, y: f64, rotate_matrix: &[[f64; 2]; 2]) -> (f64, f64) {
+pub fn rotate_2d<T>(x: T, y: T, rotate_matrix: &[[T; 2]; 2]) -> (T, T)
+where
+    T: GeoFloat,
+{
     let out_x = rotate_matrix[0][0] * x + rotate_matrix[0][1] * y;
     let out_y = rotate_matrix[1][0] * x + rotate_matrix[1][1] * y;
     (out_x, out_y)

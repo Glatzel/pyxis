@@ -139,6 +139,7 @@ jobs:
 
       - name: cargo-test
         run: ./scripts/cargo-test.ps1
+        shell: pwsh
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
@@ -153,8 +154,12 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  pytest-linux:
-    runs-on: ubuntu-latest
+  pytest:
+    needs: out-cache
+    strategy:
+      matrix:
+          machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci
@@ -181,33 +186,6 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  pytest-win:
-    needs: out-cache
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-ci-win
-      - uses: dtolnay/rust-toolchain@stable
-
-      - name: dev python
-        run: ./scripts/py-develop.ps1
-
-      - name: test python
-        run: ./scripts/py-pytest.ps1
-
-      - name: Upload results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
   out-check:
     needs:
       - cargo-bench
@@ -215,8 +193,7 @@ jobs:
       - cargo-fmt
       - cargo-machete
       - cargo-test
-      - pytest-linux
-      - pytest-win
+      - pytest
       - ruff-lint
     runs-on: ubuntu-latest
     steps:

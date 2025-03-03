@@ -14,6 +14,10 @@ class COORD_CRYPTO_SPACE(str, Enum):
     GCJ02 = "GCJ02"
     BD09 = "BD09"
 
+    @classmethod
+    def list(cls):
+        return list(map(str, cls))
+
 
 @overload
 def crypto(
@@ -67,9 +71,9 @@ def crypto(lon, lat, crypto_from, crypto_to, exact=False):
     lon = coord_util("lon", lon)
     lat = coord_util("lat", lat)
     if (
-        (str(crypto_from).lower() not in ("wgs84", "bd09", "gcj02"))
-        or (str(crypto_to).lower() not in ("wgs84", "bd09", "gcj02"))
-        or str(crypto_to).lower() == str(crypto_from).lower()
+        (str(crypto_from).upper() not in COORD_CRYPTO_SPACE.list())
+        or (str(crypto_to).upper() not in COORD_CRYPTO_SPACE.list())
+        or str(crypto_to).upper() == str(crypto_from).upper()
     ):
         msg = f"from `{crypto_from}` to `{crypto_to}`."
         raise TypeError(msg)

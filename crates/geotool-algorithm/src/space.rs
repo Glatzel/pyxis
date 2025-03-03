@@ -1,3 +1,5 @@
+use crate::GeoFloat;
+
 /// Converts Cartesian coordinates (x, y, z) to cylindrical coordinates (r, u, z).
 ///
 /// # Arguments
@@ -19,8 +21,11 @@
 /// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-17);
 /// assert_approx_eq!(f64, z, -5.60000000000000, epsilon = 1e-17);
 /// ```
-pub fn cartesian_to_cylindrical(x: f64, y: f64, z: f64) -> (f64, f64, f64) {
-    ((x.powf(2.0) + y.powf(2.0)).sqrt(), y.atan2(x), z)
+pub fn cartesian_to_cylindrical<T>(x: T, y: T, z: T) -> (T, T, T)
+where
+    T: GeoFloat,
+{
+    ((x.powi(2) + y.powi(2)).sqrt(), y.atan2(x), z)
 }
 
 /// Converts Cartesian coordinates (x, y, z) to spherical coordinates (u, v, r).
@@ -44,8 +49,11 @@ pub fn cartesian_to_cylindrical(x: f64, y: f64, z: f64) -> (f64, f64, f64) {
 /// assert_approx_eq!(f64, v, 2.5695540653144073, epsilon = 1e-15);
 /// assert_approx_eq!(f64, r, 6.660330322138685, epsilon = 1e-15);
 /// ```
-pub fn cartesian_to_spherical(x: f64, y: f64, z: f64) -> (f64, f64, f64) {
-    let r = (x.powf(2.0) + y.powf(2.0) + z.powf(2.0)).sqrt();
+pub fn cartesian_to_spherical<T>(x: T, y: T, z: T) -> (T, T, T)
+where
+    T: GeoFloat,
+{
+    let r = (x.powi(2) + y.powi(2) + z.powi(2)).sqrt();
     (y.atan2(x), (z / r).acos(), r)
 }
 
@@ -70,7 +78,10 @@ pub fn cartesian_to_spherical(x: f64, y: f64, z: f64) -> (f64, f64, f64) {
 /// assert_approx_eq!(f64, y, 3.4, epsilon = 1e-15);
 /// assert_approx_eq!(f64, z, -5.6,epsilon = 1e-15);
 /// ```
-pub fn cylindrical_to_cartesian(r: f64, u: f64, z: f64) -> (f64, f64, f64) {
+pub fn cylindrical_to_cartesian<T>(r: T, u: T, z: T) -> (T, T, T)
+where
+    T: GeoFloat,
+{
     (r * u.cos(), r * u.sin(), z)
 }
 
@@ -95,8 +106,11 @@ pub fn cylindrical_to_cartesian(r: f64, u: f64, z: f64) -> (f64, f64, f64) {
 /// assert_approx_eq!(f64, v, 2.5695540653144073, epsilon = 1e-15);
 /// assert_approx_eq!(f64, r, 6.660330322138685, epsilon = 1e-15);
 /// ```
-pub fn cylindrical_to_spherical(r: f64, u: f64, z: f64) -> (f64, f64, f64) {
-    (u, r.atan2(z), (r.powf(2.0) + z.powf(2.0)).sqrt())
+pub fn cylindrical_to_spherical<T>(r: T, u: T, z: T) -> (T, T, T)
+where
+    T: GeoFloat,
+{
+    (u, r.atan2(z), (r.powi(2) + z.powi(2)).sqrt())
 }
 
 /// Converts spherical coordinates (u, v, r) to Cartesian coordinates (x, y, z).
@@ -120,7 +134,10 @@ pub fn cylindrical_to_spherical(r: f64, u: f64, z: f64) -> (f64, f64, f64) {
 /// assert_approx_eq!(f64, y, 3.4, epsilon = 1e-15);
 /// assert_approx_eq!(f64, z, -5.6,epsilon = 1e-15);
 /// ```
-pub fn spherical_to_cartesian(u: f64, v: f64, r: f64) -> (f64, f64, f64) {
+pub fn spherical_to_cartesian<T>(u: T, v: T, r: T) -> (T, T, T)
+where
+    T: GeoFloat,
+{
     (r * v.sin() * u.cos(), r * v.sin() * u.sin(), r * v.cos())
 }
 
@@ -145,6 +162,9 @@ pub fn spherical_to_cartesian(u: f64, v: f64, r: f64) -> (f64, f64, f64) {
 /// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-15);
 /// assert_approx_eq!(f64, z, -5.60000000000000,epsilon = 1e-15);
 /// ```
-pub fn spherical_to_cylindrical(u: f64, v: f64, r: f64) -> (f64, f64, f64) {
+pub fn spherical_to_cylindrical<T>(u: T, v: T, r: T) -> (T, T, T)
+where
+    T: GeoFloat,
+{
     (r * v.sin(), u, r * v.cos())
 }

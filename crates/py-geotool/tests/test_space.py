@@ -1,122 +1,25 @@
 import geotool
 import pytest
+from geotool import COORD_SPACE
+
+cartesian = (1.2, 3.4, -5.6)
+cylindrical = (3.60555127546399, 1.23150371234085, -5.60000000000000)
+spherical = (1.23150371234085, 2.5695540653144073, 6.66033032213868)
 
 
 @pytest.mark.parametrize(
-    ("x", "y", "z", "r1", "u1", "z1"),
+    ("from_space", "to_space", "input", "expected"),
     [
-        (
-            1.2,
-            3.4,
-            -5.6,
-            3.60555127546399,
-            1.23150371234085,
-            -5.60000000000000,
-        ),
+        (COORD_SPACE.CARTESIAN, COORD_SPACE.CYLINDRICAL, cartesian, cylindrical),
+        (COORD_SPACE.CARTESIAN, COORD_SPACE.SPHERICAL, cartesian, spherical),
+        (COORD_SPACE.CYLINDRICAL, COORD_SPACE.CARTESIAN, cylindrical, cartesian),
+        (COORD_SPACE.CYLINDRICAL, COORD_SPACE.SPHERICAL, cylindrical, spherical),
+        (COORD_SPACE.SPHERICAL, COORD_SPACE.CARTESIAN, spherical, cartesian),
+        (COORD_SPACE.SPHERICAL, COORD_SPACE.CYLINDRICAL, spherical, cylindrical),
     ],
 )
-def test_cartesian_to_cylindrical(x, y, z, r1, u1, z1):
-    cy = geotool.cartesian_to_cylindrical(x=x, y=y, z=z)
-    assert cy[0] == pytest.approx(r1)
-    assert cy[1] == pytest.approx(u1)
-    assert cy[2] == pytest.approx(z1)
-
-
-@pytest.mark.parametrize(
-    ("x", "y", "z", "u2", "v2", "r2"),
-    [
-        (
-            1.2,
-            3.4,
-            -5.6,
-            1.23150371234085,
-            2.5695540653144073,
-            6.66033032213868,
-        ),
-    ],
-)
-def test_cartesian_to_spherical(x, y, z, u2, v2, r2):
-    cy = geotool.cartesian_to_spherical(x=x, y=y, z=z)
-    assert cy[0] == pytest.approx(u2)
-    assert cy[1] == pytest.approx(v2)
-    assert cy[2] == pytest.approx(r2)
-
-
-@pytest.mark.parametrize(
-    ("x", "y", "z", "r1", "u1", "z1"),
-    [
-        (
-            1.2,
-            3.4,
-            -5.6,
-            3.60555127546399,
-            1.23150371234085,
-            -5.60000000000000,
-        ),
-    ],
-)
-def test_cylindrical_to_cartesian(x, y, z, r1, u1, z1):
-    cy = geotool.cylindrical_to_cartesian(r1, u1, z1)
-    assert cy[0] == pytest.approx(x)
-    assert cy[1] == pytest.approx(y)
-    assert cy[2] == pytest.approx(z)
-
-
-@pytest.mark.parametrize(
-    ("r1", "u1", "z1", "u2", "v2", "r2"),
-    [
-        (
-            3.60555127546399,
-            1.23150371234085,
-            -5.60000000000000,
-            1.23150371234085,
-            2.5695540653144073,
-            6.66033032213868,
-        ),
-    ],
-)
-def test_cylindrical_to_spherical(r1, u1, z1, u2, v2, r2):
-    cy = geotool.cylindrical_to_spherical(r1, u1, z1)
-    assert cy[0] == pytest.approx(u2)
-    assert cy[1] == pytest.approx(v2)
-    assert cy[2] == pytest.approx(r2)
-
-
-@pytest.mark.parametrize(
-    ("x", "y", "z", "u2", "v2", "r2"),
-    [
-        (
-            1.2,
-            3.4,
-            -5.6,
-            1.23150371234085,
-            2.5695540653144073,
-            6.66033032213868,
-        ),
-    ],
-)
-def test_spherical_to_cartesian(x, y, z, u2, v2, r2):
-    cy = geotool.spherical_to_cartesian(u2, v2, r2)
-    assert cy[0] == pytest.approx(x)
-    assert cy[1] == pytest.approx(y)
-    assert cy[2] == pytest.approx(z)
-
-
-@pytest.mark.parametrize(
-    ("r1", "u1", "z1", "u2", "v2", "r2"),
-    [
-        (
-            3.60555127546399,
-            1.23150371234085,
-            -5.60000000000000,
-            1.23150371234085,
-            2.5695540653144073,
-            6.66033032213868,
-        ),
-    ],
-)
-def test_spherical_to_cylindrical(r1, u1, z1, u2, v2, r2):
-    cy = geotool.spherical_to_cylindrical(u2, v2, r2)
-    assert cy[0] == pytest.approx(r1)
-    assert cy[1] == pytest.approx(u1)
-    assert cy[2] == pytest.approx(z1)
+def test_space(from_space, to_space, input, expected):
+    result = geotool.space(input[0], input[1], input[2], from_space, to_space)
+    assert result[0] == pytest.approx(expected[0])
+    assert result[1] == pytest.approx(expected[1])
+    assert result[2] == pytest.approx(expected[2])

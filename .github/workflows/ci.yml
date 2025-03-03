@@ -223,6 +223,7 @@ jobs:
           if-no-files-found: error
 
   build-py-geotool:
+    needs: out-cache
     strategy:
       fail-fast: false
       matrix:
@@ -274,6 +275,7 @@ jobs:
           if-no-files-found: error
 
   build-geotool-cli:
+    needs: out-cache
     strategy:
       fail-fast: false
       matrix:

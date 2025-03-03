@@ -55,7 +55,11 @@ impl ContextTransform {
     }
 
     pub fn datum_compense(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
-        (self.x, self.y) = geotool_algorithm::datum_compense(self.x, self.y, hb, r, x0, y0);
+        (self.x, self.y) = geotool_algorithm::datum_compense(
+            self.x,
+            self.y,
+            &geotool_algorithm::DatumCompenseParms::new(hb, r, x0, y0),
+        );
     }
     pub fn lbh2xyz(&mut self, ellipsoid: &Ellipsoid<f64>) {
         (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, ellipsoid);

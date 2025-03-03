@@ -1,21 +1,20 @@
 use std::fmt::{Debug, Display, LowerExp};
 use std::sync::LazyLock;
 
-use num_traits::{ConstOne, Float, FloatConst, FromPrimitive};
+use num_traits::{ConstOne, Float, FloatConst, FromPrimitive, NumAssign};
 
 use crate::Ellipsoid;
 pub trait GeoFloat:
-    Float + FromPrimitive + FloatConst + ConstOne + Debug + Display + LowerExp
+    Float + FromPrimitive + FloatConst + ConstOne + NumAssign + Debug + Display + LowerExp
 {
     const TWO: Self;
 }
-#[macro_export]
 macro_rules! num {
     ($value:expr) => {
         T::from($value).unwrap()
     };
 }
-
+pub(crate) use num;
 impl GeoFloat for f32 {
     const TWO: Self = 2.0;
 }

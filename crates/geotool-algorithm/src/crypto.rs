@@ -5,10 +5,7 @@
 /// - https://github.com/wandergis/coordtransform
 /// - https://blog.csdn.net/coolypf/article/details/8569813
 /// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
-use std::f64::consts::PI;
-
-use crate::num;
-use crate::types::{ConstEllipsoid, GeoFloat};
+use crate::types::{ConstEllipsoid, GeoFloat, num};
 #[cfg(debug_assertions)]
 pub const WGS84_LON: f64 = 121.0917077;
 #[cfg(debug_assertions)]
@@ -44,24 +41,26 @@ where
     let mut lat = d;
     let mut lon = d;
 
-    lat = lat + num!(20.0) * (y_pi).sin() + num!(40.0) * (y_pi / num!(3.0)).sin();
-    lon = lon + num!(20.0) * (x_pi).sin() + num!(40.0) * (x_pi / num!(3.0)).sin();
+    lat += num!(20.0) * (y_pi).sin()
+        + num!(40.0) * (y_pi / num!(3.0)).sin()
+        + num!(160.0) * (y_pi / num!(12.0)).sin()
+        + num!(320.0) * (y_pi / num!(30.0)).sin();
+    lon += num!(20.0) * (x_pi).sin()
+        + num!(40.0) * (x_pi / num!(3.0)).sin()
+        + num!(150.0) * (x_pi / num!(12.0)).sin()
+        + num!(300.0) * (x_pi / num!(30.0)).sin();
 
-    lat = lat + num!(160.0) * (y_pi / num!(12.0)).sin() + num!(320.0) * (y_pi / num!(30.0)).sin();
-    lon = lon + num!(150.0) * (x_pi / num!(12.0)).sin() + num!(300.0) * (x_pi / num!(30.0)).sin();
+    lat *= num!(2.0) / num!(3.0);
+    lon *= num!(2.0) / num!(3.0);
 
-    lat = lat * num!(2.0) / num!(3.0);
-    lon = lon * num!(2.0) / num!(3.0);
-
-    lat = lat
-        + num!(-100.0)
+    lat += num!(-100.0)
         + T::TWO * x
         + num!(3.0) * y
-        + num!(0.2) * y * y
+        + num!(0.2) * y.powi(2)
         + num!(0.1) * xy
         + num!(0.2) * abs_x;
-    lon =
-        lon + num!(300.0) + x + T::TWO * y + num!(0.1) * x * x + num!(0.1) * xy + num!(0.1) * abs_x;
+    lon +=
+        num!(300.0) + x + T::TWO * y + num!(0.1) * x.powi(2) + num!(0.1) * xy + num!(0.1) * abs_x;
 
     (lon, lat)
 }
@@ -111,7 +110,7 @@ pub fn bd09_to_gcj02<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
-    let x_pi = num!(PI) * num!(3000.0) / num!(180.0);
+    let x_pi = T::PI() * num!(3000.0) / num!(180.0);
     let x = bd09_lon - num!(0.0065);
     let y = bd09_lat - num!(0.006);
     let z = (x.powi(2) + y * y).sqrt() - num!(0.00002) * (y * x_pi).sin();
@@ -207,7 +206,7 @@ pub fn gcj02_to_bd09<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
-    let x_pi = num!(PI) * num!(3000.0) / num!(180.0);
+    let x_pi = T::PI() * num!(3000.0) / num!(180.0);
     let z =
         (gcj02_lon.powi(2) + gcj02_lat.powi(2)).sqrt() + num!(0.00002) * (gcj02_lat * x_pi).sin();
     let theta = gcj02_lat.atan2(gcj02_lon) + num!(0.000003) * (gcj02_lon * x_pi).cos();
@@ -345,8 +344,8 @@ where
     let mut p_lon = dst_lon + d_lon;
     let mut p_lat = dst_lat + d_lat;
 
-    d_lon = d_lon + num!(1.0);
-    d_lat = d_lat + num!(1.0);
+    d_lon += num!(1.0);
+    d_lat += num!(1.0);
 
     for _i in 0..max_iter {
         (dst_lon, dst_lat) = ((m_lon + p_lon) / T::TWO, (m_lat + p_lat) / T::TWO);
@@ -391,11 +390,11 @@ where
             (false, true) => m_lon = dst_lon,
             (true, false) => {
                 p_lon = dst_lon;
-                m_lon = m_lon - d_lon;
+                m_lon -= d_lon;
             }
             (false, false) => {
                 m_lon = dst_lon;
-                p_lon = p_lon - d_lon;
+                p_lon -= d_lon;
             }
         }
         match (d_lat > T::zero(), d_lat.abs() > temp_d_lat.abs()) {
@@ -403,11 +402,11 @@ where
             (false, true) => m_lat = dst_lat,
             (true, false) => {
                 p_lat = dst_lat;
-                m_lat = m_lat - d_lat;
+                m_lat -= d_lat;
             }
             (false, false) => {
                 m_lat = dst_lat;
-                p_lat = p_lat - d_lat;
+                p_lat -= d_lat;
             }
         }
 

@@ -4,22 +4,22 @@ New-Item ./target/llvm-cov-target/debug -ItemType Directory -ErrorAction Silentl
 & $PSScriptRoot/set-env.ps1
 
 Write-Output "::group::nextest"
-cargo +nightly llvm-cov --no-report --all-features --workspace --branch nextest
+pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --branch nextest
 $code = $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::doctest"
-cargo +nightly llvm-cov --no-report --all-features --workspace --branch --doc
+pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --branch --doc
 $code = $code + $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::report"
-cargo +nightly llvm-cov report
+pixi run cargo +nightly llvm-cov report
 Write-Output "::endgroup::"
 
 Write-Output "::group::lcov"
 if ( $env:CI ) {
-    cargo +nightly llvm-cov report --lcov --output-path lcov.info
+    pixi run cargo +nightly llvm-cov report --lcov --output-path lcov.info
 }
 Write-Output "::endgroup::"
 

@@ -290,8 +290,8 @@ where
 /// let p = crypto_exact(
 ///             p.0,
 ///             p.1,
-///             bd09_to_wgs84,
-///             wgs84_to_bd09,
+///             &bd09_to_wgs84,
+///             &wgs84_to_bd09,
 ///             1e-17,
 ///             CryptoThresholdMode::LonLat,
 ///             100,
@@ -313,8 +313,8 @@ where
 /// let p = crypto_exact(
 ///             p.0,
 ///             p.1,
-///             bd09_to_wgs84,
-///             wgs84_to_bd09,
+///             &bd09_to_wgs84,
+///             &wgs84_to_bd09,
 ///             1e-3,
 ///             CryptoThresholdMode::Distance,
 ///             100,

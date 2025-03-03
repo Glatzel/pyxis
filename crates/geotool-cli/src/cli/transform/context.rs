@@ -14,8 +14,8 @@ impl ContextTransform {
             (CryptoSpace::BD09, CryptoSpace::GCJ02) => geotool_algorithm::crypto::crypto_exact(
                 self.x,
                 self.y,
-                geotool_algorithm::crypto::bd09_to_gcj02,
-                geotool_algorithm::crypto::gcj02_to_bd09,
+                &geotool_algorithm::crypto::bd09_to_gcj02,
+                &geotool_algorithm::crypto::gcj02_to_bd09,
                 1e-17,
                 geotool_algorithm::crypto::CryptoThresholdMode::LonLat,
                 1000,
@@ -23,8 +23,8 @@ impl ContextTransform {
             (CryptoSpace::BD09, CryptoSpace::WGS84) => geotool_algorithm::crypto::crypto_exact(
                 self.x,
                 self.y,
-                geotool_algorithm::crypto::bd09_to_wgs84,
-                geotool_algorithm::crypto::wgs84_to_bd09,
+                &geotool_algorithm::crypto::bd09_to_wgs84,
+                &geotool_algorithm::crypto::wgs84_to_bd09,
                 1e-17,
                 geotool_algorithm::crypto::CryptoThresholdMode::LonLat,
                 1000,
@@ -35,8 +35,8 @@ impl ContextTransform {
             (CryptoSpace::GCJ02, CryptoSpace::WGS84) => geotool_algorithm::crypto::crypto_exact(
                 self.x,
                 self.y,
-                geotool_algorithm::crypto::gcj02_to_wgs84,
-                geotool_algorithm::crypto::wgs84_to_gcj02,
+                &geotool_algorithm::crypto::gcj02_to_wgs84,
+                &geotool_algorithm::crypto::wgs84_to_gcj02,
                 1e-17,
                 geotool_algorithm::crypto::CryptoThresholdMode::LonLat,
                 1000,

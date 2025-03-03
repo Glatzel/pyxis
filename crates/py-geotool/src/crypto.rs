@@ -19,8 +19,8 @@ fn get_crypto_fn(
             crypto_exact(
                 src_lon,
                 src_lat,
-                bd09_to_gcj02,
-                gcj02_to_bd09,
+                &bd09_to_gcj02,
+                &gcj02_to_bd09,
                 1e-17,
                 CryptoThresholdMode::LonLat,
                 100,
@@ -31,8 +31,8 @@ fn get_crypto_fn(
             crypto_exact(
                 src_lon,
                 src_lat,
-                bd09_to_wgs84,
-                wgs84_to_bd09,
+                &bd09_to_wgs84,
+                &wgs84_to_bd09,
                 1e-17,
                 CryptoThresholdMode::LonLat,
                 100,
@@ -44,8 +44,8 @@ fn get_crypto_fn(
             crypto_exact(
                 src_lon,
                 src_lat,
-                gcj02_to_wgs84,
-                wgs84_to_gcj02,
+                &gcj02_to_wgs84,
+                &wgs84_to_gcj02,
                 1e-17,
                 CryptoThresholdMode::LonLat,
                 100,

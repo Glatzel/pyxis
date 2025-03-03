@@ -14,6 +14,10 @@ class COORD_SPACE(str, Enum):
     CYLINDRICAL = "CYLINDRICAL"
     SPHERICAL = "SPHERICAL"
 
+    @classmethod
+    def list(cls):
+        return list(map(str, cls))
+
 
 @overload
 def space(
@@ -35,9 +39,9 @@ def space(x, y, z, from_space, to_space):
     from .py_geotool import py_space  # type: ignore
 
     if (
-        (str(from_space).lower() not in ("wgs84", "bd09", "gcj02"))
-        or (str(to_space).lower() not in ("wgs84", "bd09", "gcj02"))
-        or str(to_space).lower() == str(from_space).lower()
+        (str(from_space).upper() not in COORD_SPACE.list())
+        or (str(to_space).upper() not in COORD_SPACE.list())
+        or str(to_space).upper() == str(from_space).lower()
     ):
         msg = f"from `{from_space}` to `{to_space}`."
         raise TypeError(msg)
@@ -46,6 +50,6 @@ def space(x, y, z, from_space, to_space):
     y = coord_util("y", y)
     z = coord_util("z", z)
 
-    r, u, z = py_space(x, y, z, "cartesian", "cylindrical")
+    r, u, z = py_space(x, y, z, from_space, to_space)
 
     return r, u, z

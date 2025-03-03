@@ -1,6 +1,7 @@
 import geotool
 import numpy as np
 import pytest
+from geotool import COORD_CRYPTO_SPACE
 
 bd09 = (121.10271732371203, 30.61484572185035)
 gcj02 = (121.09626935575027, 30.608604331756705)
@@ -10,14 +11,16 @@ wgs84 = (121.0917077, 30.6107779)
 @pytest.mark.parametrize(
     ("src", "dst", "input", "expected"),
     [
-        ("WGS84", "BD09", wgs84, bd09),
-        ("WGS84", "GCJ02", wgs84, gcj02),
-        ("GCJ02", "BD09", gcj02, bd09),
-        ("GCJ02", "WGS84", gcj02, wgs84),
-        ("BD09", "GCJ02", bd09, gcj02),
-        ("BD09", "WGS84", bd09, wgs84),
-        pytest.param("WGS84", "WGS84", bd09, wgs84, marks=pytest.mark.xfail(strict=True)),
-        pytest.param("cgcs", "WGS84", bd09, wgs84, marks=pytest.mark.xfail(strict=True)),
+        (COORD_CRYPTO_SPACE.WGS84, COORD_CRYPTO_SPACE.BD09, wgs84, bd09),
+        (COORD_CRYPTO_SPACE.WGS84, COORD_CRYPTO_SPACE.GCJ02, wgs84, gcj02),
+        (COORD_CRYPTO_SPACE.GCJ02, COORD_CRYPTO_SPACE.BD09, gcj02, bd09),
+        (COORD_CRYPTO_SPACE.GCJ02, COORD_CRYPTO_SPACE.WGS84, gcj02, wgs84),
+        (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.GCJ02, bd09, gcj02),
+        (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.WGS84, bd09, wgs84),
+        pytest.param(
+            COORD_CRYPTO_SPACE.WGS84, COORD_CRYPTO_SPACE.WGS84, bd09, wgs84, marks=pytest.mark.xfail(strict=True)
+        ),
+        pytest.param("cgcs", COORD_CRYPTO_SPACE.WGS84, bd09, wgs84, marks=pytest.mark.xfail(strict=True)),
     ],
 )
 @pytest.mark.parametrize("exact", [True, False])
@@ -39,12 +42,12 @@ wgs84_array = (
 @pytest.mark.parametrize(
     ("src", "dst", "input", "expected"),
     [
-        ("WGS84", "BD09", wgs84_array, bd09),
-        ("WGS84", "GCJ02", wgs84_array, gcj02),
-        ("GCJ02", "BD09", gcj02_array, bd09),
-        ("GCJ02", "WGS84", gcj02_array, wgs84),
-        ("BD09", "GCJ02", bd09_array, gcj02),
-        ("BD09", "WGS84", bd09_array, wgs84),
+        (COORD_CRYPTO_SPACE.WGS84, COORD_CRYPTO_SPACE.BD09, wgs84_array, bd09),
+        (COORD_CRYPTO_SPACE.WGS84, COORD_CRYPTO_SPACE.GCJ02, wgs84_array, gcj02),
+        (COORD_CRYPTO_SPACE.GCJ02, COORD_CRYPTO_SPACE.BD09, gcj02_array, bd09),
+        (COORD_CRYPTO_SPACE.GCJ02, COORD_CRYPTO_SPACE.WGS84, gcj02_array, wgs84),
+        (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.GCJ02, bd09_array, gcj02),
+        (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.WGS84, bd09_array, wgs84),
     ],
 )
 @pytest.mark.parametrize("exact", [True, False])

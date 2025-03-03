@@ -74,7 +74,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci-linux
+      - uses: ./.github/actions/setup-ci
       - name: cargo-clippy
         run: ./scripts/cargo-clippy.ps1
         shell: pwsh
@@ -88,7 +88,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: rustfmt
-      - uses: ./.github/actions/setup-ci-linux
+      - uses: ./.github/actions/setup-ci
 
       - name: cargo-fmt
         run: ./scripts/cargo-fmt.ps1
@@ -118,43 +118,18 @@ jobs:
           run: cargo codspeed run
           token: ${{ secrets.CODSPEED_TOKEN }}
 
-  cargo-test-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
-      - uses: ./.github/actions/setup-ci-linux
-
-      - name: Install nextest
-        uses: taiki-e/install-action@nextest
-
-      - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@cargo-llvm-cov
-
-      - name: cargo-test
-        run: ./scripts/cargo-test.ps1
-        shell: pwsh
-
-      - name: Upload results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN  }}
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  cargo-test-win:
+  cargo-test:
     needs: out-cache
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
       - run: choco install pkgconfiglite
-      - uses: ./.github/actions/setup-ci-win
+        if: ${{runner.os == 'Windows'}}
+      - uses: ./.github/actions/setup-ci
       - uses: dtolnay/rust-toolchain@nightly
 
       - name: Install nextest
@@ -165,6 +140,7 @@ jobs:
 
       - name: cargo-test
         run: ./scripts/cargo-test.ps1
+        shell: pwsh
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
@@ -179,47 +155,25 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  pytest-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-ci-linux
-      - uses: dtolnay/rust-toolchain@stable
-
-      - name: dev python
-        run: ./scripts/py-develop.ps1
-        shell: pwsh
-
-      - name: test python
-        run: ./scripts/py-pytest.ps1
-        shell: pwsh
-
-      - name: Upload results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  pytest-win:
+  pytest:
     needs: out-cache
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-ci-win
+      - uses: ./.github/actions/setup-ci
       - uses: dtolnay/rust-toolchain@stable
 
       - name: dev python
         run: ./scripts/py-develop.ps1
+        shell: pwsh
 
       - name: test python
         run: ./scripts/py-pytest.ps1
+        shell: pwsh
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
@@ -240,10 +194,8 @@ jobs:
       - cargo-clippy
       - cargo-fmt
       - cargo-machete
-      - cargo-test-linux
-      - cargo-test-win
-      - pytest-linux
-      - pytest-win
+      - cargo-test
+      - pytest
       - ruff-lint
     runs-on: ubuntu-latest
     steps:
@@ -257,7 +209,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci-linux
+      - uses: ./.github/actions/setup-ci
 
       - name: cargo-doc
         run: ./scripts/cargo-doc.ps1
@@ -270,54 +222,32 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  build-py-geotool-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.3
-        with:
-          cache: false
-          environments: default
-      - uses: dtolnay/rust-toolchain@stable
-
-      - name: build python (debug)
-        if: ${{!inputs.build-dist}}
-        run: ./scripts/build-wheel.ps1
-        shell: pwsh
-
-      - name: build python (dist)
-        if: ${{ inputs.build-dist}}
-        run: ./scripts/build-wheel.ps1 -config dist
-        shell: pwsh
-
-      - name: upload whl
-        uses: actions/upload-artifact@v4
-        with:
-          name: py-geotool-linux
-          path: dist/*.whl
-          if-no-files-found: error
-
-  build-py-geotool-win:
+  build-py-geotool:
     needs: out-cache
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-ci-win
+      - uses: ./.github/actions/setup-ci
       - uses: dtolnay/rust-toolchain@stable
 
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
         run: ./scripts/build-wheel.ps1
+        shell: pwsh
 
       - name: build python (dist)
         if: ${{ inputs.build-dist}}
         run: ./scripts/build-wheel.ps1 -config dist
+        shell: pwsh
 
       - name: upload whl
         uses: actions/upload-artifact@v4
         with:
-          name: py-geotool-windows
+          name: py-geotool-${{matrix.machine}}
           path: dist/*.whl
           if-no-files-found: error
 
@@ -344,68 +274,45 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  build-geotool-cli-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci-linux
-
-      - name: build cli (debug)
-        if: ${{!inputs.build-dist}}
-        run: ./scripts/build-cli.ps1
-        shell: pwsh
-
-      - name: build cli(dist)
-        if: ${{inputs.build-dist}}
-        run: ./scripts/build-cli.ps1 -config dist
-        shell: pwsh
-
-      - name: upload cli
-        uses: actions/upload-artifact@v4
-        with:
-          name: geotool-cli-linux
-          path: dist/*.7z
-          if-no-files-found: error
-
-      - name: test cli
-        run: ./examples/cli.ps1
-        shell: pwsh
-
-  build-geotool-cli-win:
+  build-geotool-cli:
     needs: out-cache
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+          machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - run: choco install pkgconfiglite
-      - uses: ./.github/actions/setup-ci-win
       - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - uses: ./.github/actions/setup-ci
+      - run: choco install pkgconfiglite
+        if: ${{runner.os == 'Windows'}}
 
       - name: build cli (debug)
         if: ${{!inputs.build-dist}}
         run: ./scripts/build-cli.ps1
+        shell: pwsh
 
       - name: build cli(dist)
         if: ${{inputs.build-dist}}
         run: ./scripts/build-cli.ps1 -config dist
+        shell: pwsh
 
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
-          name: geotool-cli-win
+          name: geotool-cli--${{matrix.machine}}
           path: dist/*.7z
           if-no-files-found: error
 
       - name: test cli
         run: ./examples/cli.ps1
+        shell: pwsh
 
   out-build:
     needs:
-      - build-geotool-cli-linux
-      - build-geotool-cli-win
-      - build-py-geotool-linux
-      - build-py-geotool-win
+      - build-geotool-cli
+      - build-py-geotool
       - cargo-doc
       - sphinx
     runs-on: ubuntu-latest

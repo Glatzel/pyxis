@@ -1,4 +1,4 @@
-name: Setup CI Windows
+name: Setup CI
 runs:
   using: "composite"
   steps:
@@ -8,6 +8,7 @@ runs:
         run-install: false
 
     - name: restore vcpkg
+      if: ${{ runner.os == 'Windows' }}
       uses: actions/cache/restore@v4
       with:
         path: ./vcpkg_deps/vcpkg_installed

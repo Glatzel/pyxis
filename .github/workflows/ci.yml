@@ -74,7 +74,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci-linux
+      - uses: ./.github/actions/setup-ci
       - name: cargo-clippy
         run: ./scripts/cargo-clippy.ps1
         shell: pwsh
@@ -88,7 +88,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: rustfmt
-      - uses: ./.github/actions/setup-ci-linux
+      - uses: ./.github/actions/setup-ci
 
       - name: cargo-fmt
         run: ./scripts/cargo-fmt.ps1
@@ -123,7 +123,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@nightly
-      - uses: ./.github/actions/setup-ci-linux
+      - uses: ./.github/actions/setup-ci
 
       - name: Install nextest
         uses: taiki-e/install-action@nextest
@@ -150,11 +150,16 @@ jobs:
 
   cargo-test-win:
     needs: out-cache
+    strategy:
+      matrix:
+        include:
+          - machine: ubuntu-latest
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - run: choco install pkgconfiglite
-      - uses: ./.github/actions/setup-ci-win
+        if: ${{runner.os == 'Windows'}}
+      - uses: ./.github/actions/setup-ci
       - uses: dtolnay/rust-toolchain@nightly
 
       - name: Install nextest
@@ -183,7 +188,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-ci-linux
+      - uses: ./.github/actions/setup-ci
       - uses: dtolnay/rust-toolchain@stable
 
       - name: dev python
@@ -257,7 +262,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci-linux
+      - uses: ./.github/actions/setup-ci
 
       - name: cargo-doc
         run: ./scripts/cargo-doc.ps1
@@ -349,7 +354,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci-linux
+      - uses: ./.github/actions/setup-ci
 
       - name: build cli (debug)
         if: ${{!inputs.build-dist}}

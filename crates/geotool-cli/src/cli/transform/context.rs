@@ -14,8 +14,8 @@ impl ContextTransform {
             (CryptoSpace::BD09, CryptoSpace::GCJ02) => geotool_algorithm::crypto::crypto_exact(
                 self.x,
                 self.y,
-                geotool_algorithm::crypto::bd09_to_gcj02,
-                geotool_algorithm::crypto::gcj02_to_bd09,
+                &geotool_algorithm::crypto::bd09_to_gcj02,
+                &geotool_algorithm::crypto::gcj02_to_bd09,
                 1e-17,
                 geotool_algorithm::crypto::CryptoThresholdMode::LonLat,
                 1000,
@@ -23,8 +23,8 @@ impl ContextTransform {
             (CryptoSpace::BD09, CryptoSpace::WGS84) => geotool_algorithm::crypto::crypto_exact(
                 self.x,
                 self.y,
-                geotool_algorithm::crypto::bd09_to_wgs84,
-                geotool_algorithm::crypto::wgs84_to_bd09,
+                &geotool_algorithm::crypto::bd09_to_wgs84,
+                &geotool_algorithm::crypto::wgs84_to_bd09,
                 1e-17,
                 geotool_algorithm::crypto::CryptoThresholdMode::LonLat,
                 1000,
@@ -35,8 +35,8 @@ impl ContextTransform {
             (CryptoSpace::GCJ02, CryptoSpace::WGS84) => geotool_algorithm::crypto::crypto_exact(
                 self.x,
                 self.y,
-                geotool_algorithm::crypto::gcj02_to_wgs84,
-                geotool_algorithm::crypto::wgs84_to_gcj02,
+                &geotool_algorithm::crypto::gcj02_to_wgs84,
+                &geotool_algorithm::crypto::wgs84_to_gcj02,
                 1e-17,
                 geotool_algorithm::crypto::CryptoThresholdMode::LonLat,
                 1000,
@@ -55,7 +55,11 @@ impl ContextTransform {
     }
 
     pub fn datum_compense(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
-        (self.x, self.y) = geotool_algorithm::datum_compense(self.x, self.y, hb, r, x0, y0);
+        (self.x, self.y) = geotool_algorithm::datum_compense(
+            self.x,
+            self.y,
+            &geotool_algorithm::DatumCompenseParms::new(hb, r, x0, y0),
+        );
     }
     pub fn lbh2xyz(&mut self, ellipsoid: &Ellipsoid<f64>) {
         (self.x, self.y, self.z) = geotool_algorithm::lbh2xyz(self.x, self.y, self.z, ellipsoid);

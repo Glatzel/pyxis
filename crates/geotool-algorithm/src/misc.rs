@@ -1,7 +1,32 @@
-use num_traits::Float;
-use num_traits::identities::ConstOne;
-
 use crate::GeoFloat;
+pub trait IDatumCompenseParms<T: GeoFloat> {
+    fn x0(&self) -> T;
+    fn y0(&self) -> T;
+    fn factor(&self) -> T;
+}
+pub struct DatumCompenseParms<T: GeoFloat> {
+    x0: T,
+    y0: T,
+    factor: T,
+}
+impl<T: GeoFloat> DatumCompenseParms<T> {
+    pub fn new(hb: T, radius: T, x0: T, y0: T) -> Self {
+        let ratio = hb / radius;
+        let factor = ratio / (T::ONE + ratio);
+        Self { x0, y0, factor }
+    }
+}
+impl<T: GeoFloat> IDatumCompenseParms<T> for DatumCompenseParms<T> {
+    fn x0(&self) -> T {
+        self.x0
+    }
+    fn y0(&self) -> T {
+        self.y0
+    }
+    fn factor(&self) -> T {
+        self.factor
+    }
+}
 /// Converts projected XY coordinates from the height compensation plane to the sea level plane.
 ///
 /// # Arguments
@@ -22,19 +47,18 @@ use crate::GeoFloat;
 /// # Examples
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p = (469704.6693, 2821940.796);
-/// let p = geotool_algorithm::datum_compense(p.0, p.1, 400.0, 6_378_137.0, 500_000.0, 0.0);
+/// let p =(469704.6693, 2821940.796);
+/// let parms=geotool_algorithm::DatumCompenseParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);
+/// let p = geotool_algorithm::datum_compense(p.0, p.1, &parms);
 /// assert_approx_eq!(f64, p.0, 469706.56912942487, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 2821763.831232311, epsilon = 1e-17);
 /// ```
-pub fn datum_compense<T>(xc: T, yc: T, hb: T, radius: T, x0: T, y0: T) -> (T, T)
+pub fn datum_compense<T>(xc: T, yc: T, parms: &impl IDatumCompenseParms<T>) -> (T, T)
 where
-    T: Float + ConstOne,
+    T: GeoFloat,
 {
-    let ratio = hb / radius;
-    let factor = ratio / (T::ONE + ratio);
-    let xc = xc - factor * (xc - x0);
-    let yc = yc - factor * (yc - y0);
+    let xc = xc - parms.factor() * (xc - parms.x0());
+    let yc = yc - parms.factor() * (yc - parms.y0());
     (xc, yc)
 }
 /// Converts geodetic coordinates (longitude/L, latitude/B, height/H) to Cartesian coordinates (X, Y, Z).

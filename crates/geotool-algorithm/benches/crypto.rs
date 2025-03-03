@@ -56,10 +56,10 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
             b.iter(|| {
                 for p in COORDS.iter() {
                     crypto_exact(
-                        p.0,
-                        p.1,
-                        bd09_to_gcj02,
-                        gcj02_to_bd09,
+                        black_box(p.0),
+                        black_box(p.1),
+                        &bd09_to_gcj02,
+                        &gcj02_to_bd09,
                         threshold,
                         CryptoThresholdMode::LonLat,
                         1000,
@@ -71,10 +71,10 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
             b.iter(|| {
                 for p in COORDS.iter() {
                     crypto_exact(
-                        p.0,
-                        p.1,
-                        bd09_to_wgs84,
-                        wgs84_to_bd09,
+                        black_box(p.0),
+                        black_box(p.1),
+                        &bd09_to_wgs84,
+                        &wgs84_to_bd09,
                         threshold,
                         CryptoThresholdMode::LonLat,
                         1000,
@@ -86,10 +86,10 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
             b.iter(|| {
                 for p in COORDS.iter() {
                     crypto_exact(
-                        p.0,
-                        p.1,
-                        gcj02_to_wgs84,
-                        wgs84_to_gcj02,
+                        black_box(p.0),
+                        black_box(p.1),
+                        &gcj02_to_wgs84,
+                        &wgs84_to_gcj02,
                         threshold,
                         CryptoThresholdMode::LonLat,
                         1000,
@@ -109,10 +109,10 @@ fn bench_crypto_exact_distance(c: &mut Criterion) {
             b.iter(|| {
                 for p in COORDS.iter() {
                     crypto_exact(
-                        p.0,
-                        p.1,
-                        bd09_to_gcj02,
-                        gcj02_to_bd09,
+                        black_box(p.0),
+                        black_box(p.1),
+                        &bd09_to_gcj02,
+                        &gcj02_to_bd09,
                         threshold,
                         CryptoThresholdMode::Distance,
                         1000,
@@ -124,10 +124,10 @@ fn bench_crypto_exact_distance(c: &mut Criterion) {
             b.iter(|| {
                 for p in COORDS.iter() {
                     crypto_exact(
-                        p.0,
-                        p.1,
-                        bd09_to_wgs84,
-                        wgs84_to_bd09,
+                        black_box(p.0),
+                        black_box(p.1),
+                        &bd09_to_wgs84,
+                        &wgs84_to_bd09,
                         threshold,
                         CryptoThresholdMode::Distance,
                         1000,
@@ -139,10 +139,10 @@ fn bench_crypto_exact_distance(c: &mut Criterion) {
             b.iter(|| {
                 for p in COORDS.iter() {
                     crypto_exact(
-                        p.0,
-                        p.1,
-                        gcj02_to_wgs84,
-                        wgs84_to_gcj02,
+                        black_box(p.0),
+                        black_box(p.1),
+                        &gcj02_to_wgs84,
+                        &wgs84_to_gcj02,
                         threshold,
                         CryptoThresholdMode::Distance,
                         1000,

@@ -33,4 +33,3 @@ else {
 }
 Write-Output "::endgroup::"
 exit $code
-

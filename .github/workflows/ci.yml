@@ -121,8 +121,9 @@ jobs:
   cargo-test:
     needs: out-cache
     strategy:
+      fail-fast: false
       matrix:
-          machine: [windows-latest,ubuntu-latest]
+        machine: [windows-latest,ubuntu-latest]
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
@@ -157,8 +158,9 @@ jobs:
   pytest:
     needs: out-cache
     strategy:
+      fail-fast: false
       matrix:
-          machine: [windows-latest,ubuntu-latest]
+        machine: [windows-latest,ubuntu-latest]
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
@@ -222,8 +224,9 @@ jobs:
 
   build-py-geotool:
     strategy:
+      fail-fast: false
       matrix:
-          machine: [windows-latest,ubuntu-latest]
+        machine: [windows-latest,ubuntu-latest]
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
@@ -272,6 +275,7 @@ jobs:
 
   build-geotool-cli:
     strategy:
+      fail-fast: false
       matrix:
           machine: [windows-latest,ubuntu-latest]
     runs-on: ${{matrix.machine}}

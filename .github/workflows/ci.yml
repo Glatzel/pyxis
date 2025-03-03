@@ -118,43 +118,12 @@ jobs:
           run: cargo codspeed run
           token: ${{ secrets.CODSPEED_TOKEN }}
 
-  cargo-test-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
-      - uses: ./.github/actions/setup-ci
-
-      - name: Install nextest
-        uses: taiki-e/install-action@nextest
-
-      - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@cargo-llvm-cov
-
-      - name: cargo-test
-        run: ./scripts/cargo-test.ps1
-        shell: pwsh
-
-      - name: Upload results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN  }}
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  cargo-test-win:
+  cargo-test:
     needs: out-cache
     strategy:
       matrix:
-        include:
-          - machine: ubuntu-latest
-    runs-on: windows-latest
+          machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
       - run: choco install pkgconfiglite
@@ -245,8 +214,7 @@ jobs:
       - cargo-clippy
       - cargo-fmt
       - cargo-machete
-      - cargo-test-linux
-      - cargo-test-win
+      - cargo-test
       - pytest-linux
       - pytest-win
       - ruff-lint

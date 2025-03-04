@@ -44,8 +44,7 @@ pub fn py_lbh2xyz(
     semi_major_axis: f64,
     inverse_flattening: f64,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    let ellipsoid =
-        pyxis::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
+    let ellipsoid = pyxis::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
     if let (Ok(lon_ref), Ok(lat_ref), Ok(height_ref)) = (
         lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
         lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -86,8 +85,7 @@ pub fn py_xyz2lbh(
     threshold: f64,
     max_iter: usize,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    let ellipsoid =
-        pyxis::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
+    let ellipsoid = pyxis::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
     if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
         x_py.downcast_bound::<PyArrayDyn<f64>>(py),
         y_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -102,8 +100,7 @@ pub fn py_xyz2lbh(
             .zip(y_array.par_iter_mut())
             .zip(z_array.par_iter_mut())
             .for_each(|((l, b), h)| {
-                (*l, *b, *h) =
-                    pyxis::xyz2lbh(*l, *b, *h, &ellipsoid, threshold, max_iter);
+                (*l, *b, *h) = pyxis::xyz2lbh(*l, *b, *h, &ellipsoid, threshold, max_iter);
             });
         (x_ref, y_ref, z_ref).into_pyobject(py)
     } else if let (Ok(x), Ok(y), Ok(z)) = (

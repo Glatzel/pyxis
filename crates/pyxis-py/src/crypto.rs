@@ -1,8 +1,8 @@
-use pyxis::crypto::*;
 use numpy::{PyArrayDyn, PyArrayMethods};
 use pyo3::prelude::*;
 use pyo3::types::PyTuple;
 use pyo3::{PyObject, Python, pyfunction};
+use pyxis::crypto::*;
 use rayon::prelude::*;
 fn get_crypto_fn(
     from: &str,

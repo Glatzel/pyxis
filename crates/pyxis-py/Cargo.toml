@@ -1,15 +1,15 @@
 [package]
-name = "py-pyxis"
+name = "pyxis-py"
 version.workspace = true
 edition.workspace = true
 
 [dependencies]
 pyo3 = { workspace = true }
 numpy = { workspace = true }
-pyxis-algorithm = { workspace = true }
+pyxis = { workspace = true }
 rayon = { workspace = true }
 miette = { workspace = true }
 
 [lib]
-name = "py_pyxis"
+name = "pyxis_py"
 crate-type = ["cdylib"]

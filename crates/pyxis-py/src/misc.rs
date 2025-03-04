@@ -13,7 +13,7 @@ pub fn py_datum_compense(
     x0: f64,
     y0: f64,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    let parms = pyxis_algorithm::DatumCompenseParms::new(hb, r, x0, y0);
+    let parms = pyxis::DatumCompenseParms::new(hb, r, x0, y0);
     if let (Ok(xc_ref), Ok(yc_ref)) = (
         xc_py.downcast_bound::<PyArrayDyn<f64>>(py),
         yc_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -24,11 +24,11 @@ pub fn py_datum_compense(
             .par_iter_mut()
             .zip(yc_array.par_iter_mut())
             .for_each(|(x, y)| {
-                (*x, *y) = pyxis_algorithm::datum_compense(*x, *y, &parms);
+                (*x, *y) = pyxis::datum_compense(*x, *y, &parms);
             });
         (xc_ref, yc_ref).into_pyobject(py)
     } else if let (Ok(xc), Ok(yc)) = (xc_py.extract::<f64>(py), yc_py.extract::<f64>(py)) {
-        pyxis_algorithm::datum_compense(xc, yc, &parms).into_pyobject(py)
+        pyxis::datum_compense(xc, yc, &parms).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
@@ -45,7 +45,7 @@ pub fn py_lbh2xyz(
     inverse_flattening: f64,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
     let ellipsoid =
-        pyxis_algorithm::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
+        pyxis::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
     if let (Ok(lon_ref), Ok(lat_ref), Ok(height_ref)) = (
         lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
         lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -60,7 +60,7 @@ pub fn py_lbh2xyz(
             .zip(lat_array.par_iter_mut())
             .zip(height_array.par_iter_mut())
             .for_each(|((lon, lat), height)| {
-                (*lon, *lat, *height) = pyxis_algorithm::lbh2xyz(*lon, *lat, *height, &ellipsoid);
+                (*lon, *lat, *height) = pyxis::lbh2xyz(*lon, *lat, *height, &ellipsoid);
             });
         (lon_ref, lat_ref, height_ref).into_pyobject(py)
     } else if let (Ok(lon), Ok(lat), Ok(height)) = (
@@ -68,7 +68,7 @@ pub fn py_lbh2xyz(
         lat_py.extract::<f64>(py),
         height_py.extract::<f64>(py),
     ) {
-        pyxis_algorithm::lbh2xyz(lon, lat, height, &ellipsoid).into_pyobject(py)
+        pyxis::lbh2xyz(lon, lat, height, &ellipsoid).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
@@ -87,7 +87,7 @@ pub fn py_xyz2lbh(
     max_iter: usize,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
     let ellipsoid =
-        pyxis_algorithm::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
+        pyxis::Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
     if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
         x_py.downcast_bound::<PyArrayDyn<f64>>(py),
         y_py.downcast_bound::<PyArrayDyn<f64>>(py),
@@ -103,7 +103,7 @@ pub fn py_xyz2lbh(
             .zip(z_array.par_iter_mut())
             .for_each(|((l, b), h)| {
                 (*l, *b, *h) =
-                    pyxis_algorithm::xyz2lbh(*l, *b, *h, &ellipsoid, threshold, max_iter);
+                    pyxis::xyz2lbh(*l, *b, *h, &ellipsoid, threshold, max_iter);
             });
         (x_ref, y_ref, z_ref).into_pyobject(py)
     } else if let (Ok(x), Ok(y), Ok(z)) = (
@@ -111,7 +111,7 @@ pub fn py_xyz2lbh(
         y_py.extract::<f64>(py),
         z_py.extract::<f64>(py),
     ) {
-        pyxis_algorithm::xyz2lbh(x, y, z, &ellipsoid, threshold, max_iter).into_pyobject(py)
+        pyxis::xyz2lbh(x, y, z, &ellipsoid, threshold, max_iter).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",

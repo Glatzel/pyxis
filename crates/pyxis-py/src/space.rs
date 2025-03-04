@@ -2,7 +2,7 @@ use numpy::{PyArrayDyn, PyArrayMethods};
 use pyo3::prelude::*;
 use pyo3::types::PyTuple;
 use pyo3::{PyObject, Python, pyfunction};
-use pyxis_algorithm::*;
+use pyxis::*;
 use rayon::prelude::*;
 fn get_space_fn(from: &str, to: &str) -> miette::Result<impl Fn(f64, f64, f64) -> (f64, f64, f64)> {
     match (from.to_lowercase().as_str(), to.to_lowercase().as_str()) {

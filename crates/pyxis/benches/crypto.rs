@@ -1,7 +1,7 @@
 use std::sync::LazyLock;
 
 use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
-use pyxis_algorithm::crypto::*;
+use pyxis::crypto::*;
 static COORDS: LazyLock<Vec<(f64, f64)>> = LazyLock::new(|| {
     let num_points = 100;
     let x_min = 72.004;

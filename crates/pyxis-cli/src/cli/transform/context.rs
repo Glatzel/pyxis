@@ -1,5 +1,5 @@
-use pyxis_algorithm::Ellipsoid;
 use miette::IntoDiagnostic;
+use pyxis::Ellipsoid;
 
 use super::{CoordSpace, CryptoSpace, MigrateOption2d, RotateUnit, options};
 pub struct ContextTransform {
@@ -11,41 +11,37 @@ pub struct ContextTransform {
 impl ContextTransform {
     pub fn crypto(&mut self, from: CryptoSpace, to: CryptoSpace) {
         (self.x, self.y) = match (from, to) {
-            (CryptoSpace::BD09, CryptoSpace::GCJ02) => pyxis_algorithm::crypto::crypto_exact(
+            (CryptoSpace::BD09, CryptoSpace::GCJ02) => pyxis::crypto::crypto_exact(
                 self.x,
                 self.y,
-                &pyxis_algorithm::crypto::bd09_to_gcj02,
-                &pyxis_algorithm::crypto::gcj02_to_bd09,
+                &pyxis::crypto::bd09_to_gcj02,
+                &pyxis::crypto::gcj02_to_bd09,
                 1e-17,
-                pyxis_algorithm::crypto::CryptoThresholdMode::LonLat,
+                pyxis::crypto::CryptoThresholdMode::LonLat,
                 1000,
             ),
-            (CryptoSpace::BD09, CryptoSpace::WGS84) => pyxis_algorithm::crypto::crypto_exact(
+            (CryptoSpace::BD09, CryptoSpace::WGS84) => pyxis::crypto::crypto_exact(
                 self.x,
                 self.y,
-                &pyxis_algorithm::crypto::bd09_to_wgs84,
-                &pyxis_algorithm::crypto::wgs84_to_bd09,
+                &pyxis::crypto::bd09_to_wgs84,
+                &pyxis::crypto::wgs84_to_bd09,
                 1e-17,
-                pyxis_algorithm::crypto::CryptoThresholdMode::LonLat,
+                pyxis::crypto::CryptoThresholdMode::LonLat,
                 1000,
             ),
-            (CryptoSpace::GCJ02, CryptoSpace::BD09) => {
-                pyxis_algorithm::crypto::gcj02_to_bd09(self.x, self.y)
-            }
-            (CryptoSpace::GCJ02, CryptoSpace::WGS84) => pyxis_algorithm::crypto::crypto_exact(
+            (CryptoSpace::GCJ02, CryptoSpace::BD09) => pyxis::crypto::gcj02_to_bd09(self.x, self.y),
+            (CryptoSpace::GCJ02, CryptoSpace::WGS84) => pyxis::crypto::crypto_exact(
                 self.x,
                 self.y,
-                &pyxis_algorithm::crypto::gcj02_to_wgs84,
-                &pyxis_algorithm::crypto::wgs84_to_gcj02,
+                &pyxis::crypto::gcj02_to_wgs84,
+                &pyxis::crypto::wgs84_to_gcj02,
                 1e-17,
-                pyxis_algorithm::crypto::CryptoThresholdMode::LonLat,
+                pyxis::crypto::CryptoThresholdMode::LonLat,
                 1000,
             ),
-            (CryptoSpace::WGS84, CryptoSpace::BD09) => {
-                pyxis_algorithm::crypto::wgs84_to_bd09(self.x, self.y)
-            }
+            (CryptoSpace::WGS84, CryptoSpace::BD09) => pyxis::crypto::wgs84_to_bd09(self.x, self.y),
             (CryptoSpace::WGS84, CryptoSpace::GCJ02) => {
-                pyxis_algorithm::crypto::wgs84_to_gcj02(self.x, self.y)
+                pyxis::crypto::wgs84_to_gcj02(self.x, self.y)
             }
             _ => {
                 tracing::warn!("Nothing changes from <{from}> to <{to}>.");
@@ -55,14 +51,14 @@ impl ContextTransform {
     }
 
     pub fn datum_compense(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
-        (self.x, self.y) = pyxis_algorithm::datum_compense(
+        (self.x, self.y) = pyxis::datum_compense(
             self.x,
             self.y,
-            &pyxis_algorithm::DatumCompenseParms::new(hb, r, x0, y0),
+            &pyxis::DatumCompenseParms::new(hb, r, x0, y0),
         );
     }
     pub fn lbh2xyz(&mut self, ellipsoid: &Ellipsoid<f64>) {
-        (self.x, self.y, self.z) = pyxis_algorithm::lbh2xyz(self.x, self.y, self.z, ellipsoid);
+        (self.x, self.y, self.z) = pyxis::lbh2xyz(self.x, self.y, self.z, ellipsoid);
     }
     pub fn migrate2d(
         &mut self,
@@ -78,61 +74,25 @@ impl ContextTransform {
             _ => rotate,
         };
 
-        let rotate_matrix = pyxis_algorithm::rotate_matrix_2d(rotate);
+        let rotate_matrix = pyxis::rotate_matrix_2d(rotate);
         (self.x, self.y) = match (given, another) {
             (MigrateOption2d::Absolute, MigrateOption2d::Origin) => {
-                pyxis_algorithm::migrate::rel_2d(
-                    another_x,
-                    another_y,
-                    self.x,
-                    self.y,
-                    &rotate_matrix,
-                )
+                pyxis::migrate::rel_2d(another_x, another_y, self.x, self.y, &rotate_matrix)
             }
             (MigrateOption2d::Origin, MigrateOption2d::Absolute) => {
-                pyxis_algorithm::migrate::rel_2d(
-                    self.x,
-                    self.y,
-                    another_x,
-                    another_y,
-                    &rotate_matrix,
-                )
+                pyxis::migrate::rel_2d(self.x, self.y, another_x, another_y, &rotate_matrix)
             }
             (MigrateOption2d::Absolute, MigrateOption2d::Relative) => {
-                pyxis_algorithm::migrate::origin_2d(
-                    self.x,
-                    self.y,
-                    another_x,
-                    another_y,
-                    &rotate_matrix,
-                )
+                pyxis::migrate::origin_2d(self.x, self.y, another_x, another_y, &rotate_matrix)
             }
             (MigrateOption2d::Relative, MigrateOption2d::Absolute) => {
-                pyxis_algorithm::migrate::origin_2d(
-                    another_x,
-                    another_y,
-                    self.x,
-                    self.y,
-                    &rotate_matrix,
-                )
+                pyxis::migrate::origin_2d(another_x, another_y, self.x, self.y, &rotate_matrix)
             }
             (MigrateOption2d::Relative, MigrateOption2d::Origin) => {
-                pyxis_algorithm::migrate::abs_2d(
-                    another_x,
-                    another_y,
-                    self.x,
-                    self.y,
-                    &rotate_matrix,
-                )
+                pyxis::migrate::abs_2d(another_x, another_y, self.x, self.y, &rotate_matrix)
             }
             (MigrateOption2d::Origin, MigrateOption2d::Relative) => {
-                pyxis_algorithm::migrate::abs_2d(
-                    self.x,
-                    self.y,
-                    another_x,
-                    another_y,
-                    &rotate_matrix,
-                )
+                pyxis::migrate::abs_2d(self.x, self.y, another_x, another_y, &rotate_matrix)
             }
 
             (given, another) => {
@@ -168,8 +128,8 @@ impl ContextTransform {
         oz: f64,
     ) {
         let m = match unit {
-            options::RotateUnit::Degrees => pyxis_algorithm::rotate_matrix_2d(r.to_radians()),
-            _ => pyxis_algorithm::rotate_matrix_2d(r),
+            options::RotateUnit::Degrees => pyxis::rotate_matrix_2d(r.to_radians()),
+            _ => pyxis::rotate_matrix_2d(r),
         };
 
         match (plane, unit) {
@@ -189,17 +149,17 @@ impl ContextTransform {
                 "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
             ),
             (super::RotatePlane::Xy, _) => {
-                (self.x, self.y) = pyxis_algorithm::rotate_2d(self.x - ox, self.y - oy, &m);
+                (self.x, self.y) = pyxis::rotate_2d(self.x - ox, self.y - oy, &m);
                 self.x += ox;
                 self.y += oy;
             }
             (super::RotatePlane::Zx, _) => {
-                (self.z, self.x) = pyxis_algorithm::rotate_2d(self.z - oz, self.x - ox, &m);
+                (self.z, self.x) = pyxis::rotate_2d(self.z - oz, self.x - ox, &m);
                 self.z += oz;
                 self.x += ox;
             }
             (super::RotatePlane::Yz, _) => {
-                (self.y, self.z) = pyxis_algorithm::rotate_2d(self.y - oy, self.z - oz, &m);
+                (self.y, self.z) = pyxis::rotate_2d(self.y - oy, self.z - oz, &m);
                 self.y += oy;
                 self.z += oz;
             }
@@ -219,22 +179,22 @@ impl ContextTransform {
     pub fn space(&mut self, from: CoordSpace, to: CoordSpace) {
         (self.x, self.y, self.z) = match (from, to) {
             (CoordSpace::Cartesian, CoordSpace::Cylindrical) => {
-                pyxis_algorithm::cartesian_to_cylindrical(self.x, self.y, self.z)
+                pyxis::cartesian_to_cylindrical(self.x, self.y, self.z)
             }
             (CoordSpace::Cartesian, CoordSpace::Spherical) => {
-                pyxis_algorithm::cartesian_to_spherical(self.x, self.y, self.z)
+                pyxis::cartesian_to_spherical(self.x, self.y, self.z)
             }
             (CoordSpace::Cylindrical, CoordSpace::Cartesian) => {
-                pyxis_algorithm::cylindrical_to_cartesian(self.x, self.y, self.z)
+                pyxis::cylindrical_to_cartesian(self.x, self.y, self.z)
             }
             (CoordSpace::Cylindrical, CoordSpace::Spherical) => {
-                pyxis_algorithm::cylindrical_to_spherical(self.x, self.y, self.z)
+                pyxis::cylindrical_to_spherical(self.x, self.y, self.z)
             }
             (CoordSpace::Spherical, CoordSpace::Cartesian) => {
-                pyxis_algorithm::spherical_to_cartesian(self.x, self.y, self.z)
+                pyxis::spherical_to_cartesian(self.x, self.y, self.z)
             }
             (CoordSpace::Spherical, CoordSpace::Cylindrical) => {
-                pyxis_algorithm::spherical_to_cylindrical(self.x, self.y, self.z)
+                pyxis::spherical_to_cylindrical(self.x, self.y, self.z)
             }
             _ => {
                 tracing::warn!("Nothing changes from <{from}> to <{to}>.");
@@ -253,7 +213,6 @@ impl ContextTransform {
         self.z += tz;
     }
     pub fn xyz2lbh(&mut self, ellipsoid: &Ellipsoid<f64>) {
-        (self.x, self.y, self.z) =
-            pyxis_algorithm::xyz2lbh(self.x, self.y, self.z, ellipsoid, 1e-17, 1000);
+        (self.x, self.y, self.z) = pyxis::xyz2lbh(self.x, self.y, self.z, ellipsoid, 1e-17, 1000);
     }
 }

@@ -1,4 +1,4 @@
-use pyxis_algorithm::crypto::*;
+use pyxis::crypto::*;
 use numpy::{PyArrayDyn, PyArrayMethods};
 use pyo3::prelude::*;
 use pyo3::types::PyTuple;

@@ -1,12 +1,12 @@
 use crate::GeoFloat;
 
 /// Represents an ellipsoid with semi-major axis `a`, semi-minor axis `b`, eccentricity `e`,
-/// squared eccentricity `e²`, flattening `f`, and inverse flattening `1/f` in the `pyxis_algorithm` crate.
+/// squared eccentricity `e²`, flattening `f`, and inverse flattening `1/f` in the `pyxis` crate.
 ///
 /// # Examples
 ///
 /// ```
-/// use pyxis_algorithm::Ellipsoid;
+/// use pyxis::Ellipsoid;
 /// use float_cmp::assert_approx_eq;
 ///
 /// let semi_major_axis = 6378137.0;  // Semi-major axis in meters
@@ -43,7 +43,7 @@ impl<T: GeoFloat> Ellipsoid<T> {
     /// # Examples
     ///
     /// ```
-    /// use pyxis_algorithm::Ellipsoid;
+    /// use pyxis::Ellipsoid;
     /// use float_cmp::assert_approx_eq;
     ///
     /// let semi_major_axis = 6378137.0;  // WGS84 semi-major axis in meters
@@ -96,7 +96,7 @@ impl<T: GeoFloat> Ellipsoid<T> {
     /// Create an `Ellipsoid` from semi-major axis and semi-minor axis:
     ///
     /// ```
-    /// use pyxis_algorithm::Ellipsoid;
+    /// use pyxis::Ellipsoid;
     /// let ellipsoid = Ellipsoid::from_semi_axis(6378137.0, 6356752.314245);
     /// assert_eq!(ellipsoid.semi_major_axis(), 6378137.0);
     /// assert_eq!(ellipsoid.semi_minor_axis(), 6356752.314245);

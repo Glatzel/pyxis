@@ -1,6 +1,6 @@
 use assert_cmd::Command;
-use pyxis_algorithm::crypto::{BD09_LAT, BD09_LON, GCJ02_LAT, GCJ02_LON, WGS84_LAT, WGS84_LON};
 use predicates::prelude::*;
+use pyxis::crypto::{BD09_LAT, BD09_LON, GCJ02_LAT, GCJ02_LON, WGS84_LAT, WGS84_LON};
 #[test]
 fn test_wgs84_to_gcj02() {
     Command::cargo_bin("pyxis")

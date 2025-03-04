@@ -216,7 +216,7 @@ pub fn execute(
                 major_radius: semi_major_axis,
                 inverse_flattening,
             } => {
-                let ellipsoid = pyxis_algorithm::Ellipsoid::from_semi_major_and_invf(
+                let ellipsoid = pyxis::Ellipsoid::from_semi_major_and_invf(
                     *semi_major_axis,
                     *inverse_flattening,
                 );
@@ -398,7 +398,7 @@ pub fn execute(
                 major_radius: semi_major_axis,
                 inverse_flattening,
             } => {
-                let ellipsoid = pyxis_algorithm::Ellipsoid::from_semi_major_and_invf(
+                let ellipsoid = pyxis::Ellipsoid::from_semi_major_and_invf(
                     *semi_major_axis,
                     *inverse_flattening,
                 );

@@ -48,8 +48,8 @@ impl<T: GeoFloat> IDatumCompenseParms<T> for DatumCompenseParms<T> {
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// let p =(469704.6693, 2821940.796);
-/// let parms=pyxis_algorithm::DatumCompenseParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);
-/// let p = pyxis_algorithm::datum_compense(p.0, p.1, &parms);
+/// let parms=pyxis::DatumCompenseParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);
+/// let p = pyxis::datum_compense(p.0, p.1, &parms);
 /// assert_approx_eq!(f64, p.0, 469706.56912942487, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 2821763.831232311, epsilon = 1e-17);
 /// ```
@@ -87,9 +87,9 @@ where
 ///
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// use pyxis_algorithm::Ellipsoid;
+/// use pyxis::Ellipsoid;
 /// let ellipsoid = Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257223563);
-/// let (x, y, z) = pyxis_algorithm::lbh2xyz(48.8566, 2.3522, 35.0, &ellipsoid);
+/// let (x, y, z) = pyxis::lbh2xyz(48.8566, 2.3522, 35.0, &ellipsoid);
 /// println!("{},{},{}", x, y, z);
 /// assert_approx_eq!(f64, x, 4192979.6198897623, epsilon = 1e-17);
 /// assert_approx_eq!(f64, y, 4799159.563725418, epsilon = 1e-17);
@@ -138,10 +138,10 @@ where
 ///
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// use pyxis_algorithm::Ellipsoid;
+/// use pyxis::Ellipsoid;
 ///
 /// let ellipsoid = Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257223563);
-/// let (x, y, z) = pyxis_algorithm::xyz2lbh(
+/// let (x, y, z) = pyxis::xyz2lbh(
 ///     4192979.6198897623,
 ///     4799159.563725418,
 ///     260022.66015989496,

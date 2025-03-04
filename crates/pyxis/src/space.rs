@@ -16,7 +16,7 @@ use crate::GeoFloat;
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let (r, u, z) = pyxis_algorithm::cartesian_to_cylindrical(1.2, 3.4, -5.6);
+/// let (r, u, z) = pyxis::cartesian_to_cylindrical(1.2, 3.4, -5.6);
 /// assert_approx_eq!(f64, r, 3.605551275463989, epsilon = 1e-17);
 /// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-17);
 /// assert_approx_eq!(f64, z, -5.60000000000000, epsilon = 1e-17);
@@ -44,7 +44,7 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let (u, v, r) = pyxis_algorithm::cartesian_to_spherical(1.2, 3.4, -5.6);
+/// let (u, v, r) = pyxis::cartesian_to_spherical(1.2, 3.4, -5.6);
 /// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-15);
 /// assert_approx_eq!(f64, v, 2.5695540653144073, epsilon = 1e-15);
 /// assert_approx_eq!(f64, r, 6.660330322138685, epsilon = 1e-15);
@@ -73,7 +73,7 @@ where
 /// # Example
 /// ```
 ///  use float_cmp::assert_approx_eq;
-/// let (x, y, z) = pyxis_algorithm::cylindrical_to_cartesian(3.605551275463989, 1.2315037123408519, -5.60000000000000);
+/// let (x, y, z) = pyxis::cylindrical_to_cartesian(3.605551275463989, 1.2315037123408519, -5.60000000000000);
 /// assert_approx_eq!(f64, x, 1.2,epsilon = 1e-15);
 /// assert_approx_eq!(f64, y, 3.4, epsilon = 1e-15);
 /// assert_approx_eq!(f64, z, -5.6,epsilon = 1e-15);
@@ -101,7 +101,7 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let (u, v, r) = pyxis_algorithm::cylindrical_to_spherical(3.605551275463989, 1.2315037123408519, -5.60000000000000);
+/// let (u, v, r) = pyxis::cylindrical_to_spherical(3.605551275463989, 1.2315037123408519, -5.60000000000000);
 /// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-15);
 /// assert_approx_eq!(f64, v, 2.5695540653144073, epsilon = 1e-15);
 /// assert_approx_eq!(f64, r, 6.660330322138685, epsilon = 1e-15);
@@ -129,7 +129,7 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let (x, y, z) = pyxis_algorithm::spherical_to_cartesian(1.2315037123408519, 2.5695540653144073, 6.660330322138685);
+/// let (x, y, z) = pyxis::spherical_to_cartesian(1.2315037123408519, 2.5695540653144073, 6.660330322138685);
 /// assert_approx_eq!(f64, x, 1.2,epsilon = 1e-15);
 /// assert_approx_eq!(f64, y, 3.4, epsilon = 1e-15);
 /// assert_approx_eq!(f64, z, -5.6,epsilon = 1e-15);
@@ -157,7 +157,7 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let (r, u, z) = pyxis_algorithm::spherical_to_cylindrical(1.2315037123408519, 2.5695540653144073, 6.660330322138685);
+/// let (r, u, z) = pyxis::spherical_to_cylindrical(1.2315037123408519, 2.5695540653144073, 6.660330322138685);
 /// assert_approx_eq!(f64, r, 3.605551275463989,epsilon = 1e-15);
 /// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-15);
 /// assert_approx_eq!(f64, z, -5.60000000000000,epsilon = 1e-15);

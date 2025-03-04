@@ -2,10 +2,10 @@ Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
 if($env:CI){
-    cargo doc --no-deps --all-features --package geotool-algorithm
+    cargo doc --no-deps --all-features --package pyxis-algorithm
 }
 else{
-    pixi run cargo doc --no-deps --all-features --package geotool-algorithm
+    pixi run cargo doc --no-deps --all-features --package pyxis-algorithm
 }
 
 Remove-Item ./dist/rust-doc.zip -Force -ErrorAction SilentlyContinue

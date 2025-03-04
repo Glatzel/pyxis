@@ -5,8 +5,8 @@ param (
 
 Set-Location $PSScriptRoot
 Set-Location ..
-Set-Location crates/py-geotool
-Remove-Item geotool/geotool.pyd -ErrorAction SilentlyContinue
+Set-Location crates/py-pyxis
+Remove-Item pyxis/pyxis.pyd -ErrorAction SilentlyContinue
 
 Write-Host "Build in $config mode."
 if ($config -ne "debug") {

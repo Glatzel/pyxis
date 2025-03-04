@@ -9,7 +9,7 @@
         "**/changelog.md"
     ],
     "python.testing.pytestArgs": [
-        "crates/py-geotool/tests",
+        "crates/py-pyxis/tests",
         "--durations=0"
     ],
     "python.testing.pytestEnabled": true,

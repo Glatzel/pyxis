@@ -7,7 +7,7 @@ version = "0.0.10"
 edition = "2024"
 
 [workspace.dependencies]
-geotool-algorithm = { path = "crates/geotool-algorithm" }
+pyxis = { path = "crates/pyxis" }
 
 assert_cmd = "2.0"
 bpaf = { version = "0.9.17", features = ["derive", "batteries"] }

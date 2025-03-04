@@ -1,0 +1,27 @@
+[package]
+name = "pyxis-cli"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "pyxis"
+path = "src/main.rs"
+
+[dependencies]
+bpaf = { workspace = true }
+pyxis-algorithm = { workspace = true,features=["serde"] }
+log-template = { workspace = true }
+miette = { workspace = true }
+proj = { workspace = true }
+serde_json = { workspace = true }
+serde = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+[dev-dependencies]
+float-cmp = { workspace = true }
+assert_cmd = { workspace = true }
+predicates = { workspace = true }
+
+[features]
+static = []

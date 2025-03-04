@@ -387,8 +387,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "geotool-algorithm"
-version = "0.0.9"
+name = "pyxis-algorithm"
+version = "0.0.10"
 dependencies = [
  "codspeed-criterion-compat",
  "float-cmp",
@@ -401,13 +401,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "geotool-cli"
-version = "0.0.9"
+name = "pyxis-cli"
+version = "0.0.10"
 dependencies = [
  "assert_cmd",
  "bpaf",
  "float-cmp",
- "geotool-algorithm",
+ "pyxis-algorithm",
  "log-template",
  "miette",
  "predicates",
@@ -876,10 +876,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "py-geotool"
-version = "0.0.9"
+name = "py-pyxis"
+version = "0.0.10"
 dependencies = [
- "geotool-algorithm",
+ "pyxis-algorithm",
  "miette",
  "numpy",
  "pyo3",

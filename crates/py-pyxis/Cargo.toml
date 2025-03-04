@@ -1,0 +1,15 @@
+[package]
+name = "py-pyxis"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+pyo3 = { workspace = true }
+numpy = { workspace = true }
+pyxis-algorithm = { workspace = true }
+rayon = { workspace = true }
+miette = { workspace = true }
+
+[lib]
+name = "py_pyxis"
+crate-type = ["cdylib"]

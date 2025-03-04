@@ -222,7 +222,7 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  build-py-geotool:
+  build-py-pyxis:
     needs: out-cache
     strategy:
       fail-fast: false
@@ -247,7 +247,7 @@ jobs:
       - name: upload whl
         uses: actions/upload-artifact@v4
         with:
-          name: py-geotool-${{matrix.machine}}
+          name: py-pyxis-${{matrix.machine}}
           path: dist/*.whl
           if-no-files-found: error
 
@@ -274,7 +274,7 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  build-geotool-cli:
+  build-pyxis-cli:
     needs: out-cache
     strategy:
       fail-fast: false
@@ -301,7 +301,7 @@ jobs:
       - name: upload cli
         uses: actions/upload-artifact@v4
         with:
-          name: geotool-cli--${{matrix.machine}}
+          name: pyxis-cli-${{matrix.machine}}
           path: dist/*.7z
           if-no-files-found: error
 
@@ -311,8 +311,8 @@ jobs:
 
   out-build:
     needs:
-      - build-geotool-cli
-      - build-py-geotool
+      - build-pyxis-cli
+      - build-py-pyxis
       - cargo-doc
       - sphinx
     runs-on: ubuntu-latest

@@ -3,7 +3,7 @@ Set-Location ..
 
 # run test
 pixi run pytest `
-    ./crates/py-geotool/tests `
+    ./crates/py-pyxis/tests `
     --durations=10 `
     --junitxml=tests_report/junit.xml `
     -o junit_family=legacy `

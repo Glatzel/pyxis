@@ -11,7 +11,7 @@ dependencies = ["lazy-loader", "numpy", "scipy","pyproj"]
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
-module-name = "pyxis.py_pyxis"
+module-name = "pyxis.pyxis_py"
 
 [tool.numpydoc_validation]
 checks = [

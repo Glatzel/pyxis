@@ -4,7 +4,7 @@ mod space;
 use pyo3::prelude::*;
 
 #[pymodule]
-fn py_pyxis(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn pyxis_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // crypto
     m.add_wrapped(wrap_pyfunction!(crypto::py_crypto))?;
 

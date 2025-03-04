@@ -9,4 +9,4 @@ coverage:
 comment:
   behavior: default
 ignore:
-  - "crates/py-pyxis/src"
+  - "crates/pyxis-py/src"

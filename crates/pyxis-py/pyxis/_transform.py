@@ -69,7 +69,7 @@ def datum_compense(
     ... )
     ( array([469706.56912942, 469706.56912942]), array([2821763.83123231, 2821763.83123231]),)
     """
-    from .py_pyxis import py_datum_compense  # type: ignore
+    from .pyxis_py import py_datum_compense  # type: ignore
 
     xc = coord_util("xc", xc)
     yc = coord_util("yc", yc)
@@ -152,7 +152,7 @@ def lbh2xyz(
     >>> x, y, z = lbh2xyz(latitudes, longitudes, heights, 6378137.0, 298.257223563)
     >>> print(f"X: {x}, Y: {y}, Z: {z}")
     """
-    from .py_pyxis import py_lbh2xyz  # type: ignore
+    from .pyxis_py import py_lbh2xyz  # type: ignore
 
     lon = coord_util("lon", lon)
     lat = coord_util("lat", lat)
@@ -233,7 +233,7 @@ def xyz2lbh(
     >>> print(f"Latitude: {latitude:.6f}°")
     >>> print(f"Height: {height:.2f} m")
     """
-    from .py_pyxis import py_xyz2lbh  # type: ignore
+    from .pyxis_py import py_xyz2lbh  # type: ignore
 
     x = coord_util("x", x)
     y = coord_util("y", y)

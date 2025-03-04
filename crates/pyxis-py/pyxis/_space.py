@@ -36,7 +36,7 @@ def space(
     to_space: COORD_SPACE,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 def space(x, y, z, from_space, to_space):
-    from .py_pyxis import py_space  # type: ignore
+    from .pyxis_py import py_space  # type: ignore
 
     if (
         (str(from_space).upper() not in COORD_SPACE.list())

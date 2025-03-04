@@ -222,7 +222,7 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  build-py-pyxis:
+  build-pyxis-py:
     needs: out-cache
     strategy:
       fail-fast: false
@@ -247,7 +247,7 @@ jobs:
       - name: upload whl
         uses: actions/upload-artifact@v4
         with:
-          name: py-pyxis-${{matrix.machine}}
+          name: pyxis-py-${{matrix.machine}}
           path: dist/*.whl
           if-no-files-found: error
 
@@ -312,7 +312,7 @@ jobs:
   out-build:
     needs:
       - build-pyxis-cli
-      - build-py-pyxis
+      - build-pyxis-py
       - cargo-doc
       - sphinx
     runs-on: ubuntu-latest

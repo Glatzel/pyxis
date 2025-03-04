@@ -10,8 +10,8 @@ __pycache__
 .pixi
 *.egg-info
 *.pyd
-crates/py-pyxis/doc/build
-crates/py-pyxis/doc/source/reference/api
+crates/pyxis-py/doc/build
+crates/pyxis-py/doc/source/reference/api
 diff.md
 
 # rust

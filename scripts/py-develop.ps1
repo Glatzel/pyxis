@@ -5,7 +5,7 @@ param (
 
 Set-Location $PSScriptRoot
 Set-Location ..
-Set-Location crates/py-pyxis
+Set-Location crates/pyxis-py
 Remove-Item pyxis/pyxis.pyd -ErrorAction SilentlyContinue
 
 Write-Host "Build in $config mode."

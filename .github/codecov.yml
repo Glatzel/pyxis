@@ -9,4 +9,4 @@ coverage:
 comment:
   behavior: default
 ignore:
-  - "crates/py-geotool/src"
+  - "crates/pyxis-py/src"

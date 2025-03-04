@@ -13,10 +13,10 @@ if ($IsWindows) {
     else {
         $env:PKG_CONFIG_PATH = Resolve-Path vcpkg_deps/vcpkg_installed/dynamic/x64-windows/lib/pkgconfig
     }
-    Copy-Item .pixi/envs/default/Library/share/proj/proj.db ./crates/geotool-cli/src/proj.db
+    Copy-Item .pixi/envs/default/Library/share/proj/proj.db ./crates/pyxis-cli/src/proj.db
 }
 if ($IsLinux) {
     pixi install
-    Copy-Item .pixi/envs/default/share/proj/proj.db ./crates/geotool-cli/src/proj.db
+    Copy-Item .pixi/envs/default/share/proj/proj.db ./crates/pyxis-cli/src/proj.db
 }
 Set-Location $current_dir

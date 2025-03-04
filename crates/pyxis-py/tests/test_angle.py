@@ -1,5 +1,5 @@
-import pyxis
 import pytest
+import pyxis
 
 
 def test_angle2dms():

@@ -1,5 +1,5 @@
-import pyxis
 import pytest
+import pyxis
 from pyxis import COORD_SPACE
 
 cartesian = (1.2, 3.4, -5.6)

@@ -1,6 +1,6 @@
-import pyxis
 import numpy as np
 import pytest
+import pyxis
 from pyxis import COORD_CRYPTO_SPACE
 
 bd09 = (121.10271732371203, 30.61484572185035)

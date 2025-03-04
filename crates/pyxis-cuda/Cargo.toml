@@ -4,4 +4,4 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
-cust = "0.3"
+cust = { workspace = true }

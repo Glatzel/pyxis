@@ -238,19 +238,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "criterion-cuda"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e06e6f0ff75776cbe89467aace48fb906e9f0eb62830e9e236f3cdba305b31a1"
-dependencies = [
- "criterion",
- "cust",
- "cust_core",
- "cust_derive",
- "once_cell",
-]
-
-[[package]]
 name = "criterion-plot"
 version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -993,7 +980,6 @@ name = "pyxis-cuda"
 version = "0.0.10"
 dependencies = [
  "criterion",
- "criterion-cuda",
  "cust",
  "pyxis",
  "rand",

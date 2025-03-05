@@ -10,7 +10,6 @@ pyxis = { workspace = true }
 [dev-dependencies]
 rand = { workspace = true }
 criterion = { workspace = true }
-criterion-cuda = { workspace = true }
 [[bench]]
 name = "datum_compense_cuda"
 harness = false

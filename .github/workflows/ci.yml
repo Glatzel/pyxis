@@ -320,6 +320,7 @@ jobs:
         with:
           cuda: '12.8.0'
           sub-packages: '["nvcc"]'
+          method: 'network'
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'}}
 

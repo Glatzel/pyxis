@@ -2,14 +2,15 @@ Set-Location $PSScriptRoot
 Set-Location ..
 New-Item ./target/llvm-cov-target/debug -ItemType Directory -ErrorAction SilentlyContinue
 & $PSScriptRoot/set-env.ps1
-
+if ($env:CI) { $features = "-p pyxis pyxis-cli pyxis-py" }
+else { $features = "--all-features" }
 Write-Output "::group::nextest"
-pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --branch nextest
+pixi run cargo +nightly llvm-cov --no-report $features --workspace --branch nextest
 $code = $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::doctest"
-pixi run cargo +nightly llvm-cov --no-report --all-features --workspace --branch --doc
+pixi run cargo +nightly llvm-cov --no-report $features --workspace --branch --doc
 $code = $code + $LASTEXITCODE
 Write-Output "::endgroup::"
 

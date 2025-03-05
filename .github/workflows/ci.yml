@@ -310,7 +310,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        includes:
+        include:
           - machine: windows-latest
             method: local
           - machine: ubuntu-latest

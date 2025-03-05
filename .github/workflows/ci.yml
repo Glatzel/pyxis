@@ -151,7 +151,7 @@ jobs:
         uses: codecov/test-results-action@v1
         with:
           fail_ci_if_error: true
-          
+
 
   pytest:
     needs: out-cache
@@ -175,14 +175,14 @@ jobs:
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5     
+        uses: codecov/codecov-action@v5
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1
         with:
           fail_ci_if_error: true
-          
+
   out-check:
     needs:
       - cargo-bench

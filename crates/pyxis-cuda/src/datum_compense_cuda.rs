@@ -11,13 +11,14 @@ impl PyxisCudaContext {
         yc: &mut DeviceBuffer<f64>,
         parms: &impl IDatumCompenseParms<f64>,
     ) {
+        assert_eq!(xc.len(), yc.len());
         let length: usize = xc.len();
         let module = Module::from_ptx(PTX, &[]).unwrap();
         let func = module.get_function("datum_compense").unwrap();
         let stream = self.stream();
         let (_, block_size) = func.suggested_launch_configuration(0, 0.into()).unwrap();
         let grid_size = (length as u32).div_ceil(block_size);
-        
+
         #[cfg(feature = "log")]
         {
             tracing::debug!(

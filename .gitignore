@@ -19,6 +19,7 @@ diff.md
 
 # rust
 target
+lcov.info
 
 #vcpkg
 vcpkg_deps/vcpkg

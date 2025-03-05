@@ -1,4 +1,3 @@
-mod datum_compense_cuda;
-
 mod context;
+mod datum_compense_cuda;
 pub use context::*;

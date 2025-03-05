@@ -16,17 +16,7 @@ impl PyxisCudaContext {
         let module = Module::from_ptx(PTX, &[]).unwrap();
         let func = module.get_function("datum_compense").unwrap();
         let stream = self.stream();
-        let (_, block_size) = func.suggested_launch_configuration(0, 0.into()).unwrap();
-        let grid_size = (length as u32).div_ceil(block_size);
-
-        #[cfg(feature = "log")]
-        {
-            tracing::debug!(
-                "using {} blocks and {} threads per block",
-                grid_size,
-                block_size
-            );
-        }
+        let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
             launch!(

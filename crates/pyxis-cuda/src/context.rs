@@ -25,4 +25,17 @@ impl PyxisCudaContext {
     pub fn from_slice(&self, slice: &[f64]) -> DeviceBuffer<f64> {
         DeviceBuffer::from_slice(slice).unwrap()
     }
+    pub fn size(&self, func: &Function, length: usize) -> (u32, u32) {
+        let (_, block_size) = func.suggested_launch_configuration(0, 0.into()).unwrap();
+        let grid_size = (length as u32).div_ceil(block_size);
+        #[cfg(feature = "log")]
+        {
+            tracing::debug!(
+                "using {} blocks and {} threads per block.",
+                grid_size,
+                block_size
+            );
+        }
+        (grid_size, block_size)
+    }
 }

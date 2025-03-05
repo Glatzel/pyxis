@@ -3,4 +3,4 @@ Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
 
-pixi run cargo bench -- $filter
+cargo bench -p pyxis -p pyxis-cuda -- $filter

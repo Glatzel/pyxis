@@ -2,25 +2,25 @@ Set-Location $PSScriptRoot
 Set-Location ..
 
 & $PSScriptRoot/set-env.ps1
-if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-py" }
-else { $package = "--workspace" }
+if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli"}
+else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda" }
 Write-Output "::group::nextest"
-pixi run cargo +nightly llvm-cov --no-report --all-features $package --branch nextest
+cargo +nightly llvm-cov --no-report --all-features $package --branch nextest
 $code = $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::doctest"
-pixi run cargo +nightly llvm-cov --no-report --all-features $package --branch --doc
+cargo +nightly llvm-cov --no-report --all-features $package --branch --doc
 $code = $code + $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::report"
-pixi run cargo +nightly llvm-cov report
+cargo +nightly llvm-cov report
 Write-Output "::endgroup::"
 
 Write-Output "::group::lcov"
 if ( $env:CI ) {
-    pixi run cargo +nightly llvm-cov report --lcov --output-path lcov.info
+    cargo +nightly llvm-cov report --lcov --output-path lcov.info
 }
 Write-Output "::endgroup::"
 

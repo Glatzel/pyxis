@@ -145,8 +145,6 @@ jobs:
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN  }}
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
@@ -154,6 +152,7 @@ jobs:
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
+
 
   pytest:
     needs: out-cache
@@ -178,8 +177,6 @@ jobs:
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}

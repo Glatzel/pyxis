@@ -10,7 +10,7 @@ option(BUILD_CPP "Build C++ DLL" OFF)
 option(BUILD_CPP_STATIC "Build C++ LIB" OFF)
 
 # Set the sources
-set(CPP_SOURCES 
+set(CPP_SOURCES
 src_cuda/crypto.cpp)
 
 # Conditional DLL build

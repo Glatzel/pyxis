@@ -12,7 +12,7 @@ CUDA_DEVICE void datum_compense(double xc,
                                 double &out_xc,
                                 double &out_yc)
 {
-    
+
     out_xc = xc - factor * (xc - x0);
     out_yc = yc - factor * (yc - y0);
 }

@@ -14,10 +14,10 @@ if ($IsWindows) {
     Write-Output "::group::Build static"
     & $PSScriptRoot/set-env.ps1 -link static
     if ($config -ne "debug") {
-        pixi run cargo build --profile $config --bin pyxis --features static
+        cargo build --profile $config -p pyxis-cli --features static
     }
     else {
-        pixi run cargo build --bin pyxis --features static
+        cargo build -p pyxis-cli --features static
     }
     New-Item ./dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
     Copy-Item "target/$config/pyxis.exe" ./dist/cli/static/pyxis.exe
@@ -31,10 +31,10 @@ if ($IsWindows) {
     Write-Output "::group::Build dynamic"
     & $PSScriptRoot/set-env.ps1 -link dynamic
     if ($config -ne "debug") {
-        pixi run cargo build --profile $config --bin pyxis
+        cargo build --profile $config -p pyxis-cli
     }
     else {
-        pixi run cargo build --bin pyxis
+        cargo build -p pyxis-cli
     }
     New-Item ./dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue
     Copy-Item "target/$config/pyxis.exe" ./dist/cli/dynamic/pyxis.exe
@@ -56,10 +56,10 @@ elseif ($IsLinux) {
     Write-Output "::group::Build static"
     & $PSScriptRoot/set-env.ps1 -link static
     if ($config -ne "debug") {
-        cargo build --profile $config --bin pyxis --features static
+        cargo build --profile $config -p pyxis-cli --features static
     }
     else {
-        cargo build --bin pyxis --features static
+        cargo build -p pyxis-cli --features static
     }
     New-Item ./dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
     Write-Output "::endgroup::"

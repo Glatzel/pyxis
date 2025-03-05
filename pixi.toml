@@ -1,6 +1,6 @@
 [project]
 authors = ["Glatzel <893016099@qq.com>"]
-channels = ["conda-forge"]
+channels = ["conda-forge","nvidia"]
 description = "Add a short description here"
 name = "pyxis"
 platforms = ["win-64", "linux-64"]
@@ -15,6 +15,7 @@ python = "3.11.*"
 maturin = "*"
 pip = "*"
 proj = "9.4.*"
+
 [feature.py-deps.dependencies]
 lazy-loader = "*"
 nomkl = "*"

@@ -7,15 +7,18 @@ Set-Location $PSScriptRoot
 Set-Location ..
 pixi install
 if ($IsWindows) {
+    # set libproj find path for pkgconfig
     if ($link -eq 'static') {
         $env:PKG_CONFIG_PATH = Resolve-Path vcpkg_deps/vcpkg_installed/static/x64-windows-static/lib/pkgconfig
     }
     else {
         $env:PKG_CONFIG_PATH = Resolve-Path vcpkg_deps/vcpkg_installed/dynamic/x64-windows/lib/pkgconfig
     }
+    # copy proj.db to cli src
     Copy-Item .pixi/envs/default/Library/share/proj/proj.db ./crates/pyxis-cli/src/proj.db
 }
 if ($IsLinux) {
+    # copy proj.db to cli src
     pixi install
     Copy-Item .pixi/envs/default/share/proj/proj.db ./crates/pyxis-cli/src/proj.db
 }

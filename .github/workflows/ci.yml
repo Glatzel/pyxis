@@ -106,11 +106,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
       - run: cargo install cargo-codspeed --locked
 
       - name: Build the benchmark target(s)
-        run: cargo codspeed build
+        run: cargo codspeed build -p pyxis
 
       - name: Run the benchmarks
         uses: CodSpeedHQ/action@v3
@@ -233,12 +232,12 @@ jobs:
 
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
-        run: ./scripts/build-wheel.ps1
+        run: ./scripts/build-py.ps1
         shell: pwsh
 
       - name: build python (dist)
         if: ${{ inputs.build-dist}}
-        run: ./scripts/build-wheel.ps1 -config dist
+        run: ./scripts/build-py.ps1 -config dist
         shell: pwsh
 
       - name: upload whl
@@ -253,11 +252,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.3
-        with:
-          cache: false
-          environments: default
-
+        uses: ./.github/actions/setup-ci
       - uses: dtolnay/rust-toolchain@stable
 
       - name: sphinx build
@@ -306,9 +301,35 @@ jobs:
         run: ./examples/cli.ps1
         shell: pwsh
 
+  build-pyxis-cuda:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - machine: windows-latest
+            method: network
+            sub-packages: '["nvcc","cudart"]'
+          - machine: ubuntu-latest
+            method: network
+            sub-packages: '["nvcc"]'
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/setup-ci
+      - uses: Jimver/cuda-toolkit@v0.2.21
+        with:
+          cuda: '12.8.0'
+          sub-packages: ${{matrix.sub-packages}}
+          method: ${{matrix.method}}
+      - name: build cuda
+        run: ./scripts/build-cuda.ps1
+        shell: pwsh
+
   out-build:
     needs:
       - build-pyxis-cli
+      - build-pyxis-cuda
       - build-pyxis-py
       - cargo-doc
       - sphinx

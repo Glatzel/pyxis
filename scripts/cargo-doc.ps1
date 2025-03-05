@@ -5,7 +5,7 @@ if($env:CI){
     cargo doc --no-deps --all-features --package pyxis
 }
 else{
-    pixi run cargo doc --no-deps --all-features --package pyxis
+    cargo doc --no-deps --all-features --package pyxis
 }
 
 Remove-Item ./dist/rust-doc.zip -Force -ErrorAction SilentlyContinue

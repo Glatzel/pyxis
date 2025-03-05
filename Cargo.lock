@@ -1048,8 +1048,10 @@ version = "0.0.10"
 dependencies = [
  "codspeed-criterion-compat",
  "cust",
+ "glob",
  "pyxis",
  "rand",
+ "tracing",
 ]
 
 [[package]]

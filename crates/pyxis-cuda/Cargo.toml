@@ -6,10 +6,17 @@ edition.workspace = true
 [dependencies]
 cust = { workspace = true }
 pyxis = { workspace = true }
+tracing = { workspace = true, optional = true }
 
 [dev-dependencies]
 rand = { workspace = true }
 criterion = { workspace = true }
+
+[build-dependencies]
+glob = { workspace = true }
+
+[features]
+log = ["dep:tracing"]
 
 [[bench]]
 name = "datum_compense_cuda"

@@ -1,7 +1,6 @@
 use std::sync::LazyLock;
 
 use cust::prelude::*;
-
 pub struct PyxisCudaContext {
     _ctx: Context,
 }

@@ -2,7 +2,7 @@ use cust::prelude::*;
 use pyxis::IDatumCompenseParms;
 
 use crate::PyxisCudaContext;
-const PTX: &str = include_str!("./datum_compense.ptx");
+const PTX: &str = include_str!("./datum_compense_cuda.ptx");
 
 impl PyxisCudaContext {
     pub fn datum_compense_cuda<'a>(
@@ -14,7 +14,7 @@ impl PyxisCudaContext {
         assert_eq!(xc.len(), yc.len());
         let length: usize = xc.len();
         let module = Module::from_ptx(PTX, &[]).unwrap();
-        let func = module.get_function("datum_compense").unwrap();
+        let func = module.get_function("datum_compense_cuda").unwrap();
         let stream = self.stream();
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 

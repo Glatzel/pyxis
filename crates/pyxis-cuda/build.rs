@@ -8,20 +8,23 @@ fn main() {
     );
     #[cfg(target_os = "linux")]
     let new_path_env_var = std::env::var("PATH").unwrap();
-    for cu_file in glob("./src_cuda/*.cu").expect("Failed to read glob pattern") {
-        let cu_file = cu_file.unwrap();
-        let output = std::process::Command::new("nvcc")
-            .args(["--ptx", cu_file.to_str().unwrap()])
-            .args([
-                "-o",
-                &format!("src/{}.ptx", cu_file.file_stem().unwrap().to_str().unwrap()),
-            ])
-            .env("PATH", new_path_env_var.clone())
-            .output()
-            .expect("Failed to execute script");
-        println!("Stdout:/n{}", String::from_utf8_lossy(&output.stdout));
-        if !output.status.success() {
-            panic!("Build failed.",);
-        }
+    let cu_files = glob("./src_cuda/*.cu").expect("Failed to read glob pattern");
+    let h_files = glob("./src_cuda/*.h").expect("Failed to read glob pattern");
+    let files = cu_files
+        .into_iter()
+        .chain(h_files)
+        .map(|f| f.unwrap().to_string_lossy().into_owned())
+        .collect::<Vec<String>>();
+
+    let output = std::process::Command::new("nvcc")
+        .arg("--ptx")
+        .args(files)
+        .args(["-odir", "./src"])
+        .env("PATH", new_path_env_var.clone())
+        .output()
+        .expect("Failed to execute script");
+    println!("Stdout:/n{}", String::from_utf8_lossy(&output.stdout));
+    if !output.status.success() {
+        panic!("Build failed.",);
     }
 }

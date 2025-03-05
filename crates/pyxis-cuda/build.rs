@@ -8,11 +8,11 @@ fn main() {
     #[cfg(target_os = "linux")]
     let new_path = std::env::var("PATH").unwrap();
     let output = std::process::Command::new("nvcc")
-        .args(["--ptx", "src_cuda/add.cu"])
-        .args(["-o", "src/add.ptx"])
+        .args(["--ptx", "src_cuda/datum_compense.cu"])
+        .args(["-o", "src/datum_compense.ptx"])
         .env("PATH", new_path)
         .output()
-        .expect("Failed to execute Bash script");
+        .expect("Failed to execute script");
     println!("Stdout:/n{}", String::from_utf8_lossy(&output.stdout));
     if !output.status.success() {
         panic!("Build failed.",);

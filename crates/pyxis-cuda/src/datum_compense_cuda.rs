@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use cust::prelude::*;
 use pyxis::IDatumCompenseParms;
 
@@ -13,10 +15,11 @@ impl PyxisCudaContext {
     ) {
         assert_eq!(xc.len(), yc.len());
         let length: usize = xc.len();
-        let module = Module::from_ptx(PTX, &[]).unwrap();
-        let func = module.get_function("datum_compense").unwrap();
+        static MODULE: LazyLock<Module> = LazyLock::new(|| Module::from_ptx(PTX, &[]).unwrap());
+        static FUNC: LazyLock<Function<'_>> =
+            LazyLock::new(|| MODULE.get_function("datum_compense").unwrap());
         let stream = self.stream();
-        let (_, block_size) = func.suggested_launch_configuration(0, 0.into()).unwrap();
+        let (_, block_size) = FUNC.suggested_launch_configuration(0, 0.into()).unwrap();
         let grid_size = (length as u32).div_ceil(block_size);
 
         #[cfg(feature = "log")]
@@ -30,7 +33,7 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                FUNC<<<grid_size, block_size, 0, stream>>>(
                     xc.as_device_ptr(),
                     yc.as_device_ptr(),parms.factor(),parms.x0(),parms.y0()
                 )

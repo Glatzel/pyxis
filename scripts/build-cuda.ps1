@@ -12,8 +12,8 @@ if($IsWindows){
 }
 
 if ($config -ne "debug") {
-    pixi run cargo build --profile $config -p pyxis-cuda
+    cargo build --profile $config -p pyxis-cuda
 }
 else {
-    pixi run cargo build -p pyxis-cuda
+    cargo build -p pyxis-cuda
 }

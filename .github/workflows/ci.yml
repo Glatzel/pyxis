@@ -236,12 +236,12 @@ jobs:
 
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
-        run: ./scripts/build-wheel.ps1
+        run: ./scripts/build-py.ps1
         shell: pwsh
 
       - name: build python (dist)
         if: ${{ inputs.build-dist}}
-        run: ./scripts/build-wheel.ps1 -config dist
+        run: ./scripts/build-py.ps1 -config dist
         shell: pwsh
 
       - name: upload whl

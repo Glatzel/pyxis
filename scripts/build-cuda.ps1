@@ -8,7 +8,7 @@ Set-Location ..
 
 # add nvcc to path
 if($IsWindows){
-    $env:PATH="$env:PATH;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.8\bin"
+    $env:PATH="$env:PATH;C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.43.34808\bin\Hostx64\x64"
 }
 
 if ($config -ne "debug") {

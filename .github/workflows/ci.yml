@@ -307,7 +307,7 @@ jobs:
       matrix:
         include:
           - machine: windows-latest
-            method: local
+            method: network
             sub-packages: '["nvcc","cudart"]'
           - machine: ubuntu-latest
             method: network

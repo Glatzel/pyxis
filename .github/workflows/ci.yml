@@ -306,9 +306,31 @@ jobs:
         run: ./examples/cli.ps1
         shell: pwsh
 
+  build-pyxis-cuda:
+    strategy:
+      fail-fast: false
+      matrix:
+          machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/setup-ci
+      - uses: Jimver/cuda-toolkit@v0.2.21
+        with:
+          cuda: '12.8.0'
+          sub-packages: '["nvcc"]'
+      - run: choco install pkgconfiglite
+        if: ${{runner.os == 'Windows'}}
+
+      - name: build cli
+        run: ./scripts/build-cuda.ps1
+        shell: pwsh
+
   out-build:
     needs:
       - build-pyxis-cli
+      - build-pyxis-cuda
       - build-pyxis-py
       - cargo-doc
       - sphinx

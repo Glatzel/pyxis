@@ -308,8 +308,10 @@ jobs:
         include:
           - machine: windows-latest
             method: local
+            sub-packages: '[]'
           - machine: ubuntu-latest
             method: network
+            sub-packages: '["nvcc"]'
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
@@ -318,9 +320,8 @@ jobs:
       - uses: Jimver/cuda-toolkit@v0.2.21
         with:
           cuda: '12.8.0'
-          sub-packages: '["nvcc"]'
+          sub-packages: ${{matrix.sub-packages}}
           method: ${{matrix.method}}
-      - run: nvcc -V
       - name: build cuda
         run: ./scripts/build-cuda.ps1
         shell: pwsh

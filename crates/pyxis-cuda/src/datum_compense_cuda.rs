@@ -16,7 +16,7 @@ impl PyxisCudaContext {
         let module = Module::from_ptx(PTX, &[]).unwrap();
         let func = module.get_function("datum_compense").unwrap();
         let stream = self.stream();
-        let (grid_size, block_size) = self.size(&func, length);
+        let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
             launch!(

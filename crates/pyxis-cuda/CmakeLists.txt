@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.18)
+project(PYXIS_CPP)
+enable_language(CXX)
+
+# clean install dir
+file(REMOVE_RECURSE "${CMAKE_INSTALL_PREFIX}")
+
+# Option to enable/disable DLL and PTX build
+option(BUILD_CPP "Build C++ DLL" OFF)
+option(BUILD_CPP_STATIC "Build C++ LIB" OFF)
+
+# Set the sources
+set(CPP_SOURCES
+src_cuda/crypto.cpp)
+
+# Conditional DLL build
+if(BUILD_CPP)
+    add_library(pyxis SHARED ${CPP_SOURCES})
+    set_target_properties(pyxis PROPERTIES LINKER_LANGUAGE CXX)
+    install(TARGETS pyxis DESTINATION dll)
+endif()
+
+# Conditional LIB build
+if(BUILD_CPP_STATIC)
+    add_library(pyxis_static STATIC  ${CPP_SOURCES})
+    set_target_properties(pyxis_static PROPERTIES LINKER_LANGUAGE CXX)
+    install(TARGETS pyxis_static DESTINATION lib)
+endif()

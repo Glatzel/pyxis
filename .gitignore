@@ -27,3 +27,6 @@ vcpkg_deps/vcpkg_installed
 
 #misc
 proj.db
+
+# cmake
+build

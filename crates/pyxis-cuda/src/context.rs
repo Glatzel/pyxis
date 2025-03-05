@@ -5,6 +5,12 @@ use cust::prelude::*;
 pub struct PyxisCudaContext {
     _ctx: Context,
 }
+impl Default for PyxisCudaContext {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PyxisCudaContext {
     pub fn new() -> Self {
         Self {
@@ -14,7 +20,7 @@ impl PyxisCudaContext {
     pub fn stream(&self) -> &Stream {
         static STREAM: LazyLock<Stream> =
             LazyLock::new(|| Stream::new(StreamFlags::NON_BLOCKING, None).unwrap());
-        &*STREAM
+        &STREAM
     }
     pub fn from_slice(&self, slice: &[f64]) -> DeviceBuffer<f64> {
         DeviceBuffer::from_slice(slice).unwrap()

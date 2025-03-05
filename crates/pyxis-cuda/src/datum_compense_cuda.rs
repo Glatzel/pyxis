@@ -17,7 +17,7 @@ impl PyxisCudaContext {
         let stream = self.stream();
         let (_, block_size) = func.suggested_launch_configuration(0, 0.into()).unwrap();
         // let block_size = 1024;
-        let grid_size = (length as u32 + block_size - 1) / block_size;
+        let grid_size = (length as u32).div_ceil(block_size);
 
         // Launch kernel (<<<blocks, threads>>>)
         unsafe {

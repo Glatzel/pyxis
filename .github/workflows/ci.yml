@@ -308,7 +308,7 @@ jobs:
         include:
           - machine: windows-latest
             method: local
-            sub-packages: '[]'
+            sub-packages: '["nvcc","cudart"]'
           - machine: ubuntu-latest
             method: network
             sub-packages: '["nvcc"]'

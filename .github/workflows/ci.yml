@@ -310,7 +310,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          machine: [windows-latest,ubuntu-latest]
+        includes:
+          - machine: windows-latest
+            method: local
+          - machine: ubuntu-latest
+            method: network
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
@@ -320,7 +324,7 @@ jobs:
         with:
           cuda: '12.8.0'
           sub-packages: '["nvcc"]'
-          method: 'network'
+          method: ${{matrix.method}}
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'}}
 

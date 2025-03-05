@@ -1,8 +1,8 @@
 Set-Location $PSScriptRoot
 Set-Location ..
-New-Item ./target/llvm-cov-target/debug -ItemType Directory -ErrorAction SilentlyContinue
+
 & $PSScriptRoot/set-env.ps1
-if ($env:CI) { $package = "-p pyxis -p pyxis-cli -p pyxis-py" }
+if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-py" }
 else { $package = "--workspace" }
 Write-Output "::group::nextest"
 pixi run cargo +nightly llvm-cov --no-report --all-features $package --branch nextest

@@ -16,10 +16,17 @@ impl PyxisCudaContext {
         let func = module.get_function("datum_compense").unwrap();
         let stream = self.stream();
         let (_, block_size) = func.suggested_launch_configuration(0, 0.into()).unwrap();
-        // let block_size = 1024;
         let grid_size = (length as u32).div_ceil(block_size);
+        
+        #[cfg(feature = "log")]
+        {
+            tracing::debug!(
+                "using {} blocks and {} threads per block",
+                grid_size,
+                block_size
+            );
+        }
 
-        // Launch kernel (<<<blocks, threads>>>)
         unsafe {
             launch!(
                 func<<<grid_size, block_size, 0, stream>>>(

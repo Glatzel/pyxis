@@ -1050,6 +1050,7 @@ dependencies = [
  "cust",
  "pyxis",
  "rand",
+ "tracing",
 ]
 
 [[package]]

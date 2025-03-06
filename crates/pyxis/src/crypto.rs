@@ -297,7 +297,7 @@ where
 ///             100,
 ///         );
 /// assert_approx_eq!(f64, p.0+1.0, WGS84_LON, epsilon = 1e-15);
-/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-14);
+/// assert_approx_eq!(f64, p.1+1.0, WGS84_LAT, epsilon = 1e-14);
 /// ```
 ///
 /// ```
@@ -339,19 +339,14 @@ where
     let mut d_lon = (dst_lon - src_lon).abs();
     let mut d_lat = (dst_lat - src_lat).abs();
 
-    let mut m_lon = dst_lon - d_lon;
-    let mut m_lat = dst_lat - d_lat;
-    let mut p_lon = dst_lon + d_lon;
-    let mut p_lat = dst_lat + d_lat;
-
     d_lon += num!(1.0);
     d_lat += num!(1.0);
 
     for _i in 0..max_iter {
         let (tmp_d_lon, tmp_d_lat) = inv_crypto_fn(dst_lon, dst_lat);
 
-        let tmp_lon = dst_lon + src_lon - tmp_d_lon;
-        let tmp_lat = dst_lat + src_lat - tmp_d_lat;
+        let tmp_lon = dst_lon + (src_lon - tmp_d_lon) / T::TWO;
+        let tmp_lat = dst_lat + (src_lat - tmp_d_lat) / T::TWO;
         #[cfg(feature = "log")]
         {
             tracing::trace!("iteration: {_i}");
@@ -432,7 +427,7 @@ mod test {
         let mut max_lonlat: f64 = 0.0;
         let mut all_dist = 0.0;
         let mut all_lonlat = 0.0;
-        let count = if is_ci { 10 } else { 10000 };
+        let count = if is_ci { 10 } else { 100000 };
         for _ in 0..count {
             let wgs: (f64, f64) = (
                 rng.random_range(72.004..137.8347),
@@ -448,7 +443,7 @@ mod test {
                     &gcj02_to_bd09,
                     1e-20,
                     CryptoThresholdMode::LonLat,
-                    1000,
+                    100,
                 );
                 if (test_gcj.0 - gcj.0).abs() > threshold || (test_gcj.1 - gcj.1).abs() > threshold
                 {
@@ -483,7 +478,7 @@ mod test {
                     &wgs84_to_bd09,
                     1e-20,
                     CryptoThresholdMode::LonLat,
-                    1000,
+                    100,
                 );
                 if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
                 {
@@ -518,7 +513,7 @@ mod test {
                     &wgs84_to_gcj02,
                     1e-20,
                     CryptoThresholdMode::LonLat,
-                    1000,
+                    100,
                 );
                 if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
                 {

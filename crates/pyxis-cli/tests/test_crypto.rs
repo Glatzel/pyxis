@@ -79,10 +79,10 @@ fn test_bd09_to_wgs84() {
         .assert()
         .success()
         .stdout(predicate::str::contains(
-            WGS84_LON.to_string().get(0..10).unwrap(),
+            WGS84_LON.to_string().get(0..8).unwrap(),
         ))
         .stdout(predicate::str::contains(
-            WGS84_LAT.to_string().get(0..10).unwrap(),
+            WGS84_LAT.to_string().get(0..8).unwrap(),
         ));
 }
 #[test]

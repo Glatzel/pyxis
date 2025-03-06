@@ -5,7 +5,7 @@ use crate::PyxisCudaContext;
 const PTX: &str = include_str!("./datum_compense_cuda.ptx");
 
 impl PyxisCudaContext {
-    pub fn datum_compense_cuda<'a>(
+    pub fn datum_compense_cuda(
         &self,
         xc: &mut DeviceBuffer<f64>,
         yc: &mut DeviceBuffer<f64>,
@@ -15,7 +15,7 @@ impl PyxisCudaContext {
         let length: usize = xc.len();
         let module = Module::from_ptx(PTX, &[]).unwrap();
         let func = module.get_function("datum_compense_cuda").unwrap();
-        let stream = self.stream();
+        let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -39,7 +39,7 @@ mod test {
     fn test_datum_compense_cuda() {
         let mut xc: Vec<f64> = vec![469704.6693, 469704.6693];
         let mut yc: Vec<f64> = vec![2821940.796, 2821940.796];
-        let ctx = crate::PyxisCudaContext::new();
+        let ctx = &crate::CTX;
         let mut dxc = ctx.from_slice(&xc);
         let mut dyc = ctx.from_slice(&yc);
         let parms = pyxis::DatumCompenseParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);

@@ -107,105 +107,6 @@ CUDA_DEVICE void bd09_to_wgs84(
     gcj02_to_wgs84(wgs84_lon, wgs84_lat,
                    wgs84_lon, wgs84_lat);
 }
-CUDA_DEVICE void crypto_exact(
-    const double src_lon,
-    const double src_lat,
-    void (*crypto_fn)(const double, const double, double &, double &),
-    void (*inv_crypto_fn)(const double, const double, double &, double &),
-    const double threshold,
-    const bool distance_mode,
-    const int max_iter,
-    double &out_lon,
-    double &out_lat)
-
-{
-    double dst_lon = 0;
-    double dst_lat = 0;
-    crypto_fn(src_lon, src_lat, dst_lon, dst_lat);
-
-    double d_lon = abs(dst_lon - src_lon);
-    double d_lat = abs(dst_lat - src_lat);
-
-    double m_lon = dst_lon - d_lon;
-    double m_lat = dst_lat - d_lat;
-    double p_lon = dst_lon + d_lon;
-    double p_lat = dst_lat + d_lat;
-
-    d_lon += 1.0;
-    d_lat += 1.0;
-
-    for (int i = 0; i < max_iter; i++)
-    {
-        dst_lon = (m_lon + p_lon) / 2.0;
-        dst_lat = (m_lat + p_lat) / 2.0;
-        double tmp_lon = 0.0;
-        double tmp_lat = 0.0;
-        inv_crypto_fn(dst_lon, dst_lat, tmp_lon, tmp_lat);
-        double temp_d_lon = tmp_lon - src_lon;
-        double temp_d_lat = tmp_lat - src_lat;
-
-        if (distance_mode)
-        {
-            if (haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat) < threshold)
-            {
-                break;
-            }
-        }
-        else
-        {
-            if (abs(temp_d_lat) < threshold && abs(temp_d_lon) < threshold)
-            {
-                break;
-            }
-        }
-
-        // For d_lon
-        if (d_lon > 0.0 && std::abs(d_lon) > std::abs(temp_d_lon))
-        {
-            p_lon = dst_lon;
-        }
-        else if (d_lon <= 0.0 && std::abs(d_lon) > std::abs(temp_d_lon))
-        {
-            m_lon = dst_lon;
-        }
-        else if (d_lon > 0.0 && std::abs(d_lon) <= std::abs(temp_d_lon))
-        {
-            p_lon = dst_lon;
-            m_lon -= d_lon;
-        }
-        else if (d_lon <= 0.0 && std::abs(d_lon) <= std::abs(temp_d_lon))
-        {
-            m_lon = dst_lon;
-            p_lon -= d_lon;
-        }
-
-        // For d_lat
-        if (d_lat > 0.0 && std::abs(d_lat) > std::abs(temp_d_lat))
-        {
-            p_lat = dst_lat;
-        }
-        else if (d_lat <= 0.0 && std::abs(d_lat) > std::abs(temp_d_lat))
-        {
-            m_lat = dst_lat;
-        }
-        else if (d_lat > 0.0 && std::abs(d_lat) <= std::abs(temp_d_lat))
-        {
-            p_lat = dst_lat;
-            m_lat -= d_lat;
-        }
-        else if (d_lat <= 0.0 && std::abs(d_lat) <= std::abs(temp_d_lat))
-        {
-            m_lat = dst_lat;
-            p_lat -= d_lat;
-        }
-
-        d_lon = temp_d_lon;
-        d_lat = temp_d_lat;
-    }
-
-    out_lon = dst_lon;
-    out_lat = dst_lat;
-}
 CUDA_DEVICE double to_radians(const double degrees)
 {
     return degrees * M_PI / 180.0;
@@ -230,4 +131,98 @@ CUDA_DEVICE double haversine_distance(const double lon_a, const double lat_a,
 
     double c = 2.0 * std::atan2(std::sqrt(a), std::sqrt(1.0 - a));
     return 6378137.0 * c;
+}
+CUDA_DEVICE void crypto_exact(
+    const double src_lon,
+    const double src_lat,
+    void (*crypto_fn)(const double, const double, double &, double &),
+    void (*inv_crypto_fn)(const double, const double, double &, double &),
+    const double threshold,
+    const bool distance_mode,
+    const int max_iter,
+    double &out_lon,
+    double &out_lat)
+
+{
+    crypto_fn(src_lon, src_lat, out_lon, out_lat);
+
+    double d_lon = abs(out_lon - src_lon);
+    double d_lat = abs(out_lat - src_lat);
+
+    double m_lon = out_lon - d_lon;
+    double m_lat = out_lat - d_lat;
+    double p_lon = out_lon + d_lon;
+    double p_lat = out_lat + d_lat;
+
+    d_lon += 1.0;
+    d_lat += 1.0;
+
+    for (int i = 0; i < max_iter; i++)
+    {
+        out_lon = (m_lon + p_lon) / 2.0;
+        out_lat = (m_lat + p_lat) / 2.0;
+        double tmp_lon = 0.0;
+        double tmp_lat = 0.0;
+        inv_crypto_fn(out_lon, out_lat, tmp_lon, tmp_lat);
+        double temp_d_lon = tmp_lon - src_lon;
+        double temp_d_lat = tmp_lat - src_lat;
+
+        if (distance_mode)
+        {
+            if (haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat) < threshold)
+            {
+                break;
+            }
+        }
+        else
+        {
+            if (abs(temp_d_lat) < threshold && abs(temp_d_lon) < threshold)
+            {
+                break;
+            }
+        }
+
+        // For d_lon
+        if (d_lon > 0.0 && std::abs(d_lon) > std::abs(temp_d_lon))
+        {
+            p_lon = out_lon;
+        }
+        else if (d_lon <= 0.0 && std::abs(d_lon) > std::abs(temp_d_lon))
+        {
+            m_lon = out_lon;
+        }
+        else if (d_lon > 0.0 && std::abs(d_lon) <= std::abs(temp_d_lon))
+        {
+            p_lon = out_lon;
+            m_lon -= d_lon;
+        }
+        else if (d_lon <= 0.0 && std::abs(d_lon) <= std::abs(temp_d_lon))
+        {
+            m_lon = out_lon;
+            p_lon -= d_lon;
+        }
+
+        // For d_lat
+        if (d_lat > 0.0 && std::abs(d_lat) > std::abs(temp_d_lat))
+        {
+            p_lat = out_lat;
+        }
+        else if (d_lat <= 0.0 && std::abs(d_lat) > std::abs(temp_d_lat))
+        {
+            m_lat = out_lat;
+        }
+        else if (d_lat > 0.0 && std::abs(d_lat) <= std::abs(temp_d_lat))
+        {
+            p_lat = out_lat;
+            m_lat -= d_lat;
+        }
+        else if (d_lat <= 0.0 && std::abs(d_lat) <= std::abs(temp_d_lat))
+        {
+            m_lat = out_lat;
+            p_lat -= d_lat;
+        }
+
+        d_lon = temp_d_lon;
+        d_lat = temp_d_lat;
+    }
 }

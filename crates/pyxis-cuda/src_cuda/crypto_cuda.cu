@@ -39,7 +39,7 @@ extern "C" __global__ void bd09_to_wgs84_cuda(double *lon,
     bd09_to_wgs84(lon[i], lat[i], lon[i], lat[i]);
 }
 
-extern "C" __global__ void gcj02_to_wgs84_exact(double *lon,
+extern "C" __global__ void gcj02_to_wgs84_exact_cuda(double *lon,
                                                 double *lat,
                                                 const double threshold,
                                                 const bool distance_mode,
@@ -48,16 +48,16 @@ extern "C" __global__ void gcj02_to_wgs84_exact(double *lon,
     int i = threadIdx.x;
     crypto_exact(lon[i], lat[i], gcj02_to_wgs84, wgs84_to_gcj02, threshold, distance_mode, max_iter, lon[i], lat[i]);
 }
-extern "C" __global__ void bd09_to_wgs84_exact(double *lon,
+extern "C" __global__ void bd09_to_wgs84_exact_cuda(double *lon,
                                                double *lat,
                                                const double threshold,
                                                const bool distance_mode,
                                                const int max_iter)
 {
     int i = threadIdx.x;
-    crypto_exact(lon[i], lat[i], gcj02_to_wgs84, wgs84_to_gcj02, threshold, distance_mode, max_iter, lon[i], lat[i]);
+    crypto_exact(lon[i], lat[i], bd09_to_wgs84, bd09_to_gcj02, threshold, distance_mode, max_iter, lon[i], lat[i]);
 }
-extern "C" __global__ void bd09_to_gcj02_exact(double *lon,
+extern "C" __global__ void bd09_to_gcj02_exact_cuda(double *lon,
                                                double *lat,
                                                const double threshold,
                                                const bool distance_mode,

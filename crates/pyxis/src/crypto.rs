@@ -427,7 +427,7 @@ mod test {
         let mut max_lonlat: f64 = 0.0;
         let mut all_dist = 0.0;
         let mut all_lonlat = 0.0;
-        let count = if is_ci { 10 } else { 10000};
+        let count = if is_ci { 10 } else { 10000 };
         for _ in 0..count {
             let wgs: (f64, f64) = (
                 rng.random_range(72.004..137.8347),

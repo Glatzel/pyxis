@@ -1,3 +1,4 @@
+use core::f64;
 use std::sync::LazyLock;
 
 use cust::prelude::*;

@@ -315,7 +315,7 @@ where
 ///             p.1,
 ///             &bd09_to_wgs84,
 ///             &wgs84_to_bd09,
-///             1e-3,
+///             1e-4,
 ///             CryptoThresholdMode::Distance,
 ///             100,
 ///         );

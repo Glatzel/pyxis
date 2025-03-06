@@ -189,16 +189,16 @@ CUDA_DEVICE void crypto_exact(
         {
             p_lon = dest_lon;
         }
-        else if (d_lon <= 0.0 && abs(d_lon) > abs(temp_d_lon))
+        else if (d_lon < 0.0 && abs(d_lon) > abs(temp_d_lon))
         {
             m_lon = dest_lon;
         }
-        else if (d_lon > 0.0 && abs(d_lon) <= abs(temp_d_lon))
+        else if (d_lon > 0.0 && abs(d_lon) < abs(temp_d_lon))
         {
             p_lon = dest_lon;
             m_lon -= d_lon;
         }
-        else if (d_lon <= 0.0 && abs(d_lon) <= abs(temp_d_lon))
+        else if (d_lon < 0.0 && abs(d_lon) < abs(temp_d_lon))
         {
             m_lon = dest_lon;
             p_lon -= d_lon;
@@ -209,16 +209,16 @@ CUDA_DEVICE void crypto_exact(
         {
             p_lat = dest_lat;
         }
-        else if (d_lat <= 0.0 && abs(d_lat) > abs(temp_d_lat))
+        else if (d_lat < 0.0 && abs(d_lat) > abs(temp_d_lat))
         {
             m_lat = dest_lat;
         }
-        else if (d_lat > 0.0 && abs(d_lat) <= abs(temp_d_lat))
+        else if (d_lat > 0.0 && abs(d_lat) < abs(temp_d_lat))
         {
             p_lat = dest_lat;
             m_lat -= d_lat;
         }
-        else if (d_lat <= 0.0 && abs(d_lat) <= abs(temp_d_lat))
+        else if (d_lat < 0.0 && abs(d_lat) < abs(temp_d_lat))
         {
             m_lat = dest_lat;
             p_lat -= d_lat;

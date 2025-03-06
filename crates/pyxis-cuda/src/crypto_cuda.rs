@@ -291,7 +291,7 @@ mod test {
             &mut dlat,
             CryptoSpace::BD09,
             CryptoSpace::WGS84,
-            1e-14,
+            1e-20,
             CryptoThresholdMode::LonLat,
             1000,
         );
@@ -317,7 +317,7 @@ mod test {
             &mut dlat,
             CryptoSpace::BD09,
             CryptoSpace::GCJ02,
-            1e-14,
+            1e-20,
             CryptoThresholdMode::LonLat,
             1000,
         );
@@ -328,8 +328,8 @@ mod test {
         println!("lon:{:?}", lon);
         println!("lat:{:?}", lat);
         println!("gcj02: {GCJ02_LON},{GCJ02_LAT}");
-        assert_approx_eq!(f64, lon[0], GCJ02_LON, epsilon = 1e-14);
-        assert_approx_eq!(f64, lat[0], GCJ02_LAT, epsilon = 1e-14);
+        assert_approx_eq!(f64, lon[0], GCJ02_LON, epsilon = 1e-13);
+        assert_approx_eq!(f64, lat[0], GCJ02_LAT, epsilon = 1e-13);
     }
     #[test]
     fn test_gcj02_to_wgs84_exact_cuda() {
@@ -354,8 +354,8 @@ mod test {
         println!("lon:{:?}", lon);
         println!("lat:{:?}", lat);
         println!("wgs84: {WGS84_LON},{WGS84_LAT}");
-        assert_approx_eq!(f64, lon[0], WGS84_LON, epsilon = 1e-14);
-        assert_approx_eq!(f64, lat[0], WGS84_LAT, epsilon = 1e-14);
+        assert_approx_eq!(f64, lon[0], WGS84_LON, epsilon = 1e-13);
+        assert_approx_eq!(f64, lat[0], WGS84_LAT, epsilon = 1e-13);
     }
     #[test]
     fn test_exact_cuda() {

@@ -7,17 +7,17 @@
 /// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
 use crate::types::{ConstEllipsoid, GeoFloat, num};
 #[cfg(debug_assertions)]
-pub const WGS84_LON: f64 = 121.091707700000001;
+pub const WGS84_LON: f64 = 121.091_707_7;
 #[cfg(debug_assertions)]
-pub const WGS84_LAT: f64 = 30.610777899999999;
+pub const WGS84_LAT: f64 = 30.610_777_9;
 #[cfg(debug_assertions)]
-pub const GCJ02_LON: f64 = 121.096269278509766;
+pub const GCJ02_LON: f64 = 121.096_269_278_509_77;
 #[cfg(debug_assertions)]
 pub const GCJ02_LAT: f64 = 30.608604368560773;
 #[cfg(debug_assertions)]
-pub const BD09_LON: f64 = 121.102717246225637;
+pub const BD09_LON: f64 = 121.102_717_246_225_64;
 #[cfg(debug_assertions)]
-pub const BD09_LAT: f64 = 30.614845759768389;
+pub const BD09_LAT: f64 = 30.614_845_759_768_39;
 pub enum CryptoSpace {
     WGS84,
     GCJ02,

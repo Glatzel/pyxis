@@ -174,7 +174,7 @@ mod test {
     use pyxis::crypto::*;
     use rand::Rng;
 
-    use super::*;
+    
     #[test]
     fn test_bd09_to_gcj02_cuda() {
         let mut lon: Vec<f64> = vec![pyxis::crypto::BD09_LON, pyxis::crypto::BD09_LON];
@@ -412,7 +412,6 @@ mod test {
             dlat.copy_to(&mut lat).unwrap();
             lon.iter()
                 .zip(lat.iter())
-                .into_iter()
                 .zip(wgs_lon.iter())
                 .zip(wgs_lat.iter())
                 .for_each(|(((x, y), a), b)| {
@@ -450,7 +449,6 @@ mod test {
             dlat.copy_to(&mut lat).unwrap();
             lon.iter()
                 .zip(lat.iter())
-                .into_iter()
                 .zip(wgs_lon.iter())
                 .zip(wgs_lat.iter())
                 .for_each(|(((x, y), a), b)| {
@@ -488,7 +486,6 @@ mod test {
             dlat.copy_to(&mut lat).unwrap();
             lon.iter()
                 .zip(lat.iter())
-                .into_iter()
                 .zip(gcj_lon.iter())
                 .zip(gcj_lat.iter())
                 .for_each(|(((x, y), a), b)| {

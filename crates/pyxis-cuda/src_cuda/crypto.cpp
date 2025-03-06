@@ -125,11 +125,11 @@ CUDA_DEVICE double haversine_distance(const double lon_a, const double lat_a,
     double delta_lon = lon2_rad - lon1_rad;
 
     // Haversine formula
-    double a = std::pow(std::sin(delta_lat / 2.0), 2) +
-               std::cos(lat1_rad) * std::cos(lat2_rad) *
-                   std::pow(std::sin(delta_lon / 2.0), 2);
+    double a = pow(sin(delta_lat / 2.0), 2) +
+               cos(lat1_rad) * cos(lat2_rad) *
+                   pow(sin(delta_lon / 2.0), 2);
 
-    double c = 2.0 * std::atan2(std::sqrt(a), std::sqrt(1.0 - a));
+    double c = 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
     return 6378137.0 * c;
 }
 CUDA_DEVICE void crypto_exact(
@@ -183,40 +183,40 @@ CUDA_DEVICE void crypto_exact(
         }
 
         // For d_lon
-        if (d_lon > 0.0 && std::abs(d_lon) > std::abs(temp_d_lon))
+        if (d_lon > 0.0 && abs(d_lon) > abs(temp_d_lon))
         {
             p_lon = out_lon;
         }
-        else if (d_lon <= 0.0 && std::abs(d_lon) > std::abs(temp_d_lon))
+        else if (d_lon <= 0.0 && abs(d_lon) > abs(temp_d_lon))
         {
             m_lon = out_lon;
         }
-        else if (d_lon > 0.0 && std::abs(d_lon) <= std::abs(temp_d_lon))
+        else if (d_lon > 0.0 && abs(d_lon) <= abs(temp_d_lon))
         {
             p_lon = out_lon;
             m_lon -= d_lon;
         }
-        else if (d_lon <= 0.0 && std::abs(d_lon) <= std::abs(temp_d_lon))
+        else if (d_lon <= 0.0 && abs(d_lon) <= abs(temp_d_lon))
         {
             m_lon = out_lon;
             p_lon -= d_lon;
         }
 
         // For d_lat
-        if (d_lat > 0.0 && std::abs(d_lat) > std::abs(temp_d_lat))
+        if (d_lat > 0.0 && abs(d_lat) > abs(temp_d_lat))
         {
             p_lat = out_lat;
         }
-        else if (d_lat <= 0.0 && std::abs(d_lat) > std::abs(temp_d_lat))
+        else if (d_lat <= 0.0 && abs(d_lat) > abs(temp_d_lat))
         {
             m_lat = out_lat;
         }
-        else if (d_lat > 0.0 && std::abs(d_lat) <= std::abs(temp_d_lat))
+        else if (d_lat > 0.0 && abs(d_lat) <= abs(temp_d_lat))
         {
             p_lat = out_lat;
             m_lat -= d_lat;
         }
-        else if (d_lat <= 0.0 && std::abs(d_lat) <= std::abs(temp_d_lat))
+        else if (d_lat <= 0.0 && abs(d_lat) <= abs(temp_d_lat))
         {
             m_lat = out_lat;
             p_lat -= d_lat;

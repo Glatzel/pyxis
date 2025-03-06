@@ -7,17 +7,17 @@
 /// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
 use crate::types::{ConstEllipsoid, GeoFloat, num};
 #[cfg(debug_assertions)]
-pub const WGS84_LON: f64 = 121.0917077;
+pub const WGS84_LON: f64 = 121.091_707_7;
 #[cfg(debug_assertions)]
-pub const WGS84_LAT: f64 = 30.6107779;
+pub const WGS84_LAT: f64 = 30.610_777_9;
 #[cfg(debug_assertions)]
-pub const GCJ02_LON: f64 = 121.09626927850977;
+pub const GCJ02_LON: f64 = 121.096_269_278_509_77;
 #[cfg(debug_assertions)]
 pub const GCJ02_LAT: f64 = 30.608604368560773;
 #[cfg(debug_assertions)]
-pub const BD09_LON: f64 = 121.10271724622564;
+pub const BD09_LON: f64 = 121.102_717_246_225_64;
 #[cfg(debug_assertions)]
-pub const BD09_LAT: f64 = 30.61484575976839;
+pub const BD09_LAT: f64 = 30.614_845_759_768_39;
 pub enum CryptoSpace {
     WGS84,
     GCJ02,
@@ -69,9 +69,7 @@ fn delta<T>(lon: T, lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
-    let (d_lon, d_lat) = transform(lon - num!(105.0), lat - num!(35.0));
-    let mut d_lat = d_lat;
-    let mut d_lon = d_lon;
+    let (mut d_lon, mut d_lat) = transform(lon - num!(105.0), lat - num!(35.0));
     let rad_lat = lat / num!(180.0) * T::PI();
     let mut magic = (rad_lat).sin();
     let ee = T::krasovsky1940().eccentricity2();
@@ -113,7 +111,7 @@ where
     let x_pi = T::PI() * num!(3000.0) / num!(180.0);
     let x = bd09_lon - num!(0.0065);
     let y = bd09_lat - num!(0.006);
-    let z = (x.powi(2) + y * y).sqrt() - num!(0.00002) * (y * x_pi).sin();
+    let z = (x.powi(2) + y.powi(2)).sqrt() - num!(0.00002) * (y * x_pi).sin();
     let theta = y.atan2(x) - num!(0.000003) * (x * x_pi).cos();
     let gcj02_lon = z * theta.cos();
     let gcj02_lat = z * theta.sin();
@@ -234,7 +232,7 @@ where
 /// use pyxis::crypto::*;
 /// let p = (WGS84_LON,WGS84_LAT );
 /// let p = wgs84_to_gcj02(p.0, p.1);
-/// println!("{},{}",p.0,p.1);
+/// println!("{:.60},{:.60}",p.0,p.1);
 /// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, GCJ02_LAT, epsilon = 1e-17);
 /// ```
@@ -265,6 +263,7 @@ where
 /// use pyxis::crypto::*;
 /// let p = (WGS84_LON,WGS84_LAT );
 /// let p = wgs84_to_bd09(p.0, p.1);
+/// println!("{:.60},{:.60}",p.0,p.1);
 /// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, BD09_LAT,  epsilon = 1e-17);
 /// ```
@@ -335,30 +334,20 @@ where
     T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let (mut dst_lon, mut dst_lat) = crypto_fn(src_lon, src_lat);
-
-    let mut d_lon = (dst_lon - src_lon).abs();
-    let mut d_lat = (dst_lat - src_lat).abs();
-
-    d_lon += num!(1.0);
-    d_lat += num!(1.0);
-
     for _i in 0..max_iter {
-        let (tmp_d_lon, tmp_d_lat) = inv_crypto_fn(dst_lon, dst_lat);
+        let (tmp_src_lon, tmp_src_lat) = inv_crypto_fn(dst_lon, dst_lat);
+        let (d_lon, d_lat) = (src_lon - tmp_src_lon, src_lat - tmp_src_lat);
 
-        let tmp_lon = dst_lon + (src_lon - tmp_d_lon) / T::TWO;
-        let tmp_lat = dst_lat + (src_lat - tmp_d_lat) / T::TWO;
+        let tmp_lon = dst_lon + d_lon;
+        let tmp_lat = dst_lat + d_lat;
         #[cfg(feature = "log")]
         {
             tracing::trace!("iteration: {_i}");
             tracing::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
-            tracing::trace!(
-                "d_lon: {:.2e}, d_lat: {:.2e}",
-                src_lon - tmp_d_lon,
-                src_lat - tmp_d_lat
-            );
+            tracing::trace!("d_lon: {:.2e}, d_lat: {:.2e}", d_lon, d_lat);
             tracing::trace!(
                 "distance: {}",
-                haversine_distance(src_lon, src_lat, tmp_d_lon, tmp_d_lat)
+                haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
             );
             if _i == max_iter - 1 {
                 tracing::warn!("Exeed max iteration num!ber: {max_iter}");
@@ -372,8 +361,7 @@ where
                 break;
             }
             CryptoThresholdMode::LonLat
-                if (tmp_lon - dst_lon).abs() < threshold
-                    && (tmp_lat - dst_lat).abs() < threshold =>
+                if (d_lon).abs() < threshold && (d_lat).abs() < threshold =>
             {
                 break;
             }

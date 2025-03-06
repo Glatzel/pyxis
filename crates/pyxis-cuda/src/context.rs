@@ -1,26 +1,18 @@
+use core::f64;
 use std::sync::LazyLock;
 
 use cust::prelude::*;
+pub static CTX: LazyLock<PyxisCudaContext> = LazyLock::new(|| PyxisCudaContext {
+    _ctx: cust::quick_init().unwrap(),
+    stream: LazyLock::new(|| Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap()),
+});
+
 pub struct PyxisCudaContext {
     _ctx: Context,
-}
-impl Default for PyxisCudaContext {
-    fn default() -> Self {
-        Self::new()
-    }
+    pub stream: LazyLock<Stream>,
 }
 
 impl PyxisCudaContext {
-    pub fn new() -> Self {
-        Self {
-            _ctx: cust::quick_init().unwrap(),
-        }
-    }
-    pub fn stream(&self) -> &Stream {
-        static STREAM: LazyLock<Stream> =
-            LazyLock::new(|| Stream::new(StreamFlags::NON_BLOCKING, None).unwrap());
-        &STREAM
-    }
     pub fn from_slice(&self, slice: &[f64]) -> DeviceBuffer<f64> {
         DeviceBuffer::from_slice(slice).unwrap()
     }

@@ -37,11 +37,5 @@
     "python.analysis.exclude": [
         "**/vcpkg",
         ".pixi"
-    ],
-    "files.associations": {
-        "ratio": "cpp",
-        "cmath": "cpp",
-        "complex": "cpp",
-        "valarray": "cpp"
-    }
+    ]
 }

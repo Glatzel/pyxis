@@ -499,6 +499,5 @@ mod test {
             println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 2.0);
             println!("max lonlat: {:.2e}", max_lonlat);
         }
-        assert!(false);
     }
 }

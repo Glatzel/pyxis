@@ -174,7 +174,6 @@ mod test {
     use pyxis::crypto::*;
     use rand::Rng;
 
-    
     #[test]
     fn test_bd09_to_gcj02_cuda() {
         let mut lon: Vec<f64> = vec![pyxis::crypto::BD09_LON, pyxis::crypto::BD09_LON];
@@ -362,7 +361,7 @@ mod test {
     fn test_exact_cuda() {
         let is_ci = std::env::var("CI").is_ok();
         let mut rng = rand::rng();
-        let count = if is_ci { 10 } else { 100000 };
+        let count = if is_ci { 10 } else { 150000 };
         let wgs_lon = (0..count)
             .map(|_| rng.random_range(72.004..137.8347))
             .collect::<Vec<f64>>();
@@ -406,7 +405,7 @@ mod test {
                 CryptoSpace::WGS84,
                 1e-20,
                 CryptoThresholdMode::LonLat,
-                1000,
+                100,
             );
             dlon.copy_to(&mut lon).unwrap();
             dlat.copy_to(&mut lat).unwrap();
@@ -443,7 +442,7 @@ mod test {
                 CryptoSpace::WGS84,
                 1e-20,
                 CryptoThresholdMode::LonLat,
-                1000,
+                100,
             );
             dlon.copy_to(&mut lon).unwrap();
             dlat.copy_to(&mut lat).unwrap();
@@ -480,7 +479,7 @@ mod test {
                 CryptoSpace::GCJ02,
                 1e-20,
                 CryptoThresholdMode::LonLat,
-                1000,
+                100,
             );
             dlon.copy_to(&mut lon).unwrap();
             dlat.copy_to(&mut lat).unwrap();
@@ -500,5 +499,6 @@ mod test {
             println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 2.0);
             println!("max lonlat: {:.2e}", max_lonlat);
         }
+        assert!(false);
     }
 }

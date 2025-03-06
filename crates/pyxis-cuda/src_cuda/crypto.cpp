@@ -6,8 +6,8 @@
 #define CUDA_DEVICE // Empty for normal C++ compilation
 #include <cmath>
 #endif
-#define M_PI 3.14159265358979323846264
-#define EE 0.006693421622965943
+#define M_PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
+#define EE 0.006693421622965943333649629920500956359319388866424560546875
 #define krasovsky1940_A 6378245.0
 CUDA_DEVICE void transform(
     const double x, const double y,
@@ -28,8 +28,8 @@ CUDA_DEVICE void transform(
     lat *= 2.0 / 3.0;
     lon *= 2.0 / 3.0;
 
-    lat += -100.0 + 2.0 * x + 3.0 * y + 0.2 * pow(y, 2) + 0.1 * xy + 0.2 * abs_x;
-    lon += 300.0 + x + 2.0 * y + 0.1 * pow(x, 2) + 0.1 * xy + 0.1 * abs_x;
+    lat += -100.0 + 2.0 * x + 3.0 * y + 0.2 * pow(y, 2.0) + 0.1 * xy + 0.2 * abs_x;
+    lon += 300.0 + x + 2.0 * y + 0.1 * pow(x, 2.0) + 0.1 * xy + 0.1 * abs_x;
 }
 CUDA_DEVICE void delta(
     const double lon, const double lat,
@@ -55,7 +55,7 @@ CUDA_DEVICE void bd09_to_gcj02(
     double x_pi = M_PI * 3000.0 / 180.0;
     double x = bd09_lon - 0.0065;
     double y = bd09_lat - 0.006;
-    double z = sqrt(pow(x, 2) + pow(y, 2)) - 0.00002 * sin(y * x_pi);
+    double z = sqrt(pow(x, 2.0) + pow(y, 2.0)) - 0.00002 * sin(y * x_pi);
     double theta = atan2(y, x) - 0.000003 * cos(x * x_pi);
     gcj02_lon = z * cos(theta);
     gcj02_lat = z * sin(theta);
@@ -65,7 +65,7 @@ CUDA_DEVICE void gcj02_to_bd09(
     double &bd09_lon, double &bd09_lat)
 {
     double x_pi = M_PI * 3000.0 / 180.0;
-    double z = sqrt(pow(gcj02_lon, 2) + pow(gcj02_lat, 2)) + 0.00002 * sin(gcj02_lat * x_pi);
+    double z = sqrt(pow(gcj02_lon, 2.0) + pow(gcj02_lat, 2.0)) + 0.00002 * sin(gcj02_lat * x_pi);
     double theta = atan2(gcj02_lat, gcj02_lon) + 0.000003 * cos(gcj02_lon * x_pi);
     bd09_lon = z * cos(theta) + 0.0065;
     bd09_lat = z * sin(theta) + 0.006;
@@ -126,9 +126,9 @@ CUDA_DEVICE double haversine_distance(const double lon_a, const double lat_a,
     double delta_lon = lon2_rad - lon1_rad;
 
     // Haversine formula
-    double a = pow(sin(delta_lat / 2.0), 2) +
+    double a = pow(sin(delta_lat / 2.0), 2.0) +
                cos(lat1_rad) * cos(lat2_rad) *
-                   pow(sin(delta_lon / 2.0), 2);
+                   pow(sin(delta_lon / 2.0), 2.0);
 
     double c = 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
     return 6378137.0 * c;
@@ -167,7 +167,7 @@ CUDA_DEVICE void crypto_exact(
         }
         else
         {
-            if (abs(src_lon - tmp_lon) < threshold && abs(src_lat - tmp_lat) < threshold)
+            if (abs(d_lon) < threshold && abs(d_lat) < threshold)
             {
                 break;
             }

@@ -111,7 +111,7 @@ where
     let x_pi = T::PI() * num!(3000.0) / num!(180.0);
     let x = bd09_lon - num!(0.0065);
     let y = bd09_lat - num!(0.006);
-    let z = (x.powi(2) + y * y).sqrt() - num!(0.00002) * (y * x_pi).sin();
+    let z = (x.powi(2) + y.powi(2)).sqrt() - num!(0.00002) * (y * x_pi).sin();
     let theta = y.atan2(x) - num!(0.000003) * (x * x_pi).cos();
     let gcj02_lon = z * theta.cos();
     let gcj02_lat = z * theta.sin();

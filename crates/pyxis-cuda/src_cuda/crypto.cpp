@@ -145,88 +145,36 @@ CUDA_DEVICE void crypto_exact(
     double &out_lat)
 
 {
-    double dest_lon = src_lon;
-    double dest_lat = src_lat;
-    crypto_fn(src_lon, src_lat, dest_lon, dest_lat);
-    double d_lon = abs(dest_lon - src_lon);
-    double d_lat = abs(dest_lat - src_lat);
-
-    double m_lon = dest_lon - d_lon;
-    double m_lat = dest_lat - d_lat;
-    double p_lon = dest_lon + d_lon;
-    double p_lat = dest_lat + d_lat;
-
-    d_lon += 1.0;
-    d_lat += 1.0;
-
+    double dst_lon = src_lon;
+    double dst_lat = src_lat;
+    crypto_fn(src_lon, src_lat, dst_lon, dst_lat);
     for (int i = 0; i < max_iter; i++)
     {
-        dest_lon = (m_lon + p_lon) / 2.0;
-        dest_lat = (m_lat + p_lat) / 2.0;
-        double tmp_lon = 0.0;
-        double tmp_lat = 0.0;
-        inv_crypto_fn(dest_lon, dest_lat, tmp_lon, tmp_lat);
-        double temp_d_lon = tmp_lon - src_lon;
-        double temp_d_lat = tmp_lat - src_lat;
+        double tmp_src_lon = 0.0;
+        double tmp_src_lat = 0.0;
+        inv_crypto_fn(dst_lon, dst_lat, tmp_src_lon, tmp_src_lat);
+        double d_lon = src_lon - tmp_src_lon;
+        double d_lat = src_lat - tmp_src_lat;
+        double tmp_lon = dst_lon + d_lon;
+        double tmp_lat = dst_lat + d_lat;
 
         if (distance_mode)
         {
-            if (haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat) < threshold)
+            if (haversine_distance(dst_lon, dst_lat, tmp_lon, tmp_lat) < threshold)
             {
                 break;
             }
         }
         else
         {
-            if (abs(temp_d_lat) < threshold && abs(temp_d_lon) < threshold)
+            if (abs(src_lon - tmp_lon) < threshold && abs(src_lat - tmp_lat) < threshold)
             {
                 break;
             }
         }
-
-        // For d_lon
-        if (d_lon > 0.0 && abs(d_lon) > abs(temp_d_lon))
-        {
-            p_lon = dest_lon;
-        }
-        else if (d_lon < 0.0 && abs(d_lon) > abs(temp_d_lon))
-        {
-            m_lon = dest_lon;
-        }
-        else if (d_lon > 0.0 && abs(d_lon) < abs(temp_d_lon))
-        {
-            p_lon = dest_lon;
-            m_lon -= d_lon;
-        }
-        else if (d_lon < 0.0 && abs(d_lon) < abs(temp_d_lon))
-        {
-            m_lon = dest_lon;
-            p_lon -= d_lon;
-        }
-
-        // For d_lat
-        if (d_lat > 0.0 && abs(d_lat) > abs(temp_d_lat))
-        {
-            p_lat = dest_lat;
-        }
-        else if (d_lat < 0.0 && abs(d_lat) > abs(temp_d_lat))
-        {
-            m_lat = dest_lat;
-        }
-        else if (d_lat > 0.0 && abs(d_lat) < abs(temp_d_lat))
-        {
-            p_lat = dest_lat;
-            m_lat -= d_lat;
-        }
-        else if (d_lat < 0.0 && abs(d_lat) < abs(temp_d_lat))
-        {
-            m_lat = dest_lat;
-            p_lat -= d_lat;
-        }
-
-        d_lon = temp_d_lon;
-        d_lat = temp_d_lat;
+        dst_lon = tmp_lon;
+        dst_lat = tmp_lat;
     }
-    out_lon = dest_lon;
-    out_lat = dest_lat;
+    out_lon = dst_lon;
+    out_lat = dst_lat;
 }

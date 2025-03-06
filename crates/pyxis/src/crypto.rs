@@ -334,30 +334,20 @@ where
     T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
     let (mut dst_lon, mut dst_lat) = crypto_fn(src_lon, src_lat);
-
-    let mut d_lon = (dst_lon - src_lon).abs();
-    let mut d_lat = (dst_lat - src_lat).abs();
-
-    d_lon += num!(1.0);
-    d_lat += num!(1.0);
-
     for _i in 0..max_iter {
-        let (tmp_d_lon, tmp_d_lat) = inv_crypto_fn(dst_lon, dst_lat);
+        let (tmp_src_lon, tmp_src_lat) = inv_crypto_fn(dst_lon, dst_lat);
+        let (d_lon, d_lat) = (src_lon - tmp_src_lon, src_lat - tmp_src_lat);
 
-        let tmp_lon = dst_lon + (src_lon - tmp_d_lon) / T::TWO;
-        let tmp_lat = dst_lat + (src_lat - tmp_d_lat) / T::TWO;
+        let tmp_lon = dst_lon + d_lon;
+        let tmp_lat = dst_lat + d_lat;
         #[cfg(feature = "log")]
         {
             tracing::trace!("iteration: {_i}");
             tracing::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
-            tracing::trace!(
-                "d_lon: {:.2e}, d_lat: {:.2e}",
-                src_lon - tmp_d_lon,
-                src_lat - tmp_d_lat
-            );
+            tracing::trace!("d_lon: {:.2e}, d_lat: {:.2e}", d_lon, d_lat);
             tracing::trace!(
                 "distance: {}",
-                haversine_distance(src_lon, src_lat, tmp_d_lon, tmp_d_lat)
+                haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
             );
             if _i == max_iter - 1 {
                 tracing::warn!("Exeed max iteration num!ber: {max_iter}");
@@ -371,8 +361,7 @@ where
                 break;
             }
             CryptoThresholdMode::LonLat
-                if (tmp_lon - dst_lon).abs() < threshold
-                    && (tmp_lat - dst_lat).abs() < threshold =>
+                if (d_lon).abs() < threshold && (d_lat).abs() < threshold =>
             {
                 break;
             }

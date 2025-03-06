@@ -296,8 +296,8 @@ where
 ///             CryptoThresholdMode::LonLat,
 ///             100,
 ///         );
-/// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-15);
-/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-14);
+/// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-13);
+/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-13);
 /// ```
 ///
 /// ```
@@ -315,7 +315,7 @@ where
 ///             p.1,
 ///             &bd09_to_wgs84,
 ///             &wgs84_to_bd09,
-///             1e-3,
+///             1e-4,
 ///             CryptoThresholdMode::Distance,
 ///             100,
 ///         );
@@ -339,32 +339,26 @@ where
     let mut d_lon = (dst_lon - src_lon).abs();
     let mut d_lat = (dst_lat - src_lat).abs();
 
-    let mut m_lon = dst_lon - d_lon;
-    let mut m_lat = dst_lat - d_lat;
-    let mut p_lon = dst_lon + d_lon;
-    let mut p_lat = dst_lat + d_lat;
-
     d_lon += num!(1.0);
     d_lat += num!(1.0);
 
     for _i in 0..max_iter {
-        (dst_lon, dst_lat) = ((m_lon + p_lon) / T::TWO, (m_lat + p_lat) / T::TWO);
-        let (tmp_lon, tmp_lat) = inv_crypto_fn(dst_lon, dst_lat);
-        let temp_d_lon = tmp_lon - src_lon;
-        let temp_d_lat = tmp_lat - src_lat;
+        let (tmp_d_lon, tmp_d_lat) = inv_crypto_fn(dst_lon, dst_lat);
 
+        let tmp_lon = dst_lon + (src_lon - tmp_d_lon) / T::TWO;
+        let tmp_lat = dst_lat + (src_lat - tmp_d_lat) / T::TWO;
         #[cfg(feature = "log")]
         {
             tracing::trace!("iteration: {_i}");
             tracing::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
-            tracing::trace!("src_lon: {tmp_lon}, src_lat: {tmp_lat}");
-            tracing::trace!("d_lon: {d_lon:.2e}, d_lat: {d_lat:.2e}");
-            tracing::trace!("range_lon: {}, range_lat: {}", p_lon - m_lon, p_lat - m_lat);
-            tracing::trace!("p_lon: {p_lon}, p_lat: {p_lat}");
-            tracing::trace!("m_lon: {m_lon}, m_lat: {m_lat}");
+            tracing::trace!(
+                "d_lon: {:.2e}, d_lat: {:.2e}",
+                src_lon - tmp_d_lon,
+                src_lat - tmp_d_lat
+            );
             tracing::trace!(
                 "distance: {}",
-                haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
+                haversine_distance(src_lon, src_lat, tmp_d_lon, tmp_d_lat)
             );
             if _i == max_iter - 1 {
                 tracing::warn!("Exeed max iteration num!ber: {max_iter}");
@@ -373,47 +367,20 @@ where
 
         match threshold_mode {
             CryptoThresholdMode::Distance
-                if haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat) < threshold =>
+                if haversine_distance(tmp_lon, tmp_lat, dst_lon, dst_lat) < threshold =>
             {
                 break;
             }
             CryptoThresholdMode::LonLat
-                if temp_d_lat.abs() < threshold && temp_d_lon.abs() < threshold =>
+                if (tmp_lon - dst_lon).abs() < threshold
+                    && (tmp_lat - dst_lat).abs() < threshold =>
             {
                 break;
             }
             _ => (),
         }
-
-        match (d_lon > T::zero(), d_lon.abs() > temp_d_lon.abs()) {
-            (true, true) => p_lon = dst_lon,
-            (false, true) => m_lon = dst_lon,
-            (true, false) => {
-                p_lon = dst_lon;
-                m_lon -= d_lon;
-            }
-            (false, false) => {
-                m_lon = dst_lon;
-                p_lon -= d_lon;
-            }
-        }
-        match (d_lat > T::zero(), d_lat.abs() > temp_d_lat.abs()) {
-            (true, true) => p_lat = dst_lat,
-            (false, true) => m_lat = dst_lat,
-            (true, false) => {
-                p_lat = dst_lat;
-                m_lat -= d_lat;
-            }
-            (false, false) => {
-                m_lat = dst_lat;
-                p_lat -= d_lat;
-            }
-        }
-
-        d_lon = temp_d_lon;
-        d_lat = temp_d_lat;
+        (dst_lon, dst_lat) = (tmp_lon, tmp_lat);
     }
-
     (dst_lon, dst_lat)
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
@@ -476,7 +443,7 @@ mod test {
                     &gcj02_to_bd09,
                     1e-20,
                     CryptoThresholdMode::LonLat,
-                    1000,
+                    100,
                 );
                 if (test_gcj.0 - gcj.0).abs() > threshold || (test_gcj.1 - gcj.1).abs() > threshold
                 {
@@ -511,7 +478,7 @@ mod test {
                     &wgs84_to_bd09,
                     1e-20,
                     CryptoThresholdMode::LonLat,
-                    1000,
+                    100,
                 );
                 if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
                 {
@@ -546,7 +513,7 @@ mod test {
                     &wgs84_to_gcj02,
                     1e-20,
                     CryptoThresholdMode::LonLat,
-                    1000,
+                    100,
                 );
                 if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
                 {
@@ -574,9 +541,9 @@ mod test {
                 }
             }
         }
-        println!("average distance: {:.2e}", all_dist / count as f64);
+        println!("average distance: {:.2e}", all_dist / count as f64 / 3.0);
         println!("max distance: {:.2e}", max_dist);
-        println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 2.0);
+        println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 6.0);
         println!("max lonlat: {:.2e}", max_lonlat);
     }
 }

@@ -8,7 +8,9 @@
 #define M_PI 3.14159265358979323846
 #define EE 0.006693421622965943
 #define krasovsky1940_A 6378245.0
-CUDA_DEVICE void transform(double x, double y, double &lon, double &lat)
+CUDA_DEVICE void transform(
+    const double x,const double y,
+    double &lon, double &lat)
 {
     double xy = x * y;
     double abs_x = sqrt(abs(x));
@@ -28,24 +30,26 @@ CUDA_DEVICE void transform(double x, double y, double &lon, double &lat)
     lat += -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * xy + 0.2 * abs_x;
     lon += 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * xy + 0.1 * abs_x;
 }
-CUDA_DEVICE void delta(double &lon, double &lat)
+CUDA_DEVICE void delta(
+    double lon, double lat,
+    double &d_lon, double &d_lat)
 {
-    double d_lon;
-    double d_lat;
-    transform(lon - (105.0), lat - (35.0), d_lon, d_lat);
-    double d_lat = d_lat;
-    double d_lon = d_lon;
-    double rad_lat = lat / (180.0) * M_PI;
+
+    transform(lon - 105.0, lat - 35.0, d_lon, d_lat);
+
+    double rad_lat = lat / 180.0 * M_PI;
     double magic = sin(rad_lat);
     double earth_r = krasovsky1940_A;
 
     magic = 1.0 - EE * magic * magic;
     double sqrt_magic = sqrt(magic);
-    d_lat = (d_lat * (180.0)) / ((earth_r * (1.0 - EE)) / (magic * sqrt_magic) * M_PI);
-    d_lon = (d_lon * (180.0)) / (earth_r / sqrt_magic * cos(rad_lat) * M_PI);
+
+    d_lat = (d_lat * 180.0) / ((earth_r * (1.0 - EE)) / (magic * sqrt_magic) * M_PI);
+    d_lon = (d_lon * 180.0) / (earth_r / sqrt_magic * cos(rad_lat) * M_PI);
 }
-CUDA_DEVICE void bd09_to_gcj02(double bd09_lon, double bd09_lat,
-                               double &gcj02_lon, double &gcj02_lat)
+CUDA_DEVICE void bd09_to_gcj02(
+    double bd09_lon, double bd09_lat,
+    double &gcj02_lon, double &gcj02_lat)
 {
     double x_pi = M_PI * 3000.0 / 180.0;
     double x = bd09_lon - 0.0065;
@@ -55,13 +59,51 @@ CUDA_DEVICE void bd09_to_gcj02(double bd09_lon, double bd09_lat,
     gcj02_lon = z * cos(theta);
     gcj02_lat = z * sin(theta);
 }
-CUDA_DEVICE void gcj02_to_bd09(double gcj02_lon, double gcj02_lat,
-                               double &bd09_lon, double &bd09_lat)
-
+CUDA_DEVICE void gcj02_to_bd09(
+    double gcj02_lon, double gcj02_lat,
+    double &bd09_lon, double &bd09_lat)
 {
     double x_pi = M_PI * 3000.0 / 180.0;
     double z = sqrt(gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat) + 0.00002 * sin(gcj02_lat * x_pi);
     double theta = atan2(gcj02_lat, gcj02_lon) + 0.000003 * cos(gcj02_lon * x_pi);
     bd09_lon = z * cos(theta) + 0.0065;
     bd09_lat = z * sin(theta) + 0.006;
+}
+CUDA_DEVICE void gcj02_to_wgs84(
+    double gcj02_lon, double gcj02_lat,
+    double &wgs84_lon, double &wgs84_lat)
+{
+    double d_lon=0.0;
+    double d_lat=0.0;
+    delta(gcj02_lon, gcj02_lat, d_lon, d_lat);
+    wgs84_lon = gcj02_lon - d_lon;
+    wgs84_lat = gcj02_lat - d_lat;
+}
+CUDA_DEVICE void wgs84_to_gcj02(
+    double wgs84_lon, double wgs84_lat,
+    double &gcj02_lon, double &gcj02_lat)
+{
+    double d_lon=0.0;
+    double d_lat=0.0;
+    delta(wgs84_lon, wgs84_lat, d_lon, d_lat);
+    gcj02_lon = wgs84_lon + d_lon;
+    gcj02_lat = wgs84_lat + d_lat;
+}
+CUDA_DEVICE void wgs84_to_bd09(
+    double wgs84_lon, double wgs84_lat,
+    double &bd09_lon, double &bd09_lat)
+{
+    wgs84_to_gcj02(wgs84_lon, wgs84_lat,
+                   bd09_lon, bd09_lat);
+    gcj02_to_bd09(bd09_lon, bd09_lat,
+                  bd09_lon, bd09_lat);
+}
+CUDA_DEVICE void bd09_to_wgs84(
+    double bd09_lon, double bd09_lat,
+    double &wgs84_lon, double &wgs84_lat)
+{
+    bd09_to_gcj02(bd09_lon, bd09_lat,
+                  wgs84_lon, wgs84_lat);
+    gcj02_to_wgs84(wgs84_lon, wgs84_lat,
+                   wgs84_lon, wgs84_lat);
 }

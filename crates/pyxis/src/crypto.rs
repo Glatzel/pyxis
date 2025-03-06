@@ -69,9 +69,7 @@ fn delta<T>(lon: T, lat: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
-    let (d_lon, d_lat) = transform(lon - num!(105.0), lat - num!(35.0));
-    let mut d_lat = d_lat;
-    let mut d_lon = d_lon;
+    let (mut d_lon, mut d_lat) = transform(lon - num!(105.0), lat - num!(35.0));
     let rad_lat = lat / num!(180.0) * T::PI();
     let mut magic = (rad_lat).sin();
     let ee = T::krasovsky1940().eccentricity2();

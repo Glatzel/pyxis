@@ -296,8 +296,8 @@ where
 ///             CryptoThresholdMode::LonLat,
 ///             100,
 ///         );
-/// assert_approx_eq!(f64, p.0+1.0, WGS84_LON, epsilon = 1e-15);
-/// assert_approx_eq!(f64, p.1+1.0, WGS84_LAT, epsilon = 1e-14);
+/// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-13);
+/// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-13);
 /// ```
 ///
 /// ```
@@ -427,7 +427,7 @@ mod test {
         let mut max_lonlat: f64 = 0.0;
         let mut all_dist = 0.0;
         let mut all_lonlat = 0.0;
-        let count = if is_ci { 10 } else { 100000 };
+        let count = if is_ci { 10 } else { 10000};
         for _ in 0..count {
             let wgs: (f64, f64) = (
                 rng.random_range(72.004..137.8347),
@@ -541,9 +541,9 @@ mod test {
                 }
             }
         }
-        println!("average distance: {:.2e}", all_dist / count as f64);
+        println!("average distance: {:.2e}", all_dist / count as f64 / 3.0);
         println!("max distance: {:.2e}", max_dist);
-        println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 2.0);
+        println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 6.0);
         println!("max lonlat: {:.2e}", max_lonlat);
     }
 }

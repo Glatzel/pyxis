@@ -169,11 +169,12 @@ impl PyxisCudaContext {
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use cust::memory::CopyDestination;
     use float_cmp::assert_approx_eq;
     use pyxis::crypto::*;
     use rand::Rng;
+
+    use super::*;
     #[test]
     fn test_bd09_to_gcj02_cuda() {
         let mut lon: Vec<f64> = vec![pyxis::crypto::BD09_LON, pyxis::crypto::BD09_LON];
@@ -293,7 +294,7 @@ mod test {
             CryptoSpace::WGS84,
             1e-20,
             CryptoThresholdMode::LonLat,
-            1000,
+            100,
         );
         dlon.copy_to(&mut lon).unwrap();
         dlat.copy_to(&mut lat).unwrap();
@@ -319,7 +320,7 @@ mod test {
             CryptoSpace::GCJ02,
             1e-20,
             CryptoThresholdMode::LonLat,
-            1000,
+            100,
         );
         dlon.copy_to(&mut lon).unwrap();
         dlat.copy_to(&mut lat).unwrap();
@@ -345,7 +346,7 @@ mod test {
             CryptoSpace::WGS84,
             1e-20,
             CryptoThresholdMode::LonLat,
-            1000,
+            100,
         );
         dlon.copy_to(&mut lon).unwrap();
         dlat.copy_to(&mut lat).unwrap();

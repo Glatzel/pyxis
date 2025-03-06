@@ -6,7 +6,7 @@
 #define CUDA_DEVICE // Empty for normal C++ compilation
 #include <cmath>
 #endif
-#define M_PI 3.141592653589793
+#define M_PI 3.14159265358979323846264
 #define EE 0.006693421622965943
 #define krasovsky1940_A 6378245.0
 CUDA_DEVICE void transform(

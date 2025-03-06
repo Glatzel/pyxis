@@ -1,11 +1,12 @@
 #pragma once
 #ifdef __CUDACC__ // If compiled with nvcc
 #define CUDA_DEVICE __device__
+#include <cuda_runtime.h>
 #else
 #define CUDA_DEVICE // Empty for normal C++ compilation
-#endif
 #include <cmath>
-#define M_PI 3.14159265358979323846
+#endif
+#define M_PI 3.141592653589793
 #define EE 0.006693421622965943
 #define krasovsky1940_A 6378245.0
 CUDA_DEVICE void transform(
@@ -27,8 +28,8 @@ CUDA_DEVICE void transform(
     lat *= 2.0 / 3.0;
     lon *= 2.0 / 3.0;
 
-    lat += -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * xy + 0.2 * abs_x;
-    lon += 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * xy + 0.1 * abs_x;
+    lat += -100.0 + 2.0 * x + 3.0 * y + 0.2 * pow(y, 2) + 0.1 * xy + 0.2 * abs_x;
+    lon += 300.0 + x + 2.0 * y + 0.1 * pow(x, 2) + 0.1 * xy + 0.1 * abs_x;
 }
 CUDA_DEVICE void delta(
     const double lon, const double lat,
@@ -54,7 +55,7 @@ CUDA_DEVICE void bd09_to_gcj02(
     double x_pi = M_PI * 3000.0 / 180.0;
     double x = bd09_lon - 0.0065;
     double y = bd09_lat - 0.006;
-    double z = sqrt(x * x + y * y) - 0.00002 * sin(y * x_pi);
+    double z = sqrt(pow(x, 2) + pow(y, 2)) - 0.00002 * sin(y * x_pi);
     double theta = atan2(y, x) - 0.000003 * cos(x * x_pi);
     gcj02_lon = z * cos(theta);
     gcj02_lat = z * sin(theta);
@@ -64,7 +65,7 @@ CUDA_DEVICE void gcj02_to_bd09(
     double &bd09_lon, double &bd09_lat)
 {
     double x_pi = M_PI * 3000.0 / 180.0;
-    double z = sqrt(gcj02_lon * gcj02_lon + gcj02_lat * gcj02_lat) + 0.00002 * sin(gcj02_lat * x_pi);
+    double z = sqrt(pow(gcj02_lon, 2) + pow(gcj02_lat, 2)) + 0.00002 * sin(gcj02_lat * x_pi);
     double theta = atan2(gcj02_lat, gcj02_lon) + 0.000003 * cos(gcj02_lon * x_pi);
     bd09_lon = z * cos(theta) + 0.0065;
     bd09_lat = z * sin(theta) + 0.006;
@@ -144,26 +145,27 @@ CUDA_DEVICE void crypto_exact(
     double &out_lat)
 
 {
-    crypto_fn(src_lon, src_lat, out_lon, out_lat);
+    double dest_lon = src_lon;
+    double dest_lat = src_lat;
+    crypto_fn(src_lon, src_lat, dest_lon, dest_lat);
+    double d_lon = abs(dest_lon - src_lon);
+    double d_lat = abs(dest_lat - src_lat);
 
-    double d_lon = abs(out_lon - src_lon);
-    double d_lat = abs(out_lat - src_lat);
-
-    double m_lon = out_lon - d_lon;
-    double m_lat = out_lat - d_lat;
-    double p_lon = out_lon + d_lon;
-    double p_lat = out_lat + d_lat;
+    double m_lon = dest_lon - d_lon;
+    double m_lat = dest_lat - d_lat;
+    double p_lon = dest_lon + d_lon;
+    double p_lat = dest_lat + d_lat;
 
     d_lon += 1.0;
     d_lat += 1.0;
 
     for (int i = 0; i < max_iter; i++)
     {
-        out_lon = (m_lon + p_lon) / 2.0;
-        out_lat = (m_lat + p_lat) / 2.0;
+        dest_lon = (m_lon + p_lon) / 2.0;
+        dest_lat = (m_lat + p_lat) / 2.0;
         double tmp_lon = 0.0;
         double tmp_lat = 0.0;
-        inv_crypto_fn(out_lon, out_lat, tmp_lon, tmp_lat);
+        inv_crypto_fn(dest_lon, dest_lat, tmp_lon, tmp_lat);
         double temp_d_lon = tmp_lon - src_lon;
         double temp_d_lat = tmp_lat - src_lat;
 
@@ -185,44 +187,46 @@ CUDA_DEVICE void crypto_exact(
         // For d_lon
         if (d_lon > 0.0 && abs(d_lon) > abs(temp_d_lon))
         {
-            p_lon = out_lon;
+            p_lon = dest_lon;
         }
         else if (d_lon <= 0.0 && abs(d_lon) > abs(temp_d_lon))
         {
-            m_lon = out_lon;
+            m_lon = dest_lon;
         }
         else if (d_lon > 0.0 && abs(d_lon) <= abs(temp_d_lon))
         {
-            p_lon = out_lon;
+            p_lon = dest_lon;
             m_lon -= d_lon;
         }
         else if (d_lon <= 0.0 && abs(d_lon) <= abs(temp_d_lon))
         {
-            m_lon = out_lon;
+            m_lon = dest_lon;
             p_lon -= d_lon;
         }
 
         // For d_lat
         if (d_lat > 0.0 && abs(d_lat) > abs(temp_d_lat))
         {
-            p_lat = out_lat;
+            p_lat = dest_lat;
         }
         else if (d_lat <= 0.0 && abs(d_lat) > abs(temp_d_lat))
         {
-            m_lat = out_lat;
+            m_lat = dest_lat;
         }
         else if (d_lat > 0.0 && abs(d_lat) <= abs(temp_d_lat))
         {
-            p_lat = out_lat;
+            p_lat = dest_lat;
             m_lat -= d_lat;
         }
         else if (d_lat <= 0.0 && abs(d_lat) <= abs(temp_d_lat))
         {
-            m_lat = out_lat;
+            m_lat = dest_lat;
             p_lat -= d_lat;
         }
 
         d_lon = temp_d_lon;
         d_lat = temp_d_lat;
     }
+    out_lon = dest_lon;
+    out_lat = dest_lat;
 }

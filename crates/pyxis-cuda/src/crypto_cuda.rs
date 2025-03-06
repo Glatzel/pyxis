@@ -10,7 +10,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = Module::from_ptx(PTX, &[]).unwrap();
         let func = module.get_function("bd09_to_gcj02_cuda").unwrap();
-        let stream = Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap();
+        let stream = &crate::CTX.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -29,7 +29,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = Module::from_ptx(PTX, &[]).unwrap();
         let func = module.get_function("gcj02_to_bd09_cuda").unwrap();
-        let stream = Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap();
+        let stream = &crate::CTX.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -48,7 +48,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = Module::from_ptx(PTX, &[]).unwrap();
         let func = module.get_function("gcj02_to_wgs84_cuda").unwrap();
-        let stream = Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap();
+        let stream = &crate::CTX.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -67,7 +67,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = Module::from_ptx(PTX, &[]).unwrap();
         let func = module.get_function("wgs84_to_gcj02_cuda").unwrap();
-        let stream = Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap();
+        let stream = &crate::CTX.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -86,7 +86,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = Module::from_ptx(PTX, &[]).unwrap();
         let func = module.get_function("wgs84_to_bd09_cuda").unwrap();
-        let stream = Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap();
+        let stream = &crate::CTX.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -105,7 +105,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = Module::from_ptx(PTX, &[]).unwrap();
         let func = module.get_function("bd09_to_wgs84_cuda").unwrap();
-        let stream = Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap();
+        let stream = &crate::CTX.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -149,9 +149,8 @@ impl PyxisCudaContext {
             CryptoThresholdMode::Distance => true,
             CryptoThresholdMode::LonLat => false,
         };
-        let stream = Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap();
+        let stream = &crate::CTX.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
-
         unsafe {
             launch!(
                 func<<<grid_size, block_size, 0, stream>>>(
@@ -208,19 +207,13 @@ mod test {
         println!("yc:{:?}", lon);
         println!("yc:{:?}", lat);
         println!("bd09:{BD09_LON},{BD09_LAT}");
-        assert_approx_eq!(f64, lon[0], pyxis::crypto::BD09_LON, epsilon = 1e-14);
-        assert_approx_eq!(f64, lat[0], pyxis::crypto::BD09_LAT, epsilon = 1e-14);
+        assert_approx_eq!(f64, lon[0], pyxis::crypto::BD09_LON, epsilon = 1e-17);
+        assert_approx_eq!(f64, lat[0], pyxis::crypto::BD09_LAT, epsilon = 1e-17);
     }
     #[test]
     fn test_gcj02_to_wgs84_cuda() {
-        let mut lon: Vec<f64> = vec![
-            pyxis::crypto::GCJ02_LON.clone(),
-            pyxis::crypto::GCJ02_LON.clone(),
-        ];
-        let mut lat: Vec<f64> = vec![
-            pyxis::crypto::GCJ02_LAT.clone(),
-            pyxis::crypto::GCJ02_LAT.clone(),
-        ];
+        let mut lon: Vec<f64> = vec![pyxis::crypto::GCJ02_LON, pyxis::crypto::GCJ02_LON];
+        let mut lat: Vec<f64> = vec![pyxis::crypto::GCJ02_LAT, pyxis::crypto::GCJ02_LAT];
         let expect_wgs = pyxis::crypto::gcj02_to_wgs84(lon[0], lat[0]);
         let ctx = &crate::CTX;
         let mut dlon = ctx.from_slice(&lon);
@@ -265,8 +258,8 @@ mod test {
 
         println!("lon:{:?}", lon);
         println!("lat:{:?}", lat);
-        assert_approx_eq!(f64, lon[0], pyxis::crypto::BD09_LON, epsilon = 1e-14);
-        assert_approx_eq!(f64, lat[0], pyxis::crypto::BD09_LAT, epsilon = 1e-14);
+        assert_approx_eq!(f64, lon[0], pyxis::crypto::BD09_LON, epsilon = 1e-15);
+        assert_approx_eq!(f64, lat[0], pyxis::crypto::BD09_LAT, epsilon = 1e-15);
     }
     #[test]
     fn test_bd09_to_wgs84_cuda() {
@@ -285,6 +278,84 @@ mod test {
 
         assert_approx_eq!(f64, lon[0], expect_wgs.0, epsilon = 1e-14);
         assert_approx_eq!(f64, lat[0], expect_wgs.1, epsilon = 1e-14);
+    }
+    #[test]
+    fn test_bd09_to_wgs84_exact_cuda() {
+        let mut lon: Vec<f64> = vec![BD09_LON, BD09_LON];
+        let mut lat: Vec<f64> = vec![BD09_LAT, BD09_LAT];
+        let ctx = &crate::CTX;
+        let mut dlon = ctx.from_slice(&lon);
+        let mut dlat = ctx.from_slice(&lat);
+        ctx.crypto_exact_cuda(
+            &mut dlon,
+            &mut dlat,
+            CryptoSpace::BD09,
+            CryptoSpace::WGS84,
+            1e-14,
+            CryptoThresholdMode::LonLat,
+            1000,
+        );
+        dlon.copy_to(&mut lon).unwrap();
+        dlat.copy_to(&mut lat).unwrap();
+
+        println!("bd09: {BD09_LON},{BD09_LAT}");
+        println!("lon:{:?}", lon);
+        println!("lat:{:?}", lat);
+        println!("wgs84: {WGS84_LON},{WGS84_LAT}");
+        assert_approx_eq!(f64, lon[0], WGS84_LON, epsilon = 1e-13);
+        assert_approx_eq!(f64, lat[0], WGS84_LAT, epsilon = 1e-13);
+    }
+    #[test]
+    fn test_bd09_to_gcj02_exact_cuda() {
+        let mut lon: Vec<f64> = vec![BD09_LON, BD09_LON];
+        let mut lat: Vec<f64> = vec![BD09_LAT, BD09_LAT];
+        let ctx = &crate::CTX;
+        let mut dlon = ctx.from_slice(&lon);
+        let mut dlat = ctx.from_slice(&lat);
+        ctx.crypto_exact_cuda(
+            &mut dlon,
+            &mut dlat,
+            CryptoSpace::BD09,
+            CryptoSpace::GCJ02,
+            1e-14,
+            CryptoThresholdMode::LonLat,
+            1000,
+        );
+        dlon.copy_to(&mut lon).unwrap();
+        dlat.copy_to(&mut lat).unwrap();
+
+        println!("bd09: {BD09_LON},{BD09_LAT}");
+        println!("lon:{:?}", lon);
+        println!("lat:{:?}", lat);
+        println!("gcj02: {GCJ02_LON},{GCJ02_LAT}");
+        assert_approx_eq!(f64, lon[0], GCJ02_LON, epsilon = 1e-14);
+        assert_approx_eq!(f64, lat[0], GCJ02_LAT, epsilon = 1e-14);
+    }
+    #[test]
+    fn test_gcj02_to_wgs84_exact_cuda() {
+        let mut lon: Vec<f64> = vec![GCJ02_LON, GCJ02_LON];
+        let mut lat: Vec<f64> = vec![GCJ02_LAT, GCJ02_LAT];
+        let ctx = &crate::CTX;
+        let mut dlon = ctx.from_slice(&lon);
+        let mut dlat = ctx.from_slice(&lat);
+        ctx.crypto_exact_cuda(
+            &mut dlon,
+            &mut dlat,
+            CryptoSpace::GCJ02,
+            CryptoSpace::WGS84,
+            1e-20,
+            CryptoThresholdMode::LonLat,
+            1000,
+        );
+        dlon.copy_to(&mut lon).unwrap();
+        dlat.copy_to(&mut lat).unwrap();
+
+        println!("bd09: {BD09_LON},{BD09_LAT}");
+        println!("lon:{:?}", lon);
+        println!("lat:{:?}", lat);
+        println!("wgs84: {WGS84_LON},{WGS84_LAT}");
+        assert_approx_eq!(f64, lon[0], WGS84_LON, epsilon = 1e-14);
+        assert_approx_eq!(f64, lat[0], WGS84_LAT, epsilon = 1e-14);
     }
     #[test]
     fn test_exact_cuda() {

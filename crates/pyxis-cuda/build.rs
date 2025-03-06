@@ -17,6 +17,7 @@ fn main() {
         .collect::<Vec<String>>();
 
     let output = std::process::Command::new("nvcc")
+        .arg("-fmad=false")
         .arg("--ptx")
         .args(files)
         .args(["-odir", "./src"])

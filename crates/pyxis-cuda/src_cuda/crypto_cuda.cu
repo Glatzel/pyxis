@@ -55,7 +55,7 @@ extern "C" __global__ void bd09_to_wgs84_exact_cuda(double *lon,
                                                const int max_iter)
 {
     int i = threadIdx.x;
-    crypto_exact(lon[i], lat[i], bd09_to_wgs84, bd09_to_gcj02, threshold, distance_mode, max_iter, lon[i], lat[i]);
+    crypto_exact(lon[i], lat[i], bd09_to_wgs84, wgs84_to_bd09, threshold, distance_mode, max_iter, lon[i], lat[i]);
 }
 extern "C" __global__ void bd09_to_gcj02_exact_cuda(double *lon,
                                                double *lat,

@@ -1,33 +1,24 @@
 use dunce::canonicalize;
 use glob::glob;
 use path_slash::{self, PathExt};
-use std::{
-    ffi::{OsStr, OsString},
-    path::{Path, PathBuf},
-};
+use std::path::Path;
 fn main() {
-    let cpp_src_dir = canonicalize(
-        Path::new(".")
-            .parent()
-            .unwrap() //pyxis-cuda
-            .parent()
-            .unwrap() //src
-            .join("cpp")
-            .join("src"),
-    )
-    .unwrap();
-    let cu_kernel_dir = canonicalize(
-        Path::new(".")
-            .parent()
-            .unwrap() //pyxis-cuda
-            .parent()
-            .unwrap() //src
-            .join("cuda")
-            .join("kernels")
-            .canonicalize()
-            .unwrap(),
-    )
-    .unwrap();
+    let cpp_src_dir = canonicalize(Path::new("."))
+        .unwrap()
+        .parent()
+        .unwrap() //rust
+        .parent()
+        .unwrap() //src
+        .join("cpp")
+        .join("src");
+    let cu_kernel_dir = canonicalize(Path::new("."))
+        .unwrap()
+        .parent()
+        .unwrap() //rust
+        .parent()
+        .unwrap() //src
+        .join("cuda")
+        .join("kernels");
     println!("cargo:rerun-if-changed={}", cpp_src_dir.to_str().unwrap());
     println!("cargo:rerun-if-changed={}", cu_kernel_dir.to_str().unwrap());
     #[cfg(target_os = "windows")]
@@ -39,13 +30,9 @@ fn main() {
     );
     #[cfg(target_os = "linux")]
     let new_path_env_var = std::env::var("PATH").unwrap();
-    let cu_files =
-        glob(cu_kernel_dir.join("*.cu").to_str().unwrap()).expect("Failed to read glob pattern");
-    let cpp_files =
-        glob(cpp_src_dir.join("*.cpp").to_str().unwrap()).expect("Failed to read glob pattern");
-    let files = cu_files
+    let cu_files = glob(cu_kernel_dir.join("*.cu").to_str().unwrap())
+        .expect("Failed to read glob pattern")
         .into_iter()
-        .chain(cpp_files)
         .map(|f| {
             canonicalize(f.unwrap())
                 .unwrap()
@@ -56,8 +43,9 @@ fn main() {
 
     let output = std::process::Command::new("nvcc")
         .arg("-fmad=false")
+        .args(["-I", cpp_src_dir.to_slash_lossy().to_string().as_str()])
         .arg("--ptx")
-        .args(files)
+        .args(cu_files)
         .args(["-odir", "./src"])
         .env("PATH", new_path_env_var.clone())
         .output()

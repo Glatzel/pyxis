@@ -28,6 +28,7 @@ concurrency:
 env:
   CPP_SRC_ROOT: ./src/cpp
   CUDA_SRC_ROOT: ./src/cuda
+  PY_SRC_ROOT: ./src/py
   RUST_SRC_ROOT: ./src/rust
 jobs:
   cache-vcpkg:
@@ -136,8 +137,8 @@ jobs:
       - name: test python
         if: ${{ !cancelled() }}
         run: |
-          ${{env.RUST_SRC_ROOT}}/scripts/py-develop.ps1
-          ${{env.RUST_SRC_ROOT}}/scripts/py-pytest.ps1
+          ${{env.PY_SRC_ROOT}}/scripts/py-develop.ps1
+          ${{env.PY_SRC_ROOT}}/scripts/py-pytest.ps1
         shell: pwsh
 
       - name: Upload results to Codecov
@@ -196,7 +197,7 @@ jobs:
       # rust doc
       - name: sphinx build
         if: ${{runner.os=='Linux'}}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/py-sphinx.ps1
+        run: ${{env.PY_SRC_ROOT}}/scripts/py-sphinx.ps1
         shell: pwsh
 
       - name: upload doc
@@ -226,14 +227,9 @@ jobs:
       # rust-py
       - name: build python (debug)
         if: ${{ !cancelled() }}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
+        run: ${{env.PY_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
   
-      - name: build python (dist)
-        if: ${{ !cancelled() }}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 -config dist
-        shell: pwsh
-
       - name: upload whl
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4

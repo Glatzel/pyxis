@@ -3,7 +3,7 @@ Set-Location ..
 
 # run test
 pixi run pytest `
-    ./crates/pyxis-py/tests `
+    ./tests `
     --durations=10 `
     --junitxml=tests_report/junit.xml `
     -o junit_family=legacy `

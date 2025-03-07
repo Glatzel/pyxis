@@ -328,6 +328,24 @@ jobs:
         run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1
         shell: pwsh
 
+  build-cpp:
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - name: build cuda
+        run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1
+        shell: pwsh
+      - name: upload 
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cpp-${{matrix.machine}}
+          path: dist/*.7z
+          if-no-files-found: error
+
   out-build:
     needs:
       - build-rust-cli

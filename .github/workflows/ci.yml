@@ -108,7 +108,7 @@ jobs:
 
       # bench
       - run: cargo install cargo-codspeed --locked
-
+        if: ${{steps.changed.outputs.rs && !cancelled()}}
       - name: Build the benchmark target(s)
         run: cargo codspeed build -p pyxis
         working-directory: ${{env.RUST_SRC_ROOT}}

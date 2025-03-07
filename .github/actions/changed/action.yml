@@ -24,7 +24,9 @@ runs:
       uses: tj-actions/changed-files@v45
       with:
         files: |
-          src/rust/*
+          src/rust/**
+        files_ignore: |
+          src/rust/target
     
     - id: cpp
       uses: tj-actions/changed-files@v45

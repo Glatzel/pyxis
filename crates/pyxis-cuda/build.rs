@@ -1,5 +1,6 @@
 use glob::glob;
 fn main() {
+    println!("cargo:rerun-if-changed=src_cuda/");
     #[cfg(target_os = "windows")]
     let new_path_env_var = format!(
         "{};{}",

@@ -293,8 +293,8 @@ jobs:
         if: ${{inputs.build-dist}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 -config dist
         shell: pwsh
-
-      - name: upload cli
+  
+      - name: upload cli 
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cli-${{matrix.machine}}
@@ -302,7 +302,7 @@ jobs:
           if-no-files-found: error
 
       - name: test cli
-        run: ${{env.RUST_SRC_ROOT}}/crates/cli/examples/cli.ps1
+        run: ${{env.RUST_SRC_ROOT}}/crates/pyxis-cli/examples/cli.ps1
         shell: pwsh
 
   build-rust-cuda:

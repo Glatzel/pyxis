@@ -67,9 +67,6 @@ jobs:
       - run: echo "out cache."
 
   # region check
-  ruff-lint:
-    uses: Glatzel/template/.github/workflows/ruff.yml@main
-
   lint:
     runs-on: ubuntu-latest
     env:
@@ -79,6 +76,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: dtolnay/rust-toolchain@nightly
       - uses: ./.github/actions/setup-ci
+      - name: ruff
+        run: |
+          pixi global install ruff
+          ruff check --output-format=github .
       - name: cargo-fmt
         if: ${{ !cancelled() }}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-fmt.ps1

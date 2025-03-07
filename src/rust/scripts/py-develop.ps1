@@ -17,3 +17,5 @@ else {
     pixi run cargo build -p pyxis-py
     pixi run maturin develop
 }
+Set-Location $PSScriptRoot
+Set-Location ../../../

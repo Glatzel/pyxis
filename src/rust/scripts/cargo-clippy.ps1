@@ -8,3 +8,5 @@ if ($env:CI) {
 else {
     pixi run cargo clippy --fix --all-targets --all-features
 }
+Set-Location $PSScriptRoot
+Set-Location ../../../

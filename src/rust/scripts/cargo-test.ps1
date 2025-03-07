@@ -34,3 +34,5 @@ else {
 }
 Write-Output "::endgroup::"
 exit $code
+Set-Location $PSScriptRoot
+Set-Location ../../../

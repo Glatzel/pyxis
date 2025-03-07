@@ -20,3 +20,5 @@ else {
     Set-Location crates/pyxis-py
     pixi run maturin build --out ../../../../dist
 }
+Set-Location $PSScriptRoot
+Set-Location ../../../

@@ -74,3 +74,5 @@ else {
     Write-Error "Unsupported system $os"
     exit 1
 }
+Set-Location $PSScriptRoot
+Set-Location ../../../

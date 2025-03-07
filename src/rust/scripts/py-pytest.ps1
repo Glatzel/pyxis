@@ -11,3 +11,5 @@ pixi run pytest `
     --cov-report term `
     --cov-report=xml:tests_report/coverage.xml `
     --cov-report=html:tests_report/htmlcov
+    Set-Location $PSScriptRoot
+    Set-Location ../../../

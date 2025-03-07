@@ -17,3 +17,5 @@ if ($config -ne "debug") {
 else {
     cargo build -p pyxis-cuda
 }
+Set-Location $PSScriptRoot
+Set-Location ../../../

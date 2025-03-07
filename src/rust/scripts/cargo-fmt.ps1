@@ -7,3 +7,5 @@ if ($env:CI) {
 else {
     pixi run cargo +nightly fmt --all
 }
+Set-Location $PSScriptRoot
+Set-Location ../../../

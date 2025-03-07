@@ -171,11 +171,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/setup-ci
-      - uses: Jimver/cuda-toolkit@v0.2.21
-        with:
-          cuda: '12.8.0'
-          sub-packages: ${{matrix.sub-packages}}
-          method: ${{matrix.method}}
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'}}
 
@@ -254,7 +249,13 @@ jobs:
           name: pyxis-cpp-${{matrix.machine}}
           path: dist/*cpp*.7z
           if-no-files-found: error
+
       # cuda
+      - uses: Jimver/cuda-toolkit@v0.2.21
+        with:
+          cuda: '12.8.0'
+          sub-packages: ${{matrix.sub-packages}}
+          method: ${{matrix.method}}
       - name: build cuda
         if: ${{ !cancelled() }}
         run: ${{env.CUDA_SRC_ROOT}}/scripts/build-cuda.ps1

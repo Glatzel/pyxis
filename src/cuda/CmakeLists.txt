@@ -1,0 +1,62 @@
+cmake_minimum_required(VERSION 3.18)
+
+project(PyxisCudaProject)
+enable_language(CUDA)
+
+# Set CUDA standard
+set(CMAKE_CUDA_STANDARD 17)
+set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+set(CMAKE_CUDA_ARCHITECTURES 75)
+
+# set cpp project dir
+set(CPP_PROJECT_DIR ../cpp)
+# Include directories
+include_directories(${CPP_PROJECT_DIR}/include)
+
+# Add cpp source files
+set(CPP_SOURCES 
+${CPP_PROJECT_DIR}/src/datum_compense.cpp
+${CPP_PROJECT_DIR}/src/crypto.cpp
+)
+set_source_files_properties(${CPP_SOURCES} PROPERTIES LANGUAGE CXX)
+
+# Add cuda source files
+set(CUDA_SOURCES 
+    src/datum_compense_cuda.cu
+    src/crypto_cuda.cu
+)
+set_source_files_properties(${CUDA_SOURCE} PROPERTIES LANGUAGE CUDA)
+
+# Build CUDA library
+add_library(pyxis_cuda STATIC ${CPP_SOURCES} ${CUDA_SOURCES})
+set_target_properties(pyxis_cuda PROPERTIES
+    OUTPUT_NAME "pyxis_cuda"
+    POSITION_INDEPENDENT_CODE ON)
+
+# Generate PTX files
+set(PTX_OUT_DIR ${CMAKE_BINARY_DIR}/ptx)
+add_custom_command(
+    OUTPUT ${PTX_OUT_DIR}
+    COMMAND ${CMAKE_CUDA_COMPILER} -fmad=false 
+        -I ${CPP_PROJECT_DIR}/src 
+        -I ${CPP_PROJECT_DIR}/include 
+        -ptx ${CUDA_SOURCES}
+        -odir ${PTX_OUT_DIR}
+    DEPENDS ${CUDA_SOURCE} ${CPP_PROJECT_DIR}
+    COMMENT "Generating PTX file for ${CUDA_SOURCE}"
+    ERROR_VARIABLE PTX_ERROR
+)
+if(CUDA_ERROR)
+    message(WARNING "CUDA compilation error: ${CUDA_ERROR}")
+endif()
+add_custom_target(generate_ptx_${CUDA_SOURCE_NAME} ALL DEPENDS ${PTX_OUT_DIR})
+
+
+# Install targets
+install(TARGETS pyxis_cuda
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
+# Install PTX files
+install(FILES ${PTX_OUT_DIR}/*.ptx DESTINATION ptx)

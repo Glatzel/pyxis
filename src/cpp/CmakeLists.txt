@@ -5,29 +5,26 @@ project(PyxisProject)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Enable CUDA (if needed)
-find_package(CUDA REQUIRED)
-
 # Include directories
 include_directories(${PROJECT_SOURCE_DIR}/include)
-
-# Build a static library
-add_library(pyxis_static STATIC ${SOURCES})
-set_target_properties(datum_compense_static PROPERTIES
-    OUTPUT_NAME "datum_compense"
-    POSITION_INDEPENDENT_CODE ON) # Required for shared libraries
-
-# Build a shared library
-add_library(pyxis_shared SHARED ${SOURCES})
-set_target_properties(datum_compense_shared PROPERTIES
-    OUTPUT_NAME "datum_compense"
-    POSITION_INDEPENDENT_CODE ON)
 
 # Add source files
 set(SOURCES 
 src/datum_compense.cpp
 src/crypto.cpp
 )
+
+# Build a static library
+add_library(pyxis_static STATIC ${SOURCES})
+set_target_properties(pyxis_static PROPERTIES
+    OUTPUT_NAME "pyxis"
+    POSITION_INDEPENDENT_CODE ON) # Required for shared libraries
+
+# Build a shared library
+add_library(pyxis_shared SHARED ${SOURCES})
+set_target_properties(pyxis_shared PROPERTIES
+    OUTPUT_NAME "pyxis"
+    POSITION_INDEPENDENT_CODE ON)
 
 # Create a library
 add_library(pyxis ${SOURCES})

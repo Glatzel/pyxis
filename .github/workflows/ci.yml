@@ -135,15 +135,18 @@ jobs:
         id: changed
       - uses: ./.github/actions/setup-ci
       - uses: dtolnay/rust-toolchain@stable
+
+      # rust-cli, rust
       - uses: dtolnay/rust-toolchain@nightly
+        if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
       - name: Install nextest
+        if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
         uses: taiki-e/install-action@nextest
       - name: Install cargo-llvm-cov
+        if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
         uses: taiki-e/install-action@cargo-llvm-cov
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'}}
-
-      # rust-cli, rust
       - name: cargo-test
         if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-test.ps1

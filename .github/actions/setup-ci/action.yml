@@ -1,36 +1,15 @@
-name: Setup CI
+name: Detect changed
 runs:
   using: "composite"
-  outputs:
-    py: ${{steps.py.outputs.any_changed}}
-    rs: ${{steps.rs.outputs.any_changed}}
-    cpp: ${{steps.cpp.outputs.any_changed}}
-    cuda: ${{steps.cuda.outputs.any_changed}}
-
   steps:
-    - id: py
-      uses: tj-actions/changed-files@v45
+    - name: Set up pixi
+      uses: prefix-dev/setup-pixi@v0.8.1
       with:
-        files: |
-          src/**.py
-          pixi.toml
-          pixi.lock
-          **/ruff.toml
+        run-install: false
 
-    - id: rs
-      uses: tj-actions/changed-files@v45
+    - name: restore vcpkg
+      if: ${{ runner.os == 'Windows' }}
+      uses: actions/cache/restore@v4
       with:
-        files: |
-          src/rust/*
-    
-    - id: cpp
-      uses: tj-actions/changed-files@v45
-      with:
-        files: |
-          src/cpp/*
-
-    - id: cuda
-      uses: tj-actions/changed-files@v45
-      with:
-        files: |
-          src/cuda/*
+        path: ./vcpkg_deps/vcpkg_installed
+        key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg_deps/vcpkg.json') }}

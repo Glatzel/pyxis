@@ -1,6 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
-project(PyxisCudaProject LANGUAGES CUDA CXX)
-
+enable_language(CUDA)
 # Set CUDA standard
 set(CMAKE_CUDA_STANDARD 17)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
@@ -10,13 +8,8 @@ set(CMAKE_CUDA_ARCHITECTURES 80)
 set(CPP_PROJECT_DIR ../cpp)
 
 # Add cpp header files
-include_directories(${CPP_PROJECT_DIR}/include)
-# Add cpp source files
-set(CPP_SOURCES
-${CPP_PROJECT_DIR}/src/datum_compense.cpp
-${CPP_PROJECT_DIR}/src/crypto.cpp
-)
-set_source_files_properties(${CPP_SOURCES} PROPERTIES LANGUAGE CXX)
+include_directories(${CMAKE_SOURCE_DIR}/pyxis_static/include)
+link_directories(${CMAKE_SOURCE_DIR}/pyxis_static)
 
 # Add cuda source files
 set(CUDA_SOURCES
@@ -31,23 +24,19 @@ set_target_properties(pyxis_cuda_static PROPERTIES
     OUTPUT_NAME "pyxis_cuda"
     POSITION_INDEPENDENT_CODE ON
     CUDA_SEPARABLE_COMPILATION ON)
-install(TARGETS pyxis_cuda_static
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin)
+target_link_libraries(pyxis_cuda_static pyxis_shared)
+
 
 # Build CUDA dynamic library
-# add_library(pyxis_cuda_shared SHARED ${CPP_SOURCES} ${CUDA_SOURCES} ${CPP_HEADERS})
-# set_target_properties(pyxis_cuda_shared PROPERTIES
-#     POSITION_INDEPENDENT_CODE ON
-#     CUDA_RUNTIME_LIBRARY Shared
-#     CUDA_RESOLVE_DEVICE_SYMBOLS ON
-#     OUTPUT_NAME "pyxis_cuda"
-#     CUDA_SEPARABLE_COMPILATION ON)
-# install(TARGETS pyxis_cuda_shared
-#         ARCHIVE DESTINATION lib
-#         LIBRARY DESTINATION lib
-#         RUNTIME DESTINATION bin)
+add_library(pyxis_cuda_shared SHARED ${CPP_SOURCES} ${CUDA_SOURCES} ${CPP_HEADERS})
+set_target_properties(pyxis_cuda_shared PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+    CUDA_RUNTIME_LIBRARY Shared
+    CUDA_RESOLVE_DEVICE_SYMBOLS ON
+    OUTPUT_NAME "pyxis_cuda"
+    CUDA_SEPARABLE_COMPILATION ON)
+target_link_libraries(pyxis_cuda_shared pyxis_shared)
+
 
 # Generate PTX files
 set(PTX_OUT_DIR ${CMAKE_BINARY_DIR}/ptx)
@@ -74,3 +63,7 @@ foreach(CUDA_SOURCE ${CUDA_SOURCES})
 endforeach()
 # Install PTX files
 install(DIRECTORY ${PTX_OUT_DIR}/ DESTINATION ptx)
+install(TARGETS pyxis_cuda_static pyxis_cuda_shared
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)

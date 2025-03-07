@@ -1,5 +1,4 @@
-#include "crypto.h"
-#include "cuda_macro.h"
+#include "pyxis.h"
 #ifdef __CUDACC__ // If compiled with nvcc
 #include <cuda_runtime.h>
 #else

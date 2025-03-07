@@ -1,5 +1,22 @@
 #pragma once
-#include "cuda_macro.h"
+
+#ifdef __CUDACC__ // If compiled with nvcc
+#define CUDA_DEVICE __device__
+#define CUDA_HOST __host__
+#define CUDA_HOST_DEVICE __host__ __device__
+#else
+#define CUDA_DEVICE // Empty for normal C++ compilation
+#define CUDA_HOST // Empty for normal C++ compilation
+#define CUDA_HOST_DEVICE // Empty for normal C++ compilation
+#endif
+
+CUDA_HOST_DEVICE void datum_compense(double xc,
+    double yc,
+    double factor,
+    double x0,
+    double y0,
+    double &out_xc,
+    double &out_yc);
 
 CUDA_HOST_DEVICE void bd09_to_gcj02(
     const double bd09_lon, const double bd09_lat,

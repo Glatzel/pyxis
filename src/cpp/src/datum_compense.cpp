@@ -1,4 +1,4 @@
-#include "datum_compense.h"
+#include "pyxis.h"
 
 CUDA_HOST_DEVICE void datum_compense(double xc,
                                 double yc,

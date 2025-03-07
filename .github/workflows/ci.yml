@@ -306,7 +306,7 @@ jobs:
         run: ${{env.RUST_SRC_ROOT}}/crates/pyxis-cli/examples/cli.ps1
         shell: pwsh
 
-  build-rust-cuda:
+  build-cpp-cuda:
     strategy:
       fail-fast: false
       matrix:
@@ -327,63 +327,26 @@ jobs:
           cuda: '12.8.0'
           sub-packages: ${{matrix.sub-packages}}
           method: ${{matrix.method}}
-      - name: build cuda
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1
-        shell: pwsh
-
-  build-cpp:
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [windows-latest,ubuntu-latest]
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
       - name: build cpp
         run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1
         shell: pwsh
-      - name: upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-cpp-${{matrix.machine}}
-          path: dist/*.7z
-          if-no-files-found: error
-
-  build-cuda:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - machine: windows-latest
-            method: network
-            sub-packages: '["nvcc","cudart"]'
-          - machine: ubuntu-latest
-            method: network
-            sub-packages: '["nvcc"]'
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: Jimver/cuda-toolkit@v0.2.21
-        with:
-          cuda: '12.8.0'
-          sub-packages: ${{matrix.sub-packages}}
-          method: ${{matrix.method}}
       - name: build cuda
         run: ${{env.CUDA_SRC_ROOT}}/scripts/build-cuda.ps1
+        shell: pwsh
+      - name: build rust cuda
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1
         shell: pwsh
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: pyxis-cuda-${{matrix.machine}}
+          name: pyxis-cpp-cuda-${{matrix.machine}}
           path: dist/*.7z
           if-no-files-found: error
 
   out-build:
     needs:
-      - build-cuda
-      - build-cpp
       - build-rust-cli
-      - build-rust-cuda
+      - build-cpp-cuda
       - build-rust-py
       - cargo-doc
       - sphinx

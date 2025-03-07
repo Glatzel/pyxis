@@ -91,29 +91,30 @@ jobs:
 
      # cargo fmt
       - name: cargo-fmt
-        if: ${{steps.changed.outputs.rs && !cancelled()}}
+        if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
 
      # cargo clippy
       - name: cargo-clippy
-        if: ${{steps.changed.outputs.rs && !cancelled()}}
+        if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
         shell: pwsh
 
       # cargo machete
       - name: cargo-machete
-        if: ${{steps.changed.outputs.rs && !cancelled()}}
+        if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
         uses: bnjbvr/cargo-machete@main
 
       # bench
       - run: cargo install cargo-codspeed --locked
-        if: ${{steps.changed.outputs.rs && !cancelled()}}
+        if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
       - name: Build the benchmark target(s)
         run: cargo codspeed build -p pyxis
         working-directory: ${{env.RUST_SRC_ROOT}}
 
       - name: Run the benchmarks
+        if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
         uses: CodSpeedHQ/action@v3
         with:
           run: cargo codspeed run

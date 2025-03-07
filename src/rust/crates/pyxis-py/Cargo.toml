@@ -1,0 +1,15 @@
+[package]
+name = "pyxis-py"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+numpy = "0.23.0"
+pyo3 = { version = "0.23.4", features = ["extension-module", "abi3-py311"] }
+pyxis = { workspace = true }
+rayon = { workspace = true }
+miette = { workspace = true }
+
+[lib]
+name = "pyxis_py"
+crate-type = ["cdylib"]

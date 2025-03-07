@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 3.25)
+project(PyxisCppProject)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Add source files
+set(SOURCES
+src/datum_compense.cpp
+src/crypto.cpp
+)
+set_source_files_properties(${SOURCES} PROPERTIES LANGUAGE CXX)
+# Build a static library
+add_library(pyxis_static STATIC ${SOURCES})
+target_include_directories(pyxis_static PUBLIC include)
+set_target_properties(pyxis_static PROPERTIES
+    OUTPUT_NAME "pyxis"
+    POSITION_INDEPENDENT_CODE ON) # Required for shared libraries
+
+# Build a shared library
+add_library(pyxis_shared SHARED ${SOURCES})
+target_include_directories(pyxis_shared PUBLIC include)
+set_target_properties(pyxis_shared PROPERTIES
+    OUTPUT_NAME "pyxis"
+    POSITION_INDEPENDENT_CODE ON)
+
+# Install targets
+install(TARGETS pyxis_static pyxis_shared
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
+        DESTINATION include
+        FILES_MATCHING PATTERN "*.h")

@@ -9,7 +9,7 @@
         "**/changelog.md"
     ],
     "python.testing.pytestArgs": [
-        "crates/pyxis-py/tests",
+        "src/rust/pyxis-py/tests",
         "--durations=0"
     ],
     "python.testing.pytestEnabled": true,
@@ -37,5 +37,8 @@
     "python.analysis.exclude": [
         "**/vcpkg",
         ".pixi"
+    ],
+    "rust-analyzer.linkedProjects": [
+        "${workspaceFolder}/src/rust/Cargo.toml"
     ]
 }

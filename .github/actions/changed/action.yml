@@ -18,7 +18,7 @@ runs:
           src/**.py
           pixi.toml
           pixi.lock
-          **/ruff.toml
+          src/**/ruff.toml
 
     - id: rs
       uses: tj-actions/changed-files@v45

@@ -124,6 +124,8 @@ jobs:
         uses: taiki-e/install-action@nextest
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
+      - run: choco install pkgconfiglite
+        if: ${{runner.os == 'Windows'}}
 
       # rust-cli, rust
       - name: cargo-test

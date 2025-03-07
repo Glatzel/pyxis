@@ -47,7 +47,6 @@ fn main() {
     let new_path_env_var = std::env::var("PATH").unwrap();
     let cu_files = glob(cu_kernel_dir.join("*.cu").to_str().unwrap())
         .expect("Failed to read glob pattern")
-        .into_iter()
         .map(|f| {
             canonicalize(f.unwrap())
                 .unwrap()

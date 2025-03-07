@@ -67,48 +67,60 @@ jobs:
       - run: echo "out cache."
 
   # region check
-  common:
+  ruff-lint:
+    uses: Glatzel/template/.github/workflows/ruff.yml@main
+
+  cargo-clippy:
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/setup-ci
+      - name: cargo-clippy
+        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
+        shell: pwsh
+
+  cargo-fmt:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-Dwarnings"
+    steps:
+      - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: rustfmt
       - uses: ./.github/actions/setup-ci
-      - name: ruff
-        run: |
-          pixi global install ruff
-          ruff check --output-format=github .
+
       - name: cargo-fmt
-        if: ${{ !cancelled() }}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
-      - name: cargo-clippy
-        if: ${{ !cancelled() }}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
-        shell: pwsh
-      - name: cargo-machete
-        if: ${{ !cancelled() }}
+
+  cargo-machete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Machete
         uses: bnjbvr/cargo-machete@main
 
-      # bench
+  cargo-bench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
       - run: cargo install cargo-codspeed --locked
 
       - name: Build the benchmark target(s)
         run: cargo codspeed build -p pyxis
-        working-directory: ${{env.RUST_SRC_ROOT}}
 
       - name: Run the benchmarks
         uses: CodSpeedHQ/action@v3
         with:
           run: cargo codspeed run
           token: ${{ secrets.CODSPEED_TOKEN }}
-          working-directory: ${{env.RUST_SRC_ROOT}}
 
-  test:
+  cargo-test:
     needs: out-cache
     strategy:
       fail-fast: false
@@ -117,27 +129,19 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-ci
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: dtolnay/rust-toolchain@nightly
-      - name: Install nextest
-        uses: taiki-e/install-action@nextest
-      - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@cargo-llvm-cov
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'}}
+      - uses: ./.github/actions/setup-ci
+      - uses: dtolnay/rust-toolchain@nightly
 
-      # rust-cli, rust
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
       - name: cargo-test
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-test.ps1
-        shell: pwsh
-
-      # rust-py
-      - name: test python
-        if: ${{ !cancelled() }}
-        run: |
-          ${{env.RUST_SRC_ROOT}}/scripts/py-develop.ps1
-          ${{env.RUST_SRC_ROOT}}/scripts/py-pytest.ps1
         shell: pwsh
 
       - name: Upload results to Codecov
@@ -152,9 +156,155 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
 
-  # region build
-  build:
+  pytest:
     needs: out-cache
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: dev python
+        run: ${{env.RUST_SRC_ROOT}}/scripts/py-develop.ps1
+        shell: pwsh
+
+      - name: test python
+        run: ${{env.RUST_SRC_ROOT}}/scripts/py-pytest.ps1
+        shell: pwsh
+
+      - name: Upload results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v5
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  out-check:
+    needs:
+      - cargo-bench
+      - cargo-clippy
+      - cargo-fmt
+      - cargo-machete
+      - cargo-test
+      - pytest
+      - ruff-lint
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "out check."
+
+  # region build
+  cargo-doc:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-Dwarnings"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/setup-ci
+
+      - name: cargo-doc
+        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-doc.ps1
+        shell: pwsh
+
+      - name: upload doc
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-doc
+          path: dist/*.7z
+          if-no-files-found: error
+
+  build-pyxis-py:
+    needs: out-cache
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-ci
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: build python (debug)
+        if: ${{!inputs.build-dist}}
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1
+        shell: pwsh
+
+      - name: build python (dist)
+        if: ${{ inputs.build-dist}}
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 -config dist
+        shell: pwsh
+
+      - name: upload whl
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-py-${{matrix.machine}}
+          path: dist/*.whl
+          if-no-files-found: error
+
+  sphinx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up pixi
+        uses: ./.github/actions/setup-ci
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: sphinx build
+        run: ${{env.RUST_SRC_ROOT}}/scripts/py-sphinx.ps1
+        shell: pwsh
+
+      - name: upload doc
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-doc
+          path: dist/*.7z
+          if-no-files-found: error
+
+  build-pyxis-cli:
+    needs: out-cache
+    strategy:
+      fail-fast: false
+      matrix:
+          machine: [windows-latest,ubuntu-latest]
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/setup-ci
+      - run: choco install pkgconfiglite
+        if: ${{runner.os == 'Windows'}}
+
+      - name: build cli (debug)
+        if: ${{!inputs.build-dist}}
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1
+        shell: pwsh
+
+      - name: build cli(dist)
+        if: ${{inputs.build-dist}}
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 -config dist
+        shell: pwsh
+
+      - name: upload cli
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cli-${{matrix.machine}}
+          path: dist/*.7z
+          if-no-files-found: error
+
+      - name: test cli
+        run: ${{env.RUST_SRC_ROOT}}/crates/pyxis/examples/cli.ps1
+        shell: pwsh
+
+  build-pyxis-cuda:
     strategy:
       fail-fast: false
       matrix:
@@ -167,108 +317,25 @@ jobs:
             sub-packages: '["nvcc"]'
     runs-on: ${{matrix.machine}}
     steps:
-      # setup
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/setup-ci
-      - run: choco install pkgconfiglite
-        if: ${{runner.os == 'Windows'}}
-
-      # cargo doc
-      - name: cargo-doc
-        if: ${{runner.os=='Linux'}}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-doc.ps1
-        shell: pwsh
-
-      - name: upload doc
-        if: ${{runner.os=='Linux'}}
-        uses: actions/upload-artifact@v4
-        with:
-          name: rust-doc
-          path: dist/rust-doc.7z
-          if-no-files-found: error
-
-      # rust doc
-      - name: sphinx build
-        if: ${{runner.os=='Linux'}}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/py-sphinx.ps1
-        shell: pwsh
-
-      - name: upload doc
-        if: ${{runner.os=='Linux'}}
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-doc
-          path: dist/python-doc.7z
-          if-no-files-found: error
-
-      # rust-cli
-      - name: build cli
-        if: ${{ !cancelled() }}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
-        shell: pwsh
-      - name: test cli
-        run: ${{env.RUST_SRC_ROOT}}/crates/pyxis-cli/examples/cli.ps1
-        shell: pwsh
-      - name: upload cpp
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-rust-cli-${{matrix.machine}}
-          path: dist/*cli*.7z
-          if-no-files-found: error
-
-      # rust-py
-      - name: build python (debug)
-        if: ${{ !cancelled() }}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
-        shell: pwsh
-
-      - name: build python (dist)
-        if: ${{ !cancelled() }}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 -config dist
-        shell: pwsh
-
-      - name: upload whl
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-py-${{matrix.machine}}
-          path: dist/*.whl
-          if-no-files-found: error
-
-      # cpp
-      - name: build cpp
-        if: ${{ !cancelled() }}
-        run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1
-        shell: pwsh
-      - name: upload cpp
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-cpp-${{matrix.machine}}
-          path: dist/*cpp*.7z
-          if-no-files-found: error
-
-      # cuda
       - uses: Jimver/cuda-toolkit@v0.2.21
         with:
           cuda: '12.8.0'
           sub-packages: ${{matrix.sub-packages}}
           method: ${{matrix.method}}
       - name: build cuda
-        if: ${{ !cancelled() }}
-        run: ${{env.CUDA_SRC_ROOT}}/scripts/build-cuda.ps1
+        run: ${{CUDA_SRC_ROOT}}/scripts/build-cuda.ps1
         shell: pwsh
-      - name: upload cuda
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-cuda-${{matrix.machine}}
-          path: dist/*cuda*.7z
-          if-no-files-found: error
 
-      # rust-cuda
-      - name: build rust cuda
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1
-        shell: pwsh
+  out-build:
+    needs:
+      - build-pyxis-cli
+      - build-pyxis-cuda
+      - build-pyxis-py
+      - cargo-doc
+      - sphinx
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "out build."

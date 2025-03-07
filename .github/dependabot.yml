@@ -8,7 +8,7 @@ updates:
       prefix: "ci"
 
   - package-ecosystem: cargo
-    directory: /
+    directory: ./src/rust
     schedule:
       interval: weekly
     commit-message:

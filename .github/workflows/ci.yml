@@ -25,7 +25,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
-
+env:
+  CPP_SRC_ROOT: ./src/cpp
+  RUST_SRC_ROOT: ./src/rust
 jobs:
   cache-vcpkg:
     runs-on: windows-latest
@@ -76,7 +78,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/setup-ci
       - name: cargo-clippy
-        run: ./scripts/cargo-clippy.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
         shell: pwsh
 
   cargo-fmt:
@@ -91,7 +93,7 @@ jobs:
       - uses: ./.github/actions/setup-ci
 
       - name: cargo-fmt
-        run: ./scripts/cargo-fmt.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
 
   cargo-machete:
@@ -138,7 +140,7 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: cargo-test
-        run: ./scripts/cargo-test.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-test.ps1
         shell: pwsh
 
       - name: Upload results to Codecov
@@ -166,7 +168,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
 
       - name: dev python
-        run: ./scripts/py-develop.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/py-develop.ps1
         shell: pwsh
 
       - name: test python
@@ -208,7 +210,7 @@ jobs:
       - uses: ./.github/actions/setup-ci
 
       - name: cargo-doc
-        run: ./scripts/cargo-doc.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-doc.ps1
         shell: pwsh
 
       - name: upload doc
@@ -232,12 +234,12 @@ jobs:
 
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
-        run: ./scripts/build-py.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1
         shell: pwsh
 
       - name: build python (dist)
         if: ${{ inputs.build-dist}}
-        run: ./scripts/build-py.ps1 -config dist
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 -config dist
         shell: pwsh
 
       - name: upload whl
@@ -256,7 +258,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
 
       - name: sphinx build
-        run: ./scripts/py-sphinx.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/py-sphinx.ps1
         shell: pwsh
 
       - name: upload doc
@@ -282,12 +284,12 @@ jobs:
 
       - name: build cli (debug)
         if: ${{!inputs.build-dist}}
-        run: ./scripts/build-cli.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1
         shell: pwsh
 
       - name: build cli(dist)
         if: ${{inputs.build-dist}}
-        run: ./scripts/build-cli.ps1 -config dist
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 -config dist
         shell: pwsh
 
       - name: upload cli
@@ -298,7 +300,7 @@ jobs:
           if-no-files-found: error
 
       - name: test cli
-        run: ./examples/cli.ps1
+        run: ${{env.RUST_SRC_ROOT}}/examples/cli.ps1
         shell: pwsh
 
   build-pyxis-cuda:
@@ -323,7 +325,7 @@ jobs:
           sub-packages: ${{matrix.sub-packages}}
           method: ${{matrix.method}}
       - name: build cuda
-        run: ./scripts/build-cuda.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1
         shell: pwsh
 
   out-build:

@@ -11,7 +11,7 @@ elseif ($IsLinux) {
 }
 
 foreach ($link in $links) {
-    Set-Location "dist/cli/$link"
+    Set-Location "../../../../../dist/cli/$link"
     Write-Output "::group::Run $link cli"
 
     # Zhengyong expressway Dehua east interchange

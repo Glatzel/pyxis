@@ -131,6 +131,8 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/changed
+        id: changed
       - uses: ./.github/actions/setup-ci
       - uses: dtolnay/rust-toolchain@stable
       - uses: dtolnay/rust-toolchain@nightly
@@ -143,12 +145,13 @@ jobs:
 
       # rust-cli, rust
       - name: cargo-test
+        if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-test.ps1
         shell: pwsh
 
       # rust-py
       - name: test python
-        if: ${{ !cancelled() }}
+        if: ${{(steps.changed.outputs.rs!='false'||steps.changed.outputs.rs!='false') && !cancelled()}}
         run: |
           ${{env.RUST_SRC_ROOT}}/scripts/py-develop.ps1
           ${{env.RUST_SRC_ROOT}}/scripts/py-pytest.ps1

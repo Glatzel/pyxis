@@ -1,5 +1,7 @@
-#include "datum_compense.h"
-#include <cuda_runtime.h>
+extern "C"
+{
+#include "crypto.h"
+}
 __global__ void datum_compense_cuda(double *xc,
                                                double *yc,
                                                double factor,

@@ -1,5 +1,8 @@
+extern "C"
+{
 #include "crypto.h"
-#include <cuda_runtime.h>
+}
+
 __global__ void bd09_to_gcj02_cuda(double *lon,
                                    double *lat)
 {

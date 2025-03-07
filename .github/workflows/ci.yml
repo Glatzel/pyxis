@@ -131,13 +131,11 @@ jobs:
         shell: pwsh
 
       # rust-py
-      - name: dev python
-        run: ${{env.RUST_SRC_ROOT}}/scripts/py-develop.ps1
-        shell: pwsh
-
       - name: test python
         if: ${{ !cancelled() }}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/py-pytest.ps1
+        run: |
+          ${{env.RUST_SRC_ROOT}}/scripts/py-develop.ps1
+          ${{env.RUST_SRC_ROOT}}/scripts/py-pytest.ps1
         shell: pwsh
 
       - name: Upload results to Codecov

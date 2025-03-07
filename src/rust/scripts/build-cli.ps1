@@ -46,8 +46,8 @@ if ($IsWindows) {
     Write-Output "::endgroup::"
 
     Write-Output "::group::Pack pyxis-windows-x64-proj.7z.7z"
-    Copy-Item ./vcpkg_deps/vcpkg_installed/dynamic/x64-windows/bin/*.dll ../../dist/cli/dynamic
-    Copy-Item ./vcpkg_deps/vcpkg_installed/dynamic/x64-windows/share/proj/proj.db ../../dist/cli/dynamic
+    Copy-Item ../../vcpkg_deps/vcpkg_installed/dynamic/x64-windows/bin/*.dll ../../dist/cli/dynamic
+    Copy-Item ../../vcpkg_deps/vcpkg_installed/dynamic/x64-windows/share/proj/proj.db ../../dist/cli/dynamic
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
         "../../dist/pyxis-windows-x64-proj.7z" "../../dist/cli/dynamic/*"
     Write-Output "::endgroup::"

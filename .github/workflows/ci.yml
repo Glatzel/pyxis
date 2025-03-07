@@ -341,7 +341,7 @@ jobs:
       - name: build cpp
         run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1
         shell: pwsh
-      - name: upload 
+      - name: upload
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cpp-${{matrix.machine}}

@@ -73,13 +73,13 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/changed
+        id: changed
       - uses: dtolnay/rust-toolchain@stable
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: rustfmt
       - uses: ./.github/actions/setup-ci
-      - uses: ./.github/actions/changed
-        id: changed
 
       #ruff
       
@@ -110,6 +110,7 @@ jobs:
       - run: cargo install cargo-codspeed --locked
         if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
       - name: Build the benchmark target(s)
+        if: ${{steps.changed.outputs.rs!='false' && !cancelled()}}
         run: cargo codspeed build -p pyxis
         working-directory: ${{env.RUST_SRC_ROOT}}
 

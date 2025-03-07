@@ -313,7 +313,7 @@ jobs:
           name: pyxis-cpp-${{matrix.machine}}
           path: dist/*.7z
           if-no-files-found: error
-    
+
   build-pyxis-cuda:
     strategy:
       fail-fast: false
@@ -367,7 +367,7 @@ jobs:
           name: pyxis-cuda-${{matrix.machine}}
           path: dist/*.7z
           if-no-files-found: error
-    
+
   out-build:
     needs:
       - build-cpp

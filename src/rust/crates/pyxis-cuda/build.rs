@@ -33,7 +33,7 @@ fn main() {
         .parent()
         .unwrap() //src
         .join("cuda")
-        .join("kernels");
+        .join("src");
     println!("cargo:rerun-if-changed={}", cpp_src_dir.to_str().unwrap());
     println!("cargo:rerun-if-changed={}", cu_kernel_dir.to_str().unwrap());
     #[cfg(target_os = "windows")]

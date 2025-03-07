@@ -237,12 +237,7 @@ jobs:
 
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1
-        shell: pwsh
-
-      - name: build python (dist)
-        if: ${{ inputs.build-dist}}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 -config dist
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1  ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
 
       - name: upload whl
@@ -285,14 +280,9 @@ jobs:
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'}}
 
-      - name: build cli (debug)
+      - name: build cli
         if: ${{!inputs.build-dist}}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1
-        shell: pwsh
-
-      - name: build cli(dist)
-        if: ${{inputs.build-dist}}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 -config dist
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
 
       - name: upload cli
@@ -315,7 +305,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: build cpp
-        run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1
+        run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1  ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config release' || null }}
         shell: pwsh
       - name: upload cpp
         uses: actions/upload-artifact@v4
@@ -323,7 +313,7 @@ jobs:
           name: pyxis-cpp-${{matrix.machine}}
           path: dist/*.7z
           if-no-files-found: error
-    
+
   build-pyxis-cuda:
     strategy:
       fail-fast: false
@@ -346,7 +336,7 @@ jobs:
           sub-packages: ${{matrix.sub-packages}}
           method: ${{matrix.method}}
       - name: build cuda
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1 ${{ inputs.build-dist == 'true' && '-config release' || null }}
         shell: pwsh
 
   build-cuda:
@@ -377,7 +367,7 @@ jobs:
           name: pyxis-cuda-${{matrix.machine}}
           path: dist/*.7z
           if-no-files-found: error
-    
+
   out-build:
     needs:
       - build-cpp

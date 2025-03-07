@@ -1024,7 +1024,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.10"
+version = "0.0.11"
 dependencies = [
  "codspeed-criterion-compat",
  "float-cmp",
@@ -1038,7 +1038,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cli"
-version = "0.0.10"
+version = "0.0.11"
 dependencies = [
  "assert_cmd",
  "bpaf",
@@ -1056,7 +1056,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cuda"
-version = "0.0.10"
+version = "0.0.11"
 dependencies = [
  "codspeed-criterion-compat",
  "cust",
@@ -1071,7 +1071,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-py"
-version = "0.0.10"
+version = "0.0.11"
 dependencies = [
  "miette",
  "numpy",

@@ -8,20 +8,20 @@ name = "pyxis"
 path = "src/main.rs"
 
 [dependencies]
-bpaf = { version = "0.9.17", features = ["derive", "batteries"] }
+bpaf = { workspace = true }
 log-template = { workspace = true }
 miette = { workspace = true }
-proj = { version = "0.28.0", default-features = false }
-pyxis = { workspace = true,features=["serde"] }
+proj = { workspace = true }
+pyxis = { workspace = true, features = ["serde"] }
 serde = { workspace = true }
 serde_json = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 
 [dev-dependencies]
+assert_cmd = { workspace = true }
 float-cmp = { workspace = true }
-assert_cmd = "2.0"
-predicates = "3.1"
+predicates = { workspace = true }
 
 [features]
 static = []

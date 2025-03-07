@@ -237,7 +237,7 @@ jobs:
 
       - name: build python (debug)
         if: ${{!inputs.build-dist}}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1  ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
 
       - name: upload whl
@@ -282,7 +282,7 @@ jobs:
 
       - name: build cli
         if: ${{!inputs.build-dist}}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
 
       - name: upload cli

@@ -2,6 +2,7 @@ from math import cos, radians, sin
 
 import numpy as np
 import pytest
+
 import pyxis
 
 

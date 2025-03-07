@@ -207,7 +207,7 @@ jobs:
           name: python-doc
           path: dist/python-doc.7z
           if-no-files-found: error
-      
+
       # rust-cli
       - name: build cli
         if: ${{ !cancelled() }}
@@ -229,7 +229,7 @@ jobs:
         if: ${{ !cancelled() }}
         run: ${{env.PY_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
-  
+
       - name: upload whl
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
@@ -267,5 +267,3 @@ jobs:
       - name: build rust cuda
         run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1
         shell: pwsh
-
-

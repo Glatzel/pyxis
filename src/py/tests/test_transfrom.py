@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 import pytest
+
 import pyxis
 
 log = logging.getLogger(__name__)

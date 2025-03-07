@@ -235,8 +235,7 @@ jobs:
       - uses: ./.github/actions/setup-ci
       - uses: dtolnay/rust-toolchain@stable
 
-      - name: build python (debug)
-        if: ${{!inputs.build-dist}}
+      - name: build python
         run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
 
@@ -281,7 +280,6 @@ jobs:
         if: ${{runner.os == 'Windows'}}
 
       - name: build cli
-        if: ${{!inputs.build-dist}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
 

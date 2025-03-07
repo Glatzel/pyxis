@@ -1,11 +1,10 @@
-#pragma once
+#include "crypto.h"
 #ifdef __CUDACC__ // If compiled with nvcc
-#define CUDA_DEVICE __device__
 #include <cuda_runtime.h>
 #else
-#define CUDA_DEVICE // Empty for normal C++ compilation
 #include <cmath>
 #endif
+
 #define M_PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
 #define EE 0.006693421622965943333649629920500956359319388866424560546875
 #define krasovsky1940_A 6378245.0

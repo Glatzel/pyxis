@@ -302,7 +302,7 @@ jobs:
           if-no-files-found: error
 
       - name: test cli
-        run: ${{env.RUST_SRC_ROOT}}/examples/cli.ps1
+        run: ${{env.RUST_SRC_ROOT}}/crates/cli/examples/cli.ps1
         shell: pwsh
 
   build-rust-cuda:

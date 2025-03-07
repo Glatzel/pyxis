@@ -1,8 +1,6 @@
-extern "C"
-{
 #include "datum_compense.h"
-}
-extern "C" __global__ void datum_compense_cuda(double *xc,
+#include <cuda_runtime.h>
+__global__ void datum_compense_cuda(double *xc,
                                                double *yc,
                                                double factor,
                                                double x0,

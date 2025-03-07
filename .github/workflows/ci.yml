@@ -77,6 +77,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@nightly
       - uses: ./.github/actions/setup-ci
       - name: cargo-fmt
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-fmt.ps1

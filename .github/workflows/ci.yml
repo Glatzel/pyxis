@@ -262,6 +262,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
       - uses: ./.github/actions/setup-ci
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'}}

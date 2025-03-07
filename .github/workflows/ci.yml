@@ -80,12 +80,15 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
       - uses: ./.github/actions/setup-ci
       - name: cargo-fmt
+        if: ${{always()}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
       - name: cargo-clippy
+        if: ${{always()}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
         shell: pwsh
       - name: cargo-machete
+        if: ${{always()}}
         uses: bnjbvr/cargo-machete@main
 
   cargo-bench:

@@ -1,6 +1,7 @@
-#include "pyxis.h"
-
-__global__ void datum_compense_cuda(double *xc,
+extern "C" {
+    #include "datum_compense.cpp"
+}
+extern "C" __global__ void datum_compense_cuda(double *xc,
                                                double *yc,
                                                double factor,
                                                double x0,

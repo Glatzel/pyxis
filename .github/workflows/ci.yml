@@ -220,7 +220,7 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  build-pyxis-py:
+  build-rust-py:
     needs: out-cache
     strategy:
       fail-fast: false
@@ -268,7 +268,7 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  build-pyxis-cli:
+  build-rust-cli:
     needs: out-cache
     strategy:
       fail-fast: false
@@ -303,7 +303,7 @@ jobs:
         run: ${{env.RUST_SRC_ROOT}}/examples/cli.ps1
         shell: pwsh
 
-  build-pyxis-cuda:
+  build-rust-cuda:
     strategy:
       fail-fast: false
       matrix:
@@ -330,9 +330,9 @@ jobs:
 
   out-build:
     needs:
-      - build-pyxis-cli
-      - build-pyxis-cuda
-      - build-pyxis-py
+      - build-rust-cli
+      - build-rust-cuda
+      - build-rust-py
       - cargo-doc
       - sphinx
     runs-on: ubuntu-latest

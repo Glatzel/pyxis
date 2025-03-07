@@ -67,7 +67,7 @@ jobs:
       - run: echo "out cache."
 
   # region check
-  lint:
+  common:
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"
@@ -92,11 +92,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: bnjbvr/cargo-machete@main
 
-  cargo-bench:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      # bench
       - run: cargo install cargo-codspeed --locked
 
       - name: Build the benchmark target(s)

@@ -70,7 +70,7 @@ jobs:
   ruff-lint:
     uses: Glatzel/template/.github/workflows/ruff.yml@main
 
-  cargo-clippy:
+  lint:
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"
@@ -78,30 +78,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/setup-ci
-      - name: cargo-clippy
-        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
-        shell: pwsh
-
-  cargo-fmt:
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
-        with:
-          components: rustfmt
-      - uses: ./.github/actions/setup-ci
-
       - name: cargo-fmt
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
-
-  cargo-machete:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Machete
+      - name: cargo-clippy
+        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
+        shell: pwsh
+      - name: cargo-machete
         uses: bnjbvr/cargo-machete@main
 
   cargo-bench:
@@ -192,9 +175,7 @@ jobs:
   out-check:
     needs:
       - cargo-bench
-      - cargo-clippy
-      - cargo-fmt
-      - cargo-machete
+      - lint
       - cargo-test
       - pytest
       - ruff-lint

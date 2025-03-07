@@ -1,6 +1,6 @@
 extern "C"
 {
-#include "datum_compense.cpp"
+#include "datum_compense.h"
 }
 extern "C" __global__ void datum_compense_cuda(double *xc,
                                                double *yc,

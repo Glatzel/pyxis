@@ -11,6 +11,14 @@ fn main() {
         .unwrap() //src
         .join("cpp")
         .join("src");
+    let cpp_include_dir = canonicalize(Path::new("."))
+        .unwrap()
+        .parent()
+        .unwrap() //rust
+        .parent()
+        .unwrap() //src
+        .join("cpp")
+        .join("include");
     let cu_kernel_dir = canonicalize(Path::new("."))
         .unwrap()
         .parent()
@@ -44,6 +52,7 @@ fn main() {
     let output = std::process::Command::new("nvcc")
         .arg("-fmad=false")
         .args(["-I", cpp_src_dir.to_slash_lossy().to_string().as_str()])
+        .args(["-I", cpp_include_dir.to_slash_lossy().to_string().as_str()])
         .arg("--ptx")
         .args(cu_files)
         .args(["-odir", "./src"])

@@ -1,6 +1,6 @@
 extern "C"
 {
-#include "crypto.cpp"
+#include "crypto.h"
 }
 extern "C" __global__ void bd09_to_gcj02_cuda(double *lon,
                                               double *lat)

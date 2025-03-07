@@ -1,28 +1,43 @@
-cmake_minimum_required(VERSION 3.18)
-project(PYXIS_CPP)
-enable_language(CXX)
+cmake_minimum_required(VERSION 3.10)
+project(PyxisProject)
 
-# clean install dir
-file(REMOVE_RECURSE "${CMAKE_INSTALL_PREFIX}")
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Option to enable/disable DLL and PTX build
-option(BUILD_CPP "Build C++ DLL" OFF)
-option(BUILD_CPP_STATIC "Build C++ LIB" OFF)
+# Enable CUDA (if needed)
+find_package(CUDA REQUIRED)
 
-# Set the sources
-set(CPP_SOURCES
-src_cuda/crypto.cpp)
+# Include directories
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
-# Conditional DLL build
-if(BUILD_CPP)
-    add_library(pyxis SHARED ${CPP_SOURCES})
-    set_target_properties(pyxis PROPERTIES LINKER_LANGUAGE CXX)
-    install(TARGETS pyxis DESTINATION dll)
-endif()
+# Build a static library
+add_library(pyxis_static STATIC ${SOURCES})
+set_target_properties(datum_compense_static PROPERTIES
+    OUTPUT_NAME "datum_compense"
+    POSITION_INDEPENDENT_CODE ON) # Required for shared libraries
 
-# Conditional LIB build
-if(BUILD_CPP_STATIC)
-    add_library(pyxis_static STATIC  ${CPP_SOURCES})
-    set_target_properties(pyxis_static PROPERTIES LINKER_LANGUAGE CXX)
-    install(TARGETS pyxis_static DESTINATION lib)
-endif()
+# Build a shared library
+add_library(pyxis_shared SHARED ${SOURCES})
+set_target_properties(datum_compense_shared PROPERTIES
+    OUTPUT_NAME "datum_compense"
+    POSITION_INDEPENDENT_CODE ON)
+
+# Add source files
+set(SOURCES 
+src/datum_compense.cpp
+src/crypto.cpp
+)
+
+# Create a library
+add_library(pyxis ${SOURCES})
+
+# Install targets
+install(TARGETS pyxis_static pyxis_shared
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
+        DESTINATION include
+        FILES_MATCHING PATTERN "*.h")

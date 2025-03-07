@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/*"]
+members = ["src/rust/*"]
 resolver = "2"
 
 [workspace.package]
@@ -7,20 +7,22 @@ version = "0.0.10"
 edition = "2024"
 
 [workspace.dependencies]
-pyxis = { path = "crates/pyxis" }
+pyxis = { path = "src/rust/pyxis" }
 
 assert_cmd = "2.0"
 bpaf = { version = "0.9.17", features = ["derive", "batteries"] }
-# criterion ="*"
 criterion = { package = "codspeed-criterion-compat", version = "*" }
 cust = "0.3"
 dialoguer = "0.11.0"
+dunce = "1.0.5"
 float-cmp = "0.10.0"
+glob = "0.3.2"
 log-template = { git = "https://github.com/Glatzel/rs-log-template", tag = "v0.0.2" }
 miette = "7.5.0"
 ndarray = "0.16.1"
 num-traits = "0.2.19"
 numpy = "0.23.0"
+path-slash = "0.2.1"
 predicates = "3.1"
 proj = { version = "0.28.0", default-features = false }
 pyo3 = { version = "0.23.4", features = ["extension-module", "abi3-py311"] }
@@ -31,7 +33,6 @@ serde = { version = "1.0.218", features = ["derive"] }
 serde_json = "1.0.140"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
-glob = "0.3.2"
 
 [profile.dist]
 inherits = "release"

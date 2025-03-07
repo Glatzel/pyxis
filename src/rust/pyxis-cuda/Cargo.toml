@@ -12,8 +12,11 @@ tracing = { workspace = true, optional = true }
 rand = { workspace = true }
 criterion = { workspace = true }
 float-cmp= { workspace = true }
+
 [build-dependencies]
 glob = { workspace = true }
+path-slash= { workspace = true }
+dunce= { workspace = true }
 
 [features]
 log = ["dep:tracing"]

@@ -97,13 +97,13 @@ jobs:
 
      # cargo clippy
       - name: cargo-clippy
-        if: ${{steps.changed-rs.outputs.rs && !cancelled()}}
+        if: ${{steps.changed.outputs.rs && !cancelled()}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
         shell: pwsh
 
       # cargo machete
       - name: cargo-machete
-        if: ${{steps.changed-rs.outputs.rs && !cancelled()}}
+        if: ${{steps.changed.outputs.rs && !cancelled()}}
         uses: bnjbvr/cargo-machete@main
 
       # bench

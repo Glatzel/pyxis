@@ -326,11 +326,12 @@ jobs:
           sub-packages: ${{matrix.sub-packages}}
           method: ${{matrix.method}}
       - name: build cuda
-        run: ${{CUDA_SRC_ROOT}}/scripts/build-cuda.ps1
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1
         shell: pwsh
 
   out-build:
     needs:
+      - build-pyxis-cli
       - build-pyxis-cli
       - build-pyxis-cuda
       - build-pyxis-py

@@ -25,7 +25,7 @@ if ($IsWindows) {
 
     Write-Output "::group::Pack pyxis-windows-x64-self-contained.7z"
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "../../dist/pyxis-windows-x64-self-contained.7z" "../../dist/cli/static/pyxis.exe"
+        "../../dist/pyxis-cli-windows-x64-self-contained.7z" "../../dist/cli/static/pyxis.exe"
     Write-Output "::endgroup::"
 
     Write-Output "::group::Build dynamic"
@@ -42,14 +42,14 @@ if ($IsWindows) {
 
     Write-Output "::group::Pack pyxis-windows-x64.7z"
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "../../dist/pyxis-windows-x64.7z" "../../dist/cli/dynamic/pyxis.exe"
+        "../../dist/pyxis-cli-windows-x64.7z" "../../dist/cli/dynamic/pyxis.exe"
     Write-Output "::endgroup::"
 
     Write-Output "::group::Pack pyxis-windows-x64-proj.7z.7z"
     Copy-Item ../../vcpkg_deps/vcpkg_installed/dynamic/x64-windows/bin/*.dll ../../dist/cli/dynamic
     Copy-Item ../../vcpkg_deps/vcpkg_installed/dynamic/x64-windows/share/proj/proj.db ../../dist/cli/dynamic
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "../../dist/pyxis-windows-x64-proj.7z" "../../dist/cli/dynamic/*"
+        "../../dist/pyxis-cli-windows-x64-proj.7z" "../../dist/cli/dynamic/*"
     Write-Output "::endgroup::"
 }
 elseif ($IsLinux) {
@@ -67,7 +67,7 @@ elseif ($IsLinux) {
     Write-Output "::group::Pack pyxis-linux-x64-self-contained.7z"
     Copy-Item "target/$config/pyxis" ../../dist/cli/static
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "../../dist/pyxis-linux-x64-self-contained.7z" "../../dist/cli/static/*"
+        "../../dist/pyxis-cli-linux-x64-self-contained.7z" "../../dist/cli/static/*"
     Write-Output "::endgroup::"
 }
 else {

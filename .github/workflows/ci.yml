@@ -27,6 +27,7 @@ concurrency:
   cancel-in-progress: true
 env:
   CPP_SRC_ROOT: ./src/cpp
+  CUDA_SRC_ROOT: ./src/cuda
   RUST_SRC_ROOT: ./src/rust
 jobs:
   cache-vcpkg:
@@ -348,8 +349,39 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
+  build-cuda:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - machine: windows-latest
+            method: network
+            sub-packages: '["nvcc","cudart"]'
+          - machine: ubuntu-latest
+            method: network
+            sub-packages: '["nvcc"]'
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Jimver/cuda-toolkit@v0.2.21
+        with:
+          cuda: '12.8.0'
+          sub-packages: ${{matrix.sub-packages}}
+          method: ${{matrix.method}}
+      - name: build cuda
+        run: ${{env.CUDA_SRC_ROOT}}/scripts/build-cuda.ps1
+        shell: pwsh
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cuda-${{matrix.machine}}
+          path: dist/*.7z
+          if-no-files-found: error
+
   out-build:
     needs:
+      - build-cuda
+      - build-cpp
       - build-rust-cli
       - build-rust-cuda
       - build-rust-py

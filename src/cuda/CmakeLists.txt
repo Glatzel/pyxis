@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.25)
-
 project(PyxisCudaProject LANGUAGES CXX CUDA)
 
 # Set CUDA standard
@@ -9,7 +8,8 @@ set(CMAKE_CUDA_ARCHITECTURES 80)
 
 # set cpp project dir
 set(CPP_PROJECT_DIR ../cpp)
-# Include directories
+
+# Add cpp header files
 include_directories(${CPP_PROJECT_DIR}/include)
 
 # Add cpp source files
@@ -38,15 +38,17 @@ install(TARGETS pyxis_cuda_static
         RUNTIME DESTINATION bin)
 
 # Build CUDA dynamic library
-add_library(pyxis_cuda_shared SHARED ${CPP_SOURCES} ${CUDA_SOURCES})
-set_target_properties(pyxis_cuda_shared PROPERTIES
-    POSITION_INDEPENDENT_CODE ON
-    OUTPUT_NAME "pyxis_cuda_s"
-    CUDA_SEPARABLE_COMPILATION ON)
-install(TARGETS pyxis_cuda_shared
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin)
+# add_library(pyxis_cuda_shared SHARED ${CPP_SOURCES} ${CUDA_SOURCES} ${CPP_HEADERS})
+# set_target_properties(pyxis_cuda_shared PROPERTIES
+#     POSITION_INDEPENDENT_CODE ON
+#     CUDA_RUNTIME_LIBRARY Shared
+#     CUDA_RESOLVE_DEVICE_SYMBOLS ON
+#     OUTPUT_NAME "pyxis_cuda"
+#     CUDA_SEPARABLE_COMPILATION ON)
+# install(TARGETS pyxis_cuda_shared
+#         ARCHIVE DESTINATION lib
+#         LIBRARY DESTINATION lib
+#         RUNTIME DESTINATION bin)
 
 # Generate PTX files
 set(PTX_OUT_DIR ${CMAKE_BINARY_DIR}/ptx)

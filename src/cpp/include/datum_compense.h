@@ -1,6 +1,6 @@
 #pragma once
 #include "cuda_macro.h"
-CUDA_DEVICE void datum_compense(double xc,
+CUDA_HOST_DEVICE void datum_compense(double xc,
                                 double yc,
                                 double factor,
                                 double x0,

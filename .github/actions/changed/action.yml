@@ -1,16 +1,15 @@
 name: Setup CI
+outputs:
+  py: 
+    value: ${{steps.py.outputs.any_changed}}
+  rs: 
+    value: ${{steps.rs.outputs.any_changed}}
+  cpp: 
+    value: ${{steps.cpp.outputs.any_changed}}
+  cuda: 
+    value: ${{steps.cuda.outputs.any_changed}}
 runs:
   using: "composite"
-  outputs:
-    py: 
-      value: ${{steps.py.outputs.any_changed}}
-    rs: 
-      value: ${{steps.rs.outputs.any_changed}}
-    cpp: 
-      value: ${{steps.cpp.outputs.any_changed}}
-    cuda: 
-      value: ${{steps.cuda.outputs.any_changed}}
-
   steps:
     - id: py
       uses: tj-actions/changed-files@v45

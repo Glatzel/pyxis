@@ -113,12 +113,14 @@ jobs:
 
       - name: Build the benchmark target(s)
         run: cargo codspeed build -p pyxis
+        working-directory: ./src/rust
 
       - name: Run the benchmarks
         uses: CodSpeedHQ/action@v3
         with:
           run: cargo codspeed run
           token: ${{ secrets.CODSPEED_TOKEN }}
+          working-directory: "./src/rust"
 
   cargo-test:
     needs: out-cache
@@ -301,7 +303,7 @@ jobs:
           if-no-files-found: error
 
       - name: test cli
-        run: ${{env.RUST_SRC_ROOT}}/crates/pyxis/examples/cli.ps1
+        run: ${{env.RUST_SRC_ROOT}}/crates/pyxis-cli/examples/cli.ps1
         shell: pwsh
 
   build-cpp:
@@ -388,4 +390,3 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "out build."
-      

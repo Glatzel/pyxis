@@ -80,15 +80,15 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
       - uses: ./.github/actions/setup-ci
       - name: cargo-fmt
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
       - name: cargo-clippy
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
         shell: pwsh
       - name: cargo-machete
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         uses: bnjbvr/cargo-machete@main
 
   cargo-bench:
@@ -109,43 +109,7 @@ jobs:
           token: ${{ secrets.CODSPEED_TOKEN }}
           working-directory: ${{env.RUST_SRC_ROOT}}
 
-  cargo-test:
-    needs: out-cache
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [windows-latest,ubuntu-latest]
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - run: choco install pkgconfiglite
-        if: ${{runner.os == 'Windows'}}
-      - uses: ./.github/actions/setup-ci
-      - uses: dtolnay/rust-toolchain@nightly
-
-      - name: Install nextest
-        uses: taiki-e/install-action@nextest
-
-      - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@cargo-llvm-cov
-
-      - name: cargo-test
-        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-test.ps1
-        shell: pwsh
-
-      - name: Upload results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-
-  pytest:
+  test:
     needs: out-cache
     strategy:
       fail-fast: false
@@ -156,12 +120,24 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-ci
       - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@nightly
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
 
+      # rust-cli, rust
+      - name: cargo-test
+        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-test.ps1
+        shell: pwsh
+
+      # rust-py
       - name: dev python
         run: ${{env.RUST_SRC_ROOT}}/scripts/py-develop.ps1
         shell: pwsh
 
       - name: test python
+        if: ${{ !cancelled() }}
         run: ${{env.RUST_SRC_ROOT}}/scripts/py-pytest.ps1
         shell: pwsh
 
@@ -176,16 +152,6 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  out-check:
-    needs:
-      - cargo-bench
-      - lint
-      - cargo-test
-      - pytest
-      - ruff-lint
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "out check."
 
   # region build
   build:
@@ -244,14 +210,14 @@ jobs:
       
       # rust-cli
       - name: build cli
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
       - name: test cli
         run: ${{env.RUST_SRC_ROOT}}/crates/pyxis-cli/examples/cli.ps1
         shell: pwsh
       - name: upload cpp
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-rust-cli-${{matrix.machine}}
@@ -260,17 +226,17 @@ jobs:
 
       # rust-py
       - name: build python (debug)
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
   
       - name: build python (dist)
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 -config dist
         shell: pwsh
 
       - name: upload whl
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-py-${{matrix.machine}}
@@ -279,11 +245,11 @@ jobs:
 
       # cpp
       - name: build cpp
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1
         shell: pwsh
       - name: upload cpp
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cpp-${{matrix.machine}}
@@ -291,11 +257,11 @@ jobs:
           if-no-files-found: error
       # cuda
       - name: build cuda
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         run: ${{env.CUDA_SRC_ROOT}}/scripts/build-cuda.ps1
         shell: pwsh
       - name: upload cuda
-        if: ${{always()}}
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cuda-${{matrix.machine}}

@@ -112,12 +112,14 @@ jobs:
 
       - name: Build the benchmark target(s)
         run: cargo codspeed build -p pyxis
+        working-directory: ${{env.RUST_SRC_ROOT}}
 
       - name: Run the benchmarks
         uses: CodSpeedHQ/action@v3
         with:
           run: cargo codspeed run
           token: ${{ secrets.CODSPEED_TOKEN }}
+          working-directory: ${{env.RUST_SRC_ROOT}}
 
   cargo-test:
     needs: out-cache
@@ -336,7 +338,7 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - name: build cuda
+      - name: build cpp
         run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1
         shell: pwsh
       - name: upload 

@@ -1,4 +1,5 @@
 #include "crypto.h"
+#include "cuda_macro.h"
 #ifdef __CUDACC__ // If compiled with nvcc
 #include <cuda_runtime.h>
 #else
@@ -8,7 +9,7 @@
 #define M_PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
 #define EE 0.006693421622965943333649629920500956359319388866424560546875
 #define krasovsky1940_A 6378245.0
-CUDA_DEVICE void transform(
+CUDA_HOST_DEVICE void transform(
     const double x, const double y,
     double &lon, double &lat)
 {
@@ -30,7 +31,7 @@ CUDA_DEVICE void transform(
     lat += -100.0 + 2.0 * x + 3.0 * y + 0.2 * pow(y, 2.0) + 0.1 * xy + 0.2 * abs_x;
     lon += 300.0 + x + 2.0 * y + 0.1 * pow(x, 2.0) + 0.1 * xy + 0.1 * abs_x;
 }
-CUDA_DEVICE void delta(
+CUDA_HOST_DEVICE void delta(
     const double lon, const double lat,
     double &d_lon, double &d_lat)
 {
@@ -47,7 +48,7 @@ CUDA_DEVICE void delta(
     d_lat = (d_lat * 180.0) / ((earth_r * (1.0 - EE)) / (magic * sqrt_magic) * M_PI);
     d_lon = (d_lon * 180.0) / (earth_r / sqrt_magic * cos(rad_lat) * M_PI);
 }
-CUDA_DEVICE void bd09_to_gcj02(
+CUDA_HOST_DEVICE void bd09_to_gcj02(
     const double bd09_lon, const double bd09_lat,
     double &gcj02_lon, double &gcj02_lat)
 {
@@ -59,7 +60,7 @@ CUDA_DEVICE void bd09_to_gcj02(
     gcj02_lon = z * cos(theta);
     gcj02_lat = z * sin(theta);
 }
-CUDA_DEVICE void gcj02_to_bd09(
+CUDA_HOST_DEVICE void gcj02_to_bd09(
     const double gcj02_lon, const double gcj02_lat,
     double &bd09_lon, double &bd09_lat)
 {
@@ -69,7 +70,7 @@ CUDA_DEVICE void gcj02_to_bd09(
     bd09_lon = z * cos(theta) + 0.0065;
     bd09_lat = z * sin(theta) + 0.006;
 }
-CUDA_DEVICE void gcj02_to_wgs84(
+CUDA_HOST_DEVICE void gcj02_to_wgs84(
     const double gcj02_lon, const double gcj02_lat,
     double &wgs84_lon, double &wgs84_lat)
 {
@@ -79,7 +80,7 @@ CUDA_DEVICE void gcj02_to_wgs84(
     wgs84_lon = gcj02_lon - d_lon;
     wgs84_lat = gcj02_lat - d_lat;
 }
-CUDA_DEVICE void wgs84_to_gcj02(
+CUDA_HOST_DEVICE void wgs84_to_gcj02(
     const double wgs84_lon, const double wgs84_lat,
     double &gcj02_lon, double &gcj02_lat)
 {
@@ -89,7 +90,7 @@ CUDA_DEVICE void wgs84_to_gcj02(
     gcj02_lon = wgs84_lon + d_lon;
     gcj02_lat = wgs84_lat + d_lat;
 }
-CUDA_DEVICE void wgs84_to_bd09(
+CUDA_HOST_DEVICE void wgs84_to_bd09(
     const double wgs84_lon, const double wgs84_lat,
     double &bd09_lon, double &bd09_lat)
 {
@@ -98,7 +99,7 @@ CUDA_DEVICE void wgs84_to_bd09(
     gcj02_to_bd09(bd09_lon, bd09_lat,
                   bd09_lon, bd09_lat);
 }
-CUDA_DEVICE void bd09_to_wgs84(
+CUDA_HOST_DEVICE void bd09_to_wgs84(
     const double bd09_lon, const double bd09_lat,
     double &wgs84_lon, double &wgs84_lat)
 {
@@ -107,11 +108,11 @@ CUDA_DEVICE void bd09_to_wgs84(
     gcj02_to_wgs84(wgs84_lon, wgs84_lat,
                    wgs84_lon, wgs84_lat);
 }
-CUDA_DEVICE double to_radians(const double degrees)
+CUDA_HOST_DEVICE double to_radians(const double degrees)
 {
     return degrees * M_PI / 180.0;
 }
-CUDA_DEVICE double haversine_distance(const double lon_a, const double lat_a,
+CUDA_HOST_DEVICE double haversine_distance(const double lon_a, const double lat_a,
                                       const double lon_b, const double lat_b)
 {
     // Convert latitudes and longitudes to radians
@@ -132,7 +133,7 @@ CUDA_DEVICE double haversine_distance(const double lon_a, const double lat_a,
     double c = 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
     return 6378137.0 * c;
 }
-CUDA_DEVICE void crypto_exact(
+CUDA_HOST_DEVICE void crypto_exact(
     const double src_lon,
     const double src_lat,
     void (*crypto_fn)(const double, const double, double &, double &),

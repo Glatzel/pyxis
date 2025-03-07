@@ -1,8 +1,8 @@
 extern "C"
 {
-#include "crypto.h"
+#include "datum_compense.h"
 }
-__global__ void datum_compense_cuda(double *xc,
+extern "C" __global__ void datum_compense_cuda(double *xc,
                                                double *yc,
                                                double factor,
                                                double x0,

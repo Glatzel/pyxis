@@ -1,6 +1,6 @@
 #include "datum_compense.h"
 
-CUDA_DEVICE void datum_compense(double xc,
+CUDA_HOST_DEVICE void datum_compense(double xc,
                                 double yc,
                                 double factor,
                                 double x0,

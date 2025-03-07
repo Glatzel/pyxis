@@ -1,6 +1,6 @@
 param(
     $config,
-    $install="./dist/cpp"
+    $install="../../dist/cpp"
 )
 
 if ($config) {
@@ -16,7 +16,6 @@ if ($install) {
 }
 Set-Location $PSScriptRoot
 Set-Location ..
-Set-Location ./src/cpp
 
 cmake . -B build $install $config
 if ($install) {

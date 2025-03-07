@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add some check and log to datum_compense cuda by @Glatzel in [#151](https://github.com/Glatzel/pyxis/pull/151)
+- Add util fn to calculate block and grid size by @Glatzel in [#152](https://github.com/Glatzel/pyxis/pull/152)
+- Add gcj bd crypto cuda by @Glatzel in [#153](https://github.com/Glatzel/pyxis/pull/153)
+
+### Changed
+
+- Initial pyxis-cuda by @Glatzel in [#150](https://github.com/Glatzel/pyxis/pull/150)
+- Complete crypto cuda by @Glatzel in [#155](https://github.com/Glatzel/pyxis/pull/155)
+
 ### Fixed
 
 - Doc test by @Glatzel in [#132](https://github.com/Glatzel/pyxis/pull/132)
@@ -16,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improve const ellipsoid performance by @Glatzel in [#129](https://github.com/Glatzel/pyxis/pull/129)
 - Optimize datum_compense and crypto_exact by @Glatzel in [#142](https://github.com/Glatzel/pyxis/pull/142)
+- Use newton method to accelerate crypto exact by @Glatzel in [#154](https://github.com/Glatzel/pyxis/pull/154)
 
 ### Refactor
 
@@ -23,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplify space python api by @Glatzel in [#135](https://github.com/Glatzel/pyxis/pull/135)
 - Generics migrate by @Glatzel in [#136](https://github.com/Glatzel/pyxis/pull/136)
 - Use assign trait by @Glatzel in [#137](https://github.com/Glatzel/pyxis/pull/137)
+- Reconstruct folers by @Glatzel in [#157](https://github.com/Glatzel/pyxis/pull/157)
 
 ## [0.0.9] - 2025-03-01
 

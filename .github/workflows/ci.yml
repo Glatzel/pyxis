@@ -78,20 +78,51 @@ jobs:
         with:
           components: rustfmt
       - uses: ./.github/actions/setup-ci
+
+      #ruff
+      - id: changed-py
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **.py
       - name: ruff
+        if: ${{steps.changed-py.outputs.any_changed!='false' && !cancelled()}}
         run: |
           pixi global install ruff
           ruff check --output-format=github .
+     # cargo fmt
+      - id: changed-rs
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **.rs
       - name: cargo-fmt
-        if: ${{ !cancelled() }}
+        if: ${{steps.changed-rs.outputs.any_changed && !cancelled()}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
+
+     # cargo clippy
+      - id: changed-clippy
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **.rs
+            **/Cargo.toml
+            **/Cargo.lock
       - name: cargo-clippy
-        if: ${{ !cancelled() }}
+        if: ${{steps.changed-clippy.outputs.any_changed && !cancelled()}}
         run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
         shell: pwsh
+      # cargo machete
+      - id: changed-machete
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **.rs
+            **/Cargo.toml
+            **/Cargo.lock
       - name: cargo-machete
-        if: ${{ !cancelled() }}
+        if: ${{steps.changed-machete.outputs.any_changed && !cancelled()}}
         uses: bnjbvr/cargo-machete@main
 
       # bench

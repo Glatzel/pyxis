@@ -2,10 +2,14 @@ name: Setup CI
 runs:
   using: "composite"
   outputs:
-    py: ${{steps.py.outputs.any_changed}}
-    rs: ${{steps.rs.outputs.any_changed}}
-    cpp: ${{steps.cpp.outputs.any_changed}}
-    cuda: ${{steps.cuda.outputs.any_changed}}
+    py: 
+      value: ${{steps.py.outputs.any_changed}}
+    rs: 
+      value: ${{steps.rs.outputs.any_changed}}
+    cpp: 
+      value: ${{steps.cpp.outputs.any_changed}}
+    cuda: 
+      value: ${{steps.cuda.outputs.any_changed}}
 
   steps:
     - id: py

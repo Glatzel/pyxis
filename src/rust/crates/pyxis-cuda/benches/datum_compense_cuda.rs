@@ -3,7 +3,7 @@ use rand::Rng;
 fn bench_datum_compense_cuda(c: &mut Criterion) {
     let mut group = c.benchmark_group("datum_compense_cuda");
     let mut rng = rand::rng();
-    let ctx = &pyxis_cuda::CONTEXT;
+    let ctx = pyxis_cuda::PyxisCudaContext::default();
     for i in [0, 2, 4, 6, 8].iter() {
         let parms = pyxis::DatumCompenseParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);
         let count = 10i32.pow(*i);

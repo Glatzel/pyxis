@@ -5,9 +5,9 @@
 #define CUDA_HOST __host__
 #define CUDA_HOST_DEVICE __host__ __device__
 #else
-#define CUDA_DEVICE // Empty for normal C++ compilation
-#define CUDA_HOST // Empty for normal C++ compilation
-#define CUDA_HOST_DEVICE // Empty for normal C++ compilation
+#define CUDA_DEVICE
+#define CUDA_HOST
+#define CUDA_HOST_DEVICE
 #endif
 
 CUDA_HOST_DEVICE void datum_compense(double xc,

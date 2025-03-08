@@ -34,3 +34,24 @@ install(TARGETS pyxis_static pyxis_shared
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
         DESTINATION include
         FILES_MATCHING PATTERN "*.h")
+
+# Configure and install .pc files
+configure_file(
+    ${CMAKE_SOURCE_DIR}/cmake/pyxis_shared.pc.in
+    ${CMAKE_BINARY_DIR}/pyxis_shared.pc
+    @ONLY
+)
+configure_file(
+    ${CMAKE_SOURCE_DIR}/cmake/pyxis_static.pc.in
+    ${CMAKE_BINARY_DIR}/pyxis_static.pc
+    @ONLY
+)
+
+install(
+    FILES ${CMAKE_BINARY_DIR}/pyxis_shared.pc
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig
+)
+install(
+    FILES ${CMAKE_BINARY_DIR}/pyxis_static.pc
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig
+)

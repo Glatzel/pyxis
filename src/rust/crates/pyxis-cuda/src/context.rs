@@ -9,7 +9,7 @@ pub(crate) struct PyxisPtx {
 }
 
 /// A struct to manage the currently active module
-pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(|| PyxisCudaContext::new(0, 0));
+pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(PyxisCudaContext::new);
 pub struct PyxisCudaContext {
     _ctx: Context,
     pub(crate) stream: Stream,
@@ -17,29 +17,37 @@ pub struct PyxisCudaContext {
     module_cache: Mutex<HashMap<&'static str, (Arc<Module>, usize)>>,
     lru: Mutex<VecDeque<&'static str>>,
     total_size: Mutex<usize>,
-    size_limit: usize,
-    count_limit: usize,
+    size_limit: Mutex<usize>,
+    count_limit: Mutex<usize>,
 }
 
 impl PyxisCudaContext {
     /// Create a new module manager
-    /// # Arguments
-    /// - size_limit: max size of cached ptx file, 0 means unlimited.
-    /// - count_limit: max count of cuda modules, 0 means unlimited.
-    fn new(size_limit: usize, count_limit: usize) -> Self {
+
+    fn new() -> Self {
         Self {
             _ctx: cust::quick_init().unwrap(),
             stream: Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap(),
             module_cache: Mutex::new(HashMap::new()),
             lru: Mutex::new(VecDeque::new()),
             total_size: Mutex::new(0),
-            size_limit,
-            count_limit,
+            size_limit: Mutex::new(0),
+            count_limit: Mutex::new(0),
         }
     }
 }
 // manage module
 impl PyxisCudaContext {
+    /// - size_limit: max size of cached ptx file, 0 means unlimited.
+    pub fn set_size_limit(&self, size_limit: usize) -> &Self {
+        *self.size_limit.lock().unwrap() = size_limit;
+        self
+    }
+    /// - count_limit: max count of cuda modules, 0 means unlimited.
+    pub fn set_count_limit(&self, count_limit: usize) -> &Self {
+        *self.count_limit.lock().unwrap() = count_limit;
+        self
+    }
     /// Get the active module or load it if not already loaded
     pub(crate) fn get_module(&self, ptx: &PyxisPtx) -> Arc<Module> {
         // add module to cache if it is not exist in cache
@@ -60,11 +68,13 @@ impl PyxisCudaContext {
     }
     fn add_module(&self, ptx: &PyxisPtx) {
         // clear last module if reach count limit
-        if self.count_limit > 0 && self.lru.lock().unwrap().len() + 1 > self.count_limit {
+        if *self.count_limit.lock().unwrap() > 0
+            && self.lru.lock().unwrap().len() + 1 > *self.count_limit.lock().unwrap()
+        {
             self.remove_last_module();
         }
         // clear modules until total size smaller than limit
-        while *self.total_size.lock().unwrap() + ptx.size > self.size_limit {
+        while *self.total_size.lock().unwrap() + ptx.size > *self.size_limit.lock().unwrap() {
             self.remove_last_module();
         }
         // add new module

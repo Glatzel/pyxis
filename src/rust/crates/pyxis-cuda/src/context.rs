@@ -8,13 +8,19 @@ pub struct PyxisPtx {
     pub size: usize,
 }
 
-pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(|| PyxisCudaContext::new());
+pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(PyxisCudaContext::new);
 /// A struct to manage the currently active module
 pub struct PyxisCudaContext {
     _ctx: Context,
     pub stream: Stream,
     active_module: Mutex<Option<Arc<Module>>>,
     active_ptx: Mutex<Option<String>>,
+}
+
+impl Default for PyxisCudaContext {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl PyxisCudaContext {

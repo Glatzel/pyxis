@@ -188,19 +188,6 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  out-check:
-    needs:
-      - cargo-bench
-      - cargo-clippy
-      - cargo-fmt
-      - cargo-machete
-      - cargo-test
-      - pytest
-      - ruff-lint
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "out check."
-
   # region build
   cargo-doc:
     runs-on: ubuntu-latest
@@ -363,16 +350,3 @@ jobs:
           name: pyxis-cuda-${{matrix.machine}}
           path: dist/*.7z
           if-no-files-found: error
-
-  out-build:
-    needs:
-      - build-cpp
-      - build-cuda
-      - build-pyxis-cli
-      - build-pyxis-cuda
-      - build-pyxis-py
-      - cargo-doc
-      - sphinx
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "out build."

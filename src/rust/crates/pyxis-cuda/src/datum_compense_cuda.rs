@@ -7,7 +7,7 @@ const PTX_STR: &str = include_str!("./datum_compense_cuda.ptx");
 const PTX: crate::context::PyxisPtx = crate::context::PyxisPtx {
     name: "datum_compense_cuda",
     content: PTX_STR,
-    size: PTX_STR.len(),
+    _size: PTX_STR.len(),
 };
 impl PyxisCudaContext {
     pub fn datum_compense_cuda(

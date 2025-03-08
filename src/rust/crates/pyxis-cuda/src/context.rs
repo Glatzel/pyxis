@@ -2,10 +2,10 @@ use std::sync::{Arc, LazyLock, Mutex};
 
 use cust::prelude::*;
 
-pub struct PyxisPtx {
+pub(crate) struct PyxisPtx {
     pub name: &'static str,
     pub content: &'static str,
-    pub size: usize,
+    pub _size: usize,
 }
 
 pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(PyxisCudaContext::new);

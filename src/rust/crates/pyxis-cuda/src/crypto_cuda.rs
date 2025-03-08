@@ -7,7 +7,7 @@ const PTX_STR: &str = include_str!("./crypto_cuda.ptx");
 const PTX: PyxisPtx = crate::PyxisPtx {
     name: "datum_compense_cuda",
     content: PTX_STR,
-    size: PTX_STR.len(),
+    _size: PTX_STR.len(),
 };
 impl PyxisCudaContext {
     pub fn bd09_to_gcj02_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {

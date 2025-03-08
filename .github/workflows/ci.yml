@@ -159,7 +159,6 @@ jobs:
 
 
   pytest:
-    needs: out-cache
     strategy:
       fail-fast: false
       matrix:
@@ -224,7 +223,6 @@ jobs:
           if-no-files-found: error
 
   build-pyxis-py:
-    needs: out-cache
     strategy:
       fail-fast: false
       matrix:

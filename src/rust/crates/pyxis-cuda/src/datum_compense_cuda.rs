@@ -11,7 +11,7 @@ const PTX: crate::context::PyxisPtx = crate::context::PyxisPtx {
 };
 impl PyxisCudaContext {
     pub fn datum_compense_cuda(
-        & self,
+        &self,
         xc: &mut DeviceBuffer<f64>,
         yc: &mut DeviceBuffer<f64>,
         parms: &impl IDatumCompenseParms<f64>,

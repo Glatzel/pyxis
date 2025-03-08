@@ -1,6 +1,7 @@
-use cust::prelude::*;
 use std::cell::{Ref, RefCell};
 use std::collections::{HashMap, VecDeque};
+
+use cust::prelude::*;
 
 pub(crate) struct PyxisPtx {
     pub name: &'static str,

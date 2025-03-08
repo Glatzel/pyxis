@@ -33,8 +33,8 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
         group.bench_with_input(BenchmarkId::new("bd2gcj", i), i, |b, _| {
             let lon = COORDS.0.clone();
             let lat = COORDS.1.clone();
-            let mut dlon = ctx.from_slice(&lon);
-            let mut dlat = ctx.from_slice(&lat);
+            let mut dlon = ctx.device_buffer_from_slice(&lon);
+            let mut dlat = ctx.device_buffer_from_slice(&lat);
             b.iter(|| {
                 ctx.crypto_exact_cuda(
                     &mut dlon,
@@ -50,8 +50,8 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
         group.bench_with_input(BenchmarkId::new("bd2wgs", i), i, |b, _| {
             let lon = COORDS.0.clone();
             let lat = COORDS.1.clone();
-            let mut dlon = ctx.from_slice(&lon);
-            let mut dlat = ctx.from_slice(&lat);
+            let mut dlon = ctx.device_buffer_from_slice(&lon);
+            let mut dlat = ctx.device_buffer_from_slice(&lat);
             b.iter(|| {
                 ctx.crypto_exact_cuda(
                     &mut dlon,
@@ -67,8 +67,8 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
         group.bench_with_input(BenchmarkId::new("gcj2wgs", i), i, |b, _| {
             let lon = COORDS.0.clone();
             let lat = COORDS.1.clone();
-            let mut dlon = ctx.from_slice(&lon);
-            let mut dlat = ctx.from_slice(&lat);
+            let mut dlon = ctx.device_buffer_from_slice(&lon);
+            let mut dlat = ctx.device_buffer_from_slice(&lat);
             b.iter(|| {
                 ctx.crypto_exact_cuda(
                     &mut dlon,

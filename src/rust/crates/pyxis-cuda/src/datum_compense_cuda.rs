@@ -45,8 +45,8 @@ mod test {
         let mut xc: Vec<f64> = vec![469704.6693, 469704.6693];
         let mut yc: Vec<f64> = vec![2821940.796, 2821940.796];
         let ctx = &crate::CONTEXT;
-        let mut dxc = ctx.from_slice(&xc);
-        let mut dyc = ctx.from_slice(&yc);
+        let mut dxc = ctx.device_buffer_from_slice(&xc);
+        let mut dyc = ctx.device_buffer_from_slice(&yc);
         let parms = pyxis::DatumCompenseParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);
         ctx.datum_compense_cuda(&mut dxc, &mut dyc, &parms);
         dxc.copy_to(&mut xc).unwrap();

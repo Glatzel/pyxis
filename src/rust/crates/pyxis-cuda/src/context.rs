@@ -89,7 +89,7 @@ impl PyxisCudaContext {
 
 // utils
 impl PyxisCudaContext {
-    pub fn from_slice(&self, slice: &[f64]) -> DeviceBuffer<f64> {
+    pub fn device_buffer_from_slice(&self, slice: &[f64]) -> DeviceBuffer<f64> {
         DeviceBuffer::from_slice(slice).unwrap()
     }
     /// # Returns

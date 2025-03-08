@@ -14,8 +14,8 @@ fn bench_datum_compense_cuda(c: &mut Criterion) {
             .map(|_| 2821940.796 + rng.random::<f64>())
             .collect();
 
-        let mut dxc = ctx.from_slice(&xc);
-        let mut dyc = ctx.from_slice(&yc);
+        let mut dxc = ctx.device_buffer_from_slice(&xc);
+        let mut dyc = ctx.device_buffer_from_slice(&yc);
         group.bench_with_input(BenchmarkId::new("length", i), i, |b, _| {
             b.iter(|| ctx.datum_compense_cuda(&mut dxc, &mut dyc, &parms))
         });

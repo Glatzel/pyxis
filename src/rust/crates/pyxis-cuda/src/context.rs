@@ -1,8 +1,7 @@
-use std::cell::{Ref, RefCell};
 use std::collections::{HashMap, VecDeque};
+use std::sync::{Arc, LazyLock, Mutex};
 
 use cust::prelude::*;
-
 pub(crate) struct PyxisPtx {
     pub name: &'static str,
     pub content: &'static str,
@@ -10,21 +9,16 @@ pub(crate) struct PyxisPtx {
 }
 
 /// A struct to manage the currently active module
+pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(|| PyxisCudaContext::new(0, 0));
 pub struct PyxisCudaContext {
     _ctx: Context,
-    pub stream: Stream,
+    pub(crate) stream: Stream,
 
-    module_cache: RefCell<HashMap<&'static str, (Module, usize)>>,
-    lru: RefCell<VecDeque<&'static str>>,
-    total_size: RefCell<usize>,
+    module_cache: Mutex<HashMap<&'static str, (Arc<Module>, usize)>>,
+    lru: Mutex<VecDeque<&'static str>>,
+    total_size: Mutex<usize>,
     size_limit: usize,
     count_limit: usize,
-}
-
-impl Default for PyxisCudaContext {
-    fn default() -> Self {
-        Self::new(0, 0)
-    }
 }
 
 impl PyxisCudaContext {
@@ -32,13 +26,13 @@ impl PyxisCudaContext {
     /// # Arguments
     /// - size_limit: max size of cached ptx file, 0 means unlimited.
     /// - count_limit: max count of cuda modules, 0 means unlimited.
-    pub fn new(size_limit: usize, count_limit: usize) -> Self {
+    fn new(size_limit: usize, count_limit: usize) -> Self {
         Self {
             _ctx: cust::quick_init().unwrap(),
             stream: Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap(),
-            module_cache: RefCell::new(HashMap::new()),
-            lru: RefCell::new(VecDeque::new()),
-            total_size: RefCell::new(0),
+            module_cache: Mutex::new(HashMap::new()),
+            lru: Mutex::new(VecDeque::new()),
+            total_size: Mutex::new(0),
             size_limit,
             count_limit,
         }
@@ -47,37 +41,47 @@ impl PyxisCudaContext {
 // manage module
 impl PyxisCudaContext {
     /// Get the active module or load it if not already loaded
-    pub(crate) fn get_module(&self, ptx: &PyxisPtx) -> Ref<Module> {
+    pub(crate) fn get_module(&self, ptx: &PyxisPtx) -> Arc<Module> {
         // add module to cache if it is not exist in cache
-        if !self.module_cache.borrow().contains_key(ptx.name) {
+        if !self.module_cache.lock().unwrap().contains_key(ptx.name) {
             self.add_module(ptx);
         }
 
         // set this module as newest
-        self.lru.borrow_mut().push_front(ptx.name);
-        Ref::map(self.module_cache.borrow(), |m| &m.get(ptx.name).unwrap().0)
+        self.lru.lock().unwrap().push_front(ptx.name);
+
+        self.module_cache
+            .lock()
+            .unwrap()
+            .get(ptx.name)
+            .unwrap()
+            .0
+            .clone()
     }
     fn add_module(&self, ptx: &PyxisPtx) {
         // clear last module if reach count limit
-        if self.count_limit > 0 && self.lru.borrow().len() + 1 > self.count_limit {
+        if self.count_limit > 0 && self.lru.lock().unwrap().len() + 1 > self.count_limit {
             self.remove_last_module();
         }
         // clear modules until total size smaller than limit
-        while *self.total_size.borrow() + ptx.size > self.size_limit {
+        while *self.total_size.lock().unwrap() + ptx.size > self.size_limit {
             self.remove_last_module();
         }
         // add new module
-        self.lru.borrow_mut().push_front(ptx.name);
-        self.module_cache.borrow_mut().insert(
+        self.lru.lock().unwrap().push_front(ptx.name);
+        self.module_cache.lock().unwrap().insert(
             ptx.name,
-            (Module::from_ptx(ptx.content, &[]).unwrap(), ptx.size),
+            (
+                Arc::new(Module::from_ptx(ptx.content, &[]).unwrap()),
+                ptx.size,
+            ),
         );
-        *self.total_size.borrow_mut() += ptx.size;
+        *self.total_size.lock().unwrap() += ptx.size;
     }
     fn remove_last_module(&self) {
-        if let Some(old_key) = self.lru.borrow_mut().pop_back() {
-            if let Some((_, old_size)) = self.module_cache.borrow_mut().remove(&old_key) {
-                *self.total_size.borrow_mut() -= old_size;
+        if let Some(old_key) = self.lru.lock().unwrap().pop_back() {
+            if let Some((_, old_size)) = self.module_cache.lock().unwrap().remove(&old_key) {
+                *self.total_size.lock().unwrap() -= old_size;
             }
         }
     }
@@ -85,7 +89,7 @@ impl PyxisCudaContext {
 
 // utils
 impl PyxisCudaContext {
-    pub fn from_slice(&self, slice: &[f64]) -> DeviceBuffer<f64> {
+    pub fn device_buffer_from_slice(&self, slice: &[f64]) -> DeviceBuffer<f64> {
         DeviceBuffer::from_slice(slice).unwrap()
     }
     /// # Returns

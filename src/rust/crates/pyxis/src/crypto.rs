@@ -6,6 +6,7 @@
 /// - https://blog.csdn.net/coolypf/article/details/8569813
 /// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
 use crate::types::{ConstEllipsoid, GeoFloat, num};
+
 pub const WGS84_LON: f64 = 121.0917077;
 pub const WGS84_LAT: f64 = 30.6107779;
 pub const GCJ02_LON: f64 = 121.09626927850977;

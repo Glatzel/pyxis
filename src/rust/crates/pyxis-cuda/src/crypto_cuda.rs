@@ -7,13 +7,13 @@ const PTX_STR: &str = include_str!("./crypto_cuda.ptx");
 const PTX: PyxisPtx = crate::PyxisPtx {
     name: "datum_compense_cuda",
     content: PTX_STR,
-    _size: PTX_STR.len(),
+    size: PTX_STR.len(),
 };
 impl PyxisCudaContext {
     pub fn bd09_to_gcj02_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(&PTX).unwrap();
+        let module = self.get_module(&PTX);
         let func = module.get_function("bd09_to_gcj02_cuda").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -32,7 +32,7 @@ impl PyxisCudaContext {
     pub fn gcj02_to_bd09_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(&PTX).unwrap();
+        let module = self.get_module(&PTX);
         let func = module.get_function("gcj02_to_bd09_cuda").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -51,7 +51,7 @@ impl PyxisCudaContext {
     pub fn gcj02_to_wgs84_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(&PTX).unwrap();
+        let module = self.get_module(&PTX);
         let func = module.get_function("gcj02_to_wgs84_cuda").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -70,7 +70,7 @@ impl PyxisCudaContext {
     pub fn wgs84_to_gcj02_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(&PTX).unwrap();
+        let module = self.get_module(&PTX);
         let func = module.get_function("wgs84_to_gcj02_cuda").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -89,7 +89,7 @@ impl PyxisCudaContext {
     pub fn wgs84_to_bd09_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(&PTX).unwrap();
+        let module = self.get_module(&PTX);
         let func = module.get_function("wgs84_to_bd09_cuda").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -108,7 +108,7 @@ impl PyxisCudaContext {
     pub fn bd09_to_wgs84_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(&PTX).unwrap();
+        let module = self.get_module(&PTX);
         let func = module.get_function("bd09_to_wgs84_cuda").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -136,7 +136,7 @@ impl PyxisCudaContext {
     ) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(&PTX).unwrap();
+        let module = self.get_module(&PTX);
         let func = match (from, to) {
             (CryptoSpace::GCJ02, CryptoSpace::WGS84) => {
                 module.get_function("gcj02_to_wgs84_exact_cuda").unwrap()
@@ -184,7 +184,7 @@ mod test {
         let mut lon: Vec<f64> = vec![BD09_LON, BD09_LON];
         let mut lat: Vec<f64> = vec![BD09_LAT, BD09_LAT];
         let expect_gcj = pyxis::crypto::bd09_to_gcj02(BD09_LON, BD09_LAT);
-        let ctx = &crate::PyxisCudaContext::new();
+        let ctx = &crate::PyxisCudaContext::default();
         let mut dlon = ctx.from_slice(&lon);
         let mut dlat = ctx.from_slice(&lat);
         ctx.bd09_to_gcj02_cuda(&mut dlon, &mut dlat);
@@ -199,7 +199,7 @@ mod test {
     }
     #[test]
     fn test_gcj02_to_bd09_cuda() {
-        let ctx = &crate::PyxisCudaContext::new();
+        let ctx = &crate::PyxisCudaContext::default();
         let mut lon: Vec<f64> = vec![GCJ02_LON, GCJ02_LON];
         let mut lat: Vec<f64> = vec![GCJ02_LAT, GCJ02_LAT];
         let mut dlon = ctx.from_slice(&lon);
@@ -219,7 +219,7 @@ mod test {
         let mut lon: Vec<f64> = vec![GCJ02_LON, GCJ02_LON];
         let mut lat: Vec<f64> = vec![GCJ02_LAT, GCJ02_LAT];
         let expect_wgs = pyxis::crypto::gcj02_to_wgs84(lon[0], lat[0]);
-        let ctx = &crate::PyxisCudaContext::new();
+        let ctx = &crate::PyxisCudaContext::default();
         let mut dlon = ctx.from_slice(&lon);
         let mut dlat = ctx.from_slice(&lat);
         ctx.gcj02_to_wgs84_cuda(&mut dlon, &mut dlat);
@@ -236,7 +236,7 @@ mod test {
     fn test_wgs84_to_gcj02_cuda() {
         let mut lon: Vec<f64> = vec![WGS84_LON, WGS84_LON];
         let mut lat: Vec<f64> = vec![WGS84_LAT, WGS84_LAT];
-        let ctx = &crate::PyxisCudaContext::new();
+        let ctx = &crate::PyxisCudaContext::default();
         let mut dlon = ctx.from_slice(&lon);
         let mut dlat = ctx.from_slice(&lat);
         ctx.wgs84_to_gcj02_cuda(&mut dlon, &mut dlat);
@@ -253,7 +253,7 @@ mod test {
     fn test_wgs84_to_bd09_cuda() {
         let mut lon: Vec<f64> = vec![WGS84_LON, WGS84_LON];
         let mut lat: Vec<f64> = vec![WGS84_LAT, WGS84_LAT];
-        let ctx = &crate::PyxisCudaContext::new();
+        let ctx = &crate::PyxisCudaContext::default();
         let mut dlon = ctx.from_slice(&lon);
         let mut dlat = ctx.from_slice(&lat);
         ctx.wgs84_to_bd09_cuda(&mut dlon, &mut dlat);
@@ -270,7 +270,7 @@ mod test {
         let mut lon: Vec<f64> = vec![BD09_LON, BD09_LON];
         let mut lat: Vec<f64> = vec![BD09_LAT, BD09_LAT];
         let expect_wgs = pyxis::crypto::bd09_to_wgs84(lon[0], lat[0]);
-        let ctx = &crate::PyxisCudaContext::new();
+        let ctx = &crate::PyxisCudaContext::default();
         let mut dlon = ctx.from_slice(&lon);
         let mut dlat = ctx.from_slice(&lat);
         ctx.bd09_to_wgs84_cuda(&mut dlon, &mut dlat);
@@ -287,7 +287,7 @@ mod test {
     fn test_bd09_to_wgs84_exact_cuda() {
         let mut lon: Vec<f64> = vec![BD09_LON, BD09_LON];
         let mut lat: Vec<f64> = vec![BD09_LAT, BD09_LAT];
-        let ctx = &crate::PyxisCudaContext::new();
+        let ctx = &crate::PyxisCudaContext::default();
         let mut dlon = ctx.from_slice(&lon);
         let mut dlat = ctx.from_slice(&lat);
         ctx.crypto_exact_cuda(
@@ -313,7 +313,7 @@ mod test {
     fn test_bd09_to_gcj02_exact_cuda() {
         let mut lon: Vec<f64> = vec![BD09_LON, BD09_LON];
         let mut lat: Vec<f64> = vec![BD09_LAT, BD09_LAT];
-        let ctx = &crate::PyxisCudaContext::new();
+        let ctx = &crate::PyxisCudaContext::default();
         let mut dlon = ctx.from_slice(&lon);
         let mut dlat = ctx.from_slice(&lat);
         ctx.crypto_exact_cuda(
@@ -339,7 +339,7 @@ mod test {
     fn test_gcj02_to_wgs84_exact_cuda() {
         let mut lon: Vec<f64> = vec![GCJ02_LON, GCJ02_LON];
         let mut lat: Vec<f64> = vec![GCJ02_LAT, GCJ02_LAT];
-        let ctx = &crate::PyxisCudaContext::new();
+        let ctx = &crate::PyxisCudaContext::default();
         let mut dlon = ctx.from_slice(&lon);
         let mut dlat = ctx.from_slice(&lat);
         ctx.crypto_exact_cuda(
@@ -397,7 +397,7 @@ mod test {
             let mut max_lonlat: f64 = 0.0;
             let mut all_dist = 0.0;
             let mut all_lonlat = 0.0;
-            let ctx = &crate::PyxisCudaContext::new();
+            let ctx = &crate::PyxisCudaContext::default();
             let mut lon = gcj_lon.clone();
             let mut lat = gcj_lat.clone();
             let mut dlon = ctx.from_slice(&lon);
@@ -434,7 +434,7 @@ mod test {
             let mut max_lonlat: f64 = 0.0;
             let mut all_dist = 0.0;
             let mut all_lonlat = 0.0;
-            let ctx = &crate::PyxisCudaContext::new();
+            let ctx = &crate::PyxisCudaContext::default();
             let mut lon = bd_lon.clone();
             let mut lat = bd_lat.clone();
             let mut dlon = ctx.from_slice(&lon);
@@ -471,7 +471,7 @@ mod test {
             let mut max_lonlat: f64 = 0.0;
             let mut all_dist = 0.0;
             let mut all_lonlat = 0.0;
-            let ctx = &crate::PyxisCudaContext::new();
+            let ctx = &crate::PyxisCudaContext::default();
             let mut lon = bd_lon.clone();
             let mut lat = bd_lat.clone();
             let mut dlon = ctx.from_slice(&lon);

@@ -27,7 +27,7 @@ static COORDS: LazyLock<(Vec<f64>, Vec<f64>)> = LazyLock::new(|| {
 });
 fn bench_crypto_exact_lonlat(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto_exact_cuda");
-    let ctx = &pyxis_cuda::PyxisCudaContext::new();
+    let ctx = pyxis_cuda::PyxisCudaContext::default();
     for i in [4, 7, 10, 13].iter() {
         let threshold = 10.0f64.powi(-i);
         group.bench_with_input(BenchmarkId::new("bd2gcj", i), i, |b, _| {

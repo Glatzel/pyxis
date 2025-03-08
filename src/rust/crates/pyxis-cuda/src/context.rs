@@ -28,6 +28,9 @@ impl Default for PyxisCudaContext {
 
 impl PyxisCudaContext {
     /// Create a new module manager
+    /// # Arguments
+    /// - size_limit: max size of cached ptx file, 0 means unlimited.
+    /// - count_limit: max count of cuda modules, 0 means unlimited.
     pub fn new(size_limit: usize, count_limit: usize) -> Self {
         Self {
             _ctx: cust::quick_init().unwrap(),

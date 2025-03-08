@@ -1,4 +1,4 @@
-use std::sync::{Arc, LazyLock, Mutex};
+use std::sync::{Arc, Mutex};
 
 use cust::prelude::*;
 
@@ -8,7 +8,6 @@ pub(crate) struct PyxisPtx {
     pub _size: usize,
 }
 
-pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(PyxisCudaContext::new);
 /// A struct to manage the currently active module
 pub struct PyxisCudaContext {
     _ctx: Context,

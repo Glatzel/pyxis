@@ -5,18 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.0.11] - 2025-03-07
+## [0.0.11] - 2025-03-08
 
 ### Added
 
 - Add some check and log to datum_compense cuda by @Glatzel in [#151](https://github.com/Glatzel/pyxis/pull/151)
 - Add util fn to calculate block and grid size by @Glatzel in [#152](https://github.com/Glatzel/pyxis/pull/152)
 - Add gcj bd crypto cuda by @Glatzel in [#153](https://github.com/Glatzel/pyxis/pull/153)
+- Add .pc file in cmake project by @Glatzel in [#167](https://github.com/Glatzel/pyxis/pull/167)
 
 ### Changed
 
 - Initial pyxis-cuda by @Glatzel in [#150](https://github.com/Glatzel/pyxis/pull/150)
 - Complete crypto cuda by @Glatzel in [#155](https://github.com/Glatzel/pyxis/pull/155)
+- New cuda context manager by @Glatzel in [#165](https://github.com/Glatzel/pyxis/pull/165)
 
 ### Performance
 
@@ -25,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Refactor
 
 - Reconstruct folers by @Glatzel in [#157](https://github.com/Glatzel/pyxis/pull/157)
+
+### Removed
+
+- Remove python build need by @Glatzel in [#168](https://github.com/Glatzel/pyxis/pull/168)
 
 ## [0.0.10] - 2025-03-05
 

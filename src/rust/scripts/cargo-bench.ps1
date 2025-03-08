@@ -1,8 +1,10 @@
-param($filter)
+param(
+$package,
+$filter)
 Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
 
-cargo bench -p pyxis -p pyxis-cuda -- $filter
+cargo bench -p $package -- $filter
 Set-Location $PSScriptRoot
 Set-Location ../../../

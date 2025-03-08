@@ -24,3 +24,7 @@ log = ["dep:tracing"]
 [[bench]]
 name = "datum_compense_cuda"
 harness = false
+
+[[bench]]
+name = "crypto_cuda"
+harness = false

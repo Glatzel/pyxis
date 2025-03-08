@@ -1,7 +1,7 @@
 use cust::prelude::*;
 use pyxis::IDatumCompenseParms;
 
-use crate::PyxisCudaContext;
+use crate::context::PyxisCudaContext;
 const PTX: &str = include_str!("./datum_compense_cuda.ptx");
 
 impl PyxisCudaContext {
@@ -13,7 +13,7 @@ impl PyxisCudaContext {
     ) {
         assert_eq!(xc.len(), yc.len());
         let length: usize = xc.len();
-        let module = Module::from_ptx(PTX, &[]).unwrap();
+        let module = self.get_module(PTX).unwrap();
         let func = module.get_function("datum_compense_cuda").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -39,7 +39,7 @@ mod test {
     fn test_datum_compense_cuda() {
         let mut xc: Vec<f64> = vec![469704.6693, 469704.6693];
         let mut yc: Vec<f64> = vec![2821940.796, 2821940.796];
-        let ctx = &crate::CTX;
+        let ctx = &crate::CONTEXT;
         let mut dxc = ctx.from_slice(&xc);
         let mut dyc = ctx.from_slice(&yc);
         let parms = pyxis::DatumCompenseParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);

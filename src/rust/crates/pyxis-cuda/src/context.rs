@@ -9,7 +9,7 @@ pub(crate) struct PyxisPtx {
 }
 
 /// A struct to manage the currently active module
-pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(|| PyxisCudaContext::new());
+pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(PyxisCudaContext::new);
 pub struct PyxisCudaContext {
     _ctx: Context,
     pub(crate) stream: Stream,

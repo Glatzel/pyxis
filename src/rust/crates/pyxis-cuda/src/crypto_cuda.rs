@@ -15,7 +15,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("bd09_to_gcj02_cuda").unwrap();
-        let stream = &crate::CONTEXT.stream;
+        let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -34,7 +34,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("gcj02_to_bd09_cuda").unwrap();
-        let stream = &crate::CONTEXT.stream;
+        let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -53,7 +53,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("gcj02_to_wgs84_cuda").unwrap();
-        let stream = &crate::CONTEXT.stream;
+        let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -72,7 +72,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("wgs84_to_gcj02_cuda").unwrap();
-        let stream = &crate::CONTEXT.stream;
+        let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -91,7 +91,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("wgs84_to_bd09_cuda").unwrap();
-        let stream = &crate::CONTEXT.stream;
+        let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -110,7 +110,7 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("bd09_to_wgs84_cuda").unwrap();
-        let stream = &crate::CONTEXT.stream;
+        let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
@@ -154,7 +154,7 @@ impl PyxisCudaContext {
             CryptoThresholdMode::Distance => true,
             CryptoThresholdMode::LonLat => false,
         };
-        let stream = &crate::CONTEXT.stream;
+        let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
         unsafe {
             launch!(

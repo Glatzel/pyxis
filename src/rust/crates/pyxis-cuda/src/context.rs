@@ -1,10 +1,7 @@
-use std::{
-    collections::{HashMap, VecDeque},
-    sync::Arc,
-};
+use std::collections::{HashMap, VecDeque};
+use std::sync::{Arc, LazyLock, Mutex};
 
 use cust::prelude::*;
-use std::sync::{LazyLock, Mutex};
 pub(crate) struct PyxisPtx {
     pub name: &'static str,
     pub content: &'static str,

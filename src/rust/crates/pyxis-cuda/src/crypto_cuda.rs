@@ -1,14 +1,19 @@
 use cust::prelude::*;
 use pyxis::crypto::{CryptoSpace, CryptoThresholdMode};
 
-use crate::context::PyxisCudaContext;
-const PTX: &str = include_str!("./crypto_cuda.ptx");
+use crate::{PyxisCudaContext, PyxisPtx};
 
+const PTX_STR: &str = include_str!("./crypto_cuda.ptx");
+const PTX: PyxisPtx = crate::PyxisPtx {
+    name: "datum_compense_cuda",
+    content: PTX_STR,
+    size: PTX_STR.len(),
+};
 impl PyxisCudaContext {
     pub fn bd09_to_gcj02_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(PTX).unwrap();
+        let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("bd09_to_gcj02_cuda").unwrap();
         let stream = &crate::CONTEXT.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -27,7 +32,7 @@ impl PyxisCudaContext {
     pub fn gcj02_to_bd09_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(PTX).unwrap();
+        let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("gcj02_to_bd09_cuda").unwrap();
         let stream = &crate::CONTEXT.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -46,7 +51,7 @@ impl PyxisCudaContext {
     pub fn gcj02_to_wgs84_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(PTX).unwrap();
+        let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("gcj02_to_wgs84_cuda").unwrap();
         let stream = &crate::CONTEXT.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -65,7 +70,7 @@ impl PyxisCudaContext {
     pub fn wgs84_to_gcj02_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(PTX).unwrap();
+        let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("wgs84_to_gcj02_cuda").unwrap();
         let stream = &crate::CONTEXT.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -84,7 +89,7 @@ impl PyxisCudaContext {
     pub fn wgs84_to_bd09_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(PTX).unwrap();
+        let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("wgs84_to_bd09_cuda").unwrap();
         let stream = &crate::CONTEXT.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -103,7 +108,7 @@ impl PyxisCudaContext {
     pub fn bd09_to_wgs84_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(PTX).unwrap();
+        let module = self.get_module(&PTX).unwrap();
         let func = module.get_function("bd09_to_wgs84_cuda").unwrap();
         let stream = &crate::CONTEXT.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
@@ -131,7 +136,7 @@ impl PyxisCudaContext {
     ) {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
-        let module = self.get_module(PTX).unwrap();
+        let module = self.get_module(&PTX).unwrap();
         let func = match (from, to) {
             (CryptoSpace::GCJ02, CryptoSpace::WGS84) => {
                 module.get_function("gcj02_to_wgs84_exact_cuda").unwrap()

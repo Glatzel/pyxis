@@ -1,8 +1,14 @@
 use std::sync::{Arc, LazyLock, Mutex};
 
 use cust::prelude::*;
-pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(|| PyxisCudaContext::new());
 
+pub struct PyxisPtx {
+    pub name: &'static str,
+    pub content: &'static str,
+    pub size: usize,
+}
+
+pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(|| PyxisCudaContext::new());
 /// A struct to manage the currently active module
 pub struct PyxisCudaContext {
     _ctx: Context,
@@ -23,22 +29,22 @@ impl PyxisCudaContext {
     }
 
     /// Get the active module or load it if not already loaded
-    pub fn get_module(&self, ptx: &str) -> Result<Arc<Module>, cust::error::CudaError> {
+    pub(crate) fn get_module(&self, ptx: &PyxisPtx) -> Result<Arc<Module>, cust::error::CudaError> {
         let mut active_module = self.active_module.lock().unwrap();
         let mut active_ptx = self.active_ptx.lock().unwrap();
 
         // Check if the requested module is already active
-        if let Some(ptx_content) = &*active_ptx {
-            if ptx == ptx_content {
+        if let Some(active_ptx_name) = &*active_ptx {
+            if ptx.name == active_ptx_name {
                 return Ok(active_module.as_ref().unwrap().clone());
             }
         }
 
-        let module = Arc::new(Module::from_ptx(&ptx, &[])?);
+        let module = Arc::new(Module::from_ptx(ptx.content, &[])?);
 
         // Update the active module and path
         *active_module = Some(module.clone());
-        *active_ptx = Some(ptx.to_string());
+        *active_ptx = Some(ptx.name.to_string());
 
         Ok(module)
     }
@@ -47,7 +53,7 @@ impl PyxisCudaContext {
     }
     /// # Returns
     /// (grid_size, block_size)
-    pub fn get_grid_block(&self, func: &Function, length: usize) -> (u32, u32) {
+    pub(crate) fn get_grid_block(&self, func: &Function, length: usize) -> (u32, u32) {
         let (_, block_size) = func.suggested_launch_configuration(0, 0.into()).unwrap();
         let grid_size = (length as u32).div_ceil(block_size);
         #[cfg(feature = "log")]

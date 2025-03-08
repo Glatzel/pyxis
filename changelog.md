@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.0.11] - 2025-03-07
 
 ### Added
 
@@ -18,6 +18,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial pyxis-cuda by @Glatzel in [#150](https://github.com/Glatzel/pyxis/pull/150)
 - Complete crypto cuda by @Glatzel in [#155](https://github.com/Glatzel/pyxis/pull/155)
 
+### Performance
+
+- Use newton method to accelerate crypto exact by @Glatzel in [#154](https://github.com/Glatzel/pyxis/pull/154)
+
+### Refactor
+
+- Reconstruct folers by @Glatzel in [#157](https://github.com/Glatzel/pyxis/pull/157)
+
+## [0.0.10] - 2025-03-05
+
 ### Fixed
 
 - Doc test by @Glatzel in [#132](https://github.com/Glatzel/pyxis/pull/132)
@@ -27,7 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improve const ellipsoid performance by @Glatzel in [#129](https://github.com/Glatzel/pyxis/pull/129)
 - Optimize datum_compense and crypto_exact by @Glatzel in [#142](https://github.com/Glatzel/pyxis/pull/142)
-- Use newton method to accelerate crypto exact by @Glatzel in [#154](https://github.com/Glatzel/pyxis/pull/154)
 
 ### Refactor
 
@@ -35,7 +44,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplify space python api by @Glatzel in [#135](https://github.com/Glatzel/pyxis/pull/135)
 - Generics migrate by @Glatzel in [#136](https://github.com/Glatzel/pyxis/pull/136)
 - Use assign trait by @Glatzel in [#137](https://github.com/Glatzel/pyxis/pull/137)
-- Reconstruct folers by @Glatzel in [#157](https://github.com/Glatzel/pyxis/pull/157)
 
 ## [0.0.9] - 2025-03-01
 
@@ -187,7 +195,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
-[unreleased]: https://github.com/Glatzel/pyxis/compare/v0.0.9..HEAD
+[0.0.11]: https://github.com/Glatzel/pyxis/compare/v0.0.10..v0.0.11
+[0.0.10]: https://github.com/Glatzel/pyxis/compare/v0.0.9..v0.0.10
 [0.0.9]: https://github.com/Glatzel/pyxis/compare/v0.0.8..v0.0.9
 [0.0.8]: https://github.com/Glatzel/pyxis/compare/v0.0.7..v0.0.8
 [0.0.7]: https://github.com/Glatzel/pyxis/compare/v0.0.6..v0.0.7

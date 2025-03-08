@@ -1,5 +1,6 @@
-use cust::prelude::*;
 use std::sync::{Arc, LazyLock, Mutex};
+
+use cust::prelude::*;
 pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(|| PyxisCudaContext::new());
 
 /// A struct to manage the currently active module

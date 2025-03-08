@@ -6,17 +6,11 @@
 /// - https://blog.csdn.net/coolypf/article/details/8569813
 /// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
 use crate::types::{ConstEllipsoid, GeoFloat, num};
-#[cfg(debug_assertions)]
 pub const WGS84_LON: f64 = 121.0917077;
-#[cfg(debug_assertions)]
 pub const WGS84_LAT: f64 = 30.6107779;
-#[cfg(debug_assertions)]
 pub const GCJ02_LON: f64 = 121.09626927850977;
-#[cfg(debug_assertions)]
 pub const GCJ02_LAT: f64 = 30.608604368560773;
-#[cfg(debug_assertions)]
 pub const BD09_LON: f64 = 121.10271724622564;
-#[cfg(debug_assertions)]
 pub const BD09_LAT: f64 = 30.61484575976839;
 pub enum CryptoSpace {
     WGS84,

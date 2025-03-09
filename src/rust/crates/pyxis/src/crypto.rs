@@ -278,7 +278,7 @@ where
 /// use tracing_subscriber::filter::LevelFilter;
 /// use pyxis::crypto::*;
 /// tracing_subscriber::registry()
-///     .with(log_template::terminal_layer(LevelFilter::TRACE))
+///     .with(clerk::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = crypto_exact(
@@ -301,7 +301,7 @@ where
 /// use tracing_subscriber::filter::LevelFilter;
 /// use pyxis::crypto::*;
 /// tracing_subscriber::registry()
-///     .with(log_template::terminal_layer(LevelFilter::TRACE))
+///     .with(clerk::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = crypto_exact(

@@ -19,8 +19,8 @@ path-slash= { workspace = true }
 dunce= { workspace = true }
 
 [features]
-default=["tracing","tracing/release_max_level_off","tracing/max_level_off"]
-log = ["tracing","tracing/default"]
+default=["tracing"]
+no-log = ["tracing","tracing/release_max_level_off","tracing/max_level_off"]
 
 [[bench]]
 name = "datum_compense_cuda"

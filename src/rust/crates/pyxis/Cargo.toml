@@ -6,7 +6,7 @@ edition.workspace = true
 [dependencies]
 num-traits =  { workspace = true }
 serde = { workspace = true, optional = true }
-tracing = { workspace = true,features=["default","release_max_level_off","max_level_off"], optional = true }
+tracing = { workspace = true, optional = true }
 
 [dev-dependencies]
 criterion = { workspace = true }
@@ -16,8 +16,8 @@ rand = { workspace = true }
 tracing-subscriber = { workspace = true }
 
 [features]
-default=["tracing","tracing/release_max_level_off","tracing/max_level_off"]
-log = ["tracing","tracing/default"]
+default=["dep:tracing"]
+no-log = ["dep:tracing","tracing/release_max_level_off","tracing/max_level_off"]
 serde = ["dep:serde"]
 
 [[bench]]

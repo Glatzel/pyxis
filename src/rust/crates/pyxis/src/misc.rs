@@ -193,7 +193,7 @@ where
             (new_latitude.to_degrees() - latitude.to_degrees()).abs()
         );
         if _i == max_iter - 1 {
-            clerk::debug!("Exeed max iteration number: {max_iter}")
+            clerk::debug!("Exeed max iteration number: {max_iter}");
         };
 
         if (new_latitude.to_degrees() - latitude.to_degrees()).abs() < threshold {

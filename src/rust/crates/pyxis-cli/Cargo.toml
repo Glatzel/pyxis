@@ -9,7 +9,7 @@ path = "src/main.rs"
 
 [dependencies]
 bpaf = { workspace = true }
-log-template = { workspace = true }
+clerk = { workspace = true }
 miette = { workspace = true }
 proj = { workspace = true }
 pyxis = { workspace = true, features = ["serde"] }

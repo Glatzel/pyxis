@@ -184,19 +184,18 @@ where
         n = a / (T::ONE - e2 * sin_lat.powi(2)).sqrt();
         let new_latitude = z.atan2(p * (T::ONE - e2 * n / (n + height)));
         height = p / new_latitude.cos() - n;
-        #[cfg(feature = "log")]
-        {
-            tracing::trace!("iteration: {_i}");
-            tracing::trace!("latitude: {}", latitude.to_degrees());
-            tracing::trace!("new_latitude: {}", new_latitude.to_degrees());
-            tracing::trace!(
-                "delta: {}",
-                (new_latitude.to_degrees() - latitude.to_degrees()).abs()
-            );
-            if _i == max_iter - 1 {
-                tracing::debug!("Exeed max iteration number: {max_iter}")
-            };
-        }
+
+        tracing::trace!("iteration: {_i}");
+        tracing::trace!("latitude: {}", latitude.to_degrees());
+        tracing::trace!("new_latitude: {}", new_latitude.to_degrees());
+        tracing::trace!(
+            "delta: {}",
+            (new_latitude.to_degrees() - latitude.to_degrees()).abs()
+        );
+        if _i == max_iter - 1 {
+            tracing::debug!("Exeed max iteration number: {max_iter}")
+        };
+
         if (new_latitude.to_degrees() - latitude.to_degrees()).abs() < threshold {
             break;
         }

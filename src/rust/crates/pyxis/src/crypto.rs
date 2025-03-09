@@ -6,12 +6,17 @@
 /// - https://blog.csdn.net/coolypf/article/details/8569813
 /// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
 use crate::types::{ConstEllipsoid, GeoFloat, num};
-
+#[cfg(debug_assertions)]
 pub const WGS84_LON: f64 = 121.0917077;
+#[cfg(debug_assertions)]
 pub const WGS84_LAT: f64 = 30.6107779;
+#[cfg(debug_assertions)]
 pub const GCJ02_LON: f64 = 121.09626927850977;
+#[cfg(debug_assertions)]
 pub const GCJ02_LAT: f64 = 30.608604368560773;
+#[cfg(debug_assertions)]
 pub const BD09_LON: f64 = 121.10271724622564;
+#[cfg(debug_assertions)]
 pub const BD09_LAT: f64 = 30.61484575976839;
 pub enum CryptoSpace {
     WGS84,
@@ -278,7 +283,7 @@ where
 /// use tracing_subscriber::filter::LevelFilter;
 /// use pyxis::crypto::*;
 /// tracing_subscriber::registry()
-///     .with(log_template::terminal_layer(LevelFilter::TRACE))
+///     .with(clerk::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = crypto_exact(
@@ -301,7 +306,7 @@ where
 /// use tracing_subscriber::filter::LevelFilter;
 /// use pyxis::crypto::*;
 /// tracing_subscriber::registry()
-///     .with(log_template::terminal_layer(LevelFilter::TRACE))
+///     .with(clerk::terminal_layer(LevelFilter::TRACE))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = crypto_exact(
@@ -335,18 +340,16 @@ where
 
         let tmp_lon = dst_lon + d_lon;
         let tmp_lat = dst_lat + d_lat;
-        #[cfg(feature = "log")]
-        {
-            tracing::trace!("iteration: {_i}");
-            tracing::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
-            tracing::trace!("d_lon: {:.2e}, d_lat: {:.2e}", d_lon, d_lat);
-            tracing::trace!(
-                "distance: {}",
-                haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
-            );
-            if _i == max_iter - 1 {
-                tracing::warn!("Exeed max iteration num!ber: {max_iter}");
-            }
+
+        clerk::trace!("iteration: {_i}");
+        clerk::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
+        clerk::trace!("d_lon: {:.2e}, d_lat: {:.2e}", d_lon, d_lat);
+        clerk::trace!(
+            "distance: {}",
+            haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
+        );
+        if _i == max_iter - 1 {
+            clerk::warn!("Exeed max iteration num!ber: {max_iter}");
         }
 
         match threshold_mode {
@@ -385,7 +388,7 @@ where
 
     T::wgs84().semi_major_axis() * c
 }
-#[cfg(test)]
+#[cfg(all(feature = "log", test))]
 mod test {
 
     use core::f64;
@@ -401,7 +404,7 @@ mod test {
     #[test]
     fn test_exact() {
         tracing_subscriber::registry()
-            .with(log_template::terminal_layer(LevelFilter::ERROR))
+            .with(clerk::terminal_layer(LevelFilter::ERROR))
             .init();
         let is_ci = std::env::var("CI").is_ok();
         let mut rng = rand::rng();

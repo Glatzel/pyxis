@@ -20,10 +20,8 @@ pub struct PyxisCudaContext {
     size_limit: Mutex<usize>,
     count_limit: Mutex<usize>,
 }
-
+/// Create a new module manager
 impl PyxisCudaContext {
-    /// Create a new module manager
-
     fn new() -> Self {
         Self {
             _ctx: cust::quick_init().unwrap(),
@@ -107,14 +105,13 @@ impl PyxisCudaContext {
     pub(crate) fn get_grid_block(&self, func: &Function, length: usize) -> (u32, u32) {
         let (_, block_size) = func.suggested_launch_configuration(0, 0.into()).unwrap();
         let grid_size = (length as u32).div_ceil(block_size);
-        #[cfg(feature = "log")]
-        {
-            tracing::debug!(
-                "using {} blocks and {} threads per block.",
-                grid_size,
-                block_size
-            );
-        }
+
+        clerk::debug!(
+            "using {} blocks and {} threads per block.",
+            grid_size,
+            block_size
+        );
+
         (grid_size, block_size)
     }
 }

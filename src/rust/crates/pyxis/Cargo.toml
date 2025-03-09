@@ -16,7 +16,7 @@ tracing-subscriber = { workspace = true }
 
 [features]
 log = ["clerk/log"]
-serde = ["dep:serde"] 
+serde = ["dep:serde"]
 
 [[bench]]
 name = "crypto"

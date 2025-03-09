@@ -335,18 +335,16 @@ where
 
         let tmp_lon = dst_lon + d_lon;
         let tmp_lat = dst_lat + d_lat;
-        #[cfg(feature = "log")]
-        {
-            tracing::trace!("iteration: {_i}");
-            tracing::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
-            tracing::trace!("d_lon: {:.2e}, d_lat: {:.2e}", d_lon, d_lat);
-            tracing::trace!(
-                "distance: {}",
-                haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
-            );
-            if _i == max_iter - 1 {
-                tracing::warn!("Exeed max iteration num!ber: {max_iter}");
-            }
+
+        clerk::trace!("iteration: {_i}");
+        clerk::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
+        clerk::trace!("d_lon: {:.2e}, d_lat: {:.2e}", d_lon, d_lat);
+        clerk::trace!(
+            "distance: {}",
+            haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
+        );
+        if _i == max_iter - 1 {
+            clerk::warn!("Exeed max iteration num!ber: {max_iter}");
         }
 
         match threshold_mode {
@@ -401,7 +399,7 @@ mod test {
     #[test]
     fn test_exact() {
         tracing_subscriber::registry()
-            .with(log_template::terminal_layer(LevelFilter::ERROR))
+            .with(clerk::terminal_layer(LevelFilter::ERROR))
             .init();
         let is_ci = std::env::var("CI").is_ok();
         let mut rng = rand::rng();

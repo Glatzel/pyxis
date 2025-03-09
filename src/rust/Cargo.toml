@@ -11,12 +11,13 @@ pyxis = { path = "crates/pyxis" }
 
 assert_cmd = "2.0"
 bpaf = { version = "0.9.17", features = ["derive", "batteries"] }
+# clerk = { git = "https://github.com/Glatzel/clerk", tag = "v0.0.3" }
+clerk = { path = "D:/project/clerk"}
 criterion = { package = "codspeed-criterion-compat", version = "*" }
 cust = "0.3"
 dunce = "1.0.5"
 float-cmp = "0.10.0"
 glob = "0.3.2"
-log-template = { git = "https://github.com/Glatzel/rs-log-template", tag = "v0.0.2" }
 miette = "7.5.0"
 ndarray = "0.16.1"
 num-traits = "0.2.19"

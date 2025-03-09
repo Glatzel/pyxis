@@ -224,6 +224,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f46ad14479a25103f283c0f10005961cf086d8dc42205bb44c46ac563475dca6"
 
 [[package]]
+name = "clerk"
+version = "0.0.3"
+dependencies = [
+ "chrono",
+ "owo-colors",
+ "tracing",
+ "tracing-core",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "cmake"
 version = "0.1.54"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -643,18 +654,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "30bde2b3dc3671ae49d8e2e9f044c7c005836e7a023ee57cffa25ab82764bb9e"
 
 [[package]]
-name = "log-template"
-version = "0.0.4"
-source = "git+https://github.com/Glatzel/rs-log-template?tag=v0.0.2#9edb27358e99a2a9e4020278553773107eafe31d"
-dependencies = [
- "chrono",
- "owo-colors",
- "tracing",
- "tracing-core",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "matchers"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1026,13 +1025,12 @@ dependencies = [
 name = "pyxis"
 version = "0.0.11"
 dependencies = [
+ "clerk",
  "codspeed-criterion-compat",
  "float-cmp",
- "log-template",
  "num-traits",
  "rand",
  "serde",
- "tracing",
  "tracing-subscriber",
 ]
 
@@ -1042,8 +1040,8 @@ version = "0.0.11"
 dependencies = [
  "assert_cmd",
  "bpaf",
+ "clerk",
  "float-cmp",
- "log-template",
  "miette",
  "predicates",
  "proj",
@@ -1058,6 +1056,7 @@ dependencies = [
 name = "pyxis-cuda"
 version = "0.0.11"
 dependencies = [
+ "clerk",
  "codspeed-criterion-compat",
  "cust",
  "dunce",
@@ -1066,7 +1065,6 @@ dependencies = [
  "path-slash",
  "pyxis",
  "rand",
- "tracing",
 ]
 
 [[package]]

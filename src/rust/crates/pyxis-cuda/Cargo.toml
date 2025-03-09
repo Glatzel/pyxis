@@ -6,7 +6,7 @@ edition.workspace = true
 [dependencies]
 cust = { workspace = true }
 pyxis = { workspace = true }
-tracing = { workspace = true, optional = true }
+clerk = { workspace = true }
 
 [dev-dependencies]
 criterion = { workspace = true }
@@ -19,7 +19,7 @@ path-slash= { workspace = true }
 dunce= { workspace = true }
 
 [features]
-log = ["dep:tracing"]
+log = ["clerk/log"]
 
 [[bench]]
 name = "datum_compense_cuda"

@@ -20,10 +20,8 @@ pub struct PyxisCudaContext {
     size_limit: Mutex<usize>,
     count_limit: Mutex<usize>,
 }
-
+/// Create a new module manager
 impl PyxisCudaContext {
-    /// Create a new module manager
-
     fn new() -> Self {
         Self {
             _ctx: cust::quick_init().unwrap(),

@@ -111,10 +111,7 @@ impl PyxisCudaContext {
             if let Some((_, old_size)) = self.module_cache.lock().unwrap().remove(&old_key) {
                 *self.total_size.lock().unwrap() -= old_size;
                 clerk::debug!("Remove last module: `{}`, size: {}`", old_key, old_size);
-                clerk::debug!(
-                    "total_size: `{}`",
-                    self.total_size.lock().unwrap()
-                );
+                clerk::debug!("total_size: `{}`", self.total_size.lock().unwrap());
             }
         }
     }

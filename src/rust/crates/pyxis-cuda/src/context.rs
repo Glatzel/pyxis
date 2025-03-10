@@ -23,6 +23,7 @@ pub struct PyxisCudaContext {
 /// Create a new module manager
 impl PyxisCudaContext {
     fn new() -> Self {
+        clerk::debug!("Init the new PyxisCudaContext. size_limit, count_limit are set to 0.");
         Self {
             _ctx: cust::quick_init().unwrap(),
             stream: Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap(),
@@ -39,23 +40,26 @@ impl PyxisCudaContext {
     /// - size_limit: max size of cached ptx file, 0 means unlimited.
     pub fn set_size_limit(&self, size_limit: usize) -> &Self {
         *self.size_limit.lock().unwrap() = size_limit;
+        clerk::debug!("Set size_limit to {size_limit}.");
         self
     }
     /// - count_limit: max count of cuda modules, 0 means unlimited.
     pub fn set_count_limit(&self, count_limit: usize) -> &Self {
         *self.count_limit.lock().unwrap() = count_limit;
+        clerk::debug!("Set count_limit to {count_limit}.");
         self
     }
     /// Get the active module or load it if not already loaded
     pub(crate) fn get_module(&self, ptx: &PyxisPtx) -> Arc<Module> {
         // add module to cache if it is not exist in cache
+        clerk::debug!("Start get module: {}.", ptx.name);
         if !self.module_cache.lock().unwrap().contains_key(ptx.name) {
+            clerk::debug!("Module `{}` is not cached.", ptx.name);
             self.add_module(ptx);
         }
 
         // set this module as newest
         self.lru.lock().unwrap().push_front(ptx.name);
-
         self.module_cache
             .lock()
             .unwrap()
@@ -66,13 +70,29 @@ impl PyxisCudaContext {
     }
     fn add_module(&self, ptx: &PyxisPtx) {
         // clear last module if reach count limit
+        clerk::debug!(
+            "Start Adding module `{}`, count_limit: {}, size limit: {}, current count: {}, total size: {}",
+            ptx.name,
+            self.count_limit.lock().unwrap(),
+            self.count_limit.lock().unwrap(),
+            self.lru.lock().unwrap().len(),
+            self.total_size.lock().unwrap()
+        );
         if *self.count_limit.lock().unwrap() > 0
             && self.lru.lock().unwrap().len() + 1 > *self.count_limit.lock().unwrap()
         {
+            clerk::debug!("Adding module `{}` will exceed count limit", ptx.name);
             self.remove_last_module();
         }
         // clear modules until total size smaller than limit
-        while *self.total_size.lock().unwrap() + ptx.size > *self.size_limit.lock().unwrap() {
+        while *self.total_size.lock().unwrap() + ptx.size > *self.size_limit.lock().unwrap()
+            && self.lru.lock().unwrap().len() != 0
+        {
+            clerk::debug!(
+                "Adding module `{}` will exceed size limit, total size: {}. Trying to remove last module",
+                ptx.name,
+                self.total_size.lock().unwrap()
+            );
             self.remove_last_module();
         }
         // add new module
@@ -90,6 +110,11 @@ impl PyxisCudaContext {
         if let Some(old_key) = self.lru.lock().unwrap().pop_back() {
             if let Some((_, old_size)) = self.module_cache.lock().unwrap().remove(&old_key) {
                 *self.total_size.lock().unwrap() -= old_size;
+                clerk::debug!("Remove last module: `{}`, size: {}`", old_key, old_size);
+                clerk::debug!(
+                    "total_size: `{}`",
+                    self.total_size.lock().unwrap()
+                );
             }
         }
     }

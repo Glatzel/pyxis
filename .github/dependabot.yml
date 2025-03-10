@@ -1,7 +1,10 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directories:
+      - /.github/workflows
+      - /.github/actions/setup-ci
+
     schedule:
       interval: "weekly"
     commit-message:

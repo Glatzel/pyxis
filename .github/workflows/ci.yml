@@ -45,12 +45,12 @@ jobs:
 
       - name: setup vcpkg
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./scripts/vcpkg-setup.ps1
+        run: ./vcpkg_deps/vcpkg-setup.ps1
         shell: pwsh
 
       - name: install vcpkg dependencies
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./scripts/vcpkg-install.ps1
+        run: ./vcpkg_deps/vcpkg-install.ps1
         shell: pwsh
 
       - name: save vcpkg

@@ -1,7 +1,4 @@
 Set-Location $PSScriptRoot
-Set-Location ..
-
-Set-Location vcpkg_deps
 
 # use custom triplet
 $triplet = Resolve-Path ./triplet

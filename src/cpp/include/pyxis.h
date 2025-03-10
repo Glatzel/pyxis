@@ -9,7 +9,7 @@
 #define CUDA_HOST
 #define CUDA_HOST_DEVICE
 #endif
-
+// datum_compense.cpp
 CUDA_HOST_DEVICE void datum_compense(double xc,
     double yc,
     double factor,
@@ -17,7 +17,7 @@ CUDA_HOST_DEVICE void datum_compense(double xc,
     double y0,
     double &out_xc,
     double &out_yc);
-
+// crypto.cpp
 CUDA_HOST_DEVICE void bd09_to_gcj02(
     const double bd09_lon, const double bd09_lat,
     double &gcj02_lon, double &gcj02_lat);

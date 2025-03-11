@@ -1,6 +1,6 @@
 param (
-    [ValidateSet("debug","--profile dist")]
-    [string]$config = "debug"
+    [ValidateSet("","-r")]
+    [string]$config = ""
 )
 
 Set-Location $PSScriptRoot

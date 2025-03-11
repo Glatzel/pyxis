@@ -12,4 +12,4 @@ tests:
       '%PREFIX%/bin/pyxis-cli/pyxis.exe --help'
   - if: linux
     then:
-      '%PREFIX%/bin/pyxis-cli/pyxis --help'
+      '${PREFIX}/bin/pyxis-cli/pyxis --help'

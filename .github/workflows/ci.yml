@@ -211,6 +211,7 @@ jobs:
           - pkg: pyxis-cli
             upload-other: dist/*.7z
             codecov: false
+
           - pkg: pyxis-py
             upload-other: dist/*.whl
             codcov: true
@@ -238,12 +239,12 @@ jobs:
           path: src/rattler/${{matrix.pkg}}/output/${{matrix.os}}/*.conda
           if-no-files-found: error
 
-      - name: upload whl
+      - name: upload other
         if: ${{matrix.upload-other != ''}}
         uses: actions/upload-artifact@v4
         with:
           name: rattler-${{matrix.pkg}}-other-${{matrix.machine}}
-          path: dist/*.whl
+          path: ${{matrix.upload-other}}
           if-no-files-found: error
 
       - name: Upload results to Codecov

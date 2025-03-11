@@ -229,7 +229,7 @@ jobs:
         if: ${{runner.os == 'Windows'}}
 
       - name: build
-        run: ${{env.RATTLER_SRC_ROOT}}/${{matrix.pkg}}/ci-${{matrix.pkg}}.ps1 ${{ inputs.build-dist == 'true' && '-config  release' || null }}
+        run: ${{env.RATTLER_SRC_ROOT}}/${{matrix.pkg}}/ci-${{matrix.pkg}}.ps1 ${{ inputs.build-dist && '-config  release' || null }}
         shell: pwsh
 
       - name: upload conda
@@ -266,7 +266,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: build cpp
-        run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1  ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config release' || null }}
+        run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1  ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist && '-config release' || null }}
         shell: pwsh
       - name: upload cpp
         uses: actions/upload-artifact@v4
@@ -297,7 +297,7 @@ jobs:
           sub-packages: ${{matrix.sub-packages}}
           method: ${{matrix.method}}
       - name: build cuda
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1 ${{ inputs.build-dist == 'true' && '-config release' || null }}
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
         shell: pwsh
 
   build-cuda:

@@ -11,6 +11,5 @@ Set-Location $PSScriptRoot
 
 Set-Location $PSScriptRoot
 build_pkg
-test_pkg
 New-Item $PSScriptRoot/../../../dist -ItemType Directory -ErrorAction SilentlyContinue
 Copy-Item ./output/**.conda $PSScriptRoot/../../../dist

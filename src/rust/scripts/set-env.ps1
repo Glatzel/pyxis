@@ -9,10 +9,10 @@ pixi install
 if ($IsWindows) {
     # set libproj find path for pkgconfig
     if ($link -eq 'static') {
-        $env:PKG_CONFIG_PATH = "$ROOT/vcpkg_deps/vcpkg_installed/static/x64-windows-static/lib/pkgconfig"
+        $env:PKG_CONFIG_PATH = "$ROOT/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
     }
     else {
-        $env:PKG_CONFIG_PATH = "$ROOT/vcpkg_deps/vcpkg_installed/dynamic/x64-windows/lib/pkgconfig"
+        $env:PKG_CONFIG_PATH = "$ROOT/vcpkg/installed/dynamic/x64-windows/lib/pkgconfig"
     }
     # copy proj.db to cli src
     Copy-Item $ROOT/.pixi/envs/default/Library/share/proj/proj.db ./crates/pyxis-cli/src/proj.db

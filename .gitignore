@@ -22,8 +22,8 @@ target
 lcov.info
 
 #vcpkg
-vcpkg_deps/vcpkg
-vcpkg_deps/vcpkg_installed
+vcpkg/vcpkg
+vcpkg/installed
 
 #misc
 proj.db

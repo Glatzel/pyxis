@@ -42,25 +42,25 @@ jobs:
         id: restore-vcpkg
         uses: actions/cache/restore@v4
         with:
-          path: ./vcpkg_deps/vcpkg_installed
-          key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg_deps/vcpkg.json') }}
+          path: ./vcpkg/installed
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg/vcpkg.json') }}
           lookup-only: true
 
       - name: setup vcpkg
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./vcpkg_deps/vcpkg-setup.ps1
+        run: ./vcpkg/vcpkg-setup.ps1
         shell: pwsh
 
       - name: install vcpkg dependencies
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./vcpkg_deps/vcpkg-install.ps1
+        run: ./vcpkg/vcpkg-install.ps1
         shell: pwsh
 
       - name: save vcpkg
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
         uses: actions/cache/save@v4
         with:
-          path: ./vcpkg_deps/vcpkg_installed
+          path: ./vcpkg/installed
           key: ${{steps.restore-vcpkg.outputs.cache-primary-key}}
 
   out-cache:

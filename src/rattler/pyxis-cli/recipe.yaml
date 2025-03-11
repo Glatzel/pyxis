@@ -4,7 +4,12 @@ package:
 build:
   number: 2
   script:
-    pwsh -f %RECIPE_DIR%\build-pyxis-cli.ps1
+    - if: win
+      then:
+        pwsh -f %RECIPE_DIR%/build-pyxis-cli.ps1
+    - if: linux
+      then:
+        pwsh -f ${PREFIX}/build-pyxis-cli.ps1
 tests:
 - script:
   - if: win

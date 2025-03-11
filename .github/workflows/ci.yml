@@ -302,7 +302,7 @@ jobs:
         if: ${{runner.os == 'Windows'}}
     
       - name: build
-        run: ${{env.RUST_SRC_ROOT}}/${{matrix.pkg}}/build-${{matrix.pkg}}.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
+        run: ${{env.RATTLER_SRC_ROOT}}/${{matrix.pkg}}/build-${{matrix.pkg}}.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
 
       - name: upload conda
@@ -311,7 +311,6 @@ jobs:
           name: conda-${{matrix.pkg}}-${{matrix.machine}}
           path: src/rattler/${{matrix.pkg}}/output/${{matrix.os}}/*.conda
           if-no-files-found: error
-
 
   build-cpp:
     strategy:

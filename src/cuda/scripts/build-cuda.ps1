@@ -1,10 +1,11 @@
 param($config)
+$ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot
 Set-Location ..
 if ($config) { $config = "-DCMAKE_BUILD_TYPE=Release" }
 
 # create install dir
-$install = "../../dist/pyxis-cuda"
+$install = "$ROOT/dist/pyxis-cuda"
 Remove-Item $install -Recurse -ErrorAction SilentlyContinue
 New-Item $install -ItemType Directory -ErrorAction SilentlyContinue
 $install = Resolve-Path $install
@@ -18,10 +19,10 @@ cmake --build build --target install
 # pack output files
 if ($IsWindows) {
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "../../dist/pyxis-cuda-windows-x64.7z" "../../dist/pyxis-cuda/"
+        "$ROOT/dist/pyxis-cuda-windows-x64.7z" "$ROOT/dist/pyxis-cuda/"
 }if ($IsLinux) {
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "../../dist/pyxis-cuda-linux-x64.7z" "../../dist/pyxis-cuda/"
+        "$ROOT/dist/pyxis-cuda-linux-x64.7z" "$ROOT/dist/pyxis-cuda/"
 }
-Set-Location $PSScriptRoot
-Set-Location ../../../
+
+Set-Location $ROOT

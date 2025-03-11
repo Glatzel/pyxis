@@ -1,4 +1,5 @@
-foreach ($whl in Get-ChildItem "$env:RECIPE_DIR/../../../dist/*.whl")
+$ROOT = git rev-parse --show-toplevel
+foreach ($whl in Get-ChildItem "$ROOT/dist/*.whl")
 {
     pip install "$whl" -v
 }

@@ -1,0 +1,20 @@
+package:
+  version: 0.0.11
+  name: pyxis-cli
+build:
+  number: 2
+  script:
+    - if: win
+      then:
+        - pwsh -f %RECIPE_DIR%/build-pyxis-cli.ps1
+    - if: linux
+      then:
+        - pwsh -f $RECIPE_DIR/build-pyxis-cli.ps1
+tests:
+- script:
+  - if: win
+    then:
+      - '%PREFIX%/bin/pyxis-cli/pyxis.exe --help'
+  - if: linux
+    then:
+      - '$PREFIX/bin/pyxis-cli/pyxis --help'

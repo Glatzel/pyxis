@@ -1,0 +1,26 @@
+package:
+  version: 0.0.11
+  name: pyxis-py
+build:
+  number: 0
+  script:
+    - if: win
+      then:
+        - pwsh -f %RECIPE_DIR%/build-pyxis-py.ps1
+    - if: linux
+      then:
+        - pwsh -f $RECIPE_DIR/build-pyxis-py.ps1
+
+requirements:
+  host:
+    - python >= 3.11
+  run:
+    - lazy-loader
+    - numpy
+    - scipy
+    - pyproj
+
+tests:
+  - python:
+      imports:
+        - pyxis

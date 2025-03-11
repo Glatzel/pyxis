@@ -1,12 +1,11 @@
 param (
-    [ValidateSet("../dist", "release", "debug")]
-    [string]$config = "debug"
+    [ValidateSet("develop","release")]
+    $config = "develop"
 )
 
 Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
-Write-Host "Build in $config mode."
 
 # clean dist folder
 Remove-Item ../../dist/cli -Recurse -ErrorAction SilentlyContinue
@@ -17,12 +16,7 @@ if ($IsWindows) {
     Write-Output "::group::Build static"
     # build
     & $PSScriptRoot/set-env.ps1 -link static
-    if ($config -ne "debug") {
-        cargo build --profile $config -p pyxis-cli --features static
-    }
-    else {
-        cargo build -p pyxis-cli --features static
-    }
+    cargo build --profile $config -p pyxis-cli --features static
 
     # copy build file to dist
     New-Item ../../dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
@@ -39,12 +33,7 @@ if ($IsWindows) {
     # build
     Write-Output "::group::Build dynamic"
     & $PSScriptRoot/set-env.ps1 -link dynamic
-    if ($config -ne "debug") {
-        cargo build --profile $config -p pyxis-cli
-    }
-    else {
-        cargo build -p pyxis-cli
-    }
+    cargo build --profile $config -p pyxis-cli
 
     # copy build file to dist
     New-Item ../../dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue
@@ -72,12 +61,7 @@ elseif ($IsLinux) {
     # build
     Write-Output "::group::Build static"
     & $PSScriptRoot/set-env.ps1 -link static
-    if ($config -ne "debug") {
-        cargo build --profile $config -p pyxis-cli --features static
-    }
-    else {
-        cargo build -p pyxis-cli --features static
-    }
+    cargo build --profile $config -p pyxis-cli --features static
 
     #copy to dist
     New-Item ../../dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue

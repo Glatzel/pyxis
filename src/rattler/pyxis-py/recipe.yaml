@@ -3,7 +3,7 @@ package:
   name: pyxis-py
 build:
   number: 0
-  script: 
+  script:
     - if: win
       then:
         - pwsh -f %RECIPE_DIR%/build-pyxis-py.ps1

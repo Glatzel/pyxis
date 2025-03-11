@@ -61,7 +61,7 @@ jobs:
         run: |
             foreach ($pkg_file in Get-ChildItem "./*.conda") {
               Write-Output "::group:: upload $pkg_file"
-              pixi run rattler-build upload prefix -c glatzel $pkg_file
+              rattler-build upload prefix -c glatzel $pkg_file
               Write-Output "::endgroup::"
             }
         shell: pwsh

@@ -237,9 +237,12 @@ jobs:
         pkg: [pyxis-cli, pyxis-py]
         include:
           - pkg: pyxis-cli
-            whl: false
+            upload-other: dist/*.7z
+            codecov: false
           - pkg: pyxis-py
-            whl: true
+            upload-other: dist/*.whl
+            codcov: true
+
           - machine: windows-latest
             os: win-64
           - machine: ubuntu-latest
@@ -264,17 +267,18 @@ jobs:
           if-no-files-found: error
 
       - name: upload whl
-        if: ${{matrix.whl}}
+        if: ${{matrix.upload-other != ''}}
         uses: actions/upload-artifact@v4
         with:
-          name: rattler-whl-${{matrix.pkg}}-${{matrix.machine}}
+          name: rattler-${{matrix.pkg}}-other-${{matrix.machine}}
           path: dist/*.whl
           if-no-files-found: error
+
       - name: Upload results to Codecov
-        if: ${{matrix.whl}}
+        if: ${{matrix.codcov}}
         uses: codecov/codecov-action@v5
       - name: Upload test results to Codecov
-        if: ${{matrix.whl}}
+        if: ${{matrix.codcov}}
         uses: codecov/test-results-action@v1
         with:
           fail_ci_if_error: true

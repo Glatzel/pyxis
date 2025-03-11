@@ -10,8 +10,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  id-token: write
+
 
 jobs:
   update-changelog:
@@ -46,6 +45,8 @@ jobs:
           draft: false
 
   upload-conda:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Set up pixi

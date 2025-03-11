@@ -25,10 +25,13 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
+
 env:
   CPP_SRC_ROOT: ./src/cpp
   CUDA_SRC_ROOT: ./src/cuda
+  RATTLER_SRC_ROOT: ./src/rust
   RUST_SRC_ROOT: ./src/rust
+
 jobs:
   cache-vcpkg:
     runs-on: windows-latest
@@ -278,6 +281,36 @@ jobs:
       - name: test cli
         run: ${{env.RUST_SRC_ROOT}}/crates/pyxis-cli/examples/cli.ps1
         shell: pwsh
+      
+  build-pyxis-cli-conda:
+    needs: out-cache
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - machine: windows-latest
+            os: win-64
+          - machine: ubuntu-latest
+            os: linux-64
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/setup-ci
+      - run: choco install pkgconfiglite
+        if: ${{runner.os == 'Windows'}}
+    
+      - name: build conda
+        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
+        shell: pwsh
+
+      - name: upload conda
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cli-conda-${{matrix.machine}}
+          path: src/rattler/pyxis-cli/output/${{matrix.os}}/*.conda
+          if-no-files-found: error
+
 
   build-cpp:
     strategy:

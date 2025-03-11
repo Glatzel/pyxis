@@ -1,8 +1,7 @@
 param (
     [ValidateSet($null,"-r")]
-    [string]$config = $null
+    $config = $null
 )
-
 
 Set-Location $PSScriptRoot
 . ../scripts/utils.ps1

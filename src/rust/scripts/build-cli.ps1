@@ -1,5 +1,5 @@
 param (
-    [ValidateSet("../dist", "release", "debug")]
+    [ValidateSet("dist", "release", "debug")]
     [string]$config = "debug"
 )
 

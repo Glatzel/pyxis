@@ -16,19 +16,19 @@
     "python.testing.unittestEnabled": false,
     "rust-analyzer.cargo.extraEnv": {
         "CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/default",
-        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg_deps/vcpkg_installed/static/x64-windows-static/lib/pkgconfig"
+        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
     },
     "rust-analyzer.check.extraEnv": {
         "CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/default",
-        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg_deps/vcpkg_installed/static/x64-windows-static/lib/pkgconfig"
+        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
     },
     "rust-analyzer.runnables.extraEnv": {
         "CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/default",
-        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg_deps/vcpkg_installed/static/x64-windows-static/lib/pkgconfig"
+        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
     },
     "rust-analyzer.server.extraEnv": {
         "CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/default",
-        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg_deps/vcpkg_installed/static/x64-windows-static/lib/pkgconfig"
+        "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
     },
     "rust-analyzer.testExplorer": true,
     "terminal.integrated.env.windows": {

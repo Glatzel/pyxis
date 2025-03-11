@@ -47,8 +47,8 @@ if ($IsWindows) {
 
     # copy dependency dll to dist
     Write-Output "::group::Pack pyxis-windows-x64-proj.7z.7z"
-    Copy-Item $ROOT/vcpkg_deps/vcpkg_installed/dynamic/x64-windows/bin/*.dll $ROOT/dist/cli/dynamic
-    Copy-Item $ROOT/vcpkg_deps/vcpkg_installed/dynamic/x64-windows/share/proj/proj.db $ROOT/dist/cli/dynamic
+    Copy-Item $ROOT/vcpkg/installed/dynamic/x64-windows/bin/*.dll $ROOT/dist/cli/dynamic
+    Copy-Item $ROOT/vcpkg/installed/dynamic/x64-windows/share/proj/proj.db $ROOT/dist/cli/dynamic
 
     # pack dynamic with dependency dll
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `

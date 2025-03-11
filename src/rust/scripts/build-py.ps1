@@ -1,9 +1,7 @@
 param (
-    [ValidateSet($null,"-r")]
-    $config = $null
+    [ValidateSet("develop","release")]
+    $config = "develop"
 )
-
-
 
 Set-Location $PSScriptRoot
 Set-Location ..

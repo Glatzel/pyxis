@@ -1,6 +1,6 @@
 param (
-    [ValidateSet($null,"-r")]
-    $config = $null
+    [ValidateSet("develop","release")]
+    $config = "develop"
 )
 
 Set-Location $PSScriptRoot
@@ -16,8 +16,7 @@ if ($IsWindows) {
     Write-Output "::group::Build static"
     # build
     & $PSScriptRoot/set-env.ps1 -link static
-    cargo build $config -p pyxis-cli --features static
-
+    cargo build --profile $config -p pyxis-cli --features static
 
     # copy build file to dist
     New-Item ../../dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
@@ -34,7 +33,7 @@ if ($IsWindows) {
     # build
     Write-Output "::group::Build dynamic"
     & $PSScriptRoot/set-env.ps1 -link dynamic
-    cargo build $config -p pyxis-cli
+    cargo build --profile $config -p pyxis-cli
 
     # copy build file to dist
     New-Item ../../dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue
@@ -62,7 +61,7 @@ elseif ($IsLinux) {
     # build
     Write-Output "::group::Build static"
     & $PSScriptRoot/set-env.ps1 -link static
-    cargo build $config -p pyxis-cli --features static
+    cargo build --profile $config -p pyxis-cli --features static
 
     #copy to dist
     New-Item ../../dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue

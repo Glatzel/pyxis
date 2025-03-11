@@ -205,8 +205,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest,ubuntu-latest]
         pkg: [pyxis-cli, pyxis-py]
+        machine: [windows-latest,ubuntu-latest]
         include:
           - pkg: pyxis-cli
             upload-other: dist/*.7z

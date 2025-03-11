@@ -6,7 +6,7 @@ param (
 Set-Location $PSScriptRoot
 . ../scripts/utils.ps1
 
-& "$PSScriptRoot/../../rust/scripts/build-cli.ps1" -config dist
+& "$PSScriptRoot/../../rust/scripts/build-cli.ps1" -config $config
 & "$PSScriptRoot/../../rust/crates/pyxis-cli/examples/cli.ps1"
 
 Set-Location $PSScriptRoot

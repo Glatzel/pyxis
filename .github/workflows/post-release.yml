@@ -59,7 +59,7 @@ jobs:
 
       - name: upload
         run: |
-            foreach ($pkg_file in Get-ChildItem "./*.conda" -Recurse -ErrorAction Continue) {
+            foreach ($pkg_file in Get-ChildItem "./*.conda") {
               Write-Output "::group:: upload $pkg_file"
               pixi run rattler-build upload prefix -c glatzel $pkg_file
               Write-Output "::endgroup::"

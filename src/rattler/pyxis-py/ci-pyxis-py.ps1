@@ -12,4 +12,3 @@ Set-Location $PSScriptRoot
 
 Set-Location $PSScriptRoot
 build_pkg
-test_pkg

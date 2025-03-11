@@ -13,8 +13,7 @@ build:
 
 requirements:
   host:
-    - python
-    - pip
+    - python >= 3.11
   run:
     - lazy-loader
     - numpy

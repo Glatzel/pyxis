@@ -1,5 +1,5 @@
-Set-Location $PSScriptRoot
-Set-Location ..
+$ROOT = git rev-parse --show-toplevel
+Set-Location $PSScriptRoot/..
 
 & $PSScriptRoot/set-env.ps1
 if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli"}
@@ -33,6 +33,5 @@ else {
     Write-Output "Test successed."
 }
 Write-Output "::endgroup::"
+Set-Location $ROOT
 exit $code
-Set-Location $PSScriptRoot
-Set-Location ../../../

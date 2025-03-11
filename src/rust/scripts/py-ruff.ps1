@@ -1,6 +1,5 @@
-Set-Location $PSScriptRoot
-Set-Location ..
+$ROOT = git rev-parse --show-toplevel
+Set-Location $PSScriptRoot/..
 pixi run ruff format
 pixi run ruff check --fix
-Set-Location $PSScriptRoot
-Set-Location ../../../
+Set-Location $ROOT

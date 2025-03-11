@@ -1,5 +1,5 @@
-Set-Location $PSScriptRoot
-Set-Location ..
+$ROOT = git rev-parse --show-toplevel
+Set-Location $PSScriptRoot/..
 Set-Location ./crates/pyxis-py
 # run test
 pixi run pytest `
@@ -11,5 +11,4 @@ pixi run pytest `
     --cov-report term `
     --cov-report=xml:tests_report/coverage.xml `
     --cov-report=html:tests_report/htmlcov
-Set-Location $PSScriptRoot
-Set-Location ../../../
+Set-Location $ROOT

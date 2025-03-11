@@ -1,5 +1,5 @@
-Set-Location $PSScriptRoot
-Set-Location ..
+$ROOT = git rev-parse --show-toplevel
+Set-Location $PSScriptRoot/..
 & $PSScriptRoot/set-env.ps1
 
 if ($env:CI) {
@@ -8,5 +8,5 @@ if ($env:CI) {
 else {
     pixi run cargo clippy --fix --all-targets --all-features
 }
-Set-Location $PSScriptRoot
-Set-Location ../../../
+
+Set-Location $ROOT

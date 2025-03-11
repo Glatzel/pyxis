@@ -2,9 +2,8 @@ param (
     [ValidateSet("develop","release")]
     $config = "develop"
 )
-
-Set-Location $PSScriptRoot
-Set-Location ..
+$ROOT = git rev-parse --show-toplevel
+Set-Location $PSScriptRoot/..
 
 # add nvcc to path
 if($IsWindows){
@@ -12,4 +11,4 @@ if($IsWindows){
 }
 cargo build --profile $config -p pyxis-cuda
 Set-Location $PSScriptRoot
-Set-Location ../../../
+Set-Location $ROOT

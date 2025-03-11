@@ -234,8 +234,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pkg: ["pyxis-cli", "pyxis-py"]
+        pkg: [pyxis-cli, pyxis-py]
         include:
+          - pkg: pyxis-cli
+            whl: false
+          - pkg: pyxis-py
+            whl: true
           - machine: windows-latest
             os: win-64
           - machine: ubuntu-latest
@@ -259,10 +263,18 @@ jobs:
           path: src/rattler/${{matrix.pkg}}/output/${{matrix.os}}/*.conda
           if-no-files-found: error
 
+      - name: upload whl
+        if: ${{matrix.whl}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: conda-${{matrix.pkg}}-${{matrix.machine}}
+          path: src/rattler/${{matrix.pkg}}/output/${{matrix.os}}/*.conda
+          if-no-files-found: error
       - name: Upload results to Codecov
+        if: ${{matrix.whl}}
         uses: codecov/codecov-action@v5
-  
       - name: Upload test results to Codecov
+        if: ${{matrix.whl}}
         uses: codecov/test-results-action@v1
         with:
           fail_ci_if_error: true

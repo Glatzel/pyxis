@@ -6,10 +6,10 @@ build:
   script: 
     - if: win
       then:
-        pwsh -f %RECIPE_DIR%/build-pyxis-py.ps1
+        - pwsh -f %RECIPE_DIR%/build-pyxis-py.ps1
     - if: linux
       then:
-        pwsh -f ${PREFIX}/build-pyxis-py.ps1
+        - pwsh -f $PREFIX/build-pyxis-py.ps1
 
 requirements:
   host:

@@ -1,5 +1,5 @@
 package:
-  version: 0.0.11
+  version: 0.0.12
   name: pyxis-py
 build:
   number: 0

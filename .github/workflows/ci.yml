@@ -282,11 +282,12 @@ jobs:
         run: ${{env.RUST_SRC_ROOT}}/crates/pyxis-cli/examples/cli.ps1
         shell: pwsh
       
-  build-pyxis-cli-conda:
+  build-rattler:
     needs: out-cache
     strategy:
       fail-fast: false
       matrix:
+        pkg: ["pyxis-cli"]
         include:
           - machine: windows-latest
             os: win-64
@@ -300,15 +301,15 @@ jobs:
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'}}
     
-      - name: build conda
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cli.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
+      - name: build
+        run: ${{env.RUST_SRC_ROOT}}/${{matrix.pkg}}/build-${{matrix.pkg}}.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
         shell: pwsh
 
       - name: upload conda
         uses: actions/upload-artifact@v4
         with:
-          name: pyxis-cli-conda-${{matrix.machine}}
-          path: src/rattler/pyxis-cli/output/${{matrix.os}}/*.conda
+          name: conda-${{matrix.pkg}}-${{matrix.machine}}
+          path: src/rattler/${{matrix.pkg}}/output/${{matrix.os}}/*.conda
           if-no-files-found: error
 
 

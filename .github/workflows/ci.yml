@@ -259,7 +259,7 @@ jobs:
       - name: upload conda
         uses: actions/upload-artifact@v4
         with:
-          name: conda-${{matrix.pkg}}-${{matrix.machine}}
+          name: rattler-conda-${{matrix.pkg}}-${{matrix.machine}}
           path: src/rattler/${{matrix.pkg}}/output/${{matrix.os}}/*.conda
           if-no-files-found: error
 
@@ -267,8 +267,8 @@ jobs:
         if: ${{matrix.whl}}
         uses: actions/upload-artifact@v4
         with:
-          name: conda-${{matrix.pkg}}-${{matrix.machine}}
-          path: src/rattler/${{matrix.pkg}}/output/${{matrix.os}}/*.conda
+          name: rattler-whl-${{matrix.pkg}}-${{matrix.machine}}
+          path: dist/*.whl
           if-no-files-found: error
       - name: Upload results to Codecov
         if: ${{matrix.whl}}

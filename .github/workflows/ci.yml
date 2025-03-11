@@ -29,7 +29,7 @@ concurrency:
 env:
   CPP_SRC_ROOT: ./src/cpp
   CUDA_SRC_ROOT: ./src/cuda
-  RATTLER_SRC_ROOT: ./src/rust
+  RATTLER_SRC_ROOT: ./src/rattler
   RUST_SRC_ROOT: ./src/rust
 
 jobs:
@@ -212,28 +212,6 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  build-pyxis-py:
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [windows-latest,ubuntu-latest]
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-ci
-      - uses: dtolnay/rust-toolchain@stable
-
-      - name: build python
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist == 'true' && '-config dist' || null }}
-        shell: pwsh
-
-      - name: upload whl
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-py-${{matrix.machine}}
-          path: dist/*.whl
-          if-no-files-found: error
-
   sphinx:
     runs-on: ubuntu-latest
     steps:
@@ -281,13 +259,13 @@ jobs:
       - name: test cli
         run: ${{env.RUST_SRC_ROOT}}/crates/pyxis-cli/examples/cli.ps1
         shell: pwsh
-      
+
   build-rattler:
     needs: out-cache
     strategy:
       fail-fast: false
       matrix:
-        pkg: ["pyxis-cli"]
+        pkg: ["pyxis-cli","pyxis-py"]
         include:
           - machine: windows-latest
             os: win-64

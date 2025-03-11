@@ -7,11 +7,9 @@ Set-Location ..
 if ($config) { $config = "-DCMAKE_BUILD_TYPE=$config" }
 
 # create install dir
-$install = "$ROOT = git rev-parse --show-toplevel/dist/pyxis-cpp"
+$install = "$ROOT/dist/pyxis-cpp"
 Remove-Item $install -Recurse -ErrorAction SilentlyContinue
 New-Item $install -ItemType Directory -ErrorAction SilentlyContinue
-$install = Resolve-Path $install
-$install = "$install".Replace('\', '/')
 $install = "-DCMAKE_INSTALL_PREFIX=$install"
 
 # build

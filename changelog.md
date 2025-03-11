@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.12] - 2025-03-11
+
+### Added
+
+- Add ptx struct by @Glatzel in [#170](https://github.com/Glatzel/pyxis/pull/170)
+- Add fn to set `size_limit` and `count_limit` by @Glatzel in [#173](https://github.com/Glatzel/pyxis/pull/173)
+- Add conda packages by @Glatzel in [#184](https://github.com/Glatzel/pyxis/pull/184)
+
+### Changed
+
+- Use option to control cuda module load by @Glatzel in [#171](https://github.com/Glatzel/pyxis/pull/171)
+- Singleton cuda context by @Glatzel in [#172](https://github.com/Glatzel/pyxis/pull/172)
+
+### Documentation
+
+- Add some comments and log by @Glatzel in [#177](https://github.com/Glatzel/pyxis/pull/177)
+
+### Fixed
+
+- Build pyxis-py conda package by @Glatzel in [#186](https://github.com/Glatzel/pyxis/pull/186)
+
 ## [0.0.11] - 2025-03-08
 
 ### Added
@@ -201,6 +222,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.12]: https://github.com/Glatzel/pyxis/compare/v0.0.11..v0.0.12
 [0.0.11]: https://github.com/Glatzel/pyxis/compare/v0.0.10..v0.0.11
 [0.0.10]: https://github.com/Glatzel/pyxis/compare/v0.0.9..v0.0.10
 [0.0.9]: https://github.com/Glatzel/pyxis/compare/v0.0.8..v0.0.9

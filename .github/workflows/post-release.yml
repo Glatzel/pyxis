@@ -10,6 +10,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+
+
 jobs:
   update-changelog:
     runs-on: ubuntu-latest
@@ -43,6 +45,8 @@ jobs:
           draft: false
 
   upload-conda:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Set up pixi
@@ -53,12 +57,15 @@ jobs:
       - run: pixi global install rattler-build
 
       - name: download
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: gh release download -R Glatzel/pyxis -p "*.conda"
 
       - name: upload
         run: |
-            foreach ($pkg_file in Get-ChildItem "./*.conda" -Recurse -ErrorAction Continue) {
-              Write-Output "::group:: upload $pkg"
-              pixi run rattler-build upload prefix -c glatzel $pkg_file
+            foreach ($pkg_file in Get-ChildItem "./*.conda") {
+              Write-Output "::group:: upload $pkg_file"
+              rattler-build upload prefix -c glatzel $pkg_file
               Write-Output "::endgroup::"
             }
+        shell: pwsh

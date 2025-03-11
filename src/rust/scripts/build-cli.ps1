@@ -3,8 +3,7 @@ param (
     $config = "develop"
 )
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot
-Set-Location ..
+Set-Location $PSScriptRoot/..
 & $PSScriptRoot/set-env.ps1
 
 # clean dist folder

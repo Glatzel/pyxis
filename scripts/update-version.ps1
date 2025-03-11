@@ -1,5 +1,4 @@
-Set-Location $PSScriptRoot
-Set-Location ..
+Set-Location $PSScriptRoot/..
 $version = (Get-Content -Path "VERSION").Trim()
 
 # Update the version in CPP

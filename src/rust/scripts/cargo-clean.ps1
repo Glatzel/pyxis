@@ -1,5 +1,4 @@
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot
-Set-Location ..
+Set-Location $PSScriptRoot/..
 cargo clean
 Set-Location $ROOT

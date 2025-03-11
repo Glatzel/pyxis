@@ -1,7 +1,6 @@
 param($config)
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot
-Set-Location ..
+Set-Location $PSScriptRoot/..
 
 # set cmake taget config
 if ($config) { $config = "-DCMAKE_BUILD_TYPE=$config" }

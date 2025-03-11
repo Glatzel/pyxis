@@ -3,8 +3,7 @@ param (
     $config = "develop"
 )
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot
-Set-Location ..
+Set-Location $PSScriptRoot/..
 
 # add nvcc to path
 if($IsWindows){

@@ -1,5 +1,4 @@
-Set-Location $PSScriptRoot
-Set-Location ..
+$ROOT = git rev-parse --show-toplevel
 
 if ($IsWindows) {
     $pyxis = "./pyxis.exe"
@@ -11,7 +10,7 @@ elseif ($IsLinux) {
 }
 
 foreach ($link in $links) {
-    Set-Location "../../../../dist/cli/$link"
+    Set-Location "$ROOT/dist/cli/$link"
     Write-Output "::group::Run $link cli"
 
     # Zhengyong expressway Dehua east interchange
@@ -43,5 +42,4 @@ foreach ($link in $links) {
     Set-Location ..
     Write-Output "::endgroup::"
 }
-Set-Location $PSScriptRoot
-Set-Location ../../../../../
+Set-Location $ROOT

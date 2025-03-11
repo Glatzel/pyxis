@@ -4,8 +4,7 @@ param (
 )
 $ROOT = git rev-parse --show-toplevel
 $current_dir = Resolve-Path $PWD
-Set-Location $PSScriptRoot
-Set-Location ..
+Set-Location $PSScriptRoot/..
 pixi install
 if ($IsWindows) {
     # set libproj find path for pkgconfig

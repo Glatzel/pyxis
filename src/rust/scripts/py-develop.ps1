@@ -3,8 +3,7 @@ param (
     $config = "develop"
 )
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot
-Set-Location ..
+Set-Location $PSScriptRoot/..
 Set-Location crates/pyxis-py
 Remove-Item pyxis/pyxis.pyd -ErrorAction SilentlyContinue
 

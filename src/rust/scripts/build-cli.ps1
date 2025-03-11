@@ -6,7 +6,6 @@ param (
 Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
-Write-Host "Build in $config mode."
 
 # clean dist folder
 Remove-Item ../../dist/cli -Recurse -ErrorAction SilentlyContinue

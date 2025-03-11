@@ -3,8 +3,7 @@ package:
   name: pyxis-py
 build:
   number: 0
-  script:
-    pwsh -f %RECIPE_DIR%\build-pyxis-py.ps1
+  script: pwsh -f %RECIPE_DIR%\build-pyxis-py.ps1
 requirements:
   host:
     - python
@@ -19,4 +18,4 @@ requirements:
 tests:
   - python:
       imports:
-        - pyxis 
+        - pyxis

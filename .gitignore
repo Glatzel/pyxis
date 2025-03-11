@@ -32,4 +32,4 @@ proj.db
 build
 
 # rattler
-src/ratter/**/output
+src/rattler/*/output

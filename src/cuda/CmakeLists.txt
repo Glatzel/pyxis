@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(PyxisCudaProject VERSION 0.0.11)
+project(PyxisCudaProject VERSION 0.0.12)
 enable_language(CUDA)
 
 # Set CUDA standard

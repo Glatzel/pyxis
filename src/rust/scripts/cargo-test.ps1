@@ -1,3 +1,4 @@
+$ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot
 Set-Location ..
 
@@ -33,6 +34,5 @@ else {
     Write-Output "Test successed."
 }
 Write-Output "::endgroup::"
+Set-Location $ROOT
 exit $code
-Set-Location $PSScriptRoot
-Set-Location ../../../

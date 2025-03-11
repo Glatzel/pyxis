@@ -1,3 +1,4 @@
+$ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
@@ -7,5 +8,5 @@ if ($env:CI) {
 else {
     pixi run cargo +nightly fmt --all
 }
-Set-Location $PSScriptRoot
-Set-Location ../../../
+
+Set-Location $ROOT

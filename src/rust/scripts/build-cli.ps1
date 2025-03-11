@@ -1,15 +1,15 @@
 param (
-    [ValidateSet("develop","release")]
+    [ValidateSet("develop", "release")]
     $config = "develop"
 )
-
+$ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot
 Set-Location ..
 & $PSScriptRoot/set-env.ps1
 
 # clean dist folder
-Remove-Item ../../dist/cli -Recurse -ErrorAction SilentlyContinue
-Remove-Item ../../dist/pyxis*.7z -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item $ROOT/dist/cli -Recurse -ErrorAction SilentlyContinue
+Remove-Item $ROOT/dist/pyxis*.7z -Recurse -Force -ErrorAction SilentlyContinue
 
 if ($IsWindows) {
     # build static##############################################################
@@ -19,14 +19,14 @@ if ($IsWindows) {
     cargo build --profile $config -p pyxis-cli --features static
 
     # copy build file to dist
-    New-Item ../../dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
-    Copy-Item "target/$config/pyxis.exe" ../../dist/cli/static/pyxis.exe
+    New-Item $ROOT/dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
+    Copy-Item "target/$config/pyxis.exe" $ROOT/dist/cli/static/pyxis.exe
     Write-Output "::endgroup::"
 
     # pack
     Write-Output "::group::Pack pyxis-windows-x64-self-contained.7z"
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "../../dist/pyxis-cli-windows-x64-self-contained.7z" "../../dist/cli/static/pyxis.exe"
+        "$ROOT/dist/pyxis-cli-windows-x64-self-contained.7z" "$ROOT/dist/cli/static/pyxis.exe"
     Write-Output "::endgroup::"
 
     # build dynamic#############################################################
@@ -36,24 +36,24 @@ if ($IsWindows) {
     cargo build --profile $config -p pyxis-cli
 
     # copy build file to dist
-    New-Item ../../dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue
-    Copy-Item "target/$config/pyxis.exe" ../../dist/cli/dynamic/pyxis.exe
+    New-Item $ROOT/dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue
+    Copy-Item "target/$config/pyxis.exe" $ROOT/dist/cli/dynamic/pyxis.exe
     Write-Output "::endgroup::"
 
     # pack dynamic without dependency dll
     Write-Output "::group::Pack pyxis-windows-x64.7z"
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "../../dist/pyxis-cli-windows-x64.7z" "../../dist/cli/dynamic/pyxis.exe"
+        "$ROOT/dist/pyxis-cli-windows-x64.7z" "$ROOT/dist/cli/dynamic/pyxis.exe"
     Write-Output "::endgroup::"
 
     # copy dependency dll to dist
     Write-Output "::group::Pack pyxis-windows-x64-proj.7z.7z"
-    Copy-Item ../../vcpkg_deps/vcpkg_installed/dynamic/x64-windows/bin/*.dll ../../dist/cli/dynamic
-    Copy-Item ../../vcpkg_deps/vcpkg_installed/dynamic/x64-windows/share/proj/proj.db ../../dist/cli/dynamic
+    Copy-Item $ROOT/vcpkg_deps/vcpkg_installed/dynamic/x64-windows/bin/*.dll $ROOT/dist/cli/dynamic
+    Copy-Item $ROOT/vcpkg_deps/vcpkg_installed/dynamic/x64-windows/share/proj/proj.db $ROOT/dist/cli/dynamic
 
     # pack dynamic with dependency dll
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "../../dist/pyxis-cli-windows-x64-proj.7z" "../../dist/cli/dynamic/*"
+        "$ROOT/dist/pyxis-cli-windows-x64-proj.7z" "$ROOT/dist/cli/dynamic/*"
     Write-Output "::endgroup::"
 }
 elseif ($IsLinux) {
@@ -64,19 +64,19 @@ elseif ($IsLinux) {
     cargo build --profile $config -p pyxis-cli --features static
 
     #copy to dist
-    New-Item ../../dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
-    Copy-Item "target/$config/pyxis" ../../dist/cli/static
+    New-Item $ROOT/dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
+    Copy-Item "target/$config/pyxis" $ROOT/dist/cli/static
     Write-Output "::endgroup::"
 
     # pack
     Write-Output "::group::Pack pyxis-linux-x64-self-contained.7z"
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "../../dist/pyxis-cli-linux-x64-self-contained.7z" "../../dist/cli/static/*"
+        "$ROOT/dist/pyxis-cli-linux-x64-self-contained.7z" "$ROOT/dist/cli/static/*"
     Write-Output "::endgroup::"
 }
 else {
     Write-Error "Unsupported system $os"
     exit 1
 }
-Set-Location $PSScriptRoot
-Set-Location ../../../
+
+Set-Location $ROOT

@@ -2,7 +2,7 @@ param (
     [ValidateSet("develop","release")]
     $config = "develop"
 )
-
+$ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot
 Set-Location ..
 
@@ -12,4 +12,4 @@ if($IsWindows){
 }
 cargo build --profile $config -p pyxis-cuda
 Set-Location $PSScriptRoot
-Set-Location ../../../
+Set-Location $ROOT

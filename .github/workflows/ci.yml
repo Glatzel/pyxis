@@ -160,36 +160,6 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  pytest:
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [windows-latest, ubuntu-latest]
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-ci
-      - uses: dtolnay/rust-toolchain@stable
-
-      - name: dev python
-        run: ${{env.RUST_SRC_ROOT}}/scripts/py-develop.ps1
-        shell: pwsh
-
-      - name: test python
-        run: ${{env.RUST_SRC_ROOT}}/scripts/py-pytest.ps1
-        shell: pwsh
-
-      - name: Upload results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
   # region build
   cargo-doc:
     runs-on: ubuntu-latest
@@ -288,6 +258,15 @@ jobs:
           name: conda-${{matrix.pkg}}-${{matrix.machine}}
           path: src/rattler/${{matrix.pkg}}/output/${{matrix.os}}/*.conda
           if-no-files-found: error
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v5
+  
+      - name: Upload test results to Codecov
+        uses: codecov/test-results-action@v1
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   build-cpp:
     strategy:

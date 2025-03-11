@@ -19,3 +19,5 @@ tests:
   - python:
       imports:
         - pyxis
+  - scripts:
+    - pwsh -f %RECIPE_DIR%\test-pyxis-py.ps1

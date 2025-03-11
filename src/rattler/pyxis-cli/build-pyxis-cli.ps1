@@ -5,4 +5,3 @@ if ($IsWindows) {
 if ($IsLinux) {
     Copy-Item "$env:RECIPE_DIR/../../../dist/cli/static/pyxis" "$env:PREFIX/bin/pyxis-cli/pyxis"
 }
-

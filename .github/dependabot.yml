@@ -6,14 +6,14 @@ updates:
       - /.github/actions/setup-ci
 
     schedule:
-      interval: "weekly"
+      interval: monthly
     commit-message:
       prefix: "ci"
 
   - package-ecosystem: cargo
     directory: ./src/rust
     schedule:
-      interval: weekly
+      interval: monthly
     commit-message:
       prefix: build
     groups:

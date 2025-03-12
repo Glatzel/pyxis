@@ -5,7 +5,7 @@
       "default-features": false
     }
   ],
-  "builtin-baseline": "300239058e33420acd153135b3f6e6b187828992",
+  "builtin-baseline": "a95b9e770131e375fdd676355648d7b2617273dd",
   "overrides": [
     {
       "name": "proj",

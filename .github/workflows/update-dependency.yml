@@ -1,0 +1,34 @@
+name: update-dependency
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 16 1 * *
+
+jobs:
+  update-pixi:
+    uses: Glatzel/template/.github/workflows/update-pixi-lock.yml@main
+    with:
+      draft: 'true'
+
+  update-vcpkg-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./vcpkg/vcpkg-update-baseline.ps1
+        shell: pwsh
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "build: update vcpkg baseline"
+          title: "build: update vcpkg baseline"
+          branch: update-vcpkg-baseline
+          base: main
+          labels: action
+          delete-branch: true
+          assignees: Glatzel
+          draft: false

@@ -31,4 +31,4 @@ jobs:
           labels: action
           delete-branch: true
           assignees: Glatzel
-          draft: false
+          draft: true

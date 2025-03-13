@@ -10,46 +10,54 @@
 #define CUDA_HOST_DEVICE
 #endif
 
-
 // datum_compense.cpp
 template <typename T>
 CUDA_HOST_DEVICE void datum_compense(T xc,
-    T yc,
-    T factor,
-    T x0,
-    T y0,
-    T &out_xc,
-    T &out_yc);
+                                     T yc,
+                                     T factor,
+                                     T x0,
+                                     T y0,
+                                     T &out_xc,
+                                     T &out_yc);
 
 // crypto.cpp
+template <typename T>
 CUDA_HOST_DEVICE void bd09_to_gcj02(
-    const double bd09_lon, const double bd09_lat,
-    double &gcj02_lon, double &gcj02_lat);
+    const T bd09_lon, const T bd09_lat,
+    T &gcj02_lon, T &gcj02_lat);
+template <typename T>
 CUDA_HOST_DEVICE void gcj02_to_bd09(
-    const double gcj02_lon, const double gcj02_lat,
-    double &bd09_lon, double &bd09_lat);
+    const T gcj02_lon, const T gcj02_lat,
+    T &bd09_lon, T &bd09_lat);
+template <typename T>
 CUDA_HOST_DEVICE void gcj02_to_wgs84(
-    const double gcj02_lon, const double gcj02_lat,
-    double &wgs84_lon, double &wgs84_lat);
+    const T gcj02_lon, const T gcj02_lat,
+    T &wgs84_lon, T &wgs84_lat);
+template <typename T>
 CUDA_HOST_DEVICE void wgs84_to_gcj02(
-    const double wgs84_lon, const double wgs84_lat,
-    double &gcj02_lon, double &gcj02_lat);
+    const T wgs84_lon, const T wgs84_lat,
+    T &gcj02_lon, T &gcj02_lat);
+template <typename T>
 CUDA_HOST_DEVICE void wgs84_to_bd09(
-    const double wgs84_lon, const double wgs84_lat,
-    double &bd09_lon, double &bd09_lat);
+    const T wgs84_lon, const T wgs84_lat,
+    T &bd09_lon, T &bd09_lat);
+template <typename T>
 CUDA_HOST_DEVICE void bd09_to_wgs84(
-    const double bd09_lon, const double bd09_lat,
-    double &wgs84_lon, double &wgs84_lat);
-CUDA_HOST_DEVICE double to_radians(const double degrees);
-CUDA_HOST_DEVICE double haversine_distance(const double lon_a, const double lat_a,
-                                      const double lon_b, const double lat_b);
+    const T bd09_lon, const T bd09_lat,
+    T &wgs84_lon, T &wgs84_lat);
+template <typename T>
+CUDA_HOST_DEVICE T to_radians(const T degrees);
+template <typename T>
+CUDA_HOST_DEVICE T haversine_distance(const T lon_a, const T lat_a,
+                                           const T lon_b, const T lat_b);
+template <typename T>
 CUDA_HOST_DEVICE void crypto_exact(
-    const double src_lon,
-    const double src_lat,
-    void (*crypto_fn)(const double, const double, double &, double &),
-    void (*inv_crypto_fn)(const double, const double, double &, double &),
-    const double threshold,
+    const T src_lon,
+    const T src_lat,
+    void (*crypto_fn)(const T, const T, T &, T &),
+    void (*inv_crypto_fn)(const T, const T, T &, T &),
+    const T threshold,
     const bool distance_mode,
     const int max_iter,
-    double &out_lon,
-    double &out_lat);
+    T &out_lon,
+    T &out_lat);

@@ -19,7 +19,7 @@ impl PyxisCudaContext {
         assert_eq!(xc.len(), yc.len());
         let length: usize = xc.len();
         let module = self.get_module(&PTX);
-        let func = module.get_function("datum_compense_cuda").unwrap();
+        let func = module.get_function("datum_compense_cuda_c_float").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 

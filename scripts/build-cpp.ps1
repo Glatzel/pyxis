@@ -13,8 +13,9 @@ Remove-Item $install -Recurse -ErrorAction SilentlyContinue
 New-Item $install -ItemType Directory -ErrorAction SilentlyContinue
 $install = "-DCMAKE_INSTALL_PREFIX=$install"
 New-Item ./build -ItemType Directory -ErrorAction SilentlyContinue
+Set-Location $ROOT/build
 # build
-cmake -B build $install $config -DBUILD_CPP=ON
+cmake -S .. -B build $install $config -DBUILD_CPP=ON
 cmake --build build --target install
 
 # pack output files

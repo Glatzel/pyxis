@@ -297,7 +297,7 @@ jobs:
       matrix:
         include:
           - machine: windows-latest
-            sub-packages: '["nvcc","cudart","thrust"]'
+            sub-packages: '["nvcc","cudart"]'
           - machine: ubuntu-latest
             sub-packages: '["nvcc"]'
     runs-on: ${{matrix.machine}}

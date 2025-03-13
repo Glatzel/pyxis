@@ -24,7 +24,7 @@ extern "C"
         float *out_yc)
     {
         int i = threadIdx.x + blockIdx.x * blockDim.x;
-        datum_compense_float(xc[i], yc[i], factor, x0, y0, out_xc+i, out_yc+i);
+        datum_compense(xc[i], yc[i], factor, x0, y0, xc[i], yc[i]);
     };
 }
 extern "C"
@@ -39,6 +39,6 @@ extern "C"
         double *out_yc)
     {
         int i = threadIdx.x + blockIdx.x * blockDim.x;
-        datum_compense_double(xc[i], yc[i], factor, x0, y0, out_xc+i, out_yc+i);
+        datum_compense(xc[i], yc[i], factor, x0, y0, xc[i], yc[i]);
     };
 }

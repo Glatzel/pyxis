@@ -50,6 +50,7 @@ fn main() {
         .collect::<Vec<String>>();
 
     let output = std::process::Command::new("nvcc")
+        .arg("-DRUST")//mark build rust
         .arg("-fmad=false")
         .args(["-I", cpp_src_dir.to_slash_lossy().to_string().as_str()])
         .args(["-I", cpp_include_dir.to_slash_lossy().to_string().as_str()])

@@ -14,7 +14,7 @@ impl PyxisCudaContext {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
-        let func = module.get_function("bd09_to_gcj02_cuda").unwrap();
+        let func = module.get_function("bd09_to_gcj02_cuda_double").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
@@ -33,7 +33,7 @@ impl PyxisCudaContext {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
-        let func = module.get_function("gcj02_to_bd09_cuda").unwrap();
+        let func = module.get_function("gcj02_to_bd09_cuda_double").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
@@ -52,7 +52,7 @@ impl PyxisCudaContext {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
-        let func = module.get_function("gcj02_to_wgs84_cuda").unwrap();
+        let func = module.get_function("gcj02_to_wgs84_cuda_double").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
@@ -71,7 +71,7 @@ impl PyxisCudaContext {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
-        let func = module.get_function("wgs84_to_gcj02_cuda").unwrap();
+        let func = module.get_function("wgs84_to_gcj02_cuda_double").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
@@ -90,7 +90,7 @@ impl PyxisCudaContext {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
-        let func = module.get_function("wgs84_to_bd09_cuda").unwrap();
+        let func = module.get_function("wgs84_to_bd09_cuda_double").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
@@ -109,7 +109,7 @@ impl PyxisCudaContext {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
-        let func = module.get_function("bd09_to_wgs84_cuda").unwrap();
+        let func = module.get_function("bd09_to_wgs84_cuda_double").unwrap();
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
@@ -138,16 +138,16 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
         let func = match (from, to) {
-            (CryptoSpace::GCJ02, CryptoSpace::WGS84) => {
-                module.get_function("gcj02_to_wgs84_exact_cuda").unwrap()
-            }
+            (CryptoSpace::GCJ02, CryptoSpace::WGS84) => module
+                .get_function("gcj02_to_wgs84_exact_cuda_double")
+                .unwrap(),
 
-            (CryptoSpace::BD09, CryptoSpace::WGS84) => {
-                module.get_function("bd09_to_wgs84_exact_cuda").unwrap()
-            }
-            (CryptoSpace::BD09, CryptoSpace::GCJ02) => {
-                module.get_function("bd09_to_gcj02_exact_cuda").unwrap()
-            }
+            (CryptoSpace::BD09, CryptoSpace::WGS84) => module
+                .get_function("bd09_to_wgs84_exact_cuda_double")
+                .unwrap(),
+            (CryptoSpace::BD09, CryptoSpace::GCJ02) => module
+                .get_function("bd09_to_gcj02_exact_cuda_double")
+                .unwrap(),
             _ => panic!("Unsupported "),
         };
         let distance_mode = match threshold_mode {

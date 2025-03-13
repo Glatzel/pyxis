@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(PyxisCppProject VERSION 0.0.12)
+project(PyxisCppProject VERSION 0.0.13)
 
 # target cpp####################################################################
 option(BUILD_CPP "Build cpp" OFF)

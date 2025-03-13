@@ -70,8 +70,8 @@ CUDA_HOST_DEVICE void gcj02_to_bd09(
     T &bd09_lon, T &bd09_lat)
 {
     T x_pi = M_PI * 3000.0 / 180.0;
-    T z = sqrt(pow(&gcj02_lon, 2) + pow(&gcj02_lat, 2)) + 0.00002 * sin(gcj02_lat * x_pi);
-    T theta = atan2(&gcj02_lat, &gcj02_lon) + 0.000003 * cos(gcj02_lon * x_pi);
+    T z = sqrt(pow(gcj02_lon, 2) + pow(gcj02_lat, 2)) + 0.00002 * sin(gcj02_lat * x_pi);
+    T theta = atan2(gcj02_lat, gcj02_lon) + 0.000003 * cos(gcj02_lon * x_pi);
     bd09_lon = z * cos(theta) + 0.0065;
     bd09_lat = z * sin(theta) + 0.006;
 }
@@ -100,7 +100,7 @@ CUDA_HOST_DEVICE void wgs84_to_gcj02(
 template <typename T>
 CUDA_HOST_DEVICE void wgs84_to_bd09(
     const T wgs84_lon, const T wgs84_lat,
-    T *bd09_lon, T *bd09_lat)
+    T &bd09_lon, T &bd09_lat)
 {
     wgs84_to_gcj02(wgs84_lon, wgs84_lat,
                    bd09_lon, bd09_lat);
@@ -110,7 +110,7 @@ CUDA_HOST_DEVICE void wgs84_to_bd09(
 template <typename T>
 CUDA_HOST_DEVICE void bd09_to_wgs84(
     const T bd09_lon, const T bd09_lat,
-    T *wgs84_lon, T *wgs84_lat)
+    T &wgs84_lon, T &wgs84_lat)
 {
     bd09_to_gcj02(bd09_lon, bd09_lat,
                   wgs84_lon, wgs84_lat);
@@ -148,8 +148,8 @@ template <typename T>
 CUDA_HOST_DEVICE void crypto_exact(
     const T src_lon,
     const T src_lat,
-    void (*crypto_fn)(const T, const T, T *, T *),
-    void (*inv_crypto_fn)(const T, const T, T *, T *),
+    void (*crypto_fn)(const T, const T, T &, T &),
+    void (*inv_crypto_fn)(const T, const T, T &, T &),
     const T threshold,
     const bool distance_mode,
     const int max_iter,
@@ -159,12 +159,12 @@ CUDA_HOST_DEVICE void crypto_exact(
 {
     T dst_lon = src_lon;
     T dst_lat = src_lat;
-    crypto_fn<T>(src_lon, src_lat, dst_lon, dst_lat);
+    crypto_fn(src_lon, src_lat, dst_lon, dst_lat);
     for (int i = 0; i < max_iter; i++)
     {
         T tmp_src_lon = 0.0;
         T tmp_src_lat = 0.0;
-        inv_crypto_fn<T>(dst_lon, dst_lat, tmp_src_lon, tmp_src_lat);
+        inv_crypto_fn(dst_lon, dst_lat, tmp_src_lon, tmp_src_lat);
         T d_lon = src_lon - tmp_src_lon;
         T d_lat = src_lat - tmp_src_lat;
         T tmp_lon = dst_lon + d_lon;
@@ -172,14 +172,14 @@ CUDA_HOST_DEVICE void crypto_exact(
 
         if (distance_mode)
         {
-            if (haversine_distance<T>(dst_lon, dst_lat, tmp_lon, tmp_lat) < threshold)
+            if (haversine_distance(dst_lon, dst_lat, tmp_lon, tmp_lat) < threshold)
             {
                 break;
             }
         }
         else
         {
-            if (abs(d_lon) < threshold * *abs(d_lat) < threshold)
+            if (abs(d_lon) < threshold *abs(d_lat) < threshold)
             {
                 break;
             }

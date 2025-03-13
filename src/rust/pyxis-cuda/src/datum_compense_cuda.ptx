@@ -10,45 +10,102 @@
 .target sm_52
 .address_size 64
 
-	// .globl	datum_compense_cuda
+	// .globl	datum_compense_cuda_float
 
-.visible .entry datum_compense_cuda(
-	.param .u64 datum_compense_cuda_param_0,
-	.param .u64 datum_compense_cuda_param_1,
-	.param .f64 datum_compense_cuda_param_2,
-	.param .f64 datum_compense_cuda_param_3,
-	.param .f64 datum_compense_cuda_param_4
+.visible .entry datum_compense_cuda_float(
+	.param .u64 datum_compense_cuda_float_param_0,
+	.param .u64 datum_compense_cuda_float_param_1,
+	.param .f32 datum_compense_cuda_float_param_2,
+	.param .f32 datum_compense_cuda_float_param_3,
+	.param .f32 datum_compense_cuda_float_param_4,
+	.param .u64 datum_compense_cuda_float_param_5,
+	.param .u64 datum_compense_cuda_float_param_6
 )
 {
+	.reg .f32 	%f<12>;
 	.reg .b32 	%r<5>;
-	.reg .f64 	%fd<12>;
-	.reg .b64 	%rd<8>;
+	.reg .b64 	%rd<14>;
 
 
-	ld.param.u64 	%rd1, [datum_compense_cuda_param_0];
-	ld.param.u64 	%rd2, [datum_compense_cuda_param_1];
-	ld.param.f64 	%fd1, [datum_compense_cuda_param_2];
-	ld.param.f64 	%fd2, [datum_compense_cuda_param_3];
-	ld.param.f64 	%fd3, [datum_compense_cuda_param_4];
-	cvta.to.global.u64 	%rd3, %rd2;
-	cvta.to.global.u64 	%rd4, %rd1;
+	ld.param.u64 	%rd1, [datum_compense_cuda_float_param_0];
+	ld.param.u64 	%rd2, [datum_compense_cuda_float_param_1];
+	ld.param.f32 	%f1, [datum_compense_cuda_float_param_2];
+	ld.param.f32 	%f2, [datum_compense_cuda_float_param_3];
+	ld.param.f32 	%f3, [datum_compense_cuda_float_param_4];
+	ld.param.u64 	%rd3, [datum_compense_cuda_float_param_5];
+	ld.param.u64 	%rd4, [datum_compense_cuda_float_param_6];
+	cvta.to.global.u64 	%rd5, %rd4;
+	cvta.to.global.u64 	%rd6, %rd3;
+	cvta.to.global.u64 	%rd7, %rd2;
+	cvta.to.global.u64 	%rd8, %rd1;
 	mov.u32 	%r1, %tid.x;
 	mov.u32 	%r2, %ctaid.x;
 	mov.u32 	%r3, %ntid.x;
 	mad.lo.s32 	%r4, %r2, %r3, %r1;
-	mul.wide.s32 	%rd5, %r4, 8;
-	add.s64 	%rd6, %rd4, %rd5;
-	ld.global.f64 	%fd4, [%rd6];
-	add.s64 	%rd7, %rd3, %rd5;
-	ld.global.f64 	%fd5, [%rd7];
+	mul.wide.s32 	%rd9, %r4, 4;
+	add.s64 	%rd10, %rd8, %rd9;
+	ld.global.f32 	%f4, [%rd10];
+	add.s64 	%rd11, %rd7, %rd9;
+	ld.global.f32 	%f5, [%rd11];
+	add.s64 	%rd12, %rd6, %rd9;
+	add.s64 	%rd13, %rd5, %rd9;
+	sub.rn.f32 	%f6, %f4, %f2;
+	mul.rn.f32 	%f7, %f6, %f1;
+	sub.rn.f32 	%f8, %f4, %f7;
+	st.global.f32 	[%rd12], %f8;
+	sub.rn.f32 	%f9, %f5, %f3;
+	mul.rn.f32 	%f10, %f9, %f1;
+	sub.rn.f32 	%f11, %f5, %f10;
+	st.global.f32 	[%rd13], %f11;
+	ret;
+
+}
+	// .globl	datum_compense_cuda_double
+.visible .entry datum_compense_cuda_double(
+	.param .u64 datum_compense_cuda_double_param_0,
+	.param .u64 datum_compense_cuda_double_param_1,
+	.param .f64 datum_compense_cuda_double_param_2,
+	.param .f64 datum_compense_cuda_double_param_3,
+	.param .f64 datum_compense_cuda_double_param_4,
+	.param .u64 datum_compense_cuda_double_param_5,
+	.param .u64 datum_compense_cuda_double_param_6
+)
+{
+	.reg .b32 	%r<5>;
+	.reg .f64 	%fd<12>;
+	.reg .b64 	%rd<14>;
+
+
+	ld.param.u64 	%rd1, [datum_compense_cuda_double_param_0];
+	ld.param.u64 	%rd2, [datum_compense_cuda_double_param_1];
+	ld.param.f64 	%fd1, [datum_compense_cuda_double_param_2];
+	ld.param.f64 	%fd2, [datum_compense_cuda_double_param_3];
+	ld.param.f64 	%fd3, [datum_compense_cuda_double_param_4];
+	ld.param.u64 	%rd3, [datum_compense_cuda_double_param_5];
+	ld.param.u64 	%rd4, [datum_compense_cuda_double_param_6];
+	cvta.to.global.u64 	%rd5, %rd4;
+	cvta.to.global.u64 	%rd6, %rd3;
+	cvta.to.global.u64 	%rd7, %rd2;
+	cvta.to.global.u64 	%rd8, %rd1;
+	mov.u32 	%r1, %tid.x;
+	mov.u32 	%r2, %ctaid.x;
+	mov.u32 	%r3, %ntid.x;
+	mad.lo.s32 	%r4, %r2, %r3, %r1;
+	mul.wide.s32 	%rd9, %r4, 8;
+	add.s64 	%rd10, %rd8, %rd9;
+	ld.global.f64 	%fd4, [%rd10];
+	add.s64 	%rd11, %rd7, %rd9;
+	ld.global.f64 	%fd5, [%rd11];
+	add.s64 	%rd12, %rd6, %rd9;
+	add.s64 	%rd13, %rd5, %rd9;
 	sub.rn.f64 	%fd6, %fd4, %fd2;
 	mul.rn.f64 	%fd7, %fd6, %fd1;
 	sub.rn.f64 	%fd8, %fd4, %fd7;
-	st.global.f64 	[%rd6], %fd8;
+	st.global.f64 	[%rd12], %fd8;
 	sub.rn.f64 	%fd9, %fd5, %fd3;
 	mul.rn.f64 	%fd10, %fd9, %fd1;
 	sub.rn.f64 	%fd11, %fd5, %fd10;
-	st.global.f64 	[%rd7], %fd11;
+	st.global.f64 	[%rd13], %fd11;
 	ret;
 
 }

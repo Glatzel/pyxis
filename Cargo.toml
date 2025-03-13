@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/*"]
+members = ["src/rust/*","src/python"]
 resolver = "2"
 
 [workspace.package]
@@ -7,7 +7,7 @@ version = "0.0.12"
 edition = "2024"
 
 [workspace.dependencies]
-pyxis = { path = "crates/pyxis" }
+pyxis = { path = "src/rust/pyxis" }
 
 assert_cmd = "2.0"
 bpaf = { version = "0.9.17", features = ["derive", "batteries"] }

@@ -3,9 +3,7 @@ $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 
 & $PSScriptRoot/py-develop.ps1
-Set-Location -Path $PSScriptRoot
-Set-Location -Path ..
-Set-Location -Path crates/pyxis-py
+Set-Location $ROOT/src/python
 
 Remove-Item -Path "./doc/source/reference/api" -Recurse -ErrorAction SilentlyContinue
 Remove-Item -Path "./doc/build" -Recurse -ErrorAction SilentlyContinue

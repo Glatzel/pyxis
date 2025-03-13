@@ -1,6 +1,8 @@
 param($config)
+$ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot/..
+Set-Location $ROOT
 if ($config) { $config = "-DCMAKE_BUILD_TYPE=Release" }
 
 # create install dir
@@ -12,7 +14,7 @@ $install = "$install".Replace('\', '/')
 $install = "-DCMAKE_INSTALL_PREFIX=$install"
 
 # build
-cmake . -B build $install $config
+cmake -B build $install $config -DBUILD_CUDA=ON
 cmake --build build --target install
 
 # pack output files

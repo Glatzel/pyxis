@@ -1,6 +1,8 @@
 param($config)
+$ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot/..
+Set-Location $ROOT
 
 # set cmake taget config
 if ($config) { $config = "-DCMAKE_BUILD_TYPE=$config" }
@@ -12,7 +14,7 @@ New-Item $install -ItemType Directory -ErrorAction SilentlyContinue
 $install = "-DCMAKE_INSTALL_PREFIX=$install"
 
 # build
-cmake . -B build $install $config
+cmake -B build $install $config -DBUILD_CPP=ON
 cmake --build build --target install
 
 # pack output files

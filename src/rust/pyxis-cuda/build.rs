@@ -7,8 +7,6 @@ fn main() {
     let cpp_src_dir = canonicalize(Path::new("."))
         .unwrap()
         .parent()
-        .unwrap() //crates
-        .parent()
         .unwrap() //rust
         .parent()
         .unwrap() //src
@@ -17,8 +15,6 @@ fn main() {
     let cpp_include_dir = canonicalize(Path::new("."))
         .unwrap()
         .parent()
-        .unwrap() //crates
-        .parent()
         .unwrap() //rust
         .parent()
         .unwrap() //src
@@ -26,8 +22,6 @@ fn main() {
         .join("include");
     let cu_kernel_dir = canonicalize(Path::new("."))
         .unwrap()
-        .parent()
-        .unwrap() //crates
         .parent()
         .unwrap() //rust
         .parent()

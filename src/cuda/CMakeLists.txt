@@ -17,7 +17,7 @@ foreach(SOURCE ${SOURCES})
     set(PTX_FILE ${PTX_OUT_DIR}/${SOURCE_NAME}.ptx)
     add_custom_command(
         OUTPUT ${PTX_FILE}
-        COMMAND ${CMAKE_CUDA_COMPILER} -fmad=false -I ${CMAKE_CURRENT_SOURCE_DIR}/${CPP_CMAKE_DIR}/src -I ${CMAKE_CURRENT_SOURCE_DIR}/${CPP_CMAKE_DIR}/include -ptx ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE} -o ${PTX_FILE}
+        COMMAND nvcc -fmad=false -I ${CMAKE_CURRENT_SOURCE_DIR}/${CPP_CMAKE_DIR}/src -I ${CMAKE_CURRENT_SOURCE_DIR}/${CPP_CMAKE_DIR}/include -ptx ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE} -o ${PTX_FILE}
         DEPENDS ${SOURCE}
         COMMENT "Generating PTX file for ${SOURCE}"
     )

@@ -4,6 +4,7 @@ $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
 Set-Location $ROOT
 if ($config) { $config = "-DCMAKE_BUILD_TYPE=Release" }
+
 # create install dir
 $install = "$ROOT/dist/pyxis-cuda"
 Remove-Item $install -Recurse -ErrorAction SilentlyContinue
@@ -12,6 +13,7 @@ $install = Resolve-Path $install
 $install = "$install".Replace('\', '/')
 $install = "-DCMAKE_INSTALL_PREFIX=$install"
 
+# create ptx output dir
 New-Item $ROOT/build/ptx -ItemType Directory -ErrorAction SilentlyContinue
 
 # build

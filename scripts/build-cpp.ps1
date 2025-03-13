@@ -2,7 +2,7 @@ param($config)
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot/..
+Set-Location $ROOT
 
 # set cmake taget config
 if ($config) { $config = "-DCMAKE_BUILD_TYPE=$config" }

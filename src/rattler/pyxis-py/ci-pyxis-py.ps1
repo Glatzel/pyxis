@@ -8,7 +8,7 @@ Set-Location $PSScriptRoot
 
 & "$ROOT/scripts/py-develop.ps1" -config $config
 & "$ROOT/scripts/py-pytest.ps1"
-& "$ROOT/scripts/build-py.ps1" -config $config
+& "$ROOT/scripts/build-python-whl.ps1" -config $config
 
 Set-Location $PSScriptRoot
 build_pkg

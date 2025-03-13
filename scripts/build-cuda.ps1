@@ -12,7 +12,7 @@ $install = "$install".Replace('\', '/')
 $install = "-DCMAKE_INSTALL_PREFIX=$install"
 
 # build
-cmake . -B build $install $config -DBUILD_CUDA=ON
+cmake -B build $install $config -DBUILD_CUDA=ON
 cmake --build build --target install
 
 # pack output files

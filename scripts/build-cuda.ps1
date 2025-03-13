@@ -7,7 +7,7 @@ if ($config) { $config = "-DCMAKE_BUILD_TYPE=Release" }
 if($IsWindows){
     $env:CUDA_PATH="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.8"
     $env:CUDA_PATH_V12_8="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.8"
-    $env:PATH="$env:PATH; $env:CUDA_PATH\bin;$env:CUDA_PATH\libnvvp"
+    $env:PATH="$env:PATH;$env:CUDA_PATH\bin;$env:CUDA_PATH\libnvvp"
 }
 # create install dir
 $install = "$ROOT/dist/pyxis-cuda"

@@ -7,7 +7,7 @@ $cmakeListsPath = "./CMakeLists.txt"
 Write-Host "Updated CPP version to $version"
 
 # Update the version in Cargo.toml
-$cargoTomlPath = "./src/rust/Cargo.toml"
+$cargoTomlPath = "./Cargo.toml"
 (Get-Content -Path $cargoTomlPath) -replace '^version = .*', "version = `"$version`"" | Set-Content -Path $cargoTomlPath
 Write-Host "Updated Rust version to $version"
 

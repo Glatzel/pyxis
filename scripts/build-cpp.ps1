@@ -14,7 +14,6 @@ New-Item $install -ItemType Directory -ErrorAction SilentlyContinue
 $install = "-DCMAKE_INSTALL_PREFIX=$install"
 
 # build
-write-output (Get-ChildItem $ROOT)
 cmake -B build $install $config -DBUILD_CPP=ON
 cmake --build build --target install
 

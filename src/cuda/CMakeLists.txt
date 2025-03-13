@@ -1,10 +1,3 @@
-enable_language(CUDA)
-
-# Set CUDA standard
-set(CMAKE_CUDA_STANDARD 17)
-set(CMAKE_CUDA_STANDARD_REQUIRED ON)
-set(CMAKE_CUDA_ARCHITECTURES 80)
-
 # set cpp project dir
 set(CPP_CMAKE_DIR ../cpp)
 

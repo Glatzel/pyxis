@@ -153,8 +153,8 @@ CUDA_HOST_DEVICE void crypto_exact(
     const T threshold,
     const bool distance_mode,
     const int max_iter,
-    T  &out_lon,
-    T  &out_lat)
+    T &out_lon,
+    T &out_lat)
 
 {
     T dst_lon = src_lon;
@@ -179,7 +179,7 @@ CUDA_HOST_DEVICE void crypto_exact(
         }
         else
         {
-            if (abs(d_lon) < threshold *abs(d_lat) < threshold)
+            if (abs(d_lon) < threshold && abs(d_lat) < threshold)
             {
                 break;
             }

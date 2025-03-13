@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.25)
+project(PyxisCppProject VERSION 0.0.12)
+
+# target cpp####################################################################
+option(BUILD_CPP "Build cpp" OFF)
+if(BUILD_CPP)
+    add_subdirectory(./src/cpp)
+endif()
+
+# target cuda###################################################################
+option(BUILD_CUDA "Build cuda" OFF)
+if(BUILD_CUDA)
+    add_subdirectory(./src/cuda)
+endif()

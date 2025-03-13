@@ -1,5 +1,6 @@
 mod crypto;
-mod misc;
+mod datum_compense;
+mod gauss_projection;
 mod space;
 use pyo3::prelude::*;
 
@@ -11,10 +12,10 @@ fn pyxis_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // space
     m.add_wrapped(wrap_pyfunction!(space::py_space))?;
 
-    // transform
-    m.add_wrapped(wrap_pyfunction!(misc::py_datum_compense))?;
-    m.add_wrapped(wrap_pyfunction!(misc::py_lbh2xyz))?;
-    m.add_wrapped(wrap_pyfunction!(misc::py_xyz2lbh))?;
+    m.add_wrapped(wrap_pyfunction!(datum_compense::py_datum_compense))?;
+
+    m.add_wrapped(wrap_pyfunction!(gauss_projection::py_lbh2xyz))?;
+    m.add_wrapped(wrap_pyfunction!(gauss_projection::py_xyz2lbh))?;
 
     Ok(())
 }

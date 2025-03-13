@@ -6,10 +6,11 @@ set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 set(CMAKE_CUDA_ARCHITECTURES 80)
 
 # set cpp project dir
-set(CPP_CMAKE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cpp)
+set(CPP_CMAKE_DIR ../cpp)
 
 # PTX target####################################################################
 # Generate PTX files
+set (SOURCES ./src/crypto_cuda.cu ./src/datum_compense_cuda.cu) 
 set(PTX_OUT_DIR ${CMAKE_BINARY_DIR}/ptx)
 foreach(SOURCE ${SOURCES})
     get_filename_component(SOURCE_NAME ${SOURCE} NAME_WE)

@@ -6,8 +6,8 @@ $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot
 . ../scripts/utils.ps1
 
-& "$ROOT/src/rust/scripts/build-cli.ps1" -config $config
-& "$ROOT/src/rust/crates/pyxis-cli/examples/cli.ps1"
+& "$ROOT/scripts/build-cli.ps1" -config $config
+& "$ROOT/crates/pyxis-cli/examples/cli.ps1"
 
 Set-Location $PSScriptRoot
 build_pkg

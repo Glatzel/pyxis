@@ -14,7 +14,7 @@ $install = "$install".Replace('\', '/')
 $install = "-DCMAKE_INSTALL_PREFIX=$install"
 
 # create ptx output dir
-New-Item $ROOT/build/ptx -ItemType Directory -ErrorAction SilentlyContinue
+New-Item ./build/ptx -ItemType Directory -ErrorAction SilentlyContinue
 
 # build
 cmake -B build $install $config -DBUILD_CUDA=ON

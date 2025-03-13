@@ -26,12 +26,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  CPP_SRC_ROOT: ./src/cpp
-  CUDA_SRC_ROOT: ./src/cuda
-  RATTLER_SRC_ROOT: ./src/rattler
-  RUST_SRC_ROOT: ./src/rust
-
 jobs:
   cache-vcpkg:
     runs-on: windows-latest
@@ -82,7 +76,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/setup-ci
       - name: cargo-clippy
-        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-clippy.ps1
+        run: ./scripts/cargo-clippy.ps1
         shell: pwsh
 
   cargo-fmt:
@@ -91,40 +85,19 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        if: ${{github.event_name !='pull_request'}}
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            src/rust/scripts/cargo-fmt.ps1
-            src/rust/crates/**.rs
-            rustfmt.toml
-            .github/**
       - uses: dtolnay/rust-toolchain@nightly
-        if: ${{steps.changed.outputs.any_changed !='false'}}
         with:
           components: rustfmt
       - uses: ./.github/actions/setup-ci
-        if: ${{steps.changed.outputs.any_changed !='false'}}
-
       - name: cargo-fmt
-        if: ${{steps.changed.outputs.any_changed !='false'}}
-        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-fmt.ps1
+        run: ./scripts/cargo-fmt.ps1
         shell: pwsh
 
   cargo-machete:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        if: ${{github.event_name !='pull_request'}}
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            **Cargo.toml
-            .github/**
       - name: Machete
-        if: ${{steps.changed.outputs.any_changed !='false'}}
         uses: bnjbvr/cargo-machete@main
 
   cargo-bench:
@@ -166,7 +139,7 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: cargo-test
-        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-test.ps1
+        run: ./scripts/cargo-test.ps1
         shell: pwsh
 
       - name: Upload results to Codecov
@@ -191,7 +164,7 @@ jobs:
       - uses: ./.github/actions/setup-ci
 
       - name: cargo-doc
-        run: ${{env.RUST_SRC_ROOT}}/scripts/cargo-doc.ps1
+        run: ./scripts/cargo-doc.ps1
         shell: pwsh
 
       - name: upload doc
@@ -210,7 +183,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
 
       - name: sphinx build
-        run: ${{env.RUST_SRC_ROOT}}/scripts/py-sphinx.ps1
+        run: ./scripts/py-sphinx.ps1
         shell: pwsh
 
       - name: upload doc
@@ -249,7 +222,7 @@ jobs:
         if: ${{runner.os == 'Windows'}}
 
       - name: build
-        run: ${{env.RATTLER_SRC_ROOT}}/${{matrix.pkg}}/ci-${{matrix.pkg}}.ps1 ${{ inputs.build-dist && '-config  release' || null }}
+        run: ./${{matrix.pkg}}/ci-${{matrix.pkg}}.ps1 ${{ inputs.build-dist && '-config  release' || null }}
         shell: pwsh
 
       - name: upload conda
@@ -285,19 +258,10 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        if: ${{github.event_name !='pull_request'}}
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            src/cpp/**
-            .github/**
       - name: build cpp
-        if: ${{steps.changed.outputs.any_changed !='false'}}
-        run: ${{env.CPP_SRC_ROOT}}/scripts/build-cpp.ps1  ${{env.RUST_SRC_ROOT}}/scripts/build-py.ps1 ${{ inputs.build-dist && '-config release' || null }}
+        run: ./scripts/build-cpp.ps1 ${{ inputs.build-dist && '-config release' || null }}
         shell: pwsh
       - name: upload cpp
-        if: ${{steps.changed.outputs.any_changed !='false'}}
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cpp-${{matrix.machine}}
@@ -326,7 +290,7 @@ jobs:
           sub-packages: ${{matrix.sub-packages}}
           method: ${{matrix.method}}
       - name: build cuda
-        run: ${{env.RUST_SRC_ROOT}}/scripts/build-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
+        run: ./scripts/build-rust-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
         shell: pwsh
 
   build-cuda:
@@ -343,26 +307,15 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        if: ${{github.event_name !='pull_request'}}
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            src/cpp/**
-            src/cuda/**
-            .github/**
       - uses: Jimver/cuda-toolkit@v0.2.22
-        if: ${{steps.changed.outputs.any_changed !='false'}}
         with:
           cuda: "12.8.0"
           sub-packages: ${{matrix.sub-packages}}
           method: ${{matrix.method}}
       - name: build cuda
-        if: ${{steps.changed.outputs.any_changed !='false'}}
-        run: ${{env.CUDA_SRC_ROOT}}/scripts/build-cuda.ps1
+        run: ./scripts/build-cuda.ps1
         shell: pwsh
       - name: upload cuda
-        if: ${{steps.changed.outputs.any_changed !='false'}}
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cuda-${{matrix.machine}}

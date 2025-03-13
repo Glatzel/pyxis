@@ -274,10 +274,8 @@ jobs:
       matrix:
         include:
           - machine: windows-latest
-            method: network
             sub-packages: '["nvcc","cudart"]'
           - machine: ubuntu-latest
-            method: network
             sub-packages: '["nvcc"]'
     runs-on: ${{matrix.machine}}
     steps:
@@ -288,7 +286,7 @@ jobs:
         with:
           cuda: "12.8.0"
           sub-packages: ${{matrix.sub-packages}}
-          method: ${{matrix.method}}
+          method: network
       - name: build cuda
         run: ./scripts/build-rust-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
         shell: pwsh

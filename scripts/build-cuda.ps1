@@ -13,6 +13,8 @@ $install = Resolve-Path $install
 $install = "$install".Replace('\', '/')
 $install = "-DCMAKE_INSTALL_PREFIX=$install"
 
+New-Item $ROOT/build/ptx -ItemType Directory -ErrorAction SilentlyContinue
+
 # build
 cmake -B build $install $config -DBUILD_CUDA=ON
 cmake --build build --target install

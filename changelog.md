@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.13] - 2025-03-13
+
+### Added
+
+- Add check condition by @Glatzel in [#193](https://github.com/Glatzel/pyxis/pull/193)
+- Add update vcpkg baseline by @Glatzel in [#194](https://github.com/Glatzel/pyxis/pull/194)
+
+### Documentation
+
+- Add feature doc by @Glatzel in [#200](https://github.com/Glatzel/pyxis/pull/200)
+
+### Fixed
+
+- Build problem by @Glatzel in [#201](https://github.com/Glatzel/pyxis/pull/201)
+
 ## [0.0.12] - 2025-03-11
 
 ### Added
@@ -222,6 +237,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.13]: https://github.com/Glatzel/pyxis/compare/v0.0.12..v0.0.13
 [0.0.12]: https://github.com/Glatzel/pyxis/compare/v0.0.11..v0.0.12
 [0.0.11]: https://github.com/Glatzel/pyxis/compare/v0.0.10..v0.0.11
 [0.0.10]: https://github.com/Glatzel/pyxis/compare/v0.0.9..v0.0.10

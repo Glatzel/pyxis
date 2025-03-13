@@ -141,7 +141,7 @@ CUDA_HOST_DEVICE T haversine_distance(const T lon_a, const T lat_a,
           cos(lat1_rad) * cos(lat2_rad) *
               pow(sin(delta_lon / 2.0), 2);
 
-    T c = 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
+    T c = 2.0 * atan2(sqrt(a), (T)sqrt(1.0 - a));
     return 6378137.0 * c;
 }
 template <typename T>

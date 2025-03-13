@@ -138,16 +138,16 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
         let func = match (from, to) {
-            (CryptoSpace::GCJ02, CryptoSpace::WGS84) => {
-                module.get_function("gcj02_to_wgs84_exact_cuda_double").unwrap()
-            }
+            (CryptoSpace::GCJ02, CryptoSpace::WGS84) => module
+                .get_function("gcj02_to_wgs84_exact_cuda_double")
+                .unwrap(),
 
-            (CryptoSpace::BD09, CryptoSpace::WGS84) => {
-                module.get_function("bd09_to_wgs84_exact_cuda_double").unwrap()
-            }
-            (CryptoSpace::BD09, CryptoSpace::GCJ02) => {
-                module.get_function("bd09_to_gcj02_exact_cuda_double").unwrap()
-            }
+            (CryptoSpace::BD09, CryptoSpace::WGS84) => module
+                .get_function("bd09_to_wgs84_exact_cuda_double")
+                .unwrap(),
+            (CryptoSpace::BD09, CryptoSpace::GCJ02) => module
+                .get_function("bd09_to_gcj02_exact_cuda_double")
+                .unwrap(),
             _ => panic!("Unsupported "),
         };
         let distance_mode = match threshold_mode {

@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.25)
+project(PyxisCudaProject VERSION 0.0.13)
 # set cpp project dir
 set(CPP_CMAKE_DIR ../cpp)
 

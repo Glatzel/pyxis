@@ -1,5 +1,6 @@
 #include "datum_compense.h"
-
+#pragma region cpp
+#ifdef __cplusplus
 template <typename T>
 CUDA_HOST_DEVICE void datum_compense(
     T xc,
@@ -13,7 +14,13 @@ CUDA_HOST_DEVICE void datum_compense(
     *out_xc = xc - factor * (xc - x0);
     *out_yc = yc - factor * (yc - y0);
 }
+#endif
+#pragma endregion
+// #############################################################################
+#pragma region c
+#ifdef __cplusplus
 extern "C" {
+    #endif
     CUDA_HOST_DEVICE void datum_compense_float(
         float xc,
         float yc,
@@ -36,4 +43,7 @@ extern "C" {
     {
         datum_compense(xc,yc,factor,x0,y0,out_xc,out_yc);
     };
+    #ifdef __cplusplus
 }
+#endif
+#pragma endregion

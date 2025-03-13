@@ -9,7 +9,7 @@
 #endif
 #define EE 0.006693421622965943333649629920500956359319388866424560546875
 #define krasovsky1940_A 6378245.0
-
+#ifdef __cplusplus
 template <typename T>
 CUDA_HOST_DEVICE void transform(
     const T x, const T y,
@@ -187,14 +187,16 @@ CUDA_HOST_DEVICE void crypto_exact(
         dst_lon = tmp_lon;
         dst_lat = tmp_lat;
     }
-    out_lon = dst_lon;
-    out_lat = dst_lat;
+    *out_lon = dst_lon;
+    *out_lat = dst_lat;
 }
-// float
+#endif
+// #############################################################################
+
 extern "C"{
     
 }
-// double
+// #############################################################################
 extern "C"{
     
 }

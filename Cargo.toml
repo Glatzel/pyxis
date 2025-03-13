@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/*"]
+members = ["src/rust/crates/*"]
 resolver = "2"
 
 [workspace.package]

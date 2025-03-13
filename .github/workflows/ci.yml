@@ -98,7 +98,7 @@ jobs:
           files: |
             src/rust/scripts/cargo-fmt.ps1
             src/rust/crates/**.rs
-            src/rust/rustfmt.toml
+            rustfmt.toml
             .github/**
       - uses: dtolnay/rust-toolchain@nightly
         if: ${{steps.changed.outputs.any_changed !='false'}}
@@ -121,7 +121,7 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           files: |
-            src/rust/**Cargo.toml
+            **Cargo.toml
             .github/**
       - name: Machete
         if: ${{steps.changed.outputs.any_changed !='false'}}

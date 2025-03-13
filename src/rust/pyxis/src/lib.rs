@@ -1,16 +1,16 @@
 mod angle;
 pub mod crypto;
+mod datum_compense;
 mod ellipsoid;
 mod gauss_projection;
 mod linear;
 pub mod migrate;
-mod datum_compense;
 mod space;
 mod types;
 pub use angle::*;
+pub use datum_compense::*;
 pub use ellipsoid::*;
 pub use gauss_projection::*;
 pub use linear::*;
-pub use datum_compense::*;
 pub use space::*;
 pub use types::{ConstEllipsoid, GeoFloat};

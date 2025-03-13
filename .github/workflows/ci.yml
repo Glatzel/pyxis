@@ -268,7 +268,7 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  build-pyxis-cuda:
+  build-rust-cuda:
     strategy:
       fail-fast: false
       matrix:

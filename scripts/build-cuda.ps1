@@ -1,6 +1,6 @@
 param($config)
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot/..
+Set-Location $ROOT
 if ($config) { $config = "-DCMAKE_BUILD_TYPE=Release" }
 
 # create install dir

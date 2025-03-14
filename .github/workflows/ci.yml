@@ -75,6 +75,7 @@ jobs:
           files: |
             .github/**
             cuda/**
+            cpp/**
       - uses: Jimver/cuda-toolkit@v0.2.22
         if: ${{ steps.changed.outputs.any_changed != 'false' }}
         with:
@@ -228,14 +229,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            .github/**
+            rust/**
       - uses: dtolnay/rust-toolchain@stable
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - run: cargo install cargo-codspeed --locked
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
 
       - name: Build the benchmark target(s)
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: cargo codspeed build -p pyxis
         working-directory: ./rust
 
       - name: Run the benchmarks
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: CodSpeedHQ/action@v3
         with:
           run: cargo codspeed run
@@ -246,7 +258,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            .github/**
+            rust/**
       - name: Machete
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: bnjbvr/cargo-machete@main
 
   cargo-test:
@@ -258,18 +278,30 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            .github/**
+            rust/**
       - run: choco install pkgconfiglite
-        if: ${{runner.os == 'Windows'}}
+        if: ${{runner.os == 'Windows' && steps.changed.outputs.any_changed != 'false'}}
       - uses: ./.github/actions/setup-ci
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - uses: dtolnay/rust-toolchain@nightly
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
 
       - name: Install nextest
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: taiki-e/install-action@nextest
 
       - name: Install cargo-llvm-cov
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: cargo-test
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ./rust/scripts/cargo-test.ps1
         shell: pwsh
 
@@ -290,14 +322,25 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            .github/**
+            rust/**
       - uses: dtolnay/rust-toolchain@stable
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - uses: ./.github/actions/setup-ci
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
 
       - name: cargo-doc
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ./rust/scripts/cargo-doc.ps1
         shell: pwsh
 
       - name: upload doc
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: rust-doc
@@ -318,16 +361,26 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            .github/**
+            rust/**
       - uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/setup-ci
+        if: ${{ steps.changed.outputs.any_changed != 'false' && steps.changed.outputs.any_changed != 'false'  }}
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'}}
 
       - name: build
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ./rust/rattler/ci-pyxis-cli.ps1 ${{ inputs.build-dist && '-config  release' || null }}
         shell: pwsh
 
-      - name: upload conda
+      - name: upload
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: rattler-pyxis-cli-${{matrix.machine}}
@@ -348,17 +401,31 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            .github/**
+            cpp/**
+            cuda/**
+            rust/**
       - uses: dtolnay/rust-toolchain@stable
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - uses: ./.github/actions/setup-ci
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - uses: Jimver/cuda-toolkit@v0.2.22
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         with:
           cuda: "12.8.0"
           sub-packages: ${{matrix.sub-packages}}
           method: network
       - name: clippy
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ./rust/scripts/cargo-clippy-cuda.ps1
         shell: pwsh
       - name: build cuda
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ./rust/scripts/build-rust-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
         shell: pwsh
 
@@ -372,9 +439,22 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            .github/**
+            **.rs
+            **Cargo.toml
+            **Cargo.lock
+            **clippy.toml
       - uses: dtolnay/rust-toolchain@stable
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - uses: ./.github/actions/setup-ci
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - name: cargo-clippy
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: |
           ./${{matrix.lang}}/scripts/cargo-clippy.ps1
         shell: pwsh
@@ -388,11 +468,24 @@ jobs:
         lang: [python, rust]
     steps:
       - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            .github/**
+            **.rs
+            **Cargo.toml
+            **Cargo.lock
+            **rustfmt.toml
       - uses: dtolnay/rust-toolchain@nightly
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         with:
           components: rustfmt
       - uses: ./.github/actions/setup-ci
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - name: cargo-fmt
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: |
           ./${{matrix.lang}}/scripts/cargo-fmt.ps1
         shell: pwsh

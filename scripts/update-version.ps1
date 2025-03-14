@@ -1,5 +1,5 @@
 Set-Location $PSScriptRoot/..
-$version= "0.0.13"
+$version= "0.0.14"
 
 # Update cpp version
 $cmakeListsPath = "./cpp/CMakeLists.txt"
@@ -20,10 +20,3 @@ Write-Host "Updated python version to $version"
 $cargoTomlPath = "./rust/Cargo.toml"
 (Get-Content -Path $cargoTomlPath) -replace '^version = .*', "version = `"$version`"" | Set-Content -Path $cargoTomlPath
 Write-Host "Updated Rust version to $version"
-
-# Update the version in rattler
-foreach ($pkg in ("pyxis-cli","pyxis-py")) {
-    $recipe_path = "./rattler/$pkg/recipe.yaml"
-    (Get-Content -Path $recipe_path) -replace '^  version: .*', "  version: $version" | Set-Content -Path $recipe_path
-    Write-Host "Updated ratter $pkg version to $version"
-}

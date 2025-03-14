@@ -1,0 +1,40 @@
+[project]
+authors = ["Glatzel <893016099@qq.com>"]
+channels = ["conda-forge","nvidia"]
+description = "Add a short description here"
+name = "pyxis"
+platforms = ["win-64", "linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[feature.py311.dependencies]
+python = "3.11.*"
+
+[feature.build.dependencies]
+maturin = "*"
+pip = "*"
+proj = "9.4.*"
+rattler-build="*"
+
+[feature.py-deps.dependencies]
+lazy-loader = "*"
+nomkl = "*"
+numpy = "*"
+scipy = "*"
+cupy-core="*"
+
+[feature.py-test.dependencies]
+pytest = "*"
+pytest-cov = "*"
+
+[feature.py-doc.dependencies]
+autodocsumm = "*"
+numpydoc = "*"
+pydata-sphinx-theme = "*"
+sphinx = "*"
+sphinx-autosummary-accessors = "*"
+sphinx-copybutton = "*"
+
+[environments]
+default = ["py311", "build", "py-deps", "py-test", "py-doc"]

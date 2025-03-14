@@ -1,0 +1,9 @@
+[project]
+authors = ["Glatzel"]
+channels = ["conda-forge"]
+name = "pyxis-rust"
+platforms = ["win-64", "linux-64"]
+version = "0.1.0"
+
+[dependencies]
+proj = "9.4.*"

@@ -10,9 +10,38 @@ on:
 
 jobs:
   update-pixi:
-    uses: Glatzel/template/.github/workflows/update-pixi-lock.yml@main
-    with:
-      draft: 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lang: [rattler,python,rust]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
+        with:
+          run-install: false
+
+      - name: Update lockfiles
+        run: |
+          set-location ./${{matrix.lang}}
+          pixi update --no-install --json | pixi exec pixi-diff-to-markdown >> diff.md
+        shell: pwsh
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "build: Update ${{matrix.lang}} pixi lockfile"
+          title: "build: update pixi lockfile"
+          body-path: ./${{matrix.lang}}/diff.md
+          branch: update-pixi
+          base: main
+          labels: action
+          delete-branch: true
+          add-paths: pixi.lock
+          assignees: Glatzel
+          draft: true
 
   update-vcpkg-baseline:
     runs-on: windows-latest

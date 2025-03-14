@@ -1,0 +1,10 @@
+[project]
+authors = ["Glatzel <893016099@qq.com>"]
+channels = ["conda-forge","nvidia"]
+description = "Add a short description here"
+name = "pyxis-rattler"
+platforms = ["win-64", "linux-64"]
+version = "0.1.0"
+
+[dependencies]
+rattler-build="*"

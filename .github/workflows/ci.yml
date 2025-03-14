@@ -65,10 +65,26 @@ jobs:
 
   # region check
   ruff-lint:
-    uses: Glatzel/template/.github/workflows/ruff.yml@main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
+        with:
+          run-install: false
+      - name: install ruff
+        run: pixi global install ruff
+
+      - name: lint
+        run: ruff check --output-format=github .
+        working-directory: ./python
+
 
   cargo-clippy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lang: [python,rust]
     env:
       RUSTFLAGS: "-Dwarnings"
     steps:
@@ -76,13 +92,17 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/setup-ci
       - name: cargo-clippy
-        run: ./scripts/cargo-clippy.ps1
+        run: |
+          ./${{matrix.lang}}/scripts/cargo-clippy.ps1
         shell: pwsh
 
   cargo-fmt:
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"
+    strategy:
+      matrix:
+        lang: [python,rust]
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@nightly
@@ -90,7 +110,8 @@ jobs:
           components: rustfmt
       - uses: ./.github/actions/setup-ci
       - name: cargo-fmt
-        run: ./scripts/cargo-fmt.ps1
+        run: |
+          ./${{matrix.lang}}/scripts/cargo-fmt.ps1
         shell: pwsh
 
   cargo-machete:
@@ -109,14 +130,14 @@ jobs:
 
       - name: Build the benchmark target(s)
         run: cargo codspeed build -p pyxis
-        working-directory: ./src/rust
+        working-directory: ./rust
 
       - name: Run the benchmarks
         uses: CodSpeedHQ/action@v3
         with:
           run: cargo codspeed run
           token: ${{ secrets.CODSPEED_TOKEN }}
-          working-directory: "./src/rust"
+          working-directory: "./rust"
 
   cargo-test:
     needs: out-cache
@@ -139,7 +160,7 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: cargo-test
-        run: ./scripts/cargo-test.ps1
+        run: ./rust/scripts/cargo-test.ps1
         shell: pwsh
 
       - name: Upload results to Codecov
@@ -164,7 +185,7 @@ jobs:
       - uses: ./.github/actions/setup-ci
 
       - name: cargo-doc
-        run: ./scripts/cargo-doc.ps1
+        run: ./rust/scripts/cargo-doc.ps1
         shell: pwsh
 
       - name: upload doc
@@ -183,7 +204,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
 
       - name: sphinx build
-        run: ./scripts/py-sphinx.ps1
+        run: ./python/scripts/py-sphinx.ps1
         shell: pwsh
 
       - name: upload doc
@@ -213,7 +234,7 @@ jobs:
         if: ${{runner.os == 'Windows'}}
 
       - name: build
-        run: ./src/rattler/pyxis-cli/ci-pyxis-cli.ps1 ${{ inputs.build-dist && '-config  release' || null }}
+        run: ./rattler/pyxis-cli/ci-pyxis-cli.ps1 ${{ inputs.build-dist && '-config  release' || null }}
         shell: pwsh
 
       - name: upload conda
@@ -221,7 +242,7 @@ jobs:
         with:
           name: rattler-pyxis-cli-${{matrix.machine}}
           path: |
-            src/rattler/pyxis-cli/output/${{matrix.os}}/*.conda
+            rattler/pyxis-cli/output/${{matrix.os}}/*.conda
             dist/*.7z
           if-no-files-found: error
 
@@ -252,7 +273,7 @@ jobs:
           method: network
 
       - name: build
-        run: ./src/rattler/pyxis-py/ci-pyxis-py.ps1 ${{ inputs.build-dist && '-config  release' || null }}
+        run: ./rattler/pyxis-py/ci-pyxis-py.ps1 ${{ inputs.build-dist && '-config  release' || null }}
         shell: pwsh
 
       - name: upload conda
@@ -260,7 +281,7 @@ jobs:
         with:
           name: rattler-pyxis-py-${{matrix.machine}}
           path: |
-            src/rattler/pyxis-py/output/${{matrix.os}}/*.conda
+            rattler/pyxis-py/output/${{matrix.os}}/*.conda
             dist/*.whl
           if-no-files-found: error
 
@@ -281,7 +302,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: build cpp
-        run: ./scripts/build-cpp.ps1 ${{ inputs.build-dist && '-config release' || null }}
+        run: ./cpp/scripts/build-cpp.ps1 ${{ inputs.build-dist && '-config release' || null }}
         shell: pwsh
       - name: upload cpp
         uses: actions/upload-artifact@v4
@@ -309,8 +330,11 @@ jobs:
           cuda: "12.8.0"
           sub-packages: ${{matrix.sub-packages}}
           method: network
+      - name: clippy
+        run: ./rust/scripts/cargo-clippy-cuda.ps1
+        shell: pwsh
       - name: build cuda
-        run: ./scripts/build-rust-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
+        run: ./rust/scripts/build-rust-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
         shell: pwsh
 
   build-cuda:
@@ -331,7 +355,7 @@ jobs:
           sub-packages: ${{matrix.sub-packages}}
           method: network
       - name: build cuda
-        run: ./scripts/build-cuda.ps1
+        run: ./cuda/scripts/build-cuda.ps1
         shell: pwsh
       - name: upload cuda
         uses: actions/upload-artifact@v4

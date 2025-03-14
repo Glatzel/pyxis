@@ -2,16 +2,17 @@ version: 2
 updates:
   - package-ecosystem: "github-actions"
     directories:
-      - /.github/workflows
-      - /.github/actions/setup-ci
-
+      - .github/workflows
+      - .github/actions/setup-ci
     schedule:
       interval: monthly
     commit-message:
       prefix: "ci"
 
   - package-ecosystem: cargo
-    directory: ./src/rust
+    directories:
+      - ./rust
+      - ./python
     schedule:
       interval: monthly
     commit-message:

@@ -28,12 +28,13 @@
 	"settings": {
 		"VSCodeCounter.exclude": [
 			"**/.gitignore",
-			"**/.vscode/**",
 			"**/node_modules/**",
 			"tests_report",
 			"**/*.lock",
-			"**/vcpkg",
-			"**/changelog.md"
+			"vcpkg/**.cmake",
+			"vcpkg/installed/**",
+			"**/changelog.md",
+			"**.code-workspace"
 		],
 		"rust-analyzer.cargo.extraEnv": {
 			"CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",

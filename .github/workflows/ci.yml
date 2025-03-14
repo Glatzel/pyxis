@@ -330,6 +330,9 @@ jobs:
           cuda: "12.8.0"
           sub-packages: ${{matrix.sub-packages}}
           method: network
+      - name: clippy
+        run: ./rust/scripts/cargo-clippy-cuda.ps1
+        shell: pwsh
       - name: build cuda
         run: ./rust/scripts/build-rust-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
         shell: pwsh

@@ -7,7 +7,7 @@ Set-Location $PSScriptRoot
 . ../scripts/utils.ps1
 
 & "$ROOT/rust/scripts/build-rust-cli.ps1" -config $config
-& "$ROOT/rust/pyxis-cli/examples/cli.ps1"
+& "$ROOT/rust/crates/pyxis-cli/examples/cli.ps1"
 
 Set-Location $PSScriptRoot
 build_pkg

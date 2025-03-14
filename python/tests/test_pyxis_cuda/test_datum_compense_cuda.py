@@ -5,6 +5,7 @@ import pytest
 @pytest.mark.cuda
 def test_datum_compense_cuda():
     import cupy as cp
+
     from pyxis.pyxis_cuda import DatumCompenseCuda
 
     x = np.array([469704.6693] * 2, dtype=np.float64)

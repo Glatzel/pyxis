@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 import pyxis
 from pyxis import COORD_CRYPTO_SPACE
 

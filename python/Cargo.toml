@@ -1,15 +1,25 @@
 [package]
 name = "pyxis-py"
-version.workspace = true
-edition.workspace = true
+version = "0.0.13"
+edition = "2024"
 
 [dependencies]
-numpy = { workspace = true }
-pyo3 = { workspace = true }
-pyxis = { workspace = true }
-rayon = { workspace = true }
-miette = { workspace = true }
+numpy = "0.23.0"
+pyxis = { path = "./../rust/crates/pyxis/" }
+rayon = "1.10.0"
+miette = "7.5.0"
+pyo3 = { version = "0.23.4", features = ["extension-module", "abi3-py311"] }
 
 [lib]
 name = "pyxis_py"
 crate-type = ["cdylib"]
+
+[profile.release]
+codegen-units = 1
+debug = false
+lto = "fat"
+opt-level = 3
+strip = true
+
+[profile.develop]
+inherits="dev"

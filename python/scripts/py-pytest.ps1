@@ -1,6 +1,5 @@
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
-Set-Location ./src/python
 
 # only run cuda test in local machine
 if ($env:CI) {

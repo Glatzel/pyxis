@@ -5,7 +5,6 @@ param (
 $ROOT = git rev-parse --show-toplevel
 
 Set-Location $PSScriptRoot/..
-Set-Location src/python
 Remove-Item pyxis/pyxis.pyd -ErrorAction SilentlyContinue
 
 pixi run cargo build --profile  $config -p pyxis-py

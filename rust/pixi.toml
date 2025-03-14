@@ -7,3 +7,4 @@ version = "0.1.0"
 
 [dependencies]
 proj = "9.4.*"
+rattler-build="*"

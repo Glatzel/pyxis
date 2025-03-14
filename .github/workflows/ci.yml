@@ -27,6 +27,173 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # region cpp
+  build-cpp:
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest, ubuntu-latest]
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - id: changed
+        if: ${{github.event_name != 'pull_request'}}
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            .github/**
+            cpp/**
+      - name: build cpp
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        run: ./cpp/scripts/build-cpp.ps1 ${{ inputs.build-dist && '-config release' || null }}
+        shell: pwsh
+      - name: upload cpp
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cpp-${{matrix.machine}}
+          path: dist/*.7z
+          if-no-files-found: error
+
+  # region cuda
+  build-cuda:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - machine: windows-latest
+            sub-packages: '["nvcc","cudart"]'
+          - machine: ubuntu-latest
+            sub-packages: '["nvcc"]'
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            .github/**
+            cuda/**
+      - uses: Jimver/cuda-toolkit@v0.2.22
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        with:
+          cuda: "12.8.0"
+          sub-packages: ${{matrix.sub-packages}}
+          method: network
+      - name: build cuda
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        run: ./cuda/scripts/build-cuda.ps1
+        shell: pwsh
+      - name: upload cuda
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cuda-${{matrix.machine}}
+          path: dist/*.7z
+          if-no-files-found: error
+
+  # region python
+  ruff-lint:
+    runs-on: ubuntu-latest`
+    steps:
+      - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            **ruff.toml
+            **.py
+      - name: Set up pixi
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        uses: prefix-dev/setup-pixi@v0.8.3
+        with:
+          run-install: false
+      - name: install ruff
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        run: pixi global install ruff
+      - name: lint
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        run: ruff check --output-format=github .
+        working-directory: ./python
+
+  sphinx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: changed
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name != 'pull_request'}}
+        with:
+          files: |
+            ./python/**
+      - name: Set up pixi
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        uses: ./.github/actions/setup-ci
+      - uses: dtolnay/rust-toolchain@stable
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+
+      - name: sphinx build
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        run: ./python/scripts/py-sphinx.ps1
+        shell: pwsh
+
+      - name: upload doc
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-doc
+          path: dist/*.7z
+          if-no-files-found: error
+
+  rattler-pyxis-py:
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest, ubuntu-latest]
+        include:
+          - machine: windows-latest
+            os: win-64
+            sub-packages: '["nvcc","cudart"]'
+          - machine: ubuntu-latest
+            os: linux-64
+            sub-packages: '["nvcc"]'
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/setup-ci
+      - run: choco install pkgconfiglite
+        if: ${{runner.os == 'Windows'}}
+      - uses: Jimver/cuda-toolkit@v0.2.22
+        with:
+          cuda: "12.8.0"
+          sub-packages: ${{matrix.sub-packages}}
+          method: network
+
+      - name: build
+        run: ./python/rattler/ci-pyxis-py.ps1 ${{ inputs.build-dist && '-config  release' || null }}
+        shell: pwsh
+
+      - name: upload conda
+        uses: actions/upload-artifact@v4
+        with:
+          name: rattler-pyxis-py-${{matrix.machine}}
+          path: |
+            rattler/pyxis-py/output/${{matrix.os}}/*.conda
+            dist/*.whl
+          if-no-files-found: error
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v5
+      - name: Upload test results to Codecov
+        uses: codecov/test-results-action@v1
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  # region rust
   cache-vcpkg:
     runs-on: windows-latest
     steps:
@@ -57,70 +224,6 @@ jobs:
           path: ./vcpkg/installed
           key: ${{steps.restore-vcpkg.outputs.cache-primary-key}}
 
-  out-cache:
-    needs: [cache-vcpkg]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "out cache."
-
-  # region check
-  ruff-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.3
-        with:
-          run-install: false
-      - name: install ruff
-        run: pixi global install ruff
-
-      - name: lint
-        run: ruff check --output-format=github .
-        working-directory: ./python
-
-
-  cargo-clippy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        lang: [python,rust]
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci
-      - name: cargo-clippy
-        run: |
-          ./${{matrix.lang}}/scripts/cargo-clippy.ps1
-        shell: pwsh
-
-  cargo-fmt:
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    strategy:
-      matrix:
-        lang: [python,rust]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
-        with:
-          components: rustfmt
-      - uses: ./.github/actions/setup-ci
-      - name: cargo-fmt
-        run: |
-          ./${{matrix.lang}}/scripts/cargo-fmt.ps1
-        shell: pwsh
-
-  cargo-machete:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Machete
-        uses: bnjbvr/cargo-machete@main
-
   cargo-bench:
     runs-on: ubuntu-latest
     steps:
@@ -139,8 +242,15 @@ jobs:
           token: ${{ secrets.CODSPEED_TOKEN }}
           working-directory: "./rust"
 
+  cargo-machete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Machete
+        uses: bnjbvr/cargo-machete@main
+
   cargo-test:
-    needs: out-cache
+    needs: cache-vcpkg
     strategy:
       fail-fast: false
       matrix:
@@ -174,7 +284,6 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  # region build
   cargo-doc:
     runs-on: ubuntu-latest
     env:
@@ -195,31 +304,12 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  sphinx:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up pixi
-        uses: ./.github/actions/setup-ci
-      - uses: dtolnay/rust-toolchain@stable
-
-      - name: sphinx build
-        run: ./python/scripts/py-sphinx.ps1
-        shell: pwsh
-
-      - name: upload doc
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-doc
-          path: dist/*.7z
-          if-no-files-found: error
-
   rattler-pyxis-cli:
-    needs: out-cache
+    needs: cache-vcpkg
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest,ubuntu-latest]
+        machine: [windows-latest, ubuntu-latest]
         include:
           - machine: windows-latest
             os: win-64
@@ -234,7 +324,7 @@ jobs:
         if: ${{runner.os == 'Windows'}}
 
       - name: build
-        run: ./rattler/pyxis-cli/ci-pyxis-cli.ps1 ${{ inputs.build-dist && '-config  release' || null }}
+        run: ./rust/rattler/ci-pyxis-cli.ps1 ${{ inputs.build-dist && '-config  release' || null }}
         shell: pwsh
 
       - name: upload conda
@@ -244,71 +334,6 @@ jobs:
           path: |
             rattler/pyxis-cli/output/${{matrix.os}}/*.conda
             dist/*.7z
-          if-no-files-found: error
-
-  rattler-pyxis-py:
-    needs: out-cache
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [windows-latest,ubuntu-latest]
-        include:
-          - machine: windows-latest
-            os: win-64
-            sub-packages: '["nvcc","cudart"]'
-          - machine: ubuntu-latest
-            os: linux-64
-            sub-packages: '["nvcc"]'
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci
-      - run: choco install pkgconfiglite
-        if: ${{runner.os == 'Windows'}}
-      - uses: Jimver/cuda-toolkit@v0.2.22
-        with:
-          cuda: "12.8.0"
-          sub-packages: ${{matrix.sub-packages}}
-          method: network
-
-      - name: build
-        run: ./rattler/pyxis-py/ci-pyxis-py.ps1 ${{ inputs.build-dist && '-config  release' || null }}
-        shell: pwsh
-
-      - name: upload conda
-        uses: actions/upload-artifact@v4
-        with:
-          name: rattler-pyxis-py-${{matrix.machine}}
-          path: |
-            rattler/pyxis-py/output/${{matrix.os}}/*.conda
-            dist/*.whl
-          if-no-files-found: error
-
-      - name: Upload results to Codecov
-        uses: codecov/codecov-action@v5
-      - name: Upload test results to Codecov
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  build-cpp:
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [windows-latest, ubuntu-latest]
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - name: build cpp
-        run: ./cpp/scripts/build-cpp.ps1 ${{ inputs.build-dist && '-config release' || null }}
-        shell: pwsh
-      - name: upload cpp
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-cpp-${{matrix.machine}}
-          path: dist/*.7z
           if-no-files-found: error
 
   build-rust-cuda:
@@ -337,29 +362,37 @@ jobs:
         run: ./rust/scripts/build-rust-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
         shell: pwsh
 
-  build-cuda:
+  # region rust-python
+  cargo-clippy:
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - machine: windows-latest
-            sub-packages: '["nvcc","cudart"]'
-          - machine: ubuntu-latest
-            sub-packages: '["nvcc"]'
-    runs-on: ${{matrix.machine}}
+        lang: [python, rust]
+    env:
+      RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
-      - uses: Jimver/cuda-toolkit@v0.2.22
-        with:
-          cuda: "12.8.0"
-          sub-packages: ${{matrix.sub-packages}}
-          method: network
-      - name: build cuda
-        run: ./cuda/scripts/build-cuda.ps1
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/setup-ci
+      - name: cargo-clippy
+        run: |
+          ./${{matrix.lang}}/scripts/cargo-clippy.ps1
         shell: pwsh
-      - name: upload cuda
-        uses: actions/upload-artifact@v4
+
+  cargo-fmt:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-Dwarnings"
+    strategy:
+      matrix:
+        lang: [python, rust]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
         with:
-          name: pyxis-cuda-${{matrix.machine}}
-          path: dist/*.7z
-          if-no-files-found: error
+          components: rustfmt
+      - uses: ./.github/actions/setup-ci
+      - name: cargo-fmt
+        run: |
+          ./${{matrix.lang}}/scripts/cargo-fmt.ps1
+        shell: pwsh

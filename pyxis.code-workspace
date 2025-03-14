@@ -1,28 +1,32 @@
 {
 	"folders": [
 		{
+			"name": "pyxis",
 			"path": "."
 		},
 		{
+			"name": ".github",
 			"path": ".github"
 		},
 		{
+			"name": "cpp",
 			"path": "cpp"
 		},
 		{
+			"name": "cuda",
 			"path": "cuda"
 		},
 		{
+			"name": "python",
+			"path": "python"
+		},
+		{
+			"name": "rust",
 			"path": "rust"
 		},
 		{
+			"name": "vcpkg",
 			"path": "vcpkg"
-		},
-		{
-			"path": "rattler"
-		},
-		{
-			"path": "python"
 		}
 	],
 	"settings": {

@@ -198,17 +198,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pkg: [pyxis-cli, pyxis-py]
         machine: [windows-latest,ubuntu-latest]
         include:
-          - pkg: pyxis-cli
-            upload-other: dist/*.7z
-            codecov: false
-
-          - pkg: pyxis-py
-            upload-other: dist/*.whl
-            codcov: true
-
           - machine: windows-latest
             os: win-64
           - machine: ubuntu-latest

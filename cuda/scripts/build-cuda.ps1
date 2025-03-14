@@ -1,11 +1,11 @@
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
-Set-Location $ROOT/src/cuda
+Set-Location $ROOT/cuda
 $config = "-DCMAKE_BUILD_TYPE=Release"
 
 # create install dir
-$install = "$ROOT/dist/pyxis-cuda"
+$install = "$ROOT/dist/cuda"
 Remove-Item $install -Recurse -ErrorAction SilentlyContinue
 New-Item $install -ItemType Directory -ErrorAction SilentlyContinue
 $install = Resolve-Path $install
@@ -22,15 +22,8 @@ cmake --build build --target install
 # pack output files
 if ($IsWindows) {
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "$ROOT/dist/pyxis-cuda-windows-x64.7z" "$ROOT/dist/pyxis-cuda/"
+        "$ROOT/dist/pyxis-cuda-windows-x64.7z" "$ROOT/dist/cuda/"
 }if ($IsLinux) {
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "$ROOT/dist/pyxis-cuda-linux-x64.7z" "$ROOT/dist/pyxis-cuda/"
+        "$ROOT/dist/pyxis-cuda-linux-x64.7z" "$ROOT/dist/cuda/"
 }
-
-# install to python src
-Remove-Item $ROOT/src/python/pyxis/cuda/ptx -Recurse -Force -ErrorAction SilentlyContinue
-New-Item $ROOT/src/python/pyxis/cuda/ptx -ItemType Directory -ErrorAction SilentlyContinue
-Copy-Item $ROOT/dist/pyxis-cuda/ptx/* $ROOT/src/python/pyxis/cuda/ptx/
-
-Set-Location $ROOT

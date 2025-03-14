@@ -1,0 +1,56 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": ".github"
+		},
+		{
+			"path": "cpp"
+		},
+		{
+			"path": "cuda"
+		},
+		{
+			"path": "rust"
+		},
+		{
+			"path": "vcpkg"
+		},
+		{
+			"path": "rattler"
+		}
+	],
+	"settings": {
+		"VSCodeCounter.exclude": [
+			"**/.gitignore",
+			"**/.vscode/**",
+			"**/node_modules/**",
+			"tests_report",
+			"**/*.lock",
+			"**/vcpkg",
+			"**/changelog.md"
+		],
+		"rust-analyzer.cargo.extraEnv": {
+			"CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/default",
+			"PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
+		},
+		"rust-analyzer.check.extraEnv": {
+			"CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/default",
+			"PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
+		},
+		"rust-analyzer.runnables.extraEnv": {
+			"CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/default",
+			"PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
+		},
+		"rust-analyzer.server.extraEnv": {
+			"CONDA_PREFIX": "${workspaceFolder}/.pixi/envs/default",
+			"PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
+		},
+		"rust-analyzer.testExplorer": true,
+		"terminal.integrated.env.windows": {
+			"PYTHONPATH": "${workspaceFolder}"
+		}
+	}
+}

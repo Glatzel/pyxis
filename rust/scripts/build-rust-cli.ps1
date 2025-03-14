@@ -8,7 +8,7 @@ Set-Location $PSScriptRoot/..
 
 # clean dist folder
 Remove-Item $ROOT/dist/cli -Recurse -ErrorAction SilentlyContinue
-Remove-Item $ROOT/dist/pyxis*.7z -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item $ROOT/dist/pyxis-cli*.7z -Recurse -Force -ErrorAction SilentlyContinue
 
 if ($IsWindows) {
     # build static##############################################################

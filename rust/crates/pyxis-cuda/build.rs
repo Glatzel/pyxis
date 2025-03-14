@@ -7,25 +7,31 @@ fn main() {
     let cpp_src_dir = canonicalize(Path::new("."))
         .unwrap()
         .parent()
+        .unwrap() //crates
+        .parent()
         .unwrap() //rust
         .parent()
-        .unwrap() //src
+        .unwrap() //root
         .join("cpp")
         .join("src");
     let cpp_include_dir = canonicalize(Path::new("."))
         .unwrap()
         .parent()
+        .unwrap() //crates
+        .parent()
         .unwrap() //rust
         .parent()
-        .unwrap() //src
+        .unwrap() //root
         .join("cpp")
         .join("include");
     let cu_kernel_dir = canonicalize(Path::new("."))
         .unwrap()
         .parent()
+        .unwrap() //crates
+        .parent()
         .unwrap() //rust
         .parent()
-        .unwrap() //src
+        .unwrap() //root
         .join("cuda")
         .join("src");
     println!("cargo:rerun-if-changed={}", cpp_src_dir.to_str().unwrap());

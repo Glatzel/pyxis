@@ -1,5 +1,5 @@
 $ROOT = git rev-parse --show-toplevel
-Set-Location $ROOT
+Set-Location $PSScriptRoot/..
 & $PSScriptRoot/set-env.ps1
 if($env:CI){
     cargo doc --no-deps --all-features --package pyxis

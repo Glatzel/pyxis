@@ -1,4 +1,5 @@
-use cust::{memory::DeviceCopy, prelude::*};
+use cust::memory::DeviceCopy;
+use cust::prelude::*;
 use pyxis::{GeoFloat, IDatumCompenseParms};
 
 use crate::context::PyxisCudaContext;

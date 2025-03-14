@@ -1,8 +1,7 @@
-use cust::{memory::DeviceCopy, prelude::*};
-use pyxis::{
-    GeoFloat,
-    crypto::{CryptoSpace, CryptoThresholdMode},
-};
+use cust::memory::DeviceCopy;
+use cust::prelude::*;
+use pyxis::GeoFloat;
+use pyxis::crypto::{CryptoSpace, CryptoThresholdMode};
 
 use crate::{PyxisCudaContext, PyxisPtx};
 

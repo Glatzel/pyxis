@@ -20,3 +20,13 @@ Write-Host "Updated python version to $version"
 $cargoTomlPath = "./rust/Cargo.toml"
 (Get-Content -Path $cargoTomlPath) -replace '^version = .*', "version = `"$version`"" | Set-Content -Path $cargoTomlPath
 Write-Host "Updated Rust version to $version"
+
+# Update python rattler version
+$recipe_path = "./python/rattler/recipe.yaml"
+(Get-Content -Path $recipe_path) -replace '^  version: .*', "  version: $version" | Set-Content -Path $recipe_path
+Write-Host "Updated ratter $pkg version to $version"
+
+# Update rust rattler version
+$recipe_path = "./rust/rattler/recipe.yaml"
+(Get-Content -Path $recipe_path) -replace '^  version: .*', "  version: $version" | Set-Content -Path $recipe_path
+Write-Host "Updated ratter $pkg version to $version"

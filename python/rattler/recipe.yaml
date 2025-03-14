@@ -1,5 +1,5 @@
 package:
-  version: 0.0.13
+  version: 0.0.14
   name: pyxis-py
 build:
   string: ${{ "cpu" if cuda_variant == "numpy" else ( 'gpu' if cuda_variant=='cupy-core' else 'gpu_cudart')}}_${{ hash }}_${{ build_number }}

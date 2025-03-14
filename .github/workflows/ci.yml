@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: changed
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         uses: tj-actions/changed-files@v45
         with:
           files: |
@@ -70,7 +70,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             .github/**
@@ -101,7 +101,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             **ruff.toml
@@ -125,7 +125,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             ./python/**
@@ -231,7 +231,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             .github/**
@@ -260,7 +260,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             .github/**
@@ -280,7 +280,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             .github/**
@@ -324,7 +324,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             .github/**
@@ -363,7 +363,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             .github/**
@@ -403,7 +403,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             .github/**
@@ -441,7 +441,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             .github/**
@@ -470,7 +470,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: changed
         uses: tj-actions/changed-files@v45
-        if: ${{github.event_name != 'pull_request'}}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             .github/**

@@ -179,13 +179,13 @@ impl ContextTransform {
     pub fn space(&mut self, from: CoordSpace, to: CoordSpace) {
         (self.x, self.y, self.z) = match (from, to) {
             (CoordSpace::Cartesian, CoordSpace::Cylindrical) => {
-                pyxis::cartesian_to_polar(self.x, self.y, self.z)
+                pyxis::cartesian_to_cylindrical(self.x, self.y, self.z)
             }
             (CoordSpace::Cartesian, CoordSpace::Spherical) => {
                 pyxis::cartesian_to_spherical(self.x, self.y, self.z)
             }
             (CoordSpace::Cylindrical, CoordSpace::Cartesian) => {
-                pyxis::polar_to_cartesian(self.x, self.y, self.z)
+                pyxis::cylindrical_to_cartesian(self.x, self.y, self.z)
             }
             (CoordSpace::Cylindrical, CoordSpace::Spherical) => {
                 pyxis::cylindrical_to_spherical(self.x, self.y, self.z)

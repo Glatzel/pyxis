@@ -3,6 +3,7 @@ param (
     $config = "develop"
 )
 $ROOT = git rev-parse --show-toplevel
+
 Set-Location $PSScriptRoot/..
 Set-Location src/python
 Remove-Item pyxis/pyxis.pyd -ErrorAction SilentlyContinue

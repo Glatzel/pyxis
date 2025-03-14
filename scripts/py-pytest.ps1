@@ -1,9 +1,19 @@
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 Set-Location ./src/python
+
+# only run cuda test in local machine
+if ($env:CI) {
+    $markers = "not cuda"
+}
+else {
+    $markers = ""
+}
+
 # run test
 pixi run pytest `
     ./tests `
+    -m $markers `
     --durations=10 `
     --junitxml=tests_report/junit.xml `
     -o junit_family=legacy `

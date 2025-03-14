@@ -16,11 +16,13 @@ maturin = "*"
 pip = "*"
 proj = "9.4.*"
 rattler-build="*"
+
 [feature.py-deps.dependencies]
 lazy-loader = "*"
 nomkl = "*"
 numpy = "*"
 scipy = "*"
+cupy-core="*"
 
 [feature.py-test.dependencies]
 pytest = "*"

@@ -20,3 +20,7 @@ __all__ = [
     "transformation_residuals7",
     "xyz2lbh",
 ]
+import importlib
+
+if importlib.util.find_spec("cupy"):
+    __all__.append("pyxis_cuda")

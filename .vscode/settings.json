@@ -36,7 +36,8 @@
     },
     "python.analysis.exclude": [
         "**/vcpkg",
-        ".pixi"
+        "**/.pixi",
+        "**/src/rattler"
     ],
     "files.associations": {
         "cmath": "cpp",

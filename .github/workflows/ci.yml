@@ -193,22 +193,13 @@ jobs:
           path: dist/*.7z
           if-no-files-found: error
 
-  build-rattler:
+  rattler-pyxis-cli:
     needs: out-cache
     strategy:
       fail-fast: false
       matrix:
-        pkg: [pyxis-cli, pyxis-py]
         machine: [windows-latest,ubuntu-latest]
         include:
-          - pkg: pyxis-cli
-            upload-other: dist/*.7z
-            codecov: false
-
-          - pkg: pyxis-py
-            upload-other: dist/*.whl
-            codcov: true
-
           - machine: windows-latest
             os: win-64
           - machine: ubuntu-latest
@@ -222,29 +213,60 @@ jobs:
         if: ${{runner.os == 'Windows'}}
 
       - name: build
-        run: ./src/rattler/${{matrix.pkg}}/ci-${{matrix.pkg}}.ps1 ${{ inputs.build-dist && '-config  release' || null }}
+        run: ./src/rattler/pyxis-cli/ci-pyxis-cli.ps1 ${{ inputs.build-dist && '-config  release' || null }}
         shell: pwsh
 
       - name: upload conda
         uses: actions/upload-artifact@v4
         with:
-          name: rattler-conda-${{matrix.pkg}}-${{matrix.machine}}
-          path: src/rattler/${{matrix.pkg}}/output/${{matrix.os}}/*.conda
+          name: rattler-pyxis-cli-${{matrix.machine}}
+          path: |
+            src/rattler/pyxis-cli/output/${{matrix.os}}/*.conda
+            dist/*.7z
           if-no-files-found: error
 
-      - name: upload other
-        if: ${{matrix.upload-other != ''}}
+  rattler-pyxis-py:
+    needs: out-cache
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest,ubuntu-latest]
+        include:
+          - machine: windows-latest
+            os: win-64
+            sub-packages: '["nvcc","cudart"]'
+          - machine: ubuntu-latest
+            os: linux-64
+            sub-packages: '["nvcc"]'
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/setup-ci
+      - run: choco install pkgconfiglite
+        if: ${{runner.os == 'Windows'}}
+      - uses: Jimver/cuda-toolkit@v0.2.22
+        with:
+          cuda: "12.8.0"
+          sub-packages: ${{matrix.sub-packages}}
+          method: network
+
+      - name: build
+        run: ./src/rattler/pyxis-py/ci-pyxis-py.ps1 ${{ inputs.build-dist && '-config  release' || null }}
+        shell: pwsh
+
+      - name: upload conda
         uses: actions/upload-artifact@v4
         with:
-          name: rattler-${{matrix.pkg}}-other-${{matrix.machine}}
-          path: ${{matrix.upload-other}}
+          name: rattler-pyxis-py-${{matrix.machine}}
+          path: |
+            src/rattler/pyxis-py/output/${{matrix.os}}/*.conda
+            dist/*.whl
           if-no-files-found: error
 
       - name: Upload results to Codecov
-        if: ${{matrix.codcov}}
         uses: codecov/codecov-action@v5
       - name: Upload test results to Codecov
-        if: ${{matrix.codcov}}
         uses: codecov/test-results-action@v1
         with:
           fail_ci_if_error: true

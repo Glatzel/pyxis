@@ -82,6 +82,9 @@ jobs:
 
   cargo-clippy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lang: [python,rust]
     env:
       RUSTFLAGS: "-Dwarnings"
     steps:
@@ -90,14 +93,16 @@ jobs:
       - uses: ./.github/actions/setup-ci
       - name: cargo-clippy
         run: |
-          ./python/scripts/cargo-clippy.ps1
-          ./rust/scripts/cargo-clippy.ps1
+          ./${{matrix.lang}}/scripts/cargo-clippy.ps1
         shell: pwsh
 
   cargo-fmt:
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"
+    strategy:
+      matrix:
+        lang: [python,rust]
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@nightly
@@ -106,8 +111,7 @@ jobs:
       - uses: ./.github/actions/setup-ci
       - name: cargo-fmt
         run: |
-          ./python/scripts/cargo-fmt.ps1
-          ./rust/scripts/cargo-fmt.ps1
+          ./${{matrix.lang}}/scripts/cargo-fmt.ps1
         shell: pwsh
 
   cargo-machete:

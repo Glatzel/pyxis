@@ -74,7 +74,7 @@ jobs:
           run-install: false
       - name: install ruff
         run: pixi global install ruff
-  
+
       - name: lint
         run: ruff check --output-format=github .
         working-directory: ./python

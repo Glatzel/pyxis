@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        lang: [rattler,python,rust]
+        lang: [python,rust]
     steps:
       - uses: actions/checkout@v4
 

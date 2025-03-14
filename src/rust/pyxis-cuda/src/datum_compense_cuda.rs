@@ -1,5 +1,5 @@
-use cust::prelude::*;
-use pyxis::IDatumCompenseParms;
+use cust::{memory::DeviceCopy, prelude::*};
+use pyxis::{GeoFloat, IDatumCompenseParms};
 
 use crate::context::PyxisCudaContext;
 
@@ -10,16 +10,17 @@ const PTX: crate::context::PyxisPtx = crate::context::PyxisPtx {
     size: PTX_STR.len(),
 };
 impl PyxisCudaContext {
-    pub fn datum_compense_cuda(
+    pub fn datum_compense_cuda<T: 'static + DeviceCopy + GeoFloat>(
         &self,
-        xc: &mut DeviceBuffer<f64>,
-        yc: &mut DeviceBuffer<f64>,
-        parms: &impl IDatumCompenseParms<f64>,
+        xc: &mut DeviceBuffer<T>,
+        yc: &mut DeviceBuffer<T>,
+        parms: &impl IDatumCompenseParms<T>,
     ) {
         assert_eq!(xc.len(), yc.len());
         let length: usize = xc.len();
         let module = self.get_module(&PTX);
-        let func = module.get_function("datum_compense_cuda_double").unwrap();
+        // let func = module.get_function("datum_compense_cuda_double").unwrap();
+        let func = self.get_function::<T>(&module, "datum_compense_cuda");
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 

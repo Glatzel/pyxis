@@ -1,5 +1,5 @@
 Set-Location $PSScriptRoot/..
-$version = (Get-Content -Path "VERSION").Trim()
+$version= "0.0.13"
 
 # Update cpp version
 $cmakeListsPath = "./cpp/CMakeLists.txt"

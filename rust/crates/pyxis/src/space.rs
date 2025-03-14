@@ -1,31 +1,28 @@
 use crate::GeoFloat;
 
-/// Converts Cartesian coordinates (x, y, z) to cylindrical coordinates (r, u, z).
+/// Converts Cartesian coordinates (x, y) to polar coordinates (r, u).
 ///
 /// # Arguments
 /// - `x`: The x-coordinate in Cartesian space (in any unit).
 /// - `y`: The y-coordinate in Cartesian space (in any unit).
-/// - `z`: The z-coordinate in Cartesian space (in any unit).
 ///
 /// # Returns
 /// A tuple `(r, u, z)` representing the cylindrical coordinates:
-/// - `r`: The radial distance from the z-axis in the x-y plane.
-/// - `u`: The azimuthal angle, the angle in the x-y plane (in radians).
-/// - `z`: The same z-coordinate as input.
+/// - `r`: The radius.
+/// - `u`: The azimuthal angle.
 ///
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let (r, u, z) = pyxis::cartesian_to_cylindrical(1.2, 3.4, -5.6);
+/// let (r, u) = pyxis::cartesian_to_polar(1.2, 3.4);
 /// assert_approx_eq!(f64, r, 3.605551275463989, epsilon = 1e-17);
 /// assert_approx_eq!(f64, u, 1.2315037123408519, epsilon = 1e-17);
-/// assert_approx_eq!(f64, z, -5.60000000000000, epsilon = 1e-17);
 /// ```
-pub fn cartesian_to_cylindrical<T>(x: T, y: T, z: T) -> (T, T, T)
+pub fn cartesian_to_polar<T>(x: T, y: T) -> (T, T)
 where
     T: GeoFloat,
 {
-    ((x.powi(2) + y.powi(2)).sqrt(), y.atan2(x), z)
+    ((x.powi(2) + y.powi(2)).sqrt(), y.atan2(x))
 }
 
 /// Converts Cartesian coordinates (x, y, z) to spherical coordinates (u, v, r).
@@ -57,32 +54,29 @@ where
     (y.atan2(x), (z / r).acos(), r)
 }
 
-/// Converts cylindrical coordinates (r, u, z) to Cartesian coordinates (x, y, z).
+/// Converts polar coordinates (r, theta) to Cartesian coordinates (x, y).
 ///
 /// # Arguments
-/// - `r`: The radial distance from the z-axis in the x-y plane.
-/// - `u`: The azimuthal angle in the x-y plane (in radians).
-/// - `z`: The z-coordinate (same as in cylindrical and Cartesian systems).
+/// - `r`: The radius.
+/// - `u`: The azimuthal angle.
 ///
 /// # Returns
-/// A tuple `(x, y, z)` representing the Cartesian coordinates:
+/// A tuple `(x, y)` representing the Cartesian coordinates:
 /// - `x`: The x-coordinate in Cartesian space.
 /// - `y`: The y-coordinate in Cartesian space.
-/// - `z`: The same z-coordinate as input.
 ///
 /// # Example
 /// ```
 ///  use float_cmp::assert_approx_eq;
-/// let (x, y, z) = pyxis::cylindrical_to_cartesian(3.605551275463989, 1.2315037123408519, -5.60000000000000);
+/// let (x, y) = pyxis::polar_to_cartesian(3.605551275463989, 1.2315037123408519);
 /// assert_approx_eq!(f64, x, 1.2,epsilon = 1e-15);
 /// assert_approx_eq!(f64, y, 3.4, epsilon = 1e-15);
-/// assert_approx_eq!(f64, z, -5.6,epsilon = 1e-15);
 /// ```
-pub fn cylindrical_to_cartesian<T>(r: T, u: T, z: T) -> (T, T, T)
+pub fn polar_to_cartesian<T>(r: T, theta: T) -> (T, T)
 where
     T: GeoFloat,
 {
-    (r * u.cos(), r * u.sin(), z)
+    (r * theta.cos(), r * theta.sin())
 }
 
 /// Converts cylindrical coordinates (r, u, z) to spherical coordinates (u, v, r).

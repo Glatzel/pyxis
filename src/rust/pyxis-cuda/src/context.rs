@@ -1,7 +1,9 @@
+use std::any::{TypeId, type_name};
 use std::collections::{HashMap, VecDeque};
 use std::sync::{Arc, LazyLock, Mutex};
 
 use cust::prelude::*;
+use pyxis::GeoFloat;
 pub(crate) struct PyxisPtx {
     pub name: &'static str,
     pub content: &'static str,
@@ -119,6 +121,19 @@ impl PyxisCudaContext {
 
 // utils
 impl PyxisCudaContext {
+    pub(crate) fn get_function<'a, T: 'static + GeoFloat>(
+        &self,
+        module: &'a Module,
+        fn_name: &str,
+    ) -> Function<'a> {
+        static GEOFLOAT_F32: LazyLock<TypeId> = LazyLock::new(|| TypeId::of::<f32>());
+        static GEOFLOAT_F64: LazyLock<TypeId> = LazyLock::new(|| TypeId::of::<f64>());
+        match TypeId::of::<T>() {
+            id if id == *GEOFLOAT_F32 => module.get_function(format!("{fn_name}_float")).unwrap(),
+            id if id == *GEOFLOAT_F64 => module.get_function(format!("{fn_name}_double")).unwrap(),
+            _ => panic!("Unsupported type: {}", type_name::<T>()),
+        }
+    }
     pub fn device_buffer_from_slice(&self, slice: &[f64]) -> DeviceBuffer<f64> {
         DeviceBuffer::from_slice(slice).unwrap()
     }

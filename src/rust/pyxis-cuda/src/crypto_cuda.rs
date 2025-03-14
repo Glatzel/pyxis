@@ -1,4 +1,6 @@
+use cust::memory::DeviceCopy;
 use cust::prelude::*;
+use pyxis::GeoFloat;
 use pyxis::crypto::{CryptoSpace, CryptoThresholdMode};
 
 use crate::{PyxisCudaContext, PyxisPtx};
@@ -10,127 +12,151 @@ const PTX: PyxisPtx = crate::PyxisPtx {
     size: PTX_STR.len(),
 };
 impl PyxisCudaContext {
-    pub fn bd09_to_gcj02_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
-        assert_eq!(lon.len(), lat.len());
-        let length: usize = lon.len();
-        let module = self.get_module(&PTX);
-        let func = module.get_function("bd09_to_gcj02_cuda_double").unwrap();
-        let stream = &self.stream;
-        let (grid_size, block_size) = self.get_grid_block(&func, length);
-
-        unsafe {
-            launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
-                    lon.as_device_ptr(),
-                    lat.as_device_ptr()
-                )
-            )
-            .unwrap();
-        }
-        stream.synchronize().unwrap();
-    }
-    pub fn gcj02_to_bd09_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
-        assert_eq!(lon.len(), lat.len());
-        let length: usize = lon.len();
-        let module = self.get_module(&PTX);
-        let func = module.get_function("gcj02_to_bd09_cuda_double").unwrap();
-        let stream = &self.stream;
-        let (grid_size, block_size) = self.get_grid_block(&func, length);
-
-        unsafe {
-            launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
-                    lon.as_device_ptr(),
-                    lat.as_device_ptr()
-                )
-            )
-            .unwrap();
-        }
-        stream.synchronize().unwrap();
-    }
-    pub fn gcj02_to_wgs84_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
-        assert_eq!(lon.len(), lat.len());
-        let length: usize = lon.len();
-        let module = self.get_module(&PTX);
-        let func = module.get_function("gcj02_to_wgs84_cuda_double").unwrap();
-        let stream = &self.stream;
-        let (grid_size, block_size) = self.get_grid_block(&func, length);
-
-        unsafe {
-            launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
-                    lon.as_device_ptr(),
-                    lat.as_device_ptr()
-                )
-            )
-            .unwrap();
-        }
-        stream.synchronize().unwrap();
-    }
-    pub fn wgs84_to_gcj02_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
-        assert_eq!(lon.len(), lat.len());
-        let length: usize = lon.len();
-        let module = self.get_module(&PTX);
-        let func = module.get_function("wgs84_to_gcj02_cuda_double").unwrap();
-        let stream = &self.stream;
-        let (grid_size, block_size) = self.get_grid_block(&func, length);
-
-        unsafe {
-            launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
-                    lon.as_device_ptr(),
-                    lat.as_device_ptr()
-                )
-            )
-            .unwrap();
-        }
-        stream.synchronize().unwrap();
-    }
-    pub fn wgs84_to_bd09_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
-        assert_eq!(lon.len(), lat.len());
-        let length: usize = lon.len();
-        let module = self.get_module(&PTX);
-        let func = module.get_function("wgs84_to_bd09_cuda_double").unwrap();
-        let stream = &self.stream;
-        let (grid_size, block_size) = self.get_grid_block(&func, length);
-
-        unsafe {
-            launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
-                    lon.as_device_ptr(),
-                    lat.as_device_ptr()
-                )
-            )
-            .unwrap();
-        }
-        stream.synchronize().unwrap();
-    }
-    pub fn bd09_to_wgs84_cuda(&self, lon: &mut DeviceBuffer<f64>, lat: &mut DeviceBuffer<f64>) {
-        assert_eq!(lon.len(), lat.len());
-        let length: usize = lon.len();
-        let module = self.get_module(&PTX);
-        let func = module.get_function("bd09_to_wgs84_cuda_double").unwrap();
-        let stream = &self.stream;
-        let (grid_size, block_size) = self.get_grid_block(&func, length);
-
-        unsafe {
-            launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
-                    lon.as_device_ptr(),
-                    lat.as_device_ptr()
-                )
-            )
-            .unwrap();
-        }
-        stream.synchronize().unwrap();
-    }
-    pub fn crypto_exact_cuda(
+    pub fn bd09_to_gcj02_cuda<T: 'static + DeviceCopy + GeoFloat>(
         &self,
-        lon: &mut DeviceBuffer<f64>,
-        lat: &mut DeviceBuffer<f64>,
+        lon: &mut DeviceBuffer<T>,
+        lat: &mut DeviceBuffer<T>,
+    ) {
+        assert_eq!(lon.len(), lat.len());
+        let length: usize = lon.len();
+        let module = self.get_module(&PTX);
+        let func = self.get_function::<T>(&module, "bd09_to_gcj02_cuda");
+        let stream = &self.stream;
+        let (grid_size, block_size) = self.get_grid_block(&func, length);
+
+        unsafe {
+            launch!(
+                func<<<grid_size, block_size, 0, stream>>>(
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr()
+                )
+            )
+            .unwrap();
+        }
+        stream.synchronize().unwrap();
+    }
+    pub fn gcj02_to_bd09_cuda<T: 'static + DeviceCopy + GeoFloat>(
+        &self,
+        lon: &mut DeviceBuffer<T>,
+        lat: &mut DeviceBuffer<T>,
+    ) {
+        assert_eq!(lon.len(), lat.len());
+        let length: usize = lon.len();
+        let module = self.get_module(&PTX);
+        let func = self.get_function::<T>(&module, "gcj02_to_bd09_cuda");
+        let stream = &self.stream;
+        let (grid_size, block_size) = self.get_grid_block(&func, length);
+
+        unsafe {
+            launch!(
+                func<<<grid_size, block_size, 0, stream>>>(
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr()
+                )
+            )
+            .unwrap();
+        }
+        stream.synchronize().unwrap();
+    }
+    pub fn gcj02_to_wgs84_cuda<T: 'static + DeviceCopy + GeoFloat>(
+        &self,
+        lon: &mut DeviceBuffer<T>,
+        lat: &mut DeviceBuffer<T>,
+    ) {
+        assert_eq!(lon.len(), lat.len());
+        let length: usize = lon.len();
+        let module = self.get_module(&PTX);
+        let func = self.get_function::<T>(&module, "gcj02_to_wgs84_cuda");
+        let stream = &self.stream;
+        let (grid_size, block_size) = self.get_grid_block(&func, length);
+
+        unsafe {
+            launch!(
+                func<<<grid_size, block_size, 0, stream>>>(
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr()
+                )
+            )
+            .unwrap();
+        }
+        stream.synchronize().unwrap();
+    }
+    pub fn wgs84_to_gcj02_cuda<T: 'static + DeviceCopy + GeoFloat>(
+        &self,
+        lon: &mut DeviceBuffer<T>,
+        lat: &mut DeviceBuffer<T>,
+    ) {
+        assert_eq!(lon.len(), lat.len());
+        let length: usize = lon.len();
+        let module = self.get_module(&PTX);
+        let func = self.get_function::<T>(&module, "wgs84_to_gcj02_cuda");
+        let stream = &self.stream;
+        let (grid_size, block_size) = self.get_grid_block(&func, length);
+
+        unsafe {
+            launch!(
+                func<<<grid_size, block_size, 0, stream>>>(
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr()
+                )
+            )
+            .unwrap();
+        }
+        stream.synchronize().unwrap();
+    }
+    pub fn wgs84_to_bd09_cuda<T: 'static + DeviceCopy + GeoFloat>(
+        &self,
+        lon: &mut DeviceBuffer<T>,
+        lat: &mut DeviceBuffer<T>,
+    ) {
+        assert_eq!(lon.len(), lat.len());
+        let length: usize = lon.len();
+        let module = self.get_module(&PTX);
+        let func = self.get_function::<T>(&module, "wgs84_to_bd09_cuda_double");
+        let stream = &self.stream;
+        let (grid_size, block_size) = self.get_grid_block(&func, length);
+
+        unsafe {
+            launch!(
+                func<<<grid_size, block_size, 0, stream>>>(
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr()
+                )
+            )
+            .unwrap();
+        }
+        stream.synchronize().unwrap();
+    }
+    pub fn bd09_to_wgs84_cuda<T: 'static + DeviceCopy + GeoFloat>(
+        &self,
+        lon: &mut DeviceBuffer<T>,
+        lat: &mut DeviceBuffer<T>,
+    ) {
+        assert_eq!(lon.len(), lat.len());
+        let length: usize = lon.len();
+        let module = self.get_module(&PTX);
+        let func = self.get_function::<T>(&module, "bd09_to_wgs84_cuda");
+        let stream = &self.stream;
+        let (grid_size, block_size) = self.get_grid_block(&func, length);
+
+        unsafe {
+            launch!(
+                func<<<grid_size, block_size, 0, stream>>>(
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr()
+                )
+            )
+            .unwrap();
+        }
+        stream.synchronize().unwrap();
+    }
+    pub fn crypto_exact_cuda<T: 'static + DeviceCopy + GeoFloat>(
+        &self,
+        lon: &mut DeviceBuffer<T>,
+        lat: &mut DeviceBuffer<T>,
         from: CryptoSpace,
         to: CryptoSpace,
-        threshold: f64,
+        threshold: T,
         threshold_mode: CryptoThresholdMode,
         max_iter: usize,
     ) {
@@ -138,16 +164,15 @@ impl PyxisCudaContext {
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
         let func = match (from, to) {
-            (CryptoSpace::GCJ02, CryptoSpace::WGS84) => module
-                .get_function("gcj02_to_wgs84_exact_cuda_double")
-                .unwrap(),
-
-            (CryptoSpace::BD09, CryptoSpace::WGS84) => module
-                .get_function("bd09_to_wgs84_exact_cuda_double")
-                .unwrap(),
-            (CryptoSpace::BD09, CryptoSpace::GCJ02) => module
-                .get_function("bd09_to_gcj02_exact_cuda_double")
-                .unwrap(),
+            (CryptoSpace::GCJ02, CryptoSpace::WGS84) => {
+                self.get_function::<T>(&module, "gcj02_to_wgs84_exact_cuda")
+            }
+            (CryptoSpace::BD09, CryptoSpace::WGS84) => {
+                self.get_function::<T>(&module, "bd09_to_wgs84_exact_cuda")
+            }
+            (CryptoSpace::BD09, CryptoSpace::GCJ02) => {
+                self.get_function::<T>(&module, "bd09_to_gcj02_exact_cuda")
+            }
             _ => panic!("Unsupported "),
         };
         let distance_mode = match threshold_mode {

@@ -1,9 +1,8 @@
-param($config)
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
 Set-Location $ROOT/src/cuda
-if ($config) { $config = "-DCMAKE_BUILD_TYPE=Release" }
+$config = "-DCMAKE_BUILD_TYPE=Release"
 
 # create install dir
 $install = "$ROOT/dist/pyxis-cuda"

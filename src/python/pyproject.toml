@@ -7,7 +7,10 @@ name = "pyxis"
 requires-python = ">=3.11"
 dynamic = ["version"]
 authors = [{ name = "Glatzel", email = "893016099@qq.com" }]
-dependencies = ["lazy-loader", "numpy", "scipy","pyproj"]
+dependencies = ["lazy-loader", "numpy", "scipy"]
+
+[project.optional-dependencies]
+gpu = ["cupy"]
 
 [tool.maturin]
 features = ["pyo3/extension-module"]

@@ -1,4 +1,4 @@
-name: Csharp-CI
+name: csharp-CI
 
 on:
   workflow_dispatch:
@@ -14,23 +14,14 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        if: ${{github.event_name == 'pull_request'}}
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            ${{env.CSHARP_ROOT}}/**
       - name: Add msbuild to PATH
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64
       - name: build
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: dotnet build
         working-directory: ${{env.CSHARP_ROOT}}
       - name: test
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: dotnet test --no-build --logger:junit --collect:"XPlat Code Coverage"
         working-directory: ${{env.CSHARP_ROOT}}
       - name: Upload cov results to Codecov

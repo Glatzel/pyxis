@@ -138,7 +138,7 @@ impl PyxisCudaContext {
         DeviceBuffer::from_slice(slice).unwrap()
     }
     /// # Returns
-    /// (grid_size, block_size)
+    /// (grid_size, block_size) , aka (blocks, threads)
     pub(crate) fn get_grid_block(&self, func: &Function, length: usize) -> (u32, u32) {
         let (_, block_size) = func.suggested_launch_configuration(0, 0.into()).unwrap();
         let grid_size = (length as u32 + block_size - 1).div_ceil(block_size);

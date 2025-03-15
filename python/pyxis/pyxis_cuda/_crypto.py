@@ -1,6 +1,7 @@
 import cupy as cp
 
 from pyxis import COORD_CRYPTO_SPACE
+from pyxis.pyxis_cuda import get_grid_block
 from pyxis.pyxis_cuda._utils import PTX_PATH, TDTYPE
 
 
@@ -17,7 +18,8 @@ class CryptoCuda:
         to_space: COORD_CRYPTO_SPACE,
     ) -> tuple[cp.ndarray, cp.ndarray]:
         fn = self.module.get_function(f"{from_space}_to_{to_space}_cuda_{dtype}")
-        fn((100,), (100,), (lon, lat))
+        grid_size, block_size = get_grid_block(lon.size)
+        fn((grid_size,), (block_size,), (lon, lat))
         return lon, lat
 
     def crypto_exact(
@@ -31,5 +33,6 @@ class CryptoCuda:
         max_iter: int,
     ) -> tuple[cp.ndarray, cp.ndarray]:
         fn = self.module.get_function(f"{from_space}_to_{to_space}_exact_cuda_{dtype}")
-        fn((100,), (100,), (lon, lat, threshold, True, max_iter))
+        grid_size, block_size = get_grid_block(lon.size)
+        fn((grid_size,), (block_size,), (lon, lat, threshold, True, max_iter))
         return lon, lat

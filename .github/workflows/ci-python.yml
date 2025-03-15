@@ -28,6 +28,7 @@ jobs:
       - name: lint
         if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ${{env.PYTHON_ROOT}}/scripts/ruff.ps1
+        shell: pwsh
 
   sphinx:
     runs-on: ubuntu-latest

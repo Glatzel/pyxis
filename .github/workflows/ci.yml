@@ -74,11 +74,11 @@ jobs:
       - name: build
         if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: dotnet build
-        working-directory: ./chsarp
+        working-directory: chsarp
       - name: test
         if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: dotnet test --no-build --logger:junit --collect:"XPlat Code Coverage"
-        working-directory: ./chsarp
+        working-directory: chsarp
       - name: Upload cov results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5

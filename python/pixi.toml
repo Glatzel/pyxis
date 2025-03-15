@@ -6,8 +6,6 @@ name = "pyxis"
 platforms = ["win-64", "linux-64"]
 version = "0.1.0"
 
-[tasks]
-
 [feature.py311.dependencies]
 python = "3.11.*"
 

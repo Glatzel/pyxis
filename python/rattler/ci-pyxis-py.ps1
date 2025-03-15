@@ -5,10 +5,10 @@ param (
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot
 
-& "$ROOT/python/scripts/build-cuda.ps1"
-& "$ROOT/python/scripts/py-develop.ps1" -config $config
-& "$ROOT/python/scripts/py-pytest.ps1"
-& "$ROOT/python/scripts/build-python-whl.ps1" -config $config
+& "$PSScriptRoot/../scripts/build-cuda.ps1"
+& "$PSScriptRoot/../scripts/py-develop.ps1" -config $config
+& "$PSScriptRoot/../scripts/py-pytest.ps1"
+& "$PSScriptRoot/../scripts/build-python-whl.ps1" -config $config
 
 Set-Location $PSScriptRoot
 pixi run rattler-build build

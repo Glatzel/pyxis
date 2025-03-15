@@ -20,7 +20,7 @@ jobs:
           msbuild-architecture: x64
 
       - name: build
-        run: ${{env.CSHARP_ROOT}}/scripts/build.ps1
+        run: ${{env.CSHARP_ROOT}}/scripts/build.ps1 -config ${{ inputs.build-release && 'Release' || 'Debug' }}
 
       - name: test
         run: ${{env.CSHARP_ROOT}}/scripts/test.ps1
@@ -38,7 +38,7 @@ jobs:
           fail_ci_if_error: true
 
       - name: pack
-        run: ${{env.CSHARP_ROOT}}/scripts/pack.ps1
+        run: ${{env.CSHARP_ROOT}}/scripts/pack.ps1 -config ${{ inputs.build-release && 'Release' || 'Debug' }}
       - name: upload nupkg
         uses: actions/upload-artifact@v4
         with:

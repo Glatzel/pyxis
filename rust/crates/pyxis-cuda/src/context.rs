@@ -139,7 +139,7 @@ impl PyxisCudaContext {
     }
     /// # Returns
     /// (grid_size, block_size) , aka (blocks, threads)
-    /// 
+    ///
     /// # References
     /// https://developer.nvidia.com/blog/cuda-refresher-cuda-programming-model/
     pub(crate) fn get_grid_block(&self, func: &Function, length: usize) -> (u32, u32) {

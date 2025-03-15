@@ -9,6 +9,6 @@ Remove-Item $ROOT/dist/pyxis*.whl -ErrorAction SilentlyContinue
 Remove-Item ./pyxis/pyxis_py.pyd -ErrorAction SilentlyContinue
 Remove-Item ./pyxis/**__pycache__ -Recurse -ErrorAction SilentlyContinue
 pixi run cargo build --profile $config
-pixi run maturin build --out $ROOT/dist --profile $config
+pixi run maturin build --out ./dist --profile $config
 
 Set-Location $ROOT

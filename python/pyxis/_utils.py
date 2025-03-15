@@ -1,12 +1,12 @@
 import copy
-from typing import Union, overload
+from typing import overload
 
 import numpy as np
 from numpy.typing import NDArray
 
-TCoordScalar = Union[int, float, np.integer, np.floating]
-TCoordArray = Union[list[float], tuple[float, ...], NDArray]
-TCoord = Union[TCoordScalar, TCoordArray]
+TCoordScalar = int | float | np.integer | np.floating
+TCoordArray = list[float], tuple[float, ...] | NDArray
+TCoord = TCoordScalar | TCoordArray
 
 
 @overload

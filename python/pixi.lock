@@ -78,6 +78,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/readline-8.2-h8c095d6_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/requests-2.32.3-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/roman-numerals-py-3.1.0-pyhd8ed1ab_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/ruff-0.11.0-py311hb02d549_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py311h8f841c2_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-75.8.2-pyhff2d567_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/snowballstemmer-2.2.0-pyhd8ed1ab_0.tar.bz2
@@ -159,6 +160,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/rattler-build-0.39.0-ha073cba_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/requests-2.32.3-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/roman-numerals-py-3.1.0-pyhd8ed1ab_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/win-64/ruff-0.11.0-py311h0e48851_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/scipy-1.15.2-py311h99d06ae_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-75.8.2-pyhff2d567_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/snowballstemmer-2.2.0-pyhd8ed1ab_0.tar.bz2
@@ -1335,6 +1337,34 @@ packages:
   license: 0BSD OR CC0-1.0
   size: 13348
   timestamp: 1740240332327
+- conda: https://conda.anaconda.org/conda-forge/linux-64/ruff-0.11.0-py311hb02d549_0.conda
+  sha256: b23425a92205fe6f3df48e0cdb7f141fff0c295f035c14e30e8b9cc08c38e53b
+  md5: 99fee3e259802e8567ccbc41949324bf
+  depends:
+  - __glibc >=2.17,<3.0.a0
+  - libgcc >=13
+  - libstdcxx >=13
+  - python >=3.11,<3.12.0a0
+  - python_abi 3.11.* *_cp311
+  constrains:
+  - __glibc >=2.17
+  license: MIT
+  license_family: MIT
+  size: 8865891
+  timestamp: 1741968184277
+- conda: https://conda.anaconda.org/conda-forge/win-64/ruff-0.11.0-py311h0e48851_0.conda
+  sha256: b6b08c2b8e71b02a26bfec7798697f25739312acecf5a17fc9c5e12c368ce31a
+  md5: e7c97cbece795cef15fecad42640df56
+  depends:
+  - python >=3.11,<3.12.0a0
+  - python_abi 3.11.* *_cp311
+  - ucrt >=10.0.20348.0
+  - vc >=14.2,<15
+  - vc14_runtime >=14.29.30139
+  license: MIT
+  license_family: MIT
+  size: 7954304
+  timestamp: 1741968863500
 - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py311h8f841c2_0.conda
   sha256: 6d0902775e3ff96dd1d36ac627e03fe6c0b3d2159bb71e115dd16a1f31693b25
   md5: 5ec0a1732a05376241e1e4c6d50e0e91

@@ -250,7 +250,7 @@ jobs:
         shell: pwsh
       - name: build cuda
         if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ${{env.RUST_ROOT}}/scripts/build-rust-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
+        run: ${{env.RUST_ROOT}}/scripts/build-rust-cuda.ps1 ${{ inputs.build-release && '-config release' || null }}
         shell: pwsh
 
   cargo-clippy:

@@ -6,6 +6,12 @@ $cmakeListsPath = "./cpp/CMakeLists.txt"
 (Get-Content -Path $cmakeListsPath) -replace 'project\(.* VERSION .*', "project(PyxisCppProject VERSION $version)" | Set-Content -Path $cmakeListsPath
 Write-Host "Updated CPP version to $version"
 
+
+# Update csharp version
+$csconfig = "./csharp/Directory.Build.props"
+(Get-Content -Path $csconfig) -replace '<Version>.*</Version>', "<Version>$version</Version>" | Set-Content -Path $csconfig
+Write-Host "Updated csharp version to $version"
+
 # Update cuda version
 $cmakeListsPath = "./cuda/CMakeLists.txt"
 (Get-Content -Path $cmakeListsPath) -replace 'project\(.* VERSION .*', "project(PyxisCppProject VERSION $version)" | Set-Content -Path $cmakeListsPath

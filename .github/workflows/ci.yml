@@ -30,7 +30,7 @@ jobs:
   changed:
     outputs:
       # changed-cpp: ${{steps.changed-cpp.outputs.any_changed!='false'}}
-      changed-csharp: ${{''}}
+      changed-csharp: ${{steps.changed-changed-csharp.outputs.any_changed != 'false'}}
       # changed-cuda: ${{steps.changed-cuda.outputs.any_changed!='false'}}
       # changed-python: ${{steps.changed-python.outputs.any_changed!='false'}}
       # changed-rust: ${{steps.changed-rust.outputs.any_changed!='false'}}
@@ -78,7 +78,7 @@ jobs:
   #   if: ${{ needs.changed.outputs.changed-cpp != 'false'}}
   #   uses: ./.github/workflows/ci-cpp.yml
   #   with:
-  #     build-release: ${{inputs.build-release}}
+  #     build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
   csharp-ci:
     needs: changed
@@ -92,18 +92,18 @@ jobs:
   #   if: ${{ needs.changed.outputs.changed-cuda != 'false' }}
   #   uses: ./.github/workflows/ci-cuda.yml
   #   with:
-  #     build-release: ${{inputs.build-release}}
+  #     build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
   # python-ci:
   #   needs: changed
   #   if: ${{ needs.changed.outputs.changed-python != 'false' }}
   #   uses: ./.github/workflows/ci-python.yml
   #   with:
-  #     build-release: ${{inputs.build-release}}
+  #     build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
   # rust-ci:
   #   needs: changed
   #   if: ${{ needs.changed.outputs.changed-rust != 'false' }}
   #   uses: ./.github/workflows/ci-rust.yml
   #   with:
-  #     build-release: ${{inputs.build-release}}
+  #     build-release: ${{inputs.build-release&& inputs.build-release || false}}

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   workflow_call:
     inputs:
-      build-dist:
+      build-release:
         type: boolean
         default: false
   push:
@@ -27,501 +27,82 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # region cpp
-  build-cpp:
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [windows-latest, ubuntu-latest]
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
-        if: ${{github.event_name == 'pull_request'}}
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            .github/**
-            cpp/**
-      - name: build cpp
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ./cpp/scripts/build-cpp.ps1 ${{ inputs.build-dist && '-config release' || null }}
-        shell: pwsh
-      - name: upload cpp
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-cpp-${{matrix.machine}}
-          path: cpp/dist/*.7z
-          if-no-files-found: error
-  # region csharp
-  build-csharp:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
-        if: ${{github.event_name == 'pull_request'}}
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            .github/**
-            chsarp/**
-      - name: Add msbuild to PATH
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: microsoft/setup-msbuild@v2
-        with:
-          msbuild-architecture: x64
-      - name: build
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: dotnet build
-        working-directory: csharp
-      - name: test
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: dotnet test --no-build --logger:junit --collect:"XPlat Code Coverage"
-        working-directory: csharp
-      - name: Upload cov results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-        with:
-          fail_ci_if_error: true
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          files: ./tests/*/TestResults/TestResults.xml
-          fail_ci_if_error: true
-
-  # region cuda
-  build-cuda:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - machine: windows-latest
-            sub-packages: '["nvcc","cudart"]'
-          - machine: ubuntu-latest
-            sub-packages: '["nvcc"]'
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            .github/**
-            cuda/**
-            cpp/**
-      - uses: Jimver/cuda-toolkit@v0.2.22
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        with:
-          cuda: "12.8.0"
-          sub-packages: ${{matrix.sub-packages}}
-          method: network
-      - name: build cuda
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ./cuda/scripts/build-cuda.ps1
-        shell: pwsh
-      - name: upload cuda
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-cuda-${{matrix.machine}}
-          path: cuda/dist/*.7z
-          if-no-files-found: error
-
-  # region python
-  ruff-lint:
+  changed:
+    outputs:
+      changed-cpp: ${{steps.changed-cpp.outputs.any_changed}}
+      changed-csharp: ${{steps.changed-csharp.outputs.any_changed}}
+      changed-cuda: ${{steps.changed-cuda.outputs.any_changed}}
+      changed-python: ${{steps.changed-python.outputs.any_changed}}
+      changed-rust: ${{steps.changed-rust.outputs.any_changed}}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - id: changed
+      - id: changed-cpp
         uses: tj-actions/changed-files@v45
         if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
-            **ruff.toml
-            **.py
-      - name: Set up pixi
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: prefix-dev/setup-pixi@v0.8.3
+            ./cpp/**
+            ./.github/workflows/ci-cpp.yml
+      - id: changed-csharp
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name == 'pull_request'}}
         with:
-          run-install: false
-      - name: install ruff
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: pixi global install ruff
-      - name: lint
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ruff check --output-format=github .
-        working-directory: ./python
-
-  sphinx:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
+          files: |
+            ./csharp/**
+            ./.github/workflows/ci-csharp.yml
+      - id: changed-cuda
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name == 'pull_request'}}
+        with:
+          files: |
+            ./cuda/**
+            ./.github/workflows/ci-cuda.yml
+      - id: changed-python
         uses: tj-actions/changed-files@v45
         if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             ./python/**
-      - name: Set up pixi
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: ./.github/actions/setup-ci
-      - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-
-      - name: sphinx build
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ./python/scripts/py-sphinx.ps1
-        shell: pwsh
-
-      - name: upload doc
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-doc
-          path: python/dist/*.7z
-          if-no-files-found: error
-
-  rattler-pyxis-py:
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [windows-latest, ubuntu-latest]
-        include:
-          - machine: windows-latest
-            os: win-64
-            sub-packages: '["nvcc","cudart"]'
-          - machine: ubuntu-latest
-            os: linux-64
-            sub-packages: '["nvcc"]'
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci
-      - run: choco install pkgconfiglite
-        if: ${{runner.os == 'Windows'}}
-      - uses: Jimver/cuda-toolkit@v0.2.22
-        with:
-          cuda: "12.8.0"
-          sub-packages: ${{matrix.sub-packages}}
-          method: network
-
-      - name: build
-        run: ./python/rattler/ci-pyxis-py.ps1 ${{ inputs.build-dist && '-config  release' || null }}
-        shell: pwsh
-
-      - name: upload conda
-        uses: actions/upload-artifact@v4
-        with:
-          name: rattler-pyxis-py-${{matrix.machine}}
-          path: |
-            python/rattler/output/${{matrix.os}}/*.conda
-            python/dist/*.whl
-          if-no-files-found: error
-
-      - name: Upload results to Codecov
-        uses: codecov/codecov-action@v5
-      - name: Upload test results to Codecov
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  # region rust
-  cache-vcpkg:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: restore vcpkg
-        id: restore-vcpkg
-        uses: actions/cache/restore@v4
-        with:
-          path: ./rust/vcpkg/installed
-          key: vcpkg-${{ runner.os }}-${{ hashFiles('./rust/vcpkg/vcpkg.json') }}
-          lookup-only: true
-
-      - name: setup vcpkg
-        if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./rust/vcpkg/vcpkg-setup.ps1
-        shell: pwsh
-
-      - name: install vcpkg dependencies
-        if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./rust/vcpkg/vcpkg-install.ps1
-        shell: pwsh
-
-      - name: save vcpkg
-        if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        uses: actions/cache/save@v4
-        with:
-          path: ./rust/vcpkg/installed
-          key: ${{steps.restore-vcpkg.outputs.cache-primary-key}}
-
-  cargo-bench:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
+            ./.github/workflows/ci-python.yml
+      - id: changed-rust
         uses: tj-actions/changed-files@v45
         if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
-            .github/**
-            rust/**
-      - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - run: cargo install cargo-codspeed --locked
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+            ./rust/**
+            ./.github/workflows/ci-rust.yml
 
-      - name: Build the benchmark target(s)
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: cargo codspeed build -p pyxis
-        working-directory: ./rust
+  ci-cpp:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-cpp != 'false' }}
+    uses: ./.github/workflows/ci-cpp.yml
+    with:
+      build-release: ${{inputs.build-release}}
 
-      - name: Run the benchmarks
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: CodSpeedHQ/action@v3
-        with:
-          run: cargo codspeed run
-          token: ${{ secrets.CODSPEED_TOKEN }}
-          working-directory: "./rust"
+  csharp-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-cpp != 'false' }}
+    uses: ./.github/workflows/ci-csharp.yml
+    with:
+      build-release: ${{inputs.build-release}}
 
-  cargo-machete:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            .github/**
-            rust/**
-      - name: Machete
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: bnjbvr/cargo-machete@main
+  cuda-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-cuda != 'false' }}
+    uses: ./.github/workflows/ci-cuda.yml
+    with:
+      build-release: ${{inputs.build-release}}
 
-  cargo-test:
-    needs: cache-vcpkg
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [windows-latest, ubuntu-latest]
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            .github/**
-            rust/**
-      - run: choco install pkgconfiglite
-        if: ${{runner.os == 'Windows' && steps.changed.outputs.any_changed != 'false'}}
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - uses: dtolnay/rust-toolchain@nightly
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+  python-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-python != 'false' }}
+    uses: ./.github/workflows/ci-python.yml
+    with:
+      build-release: ${{inputs.build-release}}
 
-      - name: Install nextest
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: taiki-e/install-action@nextest
-
-      - name: Install cargo-llvm-cov
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: taiki-e/install-action@cargo-llvm-cov
-
-      - name: cargo-test
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ./rust/scripts/cargo-test.ps1
-        shell: pwsh
-
-      - name: Upload results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  cargo-doc:
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            .github/**
-            rust/**
-      - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-
-      - name: cargo-doc
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ./rust/scripts/cargo-doc.ps1
-        shell: pwsh
-
-      - name: upload doc
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: rust-doc
-          path: rust/dist/*.7z
-          if-no-files-found: error
-
-  rattler-pyxis-cli:
-    needs: cache-vcpkg
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [windows-latest, ubuntu-latest]
-        include:
-          - machine: windows-latest
-            os: win-64
-          - machine: ubuntu-latest
-            os: linux-64
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            .github/**
-            rust/**
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' && steps.changed.outputs.any_changed != 'false'  }}
-      - run: choco install pkgconfiglite
-        if: ${{runner.os == 'Windows'}}
-
-      - name: build
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ./rust/rattler/ci-pyxis-cli.ps1 ${{ inputs.build-dist && '-config  release' || null }}
-        shell: pwsh
-
-      - name: upload
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: rattler-pyxis-cli-${{matrix.machine}}
-          path: |
-            rust/rattler/output/${{matrix.os}}/*.conda
-            rust/dist/*.7z
-          if-no-files-found: error
-
-  build-rust-cuda:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - machine: windows-latest
-            sub-packages: '["nvcc","cudart"]'
-          - machine: ubuntu-latest
-            sub-packages: '["nvcc"]'
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            .github/**
-            cpp/**
-            cuda/**
-            rust/**
-      - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - uses: Jimver/cuda-toolkit@v0.2.22
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        with:
-          cuda: "12.8.0"
-          sub-packages: ${{matrix.sub-packages}}
-          method: network
-      - name: clippy
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ./rust/scripts/cargo-clippy-cuda.ps1
-        shell: pwsh
-      - name: build cuda
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ./rust/scripts/build-rust-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
-        shell: pwsh
-
-  # region rust-python
-  cargo-clippy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        lang: [python, rust]
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            .github/**
-            **.rs
-            **Cargo.toml
-            **Cargo.lock
-            **clippy.toml
-      - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - name: cargo-clippy
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: |
-          ./${{matrix.lang}}/scripts/cargo-clippy.ps1
-        shell: pwsh
-
-  cargo-fmt:
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    strategy:
-      matrix:
-        lang: [python, rust]
-    steps:
-      - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            .github/**
-            **.rs
-            **Cargo.toml
-            **Cargo.lock
-            **rustfmt.toml
-      - uses: dtolnay/rust-toolchain@nightly
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        with:
-          components: rustfmt
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - name: cargo-fmt
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: |
-          ./${{matrix.lang}}/scripts/cargo-fmt.ps1
-        shell: pwsh
+  rust-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-rust != 'false' }}
+    uses: ./.github/workflows/ci-rust.yml
+    with:
+      build-release: ${{inputs.build-release}}

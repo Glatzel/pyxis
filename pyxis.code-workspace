@@ -13,6 +13,10 @@
             "path": "cpp"
         },
         {
+            "name": "csharp",
+            "path": "csharp"
+        },
+        {
             "name": "cuda",
             "path": "cuda"
         },

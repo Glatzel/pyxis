@@ -1,0 +1,37 @@
+name: cpp-CI
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      build-release:
+        type: boolean
+        default: false
+env:
+  CPP_ROOT: ./cpp
+jobs:
+  build-cpp:
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest, ubuntu-latest]
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - id: changed
+        if: ${{github.event_name == 'pull_request'}}
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            ${{env.CPP_ROOT}}/**
+      - name: build cpp
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        run: ${{env.CPP_ROOT}}/scripts/build-cpp.ps1 ${{ inputs.build-release && '-config release' || null }}
+        shell: pwsh
+      - name: upload cpp
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cpp-${{matrix.machine}}
+          path: ${{env.CPP_ROOT}}/dist/*.7z
+          if-no-files-found: error

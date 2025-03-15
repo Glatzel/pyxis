@@ -204,25 +204,25 @@ jobs:
         id: restore-vcpkg
         uses: actions/cache/restore@v4
         with:
-          path: ./vcpkg/installed
-          key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg/vcpkg.json') }}
+          path: ./rust/vcpkg/installed
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('./rust/vcpkg/vcpkg.json') }}
           lookup-only: true
 
       - name: setup vcpkg
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./vcpkg/vcpkg-setup.ps1
+        run: ./rust/vcpkg/vcpkg-setup.ps1
         shell: pwsh
 
       - name: install vcpkg dependencies
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./vcpkg/vcpkg-install.ps1
+        run: ./rust/vcpkg/vcpkg-install.ps1
         shell: pwsh
 
       - name: save vcpkg
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
         uses: actions/cache/save@v4
         with:
-          path: ./vcpkg/installed
+          path: ./rust/vcpkg/installed
           key: ${{steps.restore-vcpkg.outputs.cache-primary-key}}
 
   cargo-bench:

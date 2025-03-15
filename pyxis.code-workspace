@@ -23,10 +23,6 @@
         {
             "name": "rust",
             "path": "rust"
-        },
-        {
-            "name": "vcpkg",
-            "path": "vcpkg"
         }
     ],
     "settings": {

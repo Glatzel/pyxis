@@ -176,6 +176,7 @@ jobs:
           if-no-files-found: error
 
   build-rust-cuda:
+    needs: cache-vcpkg
     strategy:
       fail-fast: false
       matrix:
@@ -213,6 +214,7 @@ jobs:
         shell: pwsh
 
   cargo-clippy:
+    needs: cache-vcpkg
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"

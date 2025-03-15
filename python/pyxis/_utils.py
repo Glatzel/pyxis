@@ -10,11 +10,11 @@ TCoord = TCoordScalar | TCoordArray
 
 
 @overload
-def coord_util(name: str, coord: TCoordScalar) -> float: ...
+def coord_util(name: str, coord: TCoordScalar, clone: bool) -> float: ...
 @overload
-def coord_util(name: str, coord: TCoordArray) -> NDArray[np.float64]: ...
-def coord_util(name: str, coord: TCoord) -> float | NDArray[np.float64]:
-    coord = copy.deepcopy(coord)
+def coord_util(name: str, coord: TCoordArray, clone: bool) -> NDArray[np.float64]: ...
+def coord_util(name: str, coord: TCoord, clone: bool) -> float | NDArray[np.float64]:
+    coord = copy.deepcopy(coord) if clone else coord
     match coord:
         case float():
             pass

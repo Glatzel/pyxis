@@ -13,6 +13,7 @@ def lbh2xyz(
     height: TCoordScalar,
     major_radius: float = 6378137.0,
     invf: float = 298.257223563,
+    clone: bool = True,
 ) -> tuple[float, float, float]: ...
 @overload
 def lbh2xyz(
@@ -21,6 +22,7 @@ def lbh2xyz(
     height: TCoordArray,
     major_radius: float = 6378137.0,
     invf: float = 298.257223563,
+    clone: bool = True,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 def lbh2xyz(
     lon,
@@ -28,6 +30,7 @@ def lbh2xyz(
     height,
     major_radius: float = 6378137.0,
     invf: float = 298.257223563,
+    clone: bool = True,
 ):
     """
     Convert geodetic coordinates (longitude/L, latitude/B, height/H) to Cartesian coordinates (X, Y, Z).
@@ -44,6 +47,9 @@ def lbh2xyz(
         Semi major axis.
     invf
         Inverse flattening.
+    clone
+        If True, a deep copy of `data` will be created before processing.
+        If False, `data` will be modified in place. Default is False.
 
     Returns
     -------
@@ -81,9 +87,9 @@ def lbh2xyz(
     """
     from .pyxis_py import py_lbh2xyz  # type: ignore
 
-    lon = coord_util("lon", lon)
-    lat = coord_util("lat", lat)
-    height = coord_util("height", height)
+    lon = coord_util("lon", lon, clone)
+    lat = coord_util("lat", lat, clone)
+    height = coord_util("height", height, clone)
 
     x, y, z = py_lbh2xyz(lon, lat, height, major_radius, invf)
 
@@ -99,6 +105,7 @@ def xyz2lbh(
     invf: float = 298.257223563,
     threshold: float = 1e-17,
     max_iter: int = 100,
+    clone: bool = True,
 ) -> tuple[float, float, float]: ...
 @overload
 def xyz2lbh(
@@ -109,6 +116,7 @@ def xyz2lbh(
     invf: float = 298.257223563,
     threshold: float = 1e-17,
     max_iter: int = 100,
+    clone: bool = True,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
 def xyz2lbh(
     x,
@@ -118,6 +126,7 @@ def xyz2lbh(
     invf: float = 298.257223563,
     threshold: float = 1e-17,
     max_iter: int = 100,
+    clone: bool = True,
 ):
     """
     Convert Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
@@ -138,6 +147,9 @@ def xyz2lbh(
         Error threshold.
     max_iter
         Max iterations.
+    clone
+        If True, a deep copy of `data` will be created before processing.
+        If False, `data` will be modified in place. Default is False.
 
     Returns
     -------
@@ -147,6 +159,9 @@ def xyz2lbh(
         Latitude in degrees.
     height : float or ndarray
         Height above the reference ellipsoid in meters.
+    clone
+        If True, a deep copy of `data` will be created before processing.
+        If False, `data` will be modified in place. Default is False.
 
     Notes
     -----
@@ -162,9 +177,9 @@ def xyz2lbh(
     """
     from .pyxis_py import py_xyz2lbh  # type: ignore
 
-    x = coord_util("x", x)
-    y = coord_util("y", y)
-    z = coord_util("z", z)
+    x = coord_util("x", x, clone)
+    y = coord_util("y", y, clone)
+    z = coord_util("z", z, clone)
 
     lon, lat, h = py_xyz2lbh(x, y, z, major_radius, invf, threshold, max_iter)
 

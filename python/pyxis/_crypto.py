@@ -26,6 +26,7 @@ def crypto(
     crypto_from: COORD_CRYPTO_SPACE,
     crypto_to: COORD_CRYPTO_SPACE,
     exact: bool = False,
+    clone: bool = True,
 ) -> tuple[float, float]: ...
 @overload
 def crypto(
@@ -34,8 +35,16 @@ def crypto(
     crypto_from: COORD_CRYPTO_SPACE,
     crypto_to: COORD_CRYPTO_SPACE,
     exact: bool = False,
+    clone: bool = True,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]: ...
-def crypto(lon, lat, crypto_from, crypto_to, exact=False):
+def crypto(
+    lon,
+    lat,
+    crypto_from,
+    crypto_to,
+    exact=False,
+    clone: bool = True,
+):
     r"""
     Convert coordinates between `WGS84`, `GCJ02` and `BD09`.
 
@@ -47,6 +56,9 @@ def crypto(lon, lat, crypto_from, crypto_to, exact=False):
         From a coordinate system to another coordinate system.
     exact
         Use exact mode. Max Error is 1e-13.
+    clone
+        If True, a deep copy of `data` will be created before processing.
+        If False, `data` will be modified in place. Default is False.
 
     Returns
     -------
@@ -68,8 +80,8 @@ def crypto(lon, lat, crypto_from, crypto_to, exact=False):
     """
     from .pyxis_py import py_crypto  # type: ignore
 
-    lon = coord_util("lon", lon)
-    lat = coord_util("lat", lat)
+    lon = coord_util("lon", lon, clone)
+    lat = coord_util("lat", lat, clone)
     if (
         (str(crypto_from).upper() not in COORD_CRYPTO_SPACE.list())
         or (str(crypto_to).upper() not in COORD_CRYPTO_SPACE.list())

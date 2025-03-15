@@ -14,6 +14,7 @@ def datum_compense(
     radius: float = 6378_137,
     x0: float = 500_000,
     y0: float = 0,
+    clone: bool = True,
 ) -> tuple[float, float]: ...
 @overload
 def datum_compense(
@@ -23,6 +24,7 @@ def datum_compense(
     radius: float = 6378_137,
     x0: float = 500_000,
     y0: float = 0,
+    clone: bool = True,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]: ...
 def datum_compense(
     xc,
@@ -31,6 +33,7 @@ def datum_compense(
     radius: float = 6378_137,
     x0: float = 500_000,
     y0: float = 0,
+    clone: bool = True,
 ):
     r"""
     Convert projected XY coordinates from height compensation plane to sea level plane.
@@ -47,6 +50,9 @@ def datum_compense(
         Radius of earth.
     x0, y0
         Coordinate system origin.
+    clone
+        If True, a deep copy of `data` will be created before processing.
+        If False, `data` will be modified in place. Default is False.
 
     Returns
     -------
@@ -71,8 +77,8 @@ def datum_compense(
     """
     from .pyxis_py import py_datum_compense  # type: ignore
 
-    xc = coord_util("xc", xc)
-    yc = coord_util("yc", yc)
+    xc = coord_util("xc", xc, clone)
+    yc = coord_util("yc", yc, clone)
 
     xc, yc = py_datum_compense(xc, yc, hb, radius, x0, y0)
 

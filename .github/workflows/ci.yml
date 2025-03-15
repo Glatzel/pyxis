@@ -29,11 +29,11 @@ concurrency:
 jobs:
   changed:
     outputs:
-      # changed-cpp: ${{steps.changed-cpp.outputs.any_changed}}
+      changed-cpp: ${{steps.changed-cpp.outputs.any_changed}}
       changed-csharp: ${{steps.changed-csharp.outputs.any_changed }}
-      # changed-cuda: ${{steps.changed-cuda.outputs.any_changed}}
-      # changed-python: ${{steps.changed-python.outputs.any_changed}}
-      # changed-rust: ${{steps.changed-rust.outputs.any_changed}}
+      changed-cuda: ${{steps.changed-cuda.outputs.any_changed}}
+      changed-python: ${{steps.changed-python.outputs.any_changed}}
+      changed-rust: ${{steps.changed-rust.outputs.any_changed}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

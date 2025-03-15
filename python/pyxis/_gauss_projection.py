@@ -147,6 +147,9 @@ def xyz2lbh(
         Error threshold.
     max_iter
         Max iterations.
+    clone
+        If True, a deep copy of `data` will be created before processing.
+        If False, `data` will be modified in place. Default is False.
 
     Returns
     -------

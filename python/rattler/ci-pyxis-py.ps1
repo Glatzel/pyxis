@@ -7,7 +7,7 @@ Set-Location $PSScriptRoot
 
 & "$PSScriptRoot/../scripts/build-cuda.ps1"
 & "$PSScriptRoot/../scripts/maturin-develop.ps1" -config $config
-& "$PSScriptRoot/../scripts/py-pytest.ps1"
+& "$PSScriptRoot/../scripts/pytest.ps1"
 & "$PSScriptRoot/../scripts/build-python-whl.ps1" -config $config
 
 Set-Location $PSScriptRoot

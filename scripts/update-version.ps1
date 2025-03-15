@@ -1,5 +1,5 @@
 Set-Location $PSScriptRoot/..
-$version= "0.0.14"
+$version= "0.0.15"
 
 # Update cpp version
 $cmakeListsPath = "./cpp/CMakeLists.txt"
@@ -30,9 +30,9 @@ Write-Host "Updated Rust version to $version"
 # Update python rattler version
 $recipe_path = "./python/rattler/recipe.yaml"
 (Get-Content -Path $recipe_path) -replace '^  version: .*', "  version: $version" | Set-Content -Path $recipe_path
-Write-Host "Updated ratter $pkg version to $version"
+Write-Host "Updated ratter cli version to $version"
 
 # Update rust rattler version
 $recipe_path = "./rust/rattler/recipe.yaml"
 (Get-Content -Path $recipe_path) -replace '^  version: .*', "  version: $version" | Set-Content -Path $recipe_path
-Write-Host "Updated ratter $pkg version to $version"
+Write-Host "Updated ratter py version to $version"

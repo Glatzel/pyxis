@@ -82,7 +82,7 @@ jobs:
 
   csharp-ci:
     needs: changed
-    if: ${{ needs.changed.outputs.changed-csharp }}
+    # if: ${{ needs.changed.outputs.changed-csharp }}
     uses: ./.github/workflows/ci-csharp.yml
     with:
       build-release: ${{inputs.build-release}}

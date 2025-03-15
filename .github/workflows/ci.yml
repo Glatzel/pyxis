@@ -75,7 +75,7 @@ jobs:
 
   ci-cpp:
     needs: changed
-    if: ${{ needs.changed.outputs.changed-cpp }}
+    if: ${{ needs.changed.outputs.changed-cpp != 'false'}}
     uses: ./.github/workflows/ci-cpp.yml
     with:
       build-release: ${{inputs.build-release}}

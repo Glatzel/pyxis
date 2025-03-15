@@ -18,12 +18,13 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64
+
       - name: build
-        run: dotnet build
-        working-directory: ${{env.CSHARP_ROOT}}
+        run: ${{env.CSHARP_ROOT}}/scripts/build.ps1
+
       - name: test
-        run: dotnet test --no-build --logger:junit --collect:"XPlat Code Coverage"
-        working-directory: ${{env.CSHARP_ROOT}}
+        run: ${{env.CSHARP_ROOT}}/scripts/test.ps1
+
       - name: Upload cov results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5
@@ -35,3 +36,13 @@ jobs:
         with:
           files: ./tests/*/TestResults/TestResults.xml
           fail_ci_if_error: true
+
+      - name: pack
+        run: ${{env.CSHARP_ROOT}}/scripts/pack.ps1
+      - name: upload nupkg
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-csharp
+          path: |
+            ${{env.CSHARP_ROOT}}/dist/*.nupkg
+          if-no-files-found: error

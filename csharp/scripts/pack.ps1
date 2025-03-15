@@ -4,6 +4,5 @@ param (
 )
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
-Remove-Item ./bin -Recurse -ErrorAction SilentlyContinue
-dotnet build --configuration $config
+dotnet pack --configuration $config -o dist
 Set-Location $ROOT

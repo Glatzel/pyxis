@@ -54,6 +54,42 @@ jobs:
           name: pyxis-cpp-${{matrix.machine}}
           path: cpp/dist/*.7z
           if-no-files-found: error
+  # region csharp
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: changed
+        if: ${{github.event_name == 'pull_request'}}
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            .github/**
+            chsarp/**
+      - name: Add msbuild to PATH
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+      - name: build
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        run: dotnet build
+        working-directory: ./chsarp
+      - name: test
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        run: dotnet test --no-build --logger:junit --collect:"XPlat Code Coverage"
+        working-directory: ./chsarp
+      - name: Upload cov results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: ./tests/*/TestResults/TestResults.xml
+          fail_ci_if_error: true
 
   # region cuda
   build-cuda:

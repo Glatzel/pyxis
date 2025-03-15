@@ -117,10 +117,6 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.3
-        with:
-          run-install: false
       - uses: dtolnay/rust-toolchain@stable
       - name: cargo-doc
         run: ${{env.RUST_ROOT}}/scripts/cargo-doc.ps1
@@ -176,6 +172,7 @@ jobs:
           if-no-files-found: error
 
   build-rust-cuda:
+    needs: cache-vcpkg
     strategy:
       fail-fast: false
       matrix:
@@ -187,19 +184,7 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.3
-        with:
-          run-install: false
-      - name: restore vcpkg
-        id: restore-vcpkg
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{env.RUST_ROOT}}/vcpkg/installed
-          key: vcpkg-${{ runner.os }}-${{ hashFiles('./rust/vcpkg/vcpkg.json') }}
-          lookup-only: true
       - uses: dtolnay/rust-toolchain@stable
-
       - uses: Jimver/cuda-toolkit@v0.2.22
         with:
           cuda: "12.8.0"
@@ -213,6 +198,7 @@ jobs:
         shell: pwsh
 
   cargo-clippy:
+    needs: cache-vcpkg
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"

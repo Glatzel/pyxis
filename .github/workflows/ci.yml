@@ -28,36 +28,26 @@ concurrency:
 
 jobs:
   ci-cpp:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-cpp != 'false'}}
     uses: ./.github/workflows/ci-cpp.yml
     with:
       build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
   csharp-ci:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-csharp != 'false'}}
     uses: ./.github/workflows/ci-csharp.yml
     with:
       build-release: ${{inputs.build-release && inputs.build-release || false }}
 
   cuda-ci:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-cuda != 'false' }}
     uses: ./.github/workflows/ci-cuda.yml
     with:
       build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
   python-ci:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-python != 'false' }}
     uses: ./.github/workflows/ci-python.yml
     with:
       build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
   rust-ci:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-rust != 'false' }}
     uses: ./.github/workflows/ci-rust.yml
     with:
       build-release: ${{inputs.build-release&& inputs.build-release || false}}

@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cpp-${{matrix.machine}}
-          path: dist/*.7z
+          path: cpp/dist/*.7z
           if-no-files-found: error
 
   # region cuda
@@ -91,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cuda-${{matrix.machine}}
-          path: dist/*.7z
+          path: cuda/dist/*.7z
           if-no-files-found: error
 
   # region python
@@ -145,7 +145,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: python-doc
-          path: dist/*.7z
+          path: python/dist/*.7z
           if-no-files-found: error
 
   rattler-pyxis-py:
@@ -183,7 +183,7 @@ jobs:
           name: rattler-pyxis-py-${{matrix.machine}}
           path: |
             python/rattler/output/${{matrix.os}}/*.conda
-            dist/*.whl
+            python/dist/*.whl
           if-no-files-found: error
 
       - name: Upload results to Codecov
@@ -344,7 +344,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rust-doc
-          path: dist/*.7z
+          path: rust/dist/*.7z
           if-no-files-found: error
 
   rattler-pyxis-cli:
@@ -386,7 +386,7 @@ jobs:
           name: rattler-pyxis-cli-${{matrix.machine}}
           path: |
             rust/rattler/output/${{matrix.os}}/*.conda
-            dist/*.7z
+            rust/dist/*.7z
           if-no-files-found: error
 
   build-rust-cuda:

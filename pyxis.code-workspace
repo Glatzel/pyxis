@@ -30,6 +30,7 @@
         }
     ],
     "settings": {
+        "cmake.ignoreCMakeListsMissing": true,
         "VSCodeCounter.exclude": [
             "**/.gitignore",
             "**/node_modules/**",
@@ -57,9 +58,6 @@
             "PKG_CONFIG_PATH": "${workspaceFolder}/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
         },
         "rust-analyzer.testExplorer": true,
-        "terminal.integrated.env.windows": {
-            "PYTHONPATH": "${workspaceFolder}"
-        },
         "rust-analyzer.linkedProjects": [
             "${workspaceFolder}/rust/Cargo.toml",
             "${workspaceFolder}/python/Cargo.toml"

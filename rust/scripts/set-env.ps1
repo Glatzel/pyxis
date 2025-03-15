@@ -4,7 +4,7 @@ param (
 )
 $ROOT = git rev-parse --show-toplevel
 $current_dir = Resolve-Path $PWD
-Set-Location $ROOT/rust
+Set-Location $PSScriptRoot/..
 pixi install
 if ($IsWindows) {
     # set libproj find path for pkgconfig
@@ -15,11 +15,11 @@ if ($IsWindows) {
         $env:PKG_CONFIG_PATH = "$ROOT/vcpkg/installed/dynamic/x64-windows/lib/pkgconfig"
     }
     # copy proj.db to cli src
-    Copy-Item $ROOT/rust/.pixi/envs/default/Library/share/proj/proj.db $ROOT/rust/crates/pyxis-cli/src/proj.db
+    Copy-Item $ROOT/rust/.pixi/envs/default/Library/share/proj/proj.db ./rust/crates/pyxis-cli/src/proj.db
 }
 if ($IsLinux) {
     # copy proj.db to cli src
     pixi install
-    Copy-Item $ROOT/rust/.pixi/envs/default/share/proj/proj.db $ROOT/rust/crates/pyxis-cli/src/proj.db
+    Copy-Item $ROOT/rust/.pixi/envs/default/share/proj/proj.db ./rust/crates/pyxis-cli/src/proj.db
 }
 Set-Location $current_dir

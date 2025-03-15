@@ -1,0 +1,24 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/root/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Folder Name="/root/src/" Id="b858486b-2441-8b08-345c-f7828c338578">
+    <File Path="src/Directory.Build.props" />
+    <Project Path="src/Pyxis/Pyxis.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/root/tests/" Id="f1e2bc5e-7cad-0b05-d18d-b2f055a57be7">
+    <File Path="tests/Directory.Build.props" />
+    <Project Path="tests/Pyxis.Test/Pyxis.Test.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/root/scripts/" Id="cd211cbc-440c-3d8b-ffc8-d7ae7fc0977d">
+    <File Path="scripts/test.ps1" />
+  </Folder>
+</Solution>

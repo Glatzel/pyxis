@@ -1,0 +1,13 @@
+# cuda
+*.ptx
+
+# rust
+dist
+target
+lcov.info
+
+# misc
+proj.db
+
+# rattler
+rattler/output

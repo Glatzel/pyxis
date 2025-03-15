@@ -1,11 +1,11 @@
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
-Set-Location $ROOT/cuda
+Set-Location $PSScriptRoot/..
 $config = "-DCMAKE_BUILD_TYPE=Release"
 
 # create install dir
-$install = "$ROOT/dist/cuda"
+$install = "./dist"
 Remove-Item $install -Recurse -ErrorAction SilentlyContinue
 New-Item $install -ItemType Directory -ErrorAction SilentlyContinue
 $install = Resolve-Path $install
@@ -22,8 +22,9 @@ cmake --build build --target install
 # pack output files
 if ($IsWindows) {
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "$ROOT/dist/pyxis-cuda-windows-x64.7z" "$ROOT/dist/cuda/"
+        "./dist/pyxis-cuda-windows-x64.7z" "./dist/"
 }if ($IsLinux) {
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "$ROOT/dist/pyxis-cuda-linux-x64.7z" "$ROOT/dist/cuda/"
+        "./dist/pyxis-cuda-linux-x64.7z" "./dist/"
 }
+Set-Location $ROOT

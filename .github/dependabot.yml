@@ -21,3 +21,13 @@ updates:
       dependencies:
         patterns:
           - "*"
+  - package-ecosystem: "nuget"
+    directory: "./csharp"
+    schedule:
+      interval: "monthly"
+    groups:
+      all:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "build"

@@ -85,7 +85,7 @@ jobs:
     # if: ${{ needs.changed.outputs.changed-csharp != 'false' }}
     uses: ./.github/workflows/ci-csharp.yml
     with:
-      build-release: ${{inputs.build-release && inputs.build-release || 'false' }}
+      build-release: ${{inputs.build-release && inputs.build-release || false }}
 
   # cuda-ci:
   #   needs: changed

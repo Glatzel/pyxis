@@ -55,7 +55,7 @@ jobs:
           path: cpp/dist/*.7z
           if-no-files-found: error
   # region csharp
-  build:
+  build-csharp:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4

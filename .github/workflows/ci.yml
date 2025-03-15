@@ -30,7 +30,7 @@ jobs:
   changed:
     outputs:
       # changed-cpp: ${{steps.changed-cpp.outputs.any_changed!='false'}}
-      changed-csharp: ${{steps.changed-csharp.outputs.any_changed!='false'}}
+      changed-csharp: ${{''}}
       # changed-cuda: ${{steps.changed-cuda.outputs.any_changed!='false'}}
       # changed-python: ${{steps.changed-python.outputs.any_changed!='false'}}
       # changed-rust: ${{steps.changed-rust.outputs.any_changed!='false'}}
@@ -82,7 +82,7 @@ jobs:
 
   csharp-ci:
     needs: changed
-    # if: ${{ needs.changed.outputs.changed-csharp }}
+    # if: ${{ needs.changed.outputs.changed-csharp != 'false' }}
     uses: ./.github/workflows/ci-csharp.yml
     with:
       build-release: ${{inputs.build-release}}

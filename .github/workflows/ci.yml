@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   workflow_call:
     inputs:
-      build-dist:
+      build-release:
         type: boolean
         default: false
   push:
@@ -70,4 +70,34 @@ jobs:
   cpp-ci:
     needs: changed
     if: ${{ needs.changed.outputs.changed-cpp != 'false' }}
-    uses: ./.github/workflows/ci.yml
+    uses: ./.github/workflows/cpp-ci.yml
+    with:
+      build-release: ${{inputs.build-release}}
+
+  csharp-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-cpp != 'false' }}
+    uses: ./.github/workflows/csharp-ci.yml
+    with:
+      build-release: ${{inputs.build-release}}
+
+  cuda-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-cuda != 'false' }}
+    uses: ./.github/workflows/cuda-ci.yml
+    with:
+      build-release: ${{inputs.build-release}}
+
+  python-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-python != 'false' }}
+    uses: ./.github/workflows/python-ci.yml
+    with:
+      build-release: ${{inputs.build-release}}
+
+  rust-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-rust != 'false' }}
+    uses: ./.github/workflows/csharp-ci.yml
+    with:
+      build-release: ${{inputs.build-release}}

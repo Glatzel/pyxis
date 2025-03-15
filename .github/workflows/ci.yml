@@ -70,4 +70,4 @@ jobs:
   cpp-ci:
     needs: changed
     if: ${{ needs.changed.outputs.changed-cpp != 'false' }}
-    uses: ./cpp/.github/workflows/ci.yml
+    uses: ./cpp/.github/workflows/ci.yml@${{github.ref}}

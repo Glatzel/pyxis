@@ -2,7 +2,7 @@ $ROOT = git rev-parse --show-toplevel
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 
-& $PSScriptRoot/py-develop.ps1
+& $PSScriptRoot/maturin-develop.ps1
 Set-Location $PSScriptRoot/..
 
 Remove-Item -Path "./doc/source/reference/api" -Recurse -ErrorAction SilentlyContinue

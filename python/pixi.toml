@@ -15,7 +15,7 @@ python = "3.11.*"
 maturin = "*"
 pip = "*"
 rattler-build="*"
-
+ruff="*"
 [feature.py-deps.dependencies]
 lazy-loader = "*"
 nomkl = "*"

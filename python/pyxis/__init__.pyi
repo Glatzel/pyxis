@@ -23,5 +23,5 @@ __all__ = [
 ]
 import importlib
 
-if importlib.util.find_spec("cupy"):
-    __all__.append("pyxis_cuda")
+if importlib.util.find_spec("cupy"):  # type: ignore
+    __all__.append("pyxis_cuda")  # type: ignore

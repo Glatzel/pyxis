@@ -44,24 +44,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            ${{env.RUST_ROOT}}/**
       - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - run: cargo install cargo-codspeed --locked
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
 
       - name: Build the benchmark target(s)
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: cargo codspeed build -p pyxis
         working-directory: ${{env.RUST_ROOT}}
 
       - name: Run the benchmarks
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: CodSpeedHQ/action@v3
         with:
           run: cargo codspeed run
@@ -72,14 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            ${{env.RUST_ROOT}}/**
       - name: Machete
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: bnjbvr/cargo-machete@main
 
   cargo-test:
@@ -91,41 +74,30 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            ${{env.RUST_ROOT}}/**
       - run: choco install pkgconfiglite
-        if: ${{runner.os == 'Windows' && steps.changed.outputs.any_changed != 'false'}}
+        if: ${{runner.os == 'Windows'}}
       - name: Set up pixi
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: prefix-dev/setup-pixi@v0.8.3
         with:
           run-install: false
 
       - name: restore vcpkg
-        if: ${{ runner.os == 'Windows' &&steps.changed.outputs.any_changed != 'false'}}
+        if: ${{ runner.os == 'Windows'}}
         uses: actions/cache/restore@v4
         with:
           path: ./rust/vcpkg/installed
           key: vcpkg-${{ runner.os }}-${{ hashFiles('./rust/vcpkg/vcpkg.json') }}
 
       - uses: dtolnay/rust-toolchain@nightly
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
 
       - name: Install nextest
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: taiki-e/install-action@nextest
 
       - name: Install cargo-llvm-cov
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: cargo-test
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ${{env.RUST_ROOT}}scripts/cargo-test.ps1
+        run: ${{env.RUST_ROOT}}/scripts/cargo-test.ps1
         shell: pwsh
 
       - name: Upload results to Codecov
@@ -145,24 +117,16 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
         with:
-          files: |
-            ${{env.RUST_ROOT}}/**
+          run-install: false
       - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-
       - name: cargo-doc
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ${{env.RUST_ROOT}}/scripts/cargo-doc.ps1
         shell: pwsh
 
       - name: upload doc
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: rust-doc
@@ -183,25 +147,26 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            ${{env.RUST_ROOT}}/**
       - uses: dtolnay/rust-toolchain@stable
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' && steps.changed.outputs.any_changed != 'false'  }}
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
+        with:
+          run-install: false
+
+      - name: restore vcpkg
+        if: ${{ runner.os == 'Windows' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: ./rust/vcpkg/installed
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('./rust/vcpkg/vcpkg.json') }}
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'}}
 
       - name: build
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ${{env.RUST_ROOT}}/rattler/ci-pyxis-cli.ps1 ${{ inputs.build-release && '-config  release' || null }}
         shell: pwsh
 
       - name: upload
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: rattler-pyxis-cli-${{matrix.machine}}
@@ -222,29 +187,29 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
         with:
-          files: |
-            ${{env.RUST_ROOT}}/**
+          run-install: false
+      - name: restore vcpkg
+        id: restore-vcpkg
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{env.RUST_ROOT}}/vcpkg/installed
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('./rust/vcpkg/vcpkg.json') }}
+          lookup-only: true
       - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+
       - uses: Jimver/cuda-toolkit@v0.2.22
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         with:
           cuda: "12.8.0"
           sub-packages: ${{matrix.sub-packages}}
           method: network
       - name: clippy
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ${{env.RUST_ROOT}}/scripts/cargo-clippy-cuda.ps1
         shell: pwsh
       - name: build cuda
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-        run: ${{env.RUST_ROOT}}/scripts/build-rust-cuda.ps1 ${{ inputs.build-dist && '-config release' || null }}
+        run: ${{env.RUST_ROOT}}/scripts/build-rust-cuda.ps1 ${{ inputs.build-release && '-config release' || null }}
         shell: pwsh
 
   cargo-clippy:
@@ -253,18 +218,19 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            ${{env.RUST_ROOT}}/**
       - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
+        with:
+          run-install: false
+
+      - name: restore vcpkg
+        if: ${{ runner.os == 'Windows' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: ./rust/vcpkg/installed
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('./rust/vcpkg/vcpkg.json') }}
       - name: cargo-clippy
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: |
           ${{env.RUST_ROOT}}/scripts/cargo-clippy.ps1
         shell: pwsh
@@ -275,20 +241,14 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
         with:
-          files: |
-            ${{env.RUST_ROOT}}/**
+          run-install: false
       - uses: dtolnay/rust-toolchain@nightly
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         with:
           components: rustfmt
-      - uses: ./.github/actions/setup-ci
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - name: cargo-fmt
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: |
           ${{env.RUST_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh

@@ -1,6 +1,6 @@
 import copy
 from pathlib import Path
-from typing import Literal, Union
+from typing import Literal
 
 import cupy as cp
 import numpy as np
@@ -8,8 +8,8 @@ from numpy.typing import NDArray
 
 PTX_PATH = Path(__file__).parent / "ptx"
 TDTYPE = Literal["float32", "float64"]
-TCoordScalarCuda = Union[int, float, np.integer, np.floating]
-TCoordArrayCuda = Union[list[float], tuple[float, ...], NDArray]
+TCoordScalarCuda = int | float | np.integer | np.floating
+TCoordArrayCuda = list[float] | tuple[float, ...] | NDArray
 
 
 def scalar_util(scalar_like: TCoordScalarCuda, dtype: TDTYPE) -> cp.ndarray:

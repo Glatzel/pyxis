@@ -14,19 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            ${{env.PYTHON_ROOT}}/**
       - name: Set up pixi
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: prefix-dev/setup-pixi@v0.8.3
         with:
           run-install: false
       - name: lint
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ${{env.PYTHON_ROOT}}/scripts/ruff.ps1
         shell: pwsh
 
@@ -34,27 +26,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            ${{env.PYTHON_ROOT}}/**
       - name: Set up pixi
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: prefix-dev/setup-pixi@v0.8.3
         with:
           run-install: false
       - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
 
       - name: sphinx build
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ${{env.PYTHON_ROOT}}/scripts/sphinx.ps1
         shell: pwsh
 
       - name: upload doc
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: python-doc
@@ -76,35 +58,24 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            ${{env.PYTHON_ROOT}}/**
       - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - name: Set up pixi
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: prefix-dev/setup-pixi@v0.8.3
         with:
           run-install: false
       - run: choco install pkgconfiglite
         if: ${{runner.os == 'Windows'&&steps.changed.outputs.any_changed != 'false'}}
       - uses: Jimver/cuda-toolkit@v0.2.22
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         with:
           cuda: "12.8.0"
           sub-packages: ${{matrix.sub-packages}}
           method: network
 
       - name: build
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: ${{env.PYTHON_ROOT}}/rattler/ci-pyxis-py.ps1 ${{ inputs.build-release && '-config  release' || null }}
         shell: pwsh
 
       - name: upload conda
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: rattler-pyxis-py-${{matrix.machine}}
@@ -126,21 +97,12 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            ${{env.PYTHON_ROOT}}/**
       - uses: dtolnay/rust-toolchain@stable
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
       - name: Set up pixi
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: prefix-dev/setup-pixi@v0.8.3
         with:
           run-install: false
       - name: cargo-clippy
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: |
           ${{env.PYTHON_ROOT}}/scripts/cargo-clippy.ps1
         shell: pwsh
@@ -151,23 +113,14 @@ jobs:
       RUSTFLAGS: "-Dwarnings"
     steps:
       - uses: actions/checkout@v4
-      - id: changed
-        uses: tj-actions/changed-files@v45
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          files: |
-            ${{env.PYTHON_ROOT}}/**
       - uses: dtolnay/rust-toolchain@nightly
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         with:
           components: rustfmt
       - name: Set up pixi
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         uses: prefix-dev/setup-pixi@v0.8.3
         with:
           run-install: false
       - name: cargo-fmt
-        if: ${{ steps.changed.outputs.any_changed != 'false' }}
         run: |
           ${{env.PYTHON_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh

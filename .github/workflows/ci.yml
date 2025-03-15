@@ -29,21 +29,21 @@ concurrency:
 jobs:
   changed:
     outputs:
-      # changed-cpp: ${{steps.changed-cpp.outputs.any_changed!='false'}}
-      changed-csharp: ${{''}}
-      # changed-cuda: ${{steps.changed-cuda.outputs.any_changed!='false'}}
-      # changed-python: ${{steps.changed-python.outputs.any_changed!='false'}}
-      # changed-rust: ${{steps.changed-rust.outputs.any_changed!='false'}}
+      changed-cpp: ${{steps.changed-cpp.outputs.any_changed}}
+      changed-csharp: ${{steps.changed-csharp.outputs.any_changed }}
+      changed-cuda: ${{steps.changed-cuda.outputs.any_changed}}
+      changed-python: ${{steps.changed-python.outputs.any_changed}}
+      changed-rust: ${{steps.changed-rust.outputs.any_changed}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # - id: changed-cpp
-      #   uses: tj-actions/changed-files@v45
-      #   if: ${{github.event_name == 'pull_request'}}
-      #   with:
-      #     files: |
-      #       ./cpp/**
-      #       ./.github/workflows/ci-cpp.yml
+      - id: changed-cpp
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name == 'pull_request'}}
+        with:
+          files: |
+            ./cpp/**
+            ./.github/workflows/ci-cpp.yml
       - id: changed-csharp
         uses: tj-actions/changed-files@v45
         if: ${{github.event_name == 'pull_request'}}
@@ -51,59 +51,59 @@ jobs:
           files: |
             ./csharp/**
             ./.github/workflows/ci-csharp.yml
-      # - id: changed-cuda
-      #   uses: tj-actions/changed-files@v45
-      #   if: ${{github.event_name == 'pull_request'}}
-      #   with:
-      #     files: |
-      #       ./cuda/**
-      #       ./.github/workflows/ci-cuda.yml
-      # - id: changed-python
-      #   uses: tj-actions/changed-files@v45
-      #   if: ${{github.event_name == 'pull_request'}}
-      #   with:
-      #     files: |
-      #       ./python/**
-      #       ./.github/workflows/ci-python.yml
-      # - id: changed-rust
-      #   uses: tj-actions/changed-files@v45
-      #   if: ${{github.event_name == 'pull_request'}}
-      #   with:
-      #     files: |
-      #       ./rust/**
-      #       ./.github/workflows/ci-rust.yml
+      - id: changed-cuda
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name == 'pull_request'}}
+        with:
+          files: |
+            ./cuda/**
+            ./.github/workflows/ci-cuda.yml
+      - id: changed-python
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name == 'pull_request'}}
+        with:
+          files: |
+            ./python/**
+            ./.github/workflows/ci-python.yml
+      - id: changed-rust
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name == 'pull_request'}}
+        with:
+          files: |
+            ./rust/**
+            ./.github/workflows/ci-rust.yml
 
-  # ci-cpp:
-  #   needs: changed
-  #   if: ${{ needs.changed.outputs.changed-cpp != 'false'}}
-  #   uses: ./.github/workflows/ci-cpp.yml
-  #   with:
-  #     build-release: ${{inputs.build-release}}
+  ci-cpp:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-cpp != 'false'}}
+    uses: ./.github/workflows/ci-cpp.yml
+    with:
+      build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
   csharp-ci:
     needs: changed
-    # if: ${{ needs.changed.outputs.changed-csharp != 'false' }}
+    if: ${{ needs.changed.outputs.changed-csharp != 'false'}}
     uses: ./.github/workflows/ci-csharp.yml
     with:
-      build-release: ${{inputs.build-release}}
+      build-release: ${{inputs.build-release && inputs.build-release || false }}
 
-  # cuda-ci:
-  #   needs: changed
-  #   if: ${{ needs.changed.outputs.changed-cuda != 'false' }}
-  #   uses: ./.github/workflows/ci-cuda.yml
-  #   with:
-  #     build-release: ${{inputs.build-release}}
+  cuda-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-cuda != 'false' }}
+    uses: ./.github/workflows/ci-cuda.yml
+    with:
+      build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
-  # python-ci:
-  #   needs: changed
-  #   if: ${{ needs.changed.outputs.changed-python != 'false' }}
-  #   uses: ./.github/workflows/ci-python.yml
-  #   with:
-  #     build-release: ${{inputs.build-release}}
+  python-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-python != 'false' }}
+    uses: ./.github/workflows/ci-python.yml
+    with:
+      build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
-  # rust-ci:
-  #   needs: changed
-  #   if: ${{ needs.changed.outputs.changed-rust != 'false' }}
-  #   uses: ./.github/workflows/ci-rust.yml
-  #   with:
-  #     build-release: ${{inputs.build-release}}
+  rust-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-rust != 'false' }}
+    uses: ./.github/workflows/ci-rust.yml
+    with:
+      build-release: ${{inputs.build-release&& inputs.build-release || false}}

@@ -5,14 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.15] - 2025-03-15
+
+### Added
+
+- Initial csharp by @Glatzel in [#216](https://github.com/Glatzel/pyxis/pull/216)
+- Add nupkg build by @Glatzel in [#222](https://github.com/Glatzel/pyxis/pull/222)
+
+### Fixed
+
+- Build scripts by @Glatzel in [#221](https://github.com/Glatzel/pyxis/pull/221)
+
+### Removed
+
+- Remove nupkg by @Glatzel in [#227](https://github.com/Glatzel/pyxis/pull/227)
+
 ## [0.0.14] - 2025-03-14
+
+### Added
+
+- Initial python cuda by @Glatzel in [#206](https://github.com/Glatzel/pyxis/pull/206)
+- Initial opencl by @Glatzel in [#209](https://github.com/Glatzel/pyxis/pull/209)
 
 ### Changed
 
 - Cpp generics by @Glatzel in [#204](https://github.com/Glatzel/pyxis/pull/204)
 - Generics rust cuda by @Glatzel in [#205](https://github.com/Glatzel/pyxis/pull/205)
-- Initial python cuda by @Glatzel in [#206](https://github.com/Glatzel/pyxis/pull/206)
-- Initial opencl by @Glatzel in [#209](https://github.com/Glatzel/pyxis/pull/209)
 
 ## [0.0.13] - 2025-03-13
 
@@ -54,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Initial pyxis-cuda by @Glatzel in [#150](https://github.com/Glatzel/pyxis/pull/150)
 - Add some check and log to datum_compense cuda by @Glatzel in [#151](https://github.com/Glatzel/pyxis/pull/151)
 - Add util fn to calculate block and grid size by @Glatzel in [#152](https://github.com/Glatzel/pyxis/pull/152)
 - Add gcj bd crypto cuda by @Glatzel in [#153](https://github.com/Glatzel/pyxis/pull/153)
@@ -61,7 +80,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Initial pyxis-cuda by @Glatzel in [#150](https://github.com/Glatzel/pyxis/pull/150)
 - Complete crypto cuda by @Glatzel in [#155](https://github.com/Glatzel/pyxis/pull/155)
 - New cuda context manager by @Glatzel in [#165](https://github.com/Glatzel/pyxis/pull/165)
 
@@ -120,9 +138,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.7] - 2025-02-26
 
-### Changed
+### Added
 
 - Initial bench by @Glatzel in [#83](https://github.com/Glatzel/pyxis/pull/83)
+
+### Changed
+
 - Complete bench for crypto by @Glatzel in [#85](https://github.com/Glatzel/pyxis/pull/85)
 - Modify crypto exact recursion exit by @Glatzel in [#94](https://github.com/Glatzel/pyxis/pull/94)
 
@@ -246,6 +267,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.15]: https://github.com/Glatzel/pyxis/compare/v0.0.14..v0.0.15
 [0.0.14]: https://github.com/Glatzel/pyxis/compare/v0.0.13..v0.0.14
 [0.0.13]: https://github.com/Glatzel/pyxis/compare/v0.0.12..v0.0.13
 [0.0.12]: https://github.com/Glatzel/pyxis/compare/v0.0.11..v0.0.12

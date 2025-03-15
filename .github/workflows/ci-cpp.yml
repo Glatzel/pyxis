@@ -7,6 +7,7 @@ on:
       build-release:
         type: boolean
         default: false
+
 env:
   CPP_ROOT: ./cpp
 jobs:

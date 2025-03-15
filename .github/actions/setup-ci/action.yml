@@ -11,5 +11,5 @@ runs:
       if: ${{ runner.os == 'Windows' }}
       uses: actions/cache/restore@v4
       with:
-        path: ./vcpkg/installed
-        key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg/vcpkg.json') }}
+        path: ./rust/vcpkg/installed
+        key: vcpkg-${{ runner.os }}-${{ hashFiles('./rust/vcpkg/vcpkg.json') }}

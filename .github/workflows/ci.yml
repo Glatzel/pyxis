@@ -52,8 +52,44 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cpp-${{matrix.machine}}
-          path: dist/*.7z
+          path: cpp/dist/*.7z
           if-no-files-found: error
+  # region csharp
+  build-csharp:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: changed
+        if: ${{github.event_name == 'pull_request'}}
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            .github/**
+            chsarp/**
+      - name: Add msbuild to PATH
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+      - name: build
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        run: dotnet build
+        working-directory: csharp
+      - name: test
+        if: ${{ steps.changed.outputs.any_changed != 'false' }}
+        run: dotnet test --no-build --logger:junit --collect:"XPlat Code Coverage"
+        working-directory: csharp
+      - name: Upload cov results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: ./tests/*/TestResults/TestResults.xml
+          fail_ci_if_error: true
 
   # region cuda
   build-cuda:
@@ -91,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cuda-${{matrix.machine}}
-          path: dist/*.7z
+          path: cuda/dist/*.7z
           if-no-files-found: error
 
   # region python
@@ -145,7 +181,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: python-doc
-          path: dist/*.7z
+          path: python/dist/*.7z
           if-no-files-found: error
 
   rattler-pyxis-py:
@@ -183,7 +219,7 @@ jobs:
           name: rattler-pyxis-py-${{matrix.machine}}
           path: |
             python/rattler/output/${{matrix.os}}/*.conda
-            dist/*.whl
+            python/dist/*.whl
           if-no-files-found: error
 
       - name: Upload results to Codecov
@@ -204,25 +240,25 @@ jobs:
         id: restore-vcpkg
         uses: actions/cache/restore@v4
         with:
-          path: ./vcpkg/installed
-          key: vcpkg-${{ runner.os }}-${{ hashFiles('./vcpkg/vcpkg.json') }}
+          path: ./rust/vcpkg/installed
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('./rust/vcpkg/vcpkg.json') }}
           lookup-only: true
 
       - name: setup vcpkg
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./vcpkg/vcpkg-setup.ps1
+        run: ./rust/vcpkg/vcpkg-setup.ps1
         shell: pwsh
 
       - name: install vcpkg dependencies
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
-        run: ./vcpkg/vcpkg-install.ps1
+        run: ./rust/vcpkg/vcpkg-install.ps1
         shell: pwsh
 
       - name: save vcpkg
         if: ${{steps.restore-vcpkg.outputs.cache-hit!='true'}}
         uses: actions/cache/save@v4
         with:
-          path: ./vcpkg/installed
+          path: ./rust/vcpkg/installed
           key: ${{steps.restore-vcpkg.outputs.cache-primary-key}}
 
   cargo-bench:
@@ -344,7 +380,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rust-doc
-          path: dist/*.7z
+          path: rust/dist/*.7z
           if-no-files-found: error
 
   rattler-pyxis-cli:
@@ -386,7 +422,7 @@ jobs:
           name: rattler-pyxis-cli-${{matrix.machine}}
           path: |
             rust/rattler/output/${{matrix.os}}/*.conda
-            dist/*.7z
+            rust/dist/*.7z
           if-no-files-found: error
 
   build-rust-cuda:

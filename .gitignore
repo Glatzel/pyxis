@@ -1,35 +1,3 @@
-# cuda
-*.ptx
-
-# dev
 .VSCodeCounter
-dist
 draft
-tests_report
-
-# python
-__pycache__
-.coverage
-.pixi
-*.egg-info
-*.pyd
-python/doc/build
-python/doc/source/reference/api
 diff.md
-
-# rust
-target
-lcov.info
-
-#vcpkg
-vcpkg/vcpkg
-vcpkg/installed
-
-#misc
-proj.db
-
-# cmake
-build
-
-# rattler
-src/rattler/*/output

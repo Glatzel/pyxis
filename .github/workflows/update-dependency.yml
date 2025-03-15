@@ -47,7 +47,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - run: ./vcpkg/vcpkg-update-baseline.ps1
+      - run: ./rust/vcpkg/vcpkg-update-baseline.ps1
         shell: pwsh
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7

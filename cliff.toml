@@ -95,6 +95,7 @@ commit_parsers = [
     { message = "^revert", group = "Revert" },
     { message = "^.*: add", group = "Added" },
     { message = "^.*: support", group = "Added" },
+    { message = "^.*: initial", group = "Added" },
     { message = "^.*: remove", group = "Removed" },
     { message = "^.*: delete", group = "Removed" },
     { message = "^build", skip = true },

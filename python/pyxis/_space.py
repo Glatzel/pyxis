@@ -26,6 +26,7 @@ def space(
     z: TCoordScalar,
     from_space: COORD_SPACE,
     to_space: COORD_SPACE,
+    clone: bool = True,
 ) -> tuple[float, float, float]: ...
 @overload
 def space(
@@ -34,8 +35,16 @@ def space(
     z: TCoordArray,
     from_space: COORD_SPACE,
     to_space: COORD_SPACE,
+    clone: bool = True,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]: ...
-def space(x, y, z, from_space, to_space):
+def space(
+    x,
+    y,
+    z,
+    from_space,
+    to_space,
+    clone: bool = True,
+):
     from .pyxis_py import py_space  # type: ignore
 
     if (
@@ -46,9 +55,9 @@ def space(x, y, z, from_space, to_space):
         msg = f"from `{from_space}` to `{to_space}`."
         raise TypeError(msg)
 
-    x = coord_util("x", x)
-    y = coord_util("y", y)
-    z = coord_util("z", z)
+    x = coord_util("x", x, clone)
+    y = coord_util("y", y, clone)
+    z = coord_util("z", z, clone)
 
     r, u, z = py_space(x, y, z, from_space, to_space)
 

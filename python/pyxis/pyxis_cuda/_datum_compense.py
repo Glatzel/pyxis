@@ -1,6 +1,6 @@
 import cupy as cp
 
-
+from pyxis.pyxis_cuda import get_grid_block
 from pyxis.pyxis_cuda._utils import PTX_PATH, TDTYPE
 
 
@@ -20,5 +20,6 @@ class DatumCompenseCuda:
     ) -> tuple[cp.ndarray, cp.ndarray]:
         fn = self.module.get_function(f"datum_compense_cuda_{dtype}")
         ratio = hb / radius / (1.0 + hb / radius)
-        fn((100,), (100,), (xc, yc, ratio, x0, y0, xc, yc))
+        grid_size, block_size = get_grid_block(xc.size)
+        fn((grid_size,), (block_size,), (xc, yc, ratio, x0, y0, xc, yc))
         return xc, yc

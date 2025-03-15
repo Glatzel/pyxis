@@ -5,7 +5,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 TCoordScalar = int | float | np.integer | np.floating
-TCoordArray = list[float], tuple[float, ...] | NDArray
+TCoordArray = list[float] | tuple[float, ...] | NDArray
 TCoord = TCoordScalar | TCoordArray
 
 

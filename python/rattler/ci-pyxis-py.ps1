@@ -6,7 +6,7 @@ $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot
 
 & "$PSScriptRoot/../scripts/build-cuda.ps1"
-& "$PSScriptRoot/../scripts/py-develop.ps1" -config $config
+& "$PSScriptRoot/../scripts/maturin-develop.ps1" -config $config
 & "$PSScriptRoot/../scripts/py-pytest.ps1"
 & "$PSScriptRoot/../scripts/build-python-whl.ps1" -config $config
 

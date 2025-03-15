@@ -8,7 +8,7 @@ on:
         type: boolean
         default: false
 env:
-  CUDA_ROOT: ./cpp
+  CUDA_ROOT: ./cuda
 jobs:
   # region cuda
   build-cuda:

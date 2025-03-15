@@ -29,7 +29,7 @@ concurrency:
 jobs:
   changed:
     outputs:
-      changed-cpp: ${{steps.changed-cpp.outputs.any_changed!='false' }}
+      changed-cpp: ${{steps.changed-cpp.outputs.any_changed!='false'}}
       changed-csharp: ${{steps.changed-csharp.outputs.any_changed!='false'}}
       changed-cuda: ${{steps.changed-cuda.outputs.any_changed!='false'}}
       changed-python: ${{steps.changed-python.outputs.any_changed!='false'}}
@@ -75,7 +75,7 @@ jobs:
 
   ci-cpp:
     needs: changed
-    if: ${{ needs.changed.outputs.changed-cpp != 'false' }}
+    if: ${{ needs.changed.outputs.changed-cpp }}
     uses: ./.github/workflows/ci-cpp.yml
     with:
       build-release: ${{inputs.build-release}}

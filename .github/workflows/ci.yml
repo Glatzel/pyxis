@@ -29,11 +29,11 @@ concurrency:
 jobs:
   changed:
     outputs:
-      changed-cpp: ${{steps.changed-cpp.outputs.any_changed!='false'}}
-      changed-csharp: ${{steps.changed-csharp.outputs.any_changed!='false'}}
-      changed-cuda: ${{steps.changed-cuda.outputs.any_changed!='false'}}
-      changed-python: ${{steps.changed-python.outputs.any_changed!='false'}}
-      changed-rust: ${{steps.changed-rust.outputs.any_changed!='false'}}
+      changed-cpp: ${{steps.changed-cpp.outputs.any_changed!='false'&&'true'||'false'}}
+      changed-csharp: ${{steps.changed-csharp.outputs.any_changed!='false'&&'true'||'false'}}
+      changed-cuda: ${{steps.changed-cuda.outputs.any_changed!='false'&&'true'||'false'}}
+      changed-python: ${{steps.changed-python.outputs.any_changed!='false'&&'true'||'false'}}
+      changed-rust: ${{steps.changed-rust.outputs.any_changed!='false'&&'true'||'false'}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

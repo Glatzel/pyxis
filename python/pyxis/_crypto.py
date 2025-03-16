@@ -25,7 +25,7 @@ def crypto(
     lat: TCoordScalar,
     crypto_from: COORD_CRYPTO_SPACE,
     crypto_to: COORD_CRYPTO_SPACE,
-    exact: bool = False,
+    exact: bool,
     clone: bool = True,
 ) -> tuple[float, float]: ...
 @overload
@@ -34,7 +34,7 @@ def crypto(
     lat: TCoordArray,
     crypto_from: COORD_CRYPTO_SPACE,
     crypto_to: COORD_CRYPTO_SPACE,
-    exact: bool = False,
+    exact: bool,
     clone: bool = True,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]: ...
 def crypto(
@@ -42,7 +42,7 @@ def crypto(
     lat,
     crypto_from,
     crypto_to,
-    exact=False,
+    exact,
     clone: bool = True,
 ):
     r"""

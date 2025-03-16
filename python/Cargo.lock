@@ -265,6 +265,7 @@ name = "pyxis"
 version = "0.0.15"
 dependencies = [
  "clerk",
+ "miette",
  "num-traits",
 ]
 

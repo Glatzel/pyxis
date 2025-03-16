@@ -7,18 +7,18 @@ import pyxis
 import pyxis.pyxis_cuda
 from pyxis import COORD_CRYPTO_SPACE
 
-bd09 = (121.10271732371203, 30.61484572185035)
-gcj02 = (121.09626935575027, 30.608604331756705)
+bd09 = (121.10271724622564, 30.61484575976839)
+gcj02 = (121.09626927850977, 30.608604331756705)
 wgs84 = (121.0917077, 30.6107779)
 
 
 bd09_array = (
-    np.array([121.10271732371203, 121.10271732371203], np.float64),
-    np.array([30.61484572185035, 30.61484572185035], np.float64),
+    np.array([121.10271724622564, 121.10271724622564], np.float64),
+    np.array([30.61484575976839, 30.61484575976839], np.float64),
 )
 gcj02_array = (
-    np.array([121.09626935575027, 121.09626935575027], np.float64),
-    np.array([30.608604331756705, 30.608604331756705], np.float64),
+    np.array([121.09626927850977, 121.09626927850977], np.float64),
+    np.array([30.608604368560773, 30.608604368560773], np.float64),
 )
 wgs84_array = (
     np.array([121.0917077, 121.0917077], np.float64),
@@ -60,9 +60,9 @@ wgs84_array = (
 def test_exact(src, dst, input, expected):
     import cupy as cp
 
-    in_lon = deepcopy(input[0])
-    in_lat = deepcopy(input[1])
+    in_lon = cp.asarray(deepcopy(input[0]))
+    in_lat = cp.asarray(deepcopy(input[1]))
     module = pyxis.pyxis_cuda.CryptoCuda()
-    lon, lat = module.crypto_exact("double", cp.asarray(in_lon), cp.asarray(in_lat), src, dst, 1e-17, 100)
-    assert cp.asnumpy(lon)[0] == pytest.approx(expected[0])
-    assert cp.asnumpy(lat)[0] == pytest.approx(expected[1])
+    module.crypto_exact("double", in_lon, in_lat, src, dst, 1e-17, 100)
+    assert cp.asnumpy(in_lon)[0] == pytest.approx(expected[0])
+    assert cp.asnumpy(in_lat)[0] == pytest.approx(expected[1])

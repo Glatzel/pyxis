@@ -60,8 +60,9 @@ wgs84_array = (
 def test_exact(src, dst, input, expected):
     import cupy as cp
 
-    in_lon = cp.asarray(deepcopy(input[0]))
-    in_lat = cp.asarray(deepcopy(input[1]))
+    in_lon = cp.asarray(deepcopy(input[0]),cp.float64)
+    in_lat = cp.asarray(deepcopy(input[1]),cp.float64)
+
     module = pyxis.pyxis_cuda.CryptoCuda()
     module.crypto_exact("double", in_lon, in_lat, src, dst, 1e-17, 100)
     assert cp.asnumpy(in_lon)[0] == pytest.approx(expected[0])

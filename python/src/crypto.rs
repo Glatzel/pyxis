@@ -8,7 +8,7 @@ fn get_crypto_fn(
     from: &str,
     to: &str,
     exact: bool,
-) -> miette::Result<impl Fn(f64, f64) -> (f64, f64)> {
+) -> Result<impl Fn(f64, f64) -> (f64, f64), PyErr> {
     match (
         from.to_lowercase().as_str(),
         to.to_lowercase().as_str(),
@@ -53,7 +53,10 @@ fn get_crypto_fn(
         }),
         ("wgs84", "bd09", false) => Ok(wgs84_to_bd09 as fn(f64, f64) -> (f64, f64)),
         ("wgs84", "gcj02", false) => Ok(wgs84_to_gcj02 as fn(f64, f64) -> (f64, f64)),
-        _ => miette::bail!("unknow from to"),
+        _ => Err(pyo3::exceptions::PyTypeError::new_err(format!(
+            "Unsupported input: from: {}, to: {}",
+            from, to,
+        ))),
     }
 }
 #[pyfunction]

@@ -273,7 +273,6 @@ dependencies = [
 name = "pyxis-py"
 version = "0.0.15"
 dependencies = [
- "miette",
  "numpy",
  "pyo3",
  "pyxis",

@@ -27,7 +27,7 @@ class CryptoCuda:
 
         fn = self.module.get_function(f"{crypto_from.lower()}_to_{crypto_to.lower()}_cuda_{dtype}")
         grid_size, block_size = get_grid_block(lon.size)
-        fn((grid_size,), (block_size,), (lon, lat))
+        fn((grid_size,), (block_size,), (lon.size, lon, lat, lon, lat))
         cp.cuda.Stream.null.synchronize()
 
     def crypto_exact(
@@ -52,5 +52,5 @@ class CryptoCuda:
                 raise TypeError(msg)
         fn = self.module.get_function(f"{crypto_from.lower()}_to_{crypto_to.lower()}_exact_cuda_{dtype}")
         grid_size, block_size = get_grid_block(lon.size)
-        fn((grid_size,), (block_size,), (lon, lat, threshold, False, max_iter))
+        fn((grid_size,), (block_size,), (lon.size, lon, lat, threshold, False, max_iter, lon, lat))
         cp.cuda.Stream.null.synchronize()

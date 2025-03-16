@@ -2,18 +2,18 @@
 template <typename T>
 __global__ void datum_compense_cuda(
     const int N,
-    T *xc,
-    T *yc,
-    T factor,
-    T x0,
-    T y0,
+    const T *xc,
+    const T *yc,
+    const T factor,
+    const T x0,
+    const T y0,
     T *out_xc,
     T *out_yc)
 {
     int i = threadIdx.x + blockIdx.x * blockDim.x;
-    if (idx >= N)
+    if (i >= N)
         return;
-    datum_compense(xc[i], yc[i], factor, x0, y0, &out_xc[i], &out_yc[i]);
+    datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
 };
 extern "C"
 {
@@ -28,9 +28,9 @@ extern "C"
         float *out_yc)
     {
         int i = threadIdx.x + blockIdx.x * blockDim.x;
-        if (idx >= N)
+        if (i >= N)
             return;
-        datum_compense(xc[i], yc[i], factor, x0, y0, xc[i], yc[i]);
+        datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
     };
 }
 extern "C"
@@ -46,8 +46,8 @@ extern "C"
         double *out_yc)
     {
         int i = threadIdx.x + blockIdx.x * blockDim.x;
-        if (idx >= N)
+        if (i >= N)
             return;
-        datum_compense(xc[i], yc[i], factor, x0, y0, xc[i], yc[i]);
+        datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
     };
 }

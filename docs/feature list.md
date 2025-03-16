@@ -21,7 +21,7 @@ c#
 opencl
 
 style c# fill         : #e884e8, stroke: #e884e8, stroke-width: 4px
-style c++ fill        : #4d8fd6, stroke: #4d8fd6, stroke-width: 4px
+style c++ fill        : #6da9ff, stroke: #6da9ff, stroke-width: 4px
 style cuda fill       : #a8e64d, stroke: #a8e64d, stroke-width: 4px
 style opencl fill     : #ff6f61, stroke: #ff6f61, stroke-width: 4px
 style python fill     : #ffd343, stroke: #ffd343, stroke-width: 4px

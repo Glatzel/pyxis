@@ -15,22 +15,38 @@ if ($IsWindows) {
     Write-Output "::group::Build static"
     # build
     & $PSScriptRoot/set-env.ps1 -link static
-    cargo install --profile $config -p pyxis-cli --features static --root ./dist/cli/static
+    cargo build --profile $config -p pyxis-cli --features static
 
+    # copy build file to dist
+    New-Item ./dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
+    Copy-Item "target/$config/pyxis.exe" ./dist/cli/static/pyxis.exe
+    Write-Output "::endgroup::"
+
+    # pack
+    Write-Output "::group::Pack pyxis-windows-x64-self-contained.7z"
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
         "./dist/pyxis-cli-windows-x64-self-contained.7z" "./dist/cli/static/pyxis.exe"
     Write-Output "::endgroup::"
 
     # build dynamic#############################################################
+    # build
     Write-Output "::group::Build dynamic"
     & $PSScriptRoot/set-env.ps1 -link dynamic
-    cargo install --profile $config -p pyxis-cli --root ./dist/cli/dynamic/
+    cargo build --profile $config -p pyxis-cli
+
+    # copy build file to dist
+    New-Item ./dist/cli/dynamic -ItemType Directory -ErrorAction SilentlyContinue
+    Copy-Item "target/$config/pyxis.exe" ./dist/cli/dynamic/pyxis.exe
+    Write-Output "::endgroup::"
 
     # pack dynamic without dependency dll
+    Write-Output "::group::Pack pyxis-windows-x64.7z"
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
         "./dist/pyxis-cli-windows-x64.7z" "./dist/cli/dynamic/pyxis.exe"
+    Write-Output "::endgroup::"
 
     # copy dependency dll to dist
+    Write-Output "::group::Pack pyxis-windows-x64-proj.7z.7z"
     Copy-Item ./vcpkg/installed/dynamic/x64-windows/bin/*.dll ./dist/cli/dynamic
     Copy-Item ./vcpkg/installed/dynamic/x64-windows/share/proj/proj.db ./dist/cli/dynamic
 
@@ -41,11 +57,18 @@ if ($IsWindows) {
 }
 elseif ($IsLinux) {
     # build static##############################################################
+    # build
     Write-Output "::group::Build static"
     & $PSScriptRoot/set-env.ps1 -link static
-    cargo install --profile $config -p pyxis-cli --features static --root ./dist/cli/static
+    cargo build --profile $config -p pyxis-cli --features static
+
+    #copy to dist
+    New-Item ./dist/cli/static -ItemType Directory -ErrorAction SilentlyContinue
+    Copy-Item "target/$config/pyxis" ./dist/cli/static
+    Write-Output "::endgroup::"
 
     # pack
+    Write-Output "::group::Pack pyxis-linux-x64-self-contained.7z"
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
         "./dist/pyxis-cli-linux-x64-self-contained.7z" "./dist/cli/static/*"
     Write-Output "::endgroup::"

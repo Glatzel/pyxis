@@ -28,7 +28,9 @@ impl PyxisCudaContext {
             launch!(
                 func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -51,7 +53,9 @@ impl PyxisCudaContext {
             launch!(
                 func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -74,7 +78,9 @@ impl PyxisCudaContext {
             launch!(
                 func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -97,7 +103,9 @@ impl PyxisCudaContext {
             launch!(
                 func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -120,7 +128,9 @@ impl PyxisCudaContext {
             launch!(
                 func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -143,7 +153,9 @@ impl PyxisCudaContext {
             launch!(
                 func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -188,7 +200,9 @@ impl PyxisCudaContext {
                     lat.as_device_ptr(),
                     threshold,
                     distance_mode,
-                    max_iter
+                    max_iter,
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();

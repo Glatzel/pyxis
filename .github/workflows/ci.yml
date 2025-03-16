@@ -27,27 +27,68 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changed:
+    outputs:
+      changed-cpp: ${{steps.main.outputs.cpp_any_changed}}
+      changed-csharp: ${{steps.main.outputs.csharp_any_changed }}
+      changed-cuda: ${{steps.main.outputs.cuda_any_changed}}
+      changed-python: ${{steps.main.outputs.python_any_changed}}
+      changed-rust: ${{steps.main.outputs.rust_any_changed}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: main
+        uses: tj-actions/changed-files@v45
+        if: ${{github.event_name == 'pull_request'}}
+        with:
+          files_yaml: |
+            cpp:
+              - ./cpp/**
+              - ./.github/workflows/ci-cpp.yml
+            csharp:
+              - ./csharp/**
+              - ./.github/workflows/ci-csharp.yml
+            cuda:
+              - ./cuda/**
+              - ./.github/workflows/ci-cuda.yml
+            python:
+              - ./python/**
+              - ./.github/workflows/ci-python.yml
+            rust:
+              - ./rust/**
+              - ./.github/workflows/ci-rust.yml
+
   ci-cpp:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-cpp != 'false'}}
     uses: ./.github/workflows/ci-cpp.yml
     with:
       build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
   csharp-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-csharp != 'false'}}
     uses: ./.github/workflows/ci-csharp.yml
     with:
       build-release: ${{inputs.build-release && inputs.build-release || false }}
 
   cuda-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-cuda != 'false' }}
     uses: ./.github/workflows/ci-cuda.yml
     with:
       build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
   python-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-python != 'false' }}
     uses: ./.github/workflows/ci-python.yml
     with:
       build-release: ${{inputs.build-release&& inputs.build-release || false}}
 
   rust-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-rust != 'false' }}
     uses: ./.github/workflows/ci-rust.yml
     with:
       build-release: ${{inputs.build-release&& inputs.build-release || false}}

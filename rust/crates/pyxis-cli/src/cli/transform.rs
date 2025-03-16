@@ -5,6 +5,7 @@ mod record;
 use bpaf::Bpaf;
 use context::ContextTransform;
 pub use options::*;
+use pyxis::crypto::CryptoSpace;
 use record::Record;
 #[derive(Bpaf, Clone, Debug)]
 pub enum TransformCommands {

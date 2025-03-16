@@ -27,7 +27,7 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     xc.as_device_ptr(),
                     yc.as_device_ptr(),
                     parms.factor(),

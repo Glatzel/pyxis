@@ -56,34 +56,7 @@ impl fmt::Display for CoordSpace {
         }
     }
 }
-#[derive(Debug, Clone, Copy, Bpaf)]
-pub enum CryptoSpace {
-    BD09,
-    GCJ02,
-    WGS84,
-}
 
-impl FromStr for CryptoSpace {
-    type Err = miette::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s.to_uppercase().as_str() {
-            "BD09" => Ok(Self::BD09),
-            "GCJ02" => Ok(Self::GCJ02),
-            "WGS84" => Ok(Self::WGS84),
-            _ => miette::bail!(""),
-        }
-    }
-}
-impl fmt::Display for CryptoSpace {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::BD09 => write!(f, "BD09"),
-            Self::GCJ02 => write!(f, "GCJ02"),
-            Self::WGS84 => write!(f, "WGS84"),
-        }
-    }
-}
 #[derive(Debug, Clone, Copy, Bpaf)]
 pub enum RotatePlane {
     Xy,

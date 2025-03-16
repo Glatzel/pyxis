@@ -26,9 +26,11 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -49,9 +51,11 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -72,9 +76,11 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -95,9 +101,11 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -112,15 +120,17 @@ impl PyxisCudaContext {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
-        let func = self.get_function::<T>(&module, "wgs84_to_bd09_cuda_double");
+        let func = self.get_function::<T>(&module, "wgs84_to_bd09_cuda");
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -141,9 +151,11 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
-                    lat.as_device_ptr()
+                    lat.as_device_ptr(),
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();
@@ -183,12 +195,14 @@ impl PyxisCudaContext {
         let (grid_size, block_size) = self.get_grid_block(&func, length);
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
                     lat.as_device_ptr(),
                     threshold,
                     distance_mode,
-                    max_iter
+                    max_iter,
+                    lon.as_device_ptr(),
+                    lat.as_device_ptr(),
                 )
             )
             .unwrap();

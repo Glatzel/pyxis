@@ -61,6 +61,10 @@
         "rust-analyzer.linkedProjects": [
             "${workspaceFolder}/rust/Cargo.toml",
             "${workspaceFolder}/python/Cargo.toml"
-        ]
+        ],
+        "cmake.automaticReconfigure": false,
+        "cmake.autoSelectActiveFolder": false,
+        "cmake.configureOnOpen": false,
+        "cmake.configureOnEdit": false
     }
 }

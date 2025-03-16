@@ -7,7 +7,6 @@ edition = "2024"
 numpy = "0.23.0"
 pyxis = { path = "./../rust/crates/pyxis/" }
 rayon = "1.10.0"
-miette = "7.5.0"
 pyo3 = { version = "0.23.4", features = ["extension-module", "abi3-py311"] }
 
 [lib]

@@ -4,7 +4,7 @@ use pyo3::types::PyTuple;
 use pyo3::{PyObject, Python, pyfunction};
 use pyxis::*;
 use rayon::prelude::*;
-fn get_space_fn(from: &str, to: &str) -> miette::Result<impl Fn(f64, f64, f64) -> (f64, f64, f64)> {
+fn get_space_fn(from: &str, to: &str) -> Result<impl Fn(f64, f64, f64) -> (f64, f64, f64), PyErr> {
     match (from.to_lowercase().as_str(), to.to_lowercase().as_str()) {
         ("cartesian", "cylindrical") => {
             Ok(cartesian_to_cylindrical as fn(f64, f64, f64) -> (f64, f64, f64))
@@ -25,7 +25,10 @@ fn get_space_fn(from: &str, to: &str) -> miette::Result<impl Fn(f64, f64, f64) -
             Ok(spherical_to_cylindrical as fn(f64, f64, f64) -> (f64, f64, f64))
         }
 
-        _ => miette::bail!("unknow from to"),
+        _ => Err(pyo3::exceptions::PyTypeError::new_err(format!(
+            "Unsupported input: from: {}, to: {}",
+            from, to
+        ))),
     }
 }
 #[pyfunction]

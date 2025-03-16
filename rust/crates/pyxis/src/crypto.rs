@@ -1,3 +1,6 @@
+use std::fmt;
+use std::str::FromStr;
+
 /// # References
 /// - https://github.com/googollee/eviltransform/blob/master/rust/src/lib.rs
 /// - https://github.com/billtian/wgtochina_lb-php/tree/master
@@ -18,16 +21,58 @@ pub const GCJ02_LAT: f64 = 30.608604368560773;
 pub const BD09_LON: f64 = 121.10271724622564;
 #[cfg(debug_assertions)]
 pub const BD09_LAT: f64 = 30.61484575976839;
+#[derive(Debug, Clone, Copy)]
 pub enum CryptoSpace {
-    WGS84,
-    GCJ02,
     BD09,
+    GCJ02,
+    WGS84,
 }
+
+impl FromStr for CryptoSpace {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_uppercase().as_str() {
+            "BD09" => Ok(Self::BD09),
+            "GCJ02" => Ok(Self::GCJ02),
+            "WGS84" => Ok(Self::WGS84),
+            _ => Err("".to_string()),
+        }
+    }
+}
+impl fmt::Display for CryptoSpace {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::BD09 => write!(f, "BD09"),
+            Self::GCJ02 => write!(f, "GCJ02"),
+            Self::WGS84 => write!(f, "WGS84"),
+        }
+    }
+}
+#[derive(Debug, Clone, Copy)]
 pub enum CryptoThresholdMode {
     Distance,
     LonLat,
 }
+impl FromStr for CryptoThresholdMode {
+    type Err = String;
 
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "distance" => Ok(Self::Distance),
+            "lonlat" => Ok(Self::LonLat),
+            _ => Err("".to_string()),
+        }
+    }
+}
+impl fmt::Display for CryptoThresholdMode {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Distance => write!(f, "Distance"),
+            Self::LonLat => write!(f, "LonLat"),
+        }
+    }
+}
 fn transform<T>(x: T, y: T) -> (T, T)
 where
     T: GeoFloat + ConstEllipsoid<T> + 'static,

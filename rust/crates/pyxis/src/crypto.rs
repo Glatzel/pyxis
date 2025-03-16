@@ -29,14 +29,14 @@ pub enum CryptoSpace {
 }
 
 impl FromStr for CryptoSpace {
-    type Err = miette::Error;
+    type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_uppercase().as_str() {
             "BD09" => Ok(Self::BD09),
             "GCJ02" => Ok(Self::GCJ02),
             "WGS84" => Ok(Self::WGS84),
-            _ => miette::bail!(""),
+            _ => Err("".to_string()),
         }
     }
 }
@@ -55,13 +55,13 @@ pub enum CryptoThresholdMode {
     LonLat,
 }
 impl FromStr for CryptoThresholdMode {
-    type Err = miette::Error;
+    type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "distance" => Ok(Self::Distance),
             "lonlat" => Ok(Self::LonLat),
-            _ => miette::bail!(""),
+            _ => Err("".to_string()),
         }
     }
 }

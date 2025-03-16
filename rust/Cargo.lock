@@ -876,7 +876,6 @@ dependencies = [
  "clerk",
  "codspeed-criterion-compat",
  "float-cmp",
- "miette",
  "num-traits",
  "rand",
  "serde",

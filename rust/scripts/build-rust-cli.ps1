@@ -22,10 +22,9 @@ if ($IsWindows) {
     Write-Output "::endgroup::"
 
     # build dynamic#############################################################
-    # build
     Write-Output "::group::Build dynamic"
     & $PSScriptRoot/set-env.ps1 -link dynamic
-    cargo install --profile $config -p pyxis-cli --root ./dist/cli/dynamic/pyxis.exe
+    cargo install --profile $config -p pyxis-cli --root ./dist/cli/dynamic/
 
     # pack dynamic without dependency dll
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
@@ -42,7 +41,6 @@ if ($IsWindows) {
 }
 elseif ($IsLinux) {
     # build static##############################################################
-    # build
     Write-Output "::group::Build static"
     & $PSScriptRoot/set-env.ps1 -link static
     cargo install --profile $config -p pyxis-cli --features static --root ./dist/cli/static

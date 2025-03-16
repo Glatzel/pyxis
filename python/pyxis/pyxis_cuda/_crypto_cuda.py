@@ -40,7 +40,7 @@ class CryptoCuda:
         threshold: float,
         max_iter: int,
     ):
-        match crypto_from, crypto_to:
+        match crypto_from.upper(), crypto_to.upper():
             case COORD_CRYPTO_SPACE.GCJ02, COORD_CRYPTO_SPACE.WGS84:
                 pass
             case COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.GCJ02:

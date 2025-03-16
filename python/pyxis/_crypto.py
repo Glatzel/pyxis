@@ -87,7 +87,7 @@ def crypto(
         or (str(crypto_to).upper() not in COORD_CRYPTO_SPACE.list())
         or str(crypto_to).upper() == str(crypto_from).upper()
     ):
-        msg = f"from `{crypto_from}` to `{crypto_to}`."
+        msg = f"Unsupported: from `{crypto_from}` to `{crypto_to}`."
         raise TypeError(msg)
     lon, lat = py_crypto(lon, lat, crypto_from, crypto_to, exact)
 

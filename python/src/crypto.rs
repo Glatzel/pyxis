@@ -38,7 +38,7 @@ fn get_crypto_fn(
                 100,
             )
         }),
-        ("gcj02", "bd09", false) => Ok(gcj02_to_bd09 as fn(f64, f64) -> (f64, f64)),
+        ("gcj02", "bd09", _) => Ok(gcj02_to_bd09 as fn(f64, f64) -> (f64, f64)),
         ("gcj02", "wgs84", false) => Ok(gcj02_to_wgs84 as fn(f64, f64) -> (f64, f64)),
         ("gcj02", "wgs84", true) => Ok(|src_lon, src_lat| {
             crypto_exact(
@@ -51,8 +51,8 @@ fn get_crypto_fn(
                 100,
             )
         }),
-        ("wgs84", "bd09", false) => Ok(wgs84_to_bd09 as fn(f64, f64) -> (f64, f64)),
-        ("wgs84", "gcj02", false) => Ok(wgs84_to_gcj02 as fn(f64, f64) -> (f64, f64)),
+        ("wgs84", "bd09", _) => Ok(wgs84_to_bd09 as fn(f64, f64) -> (f64, f64)),
+        ("wgs84", "gcj02", _) => Ok(wgs84_to_gcj02 as fn(f64, f64) -> (f64, f64)),
         _ => Err(pyo3::exceptions::PyTypeError::new_err(format!(
             "Unsupported input: from: {}, to: {}",
             from, to,

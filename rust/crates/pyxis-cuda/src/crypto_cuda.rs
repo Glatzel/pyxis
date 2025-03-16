@@ -26,7 +26,7 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
                     lat.as_device_ptr()
                 )
@@ -49,7 +49,7 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
                     lat.as_device_ptr()
                 )
@@ -72,7 +72,7 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
                     lat.as_device_ptr()
                 )
@@ -95,7 +95,7 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
                     lat.as_device_ptr()
                 )
@@ -118,7 +118,7 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
                     lat.as_device_ptr()
                 )
@@ -141,7 +141,7 @@ impl PyxisCudaContext {
 
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
                     lat.as_device_ptr()
                 )
@@ -183,7 +183,7 @@ impl PyxisCudaContext {
         let (grid_size, block_size) = self.get_grid_block(&func, length);
         unsafe {
             launch!(
-                func<<<grid_size, block_size, 0, stream>>>(
+                func<<<grid_size, block_size, 0, stream>>>(length,
                     lon.as_device_ptr(),
                     lat.as_device_ptr(),
                     threshold,

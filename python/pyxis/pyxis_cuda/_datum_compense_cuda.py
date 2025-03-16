@@ -21,5 +21,6 @@ class DatumCompenseCuda:
         fn = self.module.get_function(f"datum_compense_cuda_{dtype}")
         ratio = hb / radius / (1.0 + hb / radius)
         grid_size, block_size = get_grid_block(xc.size)
+        print(grid_size, block_size)
         fn((grid_size,), (block_size,), (xc, yc, ratio, x0, y0, xc, yc))
         cp.cuda.Stream.null.synchronize()

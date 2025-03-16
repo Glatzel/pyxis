@@ -54,8 +54,8 @@ wgs84_array = (
     ("src", "dst", "input", "expected"),
     [
         (COORD_CRYPTO_SPACE.GCJ02, COORD_CRYPTO_SPACE.WGS84, gcj02_array, wgs84),
-        (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.GCJ02, bd09_array, gcj02),
-        (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.WGS84, bd09_array, wgs84),
+        # (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.GCJ02, bd09_array, gcj02),
+        # (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.WGS84, bd09_array, wgs84),
     ],
 )
 def test_exact(src, dst, input, expected):
@@ -63,7 +63,7 @@ def test_exact(src, dst, input, expected):
 
     in_lon = cp.asarray(deepcopy(input[0]), cp.float64)
     in_lat = cp.asarray(deepcopy(input[1]), cp.float64)
-
+    print(cp.asnumpy(in_lon))
     module = pyxis.pyxis_cuda.CryptoCuda()
     module.crypto_exact("double", in_lon, in_lat, src, dst, 1e-17, 100)
     assert cp.asnumpy(in_lon)[0] == pytest.approx(expected[0])

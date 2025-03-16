@@ -112,7 +112,7 @@ impl PyxisCudaContext {
         assert_eq!(lon.len(), lat.len());
         let length: usize = lon.len();
         let module = self.get_module(&PTX);
-        let func = self.get_function::<T>(&module, "wgs84_to_bd09_cuda_double");
+        let func = self.get_function::<T>(&module, "wgs84_to_bd09_cuda");
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(&func, length);
 

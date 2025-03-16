@@ -17,7 +17,7 @@ class CryptoCuda:
         from_space: COORD_CRYPTO_SPACE,
         to_space: COORD_CRYPTO_SPACE,
     ) -> tuple[cp.ndarray, cp.ndarray]:
-        fn = self.module.get_function(f"{from_space}_to_{to_space}_cuda_{dtype}")
+        fn = self.module.get_function(f"{from_space.lower()}_to_{to_space.lower()}_cuda_{dtype}")
         grid_size, block_size = get_grid_block(lon.size)
         fn((grid_size,), (block_size,), (lon, lat))
         return lon, lat
@@ -32,7 +32,7 @@ class CryptoCuda:
         threshold: float,
         max_iter: int,
     ) -> tuple[cp.ndarray, cp.ndarray]:
-        fn = self.module.get_function(f"{from_space}_to_{to_space}_exact_cuda_{dtype}")
+        fn = self.module.get_function(f"{from_space.lower()}_to_{to_space.lower()}_exact_cuda_{dtype}")
         grid_size, block_size = get_grid_block(lon.size)
-        fn((grid_size,), (block_size,), (lon, lat, threshold, True, max_iter))
+        fn((grid_size,), (block_size,), (lon, lat, threshold, False, max_iter))
         return lon, lat

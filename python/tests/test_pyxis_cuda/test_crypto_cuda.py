@@ -49,6 +49,7 @@ wgs84_array = (
 #     assert cp.asnumpy(lat)[0] == pytest.approx(expected[1])
 
 
+@pytest.mark.cuda
 @pytest.mark.parametrize(
     ("src", "dst", "input", "expected"),
     [

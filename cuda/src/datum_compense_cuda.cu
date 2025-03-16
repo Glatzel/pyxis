@@ -15,6 +15,7 @@ __global__ void datum_compense_cuda(
         return;
     datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
 };
+// float
 extern "C"
 {
     __global__ void datum_compense_cuda_float(
@@ -33,6 +34,7 @@ extern "C"
         datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
     };
 }
+// double
 extern "C"
 {
     __global__ void datum_compense_cuda_double(

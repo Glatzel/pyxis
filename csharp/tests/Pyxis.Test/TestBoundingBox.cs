@@ -47,7 +47,9 @@ public class TestBoundingBox
             Assert.Equal(new Vec3(2, 2, 2), bbox.MaxPt);
         }
         {
-            BoundingBox bbox = new(new Vec3(-1, -1, -1), new Vec3(1, 1, 1));
+            Vec3 minPt = new(-1, -1, -1);
+            Vec3 max_pt = new Vec3(1, 1, 1);
+            BoundingBox bbox = new(in minPt, in max_pt);
             Assert.Equal(new Vec3(-1, -1, -1), bbox.MinPt);
             Assert.Equal(new Vec3(1, 1, 1), bbox.MaxPt);
         }
@@ -114,8 +116,10 @@ public class TestBoundingBox
     )
     {
         BoundingBox bbox = new(-2, 2);
-        BoundingBox bbox1 = new(new Vec3(minX, minY, minZ), new Vec3(maxX, maxY, maxZ));
-        Assert.Equal(isIntersect, BoundingBox.IsIntersect(bbox, bbox1));
+        Vec3 minPt = new(minX, minY, minZ);
+        Vec3 maxPt = new Vec3(maxX, maxY, maxZ);
+        BoundingBox bbox1 = new(in minPt, in maxPt);
+        Assert.Equal(isIntersect, BoundingBox.IsIntersect(in bbox, in bbox1));
     }
 
     [Fact]
@@ -163,7 +167,7 @@ public class TestBoundingBox
     {
         {
             BoundingBox bbox0 = new([0, 0, 0], [1, 1, 1]);
-            BoundingBox bbox = BoundingBox.Offset(bbox0, 2);
+            BoundingBox bbox = BoundingBox.Offset(in bbox0, 2);
             Assert.Equal(new Vec3(-1, -1, -1), bbox.MinPt);
             Assert.Equal(new Vec3(2, 2, 2), bbox.MaxPt);
         }
@@ -198,47 +202,52 @@ public class TestBoundingBox
         }
         {
             BoundingBox bbox = new([0, 0, 0], [2, 2, 2]);
-            bbox.Scale(new Vec3(2, 3, 4));
+
+            Vec3 scale = new(2, 3, 4);
+            bbox.Scale(in scale);
             Assert.Equal(new Vec3(-1, -2, -3), bbox.MinPt);
             Assert.Equal(new Vec3(3, 4, 5), bbox.MaxPt);
         }
         {
             BoundingBox bbox = new([0, 0, 0], [3, 3, 3]);
             Vec3 origin = new(1, 1, 1);
-            bbox.Scale(new Vec3(2, 3, 4), origin);
+            Vec3 scale = new(2, 3, 4);
+            bbox.Scale(scale, in origin);
             Assert.Equal(new Vec3(-1, -2, -3), bbox.MinPt);
             Assert.Equal(new Vec3(5, 7, 9), bbox.MaxPt);
         }
         {
             BoundingBox bbox = new([0, 0, 0], [3, 3, 3]);
             Vec3 origin = new(1, 1, 1);
-            bbox.Scale(2, origin);
+            bbox.Scale(2, in origin);
             Assert.Equal(new Vec3(-1, -1, -1), bbox.MinPt);
             Assert.Equal(new Vec3(5, 5, 5), bbox.MaxPt);
         }
         {
             BoundingBox bbox0 = new([0, 0, 0], [2, 2, 2]);
-            BoundingBox bbox = BoundingBox.Scale(bbox0, 2);
+            BoundingBox bbox = BoundingBox.Scale(in bbox0, 2);
             Assert.Equal(new Vec3(-1, -1, -1), bbox.MinPt);
             Assert.Equal(new Vec3(3, 3, 3), bbox.MaxPt);
         }
         {
             BoundingBox bbox0 = new([0, 0, 0], [2, 2, 2]);
-            BoundingBox bbox = BoundingBox.Scale(bbox0, new Vec3(2, 3, 4));
+            Vec3 scale = new(2, 3, 4);
+            BoundingBox bbox = BoundingBox.Scale(in bbox0, in scale);
             Assert.Equal(new Vec3(-1, -2, -3), bbox.MinPt);
             Assert.Equal(new Vec3(3, 4, 5), bbox.MaxPt);
         }
         {
             BoundingBox bbox0 = new([0, 0, 0], [3, 3, 3]);
             Vec3 origin = new(1, 1, 1);
-            BoundingBox bbox = BoundingBox.Scale(bbox0, new Vec3(2, 3, 4), origin);
+            Vec3 scale = new(2, 3, 4);
+            BoundingBox bbox = BoundingBox.Scale(in bbox0, scale, in origin);
             Assert.Equal(new Vec3(-1, -2, -3), bbox.MinPt);
             Assert.Equal(new Vec3(5, 7, 9), bbox.MaxPt);
         }
         {
             BoundingBox bbox0 = new([0, 0, 0], [3, 3, 3]);
             Vec3 origin = new(1);
-            BoundingBox bbox = BoundingBox.Scale(bbox0, 2, origin);
+            BoundingBox bbox = BoundingBox.Scale(in bbox0, 2, in origin);
             Assert.Equal(new Vec3(-1, -1, -1), bbox.MinPt);
             Assert.Equal(new Vec3(5, 5, 5), bbox.MaxPt);
         }

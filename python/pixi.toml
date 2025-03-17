@@ -26,7 +26,6 @@ scipy = "*"
 pytest = "*"
 pytest-cov = "*"
 
-
 [feature.py-doc.dependencies]
 autodocsumm = "*"
 numpydoc = "*"

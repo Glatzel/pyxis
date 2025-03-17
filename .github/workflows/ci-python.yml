@@ -124,6 +124,7 @@ jobs:
         run: |
           ${{env.PYTHON_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
+
   bench:
     runs-on: ubuntu-latest
     steps:

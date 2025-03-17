@@ -16,11 +16,11 @@ rattler-build = "*"
 ruff = "*"
 
 [feature.py-deps.dependencies]
+cupy-core = "*"
 lazy-loader = "*"
 nomkl = "*"
 numpy = "*"
 scipy = "*"
-cupy-core = "*"
 
 [feature.py-test.dependencies]
 pytest = "*"
@@ -37,12 +37,12 @@ sphinx-copybutton = "*"
 
 [feature.bench.dependencies]
 lazy-loader = "*"
-pytest-codspeed = "*"
-scipy = "*"
-numpy = "*"
 numba = "*"
 numexpr = "*"
+numpy = "*"
+pytest-codspeed = "*"
+scipy = "*"
 
 [environments]
-default = ["py311", "build", "py-deps", "py-test", "py-doc"]
 bench = ["py311", "build", "py-test", "bench"]
+default = ["py311", "build", "py-deps", "py-test", "py-doc"]

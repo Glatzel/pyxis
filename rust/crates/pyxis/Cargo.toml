@@ -1,12 +1,12 @@
 [package]
+edition.workspace = true
 name = "pyxis"
 version.workspace = true
-edition.workspace = true
 
 [dependencies]
-num-traits =  { workspace = true }
+clerk = { workspace = true }
+num-traits = { workspace = true }
 serde = { workspace = true, optional = true }
-clerk = { workspace = true}
 
 [dev-dependencies]
 criterion = { workspace = true }
@@ -19,9 +19,9 @@ log = ["clerk/log"]
 serde = ["dep:serde"]
 
 [[bench]]
-name = "crypto"
 harness = false
+name = "crypto"
 
 [[bench]]
-name = "datum_compense"
 harness = false
+name = "datum_compense"

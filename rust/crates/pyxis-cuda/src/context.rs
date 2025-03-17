@@ -126,8 +126,8 @@ impl PyxisCudaContext {
         module: &'a Module,
         fn_name: &str,
     ) -> Function<'a> {
-        static GEOFLOAT_F32: LazyLock<TypeId> = LazyLock::new(|| TypeId::of::<f32>());
-        static GEOFLOAT_F64: LazyLock<TypeId> = LazyLock::new(|| TypeId::of::<f64>());
+        static GEOFLOAT_F32: LazyLock<TypeId> = LazyLock::new(TypeId::of::<f32>);
+        static GEOFLOAT_F64: LazyLock<TypeId> = LazyLock::new(TypeId::of::<f64>);
         match TypeId::of::<T>() {
             id if id == *GEOFLOAT_F32 => module.get_function(format!("{fn_name}_float")).unwrap(),
             id if id == *GEOFLOAT_F64 => module.get_function(format!("{fn_name}_double")).unwrap(),

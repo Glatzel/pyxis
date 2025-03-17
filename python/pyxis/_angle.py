@@ -16,12 +16,6 @@ def angle2dms(angle) -> tuple[Any, Any, Any]:
     -------
     tuple[Any,Any,Any]
         Degree, minute, second.
-
-    Examples
-    --------
-    >>> from glatzel import pyxis
-    >>> pyxis.angle2dms(30.76)
-    (np.float64(30.0), np.float64(45.0), np.float64(36.00000000000563))
     """
     deg = np.trunc(angle)
     min = np.trunc((angle - deg) * 60.0)

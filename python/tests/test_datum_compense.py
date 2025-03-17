@@ -6,7 +6,14 @@ import pyxis
 
 def test_datum_compense_scalar():
     expected_x, expected_y = 469706.56912942487, 2821763.831232311
-    test_x, test_y = pyxis.datum_compense(xc=469704.6693, yc=2821940.796, hb=400)
+    test_x, test_y = pyxis.datum_compense(
+        xc=469704.6693,
+        yc=2821940.796,
+        hb=400,
+        radius=6378_137,
+        x0=500_000,
+        y0=0,
+    )
 
     assert test_x == pytest.approx(expected_x)
     assert test_y == pytest.approx(expected_y)
@@ -31,7 +38,14 @@ def test_datum_compense_vector(x, y):
     expected_x = 469706.56912942487
     expected_y = 2821763.831232311
 
-    test_x, test_y = pyxis.datum_compense(xc=x, yc=y, hb=400)
+    test_x, test_y = pyxis.datum_compense(
+        xc=x,
+        yc=y,
+        hb=400,
+        radius=6378_137,
+        x0=500_000,
+        y0=0,
+    )
 
     assert test_x[0] == pytest.approx(expected_x)
     assert test_y[0] == pytest.approx(expected_y)

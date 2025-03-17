@@ -66,24 +66,6 @@ def lbh2xyz(
         - Semi-major axis : 6378137.0 meters
         - Inverse Flattening :  298.257223563
     - Latitude and longitude should be provided in degrees and are internally converted to radians.
-
-    Examples
-    --------
-    Convert a single geodetic coordinate:
-
-    >>> latitude = 48.8566
-    >>> longitude = 2.3522
-    >>> height = 35
-    >>> x, y, z = lbh2xyz(latitude, longitude, height, 6378137.0, 298.257223563)
-    >>> print(f"X: {x:.3f}, Y: {y:.3f}, Z: {z:.3f}")
-
-    Convert multiple geodetic coordinates:
-
-    >>> latitudes = np.array([48.8566, 51.5074])
-    >>> longitudes = np.array([2.3522, -0.1278])
-    >>> heights = np.array([35, 45])
-    >>> x, y, z = lbh2xyz(latitudes, longitudes, heights, 6378137.0, 298.257223563)
-    >>> print(f"X: {x}, Y: {y}, Z: {z}")
     """
     from .pyxis_py import py_lbh2xyz  # type: ignore
 
@@ -166,14 +148,6 @@ def xyz2lbh(
     Notes
     -----
     The function assumes the WGS84 ellipsoid for the conversion.
-
-    Examples
-    --------
-    >>> x, y, z = 4510731.0, 4510731.0, 4510731.0
-    >>> longitude, latitude, height = xyz_to_lbh(x, y, z)
-    >>> print(f"Longitude: {longitude:.6f}°")
-    >>> print(f"Latitude: {latitude:.6f}°")
-    >>> print(f"Height: {height:.2f} m")
     """
     from .pyxis_py import py_xyz2lbh  # type: ignore
 

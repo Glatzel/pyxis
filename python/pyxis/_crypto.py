@@ -69,14 +69,6 @@ def crypto(
     ------
     ParameterError
         If ``crypto_from`` == ``crypto_to``.
-
-    Examples
-    --------
-    >>> import pyxis
-    >>> pyxis.CoordCrypto.convert(
-    ...     121.09170737767907, 30.6107684401777, "WGS84", "GCJ02"
-    ... )
-    (121.09626895522744, 30.608594904771056)
     """
     from .pyxis_py import py_crypto  # type: ignore
 

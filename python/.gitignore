@@ -14,6 +14,7 @@ python/doc/build
 python/doc/source/reference/api
 diff.md
 tests_report
+.codspeed
 
 # rust
 target

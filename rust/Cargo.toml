@@ -3,8 +3,8 @@ members = ["./crates/*"]
 resolver = "2"
 
 [workspace.package]
-version = "0.0.15"
 edition = "2024"
+version = "0.0.15"
 
 [workspace.dependencies]
 pyxis = { path = "./crates/pyxis" }
@@ -38,4 +38,4 @@ opt-level = 3
 strip = true
 
 [profile.develop]
-inherits="dev"
+inherits = "dev"

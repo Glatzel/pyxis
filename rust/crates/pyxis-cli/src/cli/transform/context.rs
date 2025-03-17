@@ -14,7 +14,6 @@ impl ContextTransform {
             (CryptoSpace::BD09, CryptoSpace::GCJ02) => pyxis::crypto::crypto_exact(
                 self.x,
                 self.y,
-                &pyxis::crypto::bd09_to_gcj02,
                 &pyxis::crypto::gcj02_to_bd09,
                 1e-17,
                 pyxis::crypto::CryptoThresholdMode::LonLat,
@@ -23,7 +22,6 @@ impl ContextTransform {
             (CryptoSpace::BD09, CryptoSpace::WGS84) => pyxis::crypto::crypto_exact(
                 self.x,
                 self.y,
-                &pyxis::crypto::bd09_to_wgs84,
                 &pyxis::crypto::wgs84_to_bd09,
                 1e-17,
                 pyxis::crypto::CryptoThresholdMode::LonLat,
@@ -33,7 +31,6 @@ impl ContextTransform {
             (CryptoSpace::GCJ02, CryptoSpace::WGS84) => pyxis::crypto::crypto_exact(
                 self.x,
                 self.y,
-                &pyxis::crypto::gcj02_to_wgs84,
                 &pyxis::crypto::wgs84_to_gcj02,
                 1e-17,
                 pyxis::crypto::CryptoThresholdMode::LonLat,

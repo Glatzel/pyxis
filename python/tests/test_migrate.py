@@ -1,7 +1,6 @@
-from math import cos, radians, sin
-
 import numpy as np
 import pytest
+from numpy import cos, radians, sin
 
 import pyxis
 

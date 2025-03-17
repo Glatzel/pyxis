@@ -144,3 +144,4 @@ jobs:
         with:
           token: ${{ secrets.CODSPEED_TOKEN }}
           run: pixi run -e bench pytest ./benches --codspeed
+          working-directory: ${{env.PYTHON_ROOT}}

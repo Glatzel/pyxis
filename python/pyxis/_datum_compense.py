@@ -62,18 +62,6 @@ def datum_compense(
     References
     ----------
     .. [1] 杨元兴.抵偿高程面的选择与计算[J].城市勘测,2008(02):72-74.
-
-    Examples
-    --------
-    >>> from glatzel import pyxis
-    >>> pyxis.datum_compense(469704.6693, 2821940.796, 400)
-    2821763.831232311 469706.56912942487
-    >>> pyxis.datum_compense(
-    ...     np.array([469704.6693, 469704.6693]),
-    ...     np.array([2821940.796, 2821940.796]),
-    ...     400,
-    ... )
-    ( array([469706.56912942, 469706.56912942]), array([2821763.83123231, 2821763.83123231]),)
     """
     from .pyxis_py import py_datum_compense  # type: ignore
 

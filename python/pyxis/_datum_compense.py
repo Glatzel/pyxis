@@ -11,9 +11,9 @@ def datum_compense(
     xc: TCoordScalar,
     yc: TCoordScalar,
     hb: float,
-    radius: float = 6378_137,
-    x0: float = 500_000,
-    y0: float = 0,
+    radius: float,
+    x0: float,
+    y0: float,
     clone: bool = True,
 ) -> tuple[float, float]: ...
 @overload
@@ -21,18 +21,18 @@ def datum_compense(
     xc: TCoordArray,
     yc: TCoordArray,
     hb: float,
-    radius: float = 6378_137,
-    x0: float = 500_000,
-    y0: float = 0,
+    radius: float,
+    x0: float,
+    y0: float,
     clone: bool = True,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]: ...
 def datum_compense(
     xc,
     yc,
     hb: float,
-    radius: float = 6378_137,
-    x0: float = 500_000,
-    y0: float = 0,
+    radius: float,
+    x0: float,
+    y0: float,
     clone: bool = True,
 ):
     r"""

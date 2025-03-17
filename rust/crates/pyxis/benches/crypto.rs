@@ -58,7 +58,6 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
                     crypto_exact(
                         black_box(p.0),
                         black_box(p.1),
-                        &bd09_to_gcj02,
                         &gcj02_to_bd09,
                         threshold,
                         CryptoThresholdMode::LonLat,
@@ -73,7 +72,6 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
                     crypto_exact(
                         black_box(p.0),
                         black_box(p.1),
-                        &bd09_to_wgs84,
                         &wgs84_to_bd09,
                         threshold,
                         CryptoThresholdMode::LonLat,
@@ -88,7 +86,6 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
                     crypto_exact(
                         black_box(p.0),
                         black_box(p.1),
-                        &gcj02_to_wgs84,
                         &wgs84_to_gcj02,
                         threshold,
                         CryptoThresholdMode::LonLat,
@@ -111,7 +108,6 @@ fn bench_crypto_exact_distance(c: &mut Criterion) {
                     crypto_exact(
                         black_box(p.0),
                         black_box(p.1),
-                        &bd09_to_gcj02,
                         &gcj02_to_bd09,
                         threshold,
                         CryptoThresholdMode::Distance,
@@ -126,7 +122,6 @@ fn bench_crypto_exact_distance(c: &mut Criterion) {
                     crypto_exact(
                         black_box(p.0),
                         black_box(p.1),
-                        &bd09_to_wgs84,
                         &wgs84_to_bd09,
                         threshold,
                         CryptoThresholdMode::Distance,
@@ -141,7 +136,6 @@ fn bench_crypto_exact_distance(c: &mut Criterion) {
                     crypto_exact(
                         black_box(p.0),
                         black_box(p.1),
-                        &gcj02_to_wgs84,
                         &wgs84_to_gcj02,
                         threshold,
                         CryptoThresholdMode::Distance,

@@ -369,7 +369,6 @@ where
 pub fn crypto_exact<T>(
     src_lon: T,
     src_lat: T,
-    crypto_fn: &impl Fn(T, T) -> (T, T),
     inv_crypto_fn: &impl Fn(T, T) -> (T, T),
     threshold: T,
     threshold_mode: CryptoThresholdMode,
@@ -378,7 +377,7 @@ pub fn crypto_exact<T>(
 where
     T: GeoFloat + ConstEllipsoid<T> + 'static,
 {
-    let (mut dst_lon, mut dst_lat) = crypto_fn(src_lon, src_lat);
+    let (mut dst_lon, mut dst_lat) = (src_lon, src_lat);
     for _i in 0..max_iter {
         let (tmp_src_lon, tmp_src_lat) = inv_crypto_fn(dst_lon, dst_lat);
         let (d_lon, d_lat) = (src_lon - tmp_src_lon, src_lat - tmp_src_lat);
@@ -436,8 +435,6 @@ where
 #[cfg(all(feature = "log", test))]
 mod test {
 
-    use core::f64;
-
     use float_cmp::assert_approx_eq;
     use rand::prelude::*;
     use tracing_subscriber::filter::LevelFilter;
@@ -458,7 +455,7 @@ mod test {
         let mut max_lonlat: f64 = 0.0;
         let mut all_dist = 0.0;
         let mut all_lonlat = 0.0;
-        let count = if is_ci { 10 } else { 10000 };
+        let count = if is_ci { 10 } else { 1000000 };
         for _ in 0..count {
             let wgs: (f64, f64) = (
                 rng.random_range(72.004..137.8347),
@@ -470,7 +467,6 @@ mod test {
                 let test_gcj = crypto_exact(
                     bd.0,
                     bd.1,
-                    &bd09_to_gcj02,
                     &gcj02_to_bd09,
                     1e-20,
                     CryptoThresholdMode::LonLat,
@@ -505,7 +501,6 @@ mod test {
                 let test_wgs = crypto_exact(
                     bd.0,
                     bd.1,
-                    &bd09_to_wgs84,
                     &wgs84_to_bd09,
                     1e-20,
                     CryptoThresholdMode::LonLat,
@@ -540,7 +535,6 @@ mod test {
                 let test_wgs = crypto_exact(
                     gcj.0,
                     gcj.1,
-                    &gcj02_to_wgs84,
                     &wgs84_to_gcj02,
                     1e-20,
                     CryptoThresholdMode::LonLat,

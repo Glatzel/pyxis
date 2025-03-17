@@ -25,6 +25,7 @@ wgs84_array = (
     np.array([30.6107779, 30.6107779], np.float64),
 )
 
+
 @pytest.mark.cuda
 @pytest.mark.parametrize(
     ("src", "dst", "input", "expected"),

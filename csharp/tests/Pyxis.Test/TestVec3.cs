@@ -19,14 +19,14 @@ public class TestVec3
         {
             Vec3 u = new(1, 2, 3);
             Vec3 v = new(1, 2, 3);
-            Vec3 result = Vec3.Add(u, v);
+            Vec3 result = Vec3.Add(in u, in v);
             Assert.Equal(2, result.X);
             Assert.Equal(4, result.Y);
             Assert.Equal(6, result.Z);
         }
         {
             Vec3 u = new(1, 2, 3);
-            Vec3 result = Vec3.Add(u, 4);
+            Vec3 result = Vec3.Add(in u, 4);
             Assert.Equal(5, result.X);
             Assert.Equal(6, result.Y);
             Assert.Equal(7, result.Z);
@@ -35,14 +35,14 @@ public class TestVec3
             Vec3 u = new(1, 2, 3);
             Vec3 v = new(1, 2, 3);
             Vec3 result = new();
-            Vec3.Add(u, v, ref result);
+            Vec3.Add(in u, in v, ref result);
             Assert.Equal(2, result.X);
             Assert.Equal(4, result.Y);
             Assert.Equal(6, result.Z);
         }
         {
             Vec3 u = new(1, 2, 3);
-            Vec3.Add(u, 4, ref u);
+            Vec3.Add(in u, 4, ref u);
             Assert.Equal(5, u.X);
             Assert.Equal(6, u.Y);
             Assert.Equal(7, u.Z);
@@ -57,7 +57,7 @@ public class TestVec3
         {
             Vec3 u = new(1, 2, 3);
             Vec3 v = new(1, 2, 3);
-            u.Add(v);
+            u.Add(in v);
             Assert.Equal(2, u.X);
             Assert.Equal(4, u.Y);
             Assert.Equal(6, u.Z);
@@ -101,7 +101,7 @@ public class TestVec3
     {
         Vec3 u = new(1, 2, 3);
         Vec3 v = new(2, 4, 7);
-        Vec3 result = Vec3.Cross(u, v);
+        Vec3 result = Vec3.Cross(in u, in v);
         Assert.Equal(2, result.X);
         Assert.Equal(-1, result.Y);
         Assert.Equal(0, result.Z);
@@ -113,14 +113,14 @@ public class TestVec3
         {
             Vec3 u = new(4, 6, 15);
             Vec3 v = new(1, 2, 3);
-            Vec3 result = Vec3.Divide(u, v);
+            Vec3 result = Vec3.Divide(in u, in v);
             Assert.Equal(4, result.X);
             Assert.Equal(3, result.Y);
             Assert.Equal(5, result.Z);
         }
         {
             Vec3 u = new(3, 9, 15);
-            Vec3 result = Vec3.Divide(u, 3);
+            Vec3 result = Vec3.Divide(in u, 3);
             Assert.Equal(1, result.X);
             Assert.Equal(3, result.Y);
             Assert.Equal(5, result.Z);
@@ -129,14 +129,14 @@ public class TestVec3
             Vec3 u = new(4, 6, 15);
             Vec3 v = new(1, 2, 3);
             Vec3 result = new();
-            Vec3.Divide(u, v, ref result);
+            Vec3.Divide(in u, in v, ref result);
             Assert.Equal(4, result.X);
             Assert.Equal(3, result.Y);
             Assert.Equal(5, result.Z);
         }
         {
             Vec3 u = new(3, 9, 15);
-            Vec3.Divide(u, 3, ref u);
+            Vec3.Divide(in u, 3, ref u);
             Assert.Equal(1, u.X);
             Assert.Equal(3, u.Y);
             Assert.Equal(5, u.Z);
@@ -151,7 +151,7 @@ public class TestVec3
         {
             Vec3 u = new(4, 6, 15);
             Vec3 v = new(1, 2, 3);
-            u.Divide(v);
+            u.Divide(in v);
             Assert.Equal(4, u.X);
             Assert.Equal(3, u.Y);
             Assert.Equal(5, u.Z);
@@ -163,7 +163,7 @@ public class TestVec3
     {
         Vec3 u = new(1, 2, 3);
         Vec3 v = new(3, 4, 5);
-        double result = Vec3.Dot(u, v);
+        double result = Vec3.Dot(in u, in v);
         Assert.Equal(26, result);
     }
 
@@ -218,7 +218,7 @@ public class TestVec3
     {
         Vec3 u = new(1, 2, 3);
         Assert.Equal(Sqrt(14), u.Length(), 6);
-        Assert.Equal(Sqrt(14), Vec3.Length(u), 6);
+        Assert.Equal(Sqrt(14), Vec3.Length(in u), 6);
     }
 
     [Fact]
@@ -226,7 +226,7 @@ public class TestVec3
     {
         Vec3 u = new(1, 2, 3);
         Assert.Equal(14, u.Length2(), 6);
-        Assert.Equal(14, Vec3.Length2(u), 6);
+        Assert.Equal(14, Vec3.Length2(in u), 6);
     }
 
     [Fact]
@@ -235,14 +235,14 @@ public class TestVec3
         {
             Vec3 u = new(2, 3, 4);
             Vec3 v = new(1, 2, 3);
-            Vec3 result = Vec3.Multiply(u, v);
+            Vec3 result = Vec3.Multiply(in u, in v);
             Assert.Equal(2, result.X);
             Assert.Equal(6, result.Y);
             Assert.Equal(12, result.Z);
         }
         {
             Vec3 u = new(3, 9, 15);
-            Vec3 result = Vec3.Multiply(u, 3);
+            Vec3 result = Vec3.Multiply(in u, 3);
             Assert.Equal(9, result.X);
             Assert.Equal(27, result.Y);
             Assert.Equal(45, result.Z);
@@ -251,14 +251,14 @@ public class TestVec3
             Vec3 u = new(4, 6, 15);
             Vec3 v = new(1, 2, 3);
             Vec3 result = new();
-            Vec3.Multiply(u, v, ref result);
+            Vec3.Multiply(in u, in v, ref result);
             Assert.Equal(4, result.X);
             Assert.Equal(12, result.Y);
             Assert.Equal(45, result.Z);
         }
         {
             Vec3 u = new(3, 9, 15);
-            Vec3.Multiply(u, 3, ref u);
+            Vec3.Multiply(in u, 3, ref u);
             Assert.Equal(9, u.X);
             Assert.Equal(27, u.Y);
             Assert.Equal(45, u.Z);
@@ -273,7 +273,7 @@ public class TestVec3
         {
             Vec3 u = new(4, 6, 15);
             Vec3 v = new(1, 2, 3);
-            u.Multiply(v);
+            u.Multiply(in v);
             Assert.Equal(4, u.X);
             Assert.Equal(12, u.Y);
             Assert.Equal(45, u.Z);
@@ -284,7 +284,7 @@ public class TestVec3
     public void TestNormalize()
     {
         Vec3 v = new(3, 4, 5);
-        Vec3 u = Vec3.Normalize(v);
+        Vec3 u = Vec3.Normalize(in v);
         v.Normalize();
         Vec3 expected = new(3.0 / 5.0 / Sqrt(2), 4.0 / 5.0 / Sqrt(2), 1.0 / Sqrt(2));
         Assert.Equal(expected.X, u.X, 6);
@@ -301,14 +301,14 @@ public class TestVec3
         {
             Vec3 u = new(1, 2, 3);
             Vec3 v = new(1, 2, 3);
-            Vec3 result = Vec3.Subtract(u, v);
+            Vec3 result = Vec3.Subtract(in u, in v);
             Assert.Equal(0, result.X);
             Assert.Equal(0, result.Y);
             Assert.Equal(0, result.Z);
         }
         {
             Vec3 u = new(1, 2, 3);
-            Vec3 result = Vec3.Subtract(u, 4);
+            Vec3 result = Vec3.Subtract(in u, 4);
             Assert.Equal(-3, result.X);
             Assert.Equal(-2, result.Y);
             Assert.Equal(-1, result.Z);
@@ -317,14 +317,14 @@ public class TestVec3
             Vec3 u = new(1, 2, 3);
             Vec3 v = new(1, 2, 3);
             Vec3 result = new();
-            Vec3.Subtract(u, v, ref result);
+            Vec3.Subtract(in u, in v, ref result);
             Assert.Equal(0, result.X);
             Assert.Equal(0, result.Y);
             Assert.Equal(0, result.Z);
         }
         {
             Vec3 u = new(1, 2, 3);
-            Vec3.Subtract(u, 4, ref u);
+            Vec3.Subtract(in u, 4, ref u);
             Assert.Equal(-3, u.X);
             Assert.Equal(-2, u.Y);
             Assert.Equal(-1, u.Z);
@@ -339,7 +339,7 @@ public class TestVec3
         {
             Vec3 u = new(1, 2, 3);
             Vec3 v = new(1, 2, 3);
-            u.Subtract(v);
+            u.Subtract(in v);
             Assert.Equal(0, u.X);
             Assert.Equal(0, u.Y);
             Assert.Equal(0, u.Z);

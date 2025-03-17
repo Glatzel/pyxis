@@ -143,5 +143,5 @@ jobs:
           PYTHONPATH: ${{env.PYTHON_ROOT}}
         with:
           token: ${{ secrets.CODSPEED_TOKEN }}
-          run: pixi run -e bench pytest ./benches --codspeed
+          run: pixi run -e bench pytest ./benches --codspeed -m "not cuda"
           working-directory: ${{env.PYTHON_ROOT}}

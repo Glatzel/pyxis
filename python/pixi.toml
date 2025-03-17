@@ -36,13 +36,10 @@ sphinx-autosummary-accessors = "*"
 sphinx-copybutton = "*"
 
 [feature.bench.dependencies]
-lazy-loader = "*"
 numba = "*"
 numexpr = "*"
-numpy = "*"
 pytest-codspeed = "*"
-scipy = "*"
 
 [environments]
-bench = ["py311", "build", "py-test", "bench"]
+bench = ["py311", "build", "py-test", "py-deps", "bench"]
 default = ["py311", "build", "py-deps", "py-test", "py-doc"]

@@ -8,7 +8,7 @@ on:
         type: boolean
         default: false
 env:
-  PYTHON_ROOT: ./python
+  PYTHON_ROOT: ${{github.workspace}}/python
 jobs:
   ruff-lint:
     runs-on: ubuntu-latest
@@ -64,7 +64,7 @@ jobs:
         with:
           run-install: false
       - run: choco install pkgconfiglite
-        if: ${{runner.os == 'Windows'&&steps.changed.outputs.any_changed != 'false'}}
+        if: ${{runner.os == 'Windows'}}
       - uses: Jimver/cuda-toolkit@v0.2.22
         with:
           cuda: "12.8.0"
@@ -139,6 +139,8 @@ jobs:
 
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v3
+        env:
+          PYTHONPATH: ${{env.PYTHON_ROOT}}
         with:
           token: ${{ secrets.CODSPEED_TOKEN }}
-          run: pwsh -f ${{env.PYTHON_ROOT}}/scripts/maturin-develop.ps1
+          run: pixi run -e bench pytest ./benches --codspeed

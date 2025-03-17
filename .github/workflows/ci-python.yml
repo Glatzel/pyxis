@@ -134,7 +134,7 @@ jobs:
         with:
           run-install: false
 
-      - run: ${{env.PYTHON_ROOT}}/scripts/maturin-develop.ps1
+      - run: ${{env.PYTHON_ROOT}}/scripts/maturin-develop.ps1 -config release
         shell: pwsh
 
       - name: Run benchmarks

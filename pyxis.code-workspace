@@ -36,10 +36,11 @@
             "**/node_modules/**",
             "tests_report",
             "**/*.lock",
-            "vcpkg/**.cmake",
-            "vcpkg/installed/**",
+            "rust/vcpkg/vcpkg/triplet", "**rust/vcpkg/vcpkg/triplets/**",
+            "**/rust/vcpkg/installed/**",
             "**/changelog.md",
-            "**.code-workspace"
+            "**.code-workspace",
+            "**/*lock.json"
         ],
         "rust-analyzer.cargo.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
@@ -54,7 +55,7 @@
             "PKG_CONFIG_PATH": "${workspaceFolder}/rust/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
         },
         "rust-analyzer.server.extraEnv": {
-             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
+            "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
             "PKG_CONFIG_PATH": "${workspaceFolder}/rust/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
         },
         "rust-analyzer.testExplorer": true,
@@ -66,6 +67,9 @@
         "cmake.autoSelectActiveFolder": false,
         "cmake.configureOnOpen": false,
         "cmake.configureOnEdit": false,
-        "python.analysis.exclude": ["${workspaceFolder}/rust/vcpkg","**/.pixi"]
+        "python.analysis.exclude": [
+            "**/vcpkg",
+            "**/.pixi"
+        ]
     }
 }

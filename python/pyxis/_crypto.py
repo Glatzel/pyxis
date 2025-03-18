@@ -51,11 +51,15 @@ def crypto(
     Parameters
     ----------
     lon, lat
-        Coordinates of `BD09` coordinate system.
+        Input Coordinates.
     crypto_from, crypto_to
         From a coordinate system to another coordinate system.
     exact
-        Use exact mode. Max Error is 1e-13.
+        Use exact mode, which raises precision to 1e-13, but will be sightly slower.
+        This parameter only works when conversion:
+        - from `BD09` to `GCJ02`
+        - from `BD09` to `WGS84`
+        - from `GCJ02` to `WGS84`
     clone
         If True, a deep copy of `data` will be created before processing.
         If False, `data` will be modified in place. Default is False.
@@ -69,11 +73,15 @@ def crypto(
     ------
     ParameterError
         If ``crypto_from`` == ``crypto_to``.
+        If ``crypto_from`` not in ``COORD_CRYPTO_SPACE``.
+        If ``crypto_to`` not in ``COORD_CRYPTO_SPACE``.
     """
     from .pyxis_py import py_crypto  # type: ignore
 
     lon = coord_util("lon", lon, clone)
     lat = coord_util("lat", lat, clone)
+    # check if crypto_from and crypto_to is valid
+    # check if crypto_from and crypto_to are not equal
     if (
         (str(crypto_from).upper() not in COORD_CRYPTO_SPACE.list())
         or (str(crypto_to).upper() not in COORD_CRYPTO_SPACE.list())

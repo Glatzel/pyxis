@@ -11,10 +11,12 @@ pub(crate) struct PyxisPtx {
 }
 
 /// A struct to manage the currently active module
+/// default block size 256.
 pub static CONTEXT: LazyLock<PyxisCudaContext> = LazyLock::new(PyxisCudaContext::new);
 pub struct PyxisCudaContext {
     _ctx: Context,
     pub(crate) stream: Stream,
+    block_size: Mutex<u32>,
 
     module_cache: Mutex<HashMap<&'static str, (Arc<Module>, usize)>>,
     lru: Mutex<VecDeque<&'static str>>,
@@ -29,6 +31,8 @@ impl PyxisCudaContext {
         Self {
             _ctx: cust::quick_init().unwrap(),
             stream: Stream::new(StreamFlags::NON_BLOCKING, 1i32.into()).unwrap(),
+            block_size: Mutex::new(256),
+
             module_cache: Mutex::new(HashMap::new()),
             lru: Mutex::new(VecDeque::new()),
             total_size: Mutex::new(0),
@@ -118,7 +122,32 @@ impl PyxisCudaContext {
         }
     }
 }
+// kernel setting
+impl PyxisCudaContext {
+    /// - size_limit: max size of cached ptx file, 0 means unlimited.
+    pub fn set_block_size(&self, block_size: u32) -> &Self {
+        *self.block_size.lock().unwrap() = block_size;
+        clerk::debug!("Set size_limit to {block_size}.");
+        self
+    }
+    /// # Returns
+    /// (grid_size, block_size) , aka (blocks, threads)
+    ///
+    /// # References
+    /// https://developer.nvidia.com/blog/cuda-refresher-cuda-programming-model/
+    pub(crate) fn get_grid_block(&self, length: usize) -> (u32, u32) {
+        let grid_size = (length as u32 + *self.block_size.lock().unwrap() - 1)
+            .div_ceil(*self.block_size.lock().unwrap());
 
+        clerk::debug!(
+            "using {} blocks and {} threads per block.",
+            grid_size,
+            self.block_size.lock().unwrap()
+        );
+
+        (grid_size, *self.block_size.lock().unwrap())
+    }
+}
 // utils
 impl PyxisCudaContext {
     pub(crate) fn get_function<'a, T: 'static + GeoFloat>(
@@ -136,22 +165,5 @@ impl PyxisCudaContext {
     }
     pub fn device_buffer_from_slice(&self, slice: &[f64]) -> DeviceBuffer<f64> {
         DeviceBuffer::from_slice(slice).unwrap()
-    }
-    /// # Returns
-    /// (grid_size, block_size) , aka (blocks, threads)
-    ///
-    /// # References
-    /// https://developer.nvidia.com/blog/cuda-refresher-cuda-programming-model/
-    pub(crate) fn get_grid_block(&self, func: &Function, length: usize) -> (u32, u32) {
-        let (_, block_size) = func.suggested_launch_configuration(0, 0.into()).unwrap();
-        let grid_size = (length as u32 + block_size - 1).div_ceil(block_size);
-
-        clerk::debug!(
-            "using {} blocks and {} threads per block.",
-            grid_size,
-            block_size
-        );
-
-        (grid_size, block_size)
     }
 }

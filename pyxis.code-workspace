@@ -65,6 +65,7 @@
         "cmake.automaticReconfigure": false,
         "cmake.autoSelectActiveFolder": false,
         "cmake.configureOnOpen": false,
-        "cmake.configureOnEdit": false
+        "cmake.configureOnEdit": false,
+        "python.analysis.exclude": ["${workspaceFolder}/rust/vcpkg","**/.pixi"]
     }
 }

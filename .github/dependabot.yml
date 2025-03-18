@@ -3,7 +3,6 @@ updates:
   - package-ecosystem: "github-actions"
     directories:
       - .github/workflows
-      - .github/actions/setup-ci
     schedule:
       interval: monthly
     commit-message:

@@ -44,6 +44,8 @@ jobs:
           if-no-files-found: error
 
   rattler-pyxis-py:
+    env:
+      PYTEST_ADDOPTS: "--color=yes"
     strategy:
       fail-fast: false
       matrix:

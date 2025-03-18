@@ -14,6 +14,7 @@ else {
 # run test
 pixi run pytest `
     ./tests `
+    -v `
     -m $markers `
     --durations=10 `
     --junitxml=tests_report/junit.xml `

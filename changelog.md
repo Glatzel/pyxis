@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.16] - 2025-03-18
+
+### Added
+
+- Add new clone parameter to python by @Glatzel in [#229](https://github.com/Glatzel/pyxis/pull/229)
+- Add python cuda crypto by @Glatzel in [#230](https://github.com/Glatzel/pyxis/pull/230)
+- Add kernel setting to python cuda by @Glatzel in [#231](https://github.com/Glatzel/pyxis/pull/231)
+- Add python bench by @Glatzel in [#236](https://github.com/Glatzel/pyxis/pull/236)
+
+### Changed
+
+- Simplify build scripts by @Glatzel in [#234](https://github.com/Glatzel/pyxis/pull/234)
+- Use ref in some functions by @Glatzel in [#237](https://github.com/Glatzel/pyxis/pull/237)
+
+### Documentation
+
+- Add dependency graph by @Glatzel in [#235](https://github.com/Glatzel/pyxis/pull/235)
+
+### Fixed
+
+- Crypto cuda problem by @Glatzel in [#233](https://github.com/Glatzel/pyxis/pull/233)
+- Vscode workspace rust config by @Glatzel in [#239](https://github.com/Glatzel/pyxis/pull/239)
+
 ## [0.0.15] - 2025-03-15
 
 ### Added
@@ -267,6 +290,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.16]: https://github.com/Glatzel/pyxis/compare/v0.0.15..v0.0.16
 [0.0.15]: https://github.com/Glatzel/pyxis/compare/v0.0.14..v0.0.15
 [0.0.14]: https://github.com/Glatzel/pyxis/compare/v0.0.13..v0.0.14
 [0.0.13]: https://github.com/Glatzel/pyxis/compare/v0.0.12..v0.0.13

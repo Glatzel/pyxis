@@ -44,6 +44,7 @@ jobs:
         if: ${{inputs.release}}
         run: ${{env.CSHARP_ROOT}}/scripts/pack.ps1 -config ${{ inputs.release && 'Release' || 'Debug' }}
       - name: upload nupkg
+        if: ${{inputs.release}}
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-csharp

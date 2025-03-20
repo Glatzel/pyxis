@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   workflow_call:
     inputs:
-      build-release:
+      release:
         type: boolean
         default: false
 env:
@@ -20,26 +20,31 @@ jobs:
           msbuild-architecture: x64
 
       - name: build
-        run: ${{env.CSHARP_ROOT}}/scripts/build.ps1 -config ${{ inputs.build-release && 'Release' || 'Debug' }}
+        if: ${{!inputs.release}}
+        run: ${{env.CSHARP_ROOT}}/scripts/build.ps1 -config ${{ inputs.release && 'Release' || 'Debug' }}
 
       - name: test
+        if: ${{!inputs.release}}
         run: ${{env.CSHARP_ROOT}}/scripts/test.ps1
 
       - name: Upload cov results to Codecov
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && !inputs.release}}
         uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true
+
       - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && !inputs.release}}
         uses: codecov/test-results-action@v1
         with:
           files: ./tests/*/TestResults/TestResults.xml
           fail_ci_if_error: true
 
       - name: pack
-        run: ${{env.CSHARP_ROOT}}/scripts/pack.ps1 -config ${{ inputs.build-release && 'Release' || 'Debug' }}
+        if: ${{inputs.release}}
+        run: ${{env.CSHARP_ROOT}}/scripts/pack.ps1 -config ${{ inputs.release && 'Release' || 'Debug' }}
       - name: upload nupkg
+        if: ${{inputs.release}}
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-csharp

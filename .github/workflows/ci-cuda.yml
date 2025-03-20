@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   workflow_call:
     inputs:
-      build-release:
+      release:
         type: boolean
         default: false
 env:
@@ -28,10 +28,13 @@ jobs:
           cuda: "12.8.0"
           sub-packages: ${{matrix.sub-packages}}
           method: network
+
       - name: build cuda
         run: ${{env.CUDA_ROOT}}/scripts/build-cuda.ps1
         shell: pwsh
+
       - name: upload cuda
+        if: ${{inputs.release}}
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-cuda-${{matrix.machine}}

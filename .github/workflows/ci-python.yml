@@ -4,13 +4,14 @@ on:
   workflow_dispatch:
   workflow_call:
     inputs:
-      build-release:
+      release:
         type: boolean
         default: false
 env:
   PYTHON_ROOT: ${{github.workspace}}/python
 jobs:
   ruff-lint:
+    if: ${{!inputs.release}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,6 +38,7 @@ jobs:
         shell: pwsh
 
       - name: upload doc
+        if: ${{inputs.release}}
         uses: actions/upload-artifact@v4
         with:
           name: python-doc
@@ -74,10 +76,10 @@ jobs:
           method: network
 
       - name: build
-        run: ${{env.PYTHON_ROOT}}/rattler/ci-pyxis-py.ps1 ${{ inputs.build-release && '-config  release' || null }}
+        run: ${{env.PYTHON_ROOT}}/rattler/ci-pyxis-py.ps1 ${{ inputs.release && '-config  release' || null }}
         shell: pwsh
 
-      - name: upload conda
+      - name: upload
         uses: actions/upload-artifact@v4
         with:
           name: pyxis-python-${{matrix.machine}}
@@ -87,13 +89,17 @@ jobs:
           if-no-files-found: error
 
       - name: Upload results to Codecov
+        if: ${{ !cancelled() && !inputs.release}}
         uses: codecov/codecov-action@v5
       - name: Upload test results to Codecov
+        if: ${{ !cancelled() && !inputs.release}}
         uses: codecov/test-results-action@v1
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
+
   cargo-clippy:
+    if: ${{!inputs.release}}
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"
@@ -110,6 +116,7 @@ jobs:
         shell: pwsh
 
   cargo-fmt:
+    if: ${{!inputs.release}}
     runs-on: ubuntu-latest
     env:
       RUSTFLAGS: "-Dwarnings"
@@ -128,6 +135,7 @@ jobs:
         shell: pwsh
 
   bench:
+    if: ${{!inputs.release}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

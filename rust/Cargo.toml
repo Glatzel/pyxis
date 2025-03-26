@@ -11,7 +11,7 @@ pyxis = { path = "./crates/pyxis" }
 
 assert_cmd = "2.0"
 bpaf = { version = "0.9.17", features = ["derive", "batteries"] }
-clerk = { git = "https://github.com/Glatzel/clerk", tag = "v0.0.4" }
+clerk = { git = "https://github.com/Glatzel/clerk", tag = "v0.0.5" }
 criterion = { package = "codspeed-criterion-compat", version = "*" }
 cust = "0.3"
 dunce = "1.0.5"

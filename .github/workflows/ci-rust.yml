@@ -7,8 +7,12 @@ on:
       release:
         type: boolean
         default: false
+
+permissions: read-all
+
 env:
   RUST_ROOT: ./rust
+
 jobs:
   cache-vcpkg:
     runs-on: windows-latest

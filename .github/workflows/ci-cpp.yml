@@ -7,7 +7,7 @@ on:
       release:
         type: boolean
         default: false
-
+permissions: read-all
 env:
   CPP_ROOT: ./cpp
 jobs:

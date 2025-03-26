@@ -7,17 +7,21 @@ on:
         type: string
         required:  true
 
+
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
 jobs:
   check-and-build:
+    permissions: read-all
     uses: ./.github/workflows/ci.yml
     with:
       release: true
 
   release:
+    permissions:
+      contents: write
     needs: [check-and-build]
     uses: Glatzel/template/.github/workflows/release.yml@main
     with:

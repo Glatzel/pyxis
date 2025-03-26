@@ -21,6 +21,10 @@
             "path": "cuda"
         },
         {
+            "name": "opencl",
+            "path": "opencl"
+        },
+        {
             "name": "python",
             "path": "python"
         },
@@ -70,6 +74,10 @@
         "python.analysis.exclude": [
             "**/vcpkg",
             "**/.pixi"
-        ]
+        ],
+        "files.associations": {
+            "random": "cpp",
+            "algorithm": "cpp"
+        }
     }
 }

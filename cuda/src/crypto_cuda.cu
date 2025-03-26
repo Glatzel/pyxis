@@ -1,5 +1,5 @@
 #include "crypto.cpp"
-
+#pragma region generics
 template <typename T>
 __global__ void bd09_to_gcj02_cuda(int N,
                                    const T *lon,
@@ -118,7 +118,8 @@ __global__ void bd09_to_gcj02_exact_cuda(int N,
         return;
     crypto_exact(lon[i], lat[i], bd09_to_gcj02, gcj02_to_bd09, threshold, distance_mode, max_iter, out_lon[i], out_lat[i]);
 };
-// float
+#pragma endregion
+#pragma region float
 extern "C"
 {
     __global__ void bd09_to_gcj02_cuda_float(int N,
@@ -238,7 +239,8 @@ extern "C"
         crypto_exact<float>(lon[i], lat[i], bd09_to_gcj02, gcj02_to_bd09, threshold, distance_mode, max_iter, out_lon[i], out_lat[i]);
     };
 }
-// double
+#pragma endregion
+#pragma region double
 extern "C"
 {
     __global__ void bd09_to_gcj02_cuda_double(int N,
@@ -358,3 +360,4 @@ extern "C"
         crypto_exact<double>(lon[i], lat[i], bd09_to_gcj02, gcj02_to_bd09, threshold, distance_mode, max_iter, out_lon[i], out_lat[i]);
     };
 }
+#pragma endregion

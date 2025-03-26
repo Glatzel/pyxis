@@ -1,5 +1,4 @@
 #include "datum_compense.h"
-#pragma region cpp
 template <typename T>
 CUDA_HOST_DEVICE void datum_compense(
     T xc,

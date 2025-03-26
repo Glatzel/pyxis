@@ -1,4 +1,5 @@
 #include "datum_compense.cpp"
+#pragma region generics
 template <typename T>
 __global__ void datum_compense_cuda(
     const int N,
@@ -15,7 +16,8 @@ __global__ void datum_compense_cuda(
         return;
     datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
 };
-// float
+#pragma endregion
+#pragma region float
 extern "C"
 {
     __global__ void datum_compense_cuda_float(
@@ -34,7 +36,8 @@ extern "C"
         datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
     };
 }
-// double
+#pragma endregion
+#pragma region double
 extern "C"
 {
     __global__ void datum_compense_cuda_double(
@@ -53,3 +56,4 @@ extern "C"
         datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
     };
 }
+#pragma endregion

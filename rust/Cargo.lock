@@ -871,7 +871,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.16"
+version = "0.0.17"
 dependencies = [
  "clerk",
  "codspeed-criterion-compat",
@@ -884,7 +884,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cli"
-version = "0.0.16"
+version = "0.0.17"
 dependencies = [
  "assert_cmd",
  "bpaf",
@@ -902,7 +902,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cuda"
-version = "0.0.16"
+version = "0.0.17"
 dependencies = [
  "clerk",
  "codspeed-criterion-compat",

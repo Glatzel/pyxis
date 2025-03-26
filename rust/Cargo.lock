@@ -219,8 +219,8 @@ checksum = "f46ad14479a25103f283c0f10005961cf086d8dc42205bb44c46ac563475dca6"
 
 [[package]]
 name = "clerk"
-version = "0.0.4"
-source = "git+https://github.com/Glatzel/clerk?tag=v0.0.4#2684e1ccf51949e84903ad7507f9194f928e84dd"
+version = "0.0.5"
+source = "git+https://github.com/Glatzel/clerk?tag=v0.0.5#78a0bc69e2ac55c5db08bfe34f9289ceacdc1e26"
 dependencies = [
  "chrono",
  "owo-colors",

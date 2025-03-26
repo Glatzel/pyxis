@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.17] - 2025-03-26
+
+### Added
+
+- Add CODEOWNERS by @Glatzel in [#246](https://github.com/Glatzel/pyxis/pull/246)
+- Add some filter by @Glatzel in [#249](https://github.com/Glatzel/pyxis/pull/249)
+- Add permission by @Glatzel in [#251](https://github.com/Glatzel/pyxis/pull/251)
+
+### Changed
+
+- Manually set block size in rust by @Glatzel in [#245](https://github.com/Glatzel/pyxis/pull/245)
+
 ## [0.0.16] - 2025-03-18
 
 ### Added
@@ -290,6 +302,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.17]: https://github.com/Glatzel/pyxis/compare/v0.0.16..v0.0.17
 [0.0.16]: https://github.com/Glatzel/pyxis/compare/v0.0.15..v0.0.16
 [0.0.15]: https://github.com/Glatzel/pyxis/compare/v0.0.14..v0.0.15
 [0.0.14]: https://github.com/Glatzel/pyxis/compare/v0.0.13..v0.0.14

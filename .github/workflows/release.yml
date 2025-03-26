@@ -20,7 +20,7 @@ jobs:
       release: true
 
   release:
-    permissions: 
+    permissions:
       contents: write
     needs: [check-and-build]
     uses: Glatzel/template/.github/workflows/release.yml@main

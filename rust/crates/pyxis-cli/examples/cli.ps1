@@ -1,15 +1,5 @@
 $ROOT = git rev-parse --show-toplevel
 
-if ($IsWindows) {
-    $pyxis = "./pyxis.exe"
-    $links = "static", "dynamic"
-}
-elseif ($IsLinux) {
-    $pyxis = "./pyxis"
-    $links = "static"
-}
-
-foreach ($link in $links) {
     Set-Location "$ROOT/rust/dist/cli/$link"
     Write-Output "::group::Run $link cli"
 
@@ -41,5 +31,5 @@ foreach ($link in $links) {
     Set-Location $PSScriptRoot
     Set-Location ..
     Write-Output "::endgroup::"
-}
+
 Set-Location $ROOT

@@ -449,7 +449,7 @@ mod test {
     #[test]
     fn test_exact() {
         tracing_subscriber::registry()
-            .with(clerk::terminal_layer(LevelFilter::ERROR))
+            .with(clerk::terminal_layer(LevelFilter::ERROR,true))
             .init();
         let is_ci = std::env::var("CI").is_ok();
         let mut rng = rand::rng();

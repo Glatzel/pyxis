@@ -89,7 +89,7 @@ fn init_log(level: Level) {
         Level::Trace => tracing::level_filters::LevelFilter::TRACE,
     };
     tracing_subscriber::registry()
-        .with(clerk::terminal_layer(tracing_level))
+        .with(clerk::terminal_layer(tracing_level, true))
         .init();
 }
 pub fn main() {

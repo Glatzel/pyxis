@@ -328,7 +328,7 @@ where
 /// use tracing_subscriber::filter::LevelFilter;
 /// use pyxis::crypto::*;
 /// tracing_subscriber::registry()
-///     .with(clerk::terminal_layer(LevelFilter::TRACE))
+///     .with(clerk::terminal_layer(LevelFilter::TRACE,true))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = crypto_exact(
@@ -351,7 +351,7 @@ where
 /// use tracing_subscriber::filter::LevelFilter;
 /// use pyxis::crypto::*;
 /// tracing_subscriber::registry()
-///     .with(clerk::terminal_layer(LevelFilter::TRACE))
+///     .with(clerk::terminal_layer(LevelFilter::TRACE,true))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = crypto_exact(
@@ -449,7 +449,7 @@ mod test {
     #[test]
     fn test_exact() {
         tracing_subscriber::registry()
-            .with(clerk::terminal_layer(LevelFilter::ERROR,true))
+            .with(clerk::terminal_layer(LevelFilter::ERROR, true))
             .init();
         let is_ci = std::env::var("CI").is_ok();
         let mut rng = rand::rng();

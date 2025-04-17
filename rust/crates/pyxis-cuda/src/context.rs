@@ -92,7 +92,7 @@ impl PyxisCudaContext {
         }
         // clear modules until total size smaller than limit
         while *self.total_size.lock().unwrap() + ptx.size > *self.size_limit.lock().unwrap()
-            && self.lru.lock().unwrap().len() != 0
+            && !self.lru.lock().unwrap().is_empty()
         {
             clerk::debug!(
                 "Adding module `{}` will exceed size limit, total size: {}. Trying to remove last module",
@@ -155,8 +155,8 @@ impl PyxisCudaContext {
         module: &'a Module,
         fn_name: &str,
     ) -> Function<'a> {
-        static GEOFLOAT_F32: LazyLock<TypeId> = LazyLock::new(|| TypeId::of::<f32>());
-        static GEOFLOAT_F64: LazyLock<TypeId> = LazyLock::new(|| TypeId::of::<f64>());
+        static GEOFLOAT_F32: LazyLock<TypeId> = LazyLock::new(TypeId::of::<f32>);
+        static GEOFLOAT_F64: LazyLock<TypeId> = LazyLock::new(TypeId::of::<f64>);
         match TypeId::of::<T>() {
             id if id == *GEOFLOAT_F32 => module.get_function(format!("{fn_name}_float")).unwrap(),
             id if id == *GEOFLOAT_F64 => module.get_function(format!("{fn_name}_double")).unwrap(),

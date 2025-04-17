@@ -6,5 +6,5 @@ platforms = ["win-64", "linux-64"]
 version = "0.1.0"
 
 [dependencies]
-proj = "9.6.*"
-rattler-build = "0.40.*"
+proj = "==9.6.0"
+rattler-build = "==0.40.0"

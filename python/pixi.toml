@@ -10,21 +10,21 @@ version = "0.1.0"
 python = "3.11.*"
 
 [feature.build.dependencies]
-maturin = "1.1.*"
+maturin = "1.8.*"
 pip = "25.0.*"
-rattler-build = "0.39.*"
+rattler-build = "0.40.*"
 ruff = "0.11.*"
 
 [feature.py-deps.dependencies]
 cupy-core = "13.4.*"
 lazy-loader = "0.4.*"
 nomkl = "1.0.*"
-numpy = "2.1.*"
+numpy = "2.2.*"
 scipy = "1.15.*"
 
 [feature.py-test.dependencies]
-pytest = "8.0.*"
-pytest-cov = "6.0.*"
+pytest = "8.3.*"
+pytest-cov = "6.1.*"
 
 [feature.py-doc]
 platforms = ["linux-64"]

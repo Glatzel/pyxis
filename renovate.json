@@ -22,7 +22,7 @@
       {
         "groupName": "Cargo",
         "matchManagers": ["cargo"]
-      }
+      },
       {
         "groupName": "Dotnet",
         "matchManagers": ["nuget"]

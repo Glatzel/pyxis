@@ -10,34 +10,34 @@ version = "0.1.0"
 python = "3.11.*"
 
 [feature.build.dependencies]
-maturin = "*"
-pip = "*"
-rattler-build = "*"
-ruff = "*"
+maturin = "1.1.*"
+pip = "25.0.*"
+rattler-build = "0.39.*"
+ruff = "0.11.*"
 
 [feature.py-deps.dependencies]
-cupy-core = "*"
-lazy-loader = "*"
-nomkl = "*"
-numpy = "*"
-scipy = "*"
+cupy-core = "13.4.*"
+lazy-loader = "0.4.*"
+nomkl = "1.0.*"
+numpy = "2.1.*"
+scipy = "1.15.*"
 
 [feature.py-test.dependencies]
-pytest = "*"
-pytest-cov = "*"
+pytest = "8.0.*"
+pytest-cov = "6.0.*"
 
 [feature.py-doc.dependencies]
-autodocsumm = "*"
-numpydoc = "*"
-pydata-sphinx-theme = "*"
+autodocsumm = "0.2.*"
+numpydoc = "1.8.*"
+pydata-sphinx-theme = "0.16.*"
 sphinx = "*"
-sphinx-autosummary-accessors = "*"
-sphinx-copybutton = "*"
+sphinx-autosummary-accessors = "8.2.*"
+sphinx-copybutton = "0.5.*"
 
 [feature.bench.dependencies]
-numba = "*"
-numexpr = "*"
-pytest-codspeed = "*"
+numba = "0.61.*"
+numexpr = "2.10.*"
+pytest-codspeed = "3.1.*"
 
 [environments]
 bench = ["py311", "build", "py-test", "py-deps", "bench"]

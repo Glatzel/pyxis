@@ -26,14 +26,18 @@ scipy = "1.15.*"
 pytest = "8.0.*"
 pytest-cov = "6.0.*"
 
+[feature.py-doc]
+platforms = ["linux-64"]
 [feature.py-doc.dependencies]
 autodocsumm = "0.2.*"
 numpydoc = "1.8.*"
 pydata-sphinx-theme = "0.16.*"
 sphinx = "*"
-sphinx-autosummary-accessors = "8.2.*"
+sphinx-autosummary-accessors = "2025.3.*"
 sphinx-copybutton = "0.5.*"
 
+[feature.bench]
+platforms = ["linux-64"]
 [feature.bench.dependencies]
 numba = "0.61.*"
 numexpr = "2.10.*"

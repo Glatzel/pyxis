@@ -1,4 +1,4 @@
-[project]
+[workspace]
 authors = ["Glatzel"]
 channels = ["conda-forge"]
 name = "pyxis-rust"

@@ -1,4 +1,4 @@
-[project]
+[workspace]
 authors = ["Glatzel <893016099@qq.com>"]
 channels = ["conda-forge", "nvidia", "pytorch"]
 description = "Add a short description here"

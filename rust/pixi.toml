@@ -1,10 +1,10 @@
 [workspace]
 authors = ["Glatzel"]
-channels = ["conda-forge"]
+channels = ["conda-forge", "https://repo.prefix.dev/glatzel"]
 name = "pyxis-rust"
 platforms = ["win-64", "linux-64"]
 version = "0.1.0"
 
 [dependencies]
-proj = "==9.6.0"
+proj = { version = "==9.6.0", channel = "https://repo.prefix.dev/glatzel" }
 rattler-build = "==0.40.0"

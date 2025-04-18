@@ -1,6 +1,6 @@
 [workspace]
 authors = ["Glatzel <893016099@qq.com>"]
-channels = ["conda-forge", "nvidia", "pytorch"]
+channels = ["conda-forge"]
 description = "Add a short description here"
 name = "pyxis"
 platforms = ["win-64", "linux-64"]

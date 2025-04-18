@@ -7,7 +7,6 @@ if ($IsWindows) {
     Copy-Item ./.pixi/envs/default/proj/x64-windows-static/share/proj/proj.db ./crates/pyxis-cli/src/proj.db
 }
 if ($IsLinux) {
-    $env:PKG_CONFIG_PATH = Resolve-Path "./.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig"
     Copy-Item ./.pixi/envs/default/proj/x64-linux-release/share/proj/proj.db ./crates/pyxis-cli/src/proj.db
 }
 Set-Location $current_dir

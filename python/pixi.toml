@@ -1,6 +1,6 @@
 [workspace]
 authors = ["Glatzel <893016099@qq.com>"]
-channels = ["conda-forge", "nvidia", "pytorch"]
+channels = ["conda-forge"]
 description = "Add a short description here"
 name = "pyxis"
 platforms = ["win-64", "linux-64"]
@@ -16,17 +16,17 @@ rattler-build = "0.40.*"
 ruff = "0.11.*"
 
 [feature.py-deps.dependencies]
-cupy-core = "13.4.*"
-lazy-loader = "0.4.*"
-nomkl = "1.0.*"
-numpy = "2.2.*"
-scipy = "1.15.*"
+cupy-core = "==13.4.1"
+lazy-loader = "==0.4"
+nomkl = "==1.0"
+numpy = "==2.2.0"
+scipy = "==1.15.0"
 
 [feature.py-test.dependencies]
 pytest = "8.3.*"
 pytest-cov = "6.1.*"
 
-[feature.py-doc.pypi-dependencies]
+[feature.py-doc.dependencies]
 autodocsumm = "==0.2.14"
 numpydoc = "==1.8.0"
 pydata-sphinx-theme = "==0.16.1"

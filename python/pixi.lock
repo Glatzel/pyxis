@@ -62,7 +62,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/rattler-build-0.40.0-h159367c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/readline-8.2-h8c095d6_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/rich-14.0.0-pyh29332c3_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/linux-64/ruff-0.11.5-py311h39e1cd3_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/ruff-0.11.6-py311h39e1cd3_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py311h8f841c2_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-78.1.0-pyhff2d567_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/tk-8.6.13-noxft_h4845f30_101.conda
@@ -149,7 +149,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/readline-8.2-h8c095d6_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/requests-2.32.3-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/roman-numerals-py-3.1.0-pyhd8ed1ab_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/linux-64/ruff-0.11.5-py311h39e1cd3_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/ruff-0.11.6-py311h39e1cd3_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py311h8f841c2_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-78.1.0-pyhff2d567_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/snowballstemmer-2.2.0-pyhd8ed1ab_0.tar.bz2
@@ -231,7 +231,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/rattler-build-0.40.0-ha073cba_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/requests-2.32.3-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/roman-numerals-py-3.1.0-pyhd8ed1ab_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/win-64/ruff-0.11.5-py311h7bc0161_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/win-64/ruff-0.11.6-py311h7bc0161_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/scipy-1.15.2-py311h99d06ae_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-78.1.0-pyhff2d567_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/snowballstemmer-2.2.0-pyhd8ed1ab_0.tar.bz2
@@ -1509,9 +1509,9 @@ packages:
   license: 0BSD OR CC0-1.0
   size: 13348
   timestamp: 1740240332327
-- conda: https://conda.anaconda.org/conda-forge/linux-64/ruff-0.11.5-py311h39e1cd3_0.conda
-  sha256: f4d85fdab50f0beb597170e2c0995961aec9c4cb16f93b1a54822ff9f274e202
-  md5: cd35c9b83c44f4772e1e19838c0f0411
+- conda: https://conda.anaconda.org/conda-forge/linux-64/ruff-0.11.6-py311h39e1cd3_0.conda
+  sha256: 1b132cf84937ebf876661b18d0463cf768d6e3328ef79736a06e937d41634d40
+  md5: 963109abf0ccb4cc7539add05504a797
   depends:
   - __glibc >=2.17,<3.0.a0
   - libgcc >=13
@@ -1522,11 +1522,11 @@ packages:
   - __glibc >=2.17
   license: MIT
   license_family: MIT
-  size: 9027128
-  timestamp: 1744323009534
-- conda: https://conda.anaconda.org/conda-forge/win-64/ruff-0.11.5-py311h7bc0161_0.conda
-  sha256: 233e2382cdc4249992ba2014c78effcc58dee343789c0116933c675c1c055dc1
-  md5: 186d7cd430cba218e8acb6cbb331b81e
+  size: 9164285
+  timestamp: 1744952954057
+- conda: https://conda.anaconda.org/conda-forge/win-64/ruff-0.11.6-py311h7bc0161_0.conda
+  sha256: a872ef49573749d8639c19593ce580909f4a55651ce075722453e2eef8ea1ccd
+  md5: 5704904cacbdcdc6f0ce81f0f80b5f25
   depends:
   - python >=3.11,<3.12.0a0
   - python_abi 3.11.* *_cp311
@@ -1535,8 +1535,8 @@ packages:
   - vc14_runtime >=14.29.30139
   license: MIT
   license_family: MIT
-  size: 8082851
-  timestamp: 1744323614202
+  size: 8224359
+  timestamp: 1744953529053
 - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.15.2-py311h8f841c2_0.conda
   sha256: 6d0902775e3ff96dd1d36ac627e03fe6c0b3d2159bb71e115dd16a1f31693b25
   md5: 5ec0a1732a05376241e1e4c6d50e0e91

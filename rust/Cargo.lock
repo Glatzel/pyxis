@@ -458,9 +458,9 @@ dependencies = [
 
 [[package]]
 name = "flate2"
-version = "1.1.0"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "11faaf5a5236997af9848be0bef4db95824b1d534ebc64d0f0c6cf3e67bd38dc"
+checksum = "7ced92e76e966ca2fd84c8f7aa01a4aea65b0eb6648d72f7c8f3e2764a67fece"
 dependencies = [
  "crc32fast",
  "miniz_oxide",
@@ -585,9 +585,9 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "libc"
-version = "0.2.171"
+version = "0.2.172"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c19937216e9d3aa9956d9bb8dfc0b0c8beb6058fc4f7a4dc4d850edf86a237d6"
+checksum = "d750af042f7ef4f724306de029d18836c26c1765a54a6a3f094cbd23a7267ffa"
 
 [[package]]
 name = "libm"
@@ -845,9 +845,9 @@ dependencies = [
 
 [[package]]
 name = "proj"
-version = "0.29.0"
+version = "0.30.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3939f58cd2f8e5f3bba7fb76b3854956d39b1b76cec4fe5f65481d18f9c92d22"
+checksum = "58e0c01de214d7ea50ee6519969be9efdc6f0dc5ce6c64fbd4f054ea26d43ca4"
 dependencies = [
  "libc",
  "num-traits",
@@ -857,9 +857,9 @@ dependencies = [
 
 [[package]]
 name = "proj-sys"
-version = "0.25.0"
+version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "533a4ed2ab59f7605ecea26db7ed76572d30aed9d2a6a90738bc7f7e7b5a11d8"
+checksum = "a208129995443a4c475464c33308274be1578993b0ad266c9139188ed0dc7e91"
 dependencies = [
  "cmake",
  "flate2",

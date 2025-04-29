@@ -861,6 +861,7 @@ dependencies = [
  "float-cmp",
  "miette",
  "predicates",
+ "proj",
  "pyxis",
  "serde",
  "serde_json",

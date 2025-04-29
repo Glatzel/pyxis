@@ -9,6 +9,7 @@ version = "0.0.17"
 [workspace.dependencies]
 pyxis = { path = "./crates/pyxis" }
 proj-sys = { path = "./crates/proj-sys" }
+proj = { path = "./crates/proj" }
 
 assert_cmd = "2.0"
 bpaf = { version = "0.9.17", features = ["derive", "batteries"] }

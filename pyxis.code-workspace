@@ -40,27 +40,25 @@
             "**/node_modules/**",
             "tests_report",
             "**/*.lock",
-            "rust/vcpkg/vcpkg/triplet", "**rust/vcpkg/vcpkg/triplets/**",
-            "**/rust/vcpkg/installed/**",
             "**/changelog.md",
             "**.code-workspace",
             "**/*lock.json"
         ],
         "rust-analyzer.cargo.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
-            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
+            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
         },
         "rust-analyzer.check.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
-            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
+            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
         },
         "rust-analyzer.runnables.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
-            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
+            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
         },
         "rust-analyzer.server.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
-            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/vcpkg/installed/static/x64-windows-static/lib/pkgconfig"
+            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
         },
         "rust-analyzer.testExplorer": true,
         "rust-analyzer.linkedProjects": [
@@ -72,7 +70,6 @@
         "cmake.configureOnOpen": false,
         "cmake.configureOnEdit": false,
         "python.analysis.exclude": [
-            "**/vcpkg",
             "**/.pixi"
         ],
         "files.associations": {

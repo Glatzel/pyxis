@@ -1,0 +1,11 @@
+[package]
+edition.workspace = true
+name = "proj"
+version.workspace = true
+
+[dependencies]
+proj-sys = { workspace = true }
+clerk = { workspace = true }
+
+[features]
+log = ["clerk/log"]

@@ -819,6 +819,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "proj"
+version = "0.0.17"
+dependencies = [
+ "clerk",
+ "proj-sys",
+]
+
+[[package]]
 name = "proj-sys"
 version = "0.0.17"
 dependencies = [

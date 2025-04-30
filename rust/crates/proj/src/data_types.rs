@@ -6,13 +6,13 @@ pub struct Proj {
 ///https://proj.org/en/stable/development/reference/functions.html#transformation-setup
 impl Proj {
     ///https://proj.org/en/stable/development/reference/functions.html#c.proj_create
-    pub fn new(ctx: ProjContext, definition: &str) -> Self {
+    pub fn new(ctx: Context, definition: &str) -> Self {
         Self {
             pj: unsafe { proj_sys::proj_create(ctx.ctx, definition.as_ptr() as *const i8) },
         }
     }
     ///https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv
-    pub fn from_argv(ctx: ProjContext, definition: &[&str]) -> Self {
+    pub fn from_argv(ctx: Context, definition: &[&str]) -> Self {
         let len = definition.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in definition {
@@ -25,12 +25,7 @@ impl Proj {
         }
     }
     ///https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs
-    pub fn from_crs_to_crs(
-        ctx: ProjContext,
-        source_crs: &str,
-        target_crs: &str,
-        area: ProjArea,
-    ) -> Self {
+    pub fn from_crs_to_crs(ctx: Context, source_crs: &str, target_crs: &str, area: Area) -> Self {
         Self {
             pj: unsafe {
                 proj_sys::proj_create_crs_to_crs(
@@ -44,10 +39,10 @@ impl Proj {
     }
     ///https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj
     pub fn from_crs_to_crs_pj(
-        ctx: ProjContext,
+        ctx: Context,
         source_crs: Proj,
         target_crs: Proj,
-        area: ProjArea,
+        area: Area,
         authority: Option<&str>,
         accuracy: Option<f64>,
         allow_ballpark: Option<bool>,
@@ -110,10 +105,10 @@ impl Proj {
 }
 struct _ProjDirection {}
 
-pub struct ProjContext {
+pub struct Context {
     ctx: *mut proj_sys::PJ_CONTEXT,
 }
-impl ProjContext {
+impl Context {
     /// #References
     /// https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create
     pub fn new() -> Self {
@@ -122,7 +117,7 @@ impl ProjContext {
         }
     }
 }
-impl Clone for ProjContext {
+impl Clone for Context {
     /// #References
     /// https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone
     fn clone(&self) -> Self {
@@ -131,17 +126,17 @@ impl Clone for ProjContext {
         }
     }
 }
-impl Drop for ProjContext {
+impl Drop for Context {
     /// #References
     /// https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy
     fn drop(&mut self) {
         unsafe { proj_sys::proj_context_destroy(self.ctx) };
     }
 }
-pub struct ProjArea {
+pub struct Area {
     area: *mut proj_sys::PJ_AREA,
 }
-impl ProjArea {
+impl Area {
     ///https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create
     pub fn new() -> Self {
         Self {

@@ -1,4 +1,4 @@
-pub fn list_operations() -> Vec<crate::PjOperations> {
+fn _list_operations() -> Vec<crate::PjOperations> {
     unimplemented!()
 }
 pub fn list_ellps() -> Vec<crate::PjEllps> {
@@ -65,13 +65,6 @@ pub fn list_prime_meridians() -> Vec<crate::PjPrimeMeridians> {
     }
     out_vec
 }
-// region:Cleanup
-/// #References
-///<https://proj.org/en/stable/development/reference/functions.html#c.proj_cleanup>
-pub fn cleanup() {
-    unsafe { proj_sys::proj_cleanup() };
-}
-// region:C API for ISO-19111 functionality
 
 // region:Test
 #[cfg(test)]

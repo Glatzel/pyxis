@@ -27,7 +27,6 @@ fn main() {
     };
 
     // Link
-    #[cfg(target_os = "windows")]
     let _pk_proj = link_lib("proj", "proj");
 
     // generate bindings

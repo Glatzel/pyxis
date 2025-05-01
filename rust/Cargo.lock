@@ -822,6 +822,7 @@ name = "proj"
 version = "0.0.17"
 dependencies = [
  "clerk",
+ "miette",
  "proj-sys",
 ]
 

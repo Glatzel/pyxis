@@ -16,90 +16,90 @@ pub enum PjCategory {
 }
 pub enum PjType {
     PjTypeUnknown,
-    PJ_TYPE_ELLIPSOID,
-    PJ_TYPE_PRIME_MERIDIAN,
-    PJ_TYPE_GEODETIC_REFERENCE_FRAME,
-    PJ_TYPE_DYNAMIC_GEODETIC_REFERENCE_FRAME,
-    PJ_TYPE_VERTICAL_REFERENCE_FRAME,
-    PJ_TYPE_DYNAMIC_VERTICAL_REFERENCE_FRAME,
-    PJ_TYPE_DATUM_ENSEMBLE,
-    PJ_TYPE_CRS,
-    PJ_TYPE_GEODETIC_CRS,
-    PJ_TYPE_GEOCENTRIC_CRS,
-    PJ_TYPE_GEOGRAPHIC_CR,
-    PJ_TYPE_GEOGRAPHIC_2D_CRS,
-    PJ_TYPE_GEOGRAPHIC_3D_CRS,
-    PJ_TYPE_VERTICAL_CRS,
-    PJ_TYPE_PROJECTED_CRS,
-    PJ_TYPE_COMPOUND_CRS,
-    PJ_TYPE_TEMPORAL_CRS,
-    PJ_TYPE_ENGINEERING_CRS,
-    PJ_TYPE_BOUND_CRS,
-    PJ_TYPE_OTHER_CRS,
-    PJ_TYPE_CONVERSION,
-    PJ_TYPE_TRANSFORMATION,
-    PJ_TYPE_CONCATENATED_OPERATION,
-    PJ_TYPE_OTHER_COORDINATE_OPERATION,
-    PJ_TYPE_TEMPORAL_DATUM,
-    PJ_TYPE_ENGINEERING_DATUM,
-    PJ_TYPE_PARAMETRIC_DATUM,
-    PJ_TYPE_DERIVED_PROJECTED_CRS,
-    PJ_TYPE_COORDINATE_METADATA,
+    PjTypeEllipsoid,
+    PjTypePrimeMeridian,
+    PjTypeGeodeticReferenceFrame,
+    PjTypeDynamicGeodeticReferenceFrame,
+    PjTypeVerticalReferenceFrame,
+    PjTypeDynamicVerticalReferenceFrame,
+    PjTypeDatumEnsemble,
+    PjTypeCrs,
+    PjTypeGeodeticCrs,
+    PjTypeGeocentricCrs,
+    PjTypeGeographicCr,
+    PjTypeGeographic2dCrs,
+    PjTypeGeographic3dCrs,
+    PjTypeVerticalCrs,
+    PjTypeProjectedCrs,
+    PjTypeCompoundCrs,
+    PjTypeTemporalCrs,
+    PjTypeEngineeringCrs,
+    PjTypeBoundCrs,
+    PjTypeOtherCrs,
+    PjTypeConversion,
+    PjTypeTransformation,
+    PjTypeConcatenatedOperation,
+    PjTypeOtherCoordinateOperation,
+    PjTypeTemporalDatum,
+    PjTypeEngineeringDatum,
+    PjTypeParametricDatum,
+    PjTypeDerivedProjectedCrs,
+    PjTypeCoordinateMetadata,
 }
-pub enum PJ_COMPARISON_CRITERION {
-    PJ_COMP_STRICT,
-    PJ_COMP_EQUIVALENT,
-    PJ_COMP_EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS,
+pub enum PjComparisonCriterion {
+    PjCompStrict,
+    PjCompEquivalent,
+    PjCompEquivalentExceptAxisOrderGeogcrs,
 }
-pub enum PJ_WKT_TYPE {
-    PJ_WKT2_2015,
-    PJ_WKT2_2015_SIMPLIFIED,
-    PJ_WKT2_2019,
-    PJ_WKT2_2018,
-    PJ_WKT2_2019_SIMPLIFIED,
-    PJ_WKT2_2018_SIMPLIFIED,
-    PJ_WKT1_GDAL,
-    PJ_WKT1_ESRI,
+pub enum PjWktType {
+    PjWkt2_2015,
+    PjWkt2_2015Simplified,
+    PjWkt2_2019,
+    PjWkt2_2018,
+    PjWkt2_2019Simplified,
+    PjWkt2_2018Simplified,
+    PjWkt1Gdal,
+    PjWkt1Esri,
 }
-pub enum PROJ_CRS_EXTENT_USE {
-    PJ_CRS_EXTENT_NONE,
-    PJ_CRS_EXTENT_BOTH,
-    PJ_CRS_EXTENT_INTERSECTION,
-    PJ_CRS_EXTENT_SMALLEST,
+pub enum ProjCrsExtentUse {
+    PjCrsExtentNone,
+    PjCrsExtentBoth,
+    PjCrsExtentIntersection,
+    PjCrsExtentSmallest,
 }
-pub enum PROJ_GRID_AVAILABILITY_USE {
-    PROJ_GRID_AVAILABILITY_USED_FOR_SORTING,
-    PROJ_GRID_AVAILABILITY_DISCARD_OPERATION_IF_MISSING_GRID,
-    PROJ_GRID_AVAILABILITY_IGNORED,
-    PROJ_GRID_AVAILABILITY_KNOWN_AVAILABLE,
-}
-
-pub enum PJ_PROJ_STRING_TYPE {
-    PJ_PROJ_5,
-    PJ_PROJ_4,
+pub enum ProjGridAvailabilityUse {
+    ProjGridAvailabilityUsedForSorting,
+    ProjGridAvailabilityDiscardOperationIfMissingGrid,
+    ProjGridAvailabilityIgnored,
+    ProjGridAvailabilityKnownAvailable,
 }
 
-pub enum PROJ_SPATIAL_CRITERION {
-    PROJ_SPATIAL_CRITERION_STRICT_CONTAINMENT,
-    PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION,
-}
-pub enum PROJ_INTERMEDIATE_CRS_USE {
-    PROJ_INTERMEDIATE_CRS_USE_ALWAYS,
-    PROJ_INTERMEDIATE_CRS_USE_IF_NO_DIRECT_TRANSFORMATION,
-    PROJ_INTERMEDIATE_CRS_USE_NEVER,
+pub enum PjProjStringType {
+    PjProj5,
+    PjProj4,
 }
 
-pub enum PJ_COORDINATE_SYSTEM_TYPE {
-    PJ_CS_TYPE_UNKNOWN,
-    PJ_CS_TYPE_CARTESIAN,
-    PJ_CS_TYPE_ELLIPSOIDAL,
-    PJ_CS_TYPE_VERTICAL,
-    PJ_CS_TYPE_SPHERICAL,
-    PJ_CS_TYPE_ORDINAL,
-    PJ_CS_TYPE_PARAMETRIC,
-    PJ_CS_TYPE_DATETIMETEMPORAL,
-    PJ_CS_TYPE_TEMPORALCOUNT,
-    PJ_CS_TYPE_TEMPORALMEASURE,
+pub enum ProjSpatialCriterion {
+    ProjSpatialCriterionStrictContainment,
+    ProjSpatialCriterionPartialIntersection,
+}
+pub enum ProjIntermediateCrsUse {
+    ProjIntermediateCrsUseAlways,
+    ProjIntermediateCrsUseIfNoDirectTransformation,
+    ProjIntermediateCrsUseNever,
+}
+
+pub enum PjCoordinateSystemType {
+    PjCsTypeUnknown,
+    PjCsTypeCartesian,
+    PjCsTypeEllipsoidal,
+    PjCsTypeVertical,
+    PjCsTypeSpherical,
+    PjCsTypeOrdinal,
+    PjCsTypeParametric,
+    PjCsTypeDatetimetemporal,
+    PjCsTypeTemporalcount,
+    PjCsTypeTemporalmeasure,
 }
 
 // pub struct PROJ_CRS_INFO{}
@@ -110,30 +110,30 @@ pub enum PJ_COORDINATE_SYSTEM_TYPE {
 
 // pub struct PROJ_CELESTIAL_BODY_INFO
 
-pub enum PJ_UNIT_TYPE {
-    PJ_UT_ANGULAR,
-    PJ_UT_LINEAR,
-    PJ_UT_SCALE,
-    PJ_UT_TIME,
-    PJ_UT_PARAMETRIC,
+pub enum PjUnitType {
+    PjUtAngular,
+    PjUtLinear,
+    PjUtScale,
+    PjUtTime,
+    PjUtParametric,
 }
 
-pub enum PJ_CARTESIAN_CS_2D_TYPE {
-    PJ_CART2D_EASTING_NORTHING,
-    PJ_CART2D_NORTHING_EASTING,
-    PJ_CART2D_NORTH_POLE_EASTING_SOUTH_NORTHING_SOUTH,
-    PJ_CART2D_SOUTH_POLE_EASTING_NORTH_NORTHING_NORTH,
-    PJ_CART2D_WESTING_SOUTHING,
+pub enum PjCartesianCs2dType {
+    PjCart2dEastingNorthing,
+    PjCart2dNorthingEasting,
+    PjCart2dNorthPoleEastingSouthNorthingSouth,
+    PjCart2dSouthPoleEastingNorthNorthingNorth,
+    PjCart2dWestingSouthing,
 }
 
-pub enum PJ_ELLIPSOIDAL_CS_2D_TYPE {
-    PJ_ELLPS2D_LONGITUDE_LATITUDE,
-    PJ_ELLPS2D_LATITUDE_LONGITUDE,
+pub enum PjEllipsoidalCs2dType {
+    PjEllps2dLongitudeLatitude,
+    PjEllps2dLatitudeLongitude,
 }
 
-pub enum PJ_ELLIPSOIDAL_CS_3D_TYPE {
-    PJ_ELLPS3D_LONGITUDE_LATITUDE_HEIGHT,
-    PJ_ELLPS3D_LATITUDE_LONGITUDE_HEIGHT,
+pub enum PjEllipsoidalCs3dType {
+    PjEllps3dLongitudeLatitudeHeight,
+    PjEllps3dLatitudeLongitudeHeight,
 }
 
 // PJ_AXIS_DESCRIPTION

@@ -66,6 +66,12 @@ pub struct PjContext {
     ctx: *mut proj_sys::PJ_CONTEXT,
 }
 // region:Threading contexts
+impl Default for PjContext {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PjContext {
     /// #References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
@@ -196,6 +202,12 @@ impl PjContext {
 pub struct PjArea {
     area: *mut proj_sys::PJ_AREA,
 }
+impl Default for PjArea {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PjArea {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>
     pub fn new() -> Self {

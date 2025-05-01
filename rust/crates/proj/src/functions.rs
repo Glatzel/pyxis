@@ -96,6 +96,6 @@ mod test {
         for i in &ellps {
             println!("{:?}", i);
         }
-        assert!(ellps.len() > 0);
+        assert!(!ellps.is_empty());
     }
 }

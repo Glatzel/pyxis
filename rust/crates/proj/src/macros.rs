@@ -12,3 +12,11 @@ pub const PROJ_VERSION_NUMBER: u32 =
 pub fn at_least_version(maj: u32, min: u32, patch: u32) -> bool {
     PROJ_VERSION_NUMBER >= compute_version(maj, min, patch)
 }
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn test_proj_version_number() {
+        assert_eq!(PROJ_VERSION_NUMBER, 90600);
+    }
+}

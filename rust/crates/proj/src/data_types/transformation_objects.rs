@@ -8,53 +8,53 @@ impl Drop for Pj {
     }
 }
 // region:Coordinate transformation
-///https://proj.org/en/stable/development/reference/functions.html#coordinate-transformation
+///<https://proj.org/en/stable/development/reference/functions.html#coordinate-transformation>
 impl Pj {
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_trans
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
     pub fn trans(&self) {
         unimplemented!()
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     pub fn trans_get_last_used_operation(&self) {
         unimplemented!()
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
     pub fn proj_trans_generic(&self) {
         unimplemented!()
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
     pub fn proj_trans_array(&self) {
         unimplemented!()
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
     pub fn proj_trans_bounds(&self) {
         unimplemented!()
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
     pub fn proj_trans_bounds_3d(&self) {
         unimplemented!()
     }
 }
 impl Pj {
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_errno
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_errno>
     fn _errno(&self) -> PjErrorCode {
         PjErrorCode::from(unsafe { proj_sys::proj_errno(self.pj) } as u32)
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_set
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_set>
     fn _errno_set(&self, err: PjErrorCode) -> &Self {
         unsafe { proj_sys::proj_errno_set(self.pj, i32::from(err)) };
         self
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_reset
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_reset>
     fn _errno_reset(&self) -> PjErrorCode {
         PjErrorCode::from(unsafe { proj_sys::proj_errno_reset(self.pj) } as u32)
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_restore
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_restore>
     fn _errno_restore(&self, err: PjErrorCode) -> &Self {
         unsafe { proj_sys::proj_errno_restore(self.pj, i32::from(err)) };
         self
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     fn _errno_string(&self, err: PjErrorCode) -> String {
         crate::c_char_to_string(unsafe { proj_sys::proj_errno_string(i32::from(err)) })
     }
@@ -68,7 +68,7 @@ pub struct PjContext {
 // region:Threading contexts
 impl PjContext {
     /// #References
-    /// https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
     pub fn new() -> Self {
         Self {
             ctx: unsafe { proj_sys::proj_context_create() },
@@ -77,7 +77,7 @@ impl PjContext {
 }
 impl Clone for PjContext {
     /// #References
-    /// https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone>
     fn clone(&self) -> Self {
         Self {
             ctx: unsafe { proj_sys::proj_context_clone(self.ctx) },
@@ -86,21 +86,21 @@ impl Clone for PjContext {
 }
 impl Drop for PjContext {
     /// #References
-    /// https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
     fn drop(&mut self) {
         unsafe { proj_sys::proj_context_destroy(self.ctx) };
     }
 }
 // region:Transformation setup
-///https://proj.org/en/stable/development/reference/functions.html#transformation-setup
+///<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 impl PjContext {
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_create
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn proj_create(&self, definition: &str) -> Pj {
         Pj {
             pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr() as *const i8) },
         }
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     pub fn proj_create_argv(&self, definition: &[&str]) -> Pj {
         let len = definition.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
@@ -113,7 +113,7 @@ impl PjContext {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },
         }
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     pub fn proj_create_crs_to_crs(&self, source_crs: &str, target_crs: &str, area: PjArea) -> Pj {
         Pj {
             pj: unsafe {
@@ -126,7 +126,7 @@ impl PjContext {
             },
         }
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub fn proj_create_crs_to_crs_from_pj(
         &self,
         source_crs: Pj,
@@ -176,13 +176,13 @@ impl PjContext {
             },
         }
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
     fn _normalize_for_visualization() {
         unimplemented!()
     }
 }
 impl PjContext {
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno>
     fn _errno(&self) -> PjErrorCode {
         PjErrorCode::from(unsafe { proj_sys::proj_context_errno(self.ctx) } as u32)
     }
@@ -197,13 +197,13 @@ pub struct PjArea {
     area: *mut proj_sys::PJ_AREA,
 }
 impl PjArea {
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>
     pub fn new() -> Self {
         Self {
             area: unsafe { proj_sys::proj_area_create() },
         }
     }
-    ///https://proj.org/en/stable/development/reference/functions.html#c.proj_area_set_bbox
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_area_set_bbox>
     pub fn set_bbox(
         &self,
         west_lon_degree: f64,

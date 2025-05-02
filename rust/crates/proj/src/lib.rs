@@ -2,6 +2,7 @@ mod data_types;
 mod functions;
 mod macros;
 mod utils;
+mod extension;
 
 pub use data_types::*;
 pub use functions::*;

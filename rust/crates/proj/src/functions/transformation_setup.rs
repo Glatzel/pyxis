@@ -3,10 +3,12 @@
 impl crate::PjContext {
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn proj_create(&self, definition: &str) -> crate::Pj {
-        crate::Pj {
+    pub fn proj_create(&self, definition: &str) -> miette::Result<crate::Pj> {
+        let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr() as *const i8) },
-        }
+        };
+        self.check_result("proj_create")?;
+        Ok(pj)
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
@@ -16,9 +18,11 @@ impl crate::PjContext {
         for s in definition {
             ptrs.push(crate::string_to_c_char(s)?.cast_mut() as *mut i8);
         }
-        Ok(crate::Pj {
+        let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },
-        })
+        };
+        self.check_result("proj_create_argv")?;
+        Ok(pj)
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
@@ -27,8 +31,8 @@ impl crate::PjContext {
         source_crs: &str,
         target_crs: &str,
         area: crate::PjArea,
-    ) -> crate::Pj {
-        crate::Pj {
+    ) -> miette::Result<crate::Pj> {
+        let pj = crate::Pj {
             pj: unsafe {
                 proj_sys::proj_create_crs_to_crs(
                     self.ctx,
@@ -37,7 +41,9 @@ impl crate::PjContext {
                     area.area,
                 )
             },
-        }
+        };
+        self.check_result("proj_create_argv")?;
+        Ok(pj)
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
@@ -51,7 +57,7 @@ impl crate::PjContext {
         allow_ballpark: Option<bool>,
         only_best: Option<bool>,
         force_over: Option<bool>,
-    ) -> crate::Pj {
+    ) -> miette::Result<crate::Pj> {
         let mut options: Vec<*const i8> = Vec::with_capacity(5);
         if let Some(authority) = authority {
             options.push(format!("AUTHORITY={}", authority).as_ptr() as *mut i8);
@@ -78,7 +84,7 @@ impl crate::PjContext {
                 format!("FORCE_OVER={}", if force_over { "YES" } else { "NO" }).as_ptr() as *mut i8,
             );
         }
-        crate::Pj {
+        let pj = crate::Pj {
             pj: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(
                     self.ctx,
@@ -88,7 +94,9 @@ impl crate::PjContext {
                     options.as_ptr(),
                 )
             },
-        }
+        };
+        self.check_result("proj_create_argv")?;
+        Ok(pj)
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>

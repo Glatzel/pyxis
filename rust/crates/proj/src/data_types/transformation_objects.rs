@@ -9,7 +9,15 @@ pub enum PjDirection {
     PjIdent,
     PjInv,
 }
-
+impl From<PjDirection> for i32 {
+    fn from(value: PjDirection) -> Self {
+        match value {
+            PjDirection::PjFwd => 1,
+            PjDirection::PjIdent => 0,
+            PjDirection::PjInv => -1,
+        }
+    }
+}
 pub struct PjContext {
     pub(crate) ctx: *mut proj_sys::PJ_CONTEXT,
 }

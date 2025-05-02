@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.0.18] - 2025-05-02
 
 ### Added
 
 - Initial renovate bot by @Glatzel in [#264](https://github.com/Glatzel/pyxis/pull/264)
+- Initial builtin proj by @Glatzel in [#282](https://github.com/Glatzel/pyxis/pull/282)
 
 ### Removed
 
@@ -313,7 +314,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
-[unreleased]: https://github.com/Glatzel/pyxis/compare/v0.0.17..HEAD
+[0.0.18]: https://github.com/Glatzel/pyxis/compare/v0.0.17..v0.0.18
 [0.0.17]: https://github.com/Glatzel/pyxis/compare/v0.0.16..v0.0.17
 [0.0.16]: https://github.com/Glatzel/pyxis/compare/v0.0.15..v0.0.16
 [0.0.15]: https://github.com/Glatzel/pyxis/compare/v0.0.14..v0.0.15

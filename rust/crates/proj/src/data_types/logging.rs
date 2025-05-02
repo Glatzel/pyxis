@@ -1,7 +1,7 @@
-enum _PjLogLevel{
-    PjLogNone,
-    PjLogError,
-    PjLogDebug,
-    PjLogTrace,
-    PjLogTell,
+enum _PjLogLevel {
+    None,
+    Error,
+    Debug,
+    Trace,
+    Tell,
 }

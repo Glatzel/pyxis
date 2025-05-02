@@ -1,8 +1,6 @@
-mod angle;
 pub mod crypto;
 mod datum_compense;
 mod ellipsoid;
-mod gauss_projection;
 mod linear;
 pub mod migrate;
 mod space;

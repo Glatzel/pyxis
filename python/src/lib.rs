@@ -1,6 +1,5 @@
 mod crypto;
 mod datum_compense;
-mod gauss_projection;
 mod space;
 use pyo3::prelude::*;
 

@@ -24,9 +24,9 @@ macro_rules! check_pj_result {
         }
     };
     ($self:expr,$code:expr) => {
-        let code = crate::PjErrorCode::from($code as u32);
+        let code = $crate::PjErrorCode::from($code as u32);
         match code {
-            crate::PjErrorCode::ProjSuccess => {
+            $crate::PjErrorCode::ProjSuccess => {
                 clerk::debug!("Proj Process successed.");
             }
             ecode => {
@@ -52,7 +52,7 @@ macro_rules! check_context_result {
     ($self:expr) => {
         let code = $self.errno();
         match code {
-            crate::PjErrorCode::ProjSuccess => {
+            $crate::PjErrorCode::ProjSuccess => {
                 clerk::debug!("Proj Process successed.");
             }
             ecode => {
@@ -73,7 +73,7 @@ macro_rules! check_context_result {
     ($self:expr,$code:expr) => {
         let code = $crate::PjErrorCode::from($code as u32);
         match code {
-            crate::PjErrorCode::ProjSuccess => {
+            $crate::PjErrorCode::ProjSuccess => {
                 clerk::debug!("Proj Process successed.");
             }
             ecode => {

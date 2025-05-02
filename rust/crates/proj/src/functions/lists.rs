@@ -4,9 +4,9 @@ fn _list_operations() -> Vec<crate::PjOperations> {
 pub fn list_ellps() -> Vec<crate::PjEllps> {
     let ptr = unsafe { proj_sys::proj_list_ellps() };
     let mut out_vec = Vec::new();
-    let end_flag = false;
+
     let mut offset = 0;
-    while !end_flag {
+    loop {
         let current_ptr = unsafe { ptr.offset(offset).as_ref().unwrap() };
         if current_ptr.id.is_null() {
             break;
@@ -47,7 +47,6 @@ pub fn list_units() -> Vec<crate::PjUnits> {
 pub fn list_prime_meridians() -> Vec<crate::PjPrimeMeridians> {
     let ptr = unsafe { proj_sys::proj_list_prime_meridians() };
     let mut out_vec = Vec::new();
-    let end_flag = false;
     let mut offset = 0;
     loop {
         let current_ptr = unsafe { ptr.offset(offset).as_ref().unwrap() };

@@ -14,8 +14,5 @@ fn pyxis_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     m.add_wrapped(wrap_pyfunction!(datum_compense::py_datum_compense))?;
 
-    m.add_wrapped(wrap_pyfunction!(gauss_projection::py_lbh2xyz))?;
-    m.add_wrapped(wrap_pyfunction!(gauss_projection::py_xyz2lbh))?;
-
     Ok(())
 }

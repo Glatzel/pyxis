@@ -14,6 +14,7 @@ impl crate::PjContext {
         unimplemented!()
     }
     pub fn set_search_paths(&self, paths: &[&Path]) -> miette::Result<&Self> {
+        clerk::debug!("search_paths:{:?}",paths);
         let len = paths.len();
         let paths: Vec<CString> = paths
             .iter()

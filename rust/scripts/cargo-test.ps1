@@ -5,12 +5,12 @@ Set-Location $PSScriptRoot/..
 if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "proj" }
 else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda", "-p", "proj" }
 Write-Output "::group::nextest"
-cargo +nightly llvm-cov --no-report --all-features $package --branch nextest --no-fail-fast
+cargo +nightly llvm-cov nextest --no-report --all-features $package --branch --no-fail-fast
 $code = $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::doctest"
-cargo +nightly llvm-cov --no-report --all-features $package --branch --doc --no-fail-fast
+cargo +nightly llvm-cov --no-report --all-features $package --branch --no-fail-fast --doc
 $code = $code + $LASTEXITCODE
 Write-Output "::endgroup::"
 

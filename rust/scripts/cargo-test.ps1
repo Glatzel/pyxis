@@ -2,8 +2,8 @@ $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 
 & $PSScriptRoot/set-env.ps1
-if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli"}
-else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda" }
+if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "proj" }
+else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda", "-p", "proj" }
 Write-Output "::group::nextest"
 cargo +nightly llvm-cov --no-report --all-features $package --branch nextest --no-fail-fast
 $code = $LASTEXITCODE

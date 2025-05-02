@@ -1,6 +1,6 @@
 crate::create_readonly_struct!(
     PjFactors,
-    "https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_FACTORS",
+    "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_FACTORS>",
     {meridional_scale: f64},
     {parallel_scale: f64},
     {areal_scale: f64},

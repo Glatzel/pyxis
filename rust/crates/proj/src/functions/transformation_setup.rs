@@ -16,7 +16,7 @@ impl crate::PjContext {
         let len = definition.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in definition {
-            ptrs.push(crate::string_to_c_char(s)?.cast_mut() as *mut i8);
+            ptrs.push(crate::string_to_c_char(s)?.cast_mut());
         }
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },

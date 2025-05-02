@@ -13,8 +13,8 @@ pub fn init_proj_builder() -> miette::Result<proj::PjContext> {
     } else {
         clerk::debug!("PROJ_DATA environment variable is not found");
         let exe_path = std::env::current_exe().into_diagnostic()?;
-        clerk::debug!("current_exe: {:?}", exe_path);
         let exe_root = exe_path.parent().unwrap();
+        clerk::debug!("current_exe: {:?}", exe_root.join("proj.db").exists());
         if !exe_root.join("proj.db").exists() {
             clerk::warn!("proj.db is not found. Try to use bundled proj.db");
             let mut db_file = std::fs::File::create(exe_root.join("proj.db")).into_diagnostic()?;

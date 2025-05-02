@@ -12,7 +12,7 @@ pub fn init_proj_builder() -> miette::Result<proj::PjContext> {
         ctx.set_search_paths(&[&PathBuf::from(proj_data)])?;
     } else {
         clerk::info!("PROJ_DATA environment variable is not found");
-        let exe_path = std::env::current_exe().unwrap();
+        let exe_path = std::env::current_exe().into_diagnostic()?;
         let exe_root = exe_path.parent().unwrap();
         if !exe_root.join("proj.db").exists() {
             clerk::warn!("proj.db is not found.");

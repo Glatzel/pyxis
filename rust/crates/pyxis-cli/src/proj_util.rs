@@ -21,7 +21,7 @@ pub fn init_proj_builder() -> miette::Result<proj::PjContext> {
                 db_file.write_all(PROJ_DB).unwrap();
             }
         }
-        ctx.set_search_paths(&[&std::env::current_exe().unwrap().parent().unwrap()])
+        ctx.set_search_paths(&[std::env::current_exe().unwrap().parent().unwrap()])
             .unwrap();
     }
     Ok(ctx)

@@ -7,7 +7,7 @@ impl crate::Pj {
             }
             ecode => {
                 let report = self.errno_string(&ecode);
-                clerk::info!(
+                clerk::error!(
                     "Proj Process Failed: {name}. Exist code: {}. {}",
                     i32::from(&ecode),
                     report
@@ -30,7 +30,7 @@ impl crate::Pj {
             }
             ecode => {
                 let report = self.errno_string(&ecode);
-                clerk::info!(
+                clerk::error!(
                     "Proj Process Failed: {name}. Exist code: {}. {}",
                     i32::from(&ecode),
                     report
@@ -55,7 +55,7 @@ impl crate::PjContext {
             }
             ecode => {
                 let report = self.errno_string(&ecode);
-                clerk::info!(
+                clerk::error!(
                     "Proj Process Failed: {name}. Exist code: {}. {}",
                     i32::from(&ecode),
                     report
@@ -77,7 +77,7 @@ impl crate::PjContext {
             }
             ecode => {
                 let report = self.errno_string(&ecode);
-                clerk::info!(
+                clerk::error!(
                     "Proj Process Failed: {name}. Exist code: {}. {}",
                     i32::from(&ecode),
                     report

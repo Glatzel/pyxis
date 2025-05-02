@@ -43,7 +43,7 @@ impl ContextTransform {
                 pyxis::crypto::wgs84_to_gcj02(self.x, self.y)
             }
             _ => {
-                tracing::warn!("Nothing changes from <{from}> to <{to}>.");
+                clerk::warn!("Nothing changes from <{from}> to <{to}>.");
                 (self.x, self.y)
             }
         };
@@ -95,14 +95,14 @@ impl ContextTransform {
             }
 
             (given, another) => {
-                tracing::warn!("Given and anther is the same. Given: {given}, Another: {another}.");
+                clerk::warn!("Given and anther is the same. Given: {given}, Another: {another}.");
                 (self.x, self.y)
             }
         }
     }
     pub fn normalize(&mut self) {
         if self.x == 0.0f64 && self.y == 0.0f64 && self.z == 0.0f64 {
-            tracing::warn!("Length of coordinate vector is 0.")
+            clerk::warn!("Length of coordinate vector is 0.")
         } else {
             let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
             self.x /= length;
@@ -111,11 +111,8 @@ impl ContextTransform {
         }
     }
     pub fn proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
-        let transformer = crate::proj_util::init_proj_builder()?.create_crs_to_crs(
-            from,
-            to,
-            proj::PjArea::default(),
-        )?;
+        let ctx = crate::proj_util::init_proj_builder()?;
+        let transformer = ctx.create_crs_to_crs(from, to, &proj::PjArea::default())?;
         (self.x, self.y) = transformer.convert((self.x, self.y));
         Ok(())
     }
@@ -134,19 +131,19 @@ impl ContextTransform {
         };
 
         match (plane, unit) {
-            (_, RotateUnit::Degrees) if r % 360.0 == 0.0 => tracing::warn!(
+            (_, RotateUnit::Degrees) if r % 360.0 == 0.0 => clerk::warn!(
                 "Rotate angle mod 360 equals 0. The Coordinate is not modified after rotate."
             ),
-            (_, RotateUnit::Radians) if r % 360.0 == 0.0 => tracing::warn!(
+            (_, RotateUnit::Radians) if r % 360.0 == 0.0 => clerk::warn!(
                 "Rotate radians mod PI equals 0. The Coordinate is not modified after rotate."
             ),
-            (super::RotatePlane::Xy, _) if ox == self.x && oy == self.y => tracing::warn!(
+            (super::RotatePlane::Xy, _) if ox == self.x && oy == self.y => clerk::warn!(
                 "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
             ),
-            (super::RotatePlane::Zx, _) if ox == self.x && oz == self.z => tracing::warn!(
+            (super::RotatePlane::Zx, _) if ox == self.x && oz == self.z => clerk::warn!(
                 "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
             ),
-            (super::RotatePlane::Yz, _) if oy == self.y && oz == self.z => tracing::warn!(
+            (super::RotatePlane::Yz, _) if oy == self.y && oz == self.z => clerk::warn!(
                 "Rotate origin equals to coordinate. The Coordinate is not modified after rotate."
             ),
             (super::RotatePlane::Xy, _) => {
@@ -168,10 +165,10 @@ impl ContextTransform {
     }
     pub fn scale(&mut self, sx: f64, sy: f64, sz: f64, ox: f64, oy: f64, oz: f64) {
         if sx == 1.0f64 && sy == 1.0f64 && sz == 1.0f64 {
-            tracing::warn!("Scale parameters are all 1.");
+            clerk::warn!("Scale parameters are all 1.");
         }
         if sx == self.x && sy == self.x && sz == self.x {
-            tracing::warn!("Scale origin is equal to coordinate.");
+            clerk::warn!("Scale origin is equal to coordinate.");
         }
         self.x = ox + (self.x - ox) * sx;
         self.y = oy + (self.y - oy) * sy;
@@ -198,14 +195,14 @@ impl ContextTransform {
                 pyxis::spherical_to_cylindrical(self.x, self.y, self.z)
             }
             _ => {
-                tracing::warn!("Nothing changes from <{from}> to <{to}>.");
+                clerk::warn!("Nothing changes from <{from}> to <{to}>.");
                 (self.x, self.y, self.z)
             }
         };
     }
     pub fn translate(&mut self, tx: f64, ty: f64, tz: f64) {
         if tx == 0.0f64 && ty == 0.0f64 && tz == 0.0f64 {
-            tracing::warn!(
+            clerk::warn!(
                 "Translation parameters are all 0. The Coordinate is not modified after translation."
             )
         }

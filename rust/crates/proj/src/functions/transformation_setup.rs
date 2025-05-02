@@ -30,7 +30,7 @@ impl crate::PjContext {
         &self,
         source_crs: &str,
         target_crs: &str,
-        area: crate::PjArea,
+        area: &crate::PjArea,
     ) -> miette::Result<crate::Pj> {
         let pj = crate::Pj {
             pj: unsafe {
@@ -42,7 +42,7 @@ impl crate::PjContext {
                 )
             },
         };
-        self.check_result("create_argv")?;
+        self.check_result("create_crs_to_crs")?;
         Ok(pj)
     }
     /// #References
@@ -95,7 +95,7 @@ impl crate::PjContext {
                 )
             },
         };
-        self.check_result("create_argv")?;
+        self.check_result("create_crs_to_crs_from_pj")?;
         Ok(pj)
     }
     /// #References

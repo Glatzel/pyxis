@@ -1,7 +1,6 @@
 from ._angle import angle2dms, dms2angle
 from ._crypto import COORD_CRYPTO_SPACE, crypto
 from ._datum_compense import datum_compense
-from ._gauss_projection import lbh2xyz, xyz2lbh
 from ._migrate import CoordMigrate
 from ._space import COORD_SPACE, space
 from ._transformation_residuals import transformation_residuals3, transformation_residuals6, transformation_residuals7
@@ -14,12 +13,10 @@ __all__ = [
     "crypto",
     "datum_compense",
     "dms2angle",
-    "lbh2xyz",
     "space",
     "transformation_residuals3",
     "transformation_residuals6",
     "transformation_residuals7",
-    "xyz2lbh",
 ]
 import importlib
 

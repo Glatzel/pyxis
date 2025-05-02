@@ -14,7 +14,7 @@ macro_rules! check_pj_result_inner {
     ($self:expr, $code:expr) => {
         match $code {
             $crate::PjErrorCode::ProjSuccess => {
-                clerk::info!("Proj Process successed.");
+                clerk::debug!("Proj Process successed.");
             }
             ecode => {
                 let report = $self.errno_string(&ecode);
@@ -49,7 +49,7 @@ macro_rules! check_context_result_inner {
     ($self:expr, $code:expr) => {
         match $code {
             $crate::PjErrorCode::ProjSuccess => {
-                clerk::info!("Proj Process successed.");
+                clerk::debug!("Proj Process successed.");
             }
             ecode => {
                 let report = $self.errno_string(&ecode);

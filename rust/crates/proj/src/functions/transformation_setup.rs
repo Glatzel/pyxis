@@ -3,16 +3,16 @@
 impl crate::PjContext {
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn proj_create(&self, definition: &str) -> miette::Result<crate::Pj> {
+    pub fn create(&self, definition: &str) -> miette::Result<crate::Pj> {
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr() as *const i8) },
         };
-        self.check_result("proj_create")?;
+        self.check_result("create")?;
         Ok(pj)
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn proj_create_argv(&self, definition: &[&str]) -> miette::Result<crate::Pj> {
+    pub fn create_argv(&self, definition: &[&str]) -> miette::Result<crate::Pj> {
         let len = definition.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in definition {
@@ -21,12 +21,12 @@ impl crate::PjContext {
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },
         };
-        self.check_result("proj_create_argv")?;
+        self.check_result("create_argv")?;
         Ok(pj)
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
-    pub fn proj_create_crs_to_crs(
+    pub fn create_crs_to_crs(
         &self,
         source_crs: &str,
         target_crs: &str,
@@ -42,12 +42,12 @@ impl crate::PjContext {
                 )
             },
         };
-        self.check_result("proj_create_argv")?;
+        self.check_result("create_argv")?;
         Ok(pj)
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
-    pub fn proj_create_crs_to_crs_from_pj(
+    pub fn create_crs_to_crs_from_pj(
         &self,
         source_crs: crate::Pj,
         target_crs: crate::Pj,
@@ -95,7 +95,7 @@ impl crate::PjContext {
                 )
             },
         };
-        self.check_result("proj_create_argv")?;
+        self.check_result("create_argv")?;
         Ok(pj)
     }
     /// #References

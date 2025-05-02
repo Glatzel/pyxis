@@ -13,11 +13,11 @@ impl crate::Pj {
         Ok(out_coord)
     }
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    pub fn trans_get_last_used_operation(&self) -> Self {
+    pub fn get_last_used_operation(&self) -> Self {
         unimplemented!()
     }
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
-    pub fn proj_trans_generic(
+    pub fn trans_generic(
         &self,
         direction: crate::PjDirection,
         x: &mut f64,
@@ -53,7 +53,7 @@ impl crate::Pj {
         }
     }
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
-    pub fn proj_trans_array(
+    pub fn trans_array(
         &self,
         direction: crate::PjDirection,
         coord: &mut [crate::PjCoord],
@@ -66,13 +66,13 @@ impl crate::Pj {
                 coord.as_mut_ptr(),
             )
         };
-        self.check_exit_code("proj_trans_bounds_3d", code)?;
+        self.check_exit_code("trans_bounds_3d", code)?;
         Ok(self)
     }
 }
 impl crate::PjContext {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
-    pub fn proj_trans_bounds(
+    pub fn trans_bounds(
         &self,
         p: &crate::Pj,
         direction: crate::PjDirection,
@@ -102,11 +102,11 @@ impl crate::PjContext {
                 densify_pts,
             )
         };
-        self.check_exit_code("proj_trans_bounds_3d", code)?;
+        self.check_exit_code("trans_bounds_3d", code)?;
         Ok(self)
     }
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
-    pub fn proj_trans_bounds_3d(
+    pub fn trans_bounds_3d(
         &self,
         p: &crate::Pj,
         direction: crate::PjDirection,
@@ -144,7 +144,7 @@ impl crate::PjContext {
                 densify_pts,
             )
         };
-        self.check_exit_code("proj_trans_bounds_3d", code)?;
+        self.check_exit_code("trans_bounds_3d", code)?;
         Ok(self)
     }
 }

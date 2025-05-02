@@ -16,14 +16,14 @@ pub fn init_proj_builder() -> miette::Result<proj::PjContext> {
         let exe_root = exe_path.parent().unwrap();
         if !exe_root.join("proj.db").exists() {
             clerk::warn!("proj.db is not found.");
-
             {
                 clerk::info!("Write to: {}", exe_root.join("proj.db").to_str().unwrap());
-                let mut db_file = std::fs::File::create(exe_root.join("proj.db")).unwrap();
-                db_file.write_all(PROJ_DB).unwrap();
+                let mut db_file =
+                    std::fs::File::create(exe_root.join("proj.db")).into_diagnostic()?;
+                db_file.write_all(PROJ_DB).into_diagnostic()?;
             }
         }
-        ctx.set_search_paths(&[std::env::current_exe().into_diagnostic()?.parent().unwrap()])?;
+        ctx.set_search_paths(&[exe_root])?;
     }
     Ok(ctx)
 }

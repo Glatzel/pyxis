@@ -56,9 +56,6 @@ impl ContextTransform {
             &pyxis::DatumCompenseParms::new(hb, r, x0, y0),
         );
     }
-    pub fn lbh2xyz(&mut self, ellipsoid: &Ellipsoid<f64>) {
-        (self.x, self.y, self.z) = pyxis::lbh2xyz(self.x, self.y, self.z, ellipsoid);
-    }
     pub fn migrate2d(
         &mut self,
         given: MigrateOption2d,
@@ -209,8 +206,5 @@ impl ContextTransform {
         self.x += tx;
         self.y += ty;
         self.z += tz;
-    }
-    pub fn xyz2lbh(&mut self, ellipsoid: &Ellipsoid<f64>) {
-        (self.x, self.y, self.z) = pyxis::xyz2lbh(self.x, self.y, self.z, ellipsoid, 1e-17, 1000);
     }
 }

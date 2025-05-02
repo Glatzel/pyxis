@@ -1,17 +1,18 @@
+use crate::{check_pj_result, check_pj_result_inner};
 impl crate::Pj {
     pub fn lp_dist(&self, a: crate::PjCoord, b: crate::PjCoord) -> miette::Result<f64> {
         let dist = unsafe { proj_sys::proj_lp_dist(self.pj, a, b) };
-        self.check_result("proj_lpz_dist")?;
+        check_pj_result!(self);
         Ok(dist)
     }
     pub fn lpz_dist(&self, a: crate::PjCoord, b: crate::PjCoord) -> miette::Result<f64> {
         let dist = unsafe { proj_sys::proj_lpz_dist(self.pj, a, b) };
-        self.check_result("proj_lp_dist")?;
+        check_pj_result!(self);
         Ok(dist)
     }
     pub fn geod(&self, a: crate::PjCoord, b: crate::PjCoord) -> miette::Result<crate::PjCoord> {
         let dist = unsafe { proj_sys::proj_geod(self.pj, a, b) };
-        self.check_result("proj_geod")?;
+        check_pj_result!(self);
         Ok(dist)
     }
 }

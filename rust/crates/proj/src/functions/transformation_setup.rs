@@ -1,3 +1,5 @@
+use crate::{check_context_result, check_context_result_inner};
+
 /// #References
 ///<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 impl crate::PjContext {
@@ -7,7 +9,7 @@ impl crate::PjContext {
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr() as *const i8) },
         };
-        self.check_result("create")?;
+        check_context_result!(self);
         Ok(pj)
     }
     /// #References
@@ -21,7 +23,7 @@ impl crate::PjContext {
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },
         };
-        self.check_result("create_argv")?;
+        check_context_result!(self);
         Ok(pj)
     }
     /// #References
@@ -42,7 +44,7 @@ impl crate::PjContext {
                 )
             },
         };
-        self.check_result("create_crs_to_crs")?;
+        check_context_result!(self);
         Ok(pj)
     }
     /// #References
@@ -95,7 +97,7 @@ impl crate::PjContext {
                 )
             },
         };
-        self.check_result("create_crs_to_crs_from_pj")?;
+        check_context_result!(self);
         Ok(pj)
     }
     /// #References

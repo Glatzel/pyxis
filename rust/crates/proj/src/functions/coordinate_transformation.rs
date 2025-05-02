@@ -1,3 +1,7 @@
+use crate::{
+    check_context_result, check_context_result_inner, check_pj_result, check_pj_result_inner,
+};
+
 // region:Coordinate transformation
 /// #References
 ///<https://proj.org/en/stable/development/reference/functions.html#coordinate-transformation>
@@ -10,7 +14,7 @@ impl crate::Pj {
         coord: crate::PjCoord,
     ) -> miette::Result<crate::PjCoord> {
         let out_coord = unsafe { proj_sys::proj_trans(self.pj, i32::from(direction), coord) };
-        self.check_result("trans")?;
+        check_pj_result!(self);
         Ok(out_coord)
     }
     /// #References
@@ -70,7 +74,7 @@ impl crate::Pj {
                 coord.as_mut_ptr(),
             )
         };
-        self.check_exit_code("trans_bounds_3d", code)?;
+        check_pj_result!(self, code);
         Ok(self)
     }
 }
@@ -107,7 +111,7 @@ impl crate::PjContext {
                 densify_pts,
             )
         };
-        self.check_exit_code("trans_bounds_3d", code)?;
+        check_context_result!(self, code);
         Ok(self)
     }
     /// #References
@@ -150,7 +154,7 @@ impl crate::PjContext {
                 densify_pts,
             )
         };
-        self.check_exit_code("trans_bounds_3d", code)?;
+        check_context_result!(self, code);
         Ok(self)
     }
 }

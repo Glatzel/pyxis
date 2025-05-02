@@ -1,5 +1,3 @@
-use pyxis::Ellipsoid;
-
 use super::{CoordSpace, CryptoSpace, MigrateOption2d, RotateUnit, options};
 pub struct ContextTransform {
     pub x: f64,

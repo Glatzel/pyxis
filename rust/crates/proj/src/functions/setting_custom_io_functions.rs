@@ -1,4 +1,5 @@
-use std::path::Path;
+use std::{ffi::CString, path::Path};
+
 
 impl crate::PjContext {
     pub fn set_fileapi(&self) {
@@ -12,12 +13,13 @@ impl crate::PjContext {
     }
     pub fn set_search_paths(&self, paths: &[&Path]) -> miette::Result<&Self> {
         let len = paths.len();
-        let paths: Vec<*const i8> = paths
+        let paths: Vec<CString> = paths
             .iter()
-            .map(|p| (crate::string_to_c_char(&p.to_string_lossy()).unwrap()))
+            .map(|p| std::ffi::CString::new(p.to_string_lossy().to_string()).unwrap())
             .collect();
+        let paths_ptr: Vec<*const i8> = paths.iter().map(|p| p.as_ptr()).collect();
         unsafe {
-            proj_sys::proj_context_set_search_paths(self.ctx, len as i32, paths.as_ptr());
+            proj_sys::proj_context_set_search_paths(self.ctx, len as i32, paths_ptr.as_ptr());
         };
         Ok(self)
     }

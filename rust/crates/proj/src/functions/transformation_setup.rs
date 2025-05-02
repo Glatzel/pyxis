@@ -1,3 +1,5 @@
+use miette::IntoDiagnostic;
+
 use crate::{check_context_result, check_context_result_inner};
 
 /// #References
@@ -18,7 +20,12 @@ impl crate::PjContext {
         let len = definition.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in definition {
-            ptrs.push(crate::string_to_c_char(s)?.cast_mut());
+            ptrs.push(
+                std::ffi::CString::new(*s)
+                    .into_diagnostic()?
+                    .as_ptr()
+                    .cast_mut(),
+            );
         }
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },
@@ -34,12 +41,14 @@ impl crate::PjContext {
         target_crs: &str,
         area: &crate::PjArea,
     ) -> miette::Result<crate::Pj> {
+        let source_crs = std::ffi::CString::new(source_crs).into_diagnostic()?;
+        let target_crs = std::ffi::CString::new(target_crs).into_diagnostic()?;
         let pj = crate::Pj {
             pj: unsafe {
                 proj_sys::proj_create_crs_to_crs(
                     self.ctx,
-                    source_crs.as_ptr() as *const i8,
-                    target_crs.as_ptr() as *const i8,
+                    source_crs.as_ptr(),
+                    target_crs.as_ptr(),
                     area.area,
                 )
             },

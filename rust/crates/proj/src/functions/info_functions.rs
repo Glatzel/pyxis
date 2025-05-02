@@ -1,3 +1,5 @@
+use miette::IntoDiagnostic;
+
 pub fn info() -> crate::PjInfo {
     let src = unsafe { proj_sys::proj_info() };
     crate::PjInfo::new(
@@ -10,7 +12,8 @@ pub fn info() -> crate::PjInfo {
     )
 }
 pub fn grid_info(gridname: &str) -> miette::Result<crate::PjGridInfo> {
-    let src = unsafe { proj_sys::proj_grid_info(crate::string_to_c_char(gridname)?) };
+    let gridname = std::ffi::CString::new(gridname).into_diagnostic()?;
+    let src = unsafe { proj_sys::proj_grid_info(gridname.as_ptr()) };
     Ok(crate::PjGridInfo::new(
         crate::c_char_to_string(src.gridname.as_ptr()),
         crate::c_char_to_string(src.filename.as_ptr()),
@@ -22,7 +25,8 @@ pub fn grid_info(gridname: &str) -> miette::Result<crate::PjGridInfo> {
     ))
 }
 pub fn init_info(initname: &str) -> miette::Result<crate::PjInitInfo> {
-    let src = unsafe { proj_sys::proj_init_info(crate::string_to_c_char(initname)?) };
+    let initname = std::ffi::CString::new(initname).into_diagnostic()?;
+    let src = unsafe { proj_sys::proj_init_info(initname.as_ptr()) };
     Ok(crate::PjInitInfo::new(
         crate::c_char_to_string(src.name.as_ptr()),
         crate::c_char_to_string(src.filename.as_ptr()),

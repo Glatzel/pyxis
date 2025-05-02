@@ -136,9 +136,9 @@ impl PyxisCudaContext {
     /// # References
     /// https://developer.nvidia.com/blog/cuda-refresher-cuda-programming-model/
     pub(crate) fn get_grid_block(&self, length: usize) -> (u32, u32) {
-        let grid_size = (length as u32 + *self.block_size.lock().unwrap() - 1)
-            .div_ceil(*self.block_size.lock().unwrap());
-
+        let grid_size = length as u32 + *self.block_size.lock().unwrap() - 1;
+        let grid_size = grid_size.div_ceil(*self.block_size.lock().unwrap());
+        println!("{}", grid_size);
         clerk::debug!(
             "using {} blocks and {} threads per block.",
             grid_size,

@@ -2,15 +2,19 @@ $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 
 & $PSScriptRoot/set-env.ps1
-if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli"}
-else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda" }
+if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "proj" }
+else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda", "-p", "proj" }
+if ($IsLinux) {
+    # fix database disk image is malformed problem of proj.db in pyxis-cli test
+    $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/share/proj
+}
 Write-Output "::group::nextest"
-cargo +nightly llvm-cov --no-report --all-features $package --branch nextest
+cargo +nightly llvm-cov nextest --no-report --all-features $package --branch --no-fail-fast
 $code = $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::doctest"
-cargo +nightly llvm-cov --no-report --all-features $package --branch --doc
+cargo +nightly llvm-cov --no-report --all-features $package --branch --no-fail-fast --doc
 $code = $code + $LASTEXITCODE
 Write-Output "::endgroup::"
 

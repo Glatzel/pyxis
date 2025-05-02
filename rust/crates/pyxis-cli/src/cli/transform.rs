@@ -167,8 +167,8 @@ pub fn execute(
         output_z_name: "z".to_string(),
     }];
     for (i, cmd) in cmds.iter().enumerate() {
-        tracing::debug!("step: {i}");
-        tracing::debug!("cmd: {cmd:?}");
+        clerk::debug!("step: {i}");
+        clerk::debug!("cmd: {cmd:?}");
         match cmd {
             TransformCommands::Crypto { from, to } => {
                 ctx.crypto(*from, *to);
@@ -282,7 +282,6 @@ pub fn execute(
                 records.push(record);
             }
             TransformCommands::Proj { from, to } => {
-                tracing::warn!("Proj currently support 2D convert only.");
                 ctx.proj(from.as_str(), to.as_str()).unwrap();
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -420,7 +419,7 @@ pub fn execute(
                 records.push(record);
             }
         }
-        tracing::debug!("context x: {}, y: {}, z: {}", ctx.x, ctx.y, ctx.z);
+        clerk::debug!("context x: {}, y: {}, z: {}", ctx.x, ctx.y, ctx.z);
     }
     // output
     match output_format {

@@ -1,12 +1,13 @@
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
+& $PSScriptRoot/set-env.ps1
 Set-Location $PSScriptRoot/..
 if ($env:CI) {
-    cargo doc --no-deps --all-features --package pyxis
+    cargo doc --no-deps --all-features -p pyxis -p proj
 }
 else {
-    cargo doc --no-deps --all-features --package pyxis
+    cargo doc --no-deps --all-features -p pyxis -p proj
 }
 
 Remove-Item ./dist/rust-doc.7z -Force -ErrorAction SilentlyContinue

@@ -1,0 +1,12 @@
+[package]
+edition.workspace = true
+name = "proj"
+version.workspace = true
+
+[dependencies]
+proj-sys = { workspace = true,features = ["bindgen"]}
+clerk = { workspace = true }
+miette={ workspace = true }
+
+[features]
+log = ["clerk/log"]

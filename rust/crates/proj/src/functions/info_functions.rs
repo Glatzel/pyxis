@@ -1,4 +1,3 @@
-
 pub fn info() -> crate::PjInfo {
     let src = unsafe { proj_sys::proj_info() };
     crate::PjInfo::new(

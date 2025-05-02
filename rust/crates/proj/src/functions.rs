@@ -1,5 +1,6 @@
 mod area_of_interest;
 mod cleanup;
+mod error_reporting;
 mod info_functions;
 mod lists;
 mod threading_contexts;

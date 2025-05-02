@@ -96,3 +96,9 @@ impl crate::PjContext {
         unimplemented!()
     }
 }
+
+impl Drop for crate::Pj {
+    fn drop(&mut self) {
+        unsafe { proj_sys::proj_destroy(self.pj) };
+    }
+}

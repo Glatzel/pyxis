@@ -1,4 +1,4 @@
-use crate::{check_pj_result, check_pj_result_inner};
+use crate::check_pj_result;
 impl crate::Pj {
     pub fn lp_dist(&self, a: crate::PjCoord, b: crate::PjCoord) -> miette::Result<f64> {
         let dist = unsafe { proj_sys::proj_lp_dist(self.pj, a, b) };

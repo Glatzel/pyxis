@@ -1,7 +1,7 @@
 use std::ffi::CString;
 use std::path::Path;
 
-use crate::{check_context_result, check_context_result_inner};
+use crate::check_context_result;
 
 impl crate::PjContext {
     pub fn set_fileapi(&self) {

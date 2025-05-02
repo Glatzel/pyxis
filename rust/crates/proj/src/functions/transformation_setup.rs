@@ -1,6 +1,6 @@
 use miette::IntoDiagnostic;
 
-use crate::{check_context_result, check_context_result_inner};
+use crate::check_context_result;
 
 /// #References
 ///<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>

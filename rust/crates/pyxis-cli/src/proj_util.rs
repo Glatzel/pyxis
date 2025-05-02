@@ -23,7 +23,7 @@ pub fn init_proj_builder() -> miette::Result<proj::PjContext> {
                 db_file.write_all(PROJ_DB).unwrap();
             }
         }
-        ctx.set_search_paths(&[&std::env::current_exe().into_diagnostic()?.parent().unwrap()])?;
+        ctx.set_search_paths(&[std::env::current_exe().into_diagnostic()?.parent().unwrap()])?;
     }
     Ok(ctx)
 }

@@ -5,7 +5,7 @@ macro_rules! check_pj_result {
         check_pj_result_inner!($self, code);
     };
     ($self:expr,$code:expr) => {
-        let code = crate::PjErrorCode::from($code as u32);
+        let code = $crate::PjErrorCode::from($code as u32);
         check_pj_result_inner!($self, code);
     };
 }
@@ -13,7 +13,7 @@ macro_rules! check_pj_result {
 macro_rules! check_pj_result_inner {
     ($self:expr, $code:expr) => {
         match $code {
-            crate::PjErrorCode::ProjSuccess => {
+            $crate::PjErrorCode::ProjSuccess => {
                 clerk::info!("Proj Process successed.");
             }
             ecode => {
@@ -40,7 +40,7 @@ macro_rules! check_context_result {
         check_context_result_inner!($self, code);
     };
     ($self:expr,$code:expr) => {
-        let code = crate::PjErrorCode::from($code as u32);
+        let code = $crate::PjErrorCode::from($code as u32);
         check_context_result_inner!($self, code);
     };
 }
@@ -48,7 +48,7 @@ macro_rules! check_context_result {
 macro_rules! check_context_result_inner {
     ($self:expr, $code:expr) => {
         match $code {
-            crate::PjErrorCode::ProjSuccess => {
+            $crate::PjErrorCode::ProjSuccess => {
                 clerk::info!("Proj Process successed.");
             }
             ecode => {

@@ -1,4 +1,3 @@
-use miette::IntoDiagnostic;
 use pyxis::Ellipsoid;
 
 use super::{CoordSpace, CryptoSpace, MigrateOption2d, RotateUnit, options};
@@ -112,10 +111,12 @@ impl ContextTransform {
         }
     }
     pub fn proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
-        let transformer = crate::proj_util::init_proj_builder()
-            .proj_known_crs(from, to, None)
-            .into_diagnostic()?;
-        (self.x, self.y) = transformer.convert((self.x, self.y)).into_diagnostic()?;
+        let transformer = crate::proj_util::init_proj_builder()?.create_crs_to_crs(
+            from,
+            to,
+            proj::PjArea::default(),
+        )?;
+        (self.x, self.y) = transformer.convert((self.x, self.y));
         Ok(())
     }
     pub fn rotate(

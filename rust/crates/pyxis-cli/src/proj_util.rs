@@ -3,11 +3,11 @@ use std::path::PathBuf;
 
 const PROJ_DB: &[u8] = include_bytes!("proj.db");
 
-pub fn init_proj_builder() -> proj::ProjBuilder {
-    let mut builder = proj::ProjBuilder::new();
+pub fn init_proj_builder() -> miette::Result<proj::PjContext> {
+    let ctx = proj::PjContext::new();
     if let Ok(proj_data) = std::env::var("PROJ_DATA") {
         tracing::info!("PROJ_DATA environment variable is found: {proj_data}");
-        builder.set_search_paths(PathBuf::from(proj_data)).unwrap();
+        ctx.set_search_paths(&[&PathBuf::from(proj_data)])?;
     } else {
         tracing::info!("PROJ_DATA environment variable is not found");
         let exe_path = std::env::current_exe().unwrap();
@@ -21,9 +21,8 @@ pub fn init_proj_builder() -> proj::ProjBuilder {
                 db_file.write_all(PROJ_DB).unwrap();
             }
         }
-        builder
-            .set_search_paths(std::env::current_exe().unwrap().parent().unwrap())
+        ctx.set_search_paths(&[&std::env::current_exe().unwrap().parent().unwrap()])
             .unwrap();
     }
-    builder
+    Ok(ctx)
 }

@@ -2,6 +2,7 @@
 /// #References
 ///<https://proj.org/en/stable/development/reference/functions.html#coordinate-transformation>
 impl crate::Pj {
+    /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
     pub fn trans(
         &self,
@@ -12,10 +13,12 @@ impl crate::Pj {
         self.check_result("trans")?;
         Ok(out_coord)
     }
+    /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     pub fn get_last_used_operation(&self) -> Self {
         unimplemented!()
     }
+    /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
     pub fn trans_generic(
         &self,
@@ -52,6 +55,7 @@ impl crate::Pj {
             )
         }
     }
+    /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
     pub fn trans_array(
         &self,
@@ -71,6 +75,7 @@ impl crate::Pj {
     }
 }
 impl crate::PjContext {
+    /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
     pub fn trans_bounds(
         &self,
@@ -105,6 +110,7 @@ impl crate::PjContext {
         self.check_exit_code("trans_bounds_3d", code)?;
         Ok(self)
     }
+    /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
     pub fn trans_bounds_3d(
         &self,

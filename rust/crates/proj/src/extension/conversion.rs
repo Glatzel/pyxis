@@ -19,7 +19,7 @@ impl IPjCoord for (f64, f64) {
     }
 
     fn pj_t(&self) -> f64 {
-      f64::INFINITY
+        f64::INFINITY
     }
     fn from_pj_coord(x: f64, y: f64, _z: f64, _t: f64) -> Self {
         (x, y)
@@ -60,7 +60,7 @@ impl IPjCoord for (f64, f64, f64) {
     }
 
     fn pj_t(&self) -> f64 {
-       f64::INFINITY
+        f64::INFINITY
     }
 
     fn from_pj_coord(x: f64, y: f64, z: f64, _t: f64) -> Self {
@@ -81,7 +81,7 @@ impl IPjCoord for [f64; 3] {
     }
 
     fn pj_t(&self) -> f64 {
-       f64::INFINITY
+        f64::INFINITY
     }
 
     fn from_pj_coord(x: f64, y: f64, z: f64, _t: f64) -> Self {

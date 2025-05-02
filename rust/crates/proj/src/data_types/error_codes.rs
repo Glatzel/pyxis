@@ -30,9 +30,7 @@ impl From<u32> for PjErrorCode {
             proj_sys::PROJ_ERR_INVALID_OP => Self::InvalidOp,
             proj_sys::PROJ_ERR_INVALID_OP_WRONG_SYNTAX => Self::InvalidOpWrongSyntax,
             proj_sys::PROJ_ERR_INVALID_OP_MISSING_ARG => Self::InvalidOpMissingArg,
-            proj_sys::PROJ_ERR_INVALID_OP_ILLEGAL_ARG_VALUE => {
-                Self::InvalidOpIllegalArgValue
-            }
+            proj_sys::PROJ_ERR_INVALID_OP_ILLEGAL_ARG_VALUE => Self::InvalidOpIllegalArgValue,
             proj_sys::PROJ_ERR_INVALID_OP_MUTUALLY_EXCLUSIVE_ARGS => {
                 Self::InvalidOpMutuallyExclusiveArgs
             }
@@ -47,12 +45,8 @@ impl From<u32> for PjErrorCode {
             }
             proj_sys::PROJ_ERR_COORD_TRANSFM_NO_OPERATION => Self::CoordTransfmNoOperation,
             proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_GRID => Self::CoordTransfmOutsideGrid,
-            proj_sys::PROJ_ERR_COORD_TRANSFM_GRID_AT_NODATA => {
-                Self::CoordTransfmGridAtNodata
-            }
-            proj_sys::PROJ_ERR_COORD_TRANSFM_NO_CONVERGENCE => {
-                Self::CoordTransfmNoConvergence
-            }
+            proj_sys::PROJ_ERR_COORD_TRANSFM_GRID_AT_NODATA => Self::CoordTransfmGridAtNodata,
+            proj_sys::PROJ_ERR_COORD_TRANSFM_NO_CONVERGENCE => Self::CoordTransfmNoConvergence,
             proj_sys::PROJ_ERR_COORD_TRANSFM_MISSING_TIME => Self::CoordTransfmMissingTime,
             //Errors in class PROJ_ERR_OTHER
             proj_sys::PROJ_ERR_OTHER => Self::Other,
@@ -70,12 +64,8 @@ impl From<&PjErrorCode> for i32 {
             PjErrorCode::ProjSuccess => 0,
             //Errors in class PROJ_ERR_INVALID_OP
             PjErrorCode::InvalidOp => proj_sys::PROJ_ERR_INVALID_OP as i32,
-            PjErrorCode::InvalidOpWrongSyntax => {
-                proj_sys::PROJ_ERR_INVALID_OP_WRONG_SYNTAX as i32
-            }
-            PjErrorCode::InvalidOpMissingArg => {
-                proj_sys::PROJ_ERR_INVALID_OP_MISSING_ARG as i32
-            }
+            PjErrorCode::InvalidOpWrongSyntax => proj_sys::PROJ_ERR_INVALID_OP_WRONG_SYNTAX as i32,
+            PjErrorCode::InvalidOpMissingArg => proj_sys::PROJ_ERR_INVALID_OP_MISSING_ARG as i32,
             PjErrorCode::InvalidOpIllegalArgValue => {
                 proj_sys::PROJ_ERR_INVALID_OP_ILLEGAL_ARG_VALUE as i32
             }

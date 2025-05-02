@@ -14,7 +14,7 @@ impl crate::PjContext {
         let len = paths.len();
         let paths: Vec<*const i8> = paths
             .iter()
-            .map(|p| (crate::string_to_c_char(&p.to_string_lossy()).unwrap()) as *const i8)
+            .map(|p| (crate::string_to_c_char(&p.to_string_lossy()).unwrap()))
             .collect();
         unsafe {
             proj_sys::proj_context_set_search_paths(self.ctx, len as i32, paths.as_ptr());

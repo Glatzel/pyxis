@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use tracing::level_filters::LevelFilter;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
@@ -11,7 +12,6 @@ fn main() {
     match std::env::var("LIBCLANG_PATH") {
         Ok(path) => tracing::info!("Found `LIBCLANG_PATH`: {path}"),
         Err(_) => {
-            use std::path::PathBuf;
             let path = "C:/Program Files/LLVM/bin";
 
             if PathBuf::from(path).exists() {

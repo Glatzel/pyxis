@@ -36,17 +36,6 @@ pub enum TransformCommands {
     },
 
     #[bpaf(command, adjacent)]
-    /// Converts geodetic coordinates (longitude/L, latitude/B, height/H) to Cartesian coordinates (X, Y, Z).
-    Lbh2xyz {
-        #[bpaf(short('a'), long)]
-        /// Semimajor radius of the ellipsoid axis
-        major_radius: f64,
-        #[bpaf(long("invf"))]
-        /// Inverse flattening of the ellipsoid.
-        inverse_flattening: f64,
-    },
-
-    #[bpaf(command, adjacent)]
     /// Migrate2d.
     Migrate2d {
         #[bpaf(short, long)]
@@ -134,17 +123,6 @@ pub enum TransformCommands {
         #[bpaf(short, long, fallback(0.0))]
         tz: f64,
     },
-
-    #[bpaf(command, adjacent)]
-    /// Converts Cartesian coordinates (X, Y, Z) to geodetic coordinates (Longitude, Latitude, Height).
-    Xyz2lbh {
-        #[bpaf(short('a'), long)]
-        /// Semimajor radius of the ellipsoid axis
-        major_radius: f64,
-        #[bpaf(long("invf"))]
-        /// Inverse flattening of the ellipsoid.
-        inverse_flattening: f64,
-    },
 }
 pub fn execute(
     name: &str,
@@ -210,30 +188,6 @@ pub fn execute(
                     output_x_name: "x".to_string(),
                     output_y_name: "y".to_string(),
                     output_z_name: "elevation".to_string(),
-                };
-                records.push(record);
-            }
-            TransformCommands::Lbh2xyz {
-                major_radius: semi_major_axis,
-                inverse_flattening,
-            } => {
-                let ellipsoid = pyxis::Ellipsoid::from_semi_major_and_invf(
-                    *semi_major_axis,
-                    *inverse_flattening,
-                );
-                ctx.lbh2xyz(&ellipsoid);
-                let record = Record {
-                    idx: (i + 1) as u8,
-                    method: "lbh2xyz".to_string(),
-                    parameter: serde_json::json!({
-                        "ellipsoid": ellipsoid
-                    }),
-                    output_x: ctx.x,
-                    output_y: ctx.y,
-                    output_z: ctx.z,
-                    output_x_name: "x".to_string(),
-                    output_y_name: "y".to_string(),
-                    output_z_name: "z".to_string(),
                 };
                 records.push(record);
             }
@@ -391,30 +345,6 @@ pub fn execute(
                     output_x_name: "x".to_string(),
                     output_y_name: "y".to_string(),
                     output_z_name: "z".to_string(),
-                };
-                records.push(record);
-            }
-            TransformCommands::Xyz2lbh {
-                major_radius: semi_major_axis,
-                inverse_flattening,
-            } => {
-                let ellipsoid = pyxis::Ellipsoid::from_semi_major_and_invf(
-                    *semi_major_axis,
-                    *inverse_flattening,
-                );
-                ctx.xyz2lbh(&ellipsoid);
-                let record = Record {
-                    idx: (i + 1) as u8,
-                    method: "xyz2lbh".to_string(),
-                    parameter: serde_json::json!({
-                         "ellipsoid": ellipsoid
-                    }),
-                    output_x: ctx.x,
-                    output_y: ctx.y,
-                    output_z: ctx.z,
-                    output_x_name: "longitude".to_string(),
-                    output_y_name: "latitude".to_string(),
-                    output_z_name: "elevation".to_string(),
                 };
                 records.push(record);
             }

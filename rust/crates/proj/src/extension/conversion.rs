@@ -1,4 +1,7 @@
 use core::f64;
+use std::ptr::null_mut;
+
+use crate::PjDirection::PjFwd;
 
 pub trait IPjCoord {
     fn components(&self) -> usize;
@@ -159,7 +162,7 @@ impl crate::Pj {
         let direction = if inv {
             crate::PjDirection::PjInv
         } else {
-            crate::PjDirection::PjFwd
+            PjFwd
         };
         let mut x = coord.pj_x();
         let mut y = coord.pj_y();
@@ -174,10 +177,10 @@ impl crate::Pj {
                 &mut y,
                 1,
                 1,
-                std::ptr::null_mut::<f64>(),
+                null_mut::<f64>(),
                 0,
                 0,
-                std::ptr::null_mut::<f64>(),
+                null_mut::<f64>(),
                 0,
                 0,
             ),
@@ -192,7 +195,7 @@ impl crate::Pj {
                 &mut z,
                 1,
                 1,
-                std::ptr::null_mut::<f64>(),
+                null_mut::<f64>(),
                 0,
                 0,
             ),
@@ -214,14 +217,14 @@ impl crate::Pj {
         let mut t = coord.pj_t();
         match coord.components() {
             2 => self.trans_generic(
-                crate::PjDirection::PjFwd,
+                PjFwd,
                 &mut x,
                 1,
                 1,
                 &mut y,
                 1,
                 1,
-                std::ptr::null_mut::<f64>(),
+                null_mut::<f64>(),
                 0,
                 0,
                 &mut t,
@@ -229,7 +232,7 @@ impl crate::Pj {
                 1,
             ),
             3 => self.trans_generic(
-                crate::PjDirection::PjFwd,
+                PjFwd,
                 &mut x,
                 1,
                 1,
@@ -239,24 +242,12 @@ impl crate::Pj {
                 &mut z,
                 1,
                 1,
-                std::ptr::null_mut::<f64>(),
+                null_mut::<f64>(),
                 0,
                 0,
             ),
             4 => self.trans_generic(
-                crate::PjDirection::PjFwd,
-                &mut x,
-                1,
-                1,
-                &mut y,
-                1,
-                1,
-                &mut z,
-                1,
-                1,
-                &mut t,
-                1,
-                1,
+                PjFwd, &mut x, 1, 1, &mut y, 1, 1, &mut z, 1, 1, &mut t, 1, 1,
             ),
             other => miette::bail!(format!("Unknow compenent count: {}", other)),
         }?;
@@ -288,11 +279,11 @@ impl IPjCoordArray for &mut [[f64; 2]] {
     }
 
     fn pj_z(&mut self) -> *mut f64 {
-        std::ptr::null_mut::<f64>()
+        null_mut::<f64>()
     }
 
     fn pj_t(&mut self) -> *mut f64 {
-        std::ptr::null_mut::<f64>()
+        null_mut::<f64>()
     }
 }
 impl IPjCoordArray for &mut [[f64; 3]] {
@@ -315,7 +306,7 @@ impl IPjCoordArray for &mut [[f64; 3]] {
     }
 
     fn pj_t(&mut self) -> *mut f64 {
-        std::ptr::null_mut::<f64>()
+        null_mut::<f64>()
     }
 }
 impl IPjCoordArray for &mut [[f64; 4]] {
@@ -349,7 +340,7 @@ impl crate::Pj {
         let direction = if inv {
             crate::PjDirection::PjInv
         } else {
-            crate::PjDirection::PjFwd
+            PjFwd
         };
         let length = coord.length();
         let size = coord.size();
@@ -361,35 +352,11 @@ impl crate::Pj {
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => self.trans_generic(
-                direction,
-                x,
-                size,
-                length,
-                y,
-                size,
-                length,
-                std::ptr::null_mut::<f64>(),
-                0,
-                0,
-                std::ptr::null_mut::<f64>(),
-                0,
-                0,
+                direction, x, size, length, y, size, length, z, 0, 0, t, 0, 0,
             ),
             //3d
             (false, false, false, true) => self.trans_generic(
-                direction,
-                x,
-                size,
-                length,
-                y,
-                size,
-                length,
-                z,
-                size,
-                length,
-                std::ptr::null_mut::<f64>(),
-                0,
-                0,
+                direction, x, size, length, y, size, length, z, size, length, t, 0, 0,
             ),
             //4d
             (false, false, false, false) => self.trans_generic(
@@ -417,53 +384,17 @@ impl crate::Pj {
 
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
-            (false, false, true, true) => self.trans_generic(
-                crate::PjDirection::PjFwd,
-                x,
-                size,
-                length,
-                y,
-                size,
-                length,
-                std::ptr::null_mut::<f64>(),
-                0,
-                0,
-                std::ptr::null_mut::<f64>(),
-                0,
-                0,
-            ),
+            (false, false, true, true) => {
+                self.trans_generic(PjFwd, x, size, length, y, size, length, z, 0, 0, t, 0, 0)
+            }
 
             //3d
             (false, false, false, true) => self.trans_generic(
-                crate::PjDirection::PjFwd,
-                x,
-                size,
-                length,
-                y,
-                size,
-                length,
-                z,
-                size,
-                length,
-                std::ptr::null_mut::<f64>(),
-                0,
-                0,
+                PjFwd, x, size, length, y, size, length, z, size, length, t, 0, 0,
             ),
             //4d
             (false, false, false, false) => self.trans_generic(
-                crate::PjDirection::PjFwd,
-                x,
-                size,
-                length,
-                y,
-                size,
-                length,
-                z,
-                size,
-                length,
-                t,
-                size,
-                length,
+                PjFwd, x, size, length, y, size, length, z, size, length, t, size, length,
             ),
             (x, y, z, t) => {
                 miette::bail!(format!(

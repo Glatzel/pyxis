@@ -22,7 +22,7 @@ impl crate::Pj {
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
-    fn trans_generic(
+    pub(crate) fn trans_generic(
         &self,
         direction: crate::PjDirection,
         x: *mut f64,

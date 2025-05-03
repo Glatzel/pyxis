@@ -5,10 +5,8 @@ use crate::check_pj_result;
 impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
-    pub fn lp_dist(&self, a: crate::PjLp, b: crate::PjLp) -> miette::Result<f64> {
-        let dist = unsafe {
-            proj_sys::proj_lp_dist(self.pj, crate::PjCoord { lp: a }, crate::PjCoord { lp: b })
-        };
+    pub fn lp_dist(&self, a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
+        let dist = unsafe { proj_sys::proj_lp_dist(self.pj, a.to_pj_coord(), b.to_pj_coord()) };
         check_pj_result!(self);
         if dist.is_nan() {
             miette::bail!(
@@ -20,14 +18,12 @@ impl crate::Pj {
     }
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_lpz_dist>
-    pub fn lpz_dist(&self, a: crate::PjLpz, b: crate::PjLpz) -> miette::Result<f64> {
-        let dist = unsafe {
-            proj_sys::proj_lpz_dist(
-                self.pj,
-                crate::PjCoord { lpz: a },
-                crate::PjCoord { lpz: b },
-            )
-        };
+    pub fn lpz_dist(
+        &self,
+        a: impl crate::IPjCoord,
+        b: impl crate::IPjCoord,
+    ) -> miette::Result<f64> {
+        let dist = unsafe { proj_sys::proj_lpz_dist(self.pj, a.to_pj_coord(), b.to_pj_coord()) };
         check_pj_result!(self);
         if dist.is_nan() {
             miette::bail!(
@@ -39,10 +35,12 @@ impl crate::Pj {
     }
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
-    pub fn geod(&self, a: crate::PjLp, b: crate::PjLp) -> miette::Result<(f64, f64)> {
-        let dist = unsafe {
-            proj_sys::proj_geod(self.pj, crate::PjCoord { lp: a }, crate::PjCoord { lp: b })
-        };
+    pub fn geod(
+        &self,
+        a: impl crate::IPjCoord,
+        b: impl crate::IPjCoord,
+    ) -> miette::Result<(f64, f64)> {
+        let dist = unsafe { proj_sys::proj_geod(self.pj, a.to_pj_coord(), b.to_pj_coord()) };
         check_pj_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };
         if dist.is_nan() || reversed_azimuth.is_nan() {
@@ -55,12 +53,12 @@ impl crate::Pj {
     }
 }
 
-pub fn xy_dist(a: crate::PjXy, b: crate::PjXy) -> f64 {
-    unsafe { proj_sys::proj_xy_dist(crate::PjCoord { xy: a }, crate::PjCoord { xy: b }) }
+pub fn xy_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> f64 {
+    unsafe { proj_sys::proj_xy_dist(a.to_pj_coord(), b.to_pj_coord()) }
 }
 
-pub fn xyz_dist(a: crate::PjXyz, b: crate::PjXyz) -> f64 {
-    unsafe { proj_sys::proj_xyz_dist(crate::PjCoord { xyz: a }, crate::PjCoord { xyz: b }) }
+pub fn xyz_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> f64 {
+    unsafe { proj_sys::proj_xyz_dist(a.to_pj_coord(), b.to_pj_coord()) }
 }
 #[cfg(test)]
 mod test {
@@ -71,14 +69,8 @@ mod test {
         let ctx = crate::PjContext::default();
         let pj = ctx.create("EPSG:4326")?;
         let dist = pj.lp_dist(
-            crate::PjLp {
-                lam: 1.0f64.to_radians(),
-                phi: 2.0f64.to_radians(),
-            },
-            crate::PjLp {
-                lam: 3.0f64.to_radians(),
-                phi: 4.0f64.to_radians(),
-            },
+            (1.0f64.to_radians(), 2.0f64.to_radians()),
+            (3.0f64.to_radians(), 4.0f64.to_radians()),
         )?;
         assert_approx_eq!(f64, dist, 313588.39721259556);
         Ok(())
@@ -88,16 +80,8 @@ mod test {
         let ctx = crate::PjContext::default();
         let pj = ctx.create("EPSG:4326")?;
         let dist = pj.lpz_dist(
-            crate::PjLpz {
-                lam: 118.0f64.to_radians(),
-                phi: 30.0f64.to_radians(),
-                z: 1.0,
-            },
-            crate::PjLpz {
-                lam: 119.0f64.to_radians(),
-                phi: 40.0f64.to_radians(),
-                z: 2000.0,
-            },
+            (118.0f64.to_radians(), 30.0f64.to_radians(), 1.0),
+            (119.0f64.to_radians(), 40.0f64.to_radians(), 2000.0),
         )?;
         assert_eq!(dist, 1113143.341157136);
         Ok(())
@@ -107,14 +91,8 @@ mod test {
         let ctx = crate::PjContext::default();
         let pj = ctx.create("EPSG:4326")?;
         let (dist, reversed_azimuth) = pj.geod(
-            crate::PjLp {
-                lam: 1.0f64.to_radians(),
-                phi: 2.0f64.to_radians(),
-            },
-            crate::PjLp {
-                lam: 3.0f64.to_radians(),
-                phi: 4.0f64.to_radians(),
-            },
+            (1.0f64.to_radians(), 2.0f64.to_radians()),
+            (3.0f64.to_radians(), 4.0f64.to_radians()),
         )?;
         assert_approx_eq!(f64, dist, 313588.39721259556);
         assert_approx_eq!(f64, reversed_azimuth, 45.10460545587798);
@@ -122,27 +100,13 @@ mod test {
     }
     #[test]
     fn test_xy_dist() -> miette::Result<()> {
-        let dist = super::xy_dist(
-            crate::PjXy { x: 1.0, y: 2.0 },
-            crate::PjXy { x: 4.0, y: 6.0 },
-        );
+        let dist = super::xy_dist((1.0, 2.0), (4.0, 6.0));
         assert_approx_eq!(f64, dist, 5.0);
         Ok(())
     }
     #[test]
     fn test_xyz_dist() -> miette::Result<()> {
-        let dist = super::xyz_dist(
-            crate::PjXyz {
-                x: 1.0,
-                y: 2.0,
-                z: 1.0,
-            },
-            crate::PjXyz {
-                x: 2.0,
-                y: 4.0,
-                z: 5.0,
-            },
-        );
+        let dist = super::xyz_dist((1.0, 2.0, 1.0), (2.0, 4.0, 5.0));
         assert_approx_eq!(f64, dist, 21.0f64.sqrt());
         Ok(())
     }

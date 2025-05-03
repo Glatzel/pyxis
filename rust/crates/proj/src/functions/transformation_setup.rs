@@ -1,8 +1,8 @@
 use miette::IntoDiagnostic;
 
 use crate::check_context_result;
-
-/// # References
+/// # Transformation setup
+/// ## References
 ///<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 impl crate::PjContext {
     /// # References

@@ -21,11 +21,11 @@ impl IPjCoord for (f64, f64) {
     }
 
     fn pj_z(&self) -> f64 {
-        0.0
+        f64::default()
     }
 
     fn pj_t(&self) -> f64 {
-        f64::INFINITY
+        f64::default()
     }
     fn from_pj_coord(x: f64, y: f64, _z: f64, _t: f64) -> Self {
         (x, y)
@@ -44,11 +44,11 @@ impl IPjCoord for [f64; 2] {
     }
 
     fn pj_z(&self) -> f64 {
-        0.0
+        f64::default()
     }
 
     fn pj_t(&self) -> f64 {
-        0.0
+        f64::default()
     }
 
     fn from_pj_coord(x: f64, y: f64, _z: f64, _t: f64) -> Self {
@@ -72,7 +72,7 @@ impl IPjCoord for (f64, f64, f64) {
     }
 
     fn pj_t(&self) -> f64 {
-        0.0
+        f64::default()
     }
 
     fn from_pj_coord(x: f64, y: f64, z: f64, _t: f64) -> Self {
@@ -96,7 +96,7 @@ impl IPjCoord for [f64; 3] {
     }
 
     fn pj_t(&self) -> f64 {
-        0.0
+        f64::default()
     }
 
     fn from_pj_coord(x: f64, y: f64, z: f64, _t: f64) -> Self {

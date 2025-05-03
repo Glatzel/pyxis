@@ -1,6 +1,5 @@
-use crate::PjDirection::{PjFwd, PjInv};
-
 use super::IPjCoord;
+use crate::PjDirection::{PjFwd, PjInv};
 
 impl crate::Pj {
     pub fn project<T>(&self, inv: bool, coord: &T) -> miette::Result<T>

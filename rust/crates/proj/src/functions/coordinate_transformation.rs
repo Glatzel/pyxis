@@ -4,14 +4,17 @@ use crate::{check_context_result, check_pj_result};
 /// # References
 ///<https://proj.org/en/stable/development/reference/functions.html#coordinate-transformation>
 impl crate::Pj {
+    ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
+
     pub fn trans(
         &self,
         direction: crate::PjDirection,
-        coord: proj_sys::PJ_COORD,
+        coord: impl crate::IPjCoord,
     ) -> miette::Result<proj_sys::PJ_COORD> {
-        let out_coord = unsafe { proj_sys::proj_trans(self.pj, i32::from(direction), coord) };
+        let out_coord =
+            unsafe { proj_sys::proj_trans(self.pj, i32::from(direction), coord.to_pj_coord()) };
         check_pj_result!(self);
         Ok(out_coord)
     }
@@ -59,13 +62,15 @@ impl crate::Pj {
         check_pj_result!(self);
         Ok(result)
     }
+    /// Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
     pub fn trans_array(
         &self,
         direction: crate::PjDirection,
-        coord: &mut [proj_sys::PJ_COORD],
+        coord: &[impl crate::IPjCoord],
     ) -> miette::Result<&Self> {
+        let mut coord: Vec<crate::PjCoord> = coord.iter().map(|a| a.to_pj_coord()).collect();
         let code = unsafe {
             proj_sys::proj_trans_array(
                 self.pj,

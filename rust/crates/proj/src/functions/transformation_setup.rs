@@ -111,8 +111,10 @@ impl crate::PjContext {
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
-    fn _normalize_for_visualization() {
-        unimplemented!()
+    pub fn normalize_for_visualization(&self, obj: &crate::Pj) -> miette::Result<crate::Pj> {
+        Ok(crate::Pj {
+            pj: unsafe { proj_sys::proj_normalize_for_visualization(self.ctx, obj.pj) },
+        })
     }
 }
 

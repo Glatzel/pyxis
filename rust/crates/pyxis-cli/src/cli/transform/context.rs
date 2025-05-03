@@ -108,7 +108,7 @@ impl ContextTransform {
     pub fn proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
         let ctx = crate::proj_util::init_proj_builder()?;
         let transformer = ctx.create_crs_to_crs(from, to, &proj::PjArea::default())?;
-        (self.x, self.y) = transformer.convert((self.x, self.y));
+        (self.x, self.y) = transformer.convert((self.x, self.y))?;
         Ok(())
     }
     pub fn rotate(

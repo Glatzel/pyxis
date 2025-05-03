@@ -4,8 +4,10 @@ Set-Location $PSScriptRoot/..
 & $PSScriptRoot/set-env.ps1
 if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "proj" }
 else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda", "-p", "proj" }
+if ($IsWindows) {
+    $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-windows-static/share/proj
+}
 if ($IsLinux) {
-    # fix database disk image is malformed problem of proj.db in pyxis-cli test
     $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/share/proj
 }
 Write-Output "::group::nextest"

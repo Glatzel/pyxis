@@ -189,7 +189,7 @@ impl crate::Pj {
                 &mut y,
                 1,
                 1,
-                &mut t,
+                &mut z,
                 1,
                 1,
                 std::ptr::null_mut::<f64>(),

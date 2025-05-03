@@ -18,6 +18,8 @@ pub fn grid_info(gridname: &str) -> miette::Result<crate::PjGridInfo> {
         crate::c_char_to_string(src.gridname.as_ptr()),
         crate::c_char_to_string(src.filename.as_ptr()),
         crate::c_char_to_string(src.format.as_ptr()),
+        src.lowerleft,
+        src.upperright,
         src.n_lon,
         src.n_lat,
         src.cs_lon,

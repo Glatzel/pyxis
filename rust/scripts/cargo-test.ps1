@@ -7,7 +7,7 @@ if ($package) {
     $package = "-p", "$package"
 }
 else {
-    if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "proj" }
+    if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "proj", "-p", "proj-sys" }
     else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda", "-p", "proj" }
 }
 

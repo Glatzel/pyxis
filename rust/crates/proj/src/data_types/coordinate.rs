@@ -19,4 +19,4 @@ pub type PjEnu = proj_sys::PJ_ENU;
 pub type PjGeod = proj_sys::PJ_GEOD;
 
 // region:Complex
-// pub type PjCoord = proj_sys::PJ_COORD;
+pub type PjCoord = proj_sys::PJ_COORD;

@@ -409,37 +409,34 @@ impl crate::Pj {
 #[cfg(test)]
 mod test {
     #[test]
-    fn test_project_2d() {
+    fn test_project_2d() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
-        let pj = ctx
-            .create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())
-            .unwrap();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         // array
         {
-            let pj = ctx.normalize_for_visualization(&pj).unwrap();
+            let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = [120.0, 30.0];
-            let coord = pj.project(false, coord).unwrap();
+            let coord = pj.project(false, coord)?;
             assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
         }
         // tuple
         {
-            let pj = ctx.normalize_for_visualization(&pj).unwrap();
+            let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = (120.0, 30.0);
-            let coord = pj.project(false, coord).unwrap();
+            let coord = pj.project(false, coord)?;
             assert_eq!(coord, (19955590.73888901, 3416780.562127255));
         }
+        Ok(())
     }
     #[test]
-    fn test_project_3d() {
+    fn test_project_3d() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
-        let pj = ctx
-            .create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())
-            .unwrap();
-        let pj = ctx.normalize_for_visualization(&pj).unwrap();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
         // array
         {
             let coord = [120.0, 30.0, 10.0];
-            let coord = pj.project(false, coord).unwrap();
+            let coord = pj.project(false, coord)?;
             assert_eq!(
                 coord,
                 [-2764132.649773435, 4787618.188267582, 3170378.735383637]
@@ -448,46 +445,44 @@ mod test {
         // tuple
         {
             let coord = (120.0, 30.0, 10.0);
-            let coord = pj.project(false, coord).unwrap();
+            let coord = pj.project(false, coord)?;
             assert_eq!(
                 coord,
                 (-2764132.649773435, 4787618.188267582, 3170378.735383637)
             );
         }
+        Ok(())
     }
     #[test]
-    fn test_convert_2d() {
+    fn test_convert_2d() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
-        let pj = ctx
-            .create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())
-            .unwrap();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         // array
         {
-            let pj = ctx.normalize_for_visualization(&pj).unwrap();
+            let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = [120.0, 30.0];
-            let coord = pj.convert(coord).unwrap();
+            let coord = pj.convert(coord)?;
             assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
         }
         // tuple
         {
-            let pj = ctx.normalize_for_visualization(&pj).unwrap();
+            let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = (120.0, 30.0);
 
-            let coord = pj.convert(coord).unwrap();
+            let coord = pj.convert(coord)?;
             assert_eq!(coord, (19955590.73888901, 3416780.562127255));
         }
+        Ok(())
     }
     #[test]
-    fn test_convert_3d() {
+    fn test_convert_3d() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
-        let pj = ctx
-            .create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())
-            .unwrap();
-        let pj = ctx.normalize_for_visualization(&pj).unwrap();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
         // array
         {
             let coord = [120.0, 30.0, 10.0];
-            let coord = pj.convert(coord).unwrap();
+            let coord = pj.convert(coord)?;
             assert_eq!(
                 coord,
                 [-2764132.649773435, 4787618.188267582, 3170378.735383637]
@@ -496,23 +491,22 @@ mod test {
         // tuple
         {
             let coord = (120.0, 30.0, 10.0);
-            let coord = pj.convert(coord).unwrap();
+            let coord = pj.convert(coord)?;
             assert_eq!(
                 coord,
                 (-2764132.649773435, 4787618.188267582, 3170378.735383637)
             );
         }
+        Ok(())
     }
     #[test]
-    fn test_project_array_2d() {
+    fn test_project_array_2d() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
-        let pj = ctx
-            .create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())
-            .unwrap();
-        let pj = ctx.normalize_for_visualization(&pj).unwrap();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
 
-        pj.project_array(false, &mut coord.as_mut_slice()).unwrap();
+        pj.project_array(false, &mut coord.as_mut_slice())?;
         assert_eq!(
             coord,
             [
@@ -520,17 +514,16 @@ mod test {
                 [17583572.872089125, -9356989.97994042]
             ]
         );
+        Ok(())
     }
     #[test]
-    fn test_project_array_3d() {
+    fn test_project_array_3d() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
-        let pj = ctx
-            .create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())
-            .unwrap();
-        let pj = ctx.normalize_for_visualization(&pj).unwrap();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
 
-        pj.project_array(false, &mut coord.as_mut_slice()).unwrap();
+        pj.project_array(false, &mut coord.as_mut_slice())?;
         assert_eq!(
             coord,
             [
@@ -538,17 +531,16 @@ mod test {
                 [714243.0112756203, 851201.6746730272, -6259542.96102869]
             ]
         );
+        Ok(())
     }
     #[test]
-    fn test_convert_array_2d() {
+    fn test_convert_array_2d() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
-        let pj = ctx
-            .create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())
-            .unwrap();
-        let pj = ctx.normalize_for_visualization(&pj).unwrap();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
 
-        pj.convert_array(&mut coord.as_mut_slice()).unwrap();
+        pj.convert_array(&mut coord.as_mut_slice())?;
         assert_eq!(
             coord,
             [
@@ -556,17 +548,16 @@ mod test {
                 [17583572.872089125, -9356989.97994042]
             ]
         );
+        Ok(())
     }
     #[test]
-    fn test_convert_array_3d() {
+    fn test_convert_array_3d() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
-        let pj = ctx
-            .create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())
-            .unwrap();
-        let pj = ctx.normalize_for_visualization(&pj).unwrap();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
 
-        pj.convert_array(&mut coord.as_mut_slice()).unwrap();
+        pj.convert_array(&mut coord.as_mut_slice())?;
         assert_eq!(
             coord,
             [
@@ -574,5 +565,6 @@ mod test {
                 [714243.0112756203, 851201.6746730272, -6259542.96102869]
             ]
         );
+        Ok(())
     }
 }

@@ -37,8 +37,8 @@ impl crate::Pj {
         t: *mut f64,
         st: usize,
         nt: usize,
-    ) -> usize {
-        unsafe {
+    ) -> miette::Result<usize> {
+        let result = unsafe {
             proj_sys::proj_trans_generic(
                 self.pj,
                 i32::from(direction),
@@ -55,7 +55,9 @@ impl crate::Pj {
                 st,
                 nt,
             )
-        }
+        };
+        check_pj_result!(self);
+        Ok(result)
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>

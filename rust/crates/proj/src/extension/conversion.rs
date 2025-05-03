@@ -212,7 +212,7 @@ impl crate::Pj {
                 0,
             ),
             other => miette::bail!(format!("Unknow compenent count: {}", other)),
-        };
+        }?;
 
         Ok(T::from_pj_coord(x, y, z, t))
     }
@@ -271,7 +271,7 @@ impl crate::Pj {
                 1,
             ),
             other => miette::bail!(format!("Unknow compenent count: {}", other)),
-        };
+        }?;
 
         Ok(T::from_pj_coord(x, y, z, t))
     }
@@ -331,7 +331,7 @@ impl IPjCoordArray for &mut [[f64; 4]] {
     }
 }
 impl crate::Pj {
-    pub fn project_array<T>(&self, inv: bool, coord: &mut T) -> &Self
+    pub fn project_array<T>(&self, inv: bool, coord: &mut T) -> miette::Result<&Self>
     where
         T: IPjCoordArray,
     {
@@ -346,8 +346,6 @@ impl crate::Pj {
         let y = coord.pj_y();
         let z = coord.pj_z();
         let t = coord.pj_t();
-        let mut default_z = 0.0;
-        let mut default_t = f64::INFINITY;
 
         match (z, t) {
             (None, None) => self.trans_generic(
@@ -358,27 +356,12 @@ impl crate::Pj {
                 y,
                 size,
                 length,
-                &mut default_z as *mut f64,
-                1,
-                1,
-                &mut default_t as *mut f64,
-                1,
-                1,
-            ),
-            (None, Some(t)) => self.trans_generic(
-                direction,
-                x,
-                size,
-                length,
-                y,
-                size,
-                length,
-                &mut default_z as *mut f64,
-                1,
-                1,
-                t,
-                size,
-                length,
+                0 as *mut f64,
+                0,
+                0,
+                0 as *mut f64,
+                0,
+                0,
             ),
             (Some(z), None) => self.trans_generic(
                 direction,
@@ -391,17 +374,18 @@ impl crate::Pj {
                 z,
                 size,
                 length,
-                &mut default_t as *mut f64,
-                1,
-                1,
+                0 as *mut f64,
+                0,
+                0,
             ),
             (Some(z), Some(t)) => self.trans_generic(
                 direction, x, size, length, y, size, length, z, size, length, t, size, length,
             ),
-        };
-        self
+            _ => miette::bail!(format!("Z component is none, but T component is not none.")),
+        }?;
+        Ok(self)
     }
-    pub fn convert_array<T>(&self, coord: &mut T) -> &Self
+    pub fn convert_array<T>(&self, coord: &mut T) -> miette::Result<&Self>
     where
         T: IPjCoordArray,
     {
@@ -412,10 +396,8 @@ impl crate::Pj {
         let y = coord.pj_y();
         let z = coord.pj_z();
         let t = coord.pj_t();
-        let mut default_component3 = 0.0;
-        let mut default_component4 = f64::INFINITY;
 
-        let result = match (z, t) {
+        match (z, t) {
             (None, None) => self.trans_generic(
                 crate::PjDirection::PjFwd,
                 x,
@@ -424,28 +406,14 @@ impl crate::Pj {
                 y,
                 size,
                 length,
-                &mut default_component3 as *mut f64,
-                1,
-                1,
-                &mut default_component4 as *mut f64,
-                1,
-                1,
+                0 as *mut f64,
+                0,
+                0,
+                0 as *mut f64,
+                0,
+                0,
             ),
-            (None, Some(t)) => self.trans_generic(
-                crate::PjDirection::PjFwd,
-                x,
-                size,
-                length,
-                y,
-                size,
-                length,
-                &mut default_component3 as *mut f64,
-                1,
-                1,
-                t,
-                size,
-                length,
-            ),
+
             (Some(z), None) => self.trans_generic(
                 crate::PjDirection::PjFwd,
                 x,
@@ -457,9 +425,9 @@ impl crate::Pj {
                 z,
                 size,
                 length,
-                &mut default_component4 as *mut f64,
-                1,
-                1,
+                0 as *mut f64,
+                0,
+                0,
             ),
             (Some(z), Some(t)) => self.trans_generic(
                 crate::PjDirection::PjFwd,
@@ -476,9 +444,10 @@ impl crate::Pj {
                 size,
                 length,
             ),
-        };
-        println!("{result}");
-        self
+            _ => miette::bail!(format!("Z component is none, but T component is not none.")),
+        }?;
+
+        Ok(self)
     }
 }
 #[cfg(test)]
@@ -496,6 +465,21 @@ mod test {
         assert_eq!(
             coord,
             [-2764132.649773435, 4787618.188267582, 3170378.735383637]
+        );
+    }
+    #[test]
+    fn test_convert_array_3d() {
+        let ctx = crate::PjContext::default();
+        let pj = ctx
+            .create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())
+            .unwrap();
+        let pj = ctx.normalize_for_visualization(&pj).unwrap();
+        let mut coord = [[120.0, 30.0, 10.0]];
+
+        pj.convert_array(&mut coord.as_mut_slice()).unwrap();
+        assert_eq!(
+            coord,
+            [[-2764132.649773435, 4787618.188267582, 3170378.735383637]]
         );
     }
 }

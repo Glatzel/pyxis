@@ -915,6 +915,7 @@ name = "proj"
 version = "0.0.18"
 dependencies = [
  "clerk",
+ "float-cmp",
  "miette",
  "proj-sys",
 ]

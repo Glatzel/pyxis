@@ -284,6 +284,29 @@ pub trait IPjCoordArray {
     fn pj_z(&mut self) -> Option<*mut f64>;
     fn pj_t(&mut self) -> Option<*mut f64>;
 }
+impl IPjCoordArray for &mut [[f64; 2]] {
+    fn length(&mut self) -> usize {
+        self.len()
+    }
+    fn size(&mut self) -> usize {
+        std::mem::size_of::<[f64; 2]>()
+    }
+    fn pj_x(&mut self) -> *mut f64 {
+        &mut self[0][0] as *mut f64
+    }
+
+    fn pj_y(&mut self) -> *mut f64 {
+        &mut self[0][1] as *mut f64
+    }
+
+    fn pj_z(&mut self) -> Option<*mut f64> {
+        None
+    }
+
+    fn pj_t(&mut self) -> Option<*mut f64> {
+        None
+    }
+}
 impl IPjCoordArray for &mut [[f64; 3]] {
     fn length(&mut self) -> usize {
         self.len()

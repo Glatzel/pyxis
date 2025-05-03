@@ -4,10 +4,9 @@ use crate::{check_context_result, check_pj_result};
 /// # References
 ///<https://proj.org/en/stable/development/reference/functions.html#coordinate-transformation>
 impl crate::Pj {
-    ///
+    ///Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
-
     pub fn trans(
         &self,
         direction: crate::PjDirection,

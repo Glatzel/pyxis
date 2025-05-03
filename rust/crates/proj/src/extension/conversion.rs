@@ -237,7 +237,7 @@ mod test {
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
 
-        pj.project_array(false, &mut coord.as_mut_slice())?;
+        pj.project_array(false, coord.as_mut_slice())?;
         assert_eq!(
             coord,
             [
@@ -254,7 +254,7 @@ mod test {
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
 
-        pj.project_array(false, &mut coord.as_mut_slice())?;
+        pj.project_array(false, coord.as_mut_slice())?;
         assert_eq!(
             coord,
             [
@@ -271,7 +271,7 @@ mod test {
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
 
-        pj.convert_array(&mut coord.as_mut_slice())?;
+        pj.convert_array(coord.as_mut_slice())?;
         assert_eq!(
             coord,
             [
@@ -288,7 +288,7 @@ mod test {
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
 
-        pj.convert_array(&mut coord.as_mut_slice())?;
+        pj.convert_array(coord.as_mut_slice())?;
         assert_eq!(
             coord,
             [

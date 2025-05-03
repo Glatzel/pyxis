@@ -22,7 +22,7 @@ impl crate::Pj {
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
-    pub fn trans_generic(
+    fn trans_generic(
         &self,
         direction: crate::PjDirection,
         x: *mut f64,
@@ -81,7 +81,7 @@ impl crate::Pj {
 impl crate::PjContext {
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
-    fn _trans_bounds(
+    pub fn _trans_bounds(
         &self,
         p: &crate::Pj,
         direction: crate::PjDirection,
@@ -89,10 +89,10 @@ impl crate::PjContext {
         ymin: f64,
         xmax: f64,
         ymax: f64,
-        out_xmin: *mut f64,
-        out_ymin: *mut f64,
-        out_xmax: *mut f64,
-        out_ymax: *mut f64,
+        out_xmin: &mut f64,
+        out_ymin: &mut f64,
+        out_xmax: &mut f64,
+        out_ymax: &mut f64,
         densify_pts: i32,
     ) -> miette::Result<&Self> {
         let code = unsafe {
@@ -116,7 +116,7 @@ impl crate::PjContext {
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
-    fn _trans_bounds_3d(
+    pub fn trans_bounds_3d(
         &self,
         p: &crate::Pj,
         direction: crate::PjDirection,
@@ -126,12 +126,12 @@ impl crate::PjContext {
         xmax: f64,
         ymax: f64,
         zmax: f64,
-        out_xmin: *mut f64,
-        out_ymin: *mut f64,
-        out_zmin: *mut f64,
-        out_xmax: *mut f64,
-        out_ymax: *mut f64,
-        out_zmax: *mut f64,
+        out_xmin: &mut f64,
+        out_ymin: &mut f64,
+        out_zmin: &mut f64,
+        out_xmax: &mut f64,
+        out_ymax: &mut f64,
+        out_zmax: &mut f64,
         densify_pts: i32,
     ) -> miette::Result<&Self> {
         let code = unsafe {

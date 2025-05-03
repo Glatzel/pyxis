@@ -571,6 +571,42 @@ mod test {
         }
     }
     #[test]
+    fn test_project_array_2d() {
+        let ctx = crate::PjContext::default();
+        let pj = ctx
+            .create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())
+            .unwrap();
+        let pj = ctx.normalize_for_visualization(&pj).unwrap();
+        let mut coord = [[120.0, 30.0], [50.0, -80.0]];
+
+        pj.project_array(false, &mut coord.as_mut_slice()).unwrap();
+        assert_eq!(
+            coord,
+            [
+                [19955590.73888901, 3416780.562127255],
+                [17583572.872089125, -9356989.97994042]
+            ]
+        );
+    }
+    #[test]
+    fn test_project_array_3d() {
+        let ctx = crate::PjContext::default();
+        let pj = ctx
+            .create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())
+            .unwrap();
+        let pj = ctx.normalize_for_visualization(&pj).unwrap();
+        let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
+
+        pj.project_array(false, &mut coord.as_mut_slice()).unwrap();
+        assert_eq!(
+            coord,
+            [
+                [-2764132.649773435, 4787618.188267582, 3170378.735383637],
+                [714243.0112756203, 851201.6746730272, -6259542.96102869]
+            ]
+        );
+    }
+    #[test]
     fn test_convert_array_2d() {
         let ctx = crate::PjContext::default();
         let pj = ctx

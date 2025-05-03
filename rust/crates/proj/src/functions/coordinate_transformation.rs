@@ -9,8 +9,8 @@ impl crate::Pj {
     pub fn trans(
         &self,
         direction: crate::PjDirection,
-        coord: crate::PjCoord,
-    ) -> miette::Result<crate::PjCoord> {
+        coord: proj_sys::PJ_COORD,
+    ) -> miette::Result<proj_sys::PJ_COORD> {
         let out_coord = unsafe { proj_sys::proj_trans(self.pj, i32::from(direction), coord) };
         check_pj_result!(self);
         Ok(out_coord)
@@ -64,7 +64,7 @@ impl crate::Pj {
     pub fn trans_array(
         &self,
         direction: crate::PjDirection,
-        coord: &mut [crate::PjCoord],
+        coord: &mut [proj_sys::PJ_COORD],
     ) -> miette::Result<&Self> {
         let code = unsafe {
             proj_sys::proj_trans_array(

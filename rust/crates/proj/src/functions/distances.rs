@@ -7,7 +7,11 @@ impl crate::Pj {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
     pub fn lp_dist(&self, a: crate::PjLp, b: crate::PjLp) -> miette::Result<f64> {
         let dist = unsafe {
-            proj_sys::proj_lp_dist(self.pj, crate::PjCoord { lp: a }, crate::PjCoord { lp: b })
+            proj_sys::proj_lp_dist(
+                self.pj,
+                proj_sys::PJ_COORD { lp: a },
+                proj_sys::PJ_COORD { lp: b },
+            )
         };
         check_pj_result!(self);
         if dist.is_nan() {
@@ -24,8 +28,8 @@ impl crate::Pj {
         let dist = unsafe {
             proj_sys::proj_lpz_dist(
                 self.pj,
-                crate::PjCoord { lpz: a },
-                crate::PjCoord { lpz: b },
+                proj_sys::PJ_COORD { lpz: a },
+                proj_sys::PJ_COORD { lpz: b },
             )
         };
         check_pj_result!(self);
@@ -41,7 +45,11 @@ impl crate::Pj {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
     pub fn geod(&self, a: crate::PjLp, b: crate::PjLp) -> miette::Result<(f64, f64)> {
         let dist = unsafe {
-            proj_sys::proj_geod(self.pj, crate::PjCoord { lp: a }, crate::PjCoord { lp: b })
+            proj_sys::proj_geod(
+                self.pj,
+                proj_sys::PJ_COORD { lp: a },
+                proj_sys::PJ_COORD { lp: b },
+            )
         };
         check_pj_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };
@@ -56,11 +64,11 @@ impl crate::Pj {
 }
 
 pub fn xy_dist(a: crate::PjXy, b: crate::PjXy) -> f64 {
-    unsafe { proj_sys::proj_xy_dist(crate::PjCoord { xy: a }, crate::PjCoord { xy: b }) }
+    unsafe { proj_sys::proj_xy_dist(proj_sys::PJ_COORD { xy: a }, proj_sys::PJ_COORD { xy: b }) }
 }
 
 pub fn xyz_dist(a: crate::PjXyz, b: crate::PjXyz) -> f64 {
-    unsafe { proj_sys::proj_xyz_dist(crate::PjCoord { xyz: a }, crate::PjCoord { xyz: b }) }
+    unsafe { proj_sys::proj_xyz_dist(proj_sys::PJ_COORD { xyz: a }, proj_sys::PJ_COORD { xyz: b }) }
 }
 #[cfg(test)]
 mod test {

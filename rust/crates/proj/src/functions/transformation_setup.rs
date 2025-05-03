@@ -8,8 +8,9 @@ impl crate::PjContext {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn create(&self, definition: &str) -> miette::Result<crate::Pj> {
+        let definition = std::ffi::CString::new(definition).into_diagnostic()?;
         let pj = crate::Pj {
-            pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr() as *const i8) },
+            pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr()) },
         };
         check_context_result!(self);
         Ok(pj)

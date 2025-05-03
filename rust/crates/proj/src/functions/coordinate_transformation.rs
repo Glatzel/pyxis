@@ -1,4 +1,4 @@
-use crate::{check_context_result, check_pj_result};
+use crate::check_pj_result;
 
 // region:Coordinate transformation
 /// # References
@@ -7,14 +7,21 @@ impl crate::Pj {
     ///Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
-    pub fn trans(
-        &self,
-        direction: crate::PjDirection,
-        coord: impl crate::IPjCoord,
-    ) -> miette::Result<proj_sys::PJ_COORD> {
+    pub fn trans<T>(&self, direction: crate::PjDirection, coord: T) -> miette::Result<T>
+    where
+        T: crate::IPjCoord,
+    {
         let out_coord =
             unsafe { proj_sys::proj_trans(self.pj, i32::from(direction), coord.to_pj_coord()) };
         check_pj_result!(self);
+        let out_coord = unsafe {
+            T::from_pj_coord(
+                out_coord.xyzt.x,
+                out_coord.xyzt.y,
+                out_coord.xyzt.z,
+                out_coord.xyzt.t,
+            )
+        };
         Ok(out_coord)
     }
     /// # References
@@ -64,20 +71,26 @@ impl crate::Pj {
     /// Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
-    pub fn trans_array(
+    pub fn trans_array<T>(
         &self,
         direction: crate::PjDirection,
-        coord: &[impl crate::IPjCoord],
-    ) -> miette::Result<&Self> {
-        let mut coord: Vec<crate::PjCoord> = coord.iter().map(|a| a.to_pj_coord()).collect();
+        coord: &mut [T],
+    ) -> miette::Result<&Self>
+    where
+        T: crate::IPjCoord,
+    {
+        let mut temp: Vec<crate::PjCoord> = coord.iter().map(|c| c.to_pj_coord()).collect();
         let code = unsafe {
             proj_sys::proj_trans_array(
                 self.pj,
                 i32::from(direction),
                 coord.len(),
-                coord.as_mut_ptr(),
+                temp.as_mut_ptr(),
             )
         };
+        coord.iter_mut().zip(temp).for_each(|(c, t)| {
+            *c = unsafe { T::from_pj_coord(t.xyzt.x, t.xyzt.y, t.xyzt.z, t.xyzt.t) }
+        });
         check_pj_result!(self, code);
         Ok(self)
     }
@@ -85,7 +98,7 @@ impl crate::Pj {
 impl crate::PjContext {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
-    pub fn _trans_bounds(
+    pub fn trans_bounds(
         &self,
         p: &crate::Pj,
         direction: crate::PjDirection,
@@ -115,7 +128,9 @@ impl crate::PjContext {
                 densify_pts,
             )
         };
-        check_context_result!(self, code);
+        if code != 1 {
+            miette::bail!("Failures encountered.")
+        }
         Ok(self)
     }
     /// # References
@@ -158,7 +173,114 @@ impl crate::PjContext {
                 densify_pts,
             )
         };
-        check_context_result!(self, code);
+        if code != 1 {
+            miette::bail!("Failures encountered.")
+        }
         Ok(self)
+    }
+}
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_trans() -> miette::Result<()> {
+        let ctx = crate::PjContext::default();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
+        let coord = [120.0, 30.0];
+        let coord = pj.trans(crate::PjDirection::PjFwd, coord)?;
+        assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
+        Ok(())
+    }
+    #[test]
+    fn test_trans_array() -> miette::Result<()> {
+        let ctx = crate::PjContext::default();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
+        let mut coord = [[120.0, 30.0], [50.0, -80.0]];
+        pj.trans_array(crate::PjDirection::PjFwd, &mut coord)?;
+        assert_eq!(
+            coord,
+            [
+                [19955590.73888901, 3416780.562127255],
+                [17583572.872089125, -9356989.97994042]
+            ]
+        );
+        Ok(())
+    }
+    #[test]
+    fn test_trans_bounds() -> miette::Result<()> {
+        let ctx = crate::PjContext::default();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
+        let xmin = 0.0;
+        let ymin = 1.0;
+        let xmax = 20.0;
+        let ymax = 30.0;
+        let mut out_xmin = f64::default();
+        let mut out_ymin = f64::default();
+        let mut out_xmax = f64::default();
+        let mut out_ymax = f64::default();
+
+        ctx.trans_bounds(
+            &pj,
+            crate::PjDirection::PjFwd,
+            xmin,
+            ymin,
+            xmax,
+            ymax,
+            &mut out_xmin,
+            &mut out_ymin,
+            &mut out_xmax,
+            &mut out_ymax,
+            21,
+        )?;
+        assert_eq!(out_xmin, 2297280.4262236636);
+        assert_eq!(out_ymin, 6639816.584496002);
+        assert_eq!(out_xmax, 10788961.870597329);
+        assert_eq!(out_ymax, 19555124.881683525);
+        Ok(())
+    }
+    #[test]
+    fn test_trans_bounds_3d() -> miette::Result<()> {
+        let ctx = crate::PjContext::default();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
+        let xmin = 0.0;
+        let ymin = 1.0;
+        let zmin = 1.0;
+        let xmax = 20.0;
+        let ymax = 30.0;
+        let zmax = 3.0;
+        let mut out_xmin = f64::default();
+        let mut out_ymin = f64::default();
+        let mut out_zmin = f64::default();
+        let mut out_xmax = f64::default();
+        let mut out_ymax = f64::default();
+        let mut out_zmax = f64::default();
+
+        ctx.trans_bounds_3d(
+            &pj,
+            crate::PjDirection::PjFwd,
+            xmin,
+            ymin,
+            zmin,
+            xmax,
+            ymax,
+            zmax,
+            &mut out_xmin,
+            &mut out_ymin,
+            &mut out_zmin,
+            &mut out_xmax,
+            &mut out_ymax,
+            &mut out_zmax,
+            21,
+        )?;
+        assert_eq!(out_xmin, 2297280.4262236636);
+        assert_eq!(out_ymin, 6639816.584496002);
+        assert_eq!(out_zmin, 1.0);
+        assert_eq!(out_xmax, 10788961.870597329);
+        assert_eq!(out_ymax, 19555124.881683525);
+        assert_eq!(out_zmax, 3.0);
+        Ok(())
     }
 }

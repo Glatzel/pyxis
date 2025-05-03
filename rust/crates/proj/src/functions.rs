@@ -12,7 +12,6 @@ mod threading_contexts;
 mod transformation_setup;
 mod various;
 
-pub use cleanup::*;
 pub use distances::*;
 pub use info_functions::*;
 pub use iso19111::*;

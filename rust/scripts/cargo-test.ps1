@@ -42,10 +42,10 @@ Write-Output "::endgroup::"
 Write-Output "::group::result"
 $code = $code + $LASTEXITCODE
 if ($code -ne 0) {
-    Write-Output "Test failed."
+    Write-Host "Test failed." -ForegroundColor Red
 }
 else {
-    Write-Output "Test successed."
+    Write-Host "Test successed." -ForegroundColor Green
 }
 Write-Output "::endgroup::"
 Set-Location $ROOT

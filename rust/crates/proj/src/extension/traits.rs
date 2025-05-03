@@ -6,6 +6,7 @@ pub trait IPjCoord: Clone {
     fn pj_z(&mut self) -> *mut f64;
     fn pj_t(&mut self) -> *mut f64;
     fn to_pj_coord(&self) -> crate::PjCoord;
+    fn from_pj_coord(x: f64, y: f64, z: f64, t: f64) -> Self;
 }
 impl IPjCoord for (f64, f64) {
     fn pj_x(&mut self) -> *mut f64 {
@@ -32,6 +33,9 @@ impl IPjCoord for (f64, f64) {
             },
         }
     }
+    fn from_pj_coord(x: f64, y: f64, _z: f64, _t: f64) -> Self {
+        (x, y)
+    }
 }
 impl IPjCoord for [f64; 2] {
     fn pj_x(&mut self) -> *mut f64 {
@@ -57,6 +61,9 @@ impl IPjCoord for [f64; 2] {
                 y: self[1],
             },
         }
+    }
+    fn from_pj_coord(x: f64, y: f64, _z: f64, _t: f64) -> Self {
+        [x, y]
     }
 }
 impl IPjCoord for (f64, f64, f64) {
@@ -85,6 +92,9 @@ impl IPjCoord for (f64, f64, f64) {
             },
         }
     }
+    fn from_pj_coord(x: f64, y: f64, z: f64, _t: f64) -> Self {
+        (x, y, z)
+    }
 }
 impl IPjCoord for [f64; 3] {
     fn pj_x(&mut self) -> *mut f64 {
@@ -110,6 +120,9 @@ impl IPjCoord for [f64; 3] {
                 z: self[2],
             },
         }
+    }
+    fn from_pj_coord(x: f64, y: f64, z: f64, _t: f64) -> Self {
+        [x, y, z]
     }
 }
 impl IPjCoord for (f64, f64, f64, f64) {
@@ -138,6 +151,9 @@ impl IPjCoord for (f64, f64, f64, f64) {
             },
         }
     }
+    fn from_pj_coord(x: f64, y: f64, z: f64, t: f64) -> Self {
+        (x, y, z, t)
+    }
 }
 impl IPjCoord for [f64; 4] {
     fn pj_x(&mut self) -> *mut f64 {
@@ -164,5 +180,8 @@ impl IPjCoord for [f64; 4] {
                 t: self[3],
             },
         }
+    }
+    fn from_pj_coord(x: f64, y: f64, z: f64, t: f64) -> Self {
+        [x, y, z, t]
     }
 }

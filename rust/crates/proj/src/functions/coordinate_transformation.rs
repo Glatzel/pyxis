@@ -116,7 +116,7 @@ impl crate::PjContext {
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
-    pub fn trans_bounds_3d(
+    fn trans_bounds_3d(
         &self,
         p: &crate::Pj,
         direction: crate::PjDirection,

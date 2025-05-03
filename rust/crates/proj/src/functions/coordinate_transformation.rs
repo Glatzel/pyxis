@@ -22,23 +22,23 @@ impl crate::Pj {
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
-    pub fn trans_generic(
+    pub(crate) fn trans_generic(
         &self,
         direction: crate::PjDirection,
-        x: &mut f64,
+        x: *mut f64,
         sx: usize,
         nx: usize,
-        y: &mut f64,
+        y: *mut f64,
         sy: usize,
         ny: usize,
-        z: &mut f64,
+        z: *mut f64,
         sz: usize,
         nz: usize,
-        t: &mut f64,
+        t: *mut f64,
         st: usize,
         nt: usize,
-    ) -> usize {
-        unsafe {
+    ) -> miette::Result<usize> {
+        let result = unsafe {
             proj_sys::proj_trans_generic(
                 self.pj,
                 i32::from(direction),
@@ -55,7 +55,9 @@ impl crate::Pj {
                 st,
                 nt,
             )
-        }
+        };
+        check_pj_result!(self);
+        Ok(result)
     }
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
@@ -79,7 +81,7 @@ impl crate::Pj {
 impl crate::PjContext {
     /// #References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
-    pub fn trans_bounds(
+    pub fn _trans_bounds(
         &self,
         p: &crate::Pj,
         direction: crate::PjDirection,

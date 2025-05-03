@@ -5,14 +5,14 @@ impl Default for crate::PjArea {
 }
 
 impl crate::PjArea {
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>
     pub fn new() -> Self {
         Self {
             area: unsafe { proj_sys::proj_area_create() },
         }
     }
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_area_set_bbox>
     pub fn set_bbox(
         &self,

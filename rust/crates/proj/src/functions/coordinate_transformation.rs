@@ -1,10 +1,10 @@
 use crate::{check_context_result, check_pj_result};
 
 // region:Coordinate transformation
-/// #References
+/// # References
 ///<https://proj.org/en/stable/development/reference/functions.html#coordinate-transformation>
 impl crate::Pj {
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
     pub fn trans(
         &self,
@@ -15,12 +15,12 @@ impl crate::Pj {
         check_pj_result!(self);
         Ok(out_coord)
     }
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     pub fn get_last_used_operation(&self) -> Self {
         unimplemented!()
     }
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
     pub(crate) fn trans_generic(
         &self,
@@ -59,7 +59,7 @@ impl crate::Pj {
         check_pj_result!(self);
         Ok(result)
     }
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
     pub fn trans_array(
         &self,
@@ -79,7 +79,7 @@ impl crate::Pj {
     }
 }
 impl crate::PjContext {
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
     pub fn _trans_bounds(
         &self,
@@ -114,7 +114,7 @@ impl crate::PjContext {
         check_context_result!(self, code);
         Ok(self)
     }
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
     pub fn trans_bounds_3d(
         &self,

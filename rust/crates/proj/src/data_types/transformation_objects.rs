@@ -2,7 +2,7 @@ pub struct Pj {
     pub(crate) pj: *mut proj_sys::PJ,
 }
 
-/// #References
+/// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_DIRECTION>
 pub enum PjDirection {
     PjFwd,

@@ -476,16 +476,73 @@ impl crate::Pj {
 #[cfg(test)]
 mod test {
     #[test]
+    fn test_project_2d() {
+        let ctx = crate::PjContext::default();
+        let pj = ctx
+            .create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())
+            .unwrap();
+        // array
+        {
+            let pj = ctx.normalize_for_visualization(&pj).unwrap();
+            let coord = [120.0, 30.0];
+            let coord = pj.project(false, coord).unwrap();
+            assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
+        }
+        // tuple
+        {
+            let pj = ctx.normalize_for_visualization(&pj).unwrap();
+            let coord = (120.0, 30.0);
+            let coord = pj.project(false, coord).unwrap();
+            assert_eq!(coord, (19955590.73888901, 3416780.562127255));
+        }
+    }
+    #[test]
+    fn test_project_3d() {
+        let ctx = crate::PjContext::default();
+        let pj = ctx
+            .create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())
+            .unwrap();
+        let pj = ctx.normalize_for_visualization(&pj).unwrap();
+        // array
+        {
+            let coord = [120.0, 30.0, 10.0];
+            let coord = pj.project(false, coord).unwrap();
+            assert_eq!(
+                coord,
+                [-2764132.649773435, 4787618.188267582, 3170378.735383637]
+            );
+        }
+        // tuple
+        {
+            let coord = (120.0, 30.0, 10.0);
+            let coord = pj.project(false, coord).unwrap();
+            assert_eq!(
+                coord,
+                (-2764132.649773435, 4787618.188267582, 3170378.735383637)
+            );
+        }
+    }
+    #[test]
     fn test_convert_2d() {
         let ctx = crate::PjContext::default();
         let pj = ctx
             .create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())
             .unwrap();
-        let pj = ctx.normalize_for_visualization(&pj).unwrap();
-        let coord = [120.0, 30.0];
+        // array
+        {
+            let pj = ctx.normalize_for_visualization(&pj).unwrap();
+            let coord = [120.0, 30.0];
+            let coord = pj.convert(coord).unwrap();
+            assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
+        }
+        // tuple
+        {
+            let pj = ctx.normalize_for_visualization(&pj).unwrap();
+            let coord = (120.0, 30.0);
 
-        let coord = pj.convert(coord).unwrap();
-        assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
+            let coord = pj.convert(coord).unwrap();
+            assert_eq!(coord, (19955590.73888901, 3416780.562127255));
+        }
     }
     #[test]
     fn test_convert_3d() {
@@ -494,13 +551,24 @@ mod test {
             .create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())
             .unwrap();
         let pj = ctx.normalize_for_visualization(&pj).unwrap();
-        let coord = [120.0, 30.0, 10.0];
-
-        let coord = pj.convert(coord).unwrap();
-        assert_eq!(
-            coord,
-            [-2764132.649773435, 4787618.188267582, 3170378.735383637]
-        );
+        // array
+        {
+            let coord = [120.0, 30.0, 10.0];
+            let coord = pj.convert(coord).unwrap();
+            assert_eq!(
+                coord,
+                [-2764132.649773435, 4787618.188267582, 3170378.735383637]
+            );
+        }
+        // tuple
+        {
+            let coord = (120.0, 30.0, 10.0);
+            let coord = pj.convert(coord).unwrap();
+            assert_eq!(
+                coord,
+                (-2764132.649773435, 4787618.188267582, 3170378.735383637)
+            );
+        }
     }
     #[test]
     fn test_convert_array_2d() {

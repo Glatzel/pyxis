@@ -64,6 +64,8 @@ pub fn xyz_dist(a: crate::PjXyz, b: crate::PjXyz) -> f64 {
 }
 #[cfg(test)]
 mod test {
+    use float_cmp::assert_approx_eq;
+
     #[test]
     fn test_lp_dist() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
@@ -78,7 +80,7 @@ mod test {
                 phi: 4.0f64.to_radians(),
             },
         )?;
-        assert_eq!(dist, 313588.39721259556);
+        assert_approx_eq!(f64, dist, 313588.39721259556);
         Ok(())
     }
     #[test]
@@ -114,8 +116,8 @@ mod test {
                 phi: 4.0f64.to_radians(),
             },
         )?;
-        assert_eq!(dist, 313588.39721259556);
-        assert_eq!(reversed_azimuth, 45.10460545587798);
+        assert_approx_eq!(f64, dist, 313588.39721259556);
+        assert_approx_eq!(f64, reversed_azimuth, 45.10460545587798);
         Ok(())
     }
     #[test]
@@ -124,7 +126,7 @@ mod test {
             crate::PjXy { x: 1.0, y: 2.0 },
             crate::PjXy { x: 4.0, y: 6.0 },
         );
-        assert_eq!(dist, 5.0);
+        assert_approx_eq!(f64, dist, 5.0);
         Ok(())
     }
     #[test]
@@ -141,7 +143,7 @@ mod test {
                 z: 5.0,
             },
         );
-        assert_eq!(dist, 21.0f64.sqrt());
+        assert_approx_eq!(f64, dist, 21.0f64.sqrt());
         Ok(())
     }
 }

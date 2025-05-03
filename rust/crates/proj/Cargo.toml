@@ -8,5 +8,8 @@ proj-sys = { workspace = true,features = ["bindgen"]}
 clerk = { workspace = true }
 miette={ workspace = true }
 
+[dev-dependencies]
+float-cmp = { workspace = true }
+
 [features]
 log = ["clerk/log"]

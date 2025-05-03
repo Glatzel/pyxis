@@ -197,19 +197,7 @@ impl crate::Pj {
                 0,
             ),
             4 => self.trans_generic(
-                direction,
-                &mut x,
-                1,
-                1,
-                &mut y,
-                1,
-                1,
-                &mut z,
-                1,
-                1,
-                std::ptr::null_mut::<f64>(),
-                0,
-                0,
+                direction, &mut x, 1, 1, &mut y, 1, 1, &mut z, 1, 1, &mut t, 1, 1,
             ),
             other => miette::bail!(format!("Unknow compenent count: {}", other)),
         }?;
@@ -236,9 +224,9 @@ impl crate::Pj {
                 std::ptr::null_mut::<f64>(),
                 0,
                 0,
-                std::ptr::null_mut::<f64>(),
-                0,
-                0,
+                &mut t,
+                1,
+                1,
             ),
             3 => self.trans_generic(
                 crate::PjDirection::PjFwd,
@@ -281,8 +269,8 @@ pub trait IPjCoordArray {
     fn size(&mut self) -> usize;
     fn pj_x(&mut self) -> *mut f64;
     fn pj_y(&mut self) -> *mut f64;
-    fn pj_z(&mut self) -> Option<*mut f64>;
-    fn pj_t(&mut self) -> Option<*mut f64>;
+    fn pj_z(&mut self) -> *mut f64;
+    fn pj_t(&mut self) -> *mut f64;
 }
 impl IPjCoordArray for &mut [[f64; 2]] {
     fn length(&mut self) -> usize {
@@ -299,12 +287,12 @@ impl IPjCoordArray for &mut [[f64; 2]] {
         &mut self[0][1] as *mut f64
     }
 
-    fn pj_z(&mut self) -> Option<*mut f64> {
-        None
+    fn pj_z(&mut self) -> *mut f64 {
+        std::ptr::null_mut::<f64>()
     }
 
-    fn pj_t(&mut self) -> Option<*mut f64> {
-        None
+    fn pj_t(&mut self) -> *mut f64 {
+        std::ptr::null_mut::<f64>()
     }
 }
 impl IPjCoordArray for &mut [[f64; 3]] {
@@ -322,12 +310,12 @@ impl IPjCoordArray for &mut [[f64; 3]] {
         &mut self[0][1] as *mut f64
     }
 
-    fn pj_z(&mut self) -> Option<*mut f64> {
-        Some(&mut self[0][2] as *mut f64)
+    fn pj_z(&mut self) -> *mut f64 {
+        &mut self[0][2] as *mut f64
     }
 
-    fn pj_t(&mut self) -> Option<*mut f64> {
-        None
+    fn pj_t(&mut self) -> *mut f64 {
+        std::ptr::null_mut::<f64>()
     }
 }
 impl IPjCoordArray for &mut [[f64; 4]] {
@@ -345,12 +333,12 @@ impl IPjCoordArray for &mut [[f64; 4]] {
         &mut self[0][1] as *mut f64
     }
 
-    fn pj_z(&mut self) -> Option<*mut f64> {
-        Some(&mut self[0][2] as *mut f64)
+    fn pj_z(&mut self) -> *mut f64 {
+        &mut self[0][2] as *mut f64
     }
 
-    fn pj_t(&mut self) -> Option<*mut f64> {
-        Some(&mut self[0][3] as *mut f64)
+    fn pj_t(&mut self) -> *mut f64 {
+        &mut self[0][3] as *mut f64
     }
 }
 impl crate::Pj {
@@ -370,8 +358,9 @@ impl crate::Pj {
         let z = coord.pj_z();
         let t = coord.pj_t();
 
-        match (z, t) {
-            (None, None) => self.trans_generic(
+        match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
+            //2d
+            (false, false, true, true) => self.trans_generic(
                 direction,
                 x,
                 size,
@@ -386,7 +375,8 @@ impl crate::Pj {
                 0,
                 0,
             ),
-            (Some(z), None) => self.trans_generic(
+            //3d
+            (false, false, false, true) => self.trans_generic(
                 direction,
                 x,
                 size,
@@ -401,10 +391,15 @@ impl crate::Pj {
                 0,
                 0,
             ),
-            (Some(z), Some(t)) => self.trans_generic(
+            //4d
+            (false, false, false, false) => self.trans_generic(
                 direction, x, size, length, y, size, length, z, size, length, t, size, length,
             ),
-            _ => miette::bail!(format!("Z component is none, but T component is not none.")),
+            (x, y, z, t) => {
+                miette::bail!(format!(
+                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
+                ))
+            }
         }?;
         Ok(self)
     }
@@ -420,8 +415,9 @@ impl crate::Pj {
         let z = coord.pj_z();
         let t = coord.pj_t();
 
-        match (z, t) {
-            (None, None) => self.trans_generic(
+        match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
+            //2d
+            (false, false, true, true) => self.trans_generic(
                 crate::PjDirection::PjFwd,
                 x,
                 size,
@@ -437,7 +433,8 @@ impl crate::Pj {
                 0,
             ),
 
-            (Some(z), None) => self.trans_generic(
+            //3d
+            (false, false, false, true) => self.trans_generic(
                 crate::PjDirection::PjFwd,
                 x,
                 size,
@@ -452,7 +449,8 @@ impl crate::Pj {
                 0,
                 0,
             ),
-            (Some(z), Some(t)) => self.trans_generic(
+            //4d
+            (false, false, false, false) => self.trans_generic(
                 crate::PjDirection::PjFwd,
                 x,
                 size,
@@ -467,7 +465,11 @@ impl crate::Pj {
                 size,
                 length,
             ),
-            _ => miette::bail!(format!("Z component is none, but T component is not none.")),
+            (x, y, z, t) => {
+                miette::bail!(format!(
+                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
+                ))
+            }
         }?;
 
         Ok(self)

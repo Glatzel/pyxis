@@ -1,11 +1,11 @@
 use miette::IntoDiagnostic;
 
 use crate::check_context_result;
-
-/// #References
+/// # Transformation setup
+/// ## References
 ///<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 impl crate::PjContext {
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn create(&self, definition: &str) -> miette::Result<crate::Pj> {
         let pj = crate::Pj {
@@ -14,7 +14,7 @@ impl crate::PjContext {
         check_context_result!(self);
         Ok(pj)
     }
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     pub fn create_argv(&self, definition: &[&str]) -> miette::Result<crate::Pj> {
         let len = definition.len();
@@ -33,7 +33,7 @@ impl crate::PjContext {
         check_context_result!(self);
         Ok(pj)
     }
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     pub fn create_crs_to_crs(
         &self,
@@ -56,7 +56,7 @@ impl crate::PjContext {
         check_context_result!(self);
         Ok(pj)
     }
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub fn create_crs_to_crs_from_pj(
         &self,
@@ -109,7 +109,7 @@ impl crate::PjContext {
         check_context_result!(self);
         Ok(pj)
     }
-    /// #References
+    /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
     pub fn normalize_for_visualization(&self, obj: &crate::Pj) -> miette::Result<crate::Pj> {
         Ok(crate::Pj {

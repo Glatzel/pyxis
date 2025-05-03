@@ -5,7 +5,7 @@ impl Default for crate::PjContext {
 }
 
 impl crate::PjContext {
-    /// #References
+    /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
     pub fn new() -> Self {
         Self {
@@ -14,7 +14,7 @@ impl crate::PjContext {
     }
 }
 impl Clone for crate::PjContext {
-    /// #References
+    /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone>
     fn clone(&self) -> Self {
         Self {
@@ -23,7 +23,7 @@ impl Clone for crate::PjContext {
     }
 }
 impl Drop for crate::PjContext {
-    /// #References
+    /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
     fn drop(&mut self) {
         unsafe { proj_sys::proj_context_destroy(self.ctx) };

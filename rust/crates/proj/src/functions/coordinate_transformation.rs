@@ -181,6 +181,7 @@ impl crate::PjContext {
 }
 #[cfg(test)]
 mod test {
+    use float_cmp::assert_approx_eq;
     #[test]
     fn test_trans() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
@@ -234,10 +235,10 @@ mod test {
             &mut out_ymax,
             21,
         )?;
-        assert_eq!(out_xmin, 2297280.4262236636);
-        assert_eq!(out_ymin, 6639816.584496002);
-        assert_eq!(out_xmax, 10788961.870597329);
-        assert_eq!(out_ymax, 19555124.881683525);
+        assert_approx_eq!(f64, out_xmin, 2297280.4262236636);
+        assert_approx_eq!(f64, out_ymin, 6639816.584496002);
+        assert_approx_eq!(f64, out_xmax, 10788961.870597329);
+        assert_approx_eq!(f64, out_ymax, 19555124.881683525);
         Ok(())
     }
     #[test]
@@ -275,12 +276,12 @@ mod test {
             &mut out_zmax,
             21,
         )?;
-        assert_eq!(out_xmin, 2297280.4262236636);
-        assert_eq!(out_ymin, 6639816.584496002);
-        assert_eq!(out_zmin, 1.0);
-        assert_eq!(out_xmax, 10788961.870597329);
-        assert_eq!(out_ymax, 19555124.881683525);
-        assert_eq!(out_zmax, 3.0);
+        assert_approx_eq!(f64, out_xmin, 2297280.4262236636);
+        assert_approx_eq!(f64, out_ymin, 6639816.584496002);
+        assert_approx_eq!(f64, out_zmin, 1.0);
+        assert_approx_eq!(f64, out_xmax, 10788961.870597329);
+        assert_approx_eq!(f64, out_ymax, 19555124.881683525);
+        assert_approx_eq!(f64, out_zmax, 3.0);
         Ok(())
     }
 }

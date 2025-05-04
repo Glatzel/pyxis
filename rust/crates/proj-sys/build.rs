@@ -40,10 +40,11 @@ fn main() {
         let bindings = bindgen::Builder::default()
             .header(header)
             .use_core()
-            .derive_eq(true)
+            .size_t_is_usize(true)
+            .blocklist_type("max_align_t")
+            // .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
+            // .generate_comments(true)
             .ctypes_prefix("libc")
-            .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
-            .generate_comments(true)
             .generate()
             .unwrap();
 

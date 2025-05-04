@@ -92,7 +92,7 @@ pub type wctype_t = libc::c_ushort;
 pub type __time32_t = libc::c_long;
 pub type __time64_t = libc::c_longlong;
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct __crt_locale_data_public {
     pub _locale_pctype: *const libc::c_ushort,
     pub _locale_mb_cur_max: libc::c_int,
@@ -112,7 +112,7 @@ const _: () = {
         [::core::mem::offset_of!(__crt_locale_data_public, _locale_lc_codepage) - 12usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct __crt_locale_pointers {
     pub locinfo: *mut __crt_locale_data,
     pub mbcinfo: *mut __crt_multibyte_data,
@@ -129,7 +129,7 @@ const _: () = {
 };
 pub type _locale_t = *mut __crt_locale_pointers;
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct _Mbstatet {
     pub _Wchar: libc::c_ulong,
     pub _Byte: libc::c_ushort,
@@ -170,7 +170,7 @@ pub struct PJ_AREA {
     _unused: [u8; 0],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct P5_FACTORS {
     pub meridional_scale: f64,
     pub parallel_scale: f64,
@@ -222,7 +222,7 @@ pub struct PJconsts {
 }
 pub type PJ = PJconsts;
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_LIST {
     pub id: *const libc::c_char,
     pub proj: ::core::option::Option<unsafe extern "C" fn(arg1: *mut PJ) -> *mut PJ>,
@@ -238,7 +238,7 @@ const _: () = {
 };
 pub type PJ_OPERATIONS = PJ_LIST;
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_ELLPS {
     pub id: *const libc::c_char,
     pub major: *const libc::c_char,
@@ -255,7 +255,7 @@ const _: () = {
     ["Offset of field: PJ_ELLPS::name"][::core::mem::offset_of!(PJ_ELLPS, name) - 24usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_UNITS {
     pub id: *const libc::c_char,
     pub to_meter: *const libc::c_char,
@@ -272,7 +272,7 @@ const _: () = {
     ["Offset of field: PJ_UNITS::factor"][::core::mem::offset_of!(PJ_UNITS, factor) - 24usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_PRIME_MERIDIANS {
     pub id: *const libc::c_char,
     pub defn: *const libc::c_char,
@@ -287,7 +287,7 @@ const _: () = {
         [::core::mem::offset_of!(PJ_PRIME_MERIDIANS, defn) - 8usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_XYZT {
     pub x: f64,
     pub y: f64,
@@ -304,7 +304,7 @@ const _: () = {
     ["Offset of field: PJ_XYZT::t"][::core::mem::offset_of!(PJ_XYZT, t) - 24usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_UVWT {
     pub u: f64,
     pub v: f64,
@@ -321,7 +321,7 @@ const _: () = {
     ["Offset of field: PJ_UVWT::t"][::core::mem::offset_of!(PJ_UVWT, t) - 24usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_LPZT {
     pub lam: f64,
     pub phi: f64,
@@ -338,7 +338,7 @@ const _: () = {
     ["Offset of field: PJ_LPZT::t"][::core::mem::offset_of!(PJ_LPZT, t) - 24usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_OPK {
     pub o: f64,
     pub p: f64,
@@ -353,7 +353,7 @@ const _: () = {
     ["Offset of field: PJ_OPK::k"][::core::mem::offset_of!(PJ_OPK, k) - 16usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_ENU {
     pub e: f64,
     pub n: f64,
@@ -368,7 +368,7 @@ const _: () = {
     ["Offset of field: PJ_ENU::u"][::core::mem::offset_of!(PJ_ENU, u) - 16usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_GEOD {
     pub s: f64,
     pub a1: f64,
@@ -383,7 +383,7 @@ const _: () = {
     ["Offset of field: PJ_GEOD::a2"][::core::mem::offset_of!(PJ_GEOD, a2) - 16usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_UV {
     pub u: f64,
     pub v: f64,
@@ -396,7 +396,7 @@ const _: () = {
     ["Offset of field: PJ_UV::v"][::core::mem::offset_of!(PJ_UV, v) - 8usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_XY {
     pub x: f64,
     pub y: f64,
@@ -409,7 +409,7 @@ const _: () = {
     ["Offset of field: PJ_XY::y"][::core::mem::offset_of!(PJ_XY, y) - 8usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_LP {
     pub lam: f64,
     pub phi: f64,
@@ -422,7 +422,7 @@ const _: () = {
     ["Offset of field: PJ_LP::phi"][::core::mem::offset_of!(PJ_LP, phi) - 8usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_XYZ {
     pub x: f64,
     pub y: f64,
@@ -437,7 +437,7 @@ const _: () = {
     ["Offset of field: PJ_XYZ::z"][::core::mem::offset_of!(PJ_XYZ, z) - 16usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_UVW {
     pub u: f64,
     pub v: f64,
@@ -452,7 +452,7 @@ const _: () = {
     ["Offset of field: PJ_UVW::w"][::core::mem::offset_of!(PJ_UVW, w) - 16usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_LPZ {
     pub lam: f64,
     pub phi: f64,
@@ -502,7 +502,7 @@ const _: () = {
     ["Offset of field: PJ_COORD::lp"][::core::mem::offset_of!(PJ_COORD, lp) - 0usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_INFO {
     pub major: libc::c_int,
     pub minor: libc::c_int,
@@ -529,7 +529,7 @@ const _: () = {
         [::core::mem::offset_of!(PJ_INFO, path_count) - 48usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_PROJ_INFO {
     pub id: *const libc::c_char,
     pub description: *const libc::c_char,
@@ -552,7 +552,7 @@ const _: () = {
         [::core::mem::offset_of!(PJ_PROJ_INFO, accuracy) - 32usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_GRID_INFO {
     pub gridname: [libc::c_char; 32usize],
     pub filename: [libc::c_char; 260usize],
@@ -588,7 +588,7 @@ const _: () = {
         [::core::mem::offset_of!(PJ_GRID_INFO, cs_lat) - 352usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_INIT_INFO {
     pub name: [libc::c_char; 32usize],
     pub filename: [libc::c_char; 260usize],
@@ -687,7 +687,7 @@ pub const PROJ_OPEN_ACCESS_PROJ_OPEN_ACCESS_CREATE: PROJ_OPEN_ACCESS = 2;
 pub type PROJ_OPEN_ACCESS = libc::c_int;
 #[doc = " File API callbacks"]
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PROJ_FILE_API {
     #[doc = " Version of this structure. Should be set to 1 currently."]
     pub version: libc::c_int,
@@ -1362,7 +1362,7 @@ pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALMEASURE: PJ_COORDINATE_SY
 pub type PJ_COORDINATE_SYSTEM_TYPE = libc::c_int;
 #[doc = " \\brief Structure given overall description of a CRS.\n\n This structure may grow over time, and should not be directly allocated by\n client code."]
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PROJ_CRS_INFO {
     #[doc = " Authority name."]
     pub auth_name: *mut libc::c_char,
@@ -1423,7 +1423,7 @@ const _: () = {
 };
 #[doc = " \\brief Structure describing optional parameters for proj_get_crs_list();\n\n This structure may grow over time, and should not be directly allocated by\n client code."]
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PROJ_CRS_LIST_PARAMETERS {
     #[doc = " Array of allowed object types. Should be NULL if all types are allowed"]
     pub types: *const PJ_TYPE,
@@ -1477,7 +1477,7 @@ const _: () = {
 };
 #[doc = " \\brief Structure given description of a unit.\n\n This structure may grow over time, and should not be directly allocated by\n client code.\n @since 7.1"]
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PROJ_UNIT_INFO {
     #[doc = " Authority name."]
     pub auth_name: *mut libc::c_char,
@@ -1515,7 +1515,7 @@ const _: () = {
 };
 #[doc = " \\brief Structure given description of a celestial body.\n\n This structure may grow over time, and should not be directly allocated by\n client code.\n @since 8.1"]
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PROJ_CELESTIAL_BODY_INFO {
     #[doc = " Authority name."]
     pub auth_name: *mut libc::c_char,
@@ -2201,7 +2201,7 @@ pub const PJ_UNIT_TYPE_PJ_UT_PARAMETRIC: PJ_UNIT_TYPE = 4;
 pub type PJ_UNIT_TYPE = libc::c_int;
 #[doc = " \\brief Axis description."]
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_AXIS_DESCRIPTION {
     #[doc = " Axis name."]
     pub name: *mut libc::c_char,
@@ -2263,7 +2263,7 @@ pub const PJ_ELLIPSOIDAL_CS_3D_TYPE_PJ_ELLPS3D_LATITUDE_LONGITUDE_HEIGHT:
 pub type PJ_ELLIPSOIDAL_CS_3D_TYPE = libc::c_int;
 #[doc = " \\brief Description of a parameter value for a Conversion."]
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct PJ_PARAM_DESCRIPTION {
     #[doc = " Parameter name."]
     pub name: *const libc::c_char,
@@ -3524,12 +3524,12 @@ unsafe extern "C" {
     ) -> *mut PJ;
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct __crt_locale_data {
     pub _address: u8,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone)]
 pub struct __crt_multibyte_data {
     pub _address: u8,
 }

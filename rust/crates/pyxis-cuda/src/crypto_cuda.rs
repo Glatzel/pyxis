@@ -23,7 +23,6 @@ impl PyxisCudaContext {
         let func = self.get_function::<T>(&module, "bd09_to_gcj02_cuda");
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(length);
-
         unsafe {
             launch!(
                 func<<<grid_size, block_size, 0, stream>>>(length,

@@ -1,3 +1,4 @@
+use std::{ffi::c_void, ptr::null_mut};
 impl Default for crate::PjContext {
     fn default() -> Self {
         Self::new()
@@ -8,9 +9,15 @@ impl crate::PjContext {
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
     pub fn new() -> Self {
-        Self {
+        let ctx = Self {
             ctx: unsafe { proj_sys::proj_context_create() },
-        }
+        };
+        //initialize log
+        unsafe {
+            proj_sys::proj_log_level(ctx.ctx, u32::from(crate::PjLogLevel::None));
+            proj_sys::proj_log_func(ctx.ctx, null_mut::<c_void>(), Some(crate::proj_clerk));
+        };
+        ctx
     }
 }
 impl Clone for crate::PjContext {

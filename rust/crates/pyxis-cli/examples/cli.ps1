@@ -30,7 +30,7 @@ Write-Output ""
 Write-Output ""
 
 # proj crate
-& "$pyxis" -v -v `
+& "$pyxis" -v -v -v `
     transform -n "proj crate" -x 4760096.421921 -y 3744293.729449 -z 0 -o plain `
     proj --from "EPSG:2230" --to "EPSG:26946"
 

@@ -74,6 +74,10 @@
         "files.associations": {
             "random": "cpp",
             "algorithm": "cpp"
-        }
+        },
+        "rust-analyzer.cargo.features": [
+            "full"
+        ],
+        "rust-analyzer.check.features": ["full"]
     }
 }

@@ -1,19 +1,28 @@
-mod area_of_interest;
+mod area;
 mod cleanup;
 mod coordinate_transformation;
+mod custom_io;
+#[cfg(feature = "distances")]
 mod distances;
 mod error_reporting;
-mod info_functions;
+#[cfg(feature = "info")]
+mod info;
+#[cfg(feature = "iso19111")]
 mod iso19111;
+#[cfg(feature = "lists")]
 mod lists;
-mod network_related_functionality;
-mod setting_custom_io_functions;
+#[cfg(feature = "network")]
+mod network;
 mod threading_contexts;
 mod transformation_setup;
 mod various;
 
+#[cfg(feature = "distances")]
 pub use distances::*;
-pub use info_functions::*;
-pub use iso19111::*;
+#[cfg(feature = "info")]
+pub use info::*;
+// pub use iso19111::*;
+#[cfg(feature = "lists")]
 pub use lists::*;
+#[cfg(feature = "various")]
 pub use various::*;

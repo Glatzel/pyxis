@@ -5,5 +5,6 @@ mod macros;
 
 pub use data_types::*;
 pub use extension::*;
+#[allow(unused_imports)]
 pub use functions::*;
 pub use macros::*;

@@ -1,3 +1,4 @@
+#[allow(unused_imports)]
 use std::path::PathBuf;
 
 use tracing::level_filters::LevelFilter;
@@ -42,8 +43,6 @@ fn main() {
             .use_core()
             .size_t_is_usize(true)
             .blocklist_type("max_align_t")
-            // .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
-            // .generate_comments(true)
             .ctypes_prefix("libc")
             .generate()
             .unwrap();

@@ -12,11 +12,11 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
     };
 }
 impl crate::PjContext {
-    pub fn set_log_level(&self, level: PjLogLevel) -> miette::Result<&Self> {
+    pub fn set_log_level(&self, level: PjLogLevel) -> &Self {
         unsafe {
-            proj_sys::proj_log_level(self.ctx, level.try_into()?);
+            proj_sys::proj_log_level(self.ctx, level.into());
         };
-        Ok(self)
+        self
     }
 }
 #[cfg(test)]
@@ -30,7 +30,7 @@ mod test {
             .with(clerk::terminal_layer(LevelFilter::TRACE, true))
             .init();
         let ctx = crate::PjContext::default();
-        ctx.set_log_level(crate::PjLogLevel::Trace)?;
+        ctx.set_log_level(crate::PjLogLevel::Trace);
         let _ = ctx.create("EPSG:4326")?;
 
         Ok(())
@@ -41,7 +41,7 @@ mod test {
             .with(clerk::terminal_layer(LevelFilter::DEBUG, true))
             .init();
         let ctx = crate::PjContext::default();
-        ctx.set_log_level(crate::PjLogLevel::Trace)?;
+        ctx.set_log_level(crate::PjLogLevel::Trace);
         let pj = ctx.create("unknow crs");
         assert!(pj.is_err());
         Ok(())
@@ -52,10 +52,10 @@ mod test {
             .with(clerk::terminal_layer(LevelFilter::TRACE, true))
             .init();
         let ctx = crate::PjContext::default();
-        ctx.set_log_level(crate::PjLogLevel::Debug)?;
+        ctx.set_log_level(crate::PjLogLevel::Debug);
         let pj = ctx.create("Show log");
         assert!(pj.is_err());
-        ctx.set_log_level(crate::PjLogLevel::None)?;
+        ctx.set_log_level(crate::PjLogLevel::None);
         let pj = ctx.create("Hide log");
         assert!(pj.is_err());
         Ok(())

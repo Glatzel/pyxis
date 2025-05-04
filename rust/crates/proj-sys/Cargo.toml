@@ -2,8 +2,7 @@
 edition.workspace = true
 name = "proj-sys"
 version.workspace = true
-[dependencies]
-link-cplusplus = { workspace = true }
+
 [build-dependencies]
 bindgen = { workspace = true, optional = true }
 clerk = { workspace = true, features = ["log"] }

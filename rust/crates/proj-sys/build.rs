@@ -43,7 +43,6 @@ fn main() {
             .use_core()
             .size_t_is_usize(true)
             .blocklist_type("max_align_t")
-            // .ctypes_prefix("libc")
             .generate()
             .unwrap();
 

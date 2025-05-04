@@ -52,12 +52,12 @@ pub const PROJ_ERR_OTHER: u32 = 4096;
 pub const PROJ_ERR_OTHER_API_MISUSE: u32 = 4097;
 pub const PROJ_ERR_OTHER_NO_INVERSE_OP: u32 = 4098;
 pub const PROJ_ERR_OTHER_NETWORK_ERROR: u32 = 4099;
-pub type va_list = *mut libc::c_char;
+pub type va_list = *mut ::core::ffi::c_char;
 unsafe extern "C" {
-    pub fn __va_start(arg1: *mut *mut libc::c_char, ...);
+    pub fn __va_start(arg1: *mut *mut ::core::ffi::c_char, ...);
 }
 pub type __vcrt_bool = bool;
-pub type wchar_t = libc::c_ushort;
+pub type wchar_t = ::core::ffi::c_ushort;
 unsafe extern "C" {
     pub fn __security_init_cookie();
 }
@@ -82,21 +82,21 @@ unsafe extern "C" {
         _Expression: *const wchar_t,
         _FunctionName: *const wchar_t,
         _FileName: *const wchar_t,
-        _LineNo: libc::c_uint,
+        _LineNo: ::core::ffi::c_uint,
         _Reserved: usize,
     ) -> !;
 }
-pub type errno_t = libc::c_int;
-pub type wint_t = libc::c_ushort;
-pub type wctype_t = libc::c_ushort;
-pub type __time32_t = libc::c_long;
-pub type __time64_t = libc::c_longlong;
+pub type errno_t = ::core::ffi::c_int;
+pub type wint_t = ::core::ffi::c_ushort;
+pub type wctype_t = ::core::ffi::c_ushort;
+pub type __time32_t = ::core::ffi::c_long;
+pub type __time64_t = ::core::ffi::c_longlong;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct __crt_locale_data_public {
-    pub _locale_pctype: *const libc::c_ushort,
-    pub _locale_mb_cur_max: libc::c_int,
-    pub _locale_lc_codepage: libc::c_uint,
+    pub _locale_pctype: *const ::core::ffi::c_ushort,
+    pub _locale_mb_cur_max: ::core::ffi::c_int,
+    pub _locale_lc_codepage: ::core::ffi::c_uint,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -131,9 +131,9 @@ pub type _locale_t = *mut __crt_locale_pointers;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _Mbstatet {
-    pub _Wchar: libc::c_ulong,
-    pub _Byte: libc::c_ushort,
-    pub _State: libc::c_ushort,
+    pub _Wchar: ::core::ffi::c_ulong,
+    pub _Byte: ::core::ffi::c_ushort,
+    pub _State: ::core::ffi::c_ushort,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -147,22 +147,22 @@ pub type mbstate_t = _Mbstatet;
 pub type time_t = __time64_t;
 pub type rsize_t = usize;
 unsafe extern "C" {
-    pub fn _errno() -> *mut libc::c_int;
+    pub fn _errno() -> *mut ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn _set_errno(_Value: libc::c_int) -> errno_t;
+    pub fn _set_errno(_Value: ::core::ffi::c_int) -> errno_t;
 }
 unsafe extern "C" {
-    pub fn _get_errno(_Value: *mut libc::c_int) -> errno_t;
+    pub fn _get_errno(_Value: *mut ::core::ffi::c_int) -> errno_t;
 }
 unsafe extern "C" {
-    pub fn __threadid() -> libc::c_ulong;
+    pub fn __threadid() -> ::core::ffi::c_ulong;
 }
 unsafe extern "C" {
     pub fn __threadhandle() -> usize;
 }
 unsafe extern "C" {
-    pub static pj_release: [libc::c_char; 0usize];
+    pub static pj_release: [::core::ffi::c_char; 0usize];
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -224,9 +224,9 @@ pub type PJ = PJconsts;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_LIST {
-    pub id: *const libc::c_char,
+    pub id: *const ::core::ffi::c_char,
     pub proj: ::core::option::Option<unsafe extern "C" fn(arg1: *mut PJ) -> *mut PJ>,
-    pub descr: *const *const libc::c_char,
+    pub descr: *const *const ::core::ffi::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -240,10 +240,10 @@ pub type PJ_OPERATIONS = PJ_LIST;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_ELLPS {
-    pub id: *const libc::c_char,
-    pub major: *const libc::c_char,
-    pub ell: *const libc::c_char,
-    pub name: *const libc::c_char,
+    pub id: *const ::core::ffi::c_char,
+    pub major: *const ::core::ffi::c_char,
+    pub ell: *const ::core::ffi::c_char,
+    pub name: *const ::core::ffi::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -257,9 +257,9 @@ const _: () = {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_UNITS {
-    pub id: *const libc::c_char,
-    pub to_meter: *const libc::c_char,
-    pub name: *const libc::c_char,
+    pub id: *const ::core::ffi::c_char,
+    pub to_meter: *const ::core::ffi::c_char,
+    pub name: *const ::core::ffi::c_char,
     pub factor: f64,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
@@ -274,8 +274,8 @@ const _: () = {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_PRIME_MERIDIANS {
-    pub id: *const libc::c_char,
-    pub defn: *const libc::c_char,
+    pub id: *const ::core::ffi::c_char,
+    pub defn: *const ::core::ffi::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -504,13 +504,13 @@ const _: () = {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_INFO {
-    pub major: libc::c_int,
-    pub minor: libc::c_int,
-    pub patch: libc::c_int,
-    pub release: *const libc::c_char,
-    pub version: *const libc::c_char,
-    pub searchpath: *const libc::c_char,
-    pub paths: *const *const libc::c_char,
+    pub major: ::core::ffi::c_int,
+    pub minor: ::core::ffi::c_int,
+    pub patch: ::core::ffi::c_int,
+    pub release: *const ::core::ffi::c_char,
+    pub version: *const ::core::ffi::c_char,
+    pub searchpath: *const ::core::ffi::c_char,
+    pub paths: *const *const ::core::ffi::c_char,
     pub path_count: usize,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
@@ -531,10 +531,10 @@ const _: () = {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_PROJ_INFO {
-    pub id: *const libc::c_char,
-    pub description: *const libc::c_char,
-    pub definition: *const libc::c_char,
-    pub has_inverse: libc::c_int,
+    pub id: *const ::core::ffi::c_char,
+    pub description: *const ::core::ffi::c_char,
+    pub definition: *const ::core::ffi::c_char,
+    pub has_inverse: ::core::ffi::c_int,
     pub accuracy: f64,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
@@ -554,13 +554,13 @@ const _: () = {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_GRID_INFO {
-    pub gridname: [libc::c_char; 32usize],
-    pub filename: [libc::c_char; 260usize],
-    pub format: [libc::c_char; 8usize],
+    pub gridname: [::core::ffi::c_char; 32usize],
+    pub filename: [::core::ffi::c_char; 260usize],
+    pub format: [::core::ffi::c_char; 8usize],
     pub lowerleft: PJ_LP,
     pub upperright: PJ_LP,
-    pub n_lon: libc::c_int,
-    pub n_lat: libc::c_int,
+    pub n_lon: ::core::ffi::c_int,
+    pub n_lat: ::core::ffi::c_int,
     pub cs_lon: f64,
     pub cs_lat: f64,
 }
@@ -590,11 +590,11 @@ const _: () = {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_INIT_INFO {
-    pub name: [libc::c_char; 32usize],
-    pub filename: [libc::c_char; 260usize],
-    pub version: [libc::c_char; 32usize],
-    pub origin: [libc::c_char; 32usize],
-    pub lastupdate: [libc::c_char; 16usize],
+    pub name: [::core::ffi::c_char; 32usize],
+    pub filename: [::core::ffi::c_char; 260usize],
+    pub version: [::core::ffi::c_char; 32usize],
+    pub origin: [::core::ffi::c_char; 32usize],
+    pub lastupdate: [::core::ffi::c_char; 16usize],
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -617,9 +617,13 @@ pub const PJ_LOG_LEVEL_PJ_LOG_TRACE: PJ_LOG_LEVEL = 3;
 pub const PJ_LOG_LEVEL_PJ_LOG_TELL: PJ_LOG_LEVEL = 4;
 pub const PJ_LOG_LEVEL_PJ_LOG_DEBUG_MAJOR: PJ_LOG_LEVEL = 2;
 pub const PJ_LOG_LEVEL_PJ_LOG_DEBUG_MINOR: PJ_LOG_LEVEL = 3;
-pub type PJ_LOG_LEVEL = libc::c_int;
+pub type PJ_LOG_LEVEL = ::core::ffi::c_int;
 pub type PJ_LOG_FUNCTION = ::core::option::Option<
-    unsafe extern "C" fn(arg1: *mut libc::c_void, arg2: libc::c_int, arg3: *const libc::c_char),
+    unsafe extern "C" fn(
+        arg1: *mut ::core::ffi::c_void,
+        arg2: ::core::ffi::c_int,
+        arg3: *const ::core::ffi::c_char,
+    ),
 >;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -640,37 +644,37 @@ unsafe extern "C" {
 pub type proj_file_finder = ::core::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
-        arg1: *const libc::c_char,
-        user_data: *mut libc::c_void,
-    ) -> *const libc::c_char,
+        arg1: *const ::core::ffi::c_char,
+        user_data: *mut ::core::ffi::c_void,
+    ) -> *const ::core::ffi::c_char,
 >;
 unsafe extern "C" {
     #[doc = " @endcond"]
     pub fn proj_context_set_file_finder(
         ctx: *mut PJ_CONTEXT,
         finder: proj_file_finder,
-        user_data: *mut libc::c_void,
+        user_data: *mut ::core::ffi::c_void,
     );
 }
 unsafe extern "C" {
     pub fn proj_context_set_search_paths(
         ctx: *mut PJ_CONTEXT,
-        count_paths: libc::c_int,
-        paths: *const *const libc::c_char,
+        count_paths: ::core::ffi::c_int,
+        paths: *const *const ::core::ffi::c_char,
     );
 }
 unsafe extern "C" {
-    pub fn proj_context_set_ca_bundle_path(ctx: *mut PJ_CONTEXT, path: *const libc::c_char);
+    pub fn proj_context_set_ca_bundle_path(ctx: *mut PJ_CONTEXT, path: *const ::core::ffi::c_char);
 }
 unsafe extern "C" {
     #[doc = " @cond Doxygen_Suppress"]
-    pub fn proj_context_use_proj4_init_rules(ctx: *mut PJ_CONTEXT, enable: libc::c_int);
+    pub fn proj_context_use_proj4_init_rules(ctx: *mut PJ_CONTEXT, enable: ::core::ffi::c_int);
 }
 unsafe extern "C" {
     pub fn proj_context_get_use_proj4_init_rules(
         ctx: *mut PJ_CONTEXT,
-        from_legacy_code_path: libc::c_int,
-    ) -> libc::c_int;
+        from_legacy_code_path: ::core::ffi::c_int,
+    ) -> ::core::ffi::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -684,20 +688,20 @@ pub const PROJ_OPEN_ACCESS_PROJ_OPEN_ACCESS_READ_UPDATE: PROJ_OPEN_ACCESS = 1;
 #[doc = " Create access. File should be truncated to 0-byte if already existing.\nEquivalent to \"w+b\""]
 pub const PROJ_OPEN_ACCESS_PROJ_OPEN_ACCESS_CREATE: PROJ_OPEN_ACCESS = 2;
 #[doc = " Open access / mode"]
-pub type PROJ_OPEN_ACCESS = libc::c_int;
+pub type PROJ_OPEN_ACCESS = ::core::ffi::c_int;
 #[doc = " File API callbacks"]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PROJ_FILE_API {
     #[doc = " Version of this structure. Should be set to 1 currently."]
-    pub version: libc::c_int,
+    pub version: ::core::ffi::c_int,
     #[doc = " Open file. Return NULL if error"]
     pub open_cbk: ::core::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
-            filename: *const libc::c_char,
+            filename: *const ::core::ffi::c_char,
             access: PROJ_OPEN_ACCESS,
-            user_data: *mut libc::c_void,
+            user_data: *mut ::core::ffi::c_void,
         ) -> *mut PROJ_FILE_HANDLE,
     >,
     #[doc = " Read sizeBytes into buffer from current position and return number of\n bytes read"]
@@ -705,9 +709,9 @@ pub struct PROJ_FILE_API {
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
             arg1: *mut PROJ_FILE_HANDLE,
-            buffer: *mut libc::c_void,
+            buffer: *mut ::core::ffi::c_void,
             sizeBytes: usize,
-            user_data: *mut libc::c_void,
+            user_data: *mut ::core::ffi::c_void,
         ) -> usize,
     >,
     #[doc = " Write sizeBytes into buffer from current position and return number of\n bytes written"]
@@ -715,9 +719,9 @@ pub struct PROJ_FILE_API {
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
             arg1: *mut PROJ_FILE_HANDLE,
-            buffer: *const libc::c_void,
+            buffer: *const ::core::ffi::c_void,
             sizeBytes: usize,
-            user_data: *mut libc::c_void,
+            user_data: *mut ::core::ffi::c_void,
         ) -> usize,
     >,
     #[doc = " Seek to offset using whence=SEEK_SET/SEEK_CUR/SEEK_END. Return TRUE in\n case of success"]
@@ -725,59 +729,59 @@ pub struct PROJ_FILE_API {
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
             arg1: *mut PROJ_FILE_HANDLE,
-            offset: libc::c_longlong,
-            whence: libc::c_int,
-            user_data: *mut libc::c_void,
-        ) -> libc::c_int,
+            offset: ::core::ffi::c_longlong,
+            whence: ::core::ffi::c_int,
+            user_data: *mut ::core::ffi::c_void,
+        ) -> ::core::ffi::c_int,
     >,
     #[doc = " Return current file position"]
     pub tell_cbk: ::core::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
             arg1: *mut PROJ_FILE_HANDLE,
-            user_data: *mut libc::c_void,
-        ) -> libc::c_ulonglong,
+            user_data: *mut ::core::ffi::c_void,
+        ) -> ::core::ffi::c_ulonglong,
     >,
     #[doc = " Close file"]
     pub close_cbk: ::core::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
             arg1: *mut PROJ_FILE_HANDLE,
-            user_data: *mut libc::c_void,
+            user_data: *mut ::core::ffi::c_void,
         ),
     >,
     #[doc = " Return TRUE if a file exists"]
     pub exists_cbk: ::core::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
-            filename: *const libc::c_char,
-            user_data: *mut libc::c_void,
-        ) -> libc::c_int,
+            filename: *const ::core::ffi::c_char,
+            user_data: *mut ::core::ffi::c_void,
+        ) -> ::core::ffi::c_int,
     >,
     #[doc = " Return TRUE if directory exists or could be created"]
     pub mkdir_cbk: ::core::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
-            filename: *const libc::c_char,
-            user_data: *mut libc::c_void,
-        ) -> libc::c_int,
+            filename: *const ::core::ffi::c_char,
+            user_data: *mut ::core::ffi::c_void,
+        ) -> ::core::ffi::c_int,
     >,
     #[doc = " Return TRUE if file could be removed"]
     pub unlink_cbk: ::core::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
-            filename: *const libc::c_char,
-            user_data: *mut libc::c_void,
-        ) -> libc::c_int,
+            filename: *const ::core::ffi::c_char,
+            user_data: *mut ::core::ffi::c_void,
+        ) -> ::core::ffi::c_int,
     >,
     #[doc = " Return TRUE if file could be renamed"]
     pub rename_cbk: ::core::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
-            oldPath: *const libc::c_char,
-            newPath: *const libc::c_char,
-            user_data: *mut libc::c_void,
-        ) -> libc::c_int,
+            oldPath: *const ::core::ffi::c_char,
+            newPath: *const ::core::ffi::c_char,
+            user_data: *mut ::core::ffi::c_void,
+        ) -> ::core::ffi::c_int,
     >,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
@@ -811,11 +815,14 @@ unsafe extern "C" {
     pub fn proj_context_set_fileapi(
         ctx: *mut PJ_CONTEXT,
         fileapi: *const PROJ_FILE_API,
-        user_data: *mut libc::c_void,
-    ) -> libc::c_int;
+        user_data: *mut ::core::ffi::c_void,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_context_set_sqlite3_vfs_name(ctx: *mut PJ_CONTEXT, name: *const libc::c_char);
+    pub fn proj_context_set_sqlite3_vfs_name(
+        ctx: *mut PJ_CONTEXT,
+        name: *const ::core::ffi::c_char,
+    );
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -826,14 +833,14 @@ pub struct PROJ_NETWORK_HANDLE {
 pub type proj_network_open_cbk_type = ::core::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
-        url: *const libc::c_char,
-        offset: libc::c_ulonglong,
+        url: *const ::core::ffi::c_char,
+        offset: ::core::ffi::c_ulonglong,
         size_to_read: usize,
-        buffer: *mut libc::c_void,
+        buffer: *mut ::core::ffi::c_void,
         out_size_read: *mut usize,
         error_string_max_size: usize,
-        out_error_string: *mut libc::c_char,
-        user_data: *mut libc::c_void,
+        out_error_string: *mut ::core::ffi::c_char,
+        user_data: *mut ::core::ffi::c_void,
     ) -> *mut PROJ_NETWORK_HANDLE,
 >;
 #[doc = " Network access: close callback"]
@@ -841,7 +848,7 @@ pub type proj_network_close_cbk_type = ::core::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
         handle: *mut PROJ_NETWORK_HANDLE,
-        user_data: *mut libc::c_void,
+        user_data: *mut ::core::ffi::c_void,
     ),
 >;
 #[doc = " Network access: get HTTP headers"]
@@ -849,21 +856,21 @@ pub type proj_network_get_header_value_cbk_type = ::core::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
         handle: *mut PROJ_NETWORK_HANDLE,
-        header_name: *const libc::c_char,
-        user_data: *mut libc::c_void,
-    ) -> *const libc::c_char,
+        header_name: *const ::core::ffi::c_char,
+        user_data: *mut ::core::ffi::c_void,
+    ) -> *const ::core::ffi::c_char,
 >;
 #[doc = " Network access: read range\n\n Read size_to_read bytes from handle, starting at offset, into\n buffer.\n During this read, the implementation should make sure to store the HTTP\n headers from the server response to be able to respond to\n proj_network_get_header_value_cbk_type callback.\n\n error_string_max_size should be the maximum size that can be written into\n the out_error_string buffer (including terminating nul character).\n\n @return the number of bytes actually read (0 in case of error)"]
 pub type proj_network_read_range_type = ::core::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
         handle: *mut PROJ_NETWORK_HANDLE,
-        offset: libc::c_ulonglong,
+        offset: ::core::ffi::c_ulonglong,
         size_to_read: usize,
-        buffer: *mut libc::c_void,
+        buffer: *mut ::core::ffi::c_void,
         error_string_max_size: usize,
-        out_error_string: *mut libc::c_char,
-        user_data: *mut libc::c_void,
+        out_error_string: *mut ::core::ffi::c_char,
+        user_data: *mut ::core::ffi::c_void,
     ) -> usize,
 >;
 unsafe extern "C" {
@@ -873,48 +880,48 @@ unsafe extern "C" {
         close_cbk: proj_network_close_cbk_type,
         get_header_value_cbk: proj_network_get_header_value_cbk_type,
         read_range_cbk: proj_network_read_range_type,
-        user_data: *mut libc::c_void,
-    ) -> libc::c_int;
+        user_data: *mut ::core::ffi::c_void,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_context_set_enable_network(
         ctx: *mut PJ_CONTEXT,
-        enabled: libc::c_int,
-    ) -> libc::c_int;
+        enabled: ::core::ffi::c_int,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_context_is_network_enabled(ctx: *mut PJ_CONTEXT) -> libc::c_int;
+    pub fn proj_context_is_network_enabled(ctx: *mut PJ_CONTEXT) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_context_set_url_endpoint(ctx: *mut PJ_CONTEXT, url: *const libc::c_char);
+    pub fn proj_context_set_url_endpoint(ctx: *mut PJ_CONTEXT, url: *const ::core::ffi::c_char);
 }
 unsafe extern "C" {
-    pub fn proj_context_get_url_endpoint(ctx: *mut PJ_CONTEXT) -> *const libc::c_char;
+    pub fn proj_context_get_url_endpoint(ctx: *mut PJ_CONTEXT) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_context_get_user_writable_directory(
         ctx: *mut PJ_CONTEXT,
-        create: libc::c_int,
-    ) -> *const libc::c_char;
+        create: ::core::ffi::c_int,
+    ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_context_set_user_writable_directory(
         ctx: *mut PJ_CONTEXT,
-        path: *const libc::c_char,
-        create: libc::c_int,
+        path: *const ::core::ffi::c_char,
+        create: ::core::ffi::c_int,
     );
 }
 unsafe extern "C" {
-    pub fn proj_grid_cache_set_enable(ctx: *mut PJ_CONTEXT, enabled: libc::c_int);
+    pub fn proj_grid_cache_set_enable(ctx: *mut PJ_CONTEXT, enabled: ::core::ffi::c_int);
 }
 unsafe extern "C" {
-    pub fn proj_grid_cache_set_filename(ctx: *mut PJ_CONTEXT, fullname: *const libc::c_char);
+    pub fn proj_grid_cache_set_filename(ctx: *mut PJ_CONTEXT, fullname: *const ::core::ffi::c_char);
 }
 unsafe extern "C" {
-    pub fn proj_grid_cache_set_max_size(ctx: *mut PJ_CONTEXT, max_size_MB: libc::c_int);
+    pub fn proj_grid_cache_set_max_size(ctx: *mut PJ_CONTEXT, max_size_MB: ::core::ffi::c_int);
 }
 unsafe extern "C" {
-    pub fn proj_grid_cache_set_ttl(ctx: *mut PJ_CONTEXT, ttl_seconds: libc::c_int);
+    pub fn proj_grid_cache_set_ttl(ctx: *mut PJ_CONTEXT, ttl_seconds: ::core::ffi::c_int);
 }
 unsafe extern "C" {
     pub fn proj_grid_cache_clear(ctx: *mut PJ_CONTEXT);
@@ -922,41 +929,41 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_is_download_needed(
         ctx: *mut PJ_CONTEXT,
-        url_or_filename: *const libc::c_char,
-        ignore_ttl_setting: libc::c_int,
-    ) -> libc::c_int;
+        url_or_filename: *const ::core::ffi::c_char,
+        ignore_ttl_setting: ::core::ffi::c_int,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_download_file(
         ctx: *mut PJ_CONTEXT,
-        url_or_filename: *const libc::c_char,
-        ignore_ttl_setting: libc::c_int,
+        url_or_filename: *const ::core::ffi::c_char,
+        ignore_ttl_setting: ::core::ffi::c_int,
         progress_cbk: ::core::option::Option<
             unsafe extern "C" fn(
                 arg1: *mut PJ_CONTEXT,
                 pct: f64,
-                user_data: *mut libc::c_void,
-            ) -> libc::c_int,
+                user_data: *mut ::core::ffi::c_void,
+            ) -> ::core::ffi::c_int,
         >,
-        user_data: *mut libc::c_void,
-    ) -> libc::c_int;
+        user_data: *mut ::core::ffi::c_void,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     #[doc = " @cond Doxygen_Suppress"]
-    pub fn proj_create(ctx: *mut PJ_CONTEXT, definition: *const libc::c_char) -> *mut PJ;
+    pub fn proj_create(ctx: *mut PJ_CONTEXT, definition: *const ::core::ffi::c_char) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_argv(
         ctx: *mut PJ_CONTEXT,
-        argc: libc::c_int,
-        argv: *mut *mut libc::c_char,
+        argc: ::core::ffi::c_int,
+        argv: *mut *mut ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_crs_to_crs(
         ctx: *mut PJ_CONTEXT,
-        source_crs: *const libc::c_char,
-        target_crs: *const libc::c_char,
+        source_crs: *const ::core::ffi::c_char,
+        target_crs: *const ::core::ffi::c_char,
         area: *mut PJ_AREA,
     ) -> *mut PJ;
 }
@@ -966,7 +973,7 @@ unsafe extern "C" {
         source_crs: *const PJ,
         target_crs: *const PJ,
         area: *mut PJ_AREA,
-        options: *const *const libc::c_char,
+        options: *const *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -993,7 +1000,7 @@ unsafe extern "C" {
     );
 }
 unsafe extern "C" {
-    pub fn proj_area_set_name(area: *mut PJ_AREA, name: *const libc::c_char);
+    pub fn proj_area_set_name(area: *mut PJ_AREA, name: *const ::core::ffi::c_char);
 }
 unsafe extern "C" {
     pub fn proj_area_destroy(area: *mut PJ_AREA);
@@ -1001,18 +1008,18 @@ unsafe extern "C" {
 pub const PJ_DIRECTION_PJ_FWD: PJ_DIRECTION = 1;
 pub const PJ_DIRECTION_PJ_IDENT: PJ_DIRECTION = 0;
 pub const PJ_DIRECTION_PJ_INV: PJ_DIRECTION = -1;
-pub type PJ_DIRECTION = libc::c_int;
+pub type PJ_DIRECTION = ::core::ffi::c_int;
 unsafe extern "C" {
-    pub fn proj_angular_input(P: *mut PJ, dir: PJ_DIRECTION) -> libc::c_int;
+    pub fn proj_angular_input(P: *mut PJ, dir: PJ_DIRECTION) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_angular_output(P: *mut PJ, dir: PJ_DIRECTION) -> libc::c_int;
+    pub fn proj_angular_output(P: *mut PJ, dir: PJ_DIRECTION) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_degree_input(P: *mut PJ, dir: PJ_DIRECTION) -> libc::c_int;
+    pub fn proj_degree_input(P: *mut PJ, dir: PJ_DIRECTION) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_degree_output(P: *mut PJ, dir: PJ_DIRECTION) -> libc::c_int;
+    pub fn proj_degree_output(P: *mut PJ, dir: PJ_DIRECTION) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_trans(P: *mut PJ, direction: PJ_DIRECTION, coord: PJ_COORD) -> PJ_COORD;
@@ -1026,7 +1033,7 @@ unsafe extern "C" {
         direction: PJ_DIRECTION,
         n: usize,
         coord: *mut PJ_COORD,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_trans_generic(
@@ -1060,8 +1067,8 @@ unsafe extern "C" {
         out_ymin: *mut f64,
         out_xmax: *mut f64,
         out_ymax: *mut f64,
-        densify_pts: libc::c_int,
-    ) -> libc::c_int;
+        densify_pts: ::core::ffi::c_int,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_trans_bounds_3D(
@@ -1080,8 +1087,8 @@ unsafe extern "C" {
         out_xmax: *mut f64,
         out_ymax: *mut f64,
         out_zmax: *mut f64,
-        densify_pts: libc::c_int,
-    ) -> libc::c_int;
+        densify_pts: ::core::ffi::c_int,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     #[doc = " @cond Doxygen_Suppress"]
@@ -1091,7 +1098,7 @@ unsafe extern "C" {
     pub fn proj_roundtrip(
         P: *mut PJ,
         direction: PJ_DIRECTION,
-        n: libc::c_int,
+        n: ::core::ffi::c_int,
         coord: *mut PJ_COORD,
     ) -> f64;
 }
@@ -1111,32 +1118,38 @@ unsafe extern "C" {
     pub fn proj_geod(P: *const PJ, a: PJ_COORD, b: PJ_COORD) -> PJ_COORD;
 }
 unsafe extern "C" {
-    pub fn proj_context_errno(ctx: *mut PJ_CONTEXT) -> libc::c_int;
+    pub fn proj_context_errno(ctx: *mut PJ_CONTEXT) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_errno(P: *const PJ) -> libc::c_int;
+    pub fn proj_errno(P: *const PJ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_errno_set(P: *const PJ, err: libc::c_int) -> libc::c_int;
+    pub fn proj_errno_set(P: *const PJ, err: ::core::ffi::c_int) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_errno_reset(P: *const PJ) -> libc::c_int;
+    pub fn proj_errno_reset(P: *const PJ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_errno_restore(P: *const PJ, err: libc::c_int) -> libc::c_int;
+    pub fn proj_errno_restore(P: *const PJ, err: ::core::ffi::c_int) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_errno_string(err: libc::c_int) -> *const libc::c_char;
+    pub fn proj_errno_string(err: ::core::ffi::c_int) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
-    pub fn proj_context_errno_string(ctx: *mut PJ_CONTEXT, err: libc::c_int)
-        -> *const libc::c_char;
+    pub fn proj_context_errno_string(
+        ctx: *mut PJ_CONTEXT,
+        err: ::core::ffi::c_int,
+    ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_log_level(ctx: *mut PJ_CONTEXT, log_level: PJ_LOG_LEVEL) -> PJ_LOG_LEVEL;
 }
 unsafe extern "C" {
-    pub fn proj_log_func(ctx: *mut PJ_CONTEXT, app_data: *mut libc::c_void, logf: PJ_LOG_FUNCTION);
+    pub fn proj_log_func(
+        ctx: *mut PJ_CONTEXT,
+        app_data: *mut ::core::ffi::c_void,
+        logf: PJ_LOG_FUNCTION,
+    );
 }
 unsafe extern "C" {
     pub fn proj_factors(P: *mut PJ, lp: PJ_COORD) -> PJ_FACTORS;
@@ -1148,10 +1161,10 @@ unsafe extern "C" {
     pub fn proj_pj_info(P: *mut PJ) -> PJ_PROJ_INFO;
 }
 unsafe extern "C" {
-    pub fn proj_grid_info(gridname: *const libc::c_char) -> PJ_GRID_INFO;
+    pub fn proj_grid_info(gridname: *const ::core::ffi::c_char) -> PJ_GRID_INFO;
 }
 unsafe extern "C" {
-    pub fn proj_init_info(initname: *const libc::c_char) -> PJ_INIT_INFO;
+    pub fn proj_init_info(initname: *const ::core::ffi::c_char) -> PJ_INIT_INFO;
 }
 unsafe extern "C" {
     pub fn proj_list_operations() -> *const PJ_OPERATIONS;
@@ -1175,30 +1188,30 @@ unsafe extern "C" {
     pub fn proj_todeg(angle_in_radians: f64) -> f64;
 }
 unsafe extern "C" {
-    pub fn proj_dmstor(is: *const libc::c_char, rs: *mut *mut libc::c_char) -> f64;
+    pub fn proj_dmstor(is: *const ::core::ffi::c_char, rs: *mut *mut ::core::ffi::c_char) -> f64;
 }
 unsafe extern "C" {
     pub fn proj_rtodms(
-        s: *mut libc::c_char,
+        s: *mut ::core::ffi::c_char,
         r: f64,
-        pos: libc::c_int,
-        neg: libc::c_int,
-    ) -> *mut libc::c_char;
+        pos: ::core::ffi::c_int,
+        neg: ::core::ffi::c_int,
+    ) -> *mut ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_rtodms2(
-        s: *mut libc::c_char,
+        s: *mut ::core::ffi::c_char,
         sizeof_s: usize,
         r: f64,
-        pos: libc::c_int,
-        neg: libc::c_int,
-    ) -> *mut libc::c_char;
+        pos: ::core::ffi::c_int,
+        neg: ::core::ffi::c_int,
+    ) -> *mut ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_cleanup();
 }
 #[doc = " \\brief Type representing a NULL terminated list of NULL-terminate strings."]
-pub type PROJ_STRING_LIST = *mut *mut libc::c_char;
+pub type PROJ_STRING_LIST = *mut *mut ::core::ffi::c_char;
 #[doc = " \\ref WKT2_2019"]
 pub const PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2019: PJ_GUESSED_WKT_DIALECT = 0;
 #[doc = " Deprecated alias for PJ_GUESSED_WKT2_2019"]
@@ -1212,7 +1225,7 @@ pub const PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT1_ESRI: PJ_GUESSED_WKT_DIALECT = 
 #[doc = " Not WKT / unrecognized"]
 pub const PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_NOT_WKT: PJ_GUESSED_WKT_DIALECT = 4;
 #[doc = " \\brief Guessed WKT \"dialect\"."]
-pub type PJ_GUESSED_WKT_DIALECT = libc::c_int;
+pub type PJ_GUESSED_WKT_DIALECT = ::core::ffi::c_int;
 pub const PJ_CATEGORY_PJ_CATEGORY_ELLIPSOID: PJ_CATEGORY = 0;
 pub const PJ_CATEGORY_PJ_CATEGORY_PRIME_MERIDIAN: PJ_CATEGORY = 1;
 pub const PJ_CATEGORY_PJ_CATEGORY_DATUM: PJ_CATEGORY = 2;
@@ -1220,7 +1233,7 @@ pub const PJ_CATEGORY_PJ_CATEGORY_CRS: PJ_CATEGORY = 3;
 pub const PJ_CATEGORY_PJ_CATEGORY_COORDINATE_OPERATION: PJ_CATEGORY = 4;
 pub const PJ_CATEGORY_PJ_CATEGORY_DATUM_ENSEMBLE: PJ_CATEGORY = 5;
 #[doc = " \\brief Object category."]
-pub type PJ_CATEGORY = libc::c_int;
+pub type PJ_CATEGORY = ::core::ffi::c_int;
 pub const PJ_TYPE_PJ_TYPE_UNKNOWN: PJ_TYPE = 0;
 pub const PJ_TYPE_PJ_TYPE_ELLIPSOID: PJ_TYPE = 1;
 pub const PJ_TYPE_PJ_TYPE_PRIME_MERIDIAN: PJ_TYPE = 2;
@@ -1274,7 +1287,7 @@ pub const PJ_TYPE_PJ_TYPE_DERIVED_PROJECTED_CRS: PJ_TYPE = 28;
 #[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
 pub const PJ_TYPE_PJ_TYPE_COORDINATE_METADATA: PJ_TYPE = 29;
 #[doc = " \\brief Object type."]
-pub type PJ_TYPE = libc::c_int;
+pub type PJ_TYPE = ::core::ffi::c_int;
 #[doc = " All properties are identical."]
 pub const PJ_COMPARISON_CRITERION_PJ_COMP_STRICT: PJ_COMPARISON_CRITERION = 0;
 #[doc = " The objects are equivalent for the purpose of coordinate\n operations. They can differ by the name of their objects,\n identifiers, other metadata.\n Parameters may be expressed in different units, provided that the\n value is (with some tolerance) the same once expressed in a\n common unit."]
@@ -1283,7 +1296,7 @@ pub const PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT: PJ_COMPARISON_CRITERION = 
 pub const PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS:
     PJ_COMPARISON_CRITERION = 2;
 #[doc = " Comparison criterion."]
-pub type PJ_COMPARISON_CRITERION = libc::c_int;
+pub type PJ_COMPARISON_CRITERION = ::core::ffi::c_int;
 #[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT2"]
 pub const PJ_WKT_TYPE_PJ_WKT2_2015: PJ_WKT_TYPE = 0;
 #[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT2_SIMPLIFIED"]
@@ -1301,7 +1314,7 @@ pub const PJ_WKT_TYPE_PJ_WKT1_GDAL: PJ_WKT_TYPE = 4;
 #[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT1_ESRI"]
 pub const PJ_WKT_TYPE_PJ_WKT1_ESRI: PJ_WKT_TYPE = 5;
 #[doc = " \\brief WKT version."]
-pub type PJ_WKT_TYPE = libc::c_int;
+pub type PJ_WKT_TYPE = ::core::ffi::c_int;
 #[doc = " Ignore CRS extent"]
 pub const PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_NONE: PROJ_CRS_EXTENT_USE = 0;
 #[doc = " Test coordinate operation extent against both CRS extent."]
@@ -1311,7 +1324,7 @@ pub const PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_INTERSECTION: PROJ_CRS_EXTENT_USE = 
 #[doc = " Test coordinate operation against the smallest of both CRS extent."]
 pub const PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_SMALLEST: PROJ_CRS_EXTENT_USE = 3;
 #[doc = " Specify how source and target CRS extent should be used to restrict\n candidate operations (only taken into account if no explicit area of\n interest is specified."]
-pub type PROJ_CRS_EXTENT_USE = libc::c_int;
+pub type PROJ_CRS_EXTENT_USE = ::core::ffi::c_int;
 #[doc = " Grid availability is only used for sorting results. Operations\n where some grids are missing will be sorted last."]
 pub const PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_USED_FOR_SORTING:
     PROJ_GRID_AVAILABILITY_USE = 0;
@@ -1324,13 +1337,13 @@ pub const PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_IGNORED: PROJ_GRID_A
 pub const PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_KNOWN_AVAILABLE:
     PROJ_GRID_AVAILABILITY_USE = 3;
 #[doc = " Describe how grid availability is used."]
-pub type PROJ_GRID_AVAILABILITY_USE = libc::c_int;
+pub type PROJ_GRID_AVAILABILITY_USE = ::core::ffi::c_int;
 #[doc = " cf osgeo::proj::io::PROJStringFormatter::Convention::PROJ_5"]
 pub const PJ_PROJ_STRING_TYPE_PJ_PROJ_5: PJ_PROJ_STRING_TYPE = 0;
 #[doc = " cf osgeo::proj::io::PROJStringFormatter::Convention::PROJ_4"]
 pub const PJ_PROJ_STRING_TYPE_PJ_PROJ_4: PJ_PROJ_STRING_TYPE = 1;
 #[doc = " \\brief PROJ string version."]
-pub type PJ_PROJ_STRING_TYPE = libc::c_int;
+pub type PJ_PROJ_STRING_TYPE = ::core::ffi::c_int;
 #[doc = " The area of validity of transforms should strictly contain the\n are of interest."]
 pub const PROJ_SPATIAL_CRITERION_PROJ_SPATIAL_CRITERION_STRICT_CONTAINMENT: PROJ_SPATIAL_CRITERION =
     0;
@@ -1338,7 +1351,7 @@ pub const PROJ_SPATIAL_CRITERION_PROJ_SPATIAL_CRITERION_STRICT_CONTAINMENT: PROJ
 pub const PROJ_SPATIAL_CRITERION_PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION:
     PROJ_SPATIAL_CRITERION = 1;
 #[doc = " Spatial criterion to restrict candidate operations."]
-pub type PROJ_SPATIAL_CRITERION = libc::c_int;
+pub type PROJ_SPATIAL_CRITERION = ::core::ffi::c_int;
 #[doc = " Always search for intermediate CRS."]
 pub const PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_ALWAYS: PROJ_INTERMEDIATE_CRS_USE = 0;
 #[doc = " Only attempt looking for intermediate CRS if there is no direct\n transformation available."]
@@ -1347,7 +1360,7 @@ pub const PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_IF_NO_DIRECT_TRANS
 #[doc = " Only attempt looking for intermediate CRS if there is no direct\n transformation available."]
 pub const PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_NEVER: PROJ_INTERMEDIATE_CRS_USE = 2;
 #[doc = " Describe if and how intermediate CRS should be used"]
-pub type PROJ_INTERMEDIATE_CRS_USE = libc::c_int;
+pub type PROJ_INTERMEDIATE_CRS_USE = ::core::ffi::c_int;
 pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_UNKNOWN: PJ_COORDINATE_SYSTEM_TYPE = 0;
 pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_CARTESIAN: PJ_COORDINATE_SYSTEM_TYPE = 1;
 pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_ELLIPSOIDAL: PJ_COORDINATE_SYSTEM_TYPE = 2;
@@ -1359,23 +1372,23 @@ pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_DATETIMETEMPORAL: PJ_COORDINATE_S
 pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALCOUNT: PJ_COORDINATE_SYSTEM_TYPE = 8;
 pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALMEASURE: PJ_COORDINATE_SYSTEM_TYPE = 9;
 #[doc = " Type of coordinate system."]
-pub type PJ_COORDINATE_SYSTEM_TYPE = libc::c_int;
+pub type PJ_COORDINATE_SYSTEM_TYPE = ::core::ffi::c_int;
 #[doc = " \\brief Structure given overall description of a CRS.\n\n This structure may grow over time, and should not be directly allocated by\n client code."]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PROJ_CRS_INFO {
     #[doc = " Authority name."]
-    pub auth_name: *mut libc::c_char,
+    pub auth_name: *mut ::core::ffi::c_char,
     #[doc = " Object code."]
-    pub code: *mut libc::c_char,
+    pub code: *mut ::core::ffi::c_char,
     #[doc = " Object name."]
-    pub name: *mut libc::c_char,
+    pub name: *mut ::core::ffi::c_char,
     #[doc = " Object type."]
     pub type_: PJ_TYPE,
     #[doc = " Whether the object is deprecated"]
-    pub deprecated: libc::c_int,
+    pub deprecated: ::core::ffi::c_int,
     #[doc = " Whereas the west_lon_degree, south_lat_degree, east_lon_degree and\n north_lat_degree fields are valid."]
-    pub bbox_valid: libc::c_int,
+    pub bbox_valid: ::core::ffi::c_int,
     #[doc = " Western-most longitude of the area of use, in degrees."]
     pub west_lon_degree: f64,
     #[doc = " Southern-most latitude of the area of use, in degrees."]
@@ -1385,11 +1398,11 @@ pub struct PROJ_CRS_INFO {
     #[doc = " Northern-most latitude of the area of use, in degrees."]
     pub north_lat_degree: f64,
     #[doc = " Name of the area of use."]
-    pub area_name: *mut libc::c_char,
+    pub area_name: *mut ::core::ffi::c_char,
     #[doc = " Name of the projection method for a projected CRS. Might be NULL even\nfor projected CRS in some cases."]
-    pub projection_method_name: *mut libc::c_char,
+    pub projection_method_name: *mut ::core::ffi::c_char,
     #[doc = " Name of the celestial body of the CRS (e.g. \"Earth\").\n @since 8.1"]
-    pub celestial_body_name: *mut libc::c_char,
+    pub celestial_body_name: *mut ::core::ffi::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -1430,9 +1443,9 @@ pub struct PROJ_CRS_LIST_PARAMETERS {
     #[doc = " Size of types. Should be 0 if all types are allowed"]
     pub typesCount: usize,
     #[doc = " If TRUE and bbox_valid == TRUE, then only CRS whose area of use\n entirely contains the specified bounding box will be returned.\n If FALSE and bbox_valid == TRUE, then only CRS whose area of use\n intersects the specified bounding box will be returned."]
-    pub crs_area_of_use_contains_bbox: libc::c_int,
+    pub crs_area_of_use_contains_bbox: ::core::ffi::c_int,
     #[doc = " To set to TRUE so that west_lon_degree, south_lat_degree,\n east_lon_degree and north_lat_degree fields are taken into account."]
-    pub bbox_valid: libc::c_int,
+    pub bbox_valid: ::core::ffi::c_int,
     #[doc = " Western-most longitude of the area of use, in degrees."]
     pub west_lon_degree: f64,
     #[doc = " Southern-most latitude of the area of use, in degrees."]
@@ -1442,9 +1455,9 @@ pub struct PROJ_CRS_LIST_PARAMETERS {
     #[doc = " Northern-most latitude of the area of use, in degrees."]
     pub north_lat_degree: f64,
     #[doc = " Whether deprecated objects are allowed. Default to FALSE."]
-    pub allow_deprecated: libc::c_int,
+    pub allow_deprecated: ::core::ffi::c_int,
     #[doc = " Celestial body of the CRS (e.g. \"Earth\"). The default value, NULL,\n  means no restriction\n @since 8.1"]
-    pub celestial_body_name: *const libc::c_char,
+    pub celestial_body_name: *const ::core::ffi::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -1480,19 +1493,19 @@ const _: () = {
 #[derive(Debug, Copy, Clone)]
 pub struct PROJ_UNIT_INFO {
     #[doc = " Authority name."]
-    pub auth_name: *mut libc::c_char,
+    pub auth_name: *mut ::core::ffi::c_char,
     #[doc = " Object code."]
-    pub code: *mut libc::c_char,
+    pub code: *mut ::core::ffi::c_char,
     #[doc = " Object name. For example \"metre\", \"US survey foot\", etc."]
-    pub name: *mut libc::c_char,
+    pub name: *mut ::core::ffi::c_char,
     #[doc = " Category of the unit: one of \"linear\", \"linear_per_time\", \"angular\",\n \"angular_per_time\", \"scale\", \"scale_per_time\" or \"time\""]
-    pub category: *mut libc::c_char,
+    pub category: *mut ::core::ffi::c_char,
     #[doc = " Conversion factor to apply to transform from that unit to the\n corresponding SI unit (metre for \"linear\", radian for \"angular\", etc.).\n It might be 0 in some cases to indicate no known conversion factor."]
     pub conv_factor: f64,
     #[doc = " PROJ short name, like \"m\", \"ft\", \"us-ft\", etc... Might be NULL"]
-    pub proj_short_name: *mut libc::c_char,
+    pub proj_short_name: *mut ::core::ffi::c_char,
     #[doc = " Whether the object is deprecated"]
-    pub deprecated: libc::c_int,
+    pub deprecated: ::core::ffi::c_int,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -1518,9 +1531,9 @@ const _: () = {
 #[derive(Debug, Copy, Clone)]
 pub struct PROJ_CELESTIAL_BODY_INFO {
     #[doc = " Authority name."]
-    pub auth_name: *mut libc::c_char,
+    pub auth_name: *mut ::core::ffi::c_char,
     #[doc = " Object name. For example \"Earth\""]
-    pub name: *mut libc::c_char,
+    pub name: *mut ::core::ffi::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -1543,42 +1556,42 @@ unsafe extern "C" {
     pub fn proj_string_list_destroy(list: PROJ_STRING_LIST);
 }
 unsafe extern "C" {
-    pub fn proj_context_set_autoclose_database(ctx: *mut PJ_CONTEXT, autoclose: libc::c_int);
+    pub fn proj_context_set_autoclose_database(ctx: *mut PJ_CONTEXT, autoclose: ::core::ffi::c_int);
 }
 unsafe extern "C" {
     pub fn proj_context_set_database_path(
         ctx: *mut PJ_CONTEXT,
-        dbPath: *const libc::c_char,
-        auxDbPaths: *const *const libc::c_char,
-        options: *const *const libc::c_char,
-    ) -> libc::c_int;
+        dbPath: *const ::core::ffi::c_char,
+        auxDbPaths: *const *const ::core::ffi::c_char,
+        options: *const *const ::core::ffi::c_char,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_context_get_database_path(ctx: *mut PJ_CONTEXT) -> *const libc::c_char;
+    pub fn proj_context_get_database_path(ctx: *mut PJ_CONTEXT) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_context_get_database_metadata(
         ctx: *mut PJ_CONTEXT,
-        key: *const libc::c_char,
-    ) -> *const libc::c_char;
+        key: *const ::core::ffi::c_char,
+    ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_context_get_database_structure(
         ctx: *mut PJ_CONTEXT,
-        options: *const *const libc::c_char,
+        options: *const *const ::core::ffi::c_char,
     ) -> PROJ_STRING_LIST;
 }
 unsafe extern "C" {
     pub fn proj_context_guess_wkt_dialect(
         ctx: *mut PJ_CONTEXT,
-        wkt: *const libc::c_char,
+        wkt: *const ::core::ffi::c_char,
     ) -> PJ_GUESSED_WKT_DIALECT;
 }
 unsafe extern "C" {
     pub fn proj_create_from_wkt(
         ctx: *mut PJ_CONTEXT,
-        wkt: *const libc::c_char,
-        options: *const *const libc::c_char,
+        wkt: *const ::core::ffi::c_char,
+        options: *const *const ::core::ffi::c_char,
         out_warnings: *mut PROJ_STRING_LIST,
         out_grammar_errors: *mut PROJ_STRING_LIST,
     ) -> *mut PJ;
@@ -1586,34 +1599,34 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_create_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const libc::c_char,
-        code: *const libc::c_char,
+        auth_name: *const ::core::ffi::c_char,
+        code: *const ::core::ffi::c_char,
         category: PJ_CATEGORY,
-        usePROJAlternativeGridNames: libc::c_int,
-        options: *const *const libc::c_char,
+        usePROJAlternativeGridNames: ::core::ffi::c_int,
+        options: *const *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_uom_get_info_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const libc::c_char,
-        code: *const libc::c_char,
-        out_name: *mut *const libc::c_char,
+        auth_name: *const ::core::ffi::c_char,
+        code: *const ::core::ffi::c_char,
+        out_name: *mut *const ::core::ffi::c_char,
         out_conv_factor: *mut f64,
-        out_category: *mut *const libc::c_char,
-    ) -> libc::c_int;
+        out_category: *mut *const ::core::ffi::c_char,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_grid_get_info_from_database(
         ctx: *mut PJ_CONTEXT,
-        grid_name: *const libc::c_char,
-        out_full_name: *mut *const libc::c_char,
-        out_package_name: *mut *const libc::c_char,
-        out_url: *mut *const libc::c_char,
-        out_direct_download: *mut libc::c_int,
-        out_open_license: *mut libc::c_int,
-        out_available: *mut libc::c_int,
-    ) -> libc::c_int;
+        grid_name: *const ::core::ffi::c_char,
+        out_full_name: *mut *const ::core::ffi::c_char,
+        out_package_name: *mut *const ::core::ffi::c_char,
+        out_url: *mut *const ::core::ffi::c_char,
+        out_direct_download: *mut ::core::ffi::c_int,
+        out_open_license: *mut ::core::ffi::c_int,
+        out_available: *mut ::core::ffi::c_int,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_clone(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
@@ -1621,20 +1634,20 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_create_from_name(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const libc::c_char,
-        searchedName: *const libc::c_char,
+        auth_name: *const ::core::ffi::c_char,
+        searchedName: *const ::core::ffi::c_char,
         types: *const PJ_TYPE,
         typesCount: usize,
-        approximateMatch: libc::c_int,
+        approximateMatch: ::core::ffi::c_int,
         limitResultCount: usize,
-        options: *const *const libc::c_char,
+        options: *const *const ::core::ffi::c_char,
     ) -> *mut PJ_OBJ_LIST;
 }
 unsafe extern "C" {
     pub fn proj_get_type(obj: *const PJ) -> PJ_TYPE;
 }
 unsafe extern "C" {
-    pub fn proj_is_deprecated(obj: *const PJ) -> libc::c_int;
+    pub fn proj_is_deprecated(obj: *const PJ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_get_non_deprecated(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ_OBJ_LIST;
@@ -1644,7 +1657,7 @@ unsafe extern "C" {
         obj: *const PJ,
         other: *const PJ,
         criterion: PJ_COMPARISON_CRITERION,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_is_equivalent_to_with_ctx(
@@ -1652,31 +1665,40 @@ unsafe extern "C" {
         obj: *const PJ,
         other: *const PJ,
         criterion: PJ_COMPARISON_CRITERION,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_is_crs(obj: *const PJ) -> libc::c_int;
+    pub fn proj_is_crs(obj: *const PJ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_get_name(obj: *const PJ) -> *const libc::c_char;
+    pub fn proj_get_name(obj: *const PJ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
-    pub fn proj_get_id_auth_name(obj: *const PJ, index: libc::c_int) -> *const libc::c_char;
+    pub fn proj_get_id_auth_name(
+        obj: *const PJ,
+        index: ::core::ffi::c_int,
+    ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
-    pub fn proj_get_id_code(obj: *const PJ, index: libc::c_int) -> *const libc::c_char;
+    pub fn proj_get_id_code(
+        obj: *const PJ,
+        index: ::core::ffi::c_int,
+    ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
-    pub fn proj_get_remarks(obj: *const PJ) -> *const libc::c_char;
+    pub fn proj_get_remarks(obj: *const PJ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
-    pub fn proj_get_domain_count(obj: *const PJ) -> libc::c_int;
+    pub fn proj_get_domain_count(obj: *const PJ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_get_scope(obj: *const PJ) -> *const libc::c_char;
+    pub fn proj_get_scope(obj: *const PJ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
-    pub fn proj_get_scope_ex(obj: *const PJ, domainIdx: libc::c_int) -> *const libc::c_char;
+    pub fn proj_get_scope_ex(
+        obj: *const PJ,
+        domainIdx: ::core::ffi::c_int,
+    ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_get_area_of_use(
@@ -1686,43 +1708,43 @@ unsafe extern "C" {
         out_south_lat_degree: *mut f64,
         out_east_lon_degree: *mut f64,
         out_north_lat_degree: *mut f64,
-        out_area_name: *mut *const libc::c_char,
-    ) -> libc::c_int;
+        out_area_name: *mut *const ::core::ffi::c_char,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_get_area_of_use_ex(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        domainIdx: libc::c_int,
+        domainIdx: ::core::ffi::c_int,
         out_west_lon_degree: *mut f64,
         out_south_lat_degree: *mut f64,
         out_east_lon_degree: *mut f64,
         out_north_lat_degree: *mut f64,
-        out_area_name: *mut *const libc::c_char,
-    ) -> libc::c_int;
+        out_area_name: *mut *const ::core::ffi::c_char,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_as_wkt(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
         type_: PJ_WKT_TYPE,
-        options: *const *const libc::c_char,
-    ) -> *const libc::c_char;
+        options: *const *const ::core::ffi::c_char,
+    ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_as_proj_string(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
         type_: PJ_PROJ_STRING_TYPE,
-        options: *const *const libc::c_char,
-    ) -> *const libc::c_char;
+        options: *const *const ::core::ffi::c_char,
+    ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_as_projjson(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        options: *const *const libc::c_char,
-    ) -> *const libc::c_char;
+        options: *const *const ::core::ffi::c_char,
+    ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_get_source_crs(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
@@ -1734,21 +1756,21 @@ unsafe extern "C" {
     pub fn proj_identify(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        auth_name: *const libc::c_char,
-        options: *const *const libc::c_char,
-        out_confidence: *mut *mut libc::c_int,
+        auth_name: *const ::core::ffi::c_char,
+        options: *const *const ::core::ffi::c_char,
+        out_confidence: *mut *mut ::core::ffi::c_int,
     ) -> *mut PJ_OBJ_LIST;
 }
 unsafe extern "C" {
     pub fn proj_get_geoid_models_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const libc::c_char,
-        code: *const libc::c_char,
-        options: *const *const libc::c_char,
+        auth_name: *const ::core::ffi::c_char,
+        code: *const ::core::ffi::c_char,
+        options: *const *const ::core::ffi::c_char,
     ) -> PROJ_STRING_LIST;
 }
 unsafe extern "C" {
-    pub fn proj_int_list_destroy(list: *mut libc::c_int);
+    pub fn proj_int_list_destroy(list: *mut ::core::ffi::c_int);
 }
 unsafe extern "C" {
     pub fn proj_get_authorities_from_database(ctx: *mut PJ_CONTEXT) -> PROJ_STRING_LIST;
@@ -1756,16 +1778,16 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_get_codes_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const libc::c_char,
+        auth_name: *const ::core::ffi::c_char,
         type_: PJ_TYPE,
-        allow_deprecated: libc::c_int,
+        allow_deprecated: ::core::ffi::c_int,
     ) -> PROJ_STRING_LIST;
 }
 unsafe extern "C" {
     pub fn proj_get_celestial_body_list_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const libc::c_char,
-        out_result_count: *mut libc::c_int,
+        auth_name: *const ::core::ffi::c_char,
+        out_result_count: *mut ::core::ffi::c_int,
     ) -> *mut *mut PROJ_CELESTIAL_BODY_INFO;
 }
 unsafe extern "C" {
@@ -1780,9 +1802,9 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_get_crs_info_list_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const libc::c_char,
+        auth_name: *const ::core::ffi::c_char,
         params: *const PROJ_CRS_LIST_PARAMETERS,
-        out_result_count: *mut libc::c_int,
+        out_result_count: *mut ::core::ffi::c_int,
     ) -> *mut *mut PROJ_CRS_INFO;
 }
 unsafe extern "C" {
@@ -1791,10 +1813,10 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_get_units_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const libc::c_char,
-        category: *const libc::c_char,
-        allow_deprecated: libc::c_int,
-        out_result_count: *mut libc::c_int,
+        auth_name: *const ::core::ffi::c_char,
+        category: *const ::core::ffi::c_char,
+        allow_deprecated: ::core::ffi::c_int,
+        out_result_count: *mut ::core::ffi::c_int,
     ) -> *mut *mut PROJ_UNIT_INFO;
 }
 unsafe extern "C" {
@@ -1820,24 +1842,24 @@ unsafe extern "C" {
         ctx: *mut PJ_CONTEXT,
         session: *mut PJ_INSERT_SESSION,
         object: *const PJ,
-        authority: *const libc::c_char,
-        code: *const libc::c_char,
-        numeric_codes: libc::c_int,
-        allowed_authorities: *const *const libc::c_char,
-        options: *const *const libc::c_char,
+        authority: *const ::core::ffi::c_char,
+        code: *const ::core::ffi::c_char,
+        numeric_codes: ::core::ffi::c_int,
+        allowed_authorities: *const *const ::core::ffi::c_char,
+        options: *const *const ::core::ffi::c_char,
     ) -> PROJ_STRING_LIST;
 }
 unsafe extern "C" {
     pub fn proj_suggests_code_for(
         ctx: *mut PJ_CONTEXT,
         object: *const PJ,
-        authority: *const libc::c_char,
-        numeric_code: libc::c_int,
-        options: *const *const libc::c_char,
-    ) -> *mut libc::c_char;
+        authority: *const ::core::ffi::c_char,
+        numeric_code: ::core::ffi::c_int,
+        options: *const *const ::core::ffi::c_char,
+    ) -> *mut ::core::ffi::c_char;
 }
 unsafe extern "C" {
-    pub fn proj_string_destroy(str_: *mut libc::c_char);
+    pub fn proj_string_destroy(str_: *mut ::core::ffi::c_char);
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -1848,7 +1870,7 @@ unsafe extern "C" {
     #[doc = " @endcond"]
     pub fn proj_create_operation_factory_context(
         ctx: *mut PJ_CONTEXT,
-        authority: *const libc::c_char,
+        authority: *const ::core::ffi::c_char,
     ) -> *mut PJ_OPERATION_FACTORY_CONTEXT;
 }
 unsafe extern "C" {
@@ -1875,7 +1897,7 @@ unsafe extern "C" {
     pub fn proj_operation_factory_context_set_area_of_interest_name(
         ctx: *mut PJ_CONTEXT,
         factory_ctx: *mut PJ_OPERATION_FACTORY_CONTEXT,
-        area_name: *const libc::c_char,
+        area_name: *const ::core::ffi::c_char,
     );
 }
 unsafe extern "C" {
@@ -1903,7 +1925,7 @@ unsafe extern "C" {
     pub fn proj_operation_factory_context_set_use_proj_alternative_grid_names(
         ctx: *mut PJ_CONTEXT,
         factory_ctx: *mut PJ_OPERATION_FACTORY_CONTEXT,
-        usePROJNames: libc::c_int,
+        usePROJNames: ::core::ffi::c_int,
     );
 }
 unsafe extern "C" {
@@ -1917,21 +1939,21 @@ unsafe extern "C" {
     pub fn proj_operation_factory_context_set_allowed_intermediate_crs(
         ctx: *mut PJ_CONTEXT,
         factory_ctx: *mut PJ_OPERATION_FACTORY_CONTEXT,
-        list_of_auth_name_codes: *const *const libc::c_char,
+        list_of_auth_name_codes: *const *const ::core::ffi::c_char,
     );
 }
 unsafe extern "C" {
     pub fn proj_operation_factory_context_set_discard_superseded(
         ctx: *mut PJ_CONTEXT,
         factory_ctx: *mut PJ_OPERATION_FACTORY_CONTEXT,
-        discard: libc::c_int,
+        discard: ::core::ffi::c_int,
     );
 }
 unsafe extern "C" {
     pub fn proj_operation_factory_context_set_allow_ballpark_transformations(
         ctx: *mut PJ_CONTEXT,
         factory_ctx: *mut PJ_OPERATION_FACTORY_CONTEXT,
-        allow: libc::c_int,
+        allow: ::core::ffi::c_int,
     );
 }
 unsafe extern "C" {
@@ -1943,13 +1965,13 @@ unsafe extern "C" {
     ) -> *mut PJ_OBJ_LIST;
 }
 unsafe extern "C" {
-    pub fn proj_list_get_count(result: *const PJ_OBJ_LIST) -> libc::c_int;
+    pub fn proj_list_get_count(result: *const PJ_OBJ_LIST) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_list_get(
         ctx: *mut PJ_CONTEXT,
         result: *const PJ_OBJ_LIST,
-        index: libc::c_int,
+        index: ::core::ffi::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -1961,10 +1983,10 @@ unsafe extern "C" {
         operations: *mut PJ_OBJ_LIST,
         direction: PJ_DIRECTION,
         coord: PJ_COORD,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_crs_is_derived(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> libc::c_int;
+    pub fn proj_crs_is_derived(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_crs_get_geodetic_crs(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> *mut PJ;
@@ -1976,7 +1998,7 @@ unsafe extern "C" {
     pub fn proj_crs_get_sub_crs(
         ctx: *mut PJ_CONTEXT,
         crs: *const PJ,
-        index: libc::c_int,
+        index: ::core::ffi::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -1989,14 +2011,16 @@ unsafe extern "C" {
     pub fn proj_crs_get_datum_forced(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> *mut PJ;
 }
 unsafe extern "C" {
-    pub fn proj_crs_has_point_motion_operation(ctx: *mut PJ_CONTEXT, crs: *const PJ)
-        -> libc::c_int;
+    pub fn proj_crs_has_point_motion_operation(
+        ctx: *mut PJ_CONTEXT,
+        crs: *const PJ,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_datum_ensemble_get_member_count(
         ctx: *mut PJ_CONTEXT,
         datum_ensemble: *const PJ,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_datum_ensemble_get_accuracy(ctx: *mut PJ_CONTEXT, datum_ensemble: *const PJ)
@@ -2006,7 +2030,7 @@ unsafe extern "C" {
     pub fn proj_datum_ensemble_get_member(
         ctx: *mut PJ_CONTEXT,
         datum_ensemble: *const PJ,
-        member_index: libc::c_int,
+        member_index: ::core::ffi::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -2022,21 +2046,21 @@ unsafe extern "C" {
     pub fn proj_cs_get_type(ctx: *mut PJ_CONTEXT, cs: *const PJ) -> PJ_COORDINATE_SYSTEM_TYPE;
 }
 unsafe extern "C" {
-    pub fn proj_cs_get_axis_count(ctx: *mut PJ_CONTEXT, cs: *const PJ) -> libc::c_int;
+    pub fn proj_cs_get_axis_count(ctx: *mut PJ_CONTEXT, cs: *const PJ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_cs_get_axis_info(
         ctx: *mut PJ_CONTEXT,
         cs: *const PJ,
-        index: libc::c_int,
-        out_name: *mut *const libc::c_char,
-        out_abbrev: *mut *const libc::c_char,
-        out_direction: *mut *const libc::c_char,
+        index: ::core::ffi::c_int,
+        out_name: *mut *const ::core::ffi::c_char,
+        out_abbrev: *mut *const ::core::ffi::c_char,
+        out_direction: *mut *const ::core::ffi::c_char,
         out_unit_conv_factor: *mut f64,
-        out_unit_name: *mut *const libc::c_char,
-        out_unit_auth_name: *mut *const libc::c_char,
-        out_unit_code: *mut *const libc::c_char,
-    ) -> libc::c_int;
+        out_unit_name: *mut *const ::core::ffi::c_char,
+        out_unit_auth_name: *mut *const ::core::ffi::c_char,
+        out_unit_code: *mut *const ::core::ffi::c_char,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_get_ellipsoid(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
@@ -2047,15 +2071,15 @@ unsafe extern "C" {
         ellipsoid: *const PJ,
         out_semi_major_metre: *mut f64,
         out_semi_minor_metre: *mut f64,
-        out_is_semi_minor_computed: *mut libc::c_int,
+        out_is_semi_minor_computed: *mut ::core::ffi::c_int,
         out_inv_flattening: *mut f64,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_get_celestial_body_name(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-    ) -> *const libc::c_char;
+    ) -> *const ::core::ffi::c_char;
 }
 unsafe extern "C" {
     pub fn proj_get_prime_meridian(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
@@ -2066,8 +2090,8 @@ unsafe extern "C" {
         prime_meridian: *const PJ,
         out_longitude: *mut f64,
         out_unit_conv_factor: *mut f64,
-        out_unit_name: *mut *const libc::c_char,
-    ) -> libc::c_int;
+        out_unit_name: *mut *const ::core::ffi::c_char,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_crs_get_coordoperation(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> *mut PJ;
@@ -2076,78 +2100,78 @@ unsafe extern "C" {
     pub fn proj_coordoperation_get_method_info(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-        out_method_name: *mut *const libc::c_char,
-        out_method_auth_name: *mut *const libc::c_char,
-        out_method_code: *mut *const libc::c_char,
-    ) -> libc::c_int;
+        out_method_name: *mut *const ::core::ffi::c_char,
+        out_method_auth_name: *mut *const ::core::ffi::c_char,
+        out_method_code: *mut *const ::core::ffi::c_char,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_is_instantiable(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_has_ballpark_transformation(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_requires_per_coordinate_input_time(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_param_count(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_param_index(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-        name: *const libc::c_char,
-    ) -> libc::c_int;
+        name: *const ::core::ffi::c_char,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_param(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-        index: libc::c_int,
-        out_name: *mut *const libc::c_char,
-        out_auth_name: *mut *const libc::c_char,
-        out_code: *mut *const libc::c_char,
+        index: ::core::ffi::c_int,
+        out_name: *mut *const ::core::ffi::c_char,
+        out_auth_name: *mut *const ::core::ffi::c_char,
+        out_code: *mut *const ::core::ffi::c_char,
         out_value: *mut f64,
-        out_value_string: *mut *const libc::c_char,
+        out_value_string: *mut *const ::core::ffi::c_char,
         out_unit_conv_factor: *mut f64,
-        out_unit_name: *mut *const libc::c_char,
-        out_unit_auth_name: *mut *const libc::c_char,
-        out_unit_code: *mut *const libc::c_char,
-        out_unit_category: *mut *const libc::c_char,
-    ) -> libc::c_int;
+        out_unit_name: *mut *const ::core::ffi::c_char,
+        out_unit_auth_name: *mut *const ::core::ffi::c_char,
+        out_unit_code: *mut *const ::core::ffi::c_char,
+        out_unit_category: *mut *const ::core::ffi::c_char,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_grid_used_count(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_grid_used(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-        index: libc::c_int,
-        out_short_name: *mut *const libc::c_char,
-        out_full_name: *mut *const libc::c_char,
-        out_package_name: *mut *const libc::c_char,
-        out_url: *mut *const libc::c_char,
-        out_direct_download: *mut libc::c_int,
-        out_open_license: *mut libc::c_int,
-        out_available: *mut libc::c_int,
-    ) -> libc::c_int;
+        index: ::core::ffi::c_int,
+        out_short_name: *mut *const ::core::ffi::c_char,
+        out_full_name: *mut *const ::core::ffi::c_char,
+        out_package_name: *mut *const ::core::ffi::c_char,
+        out_url: *mut *const ::core::ffi::c_char,
+        out_direct_download: *mut ::core::ffi::c_int,
+        out_open_license: *mut ::core::ffi::c_int,
+        out_available: *mut ::core::ffi::c_int,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_accuracy(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> f64;
@@ -2157,9 +2181,9 @@ unsafe extern "C" {
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
         out_values: *mut f64,
-        value_count: libc::c_int,
-        emit_error_if_incompatible: libc::c_int,
-    ) -> libc::c_int;
+        value_count: ::core::ffi::c_int,
+        emit_error_if_incompatible: ::core::ffi::c_int,
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_create_inverse(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
@@ -2168,13 +2192,13 @@ unsafe extern "C" {
     pub fn proj_concatoperation_get_step_count(
         ctx: *mut PJ_CONTEXT,
         concatoperation: *const PJ,
-    ) -> libc::c_int;
+    ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_concatoperation_get_step(
         ctx: *mut PJ_CONTEXT,
         concatoperation: *const PJ,
-        i_step: libc::c_int,
+        i_step: ::core::ffi::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -2198,19 +2222,19 @@ pub const PJ_UNIT_TYPE_PJ_UT_TIME: PJ_UNIT_TYPE = 3;
 #[doc = " Parametric unit of measure"]
 pub const PJ_UNIT_TYPE_PJ_UT_PARAMETRIC: PJ_UNIT_TYPE = 4;
 #[doc = " Type of unit of measure."]
-pub type PJ_UNIT_TYPE = libc::c_int;
+pub type PJ_UNIT_TYPE = ::core::ffi::c_int;
 #[doc = " \\brief Axis description."]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_AXIS_DESCRIPTION {
     #[doc = " Axis name."]
-    pub name: *mut libc::c_char,
+    pub name: *mut ::core::ffi::c_char,
     #[doc = " Axis abbreviation."]
-    pub abbreviation: *mut libc::c_char,
+    pub abbreviation: *mut ::core::ffi::c_char,
     #[doc = " Axis direction."]
-    pub direction: *mut libc::c_char,
+    pub direction: *mut ::core::ffi::c_char,
     #[doc = " Axis unit name."]
-    pub unit_name: *mut libc::c_char,
+    pub unit_name: *mut ::core::ffi::c_char,
     #[doc = " Conversion factor to SI of the unit."]
     pub unit_conv_factor: f64,
     #[doc = " Type of unit"]
@@ -2246,13 +2270,13 @@ pub const PJ_CARTESIAN_CS_2D_TYPE_PJ_CART2D_SOUTH_POLE_EASTING_NORTH_NORTHING_NO
 #[doc = " Westing-southing"]
 pub const PJ_CARTESIAN_CS_2D_TYPE_PJ_CART2D_WESTING_SOUTHING: PJ_CARTESIAN_CS_2D_TYPE = 4;
 #[doc = " Type of Cartesian 2D coordinate system."]
-pub type PJ_CARTESIAN_CS_2D_TYPE = libc::c_int;
+pub type PJ_CARTESIAN_CS_2D_TYPE = ::core::ffi::c_int;
 #[doc = " Longitude-Latitude"]
 pub const PJ_ELLIPSOIDAL_CS_2D_TYPE_PJ_ELLPS2D_LONGITUDE_LATITUDE: PJ_ELLIPSOIDAL_CS_2D_TYPE = 0;
 #[doc = " Latitude-Longitude"]
 pub const PJ_ELLIPSOIDAL_CS_2D_TYPE_PJ_ELLPS2D_LATITUDE_LONGITUDE: PJ_ELLIPSOIDAL_CS_2D_TYPE = 1;
 #[doc = " Type of Ellipsoidal 2D coordinate system."]
-pub type PJ_ELLIPSOIDAL_CS_2D_TYPE = libc::c_int;
+pub type PJ_ELLIPSOIDAL_CS_2D_TYPE = ::core::ffi::c_int;
 #[doc = " Longitude-Latitude-Height(up)"]
 pub const PJ_ELLIPSOIDAL_CS_3D_TYPE_PJ_ELLPS3D_LONGITUDE_LATITUDE_HEIGHT:
     PJ_ELLIPSOIDAL_CS_3D_TYPE = 0;
@@ -2260,21 +2284,21 @@ pub const PJ_ELLIPSOIDAL_CS_3D_TYPE_PJ_ELLPS3D_LONGITUDE_LATITUDE_HEIGHT:
 pub const PJ_ELLIPSOIDAL_CS_3D_TYPE_PJ_ELLPS3D_LATITUDE_LONGITUDE_HEIGHT:
     PJ_ELLIPSOIDAL_CS_3D_TYPE = 1;
 #[doc = " Type of Ellipsoidal 3D coordinate system."]
-pub type PJ_ELLIPSOIDAL_CS_3D_TYPE = libc::c_int;
+pub type PJ_ELLIPSOIDAL_CS_3D_TYPE = ::core::ffi::c_int;
 #[doc = " \\brief Description of a parameter value for a Conversion."]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_PARAM_DESCRIPTION {
     #[doc = " Parameter name."]
-    pub name: *const libc::c_char,
+    pub name: *const ::core::ffi::c_char,
     #[doc = " Parameter authority name."]
-    pub auth_name: *const libc::c_char,
+    pub auth_name: *const ::core::ffi::c_char,
     #[doc = " Parameter code."]
-    pub code: *const libc::c_char,
+    pub code: *const ::core::ffi::c_char,
     #[doc = " Parameter value."]
     pub value: f64,
     #[doc = " Name of unit in which parameter value is expressed."]
-    pub unit_name: *const libc::c_char,
+    pub unit_name: *const ::core::ffi::c_char,
     #[doc = " Conversion factor to SI of the unit."]
     pub unit_conv_factor: f64,
     #[doc = " Type of unit"]
@@ -2304,7 +2328,7 @@ unsafe extern "C" {
     pub fn proj_create_cs(
         ctx: *mut PJ_CONTEXT,
         type_: PJ_COORDINATE_SYSTEM_TYPE,
-        axis_count: libc::c_int,
+        axis_count: ::core::ffi::c_int,
         axis: *const PJ_AXIS_DESCRIPTION,
     ) -> *mut PJ;
 }
@@ -2312,7 +2336,7 @@ unsafe extern "C" {
     pub fn proj_create_cartesian_2D_cs(
         ctx: *mut PJ_CONTEXT,
         type_: PJ_CARTESIAN_CS_2D_TYPE,
-        unit_name: *const libc::c_char,
+        unit_name: *const ::core::ffi::c_char,
         unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2320,7 +2344,7 @@ unsafe extern "C" {
     pub fn proj_create_ellipsoidal_2D_cs(
         ctx: *mut PJ_CONTEXT,
         type_: PJ_ELLIPSOIDAL_CS_2D_TYPE,
-        unit_name: *const libc::c_char,
+        unit_name: *const ::core::ffi::c_char,
         unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2328,32 +2352,32 @@ unsafe extern "C" {
     pub fn proj_create_ellipsoidal_3D_cs(
         ctx: *mut PJ_CONTEXT,
         type_: PJ_ELLIPSOIDAL_CS_3D_TYPE,
-        horizontal_angular_unit_name: *const libc::c_char,
+        horizontal_angular_unit_name: *const ::core::ffi::c_char,
         horizontal_angular_unit_conv_factor: f64,
-        vertical_linear_unit_name: *const libc::c_char,
+        vertical_linear_unit_name: *const ::core::ffi::c_char,
         vertical_linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_query_geodetic_crs_from_datum(
         ctx: *mut PJ_CONTEXT,
-        crs_auth_name: *const libc::c_char,
-        datum_auth_name: *const libc::c_char,
-        datum_code: *const libc::c_char,
-        crs_type: *const libc::c_char,
+        crs_auth_name: *const ::core::ffi::c_char,
+        datum_auth_name: *const ::core::ffi::c_char,
+        datum_code: *const ::core::ffi::c_char,
+        crs_type: *const ::core::ffi::c_char,
     ) -> *mut PJ_OBJ_LIST;
 }
 unsafe extern "C" {
     pub fn proj_create_geographic_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const libc::c_char,
-        datum_name: *const libc::c_char,
-        ellps_name: *const libc::c_char,
+        crs_name: *const ::core::ffi::c_char,
+        datum_name: *const ::core::ffi::c_char,
+        ellps_name: *const ::core::ffi::c_char,
         semi_major_metre: f64,
         inv_flattening: f64,
-        prime_meridian_name: *const libc::c_char,
+        prime_meridian_name: *const ::core::ffi::c_char,
         prime_meridian_offset: f64,
-        pm_angular_units: *const libc::c_char,
+        pm_angular_units: *const ::core::ffi::c_char,
         pm_units_conv: f64,
         ellipsoidal_cs: *const PJ,
     ) -> *mut PJ;
@@ -2361,7 +2385,7 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_create_geographic_crs_from_datum(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const libc::c_char,
+        crs_name: *const ::core::ffi::c_char,
         datum_or_datum_ensemble: *const PJ,
         ellipsoidal_cs: *const PJ,
     ) -> *mut PJ;
@@ -2369,53 +2393,53 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_create_geocentric_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const libc::c_char,
-        datum_name: *const libc::c_char,
-        ellps_name: *const libc::c_char,
+        crs_name: *const ::core::ffi::c_char,
+        datum_name: *const ::core::ffi::c_char,
+        ellps_name: *const ::core::ffi::c_char,
         semi_major_metre: f64,
         inv_flattening: f64,
-        prime_meridian_name: *const libc::c_char,
+        prime_meridian_name: *const ::core::ffi::c_char,
         prime_meridian_offset: f64,
-        angular_units: *const libc::c_char,
+        angular_units: *const ::core::ffi::c_char,
         angular_units_conv: f64,
-        linear_units: *const libc::c_char,
+        linear_units: *const ::core::ffi::c_char,
         linear_units_conv: f64,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_geocentric_crs_from_datum(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const libc::c_char,
+        crs_name: *const ::core::ffi::c_char,
         datum_or_datum_ensemble: *const PJ,
-        linear_units: *const libc::c_char,
+        linear_units: *const ::core::ffi::c_char,
         linear_units_conv: f64,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_derived_geographic_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const libc::c_char,
+        crs_name: *const ::core::ffi::c_char,
         base_geographic_crs: *const PJ,
         conversion: *const PJ,
         ellipsoidal_cs: *const PJ,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
-    pub fn proj_is_derived_crs(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> libc::c_int;
+    pub fn proj_is_derived_crs(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> ::core::ffi::c_int;
 }
 unsafe extern "C" {
     pub fn proj_alter_name(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        name: *const libc::c_char,
+        name: *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_alter_id(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        auth_name: *const libc::c_char,
-        code: *const libc::c_char,
+        auth_name: *const ::core::ffi::c_char,
+        code: *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -2429,44 +2453,44 @@ unsafe extern "C" {
     pub fn proj_crs_alter_cs_angular_unit(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        angular_units: *const libc::c_char,
+        angular_units: *const ::core::ffi::c_char,
         angular_units_conv: f64,
-        unit_auth_name: *const libc::c_char,
-        unit_code: *const libc::c_char,
+        unit_auth_name: *const ::core::ffi::c_char,
+        unit_code: *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_crs_alter_cs_linear_unit(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        linear_units: *const libc::c_char,
+        linear_units: *const ::core::ffi::c_char,
         linear_units_conv: f64,
-        unit_auth_name: *const libc::c_char,
-        unit_code: *const libc::c_char,
+        unit_auth_name: *const ::core::ffi::c_char,
+        unit_code: *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_crs_alter_parameters_linear_unit(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        linear_units: *const libc::c_char,
+        linear_units: *const ::core::ffi::c_char,
         linear_units_conv: f64,
-        unit_auth_name: *const libc::c_char,
-        unit_code: *const libc::c_char,
-        convert_to_new_unit: libc::c_int,
+        unit_auth_name: *const ::core::ffi::c_char,
+        unit_code: *const ::core::ffi::c_char,
+        convert_to_new_unit: ::core::ffi::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_crs_promote_to_3D(
         ctx: *mut PJ_CONTEXT,
-        crs_3D_name: *const libc::c_char,
+        crs_3D_name: *const ::core::ffi::c_char,
         crs_2D: *const PJ,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_crs_create_projected_3D_crs_from_2D(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const libc::c_char,
+        crs_name: *const ::core::ffi::c_char,
         projected_2D_crs: *const PJ,
         geog_3D_crs: *const PJ,
     ) -> *mut PJ;
@@ -2474,45 +2498,45 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_crs_demote_to_2D(
         ctx: *mut PJ_CONTEXT,
-        crs_2D_name: *const libc::c_char,
+        crs_2D_name: *const ::core::ffi::c_char,
         crs_3D: *const PJ,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_engineering_crs(
         ctx: *mut PJ_CONTEXT,
-        crsName: *const libc::c_char,
+        crsName: *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_vertical_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const libc::c_char,
-        datum_name: *const libc::c_char,
-        linear_units: *const libc::c_char,
+        crs_name: *const ::core::ffi::c_char,
+        datum_name: *const ::core::ffi::c_char,
+        linear_units: *const ::core::ffi::c_char,
         linear_units_conv: f64,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_vertical_crs_ex(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const libc::c_char,
-        datum_name: *const libc::c_char,
-        datum_auth_name: *const libc::c_char,
-        datum_code: *const libc::c_char,
-        linear_units: *const libc::c_char,
+        crs_name: *const ::core::ffi::c_char,
+        datum_name: *const ::core::ffi::c_char,
+        datum_auth_name: *const ::core::ffi::c_char,
+        datum_code: *const ::core::ffi::c_char,
+        linear_units: *const ::core::ffi::c_char,
         linear_units_conv: f64,
-        geoid_model_name: *const libc::c_char,
-        geoid_model_auth_name: *const libc::c_char,
-        geoid_model_code: *const libc::c_char,
+        geoid_model_name: *const ::core::ffi::c_char,
+        geoid_model_auth_name: *const ::core::ffi::c_char,
+        geoid_model_code: *const ::core::ffi::c_char,
         geoid_geog_crs: *const PJ,
-        options: *const *const libc::c_char,
+        options: *const *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_compound_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const libc::c_char,
+        crs_name: *const ::core::ffi::c_char,
         horiz_crs: *const PJ,
         vert_crs: *const PJ,
     ) -> *mut PJ;
@@ -2520,29 +2544,29 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_create_conversion(
         ctx: *mut PJ_CONTEXT,
-        name: *const libc::c_char,
-        auth_name: *const libc::c_char,
-        code: *const libc::c_char,
-        method_name: *const libc::c_char,
-        method_auth_name: *const libc::c_char,
-        method_code: *const libc::c_char,
-        param_count: libc::c_int,
+        name: *const ::core::ffi::c_char,
+        auth_name: *const ::core::ffi::c_char,
+        code: *const ::core::ffi::c_char,
+        method_name: *const ::core::ffi::c_char,
+        method_auth_name: *const ::core::ffi::c_char,
+        method_code: *const ::core::ffi::c_char,
+        param_count: ::core::ffi::c_int,
         params: *const PJ_PARAM_DESCRIPTION,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_transformation(
         ctx: *mut PJ_CONTEXT,
-        name: *const libc::c_char,
-        auth_name: *const libc::c_char,
-        code: *const libc::c_char,
+        name: *const ::core::ffi::c_char,
+        auth_name: *const ::core::ffi::c_char,
+        code: *const ::core::ffi::c_char,
         source_crs: *const PJ,
         target_crs: *const PJ,
         interpolation_crs: *const PJ,
-        method_name: *const libc::c_char,
-        method_auth_name: *const libc::c_char,
-        method_code: *const libc::c_char,
-        param_count: libc::c_int,
+        method_name: *const ::core::ffi::c_char,
+        method_auth_name: *const ::core::ffi::c_char,
+        method_code: *const ::core::ffi::c_char,
+        param_count: ::core::ffi::c_int,
         params: *const PJ_PARAM_DESCRIPTION,
         accuracy: f64,
     ) -> *mut PJ;
@@ -2551,14 +2575,14 @@ unsafe extern "C" {
     pub fn proj_convert_conversion_to_other_method(
         ctx: *mut PJ_CONTEXT,
         conversion: *const PJ,
-        new_method_epsg_code: libc::c_int,
-        new_method_name: *const libc::c_char,
+        new_method_epsg_code: ::core::ffi::c_int,
+        new_method_name: *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_projected_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const libc::c_char,
+        crs_name: *const ::core::ffi::c_char,
         geodetic_crs: *const PJ,
         conversion: *const PJ,
         coordinate_system: *const PJ,
@@ -2576,7 +2600,7 @@ unsafe extern "C" {
     pub fn proj_crs_create_bound_crs_to_WGS84(
         ctx: *mut PJ_CONTEXT,
         crs: *const PJ,
-        options: *const *const libc::c_char,
+        options: *const *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -2584,14 +2608,14 @@ unsafe extern "C" {
         ctx: *mut PJ_CONTEXT,
         vert_crs: *const PJ,
         hub_geographic_3D_crs: *const PJ,
-        grid_name: *const libc::c_char,
+        grid_name: *const ::core::ffi::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_conversion_utm(
         ctx: *mut PJ_CONTEXT,
-        zone: libc::c_int,
-        north: libc::c_int,
+        zone: ::core::ffi::c_int,
+        north: ::core::ffi::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -2602,9 +2626,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2616,9 +2640,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2630,9 +2654,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2645,9 +2669,9 @@ unsafe extern "C" {
         longitude_secon_point: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2658,9 +2682,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2671,9 +2695,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2686,9 +2710,9 @@ unsafe extern "C" {
         latitude_second_parallel: f64,
         easting_false_origin: f64,
         northing_false_origin: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2700,9 +2724,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2715,9 +2739,9 @@ unsafe extern "C" {
         longitude_false_origin: f64,
         easting_false_origin: f64,
         northing_false_origin: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2730,9 +2754,9 @@ unsafe extern "C" {
         latitude_second_parallel: f64,
         easting_false_origin: f64,
         northing_false_origin: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2746,9 +2770,9 @@ unsafe extern "C" {
         easting_false_origin: f64,
         northing_false_origin: f64,
         ellipsoid_scaling_factor: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2761,9 +2785,9 @@ unsafe extern "C" {
         latitude_second_parallel: f64,
         easting_false_origin: f64,
         northing_false_origin: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2774,9 +2798,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2787,9 +2811,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2800,9 +2824,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2813,9 +2837,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2826,9 +2850,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2839,9 +2863,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2854,9 +2878,9 @@ unsafe extern "C" {
         latitude_second_parallel: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2866,9 +2890,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2878,9 +2902,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2890,9 +2914,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2902,9 +2926,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2914,9 +2938,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2926,9 +2950,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2939,9 +2963,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2952,9 +2976,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2964,9 +2988,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2976,9 +3000,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2988,9 +3012,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3001,9 +3025,9 @@ unsafe extern "C" {
         height: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3014,9 +3038,9 @@ unsafe extern "C" {
         height: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3027,9 +3051,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3043,9 +3067,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3059,9 +3083,9 @@ unsafe extern "C" {
         scale: f64,
         easting_projection_centre: f64,
         northing_projection_centre: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3076,9 +3100,9 @@ unsafe extern "C" {
         scale: f64,
         easting_projection_centre: f64,
         northing_projection_centre: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3091,9 +3115,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3105,9 +3129,9 @@ unsafe extern "C" {
         latitude_second_parallel: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3121,9 +3145,9 @@ unsafe extern "C" {
         scale_factor_pseudo_standard_parallel: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3137,9 +3161,9 @@ unsafe extern "C" {
         scale_factor_pseudo_standard_parallel: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3150,9 +3174,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3162,9 +3186,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3176,9 +3200,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3189,9 +3213,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3202,9 +3226,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3214,9 +3238,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3227,9 +3251,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3241,9 +3265,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3254,9 +3278,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3269,9 +3293,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3282,9 +3306,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3296,9 +3320,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3309,9 +3333,9 @@ unsafe extern "C" {
         longitude_of_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3321,9 +3345,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3333,9 +3357,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3347,9 +3371,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3359,9 +3383,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3371,9 +3395,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3383,9 +3407,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3396,9 +3420,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3408,9 +3432,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3420,9 +3444,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3432,9 +3456,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3444,9 +3468,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3457,9 +3481,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3470,9 +3494,9 @@ unsafe extern "C" {
         peg_point_long: f64,
         peg_point_heading: f64,
         peg_point_height: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3482,9 +3506,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3497,9 +3521,9 @@ unsafe extern "C" {
         view_point_height: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const libc::c_char,
+        linear_unit_name: *const ::core::ffi::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3509,7 +3533,7 @@ unsafe extern "C" {
         south_pole_lat_in_unrotated_crs: f64,
         south_pole_long_in_unrotated_crs: f64,
         axis_rotation: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3519,7 +3543,7 @@ unsafe extern "C" {
         grid_north_pole_latitude: f64,
         grid_north_pole_longitude: f64,
         north_pole_grid_longitude: f64,
-        ang_unit_name: *const libc::c_char,
+        ang_unit_name: *const ::core::ffi::c_char,
         ang_unit_conv_factor: f64,
     ) -> *mut PJ;
 }

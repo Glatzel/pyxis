@@ -32,7 +32,7 @@ fn main() {
     let _pk_proj = link_lib("proj", "proj");
 
     // generate bindings
-    #[cfg(feature = "bindgen")]
+    #[cfg(any(feature = "bindgen", feature = "update"))]
     {
         let header = &_pk_proj.include_paths[0]
             .join("proj.h")
@@ -43,7 +43,7 @@ fn main() {
             .use_core()
             .size_t_is_usize(true)
             .blocklist_type("max_align_t")
-            .ctypes_prefix("libc")
+            // .ctypes_prefix("libc")
             .generate()
             .unwrap();
 

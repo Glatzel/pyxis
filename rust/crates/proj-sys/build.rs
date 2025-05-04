@@ -34,6 +34,8 @@ fn main() {
             .header(header)
             .size_t_is_usize(true)
             .blocklist_type("max_align_t")
+            .ctypes_prefix("libc")
+            .use_core()
             .generate()
             .unwrap();
 
@@ -41,13 +43,10 @@ fn main() {
             .write_to_file(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs"))
             .expect("Couldn't write bindings!");
         //only allow linux bindgen
-        #[cfg(all(feature = "update", target_os = "linux"))]
+
+        #[cfg(feature = "update")]
         bindings
-            .write_to_file("./src/bindings-linux.rs")
-            .expect("Couldn't write bindings!");
-        #[cfg(all(feature = "update", target_os = "windows"))]
-        bindings
-            .write_to_file("./src/bindings-win.rs")
+            .write_to_file("./src/bindings.rs")
             .expect("Couldn't write bindings!");
         eprintln!(
             "Build bingings to: {:?}",

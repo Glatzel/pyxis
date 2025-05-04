@@ -5,16 +5,7 @@ env:
   RUST_ROOT: ./rust
 jobs:
     proj-bindings:
-        strategy:
-          fail-fast: false
-          matrix:
-            machine: [windows-latest, ubuntu-latest]
-            include:
-              - machine: windows-latest
-                os: win
-              - machine: ubuntu-latest
-                os: linux
-        runs-on: ${{matrix.machine}}
+        runs-on: ubuntu-latest
         env:
           RUSTFLAGS: "-Dwarnings"
         steps:
@@ -31,7 +22,7 @@ jobs:
           - name: upload
             uses: actions/upload-artifact@v4
             with:
-              name: proj-bindings-${{matrix.os}}
+              name: proj-bindings
               path: |
-                rust/crates/proj-sys/src/bindings-${{matrix.os}}.rs
+                rust/crates/proj-sys/src/bindings.rs
               if-no-files-found: error

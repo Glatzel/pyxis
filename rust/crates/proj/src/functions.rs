@@ -1,4 +1,5 @@
 mod area;
+#[cfg(feature = "unsuggested")]
 mod cleanup;
 mod coordinate_transformation;
 mod custom_io;
@@ -22,5 +23,7 @@ pub use distances::*;
 #[cfg(feature = "info")]
 pub use info::*;
 // pub use iso19111::*;
+#[cfg(feature = "unsuggested")]
+pub use cleanup::*;
 #[cfg(feature = "lists")]
 pub use lists::*;

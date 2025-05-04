@@ -4,7 +4,7 @@ use crate::PjLogLevel;
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
     let message = crate::c_char_to_string(info);
 
-    match level as u32 {
+    match std::os::raw::c_uint::try_from(level).unwrap() {
         proj_sys::PJ_LOG_LEVEL_PJ_LOG_TRACE => clerk::trace!("{}", message),
         proj_sys::PJ_LOG_LEVEL_PJ_LOG_DEBUG => clerk::debug!("{}", message),
         proj_sys::PJ_LOG_LEVEL_PJ_LOG_ERROR => clerk::error!("{}", message),

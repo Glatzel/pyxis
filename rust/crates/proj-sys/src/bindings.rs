@@ -22,9 +22,9 @@ pub const PROJ_ERR_OTHER: u32 = 4096;
 pub const PROJ_ERR_OTHER_API_MISUSE: u32 = 4097;
 pub const PROJ_ERR_OTHER_NO_INVERSE_OP: u32 = 4098;
 pub const PROJ_ERR_OTHER_NETWORK_ERROR: u32 = 4099;
-pub type wchar_t = ::core::ffi::c_int;
+pub type wchar_t = ::std::os::raw::c_int;
 unsafe extern "C" {
-    pub static pj_release: [::core::ffi::c_char; 0usize];
+    pub static pj_release: [::std::os::raw::c_char; 0usize];
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -49,32 +49,28 @@ pub struct P5_FACTORS {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of P5_FACTORS"][::core::mem::size_of::<P5_FACTORS>() - 96usize];
-    ["Alignment of P5_FACTORS"][::core::mem::align_of::<P5_FACTORS>() - 8usize];
+    ["Size of P5_FACTORS"][::std::mem::size_of::<P5_FACTORS>() - 96usize];
+    ["Alignment of P5_FACTORS"][::std::mem::align_of::<P5_FACTORS>() - 8usize];
     ["Offset of field: P5_FACTORS::meridional_scale"]
-        [::core::mem::offset_of!(P5_FACTORS, meridional_scale) - 0usize];
+        [::std::mem::offset_of!(P5_FACTORS, meridional_scale) - 0usize];
     ["Offset of field: P5_FACTORS::parallel_scale"]
-        [::core::mem::offset_of!(P5_FACTORS, parallel_scale) - 8usize];
+        [::std::mem::offset_of!(P5_FACTORS, parallel_scale) - 8usize];
     ["Offset of field: P5_FACTORS::areal_scale"]
-        [::core::mem::offset_of!(P5_FACTORS, areal_scale) - 16usize];
+        [::std::mem::offset_of!(P5_FACTORS, areal_scale) - 16usize];
     ["Offset of field: P5_FACTORS::angular_distortion"]
-        [::core::mem::offset_of!(P5_FACTORS, angular_distortion) - 24usize];
+        [::std::mem::offset_of!(P5_FACTORS, angular_distortion) - 24usize];
     ["Offset of field: P5_FACTORS::meridian_parallel_angle"]
-        [::core::mem::offset_of!(P5_FACTORS, meridian_parallel_angle) - 32usize];
+        [::std::mem::offset_of!(P5_FACTORS, meridian_parallel_angle) - 32usize];
     ["Offset of field: P5_FACTORS::meridian_convergence"]
-        [::core::mem::offset_of!(P5_FACTORS, meridian_convergence) - 40usize];
+        [::std::mem::offset_of!(P5_FACTORS, meridian_convergence) - 40usize];
     ["Offset of field: P5_FACTORS::tissot_semimajor"]
-        [::core::mem::offset_of!(P5_FACTORS, tissot_semimajor) - 48usize];
+        [::std::mem::offset_of!(P5_FACTORS, tissot_semimajor) - 48usize];
     ["Offset of field: P5_FACTORS::tissot_semiminor"]
-        [::core::mem::offset_of!(P5_FACTORS, tissot_semiminor) - 56usize];
-    ["Offset of field: P5_FACTORS::dx_dlam"]
-        [::core::mem::offset_of!(P5_FACTORS, dx_dlam) - 64usize];
-    ["Offset of field: P5_FACTORS::dx_dphi"]
-        [::core::mem::offset_of!(P5_FACTORS, dx_dphi) - 72usize];
-    ["Offset of field: P5_FACTORS::dy_dlam"]
-        [::core::mem::offset_of!(P5_FACTORS, dy_dlam) - 80usize];
-    ["Offset of field: P5_FACTORS::dy_dphi"]
-        [::core::mem::offset_of!(P5_FACTORS, dy_dphi) - 88usize];
+        [::std::mem::offset_of!(P5_FACTORS, tissot_semiminor) - 56usize];
+    ["Offset of field: P5_FACTORS::dx_dlam"][::std::mem::offset_of!(P5_FACTORS, dx_dlam) - 64usize];
+    ["Offset of field: P5_FACTORS::dx_dphi"][::std::mem::offset_of!(P5_FACTORS, dx_dphi) - 72usize];
+    ["Offset of field: P5_FACTORS::dy_dlam"][::std::mem::offset_of!(P5_FACTORS, dy_dlam) - 80usize];
+    ["Offset of field: P5_FACTORS::dy_dphi"][::std::mem::offset_of!(P5_FACTORS, dy_dphi) - 88usize];
 };
 pub type PJ_FACTORS = P5_FACTORS;
 #[repr(C)]
@@ -86,67 +82,67 @@ pub type PJ = PJconsts;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_LIST {
-    pub id: *const ::core::ffi::c_char,
-    pub proj: ::core::option::Option<unsafe extern "C" fn(arg1: *mut PJ) -> *mut PJ>,
-    pub descr: *const *const ::core::ffi::c_char,
+    pub id: *const ::std::os::raw::c_char,
+    pub proj: ::std::option::Option<unsafe extern "C" fn(arg1: *mut PJ) -> *mut PJ>,
+    pub descr: *const *const ::std::os::raw::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_LIST"][::core::mem::size_of::<PJ_LIST>() - 24usize];
-    ["Alignment of PJ_LIST"][::core::mem::align_of::<PJ_LIST>() - 8usize];
-    ["Offset of field: PJ_LIST::id"][::core::mem::offset_of!(PJ_LIST, id) - 0usize];
-    ["Offset of field: PJ_LIST::proj"][::core::mem::offset_of!(PJ_LIST, proj) - 8usize];
-    ["Offset of field: PJ_LIST::descr"][::core::mem::offset_of!(PJ_LIST, descr) - 16usize];
+    ["Size of PJ_LIST"][::std::mem::size_of::<PJ_LIST>() - 24usize];
+    ["Alignment of PJ_LIST"][::std::mem::align_of::<PJ_LIST>() - 8usize];
+    ["Offset of field: PJ_LIST::id"][::std::mem::offset_of!(PJ_LIST, id) - 0usize];
+    ["Offset of field: PJ_LIST::proj"][::std::mem::offset_of!(PJ_LIST, proj) - 8usize];
+    ["Offset of field: PJ_LIST::descr"][::std::mem::offset_of!(PJ_LIST, descr) - 16usize];
 };
 pub type PJ_OPERATIONS = PJ_LIST;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_ELLPS {
-    pub id: *const ::core::ffi::c_char,
-    pub major: *const ::core::ffi::c_char,
-    pub ell: *const ::core::ffi::c_char,
-    pub name: *const ::core::ffi::c_char,
+    pub id: *const ::std::os::raw::c_char,
+    pub major: *const ::std::os::raw::c_char,
+    pub ell: *const ::std::os::raw::c_char,
+    pub name: *const ::std::os::raw::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_ELLPS"][::core::mem::size_of::<PJ_ELLPS>() - 32usize];
-    ["Alignment of PJ_ELLPS"][::core::mem::align_of::<PJ_ELLPS>() - 8usize];
-    ["Offset of field: PJ_ELLPS::id"][::core::mem::offset_of!(PJ_ELLPS, id) - 0usize];
-    ["Offset of field: PJ_ELLPS::major"][::core::mem::offset_of!(PJ_ELLPS, major) - 8usize];
-    ["Offset of field: PJ_ELLPS::ell"][::core::mem::offset_of!(PJ_ELLPS, ell) - 16usize];
-    ["Offset of field: PJ_ELLPS::name"][::core::mem::offset_of!(PJ_ELLPS, name) - 24usize];
+    ["Size of PJ_ELLPS"][::std::mem::size_of::<PJ_ELLPS>() - 32usize];
+    ["Alignment of PJ_ELLPS"][::std::mem::align_of::<PJ_ELLPS>() - 8usize];
+    ["Offset of field: PJ_ELLPS::id"][::std::mem::offset_of!(PJ_ELLPS, id) - 0usize];
+    ["Offset of field: PJ_ELLPS::major"][::std::mem::offset_of!(PJ_ELLPS, major) - 8usize];
+    ["Offset of field: PJ_ELLPS::ell"][::std::mem::offset_of!(PJ_ELLPS, ell) - 16usize];
+    ["Offset of field: PJ_ELLPS::name"][::std::mem::offset_of!(PJ_ELLPS, name) - 24usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_UNITS {
-    pub id: *const ::core::ffi::c_char,
-    pub to_meter: *const ::core::ffi::c_char,
-    pub name: *const ::core::ffi::c_char,
+    pub id: *const ::std::os::raw::c_char,
+    pub to_meter: *const ::std::os::raw::c_char,
+    pub name: *const ::std::os::raw::c_char,
     pub factor: f64,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_UNITS"][::core::mem::size_of::<PJ_UNITS>() - 32usize];
-    ["Alignment of PJ_UNITS"][::core::mem::align_of::<PJ_UNITS>() - 8usize];
-    ["Offset of field: PJ_UNITS::id"][::core::mem::offset_of!(PJ_UNITS, id) - 0usize];
-    ["Offset of field: PJ_UNITS::to_meter"][::core::mem::offset_of!(PJ_UNITS, to_meter) - 8usize];
-    ["Offset of field: PJ_UNITS::name"][::core::mem::offset_of!(PJ_UNITS, name) - 16usize];
-    ["Offset of field: PJ_UNITS::factor"][::core::mem::offset_of!(PJ_UNITS, factor) - 24usize];
+    ["Size of PJ_UNITS"][::std::mem::size_of::<PJ_UNITS>() - 32usize];
+    ["Alignment of PJ_UNITS"][::std::mem::align_of::<PJ_UNITS>() - 8usize];
+    ["Offset of field: PJ_UNITS::id"][::std::mem::offset_of!(PJ_UNITS, id) - 0usize];
+    ["Offset of field: PJ_UNITS::to_meter"][::std::mem::offset_of!(PJ_UNITS, to_meter) - 8usize];
+    ["Offset of field: PJ_UNITS::name"][::std::mem::offset_of!(PJ_UNITS, name) - 16usize];
+    ["Offset of field: PJ_UNITS::factor"][::std::mem::offset_of!(PJ_UNITS, factor) - 24usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_PRIME_MERIDIANS {
-    pub id: *const ::core::ffi::c_char,
-    pub defn: *const ::core::ffi::c_char,
+    pub id: *const ::std::os::raw::c_char,
+    pub defn: *const ::std::os::raw::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_PRIME_MERIDIANS"][::core::mem::size_of::<PJ_PRIME_MERIDIANS>() - 16usize];
-    ["Alignment of PJ_PRIME_MERIDIANS"][::core::mem::align_of::<PJ_PRIME_MERIDIANS>() - 8usize];
+    ["Size of PJ_PRIME_MERIDIANS"][::std::mem::size_of::<PJ_PRIME_MERIDIANS>() - 16usize];
+    ["Alignment of PJ_PRIME_MERIDIANS"][::std::mem::align_of::<PJ_PRIME_MERIDIANS>() - 8usize];
     ["Offset of field: PJ_PRIME_MERIDIANS::id"]
-        [::core::mem::offset_of!(PJ_PRIME_MERIDIANS, id) - 0usize];
+        [::std::mem::offset_of!(PJ_PRIME_MERIDIANS, id) - 0usize];
     ["Offset of field: PJ_PRIME_MERIDIANS::defn"]
-        [::core::mem::offset_of!(PJ_PRIME_MERIDIANS, defn) - 8usize];
+        [::std::mem::offset_of!(PJ_PRIME_MERIDIANS, defn) - 8usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -158,12 +154,12 @@ pub struct PJ_XYZT {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_XYZT"][::core::mem::size_of::<PJ_XYZT>() - 32usize];
-    ["Alignment of PJ_XYZT"][::core::mem::align_of::<PJ_XYZT>() - 8usize];
-    ["Offset of field: PJ_XYZT::x"][::core::mem::offset_of!(PJ_XYZT, x) - 0usize];
-    ["Offset of field: PJ_XYZT::y"][::core::mem::offset_of!(PJ_XYZT, y) - 8usize];
-    ["Offset of field: PJ_XYZT::z"][::core::mem::offset_of!(PJ_XYZT, z) - 16usize];
-    ["Offset of field: PJ_XYZT::t"][::core::mem::offset_of!(PJ_XYZT, t) - 24usize];
+    ["Size of PJ_XYZT"][::std::mem::size_of::<PJ_XYZT>() - 32usize];
+    ["Alignment of PJ_XYZT"][::std::mem::align_of::<PJ_XYZT>() - 8usize];
+    ["Offset of field: PJ_XYZT::x"][::std::mem::offset_of!(PJ_XYZT, x) - 0usize];
+    ["Offset of field: PJ_XYZT::y"][::std::mem::offset_of!(PJ_XYZT, y) - 8usize];
+    ["Offset of field: PJ_XYZT::z"][::std::mem::offset_of!(PJ_XYZT, z) - 16usize];
+    ["Offset of field: PJ_XYZT::t"][::std::mem::offset_of!(PJ_XYZT, t) - 24usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -175,12 +171,12 @@ pub struct PJ_UVWT {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_UVWT"][::core::mem::size_of::<PJ_UVWT>() - 32usize];
-    ["Alignment of PJ_UVWT"][::core::mem::align_of::<PJ_UVWT>() - 8usize];
-    ["Offset of field: PJ_UVWT::u"][::core::mem::offset_of!(PJ_UVWT, u) - 0usize];
-    ["Offset of field: PJ_UVWT::v"][::core::mem::offset_of!(PJ_UVWT, v) - 8usize];
-    ["Offset of field: PJ_UVWT::w"][::core::mem::offset_of!(PJ_UVWT, w) - 16usize];
-    ["Offset of field: PJ_UVWT::t"][::core::mem::offset_of!(PJ_UVWT, t) - 24usize];
+    ["Size of PJ_UVWT"][::std::mem::size_of::<PJ_UVWT>() - 32usize];
+    ["Alignment of PJ_UVWT"][::std::mem::align_of::<PJ_UVWT>() - 8usize];
+    ["Offset of field: PJ_UVWT::u"][::std::mem::offset_of!(PJ_UVWT, u) - 0usize];
+    ["Offset of field: PJ_UVWT::v"][::std::mem::offset_of!(PJ_UVWT, v) - 8usize];
+    ["Offset of field: PJ_UVWT::w"][::std::mem::offset_of!(PJ_UVWT, w) - 16usize];
+    ["Offset of field: PJ_UVWT::t"][::std::mem::offset_of!(PJ_UVWT, t) - 24usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -192,12 +188,12 @@ pub struct PJ_LPZT {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_LPZT"][::core::mem::size_of::<PJ_LPZT>() - 32usize];
-    ["Alignment of PJ_LPZT"][::core::mem::align_of::<PJ_LPZT>() - 8usize];
-    ["Offset of field: PJ_LPZT::lam"][::core::mem::offset_of!(PJ_LPZT, lam) - 0usize];
-    ["Offset of field: PJ_LPZT::phi"][::core::mem::offset_of!(PJ_LPZT, phi) - 8usize];
-    ["Offset of field: PJ_LPZT::z"][::core::mem::offset_of!(PJ_LPZT, z) - 16usize];
-    ["Offset of field: PJ_LPZT::t"][::core::mem::offset_of!(PJ_LPZT, t) - 24usize];
+    ["Size of PJ_LPZT"][::std::mem::size_of::<PJ_LPZT>() - 32usize];
+    ["Alignment of PJ_LPZT"][::std::mem::align_of::<PJ_LPZT>() - 8usize];
+    ["Offset of field: PJ_LPZT::lam"][::std::mem::offset_of!(PJ_LPZT, lam) - 0usize];
+    ["Offset of field: PJ_LPZT::phi"][::std::mem::offset_of!(PJ_LPZT, phi) - 8usize];
+    ["Offset of field: PJ_LPZT::z"][::std::mem::offset_of!(PJ_LPZT, z) - 16usize];
+    ["Offset of field: PJ_LPZT::t"][::std::mem::offset_of!(PJ_LPZT, t) - 24usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -208,11 +204,11 @@ pub struct PJ_OPK {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_OPK"][::core::mem::size_of::<PJ_OPK>() - 24usize];
-    ["Alignment of PJ_OPK"][::core::mem::align_of::<PJ_OPK>() - 8usize];
-    ["Offset of field: PJ_OPK::o"][::core::mem::offset_of!(PJ_OPK, o) - 0usize];
-    ["Offset of field: PJ_OPK::p"][::core::mem::offset_of!(PJ_OPK, p) - 8usize];
-    ["Offset of field: PJ_OPK::k"][::core::mem::offset_of!(PJ_OPK, k) - 16usize];
+    ["Size of PJ_OPK"][::std::mem::size_of::<PJ_OPK>() - 24usize];
+    ["Alignment of PJ_OPK"][::std::mem::align_of::<PJ_OPK>() - 8usize];
+    ["Offset of field: PJ_OPK::o"][::std::mem::offset_of!(PJ_OPK, o) - 0usize];
+    ["Offset of field: PJ_OPK::p"][::std::mem::offset_of!(PJ_OPK, p) - 8usize];
+    ["Offset of field: PJ_OPK::k"][::std::mem::offset_of!(PJ_OPK, k) - 16usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -223,11 +219,11 @@ pub struct PJ_ENU {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_ENU"][::core::mem::size_of::<PJ_ENU>() - 24usize];
-    ["Alignment of PJ_ENU"][::core::mem::align_of::<PJ_ENU>() - 8usize];
-    ["Offset of field: PJ_ENU::e"][::core::mem::offset_of!(PJ_ENU, e) - 0usize];
-    ["Offset of field: PJ_ENU::n"][::core::mem::offset_of!(PJ_ENU, n) - 8usize];
-    ["Offset of field: PJ_ENU::u"][::core::mem::offset_of!(PJ_ENU, u) - 16usize];
+    ["Size of PJ_ENU"][::std::mem::size_of::<PJ_ENU>() - 24usize];
+    ["Alignment of PJ_ENU"][::std::mem::align_of::<PJ_ENU>() - 8usize];
+    ["Offset of field: PJ_ENU::e"][::std::mem::offset_of!(PJ_ENU, e) - 0usize];
+    ["Offset of field: PJ_ENU::n"][::std::mem::offset_of!(PJ_ENU, n) - 8usize];
+    ["Offset of field: PJ_ENU::u"][::std::mem::offset_of!(PJ_ENU, u) - 16usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -238,11 +234,11 @@ pub struct PJ_GEOD {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_GEOD"][::core::mem::size_of::<PJ_GEOD>() - 24usize];
-    ["Alignment of PJ_GEOD"][::core::mem::align_of::<PJ_GEOD>() - 8usize];
-    ["Offset of field: PJ_GEOD::s"][::core::mem::offset_of!(PJ_GEOD, s) - 0usize];
-    ["Offset of field: PJ_GEOD::a1"][::core::mem::offset_of!(PJ_GEOD, a1) - 8usize];
-    ["Offset of field: PJ_GEOD::a2"][::core::mem::offset_of!(PJ_GEOD, a2) - 16usize];
+    ["Size of PJ_GEOD"][::std::mem::size_of::<PJ_GEOD>() - 24usize];
+    ["Alignment of PJ_GEOD"][::std::mem::align_of::<PJ_GEOD>() - 8usize];
+    ["Offset of field: PJ_GEOD::s"][::std::mem::offset_of!(PJ_GEOD, s) - 0usize];
+    ["Offset of field: PJ_GEOD::a1"][::std::mem::offset_of!(PJ_GEOD, a1) - 8usize];
+    ["Offset of field: PJ_GEOD::a2"][::std::mem::offset_of!(PJ_GEOD, a2) - 16usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -252,10 +248,10 @@ pub struct PJ_UV {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_UV"][::core::mem::size_of::<PJ_UV>() - 16usize];
-    ["Alignment of PJ_UV"][::core::mem::align_of::<PJ_UV>() - 8usize];
-    ["Offset of field: PJ_UV::u"][::core::mem::offset_of!(PJ_UV, u) - 0usize];
-    ["Offset of field: PJ_UV::v"][::core::mem::offset_of!(PJ_UV, v) - 8usize];
+    ["Size of PJ_UV"][::std::mem::size_of::<PJ_UV>() - 16usize];
+    ["Alignment of PJ_UV"][::std::mem::align_of::<PJ_UV>() - 8usize];
+    ["Offset of field: PJ_UV::u"][::std::mem::offset_of!(PJ_UV, u) - 0usize];
+    ["Offset of field: PJ_UV::v"][::std::mem::offset_of!(PJ_UV, v) - 8usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -265,10 +261,10 @@ pub struct PJ_XY {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_XY"][::core::mem::size_of::<PJ_XY>() - 16usize];
-    ["Alignment of PJ_XY"][::core::mem::align_of::<PJ_XY>() - 8usize];
-    ["Offset of field: PJ_XY::x"][::core::mem::offset_of!(PJ_XY, x) - 0usize];
-    ["Offset of field: PJ_XY::y"][::core::mem::offset_of!(PJ_XY, y) - 8usize];
+    ["Size of PJ_XY"][::std::mem::size_of::<PJ_XY>() - 16usize];
+    ["Alignment of PJ_XY"][::std::mem::align_of::<PJ_XY>() - 8usize];
+    ["Offset of field: PJ_XY::x"][::std::mem::offset_of!(PJ_XY, x) - 0usize];
+    ["Offset of field: PJ_XY::y"][::std::mem::offset_of!(PJ_XY, y) - 8usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -278,10 +274,10 @@ pub struct PJ_LP {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_LP"][::core::mem::size_of::<PJ_LP>() - 16usize];
-    ["Alignment of PJ_LP"][::core::mem::align_of::<PJ_LP>() - 8usize];
-    ["Offset of field: PJ_LP::lam"][::core::mem::offset_of!(PJ_LP, lam) - 0usize];
-    ["Offset of field: PJ_LP::phi"][::core::mem::offset_of!(PJ_LP, phi) - 8usize];
+    ["Size of PJ_LP"][::std::mem::size_of::<PJ_LP>() - 16usize];
+    ["Alignment of PJ_LP"][::std::mem::align_of::<PJ_LP>() - 8usize];
+    ["Offset of field: PJ_LP::lam"][::std::mem::offset_of!(PJ_LP, lam) - 0usize];
+    ["Offset of field: PJ_LP::phi"][::std::mem::offset_of!(PJ_LP, phi) - 8usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -292,11 +288,11 @@ pub struct PJ_XYZ {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_XYZ"][::core::mem::size_of::<PJ_XYZ>() - 24usize];
-    ["Alignment of PJ_XYZ"][::core::mem::align_of::<PJ_XYZ>() - 8usize];
-    ["Offset of field: PJ_XYZ::x"][::core::mem::offset_of!(PJ_XYZ, x) - 0usize];
-    ["Offset of field: PJ_XYZ::y"][::core::mem::offset_of!(PJ_XYZ, y) - 8usize];
-    ["Offset of field: PJ_XYZ::z"][::core::mem::offset_of!(PJ_XYZ, z) - 16usize];
+    ["Size of PJ_XYZ"][::std::mem::size_of::<PJ_XYZ>() - 24usize];
+    ["Alignment of PJ_XYZ"][::std::mem::align_of::<PJ_XYZ>() - 8usize];
+    ["Offset of field: PJ_XYZ::x"][::std::mem::offset_of!(PJ_XYZ, x) - 0usize];
+    ["Offset of field: PJ_XYZ::y"][::std::mem::offset_of!(PJ_XYZ, y) - 8usize];
+    ["Offset of field: PJ_XYZ::z"][::std::mem::offset_of!(PJ_XYZ, z) - 16usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -307,11 +303,11 @@ pub struct PJ_UVW {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_UVW"][::core::mem::size_of::<PJ_UVW>() - 24usize];
-    ["Alignment of PJ_UVW"][::core::mem::align_of::<PJ_UVW>() - 8usize];
-    ["Offset of field: PJ_UVW::u"][::core::mem::offset_of!(PJ_UVW, u) - 0usize];
-    ["Offset of field: PJ_UVW::v"][::core::mem::offset_of!(PJ_UVW, v) - 8usize];
-    ["Offset of field: PJ_UVW::w"][::core::mem::offset_of!(PJ_UVW, w) - 16usize];
+    ["Size of PJ_UVW"][::std::mem::size_of::<PJ_UVW>() - 24usize];
+    ["Alignment of PJ_UVW"][::std::mem::align_of::<PJ_UVW>() - 8usize];
+    ["Offset of field: PJ_UVW::u"][::std::mem::offset_of!(PJ_UVW, u) - 0usize];
+    ["Offset of field: PJ_UVW::v"][::std::mem::offset_of!(PJ_UVW, v) - 8usize];
+    ["Offset of field: PJ_UVW::w"][::std::mem::offset_of!(PJ_UVW, w) - 16usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -322,11 +318,11 @@ pub struct PJ_LPZ {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_LPZ"][::core::mem::size_of::<PJ_LPZ>() - 24usize];
-    ["Alignment of PJ_LPZ"][::core::mem::align_of::<PJ_LPZ>() - 8usize];
-    ["Offset of field: PJ_LPZ::lam"][::core::mem::offset_of!(PJ_LPZ, lam) - 0usize];
-    ["Offset of field: PJ_LPZ::phi"][::core::mem::offset_of!(PJ_LPZ, phi) - 8usize];
-    ["Offset of field: PJ_LPZ::z"][::core::mem::offset_of!(PJ_LPZ, z) - 16usize];
+    ["Size of PJ_LPZ"][::std::mem::size_of::<PJ_LPZ>() - 24usize];
+    ["Alignment of PJ_LPZ"][::std::mem::align_of::<PJ_LPZ>() - 8usize];
+    ["Offset of field: PJ_LPZ::lam"][::std::mem::offset_of!(PJ_LPZ, lam) - 0usize];
+    ["Offset of field: PJ_LPZ::phi"][::std::mem::offset_of!(PJ_LPZ, phi) - 8usize];
+    ["Offset of field: PJ_LPZ::z"][::std::mem::offset_of!(PJ_LPZ, z) - 16usize];
 };
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -347,130 +343,128 @@ pub union PJ_COORD {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_COORD"][::core::mem::size_of::<PJ_COORD>() - 32usize];
-    ["Alignment of PJ_COORD"][::core::mem::align_of::<PJ_COORD>() - 8usize];
-    ["Offset of field: PJ_COORD::v"][::core::mem::offset_of!(PJ_COORD, v) - 0usize];
-    ["Offset of field: PJ_COORD::xyzt"][::core::mem::offset_of!(PJ_COORD, xyzt) - 0usize];
-    ["Offset of field: PJ_COORD::uvwt"][::core::mem::offset_of!(PJ_COORD, uvwt) - 0usize];
-    ["Offset of field: PJ_COORD::lpzt"][::core::mem::offset_of!(PJ_COORD, lpzt) - 0usize];
-    ["Offset of field: PJ_COORD::geod"][::core::mem::offset_of!(PJ_COORD, geod) - 0usize];
-    ["Offset of field: PJ_COORD::opk"][::core::mem::offset_of!(PJ_COORD, opk) - 0usize];
-    ["Offset of field: PJ_COORD::enu"][::core::mem::offset_of!(PJ_COORD, enu) - 0usize];
-    ["Offset of field: PJ_COORD::xyz"][::core::mem::offset_of!(PJ_COORD, xyz) - 0usize];
-    ["Offset of field: PJ_COORD::uvw"][::core::mem::offset_of!(PJ_COORD, uvw) - 0usize];
-    ["Offset of field: PJ_COORD::lpz"][::core::mem::offset_of!(PJ_COORD, lpz) - 0usize];
-    ["Offset of field: PJ_COORD::xy"][::core::mem::offset_of!(PJ_COORD, xy) - 0usize];
-    ["Offset of field: PJ_COORD::uv"][::core::mem::offset_of!(PJ_COORD, uv) - 0usize];
-    ["Offset of field: PJ_COORD::lp"][::core::mem::offset_of!(PJ_COORD, lp) - 0usize];
+    ["Size of PJ_COORD"][::std::mem::size_of::<PJ_COORD>() - 32usize];
+    ["Alignment of PJ_COORD"][::std::mem::align_of::<PJ_COORD>() - 8usize];
+    ["Offset of field: PJ_COORD::v"][::std::mem::offset_of!(PJ_COORD, v) - 0usize];
+    ["Offset of field: PJ_COORD::xyzt"][::std::mem::offset_of!(PJ_COORD, xyzt) - 0usize];
+    ["Offset of field: PJ_COORD::uvwt"][::std::mem::offset_of!(PJ_COORD, uvwt) - 0usize];
+    ["Offset of field: PJ_COORD::lpzt"][::std::mem::offset_of!(PJ_COORD, lpzt) - 0usize];
+    ["Offset of field: PJ_COORD::geod"][::std::mem::offset_of!(PJ_COORD, geod) - 0usize];
+    ["Offset of field: PJ_COORD::opk"][::std::mem::offset_of!(PJ_COORD, opk) - 0usize];
+    ["Offset of field: PJ_COORD::enu"][::std::mem::offset_of!(PJ_COORD, enu) - 0usize];
+    ["Offset of field: PJ_COORD::xyz"][::std::mem::offset_of!(PJ_COORD, xyz) - 0usize];
+    ["Offset of field: PJ_COORD::uvw"][::std::mem::offset_of!(PJ_COORD, uvw) - 0usize];
+    ["Offset of field: PJ_COORD::lpz"][::std::mem::offset_of!(PJ_COORD, lpz) - 0usize];
+    ["Offset of field: PJ_COORD::xy"][::std::mem::offset_of!(PJ_COORD, xy) - 0usize];
+    ["Offset of field: PJ_COORD::uv"][::std::mem::offset_of!(PJ_COORD, uv) - 0usize];
+    ["Offset of field: PJ_COORD::lp"][::std::mem::offset_of!(PJ_COORD, lp) - 0usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_INFO {
-    pub major: ::core::ffi::c_int,
-    pub minor: ::core::ffi::c_int,
-    pub patch: ::core::ffi::c_int,
-    pub release: *const ::core::ffi::c_char,
-    pub version: *const ::core::ffi::c_char,
-    pub searchpath: *const ::core::ffi::c_char,
-    pub paths: *const *const ::core::ffi::c_char,
+    pub major: ::std::os::raw::c_int,
+    pub minor: ::std::os::raw::c_int,
+    pub patch: ::std::os::raw::c_int,
+    pub release: *const ::std::os::raw::c_char,
+    pub version: *const ::std::os::raw::c_char,
+    pub searchpath: *const ::std::os::raw::c_char,
+    pub paths: *const *const ::std::os::raw::c_char,
     pub path_count: usize,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_INFO"][::core::mem::size_of::<PJ_INFO>() - 56usize];
-    ["Alignment of PJ_INFO"][::core::mem::align_of::<PJ_INFO>() - 8usize];
-    ["Offset of field: PJ_INFO::major"][::core::mem::offset_of!(PJ_INFO, major) - 0usize];
-    ["Offset of field: PJ_INFO::minor"][::core::mem::offset_of!(PJ_INFO, minor) - 4usize];
-    ["Offset of field: PJ_INFO::patch"][::core::mem::offset_of!(PJ_INFO, patch) - 8usize];
-    ["Offset of field: PJ_INFO::release"][::core::mem::offset_of!(PJ_INFO, release) - 16usize];
-    ["Offset of field: PJ_INFO::version"][::core::mem::offset_of!(PJ_INFO, version) - 24usize];
-    ["Offset of field: PJ_INFO::searchpath"]
-        [::core::mem::offset_of!(PJ_INFO, searchpath) - 32usize];
-    ["Offset of field: PJ_INFO::paths"][::core::mem::offset_of!(PJ_INFO, paths) - 40usize];
-    ["Offset of field: PJ_INFO::path_count"]
-        [::core::mem::offset_of!(PJ_INFO, path_count) - 48usize];
+    ["Size of PJ_INFO"][::std::mem::size_of::<PJ_INFO>() - 56usize];
+    ["Alignment of PJ_INFO"][::std::mem::align_of::<PJ_INFO>() - 8usize];
+    ["Offset of field: PJ_INFO::major"][::std::mem::offset_of!(PJ_INFO, major) - 0usize];
+    ["Offset of field: PJ_INFO::minor"][::std::mem::offset_of!(PJ_INFO, minor) - 4usize];
+    ["Offset of field: PJ_INFO::patch"][::std::mem::offset_of!(PJ_INFO, patch) - 8usize];
+    ["Offset of field: PJ_INFO::release"][::std::mem::offset_of!(PJ_INFO, release) - 16usize];
+    ["Offset of field: PJ_INFO::version"][::std::mem::offset_of!(PJ_INFO, version) - 24usize];
+    ["Offset of field: PJ_INFO::searchpath"][::std::mem::offset_of!(PJ_INFO, searchpath) - 32usize];
+    ["Offset of field: PJ_INFO::paths"][::std::mem::offset_of!(PJ_INFO, paths) - 40usize];
+    ["Offset of field: PJ_INFO::path_count"][::std::mem::offset_of!(PJ_INFO, path_count) - 48usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_PROJ_INFO {
-    pub id: *const ::core::ffi::c_char,
-    pub description: *const ::core::ffi::c_char,
-    pub definition: *const ::core::ffi::c_char,
-    pub has_inverse: ::core::ffi::c_int,
+    pub id: *const ::std::os::raw::c_char,
+    pub description: *const ::std::os::raw::c_char,
+    pub definition: *const ::std::os::raw::c_char,
+    pub has_inverse: ::std::os::raw::c_int,
     pub accuracy: f64,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_PROJ_INFO"][::core::mem::size_of::<PJ_PROJ_INFO>() - 40usize];
-    ["Alignment of PJ_PROJ_INFO"][::core::mem::align_of::<PJ_PROJ_INFO>() - 8usize];
-    ["Offset of field: PJ_PROJ_INFO::id"][::core::mem::offset_of!(PJ_PROJ_INFO, id) - 0usize];
+    ["Size of PJ_PROJ_INFO"][::std::mem::size_of::<PJ_PROJ_INFO>() - 40usize];
+    ["Alignment of PJ_PROJ_INFO"][::std::mem::align_of::<PJ_PROJ_INFO>() - 8usize];
+    ["Offset of field: PJ_PROJ_INFO::id"][::std::mem::offset_of!(PJ_PROJ_INFO, id) - 0usize];
     ["Offset of field: PJ_PROJ_INFO::description"]
-        [::core::mem::offset_of!(PJ_PROJ_INFO, description) - 8usize];
+        [::std::mem::offset_of!(PJ_PROJ_INFO, description) - 8usize];
     ["Offset of field: PJ_PROJ_INFO::definition"]
-        [::core::mem::offset_of!(PJ_PROJ_INFO, definition) - 16usize];
+        [::std::mem::offset_of!(PJ_PROJ_INFO, definition) - 16usize];
     ["Offset of field: PJ_PROJ_INFO::has_inverse"]
-        [::core::mem::offset_of!(PJ_PROJ_INFO, has_inverse) - 24usize];
+        [::std::mem::offset_of!(PJ_PROJ_INFO, has_inverse) - 24usize];
     ["Offset of field: PJ_PROJ_INFO::accuracy"]
-        [::core::mem::offset_of!(PJ_PROJ_INFO, accuracy) - 32usize];
+        [::std::mem::offset_of!(PJ_PROJ_INFO, accuracy) - 32usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_GRID_INFO {
-    pub gridname: [::core::ffi::c_char; 32usize],
-    pub filename: [::core::ffi::c_char; 260usize],
-    pub format: [::core::ffi::c_char; 8usize],
+    pub gridname: [::std::os::raw::c_char; 32usize],
+    pub filename: [::std::os::raw::c_char; 260usize],
+    pub format: [::std::os::raw::c_char; 8usize],
     pub lowerleft: PJ_LP,
     pub upperright: PJ_LP,
-    pub n_lon: ::core::ffi::c_int,
-    pub n_lat: ::core::ffi::c_int,
+    pub n_lon: ::std::os::raw::c_int,
+    pub n_lat: ::std::os::raw::c_int,
     pub cs_lon: f64,
     pub cs_lat: f64,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_GRID_INFO"][::core::mem::size_of::<PJ_GRID_INFO>() - 360usize];
-    ["Alignment of PJ_GRID_INFO"][::core::mem::align_of::<PJ_GRID_INFO>() - 8usize];
+    ["Size of PJ_GRID_INFO"][::std::mem::size_of::<PJ_GRID_INFO>() - 360usize];
+    ["Alignment of PJ_GRID_INFO"][::std::mem::align_of::<PJ_GRID_INFO>() - 8usize];
     ["Offset of field: PJ_GRID_INFO::gridname"]
-        [::core::mem::offset_of!(PJ_GRID_INFO, gridname) - 0usize];
+        [::std::mem::offset_of!(PJ_GRID_INFO, gridname) - 0usize];
     ["Offset of field: PJ_GRID_INFO::filename"]
-        [::core::mem::offset_of!(PJ_GRID_INFO, filename) - 32usize];
+        [::std::mem::offset_of!(PJ_GRID_INFO, filename) - 32usize];
     ["Offset of field: PJ_GRID_INFO::format"]
-        [::core::mem::offset_of!(PJ_GRID_INFO, format) - 292usize];
+        [::std::mem::offset_of!(PJ_GRID_INFO, format) - 292usize];
     ["Offset of field: PJ_GRID_INFO::lowerleft"]
-        [::core::mem::offset_of!(PJ_GRID_INFO, lowerleft) - 304usize];
+        [::std::mem::offset_of!(PJ_GRID_INFO, lowerleft) - 304usize];
     ["Offset of field: PJ_GRID_INFO::upperright"]
-        [::core::mem::offset_of!(PJ_GRID_INFO, upperright) - 320usize];
+        [::std::mem::offset_of!(PJ_GRID_INFO, upperright) - 320usize];
     ["Offset of field: PJ_GRID_INFO::n_lon"]
-        [::core::mem::offset_of!(PJ_GRID_INFO, n_lon) - 336usize];
+        [::std::mem::offset_of!(PJ_GRID_INFO, n_lon) - 336usize];
     ["Offset of field: PJ_GRID_INFO::n_lat"]
-        [::core::mem::offset_of!(PJ_GRID_INFO, n_lat) - 340usize];
+        [::std::mem::offset_of!(PJ_GRID_INFO, n_lat) - 340usize];
     ["Offset of field: PJ_GRID_INFO::cs_lon"]
-        [::core::mem::offset_of!(PJ_GRID_INFO, cs_lon) - 344usize];
+        [::std::mem::offset_of!(PJ_GRID_INFO, cs_lon) - 344usize];
     ["Offset of field: PJ_GRID_INFO::cs_lat"]
-        [::core::mem::offset_of!(PJ_GRID_INFO, cs_lat) - 352usize];
+        [::std::mem::offset_of!(PJ_GRID_INFO, cs_lat) - 352usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_INIT_INFO {
-    pub name: [::core::ffi::c_char; 32usize],
-    pub filename: [::core::ffi::c_char; 260usize],
-    pub version: [::core::ffi::c_char; 32usize],
-    pub origin: [::core::ffi::c_char; 32usize],
-    pub lastupdate: [::core::ffi::c_char; 16usize],
+    pub name: [::std::os::raw::c_char; 32usize],
+    pub filename: [::std::os::raw::c_char; 260usize],
+    pub version: [::std::os::raw::c_char; 32usize],
+    pub origin: [::std::os::raw::c_char; 32usize],
+    pub lastupdate: [::std::os::raw::c_char; 16usize],
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_INIT_INFO"][::core::mem::size_of::<PJ_INIT_INFO>() - 372usize];
-    ["Alignment of PJ_INIT_INFO"][::core::mem::align_of::<PJ_INIT_INFO>() - 1usize];
-    ["Offset of field: PJ_INIT_INFO::name"][::core::mem::offset_of!(PJ_INIT_INFO, name) - 0usize];
+    ["Size of PJ_INIT_INFO"][::std::mem::size_of::<PJ_INIT_INFO>() - 372usize];
+    ["Alignment of PJ_INIT_INFO"][::std::mem::align_of::<PJ_INIT_INFO>() - 1usize];
+    ["Offset of field: PJ_INIT_INFO::name"][::std::mem::offset_of!(PJ_INIT_INFO, name) - 0usize];
     ["Offset of field: PJ_INIT_INFO::filename"]
-        [::core::mem::offset_of!(PJ_INIT_INFO, filename) - 32usize];
+        [::std::mem::offset_of!(PJ_INIT_INFO, filename) - 32usize];
     ["Offset of field: PJ_INIT_INFO::version"]
-        [::core::mem::offset_of!(PJ_INIT_INFO, version) - 292usize];
+        [::std::mem::offset_of!(PJ_INIT_INFO, version) - 292usize];
     ["Offset of field: PJ_INIT_INFO::origin"]
-        [::core::mem::offset_of!(PJ_INIT_INFO, origin) - 324usize];
+        [::std::mem::offset_of!(PJ_INIT_INFO, origin) - 324usize];
     ["Offset of field: PJ_INIT_INFO::lastupdate"]
-        [::core::mem::offset_of!(PJ_INIT_INFO, lastupdate) - 356usize];
+        [::std::mem::offset_of!(PJ_INIT_INFO, lastupdate) - 356usize];
 };
 pub const PJ_LOG_LEVEL_PJ_LOG_NONE: PJ_LOG_LEVEL = 0;
 pub const PJ_LOG_LEVEL_PJ_LOG_ERROR: PJ_LOG_LEVEL = 1;
@@ -479,12 +473,12 @@ pub const PJ_LOG_LEVEL_PJ_LOG_TRACE: PJ_LOG_LEVEL = 3;
 pub const PJ_LOG_LEVEL_PJ_LOG_TELL: PJ_LOG_LEVEL = 4;
 pub const PJ_LOG_LEVEL_PJ_LOG_DEBUG_MAJOR: PJ_LOG_LEVEL = 2;
 pub const PJ_LOG_LEVEL_PJ_LOG_DEBUG_MINOR: PJ_LOG_LEVEL = 3;
-pub type PJ_LOG_LEVEL = ::core::ffi::c_uint;
-pub type PJ_LOG_FUNCTION = ::core::option::Option<
+pub type PJ_LOG_LEVEL = ::std::os::raw::c_uint;
+pub type PJ_LOG_FUNCTION = ::std::option::Option<
     unsafe extern "C" fn(
-        arg1: *mut ::core::ffi::c_void,
-        arg2: ::core::ffi::c_int,
-        arg3: *const ::core::ffi::c_char,
+        arg1: *mut ::std::os::raw::c_void,
+        arg2: ::std::os::raw::c_int,
+        arg3: *const ::std::os::raw::c_char,
     ),
 >;
 #[repr(C)]
@@ -503,40 +497,43 @@ unsafe extern "C" {
     pub fn proj_context_clone(ctx: *mut PJ_CONTEXT) -> *mut PJ_CONTEXT;
 }
 #[doc = " Callback to resolve a filename to a full path"]
-pub type proj_file_finder = ::core::option::Option<
+pub type proj_file_finder = ::std::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
-        arg1: *const ::core::ffi::c_char,
-        user_data: *mut ::core::ffi::c_void,
-    ) -> *const ::core::ffi::c_char,
+        arg1: *const ::std::os::raw::c_char,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> *const ::std::os::raw::c_char,
 >;
 unsafe extern "C" {
     #[doc = " @endcond"]
     pub fn proj_context_set_file_finder(
         ctx: *mut PJ_CONTEXT,
         finder: proj_file_finder,
-        user_data: *mut ::core::ffi::c_void,
+        user_data: *mut ::std::os::raw::c_void,
     );
 }
 unsafe extern "C" {
     pub fn proj_context_set_search_paths(
         ctx: *mut PJ_CONTEXT,
-        count_paths: ::core::ffi::c_int,
-        paths: *const *const ::core::ffi::c_char,
+        count_paths: ::std::os::raw::c_int,
+        paths: *const *const ::std::os::raw::c_char,
     );
 }
 unsafe extern "C" {
-    pub fn proj_context_set_ca_bundle_path(ctx: *mut PJ_CONTEXT, path: *const ::core::ffi::c_char);
+    pub fn proj_context_set_ca_bundle_path(
+        ctx: *mut PJ_CONTEXT,
+        path: *const ::std::os::raw::c_char,
+    );
 }
 unsafe extern "C" {
     #[doc = " @cond Doxygen_Suppress"]
-    pub fn proj_context_use_proj4_init_rules(ctx: *mut PJ_CONTEXT, enable: ::core::ffi::c_int);
+    pub fn proj_context_use_proj4_init_rules(ctx: *mut PJ_CONTEXT, enable: ::std::os::raw::c_int);
 }
 unsafe extern "C" {
     pub fn proj_context_get_use_proj4_init_rules(
         ctx: *mut PJ_CONTEXT,
-        from_legacy_code_path: ::core::ffi::c_int,
-    ) -> ::core::ffi::c_int;
+        from_legacy_code_path: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -550,140 +547,140 @@ pub const PROJ_OPEN_ACCESS_PROJ_OPEN_ACCESS_READ_UPDATE: PROJ_OPEN_ACCESS = 1;
 #[doc = " Create access. File should be truncated to 0-byte if already existing.\nEquivalent to \"w+b\""]
 pub const PROJ_OPEN_ACCESS_PROJ_OPEN_ACCESS_CREATE: PROJ_OPEN_ACCESS = 2;
 #[doc = " Open access / mode"]
-pub type PROJ_OPEN_ACCESS = ::core::ffi::c_uint;
+pub type PROJ_OPEN_ACCESS = ::std::os::raw::c_uint;
 #[doc = " File API callbacks"]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PROJ_FILE_API {
     #[doc = " Version of this structure. Should be set to 1 currently."]
-    pub version: ::core::ffi::c_int,
+    pub version: ::std::os::raw::c_int,
     #[doc = " Open file. Return NULL if error"]
-    pub open_cbk: ::core::option::Option<
+    pub open_cbk: ::std::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
-            filename: *const ::core::ffi::c_char,
+            filename: *const ::std::os::raw::c_char,
             access: PROJ_OPEN_ACCESS,
-            user_data: *mut ::core::ffi::c_void,
+            user_data: *mut ::std::os::raw::c_void,
         ) -> *mut PROJ_FILE_HANDLE,
     >,
     #[doc = " Read sizeBytes into buffer from current position and return number of\n bytes read"]
-    pub read_cbk: ::core::option::Option<
+    pub read_cbk: ::std::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
             arg1: *mut PROJ_FILE_HANDLE,
-            buffer: *mut ::core::ffi::c_void,
+            buffer: *mut ::std::os::raw::c_void,
             sizeBytes: usize,
-            user_data: *mut ::core::ffi::c_void,
+            user_data: *mut ::std::os::raw::c_void,
         ) -> usize,
     >,
     #[doc = " Write sizeBytes into buffer from current position and return number of\n bytes written"]
-    pub write_cbk: ::core::option::Option<
+    pub write_cbk: ::std::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
             arg1: *mut PROJ_FILE_HANDLE,
-            buffer: *const ::core::ffi::c_void,
+            buffer: *const ::std::os::raw::c_void,
             sizeBytes: usize,
-            user_data: *mut ::core::ffi::c_void,
+            user_data: *mut ::std::os::raw::c_void,
         ) -> usize,
     >,
     #[doc = " Seek to offset using whence=SEEK_SET/SEEK_CUR/SEEK_END. Return TRUE in\n case of success"]
-    pub seek_cbk: ::core::option::Option<
+    pub seek_cbk: ::std::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
             arg1: *mut PROJ_FILE_HANDLE,
-            offset: ::core::ffi::c_longlong,
-            whence: ::core::ffi::c_int,
-            user_data: *mut ::core::ffi::c_void,
-        ) -> ::core::ffi::c_int,
+            offset: ::std::os::raw::c_longlong,
+            whence: ::std::os::raw::c_int,
+            user_data: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int,
     >,
     #[doc = " Return current file position"]
-    pub tell_cbk: ::core::option::Option<
+    pub tell_cbk: ::std::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
             arg1: *mut PROJ_FILE_HANDLE,
-            user_data: *mut ::core::ffi::c_void,
-        ) -> ::core::ffi::c_ulonglong,
+            user_data: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_ulonglong,
     >,
     #[doc = " Close file"]
-    pub close_cbk: ::core::option::Option<
+    pub close_cbk: ::std::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
             arg1: *mut PROJ_FILE_HANDLE,
-            user_data: *mut ::core::ffi::c_void,
+            user_data: *mut ::std::os::raw::c_void,
         ),
     >,
     #[doc = " Return TRUE if a file exists"]
-    pub exists_cbk: ::core::option::Option<
+    pub exists_cbk: ::std::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
-            filename: *const ::core::ffi::c_char,
-            user_data: *mut ::core::ffi::c_void,
-        ) -> ::core::ffi::c_int,
+            filename: *const ::std::os::raw::c_char,
+            user_data: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int,
     >,
     #[doc = " Return TRUE if directory exists or could be created"]
-    pub mkdir_cbk: ::core::option::Option<
+    pub mkdir_cbk: ::std::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
-            filename: *const ::core::ffi::c_char,
-            user_data: *mut ::core::ffi::c_void,
-        ) -> ::core::ffi::c_int,
+            filename: *const ::std::os::raw::c_char,
+            user_data: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int,
     >,
     #[doc = " Return TRUE if file could be removed"]
-    pub unlink_cbk: ::core::option::Option<
+    pub unlink_cbk: ::std::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
-            filename: *const ::core::ffi::c_char,
-            user_data: *mut ::core::ffi::c_void,
-        ) -> ::core::ffi::c_int,
+            filename: *const ::std::os::raw::c_char,
+            user_data: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int,
     >,
     #[doc = " Return TRUE if file could be renamed"]
-    pub rename_cbk: ::core::option::Option<
+    pub rename_cbk: ::std::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
-            oldPath: *const ::core::ffi::c_char,
-            newPath: *const ::core::ffi::c_char,
-            user_data: *mut ::core::ffi::c_void,
-        ) -> ::core::ffi::c_int,
+            oldPath: *const ::std::os::raw::c_char,
+            newPath: *const ::std::os::raw::c_char,
+            user_data: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int,
     >,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PROJ_FILE_API"][::core::mem::size_of::<PROJ_FILE_API>() - 88usize];
-    ["Alignment of PROJ_FILE_API"][::core::mem::align_of::<PROJ_FILE_API>() - 8usize];
+    ["Size of PROJ_FILE_API"][::std::mem::size_of::<PROJ_FILE_API>() - 88usize];
+    ["Alignment of PROJ_FILE_API"][::std::mem::align_of::<PROJ_FILE_API>() - 8usize];
     ["Offset of field: PROJ_FILE_API::version"]
-        [::core::mem::offset_of!(PROJ_FILE_API, version) - 0usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, version) - 0usize];
     ["Offset of field: PROJ_FILE_API::open_cbk"]
-        [::core::mem::offset_of!(PROJ_FILE_API, open_cbk) - 8usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, open_cbk) - 8usize];
     ["Offset of field: PROJ_FILE_API::read_cbk"]
-        [::core::mem::offset_of!(PROJ_FILE_API, read_cbk) - 16usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, read_cbk) - 16usize];
     ["Offset of field: PROJ_FILE_API::write_cbk"]
-        [::core::mem::offset_of!(PROJ_FILE_API, write_cbk) - 24usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, write_cbk) - 24usize];
     ["Offset of field: PROJ_FILE_API::seek_cbk"]
-        [::core::mem::offset_of!(PROJ_FILE_API, seek_cbk) - 32usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, seek_cbk) - 32usize];
     ["Offset of field: PROJ_FILE_API::tell_cbk"]
-        [::core::mem::offset_of!(PROJ_FILE_API, tell_cbk) - 40usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, tell_cbk) - 40usize];
     ["Offset of field: PROJ_FILE_API::close_cbk"]
-        [::core::mem::offset_of!(PROJ_FILE_API, close_cbk) - 48usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, close_cbk) - 48usize];
     ["Offset of field: PROJ_FILE_API::exists_cbk"]
-        [::core::mem::offset_of!(PROJ_FILE_API, exists_cbk) - 56usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, exists_cbk) - 56usize];
     ["Offset of field: PROJ_FILE_API::mkdir_cbk"]
-        [::core::mem::offset_of!(PROJ_FILE_API, mkdir_cbk) - 64usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, mkdir_cbk) - 64usize];
     ["Offset of field: PROJ_FILE_API::unlink_cbk"]
-        [::core::mem::offset_of!(PROJ_FILE_API, unlink_cbk) - 72usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, unlink_cbk) - 72usize];
     ["Offset of field: PROJ_FILE_API::rename_cbk"]
-        [::core::mem::offset_of!(PROJ_FILE_API, rename_cbk) - 80usize];
+        [::std::mem::offset_of!(PROJ_FILE_API, rename_cbk) - 80usize];
 };
 unsafe extern "C" {
     pub fn proj_context_set_fileapi(
         ctx: *mut PJ_CONTEXT,
         fileapi: *const PROJ_FILE_API,
-        user_data: *mut ::core::ffi::c_void,
-    ) -> ::core::ffi::c_int;
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_context_set_sqlite3_vfs_name(
         ctx: *mut PJ_CONTEXT,
-        name: *const ::core::ffi::c_char,
+        name: *const ::std::os::raw::c_char,
     );
 }
 #[repr(C)]
@@ -692,47 +689,47 @@ pub struct PROJ_NETWORK_HANDLE {
     _unused: [u8; 0],
 }
 #[doc = " Network access: open callback\n\n Should try to read the size_to_read first bytes at the specified offset of\n the file given by URL url,\n and write them to buffer. *out_size_read should be updated with the actual\n amount of bytes read (== size_to_read if the file is larger than\n size_to_read). During this read, the implementation should make sure to store\n the HTTP headers from the server response to be able to respond to\n proj_network_get_header_value_cbk_type callback.\n\n error_string_max_size should be the maximum size that can be written into\n the out_error_string buffer (including terminating nul character).\n\n @return a non-NULL opaque handle in case of success."]
-pub type proj_network_open_cbk_type = ::core::option::Option<
+pub type proj_network_open_cbk_type = ::std::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
-        url: *const ::core::ffi::c_char,
-        offset: ::core::ffi::c_ulonglong,
+        url: *const ::std::os::raw::c_char,
+        offset: ::std::os::raw::c_ulonglong,
         size_to_read: usize,
-        buffer: *mut ::core::ffi::c_void,
+        buffer: *mut ::std::os::raw::c_void,
         out_size_read: *mut usize,
         error_string_max_size: usize,
-        out_error_string: *mut ::core::ffi::c_char,
-        user_data: *mut ::core::ffi::c_void,
+        out_error_string: *mut ::std::os::raw::c_char,
+        user_data: *mut ::std::os::raw::c_void,
     ) -> *mut PROJ_NETWORK_HANDLE,
 >;
 #[doc = " Network access: close callback"]
-pub type proj_network_close_cbk_type = ::core::option::Option<
+pub type proj_network_close_cbk_type = ::std::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
         handle: *mut PROJ_NETWORK_HANDLE,
-        user_data: *mut ::core::ffi::c_void,
+        user_data: *mut ::std::os::raw::c_void,
     ),
 >;
 #[doc = " Network access: get HTTP headers"]
-pub type proj_network_get_header_value_cbk_type = ::core::option::Option<
+pub type proj_network_get_header_value_cbk_type = ::std::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
         handle: *mut PROJ_NETWORK_HANDLE,
-        header_name: *const ::core::ffi::c_char,
-        user_data: *mut ::core::ffi::c_void,
-    ) -> *const ::core::ffi::c_char,
+        header_name: *const ::std::os::raw::c_char,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> *const ::std::os::raw::c_char,
 >;
 #[doc = " Network access: read range\n\n Read size_to_read bytes from handle, starting at offset, into\n buffer.\n During this read, the implementation should make sure to store the HTTP\n headers from the server response to be able to respond to\n proj_network_get_header_value_cbk_type callback.\n\n error_string_max_size should be the maximum size that can be written into\n the out_error_string buffer (including terminating nul character).\n\n @return the number of bytes actually read (0 in case of error)"]
-pub type proj_network_read_range_type = ::core::option::Option<
+pub type proj_network_read_range_type = ::std::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
         handle: *mut PROJ_NETWORK_HANDLE,
-        offset: ::core::ffi::c_ulonglong,
+        offset: ::std::os::raw::c_ulonglong,
         size_to_read: usize,
-        buffer: *mut ::core::ffi::c_void,
+        buffer: *mut ::std::os::raw::c_void,
         error_string_max_size: usize,
-        out_error_string: *mut ::core::ffi::c_char,
-        user_data: *mut ::core::ffi::c_void,
+        out_error_string: *mut ::std::os::raw::c_char,
+        user_data: *mut ::std::os::raw::c_void,
     ) -> usize,
 >;
 unsafe extern "C" {
@@ -742,48 +739,51 @@ unsafe extern "C" {
         close_cbk: proj_network_close_cbk_type,
         get_header_value_cbk: proj_network_get_header_value_cbk_type,
         read_range_cbk: proj_network_read_range_type,
-        user_data: *mut ::core::ffi::c_void,
-    ) -> ::core::ffi::c_int;
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_context_set_enable_network(
         ctx: *mut PJ_CONTEXT,
-        enabled: ::core::ffi::c_int,
-    ) -> ::core::ffi::c_int;
+        enabled: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_context_is_network_enabled(ctx: *mut PJ_CONTEXT) -> ::core::ffi::c_int;
+    pub fn proj_context_is_network_enabled(ctx: *mut PJ_CONTEXT) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_context_set_url_endpoint(ctx: *mut PJ_CONTEXT, url: *const ::core::ffi::c_char);
+    pub fn proj_context_set_url_endpoint(ctx: *mut PJ_CONTEXT, url: *const ::std::os::raw::c_char);
 }
 unsafe extern "C" {
-    pub fn proj_context_get_url_endpoint(ctx: *mut PJ_CONTEXT) -> *const ::core::ffi::c_char;
+    pub fn proj_context_get_url_endpoint(ctx: *mut PJ_CONTEXT) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_context_get_user_writable_directory(
         ctx: *mut PJ_CONTEXT,
-        create: ::core::ffi::c_int,
-    ) -> *const ::core::ffi::c_char;
+        create: ::std::os::raw::c_int,
+    ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_context_set_user_writable_directory(
         ctx: *mut PJ_CONTEXT,
-        path: *const ::core::ffi::c_char,
-        create: ::core::ffi::c_int,
+        path: *const ::std::os::raw::c_char,
+        create: ::std::os::raw::c_int,
     );
 }
 unsafe extern "C" {
-    pub fn proj_grid_cache_set_enable(ctx: *mut PJ_CONTEXT, enabled: ::core::ffi::c_int);
+    pub fn proj_grid_cache_set_enable(ctx: *mut PJ_CONTEXT, enabled: ::std::os::raw::c_int);
 }
 unsafe extern "C" {
-    pub fn proj_grid_cache_set_filename(ctx: *mut PJ_CONTEXT, fullname: *const ::core::ffi::c_char);
+    pub fn proj_grid_cache_set_filename(
+        ctx: *mut PJ_CONTEXT,
+        fullname: *const ::std::os::raw::c_char,
+    );
 }
 unsafe extern "C" {
-    pub fn proj_grid_cache_set_max_size(ctx: *mut PJ_CONTEXT, max_size_MB: ::core::ffi::c_int);
+    pub fn proj_grid_cache_set_max_size(ctx: *mut PJ_CONTEXT, max_size_MB: ::std::os::raw::c_int);
 }
 unsafe extern "C" {
-    pub fn proj_grid_cache_set_ttl(ctx: *mut PJ_CONTEXT, ttl_seconds: ::core::ffi::c_int);
+    pub fn proj_grid_cache_set_ttl(ctx: *mut PJ_CONTEXT, ttl_seconds: ::std::os::raw::c_int);
 }
 unsafe extern "C" {
     pub fn proj_grid_cache_clear(ctx: *mut PJ_CONTEXT);
@@ -791,41 +791,41 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_is_download_needed(
         ctx: *mut PJ_CONTEXT,
-        url_or_filename: *const ::core::ffi::c_char,
-        ignore_ttl_setting: ::core::ffi::c_int,
-    ) -> ::core::ffi::c_int;
+        url_or_filename: *const ::std::os::raw::c_char,
+        ignore_ttl_setting: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_download_file(
         ctx: *mut PJ_CONTEXT,
-        url_or_filename: *const ::core::ffi::c_char,
-        ignore_ttl_setting: ::core::ffi::c_int,
-        progress_cbk: ::core::option::Option<
+        url_or_filename: *const ::std::os::raw::c_char,
+        ignore_ttl_setting: ::std::os::raw::c_int,
+        progress_cbk: ::std::option::Option<
             unsafe extern "C" fn(
                 arg1: *mut PJ_CONTEXT,
                 pct: f64,
-                user_data: *mut ::core::ffi::c_void,
-            ) -> ::core::ffi::c_int,
+                user_data: *mut ::std::os::raw::c_void,
+            ) -> ::std::os::raw::c_int,
         >,
-        user_data: *mut ::core::ffi::c_void,
-    ) -> ::core::ffi::c_int;
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     #[doc = " @cond Doxygen_Suppress"]
-    pub fn proj_create(ctx: *mut PJ_CONTEXT, definition: *const ::core::ffi::c_char) -> *mut PJ;
+    pub fn proj_create(ctx: *mut PJ_CONTEXT, definition: *const ::std::os::raw::c_char) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_argv(
         ctx: *mut PJ_CONTEXT,
-        argc: ::core::ffi::c_int,
-        argv: *mut *mut ::core::ffi::c_char,
+        argc: ::std::os::raw::c_int,
+        argv: *mut *mut ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_crs_to_crs(
         ctx: *mut PJ_CONTEXT,
-        source_crs: *const ::core::ffi::c_char,
-        target_crs: *const ::core::ffi::c_char,
+        source_crs: *const ::std::os::raw::c_char,
+        target_crs: *const ::std::os::raw::c_char,
         area: *mut PJ_AREA,
     ) -> *mut PJ;
 }
@@ -835,7 +835,7 @@ unsafe extern "C" {
         source_crs: *const PJ,
         target_crs: *const PJ,
         area: *mut PJ_AREA,
-        options: *const *const ::core::ffi::c_char,
+        options: *const *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -862,7 +862,7 @@ unsafe extern "C" {
     );
 }
 unsafe extern "C" {
-    pub fn proj_area_set_name(area: *mut PJ_AREA, name: *const ::core::ffi::c_char);
+    pub fn proj_area_set_name(area: *mut PJ_AREA, name: *const ::std::os::raw::c_char);
 }
 unsafe extern "C" {
     pub fn proj_area_destroy(area: *mut PJ_AREA);
@@ -870,18 +870,18 @@ unsafe extern "C" {
 pub const PJ_DIRECTION_PJ_FWD: PJ_DIRECTION = 1;
 pub const PJ_DIRECTION_PJ_IDENT: PJ_DIRECTION = 0;
 pub const PJ_DIRECTION_PJ_INV: PJ_DIRECTION = -1;
-pub type PJ_DIRECTION = ::core::ffi::c_int;
+pub type PJ_DIRECTION = ::std::os::raw::c_int;
 unsafe extern "C" {
-    pub fn proj_angular_input(P: *mut PJ, dir: PJ_DIRECTION) -> ::core::ffi::c_int;
+    pub fn proj_angular_input(P: *mut PJ, dir: PJ_DIRECTION) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_angular_output(P: *mut PJ, dir: PJ_DIRECTION) -> ::core::ffi::c_int;
+    pub fn proj_angular_output(P: *mut PJ, dir: PJ_DIRECTION) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_degree_input(P: *mut PJ, dir: PJ_DIRECTION) -> ::core::ffi::c_int;
+    pub fn proj_degree_input(P: *mut PJ, dir: PJ_DIRECTION) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_degree_output(P: *mut PJ, dir: PJ_DIRECTION) -> ::core::ffi::c_int;
+    pub fn proj_degree_output(P: *mut PJ, dir: PJ_DIRECTION) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_trans(P: *mut PJ, direction: PJ_DIRECTION, coord: PJ_COORD) -> PJ_COORD;
@@ -895,7 +895,7 @@ unsafe extern "C" {
         direction: PJ_DIRECTION,
         n: usize,
         coord: *mut PJ_COORD,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_trans_generic(
@@ -929,8 +929,8 @@ unsafe extern "C" {
         out_ymin: *mut f64,
         out_xmax: *mut f64,
         out_ymax: *mut f64,
-        densify_pts: ::core::ffi::c_int,
-    ) -> ::core::ffi::c_int;
+        densify_pts: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_trans_bounds_3D(
@@ -949,8 +949,8 @@ unsafe extern "C" {
         out_xmax: *mut f64,
         out_ymax: *mut f64,
         out_zmax: *mut f64,
-        densify_pts: ::core::ffi::c_int,
-    ) -> ::core::ffi::c_int;
+        densify_pts: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     #[doc = " @cond Doxygen_Suppress"]
@@ -960,7 +960,7 @@ unsafe extern "C" {
     pub fn proj_roundtrip(
         P: *mut PJ,
         direction: PJ_DIRECTION,
-        n: ::core::ffi::c_int,
+        n: ::std::os::raw::c_int,
         coord: *mut PJ_COORD,
     ) -> f64;
 }
@@ -980,28 +980,28 @@ unsafe extern "C" {
     pub fn proj_geod(P: *const PJ, a: PJ_COORD, b: PJ_COORD) -> PJ_COORD;
 }
 unsafe extern "C" {
-    pub fn proj_context_errno(ctx: *mut PJ_CONTEXT) -> ::core::ffi::c_int;
+    pub fn proj_context_errno(ctx: *mut PJ_CONTEXT) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_errno(P: *const PJ) -> ::core::ffi::c_int;
+    pub fn proj_errno(P: *const PJ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_errno_set(P: *const PJ, err: ::core::ffi::c_int) -> ::core::ffi::c_int;
+    pub fn proj_errno_set(P: *const PJ, err: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_errno_reset(P: *const PJ) -> ::core::ffi::c_int;
+    pub fn proj_errno_reset(P: *const PJ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_errno_restore(P: *const PJ, err: ::core::ffi::c_int) -> ::core::ffi::c_int;
+    pub fn proj_errno_restore(P: *const PJ, err: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_errno_string(err: ::core::ffi::c_int) -> *const ::core::ffi::c_char;
+    pub fn proj_errno_string(err: ::std::os::raw::c_int) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_context_errno_string(
         ctx: *mut PJ_CONTEXT,
-        err: ::core::ffi::c_int,
-    ) -> *const ::core::ffi::c_char;
+        err: ::std::os::raw::c_int,
+    ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_log_level(ctx: *mut PJ_CONTEXT, log_level: PJ_LOG_LEVEL) -> PJ_LOG_LEVEL;
@@ -1009,7 +1009,7 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_log_func(
         ctx: *mut PJ_CONTEXT,
-        app_data: *mut ::core::ffi::c_void,
+        app_data: *mut ::std::os::raw::c_void,
         logf: PJ_LOG_FUNCTION,
     );
 }
@@ -1023,10 +1023,10 @@ unsafe extern "C" {
     pub fn proj_pj_info(P: *mut PJ) -> PJ_PROJ_INFO;
 }
 unsafe extern "C" {
-    pub fn proj_grid_info(gridname: *const ::core::ffi::c_char) -> PJ_GRID_INFO;
+    pub fn proj_grid_info(gridname: *const ::std::os::raw::c_char) -> PJ_GRID_INFO;
 }
 unsafe extern "C" {
-    pub fn proj_init_info(initname: *const ::core::ffi::c_char) -> PJ_INIT_INFO;
+    pub fn proj_init_info(initname: *const ::std::os::raw::c_char) -> PJ_INIT_INFO;
 }
 unsafe extern "C" {
     pub fn proj_list_operations() -> *const PJ_OPERATIONS;
@@ -1050,30 +1050,33 @@ unsafe extern "C" {
     pub fn proj_todeg(angle_in_radians: f64) -> f64;
 }
 unsafe extern "C" {
-    pub fn proj_dmstor(is: *const ::core::ffi::c_char, rs: *mut *mut ::core::ffi::c_char) -> f64;
+    pub fn proj_dmstor(
+        is: *const ::std::os::raw::c_char,
+        rs: *mut *mut ::std::os::raw::c_char,
+    ) -> f64;
 }
 unsafe extern "C" {
     pub fn proj_rtodms(
-        s: *mut ::core::ffi::c_char,
+        s: *mut ::std::os::raw::c_char,
         r: f64,
-        pos: ::core::ffi::c_int,
-        neg: ::core::ffi::c_int,
-    ) -> *mut ::core::ffi::c_char;
+        pos: ::std::os::raw::c_int,
+        neg: ::std::os::raw::c_int,
+    ) -> *mut ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_rtodms2(
-        s: *mut ::core::ffi::c_char,
+        s: *mut ::std::os::raw::c_char,
         sizeof_s: usize,
         r: f64,
-        pos: ::core::ffi::c_int,
-        neg: ::core::ffi::c_int,
-    ) -> *mut ::core::ffi::c_char;
+        pos: ::std::os::raw::c_int,
+        neg: ::std::os::raw::c_int,
+    ) -> *mut ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_cleanup();
 }
 #[doc = " \\brief Type representing a NULL terminated list of NULL-terminate strings."]
-pub type PROJ_STRING_LIST = *mut *mut ::core::ffi::c_char;
+pub type PROJ_STRING_LIST = *mut *mut ::std::os::raw::c_char;
 #[doc = " \\ref WKT2_2019"]
 pub const PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2019: PJ_GUESSED_WKT_DIALECT = 0;
 #[doc = " Deprecated alias for PJ_GUESSED_WKT2_2019"]
@@ -1087,7 +1090,7 @@ pub const PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT1_ESRI: PJ_GUESSED_WKT_DIALECT = 
 #[doc = " Not WKT / unrecognized"]
 pub const PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_NOT_WKT: PJ_GUESSED_WKT_DIALECT = 4;
 #[doc = " \\brief Guessed WKT \"dialect\"."]
-pub type PJ_GUESSED_WKT_DIALECT = ::core::ffi::c_uint;
+pub type PJ_GUESSED_WKT_DIALECT = ::std::os::raw::c_uint;
 pub const PJ_CATEGORY_PJ_CATEGORY_ELLIPSOID: PJ_CATEGORY = 0;
 pub const PJ_CATEGORY_PJ_CATEGORY_PRIME_MERIDIAN: PJ_CATEGORY = 1;
 pub const PJ_CATEGORY_PJ_CATEGORY_DATUM: PJ_CATEGORY = 2;
@@ -1095,7 +1098,7 @@ pub const PJ_CATEGORY_PJ_CATEGORY_CRS: PJ_CATEGORY = 3;
 pub const PJ_CATEGORY_PJ_CATEGORY_COORDINATE_OPERATION: PJ_CATEGORY = 4;
 pub const PJ_CATEGORY_PJ_CATEGORY_DATUM_ENSEMBLE: PJ_CATEGORY = 5;
 #[doc = " \\brief Object category."]
-pub type PJ_CATEGORY = ::core::ffi::c_uint;
+pub type PJ_CATEGORY = ::std::os::raw::c_uint;
 pub const PJ_TYPE_PJ_TYPE_UNKNOWN: PJ_TYPE = 0;
 pub const PJ_TYPE_PJ_TYPE_ELLIPSOID: PJ_TYPE = 1;
 pub const PJ_TYPE_PJ_TYPE_PRIME_MERIDIAN: PJ_TYPE = 2;
@@ -1149,7 +1152,7 @@ pub const PJ_TYPE_PJ_TYPE_DERIVED_PROJECTED_CRS: PJ_TYPE = 28;
 #[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
 pub const PJ_TYPE_PJ_TYPE_COORDINATE_METADATA: PJ_TYPE = 29;
 #[doc = " \\brief Object type."]
-pub type PJ_TYPE = ::core::ffi::c_uint;
+pub type PJ_TYPE = ::std::os::raw::c_uint;
 #[doc = " All properties are identical."]
 pub const PJ_COMPARISON_CRITERION_PJ_COMP_STRICT: PJ_COMPARISON_CRITERION = 0;
 #[doc = " The objects are equivalent for the purpose of coordinate\n operations. They can differ by the name of their objects,\n identifiers, other metadata.\n Parameters may be expressed in different units, provided that the\n value is (with some tolerance) the same once expressed in a\n common unit."]
@@ -1158,7 +1161,7 @@ pub const PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT: PJ_COMPARISON_CRITERION = 
 pub const PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS:
     PJ_COMPARISON_CRITERION = 2;
 #[doc = " Comparison criterion."]
-pub type PJ_COMPARISON_CRITERION = ::core::ffi::c_uint;
+pub type PJ_COMPARISON_CRITERION = ::std::os::raw::c_uint;
 #[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT2"]
 pub const PJ_WKT_TYPE_PJ_WKT2_2015: PJ_WKT_TYPE = 0;
 #[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT2_SIMPLIFIED"]
@@ -1176,7 +1179,7 @@ pub const PJ_WKT_TYPE_PJ_WKT1_GDAL: PJ_WKT_TYPE = 4;
 #[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT1_ESRI"]
 pub const PJ_WKT_TYPE_PJ_WKT1_ESRI: PJ_WKT_TYPE = 5;
 #[doc = " \\brief WKT version."]
-pub type PJ_WKT_TYPE = ::core::ffi::c_uint;
+pub type PJ_WKT_TYPE = ::std::os::raw::c_uint;
 #[doc = " Ignore CRS extent"]
 pub const PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_NONE: PROJ_CRS_EXTENT_USE = 0;
 #[doc = " Test coordinate operation extent against both CRS extent."]
@@ -1186,7 +1189,7 @@ pub const PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_INTERSECTION: PROJ_CRS_EXTENT_USE = 
 #[doc = " Test coordinate operation against the smallest of both CRS extent."]
 pub const PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_SMALLEST: PROJ_CRS_EXTENT_USE = 3;
 #[doc = " Specify how source and target CRS extent should be used to restrict\n candidate operations (only taken into account if no explicit area of\n interest is specified."]
-pub type PROJ_CRS_EXTENT_USE = ::core::ffi::c_uint;
+pub type PROJ_CRS_EXTENT_USE = ::std::os::raw::c_uint;
 #[doc = " Grid availability is only used for sorting results. Operations\n where some grids are missing will be sorted last."]
 pub const PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_USED_FOR_SORTING:
     PROJ_GRID_AVAILABILITY_USE = 0;
@@ -1199,13 +1202,13 @@ pub const PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_IGNORED: PROJ_GRID_A
 pub const PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_KNOWN_AVAILABLE:
     PROJ_GRID_AVAILABILITY_USE = 3;
 #[doc = " Describe how grid availability is used."]
-pub type PROJ_GRID_AVAILABILITY_USE = ::core::ffi::c_uint;
+pub type PROJ_GRID_AVAILABILITY_USE = ::std::os::raw::c_uint;
 #[doc = " cf osgeo::proj::io::PROJStringFormatter::Convention::PROJ_5"]
 pub const PJ_PROJ_STRING_TYPE_PJ_PROJ_5: PJ_PROJ_STRING_TYPE = 0;
 #[doc = " cf osgeo::proj::io::PROJStringFormatter::Convention::PROJ_4"]
 pub const PJ_PROJ_STRING_TYPE_PJ_PROJ_4: PJ_PROJ_STRING_TYPE = 1;
 #[doc = " \\brief PROJ string version."]
-pub type PJ_PROJ_STRING_TYPE = ::core::ffi::c_uint;
+pub type PJ_PROJ_STRING_TYPE = ::std::os::raw::c_uint;
 #[doc = " The area of validity of transforms should strictly contain the\n are of interest."]
 pub const PROJ_SPATIAL_CRITERION_PROJ_SPATIAL_CRITERION_STRICT_CONTAINMENT: PROJ_SPATIAL_CRITERION =
     0;
@@ -1213,7 +1216,7 @@ pub const PROJ_SPATIAL_CRITERION_PROJ_SPATIAL_CRITERION_STRICT_CONTAINMENT: PROJ
 pub const PROJ_SPATIAL_CRITERION_PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION:
     PROJ_SPATIAL_CRITERION = 1;
 #[doc = " Spatial criterion to restrict candidate operations."]
-pub type PROJ_SPATIAL_CRITERION = ::core::ffi::c_uint;
+pub type PROJ_SPATIAL_CRITERION = ::std::os::raw::c_uint;
 #[doc = " Always search for intermediate CRS."]
 pub const PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_ALWAYS: PROJ_INTERMEDIATE_CRS_USE = 0;
 #[doc = " Only attempt looking for intermediate CRS if there is no direct\n transformation available."]
@@ -1222,7 +1225,7 @@ pub const PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_IF_NO_DIRECT_TRANS
 #[doc = " Only attempt looking for intermediate CRS if there is no direct\n transformation available."]
 pub const PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_NEVER: PROJ_INTERMEDIATE_CRS_USE = 2;
 #[doc = " Describe if and how intermediate CRS should be used"]
-pub type PROJ_INTERMEDIATE_CRS_USE = ::core::ffi::c_uint;
+pub type PROJ_INTERMEDIATE_CRS_USE = ::std::os::raw::c_uint;
 pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_UNKNOWN: PJ_COORDINATE_SYSTEM_TYPE = 0;
 pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_CARTESIAN: PJ_COORDINATE_SYSTEM_TYPE = 1;
 pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_ELLIPSOIDAL: PJ_COORDINATE_SYSTEM_TYPE = 2;
@@ -1234,23 +1237,23 @@ pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_DATETIMETEMPORAL: PJ_COORDINATE_S
 pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALCOUNT: PJ_COORDINATE_SYSTEM_TYPE = 8;
 pub const PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALMEASURE: PJ_COORDINATE_SYSTEM_TYPE = 9;
 #[doc = " Type of coordinate system."]
-pub type PJ_COORDINATE_SYSTEM_TYPE = ::core::ffi::c_uint;
+pub type PJ_COORDINATE_SYSTEM_TYPE = ::std::os::raw::c_uint;
 #[doc = " \\brief Structure given overall description of a CRS.\n\n This structure may grow over time, and should not be directly allocated by\n client code."]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PROJ_CRS_INFO {
     #[doc = " Authority name."]
-    pub auth_name: *mut ::core::ffi::c_char,
+    pub auth_name: *mut ::std::os::raw::c_char,
     #[doc = " Object code."]
-    pub code: *mut ::core::ffi::c_char,
+    pub code: *mut ::std::os::raw::c_char,
     #[doc = " Object name."]
-    pub name: *mut ::core::ffi::c_char,
+    pub name: *mut ::std::os::raw::c_char,
     #[doc = " Object type."]
     pub type_: PJ_TYPE,
     #[doc = " Whether the object is deprecated"]
-    pub deprecated: ::core::ffi::c_int,
+    pub deprecated: ::std::os::raw::c_int,
     #[doc = " Whereas the west_lon_degree, south_lat_degree, east_lon_degree and\n north_lat_degree fields are valid."]
-    pub bbox_valid: ::core::ffi::c_int,
+    pub bbox_valid: ::std::os::raw::c_int,
     #[doc = " Western-most longitude of the area of use, in degrees."]
     pub west_lon_degree: f64,
     #[doc = " Southern-most latitude of the area of use, in degrees."]
@@ -1260,41 +1263,40 @@ pub struct PROJ_CRS_INFO {
     #[doc = " Northern-most latitude of the area of use, in degrees."]
     pub north_lat_degree: f64,
     #[doc = " Name of the area of use."]
-    pub area_name: *mut ::core::ffi::c_char,
+    pub area_name: *mut ::std::os::raw::c_char,
     #[doc = " Name of the projection method for a projected CRS. Might be NULL even\nfor projected CRS in some cases."]
-    pub projection_method_name: *mut ::core::ffi::c_char,
+    pub projection_method_name: *mut ::std::os::raw::c_char,
     #[doc = " Name of the celestial body of the CRS (e.g. \"Earth\").\n @since 8.1"]
-    pub celestial_body_name: *mut ::core::ffi::c_char,
+    pub celestial_body_name: *mut ::std::os::raw::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PROJ_CRS_INFO"][::core::mem::size_of::<PROJ_CRS_INFO>() - 96usize];
-    ["Alignment of PROJ_CRS_INFO"][::core::mem::align_of::<PROJ_CRS_INFO>() - 8usize];
+    ["Size of PROJ_CRS_INFO"][::std::mem::size_of::<PROJ_CRS_INFO>() - 96usize];
+    ["Alignment of PROJ_CRS_INFO"][::std::mem::align_of::<PROJ_CRS_INFO>() - 8usize];
     ["Offset of field: PROJ_CRS_INFO::auth_name"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, auth_name) - 0usize];
-    ["Offset of field: PROJ_CRS_INFO::code"][::core::mem::offset_of!(PROJ_CRS_INFO, code) - 8usize];
-    ["Offset of field: PROJ_CRS_INFO::name"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, name) - 16usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, auth_name) - 0usize];
+    ["Offset of field: PROJ_CRS_INFO::code"][::std::mem::offset_of!(PROJ_CRS_INFO, code) - 8usize];
+    ["Offset of field: PROJ_CRS_INFO::name"][::std::mem::offset_of!(PROJ_CRS_INFO, name) - 16usize];
     ["Offset of field: PROJ_CRS_INFO::type_"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, type_) - 24usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, type_) - 24usize];
     ["Offset of field: PROJ_CRS_INFO::deprecated"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, deprecated) - 28usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, deprecated) - 28usize];
     ["Offset of field: PROJ_CRS_INFO::bbox_valid"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, bbox_valid) - 32usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, bbox_valid) - 32usize];
     ["Offset of field: PROJ_CRS_INFO::west_lon_degree"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, west_lon_degree) - 40usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, west_lon_degree) - 40usize];
     ["Offset of field: PROJ_CRS_INFO::south_lat_degree"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, south_lat_degree) - 48usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, south_lat_degree) - 48usize];
     ["Offset of field: PROJ_CRS_INFO::east_lon_degree"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, east_lon_degree) - 56usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, east_lon_degree) - 56usize];
     ["Offset of field: PROJ_CRS_INFO::north_lat_degree"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, north_lat_degree) - 64usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, north_lat_degree) - 64usize];
     ["Offset of field: PROJ_CRS_INFO::area_name"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, area_name) - 72usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, area_name) - 72usize];
     ["Offset of field: PROJ_CRS_INFO::projection_method_name"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, projection_method_name) - 80usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, projection_method_name) - 80usize];
     ["Offset of field: PROJ_CRS_INFO::celestial_body_name"]
-        [::core::mem::offset_of!(PROJ_CRS_INFO, celestial_body_name) - 88usize];
+        [::std::mem::offset_of!(PROJ_CRS_INFO, celestial_body_name) - 88usize];
 };
 #[doc = " \\brief Structure describing optional parameters for proj_get_crs_list();\n\n This structure may grow over time, and should not be directly allocated by\n client code."]
 #[repr(C)]
@@ -1305,9 +1307,9 @@ pub struct PROJ_CRS_LIST_PARAMETERS {
     #[doc = " Size of types. Should be 0 if all types are allowed"]
     pub typesCount: usize,
     #[doc = " If TRUE and bbox_valid == TRUE, then only CRS whose area of use\n entirely contains the specified bounding box will be returned.\n If FALSE and bbox_valid == TRUE, then only CRS whose area of use\n intersects the specified bounding box will be returned."]
-    pub crs_area_of_use_contains_bbox: ::core::ffi::c_int,
+    pub crs_area_of_use_contains_bbox: ::std::os::raw::c_int,
     #[doc = " To set to TRUE so that west_lon_degree, south_lat_degree,\n east_lon_degree and north_lat_degree fields are taken into account."]
-    pub bbox_valid: ::core::ffi::c_int,
+    pub bbox_valid: ::std::os::raw::c_int,
     #[doc = " Western-most longitude of the area of use, in degrees."]
     pub west_lon_degree: f64,
     #[doc = " Southern-most latitude of the area of use, in degrees."]
@@ -1317,96 +1319,94 @@ pub struct PROJ_CRS_LIST_PARAMETERS {
     #[doc = " Northern-most latitude of the area of use, in degrees."]
     pub north_lat_degree: f64,
     #[doc = " Whether deprecated objects are allowed. Default to FALSE."]
-    pub allow_deprecated: ::core::ffi::c_int,
+    pub allow_deprecated: ::std::os::raw::c_int,
     #[doc = " Celestial body of the CRS (e.g. \"Earth\"). The default value, NULL,\n  means no restriction\n @since 8.1"]
-    pub celestial_body_name: *const ::core::ffi::c_char,
+    pub celestial_body_name: *const ::std::os::raw::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
     ["Size of PROJ_CRS_LIST_PARAMETERS"]
-        [::core::mem::size_of::<PROJ_CRS_LIST_PARAMETERS>() - 72usize];
+        [::std::mem::size_of::<PROJ_CRS_LIST_PARAMETERS>() - 72usize];
     ["Alignment of PROJ_CRS_LIST_PARAMETERS"]
-        [::core::mem::align_of::<PROJ_CRS_LIST_PARAMETERS>() - 8usize];
+        [::std::mem::align_of::<PROJ_CRS_LIST_PARAMETERS>() - 8usize];
     ["Offset of field: PROJ_CRS_LIST_PARAMETERS::types"]
-        [::core::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, types) - 0usize];
+        [::std::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, types) - 0usize];
     ["Offset of field: PROJ_CRS_LIST_PARAMETERS::typesCount"]
-        [::core::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, typesCount) - 8usize];
-    ["Offset of field: PROJ_CRS_LIST_PARAMETERS::crs_area_of_use_contains_bbox"][::core::mem::offset_of!(
-        PROJ_CRS_LIST_PARAMETERS,
-        crs_area_of_use_contains_bbox
-    ) - 16usize];
+        [::std::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, typesCount) - 8usize];
+    ["Offset of field: PROJ_CRS_LIST_PARAMETERS::crs_area_of_use_contains_bbox"]
+        [::std::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, crs_area_of_use_contains_bbox) - 16usize];
     ["Offset of field: PROJ_CRS_LIST_PARAMETERS::bbox_valid"]
-        [::core::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, bbox_valid) - 20usize];
+        [::std::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, bbox_valid) - 20usize];
     ["Offset of field: PROJ_CRS_LIST_PARAMETERS::west_lon_degree"]
-        [::core::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, west_lon_degree) - 24usize];
+        [::std::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, west_lon_degree) - 24usize];
     ["Offset of field: PROJ_CRS_LIST_PARAMETERS::south_lat_degree"]
-        [::core::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, south_lat_degree) - 32usize];
+        [::std::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, south_lat_degree) - 32usize];
     ["Offset of field: PROJ_CRS_LIST_PARAMETERS::east_lon_degree"]
-        [::core::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, east_lon_degree) - 40usize];
+        [::std::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, east_lon_degree) - 40usize];
     ["Offset of field: PROJ_CRS_LIST_PARAMETERS::north_lat_degree"]
-        [::core::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, north_lat_degree) - 48usize];
+        [::std::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, north_lat_degree) - 48usize];
     ["Offset of field: PROJ_CRS_LIST_PARAMETERS::allow_deprecated"]
-        [::core::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, allow_deprecated) - 56usize];
+        [::std::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, allow_deprecated) - 56usize];
     ["Offset of field: PROJ_CRS_LIST_PARAMETERS::celestial_body_name"]
-        [::core::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, celestial_body_name) - 64usize];
+        [::std::mem::offset_of!(PROJ_CRS_LIST_PARAMETERS, celestial_body_name) - 64usize];
 };
 #[doc = " \\brief Structure given description of a unit.\n\n This structure may grow over time, and should not be directly allocated by\n client code.\n @since 7.1"]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PROJ_UNIT_INFO {
     #[doc = " Authority name."]
-    pub auth_name: *mut ::core::ffi::c_char,
+    pub auth_name: *mut ::std::os::raw::c_char,
     #[doc = " Object code."]
-    pub code: *mut ::core::ffi::c_char,
+    pub code: *mut ::std::os::raw::c_char,
     #[doc = " Object name. For example \"metre\", \"US survey foot\", etc."]
-    pub name: *mut ::core::ffi::c_char,
+    pub name: *mut ::std::os::raw::c_char,
     #[doc = " Category of the unit: one of \"linear\", \"linear_per_time\", \"angular\",\n \"angular_per_time\", \"scale\", \"scale_per_time\" or \"time\""]
-    pub category: *mut ::core::ffi::c_char,
+    pub category: *mut ::std::os::raw::c_char,
     #[doc = " Conversion factor to apply to transform from that unit to the\n corresponding SI unit (metre for \"linear\", radian for \"angular\", etc.).\n It might be 0 in some cases to indicate no known conversion factor."]
     pub conv_factor: f64,
     #[doc = " PROJ short name, like \"m\", \"ft\", \"us-ft\", etc... Might be NULL"]
-    pub proj_short_name: *mut ::core::ffi::c_char,
+    pub proj_short_name: *mut ::std::os::raw::c_char,
     #[doc = " Whether the object is deprecated"]
-    pub deprecated: ::core::ffi::c_int,
+    pub deprecated: ::std::os::raw::c_int,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PROJ_UNIT_INFO"][::core::mem::size_of::<PROJ_UNIT_INFO>() - 56usize];
-    ["Alignment of PROJ_UNIT_INFO"][::core::mem::align_of::<PROJ_UNIT_INFO>() - 8usize];
+    ["Size of PROJ_UNIT_INFO"][::std::mem::size_of::<PROJ_UNIT_INFO>() - 56usize];
+    ["Alignment of PROJ_UNIT_INFO"][::std::mem::align_of::<PROJ_UNIT_INFO>() - 8usize];
     ["Offset of field: PROJ_UNIT_INFO::auth_name"]
-        [::core::mem::offset_of!(PROJ_UNIT_INFO, auth_name) - 0usize];
+        [::std::mem::offset_of!(PROJ_UNIT_INFO, auth_name) - 0usize];
     ["Offset of field: PROJ_UNIT_INFO::code"]
-        [::core::mem::offset_of!(PROJ_UNIT_INFO, code) - 8usize];
+        [::std::mem::offset_of!(PROJ_UNIT_INFO, code) - 8usize];
     ["Offset of field: PROJ_UNIT_INFO::name"]
-        [::core::mem::offset_of!(PROJ_UNIT_INFO, name) - 16usize];
+        [::std::mem::offset_of!(PROJ_UNIT_INFO, name) - 16usize];
     ["Offset of field: PROJ_UNIT_INFO::category"]
-        [::core::mem::offset_of!(PROJ_UNIT_INFO, category) - 24usize];
+        [::std::mem::offset_of!(PROJ_UNIT_INFO, category) - 24usize];
     ["Offset of field: PROJ_UNIT_INFO::conv_factor"]
-        [::core::mem::offset_of!(PROJ_UNIT_INFO, conv_factor) - 32usize];
+        [::std::mem::offset_of!(PROJ_UNIT_INFO, conv_factor) - 32usize];
     ["Offset of field: PROJ_UNIT_INFO::proj_short_name"]
-        [::core::mem::offset_of!(PROJ_UNIT_INFO, proj_short_name) - 40usize];
+        [::std::mem::offset_of!(PROJ_UNIT_INFO, proj_short_name) - 40usize];
     ["Offset of field: PROJ_UNIT_INFO::deprecated"]
-        [::core::mem::offset_of!(PROJ_UNIT_INFO, deprecated) - 48usize];
+        [::std::mem::offset_of!(PROJ_UNIT_INFO, deprecated) - 48usize];
 };
 #[doc = " \\brief Structure given description of a celestial body.\n\n This structure may grow over time, and should not be directly allocated by\n client code.\n @since 8.1"]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PROJ_CELESTIAL_BODY_INFO {
     #[doc = " Authority name."]
-    pub auth_name: *mut ::core::ffi::c_char,
+    pub auth_name: *mut ::std::os::raw::c_char,
     #[doc = " Object name. For example \"Earth\""]
-    pub name: *mut ::core::ffi::c_char,
+    pub name: *mut ::std::os::raw::c_char,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
     ["Size of PROJ_CELESTIAL_BODY_INFO"]
-        [::core::mem::size_of::<PROJ_CELESTIAL_BODY_INFO>() - 16usize];
+        [::std::mem::size_of::<PROJ_CELESTIAL_BODY_INFO>() - 16usize];
     ["Alignment of PROJ_CELESTIAL_BODY_INFO"]
-        [::core::mem::align_of::<PROJ_CELESTIAL_BODY_INFO>() - 8usize];
+        [::std::mem::align_of::<PROJ_CELESTIAL_BODY_INFO>() - 8usize];
     ["Offset of field: PROJ_CELESTIAL_BODY_INFO::auth_name"]
-        [::core::mem::offset_of!(PROJ_CELESTIAL_BODY_INFO, auth_name) - 0usize];
+        [::std::mem::offset_of!(PROJ_CELESTIAL_BODY_INFO, auth_name) - 0usize];
     ["Offset of field: PROJ_CELESTIAL_BODY_INFO::name"]
-        [::core::mem::offset_of!(PROJ_CELESTIAL_BODY_INFO, name) - 8usize];
+        [::std::mem::offset_of!(PROJ_CELESTIAL_BODY_INFO, name) - 8usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -1418,42 +1418,45 @@ unsafe extern "C" {
     pub fn proj_string_list_destroy(list: PROJ_STRING_LIST);
 }
 unsafe extern "C" {
-    pub fn proj_context_set_autoclose_database(ctx: *mut PJ_CONTEXT, autoclose: ::core::ffi::c_int);
+    pub fn proj_context_set_autoclose_database(
+        ctx: *mut PJ_CONTEXT,
+        autoclose: ::std::os::raw::c_int,
+    );
 }
 unsafe extern "C" {
     pub fn proj_context_set_database_path(
         ctx: *mut PJ_CONTEXT,
-        dbPath: *const ::core::ffi::c_char,
-        auxDbPaths: *const *const ::core::ffi::c_char,
-        options: *const *const ::core::ffi::c_char,
-    ) -> ::core::ffi::c_int;
+        dbPath: *const ::std::os::raw::c_char,
+        auxDbPaths: *const *const ::std::os::raw::c_char,
+        options: *const *const ::std::os::raw::c_char,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_context_get_database_path(ctx: *mut PJ_CONTEXT) -> *const ::core::ffi::c_char;
+    pub fn proj_context_get_database_path(ctx: *mut PJ_CONTEXT) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_context_get_database_metadata(
         ctx: *mut PJ_CONTEXT,
-        key: *const ::core::ffi::c_char,
-    ) -> *const ::core::ffi::c_char;
+        key: *const ::std::os::raw::c_char,
+    ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_context_get_database_structure(
         ctx: *mut PJ_CONTEXT,
-        options: *const *const ::core::ffi::c_char,
+        options: *const *const ::std::os::raw::c_char,
     ) -> PROJ_STRING_LIST;
 }
 unsafe extern "C" {
     pub fn proj_context_guess_wkt_dialect(
         ctx: *mut PJ_CONTEXT,
-        wkt: *const ::core::ffi::c_char,
+        wkt: *const ::std::os::raw::c_char,
     ) -> PJ_GUESSED_WKT_DIALECT;
 }
 unsafe extern "C" {
     pub fn proj_create_from_wkt(
         ctx: *mut PJ_CONTEXT,
-        wkt: *const ::core::ffi::c_char,
-        options: *const *const ::core::ffi::c_char,
+        wkt: *const ::std::os::raw::c_char,
+        options: *const *const ::std::os::raw::c_char,
         out_warnings: *mut PROJ_STRING_LIST,
         out_grammar_errors: *mut PROJ_STRING_LIST,
     ) -> *mut PJ;
@@ -1461,34 +1464,34 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_create_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const ::core::ffi::c_char,
-        code: *const ::core::ffi::c_char,
+        auth_name: *const ::std::os::raw::c_char,
+        code: *const ::std::os::raw::c_char,
         category: PJ_CATEGORY,
-        usePROJAlternativeGridNames: ::core::ffi::c_int,
-        options: *const *const ::core::ffi::c_char,
+        usePROJAlternativeGridNames: ::std::os::raw::c_int,
+        options: *const *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_uom_get_info_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const ::core::ffi::c_char,
-        code: *const ::core::ffi::c_char,
-        out_name: *mut *const ::core::ffi::c_char,
+        auth_name: *const ::std::os::raw::c_char,
+        code: *const ::std::os::raw::c_char,
+        out_name: *mut *const ::std::os::raw::c_char,
         out_conv_factor: *mut f64,
-        out_category: *mut *const ::core::ffi::c_char,
-    ) -> ::core::ffi::c_int;
+        out_category: *mut *const ::std::os::raw::c_char,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_grid_get_info_from_database(
         ctx: *mut PJ_CONTEXT,
-        grid_name: *const ::core::ffi::c_char,
-        out_full_name: *mut *const ::core::ffi::c_char,
-        out_package_name: *mut *const ::core::ffi::c_char,
-        out_url: *mut *const ::core::ffi::c_char,
-        out_direct_download: *mut ::core::ffi::c_int,
-        out_open_license: *mut ::core::ffi::c_int,
-        out_available: *mut ::core::ffi::c_int,
-    ) -> ::core::ffi::c_int;
+        grid_name: *const ::std::os::raw::c_char,
+        out_full_name: *mut *const ::std::os::raw::c_char,
+        out_package_name: *mut *const ::std::os::raw::c_char,
+        out_url: *mut *const ::std::os::raw::c_char,
+        out_direct_download: *mut ::std::os::raw::c_int,
+        out_open_license: *mut ::std::os::raw::c_int,
+        out_available: *mut ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_clone(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
@@ -1496,20 +1499,20 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_create_from_name(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const ::core::ffi::c_char,
-        searchedName: *const ::core::ffi::c_char,
+        auth_name: *const ::std::os::raw::c_char,
+        searchedName: *const ::std::os::raw::c_char,
         types: *const PJ_TYPE,
         typesCount: usize,
-        approximateMatch: ::core::ffi::c_int,
+        approximateMatch: ::std::os::raw::c_int,
         limitResultCount: usize,
-        options: *const *const ::core::ffi::c_char,
+        options: *const *const ::std::os::raw::c_char,
     ) -> *mut PJ_OBJ_LIST;
 }
 unsafe extern "C" {
     pub fn proj_get_type(obj: *const PJ) -> PJ_TYPE;
 }
 unsafe extern "C" {
-    pub fn proj_is_deprecated(obj: *const PJ) -> ::core::ffi::c_int;
+    pub fn proj_is_deprecated(obj: *const PJ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_get_non_deprecated(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ_OBJ_LIST;
@@ -1519,7 +1522,7 @@ unsafe extern "C" {
         obj: *const PJ,
         other: *const PJ,
         criterion: PJ_COMPARISON_CRITERION,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_is_equivalent_to_with_ctx(
@@ -1527,40 +1530,40 @@ unsafe extern "C" {
         obj: *const PJ,
         other: *const PJ,
         criterion: PJ_COMPARISON_CRITERION,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_is_crs(obj: *const PJ) -> ::core::ffi::c_int;
+    pub fn proj_is_crs(obj: *const PJ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_get_name(obj: *const PJ) -> *const ::core::ffi::c_char;
+    pub fn proj_get_name(obj: *const PJ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_get_id_auth_name(
         obj: *const PJ,
-        index: ::core::ffi::c_int,
-    ) -> *const ::core::ffi::c_char;
+        index: ::std::os::raw::c_int,
+    ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_get_id_code(
         obj: *const PJ,
-        index: ::core::ffi::c_int,
-    ) -> *const ::core::ffi::c_char;
+        index: ::std::os::raw::c_int,
+    ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
-    pub fn proj_get_remarks(obj: *const PJ) -> *const ::core::ffi::c_char;
+    pub fn proj_get_remarks(obj: *const PJ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
-    pub fn proj_get_domain_count(obj: *const PJ) -> ::core::ffi::c_int;
+    pub fn proj_get_domain_count(obj: *const PJ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_get_scope(obj: *const PJ) -> *const ::core::ffi::c_char;
+    pub fn proj_get_scope(obj: *const PJ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_get_scope_ex(
         obj: *const PJ,
-        domainIdx: ::core::ffi::c_int,
-    ) -> *const ::core::ffi::c_char;
+        domainIdx: ::std::os::raw::c_int,
+    ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_get_area_of_use(
@@ -1570,43 +1573,43 @@ unsafe extern "C" {
         out_south_lat_degree: *mut f64,
         out_east_lon_degree: *mut f64,
         out_north_lat_degree: *mut f64,
-        out_area_name: *mut *const ::core::ffi::c_char,
-    ) -> ::core::ffi::c_int;
+        out_area_name: *mut *const ::std::os::raw::c_char,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_get_area_of_use_ex(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        domainIdx: ::core::ffi::c_int,
+        domainIdx: ::std::os::raw::c_int,
         out_west_lon_degree: *mut f64,
         out_south_lat_degree: *mut f64,
         out_east_lon_degree: *mut f64,
         out_north_lat_degree: *mut f64,
-        out_area_name: *mut *const ::core::ffi::c_char,
-    ) -> ::core::ffi::c_int;
+        out_area_name: *mut *const ::std::os::raw::c_char,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_as_wkt(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
         type_: PJ_WKT_TYPE,
-        options: *const *const ::core::ffi::c_char,
-    ) -> *const ::core::ffi::c_char;
+        options: *const *const ::std::os::raw::c_char,
+    ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_as_proj_string(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
         type_: PJ_PROJ_STRING_TYPE,
-        options: *const *const ::core::ffi::c_char,
-    ) -> *const ::core::ffi::c_char;
+        options: *const *const ::std::os::raw::c_char,
+    ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_as_projjson(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        options: *const *const ::core::ffi::c_char,
-    ) -> *const ::core::ffi::c_char;
+        options: *const *const ::std::os::raw::c_char,
+    ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_get_source_crs(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
@@ -1618,21 +1621,21 @@ unsafe extern "C" {
     pub fn proj_identify(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        auth_name: *const ::core::ffi::c_char,
-        options: *const *const ::core::ffi::c_char,
-        out_confidence: *mut *mut ::core::ffi::c_int,
+        auth_name: *const ::std::os::raw::c_char,
+        options: *const *const ::std::os::raw::c_char,
+        out_confidence: *mut *mut ::std::os::raw::c_int,
     ) -> *mut PJ_OBJ_LIST;
 }
 unsafe extern "C" {
     pub fn proj_get_geoid_models_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const ::core::ffi::c_char,
-        code: *const ::core::ffi::c_char,
-        options: *const *const ::core::ffi::c_char,
+        auth_name: *const ::std::os::raw::c_char,
+        code: *const ::std::os::raw::c_char,
+        options: *const *const ::std::os::raw::c_char,
     ) -> PROJ_STRING_LIST;
 }
 unsafe extern "C" {
-    pub fn proj_int_list_destroy(list: *mut ::core::ffi::c_int);
+    pub fn proj_int_list_destroy(list: *mut ::std::os::raw::c_int);
 }
 unsafe extern "C" {
     pub fn proj_get_authorities_from_database(ctx: *mut PJ_CONTEXT) -> PROJ_STRING_LIST;
@@ -1640,16 +1643,16 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_get_codes_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const ::core::ffi::c_char,
+        auth_name: *const ::std::os::raw::c_char,
         type_: PJ_TYPE,
-        allow_deprecated: ::core::ffi::c_int,
+        allow_deprecated: ::std::os::raw::c_int,
     ) -> PROJ_STRING_LIST;
 }
 unsafe extern "C" {
     pub fn proj_get_celestial_body_list_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const ::core::ffi::c_char,
-        out_result_count: *mut ::core::ffi::c_int,
+        auth_name: *const ::std::os::raw::c_char,
+        out_result_count: *mut ::std::os::raw::c_int,
     ) -> *mut *mut PROJ_CELESTIAL_BODY_INFO;
 }
 unsafe extern "C" {
@@ -1664,9 +1667,9 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_get_crs_info_list_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const ::core::ffi::c_char,
+        auth_name: *const ::std::os::raw::c_char,
         params: *const PROJ_CRS_LIST_PARAMETERS,
-        out_result_count: *mut ::core::ffi::c_int,
+        out_result_count: *mut ::std::os::raw::c_int,
     ) -> *mut *mut PROJ_CRS_INFO;
 }
 unsafe extern "C" {
@@ -1675,10 +1678,10 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_get_units_from_database(
         ctx: *mut PJ_CONTEXT,
-        auth_name: *const ::core::ffi::c_char,
-        category: *const ::core::ffi::c_char,
-        allow_deprecated: ::core::ffi::c_int,
-        out_result_count: *mut ::core::ffi::c_int,
+        auth_name: *const ::std::os::raw::c_char,
+        category: *const ::std::os::raw::c_char,
+        allow_deprecated: ::std::os::raw::c_int,
+        out_result_count: *mut ::std::os::raw::c_int,
     ) -> *mut *mut PROJ_UNIT_INFO;
 }
 unsafe extern "C" {
@@ -1704,24 +1707,24 @@ unsafe extern "C" {
         ctx: *mut PJ_CONTEXT,
         session: *mut PJ_INSERT_SESSION,
         object: *const PJ,
-        authority: *const ::core::ffi::c_char,
-        code: *const ::core::ffi::c_char,
-        numeric_codes: ::core::ffi::c_int,
-        allowed_authorities: *const *const ::core::ffi::c_char,
-        options: *const *const ::core::ffi::c_char,
+        authority: *const ::std::os::raw::c_char,
+        code: *const ::std::os::raw::c_char,
+        numeric_codes: ::std::os::raw::c_int,
+        allowed_authorities: *const *const ::std::os::raw::c_char,
+        options: *const *const ::std::os::raw::c_char,
     ) -> PROJ_STRING_LIST;
 }
 unsafe extern "C" {
     pub fn proj_suggests_code_for(
         ctx: *mut PJ_CONTEXT,
         object: *const PJ,
-        authority: *const ::core::ffi::c_char,
-        numeric_code: ::core::ffi::c_int,
-        options: *const *const ::core::ffi::c_char,
-    ) -> *mut ::core::ffi::c_char;
+        authority: *const ::std::os::raw::c_char,
+        numeric_code: ::std::os::raw::c_int,
+        options: *const *const ::std::os::raw::c_char,
+    ) -> *mut ::std::os::raw::c_char;
 }
 unsafe extern "C" {
-    pub fn proj_string_destroy(str_: *mut ::core::ffi::c_char);
+    pub fn proj_string_destroy(str_: *mut ::std::os::raw::c_char);
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -1732,7 +1735,7 @@ unsafe extern "C" {
     #[doc = " @endcond"]
     pub fn proj_create_operation_factory_context(
         ctx: *mut PJ_CONTEXT,
-        authority: *const ::core::ffi::c_char,
+        authority: *const ::std::os::raw::c_char,
     ) -> *mut PJ_OPERATION_FACTORY_CONTEXT;
 }
 unsafe extern "C" {
@@ -1759,7 +1762,7 @@ unsafe extern "C" {
     pub fn proj_operation_factory_context_set_area_of_interest_name(
         ctx: *mut PJ_CONTEXT,
         factory_ctx: *mut PJ_OPERATION_FACTORY_CONTEXT,
-        area_name: *const ::core::ffi::c_char,
+        area_name: *const ::std::os::raw::c_char,
     );
 }
 unsafe extern "C" {
@@ -1787,7 +1790,7 @@ unsafe extern "C" {
     pub fn proj_operation_factory_context_set_use_proj_alternative_grid_names(
         ctx: *mut PJ_CONTEXT,
         factory_ctx: *mut PJ_OPERATION_FACTORY_CONTEXT,
-        usePROJNames: ::core::ffi::c_int,
+        usePROJNames: ::std::os::raw::c_int,
     );
 }
 unsafe extern "C" {
@@ -1801,21 +1804,21 @@ unsafe extern "C" {
     pub fn proj_operation_factory_context_set_allowed_intermediate_crs(
         ctx: *mut PJ_CONTEXT,
         factory_ctx: *mut PJ_OPERATION_FACTORY_CONTEXT,
-        list_of_auth_name_codes: *const *const ::core::ffi::c_char,
+        list_of_auth_name_codes: *const *const ::std::os::raw::c_char,
     );
 }
 unsafe extern "C" {
     pub fn proj_operation_factory_context_set_discard_superseded(
         ctx: *mut PJ_CONTEXT,
         factory_ctx: *mut PJ_OPERATION_FACTORY_CONTEXT,
-        discard: ::core::ffi::c_int,
+        discard: ::std::os::raw::c_int,
     );
 }
 unsafe extern "C" {
     pub fn proj_operation_factory_context_set_allow_ballpark_transformations(
         ctx: *mut PJ_CONTEXT,
         factory_ctx: *mut PJ_OPERATION_FACTORY_CONTEXT,
-        allow: ::core::ffi::c_int,
+        allow: ::std::os::raw::c_int,
     );
 }
 unsafe extern "C" {
@@ -1827,13 +1830,13 @@ unsafe extern "C" {
     ) -> *mut PJ_OBJ_LIST;
 }
 unsafe extern "C" {
-    pub fn proj_list_get_count(result: *const PJ_OBJ_LIST) -> ::core::ffi::c_int;
+    pub fn proj_list_get_count(result: *const PJ_OBJ_LIST) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_list_get(
         ctx: *mut PJ_CONTEXT,
         result: *const PJ_OBJ_LIST,
-        index: ::core::ffi::c_int,
+        index: ::std::os::raw::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -1845,10 +1848,10 @@ unsafe extern "C" {
         operations: *mut PJ_OBJ_LIST,
         direction: PJ_DIRECTION,
         coord: PJ_COORD,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    pub fn proj_crs_is_derived(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> ::core::ffi::c_int;
+    pub fn proj_crs_is_derived(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_crs_get_geodetic_crs(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> *mut PJ;
@@ -1860,7 +1863,7 @@ unsafe extern "C" {
     pub fn proj_crs_get_sub_crs(
         ctx: *mut PJ_CONTEXT,
         crs: *const PJ,
-        index: ::core::ffi::c_int,
+        index: ::std::os::raw::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -1876,13 +1879,13 @@ unsafe extern "C" {
     pub fn proj_crs_has_point_motion_operation(
         ctx: *mut PJ_CONTEXT,
         crs: *const PJ,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_datum_ensemble_get_member_count(
         ctx: *mut PJ_CONTEXT,
         datum_ensemble: *const PJ,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_datum_ensemble_get_accuracy(ctx: *mut PJ_CONTEXT, datum_ensemble: *const PJ)
@@ -1892,7 +1895,7 @@ unsafe extern "C" {
     pub fn proj_datum_ensemble_get_member(
         ctx: *mut PJ_CONTEXT,
         datum_ensemble: *const PJ,
-        member_index: ::core::ffi::c_int,
+        member_index: ::std::os::raw::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -1908,21 +1911,21 @@ unsafe extern "C" {
     pub fn proj_cs_get_type(ctx: *mut PJ_CONTEXT, cs: *const PJ) -> PJ_COORDINATE_SYSTEM_TYPE;
 }
 unsafe extern "C" {
-    pub fn proj_cs_get_axis_count(ctx: *mut PJ_CONTEXT, cs: *const PJ) -> ::core::ffi::c_int;
+    pub fn proj_cs_get_axis_count(ctx: *mut PJ_CONTEXT, cs: *const PJ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_cs_get_axis_info(
         ctx: *mut PJ_CONTEXT,
         cs: *const PJ,
-        index: ::core::ffi::c_int,
-        out_name: *mut *const ::core::ffi::c_char,
-        out_abbrev: *mut *const ::core::ffi::c_char,
-        out_direction: *mut *const ::core::ffi::c_char,
+        index: ::std::os::raw::c_int,
+        out_name: *mut *const ::std::os::raw::c_char,
+        out_abbrev: *mut *const ::std::os::raw::c_char,
+        out_direction: *mut *const ::std::os::raw::c_char,
         out_unit_conv_factor: *mut f64,
-        out_unit_name: *mut *const ::core::ffi::c_char,
-        out_unit_auth_name: *mut *const ::core::ffi::c_char,
-        out_unit_code: *mut *const ::core::ffi::c_char,
-    ) -> ::core::ffi::c_int;
+        out_unit_name: *mut *const ::std::os::raw::c_char,
+        out_unit_auth_name: *mut *const ::std::os::raw::c_char,
+        out_unit_code: *mut *const ::std::os::raw::c_char,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_get_ellipsoid(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
@@ -1933,15 +1936,15 @@ unsafe extern "C" {
         ellipsoid: *const PJ,
         out_semi_major_metre: *mut f64,
         out_semi_minor_metre: *mut f64,
-        out_is_semi_minor_computed: *mut ::core::ffi::c_int,
+        out_is_semi_minor_computed: *mut ::std::os::raw::c_int,
         out_inv_flattening: *mut f64,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_get_celestial_body_name(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-    ) -> *const ::core::ffi::c_char;
+    ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
     pub fn proj_get_prime_meridian(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
@@ -1952,8 +1955,8 @@ unsafe extern "C" {
         prime_meridian: *const PJ,
         out_longitude: *mut f64,
         out_unit_conv_factor: *mut f64,
-        out_unit_name: *mut *const ::core::ffi::c_char,
-    ) -> ::core::ffi::c_int;
+        out_unit_name: *mut *const ::std::os::raw::c_char,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_crs_get_coordoperation(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> *mut PJ;
@@ -1962,78 +1965,78 @@ unsafe extern "C" {
     pub fn proj_coordoperation_get_method_info(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-        out_method_name: *mut *const ::core::ffi::c_char,
-        out_method_auth_name: *mut *const ::core::ffi::c_char,
-        out_method_code: *mut *const ::core::ffi::c_char,
-    ) -> ::core::ffi::c_int;
+        out_method_name: *mut *const ::std::os::raw::c_char,
+        out_method_auth_name: *mut *const ::std::os::raw::c_char,
+        out_method_code: *mut *const ::std::os::raw::c_char,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_is_instantiable(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_has_ballpark_transformation(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_requires_per_coordinate_input_time(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_param_count(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_param_index(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-        name: *const ::core::ffi::c_char,
-    ) -> ::core::ffi::c_int;
+        name: *const ::std::os::raw::c_char,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_param(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-        index: ::core::ffi::c_int,
-        out_name: *mut *const ::core::ffi::c_char,
-        out_auth_name: *mut *const ::core::ffi::c_char,
-        out_code: *mut *const ::core::ffi::c_char,
+        index: ::std::os::raw::c_int,
+        out_name: *mut *const ::std::os::raw::c_char,
+        out_auth_name: *mut *const ::std::os::raw::c_char,
+        out_code: *mut *const ::std::os::raw::c_char,
         out_value: *mut f64,
-        out_value_string: *mut *const ::core::ffi::c_char,
+        out_value_string: *mut *const ::std::os::raw::c_char,
         out_unit_conv_factor: *mut f64,
-        out_unit_name: *mut *const ::core::ffi::c_char,
-        out_unit_auth_name: *mut *const ::core::ffi::c_char,
-        out_unit_code: *mut *const ::core::ffi::c_char,
-        out_unit_category: *mut *const ::core::ffi::c_char,
-    ) -> ::core::ffi::c_int;
+        out_unit_name: *mut *const ::std::os::raw::c_char,
+        out_unit_auth_name: *mut *const ::std::os::raw::c_char,
+        out_unit_code: *mut *const ::std::os::raw::c_char,
+        out_unit_category: *mut *const ::std::os::raw::c_char,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_grid_used_count(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_grid_used(
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
-        index: ::core::ffi::c_int,
-        out_short_name: *mut *const ::core::ffi::c_char,
-        out_full_name: *mut *const ::core::ffi::c_char,
-        out_package_name: *mut *const ::core::ffi::c_char,
-        out_url: *mut *const ::core::ffi::c_char,
-        out_direct_download: *mut ::core::ffi::c_int,
-        out_open_license: *mut ::core::ffi::c_int,
-        out_available: *mut ::core::ffi::c_int,
-    ) -> ::core::ffi::c_int;
+        index: ::std::os::raw::c_int,
+        out_short_name: *mut *const ::std::os::raw::c_char,
+        out_full_name: *mut *const ::std::os::raw::c_char,
+        out_package_name: *mut *const ::std::os::raw::c_char,
+        out_url: *mut *const ::std::os::raw::c_char,
+        out_direct_download: *mut ::std::os::raw::c_int,
+        out_open_license: *mut ::std::os::raw::c_int,
+        out_available: *mut ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_get_accuracy(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> f64;
@@ -2043,9 +2046,9 @@ unsafe extern "C" {
         ctx: *mut PJ_CONTEXT,
         coordoperation: *const PJ,
         out_values: *mut f64,
-        value_count: ::core::ffi::c_int,
-        emit_error_if_incompatible: ::core::ffi::c_int,
-    ) -> ::core::ffi::c_int;
+        value_count: ::std::os::raw::c_int,
+        emit_error_if_incompatible: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_coordoperation_create_inverse(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
@@ -2054,13 +2057,13 @@ unsafe extern "C" {
     pub fn proj_concatoperation_get_step_count(
         ctx: *mut PJ_CONTEXT,
         concatoperation: *const PJ,
-    ) -> ::core::ffi::c_int;
+    ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_concatoperation_get_step(
         ctx: *mut PJ_CONTEXT,
         concatoperation: *const PJ,
-        i_step: ::core::ffi::c_int,
+        i_step: ::std::os::raw::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -2084,19 +2087,19 @@ pub const PJ_UNIT_TYPE_PJ_UT_TIME: PJ_UNIT_TYPE = 3;
 #[doc = " Parametric unit of measure"]
 pub const PJ_UNIT_TYPE_PJ_UT_PARAMETRIC: PJ_UNIT_TYPE = 4;
 #[doc = " Type of unit of measure."]
-pub type PJ_UNIT_TYPE = ::core::ffi::c_uint;
+pub type PJ_UNIT_TYPE = ::std::os::raw::c_uint;
 #[doc = " \\brief Axis description."]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_AXIS_DESCRIPTION {
     #[doc = " Axis name."]
-    pub name: *mut ::core::ffi::c_char,
+    pub name: *mut ::std::os::raw::c_char,
     #[doc = " Axis abbreviation."]
-    pub abbreviation: *mut ::core::ffi::c_char,
+    pub abbreviation: *mut ::std::os::raw::c_char,
     #[doc = " Axis direction."]
-    pub direction: *mut ::core::ffi::c_char,
+    pub direction: *mut ::std::os::raw::c_char,
     #[doc = " Axis unit name."]
-    pub unit_name: *mut ::core::ffi::c_char,
+    pub unit_name: *mut ::std::os::raw::c_char,
     #[doc = " Conversion factor to SI of the unit."]
     pub unit_conv_factor: f64,
     #[doc = " Type of unit"]
@@ -2104,20 +2107,20 @@ pub struct PJ_AXIS_DESCRIPTION {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_AXIS_DESCRIPTION"][::core::mem::size_of::<PJ_AXIS_DESCRIPTION>() - 48usize];
-    ["Alignment of PJ_AXIS_DESCRIPTION"][::core::mem::align_of::<PJ_AXIS_DESCRIPTION>() - 8usize];
+    ["Size of PJ_AXIS_DESCRIPTION"][::std::mem::size_of::<PJ_AXIS_DESCRIPTION>() - 48usize];
+    ["Alignment of PJ_AXIS_DESCRIPTION"][::std::mem::align_of::<PJ_AXIS_DESCRIPTION>() - 8usize];
     ["Offset of field: PJ_AXIS_DESCRIPTION::name"]
-        [::core::mem::offset_of!(PJ_AXIS_DESCRIPTION, name) - 0usize];
+        [::std::mem::offset_of!(PJ_AXIS_DESCRIPTION, name) - 0usize];
     ["Offset of field: PJ_AXIS_DESCRIPTION::abbreviation"]
-        [::core::mem::offset_of!(PJ_AXIS_DESCRIPTION, abbreviation) - 8usize];
+        [::std::mem::offset_of!(PJ_AXIS_DESCRIPTION, abbreviation) - 8usize];
     ["Offset of field: PJ_AXIS_DESCRIPTION::direction"]
-        [::core::mem::offset_of!(PJ_AXIS_DESCRIPTION, direction) - 16usize];
+        [::std::mem::offset_of!(PJ_AXIS_DESCRIPTION, direction) - 16usize];
     ["Offset of field: PJ_AXIS_DESCRIPTION::unit_name"]
-        [::core::mem::offset_of!(PJ_AXIS_DESCRIPTION, unit_name) - 24usize];
+        [::std::mem::offset_of!(PJ_AXIS_DESCRIPTION, unit_name) - 24usize];
     ["Offset of field: PJ_AXIS_DESCRIPTION::unit_conv_factor"]
-        [::core::mem::offset_of!(PJ_AXIS_DESCRIPTION, unit_conv_factor) - 32usize];
+        [::std::mem::offset_of!(PJ_AXIS_DESCRIPTION, unit_conv_factor) - 32usize];
     ["Offset of field: PJ_AXIS_DESCRIPTION::unit_type"]
-        [::core::mem::offset_of!(PJ_AXIS_DESCRIPTION, unit_type) - 40usize];
+        [::std::mem::offset_of!(PJ_AXIS_DESCRIPTION, unit_type) - 40usize];
 };
 #[doc = " Easting-Norting"]
 pub const PJ_CARTESIAN_CS_2D_TYPE_PJ_CART2D_EASTING_NORTHING: PJ_CARTESIAN_CS_2D_TYPE = 0;
@@ -2132,13 +2135,13 @@ pub const PJ_CARTESIAN_CS_2D_TYPE_PJ_CART2D_SOUTH_POLE_EASTING_NORTH_NORTHING_NO
 #[doc = " Westing-southing"]
 pub const PJ_CARTESIAN_CS_2D_TYPE_PJ_CART2D_WESTING_SOUTHING: PJ_CARTESIAN_CS_2D_TYPE = 4;
 #[doc = " Type of Cartesian 2D coordinate system."]
-pub type PJ_CARTESIAN_CS_2D_TYPE = ::core::ffi::c_uint;
+pub type PJ_CARTESIAN_CS_2D_TYPE = ::std::os::raw::c_uint;
 #[doc = " Longitude-Latitude"]
 pub const PJ_ELLIPSOIDAL_CS_2D_TYPE_PJ_ELLPS2D_LONGITUDE_LATITUDE: PJ_ELLIPSOIDAL_CS_2D_TYPE = 0;
 #[doc = " Latitude-Longitude"]
 pub const PJ_ELLIPSOIDAL_CS_2D_TYPE_PJ_ELLPS2D_LATITUDE_LONGITUDE: PJ_ELLIPSOIDAL_CS_2D_TYPE = 1;
 #[doc = " Type of Ellipsoidal 2D coordinate system."]
-pub type PJ_ELLIPSOIDAL_CS_2D_TYPE = ::core::ffi::c_uint;
+pub type PJ_ELLIPSOIDAL_CS_2D_TYPE = ::std::os::raw::c_uint;
 #[doc = " Longitude-Latitude-Height(up)"]
 pub const PJ_ELLIPSOIDAL_CS_3D_TYPE_PJ_ELLPS3D_LONGITUDE_LATITUDE_HEIGHT:
     PJ_ELLIPSOIDAL_CS_3D_TYPE = 0;
@@ -2146,21 +2149,21 @@ pub const PJ_ELLIPSOIDAL_CS_3D_TYPE_PJ_ELLPS3D_LONGITUDE_LATITUDE_HEIGHT:
 pub const PJ_ELLIPSOIDAL_CS_3D_TYPE_PJ_ELLPS3D_LATITUDE_LONGITUDE_HEIGHT:
     PJ_ELLIPSOIDAL_CS_3D_TYPE = 1;
 #[doc = " Type of Ellipsoidal 3D coordinate system."]
-pub type PJ_ELLIPSOIDAL_CS_3D_TYPE = ::core::ffi::c_uint;
+pub type PJ_ELLIPSOIDAL_CS_3D_TYPE = ::std::os::raw::c_uint;
 #[doc = " \\brief Description of a parameter value for a Conversion."]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PJ_PARAM_DESCRIPTION {
     #[doc = " Parameter name."]
-    pub name: *const ::core::ffi::c_char,
+    pub name: *const ::std::os::raw::c_char,
     #[doc = " Parameter authority name."]
-    pub auth_name: *const ::core::ffi::c_char,
+    pub auth_name: *const ::std::os::raw::c_char,
     #[doc = " Parameter code."]
-    pub code: *const ::core::ffi::c_char,
+    pub code: *const ::std::os::raw::c_char,
     #[doc = " Parameter value."]
     pub value: f64,
     #[doc = " Name of unit in which parameter value is expressed."]
-    pub unit_name: *const ::core::ffi::c_char,
+    pub unit_name: *const ::std::os::raw::c_char,
     #[doc = " Conversion factor to SI of the unit."]
     pub unit_conv_factor: f64,
     #[doc = " Type of unit"]
@@ -2168,29 +2171,29 @@ pub struct PJ_PARAM_DESCRIPTION {
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of PJ_PARAM_DESCRIPTION"][::core::mem::size_of::<PJ_PARAM_DESCRIPTION>() - 56usize];
-    ["Alignment of PJ_PARAM_DESCRIPTION"][::core::mem::align_of::<PJ_PARAM_DESCRIPTION>() - 8usize];
+    ["Size of PJ_PARAM_DESCRIPTION"][::std::mem::size_of::<PJ_PARAM_DESCRIPTION>() - 56usize];
+    ["Alignment of PJ_PARAM_DESCRIPTION"][::std::mem::align_of::<PJ_PARAM_DESCRIPTION>() - 8usize];
     ["Offset of field: PJ_PARAM_DESCRIPTION::name"]
-        [::core::mem::offset_of!(PJ_PARAM_DESCRIPTION, name) - 0usize];
+        [::std::mem::offset_of!(PJ_PARAM_DESCRIPTION, name) - 0usize];
     ["Offset of field: PJ_PARAM_DESCRIPTION::auth_name"]
-        [::core::mem::offset_of!(PJ_PARAM_DESCRIPTION, auth_name) - 8usize];
+        [::std::mem::offset_of!(PJ_PARAM_DESCRIPTION, auth_name) - 8usize];
     ["Offset of field: PJ_PARAM_DESCRIPTION::code"]
-        [::core::mem::offset_of!(PJ_PARAM_DESCRIPTION, code) - 16usize];
+        [::std::mem::offset_of!(PJ_PARAM_DESCRIPTION, code) - 16usize];
     ["Offset of field: PJ_PARAM_DESCRIPTION::value"]
-        [::core::mem::offset_of!(PJ_PARAM_DESCRIPTION, value) - 24usize];
+        [::std::mem::offset_of!(PJ_PARAM_DESCRIPTION, value) - 24usize];
     ["Offset of field: PJ_PARAM_DESCRIPTION::unit_name"]
-        [::core::mem::offset_of!(PJ_PARAM_DESCRIPTION, unit_name) - 32usize];
+        [::std::mem::offset_of!(PJ_PARAM_DESCRIPTION, unit_name) - 32usize];
     ["Offset of field: PJ_PARAM_DESCRIPTION::unit_conv_factor"]
-        [::core::mem::offset_of!(PJ_PARAM_DESCRIPTION, unit_conv_factor) - 40usize];
+        [::std::mem::offset_of!(PJ_PARAM_DESCRIPTION, unit_conv_factor) - 40usize];
     ["Offset of field: PJ_PARAM_DESCRIPTION::unit_type"]
-        [::core::mem::offset_of!(PJ_PARAM_DESCRIPTION, unit_type) - 48usize];
+        [::std::mem::offset_of!(PJ_PARAM_DESCRIPTION, unit_type) - 48usize];
 };
 unsafe extern "C" {
     #[doc = " \\defgroup iso19111_advanced_functions Binding in C of advanced methods from\n the C++ API\n @{"]
     pub fn proj_create_cs(
         ctx: *mut PJ_CONTEXT,
         type_: PJ_COORDINATE_SYSTEM_TYPE,
-        axis_count: ::core::ffi::c_int,
+        axis_count: ::std::os::raw::c_int,
         axis: *const PJ_AXIS_DESCRIPTION,
     ) -> *mut PJ;
 }
@@ -2198,7 +2201,7 @@ unsafe extern "C" {
     pub fn proj_create_cartesian_2D_cs(
         ctx: *mut PJ_CONTEXT,
         type_: PJ_CARTESIAN_CS_2D_TYPE,
-        unit_name: *const ::core::ffi::c_char,
+        unit_name: *const ::std::os::raw::c_char,
         unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2206,7 +2209,7 @@ unsafe extern "C" {
     pub fn proj_create_ellipsoidal_2D_cs(
         ctx: *mut PJ_CONTEXT,
         type_: PJ_ELLIPSOIDAL_CS_2D_TYPE,
-        unit_name: *const ::core::ffi::c_char,
+        unit_name: *const ::std::os::raw::c_char,
         unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2214,32 +2217,32 @@ unsafe extern "C" {
     pub fn proj_create_ellipsoidal_3D_cs(
         ctx: *mut PJ_CONTEXT,
         type_: PJ_ELLIPSOIDAL_CS_3D_TYPE,
-        horizontal_angular_unit_name: *const ::core::ffi::c_char,
+        horizontal_angular_unit_name: *const ::std::os::raw::c_char,
         horizontal_angular_unit_conv_factor: f64,
-        vertical_linear_unit_name: *const ::core::ffi::c_char,
+        vertical_linear_unit_name: *const ::std::os::raw::c_char,
         vertical_linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_query_geodetic_crs_from_datum(
         ctx: *mut PJ_CONTEXT,
-        crs_auth_name: *const ::core::ffi::c_char,
-        datum_auth_name: *const ::core::ffi::c_char,
-        datum_code: *const ::core::ffi::c_char,
-        crs_type: *const ::core::ffi::c_char,
+        crs_auth_name: *const ::std::os::raw::c_char,
+        datum_auth_name: *const ::std::os::raw::c_char,
+        datum_code: *const ::std::os::raw::c_char,
+        crs_type: *const ::std::os::raw::c_char,
     ) -> *mut PJ_OBJ_LIST;
 }
 unsafe extern "C" {
     pub fn proj_create_geographic_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const ::core::ffi::c_char,
-        datum_name: *const ::core::ffi::c_char,
-        ellps_name: *const ::core::ffi::c_char,
+        crs_name: *const ::std::os::raw::c_char,
+        datum_name: *const ::std::os::raw::c_char,
+        ellps_name: *const ::std::os::raw::c_char,
         semi_major_metre: f64,
         inv_flattening: f64,
-        prime_meridian_name: *const ::core::ffi::c_char,
+        prime_meridian_name: *const ::std::os::raw::c_char,
         prime_meridian_offset: f64,
-        pm_angular_units: *const ::core::ffi::c_char,
+        pm_angular_units: *const ::std::os::raw::c_char,
         pm_units_conv: f64,
         ellipsoidal_cs: *const PJ,
     ) -> *mut PJ;
@@ -2247,7 +2250,7 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_create_geographic_crs_from_datum(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const ::core::ffi::c_char,
+        crs_name: *const ::std::os::raw::c_char,
         datum_or_datum_ensemble: *const PJ,
         ellipsoidal_cs: *const PJ,
     ) -> *mut PJ;
@@ -2255,53 +2258,53 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_create_geocentric_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const ::core::ffi::c_char,
-        datum_name: *const ::core::ffi::c_char,
-        ellps_name: *const ::core::ffi::c_char,
+        crs_name: *const ::std::os::raw::c_char,
+        datum_name: *const ::std::os::raw::c_char,
+        ellps_name: *const ::std::os::raw::c_char,
         semi_major_metre: f64,
         inv_flattening: f64,
-        prime_meridian_name: *const ::core::ffi::c_char,
+        prime_meridian_name: *const ::std::os::raw::c_char,
         prime_meridian_offset: f64,
-        angular_units: *const ::core::ffi::c_char,
+        angular_units: *const ::std::os::raw::c_char,
         angular_units_conv: f64,
-        linear_units: *const ::core::ffi::c_char,
+        linear_units: *const ::std::os::raw::c_char,
         linear_units_conv: f64,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_geocentric_crs_from_datum(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const ::core::ffi::c_char,
+        crs_name: *const ::std::os::raw::c_char,
         datum_or_datum_ensemble: *const PJ,
-        linear_units: *const ::core::ffi::c_char,
+        linear_units: *const ::std::os::raw::c_char,
         linear_units_conv: f64,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_derived_geographic_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const ::core::ffi::c_char,
+        crs_name: *const ::std::os::raw::c_char,
         base_geographic_crs: *const PJ,
         conversion: *const PJ,
         ellipsoidal_cs: *const PJ,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
-    pub fn proj_is_derived_crs(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> ::core::ffi::c_int;
+    pub fn proj_is_derived_crs(ctx: *mut PJ_CONTEXT, crs: *const PJ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     pub fn proj_alter_name(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        name: *const ::core::ffi::c_char,
+        name: *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_alter_id(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        auth_name: *const ::core::ffi::c_char,
-        code: *const ::core::ffi::c_char,
+        auth_name: *const ::std::os::raw::c_char,
+        code: *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -2315,44 +2318,44 @@ unsafe extern "C" {
     pub fn proj_crs_alter_cs_angular_unit(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        angular_units: *const ::core::ffi::c_char,
+        angular_units: *const ::std::os::raw::c_char,
         angular_units_conv: f64,
-        unit_auth_name: *const ::core::ffi::c_char,
-        unit_code: *const ::core::ffi::c_char,
+        unit_auth_name: *const ::std::os::raw::c_char,
+        unit_code: *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_crs_alter_cs_linear_unit(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        linear_units: *const ::core::ffi::c_char,
+        linear_units: *const ::std::os::raw::c_char,
         linear_units_conv: f64,
-        unit_auth_name: *const ::core::ffi::c_char,
-        unit_code: *const ::core::ffi::c_char,
+        unit_auth_name: *const ::std::os::raw::c_char,
+        unit_code: *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_crs_alter_parameters_linear_unit(
         ctx: *mut PJ_CONTEXT,
         obj: *const PJ,
-        linear_units: *const ::core::ffi::c_char,
+        linear_units: *const ::std::os::raw::c_char,
         linear_units_conv: f64,
-        unit_auth_name: *const ::core::ffi::c_char,
-        unit_code: *const ::core::ffi::c_char,
-        convert_to_new_unit: ::core::ffi::c_int,
+        unit_auth_name: *const ::std::os::raw::c_char,
+        unit_code: *const ::std::os::raw::c_char,
+        convert_to_new_unit: ::std::os::raw::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_crs_promote_to_3D(
         ctx: *mut PJ_CONTEXT,
-        crs_3D_name: *const ::core::ffi::c_char,
+        crs_3D_name: *const ::std::os::raw::c_char,
         crs_2D: *const PJ,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_crs_create_projected_3D_crs_from_2D(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const ::core::ffi::c_char,
+        crs_name: *const ::std::os::raw::c_char,
         projected_2D_crs: *const PJ,
         geog_3D_crs: *const PJ,
     ) -> *mut PJ;
@@ -2360,45 +2363,45 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_crs_demote_to_2D(
         ctx: *mut PJ_CONTEXT,
-        crs_2D_name: *const ::core::ffi::c_char,
+        crs_2D_name: *const ::std::os::raw::c_char,
         crs_3D: *const PJ,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_engineering_crs(
         ctx: *mut PJ_CONTEXT,
-        crsName: *const ::core::ffi::c_char,
+        crsName: *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_vertical_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const ::core::ffi::c_char,
-        datum_name: *const ::core::ffi::c_char,
-        linear_units: *const ::core::ffi::c_char,
+        crs_name: *const ::std::os::raw::c_char,
+        datum_name: *const ::std::os::raw::c_char,
+        linear_units: *const ::std::os::raw::c_char,
         linear_units_conv: f64,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_vertical_crs_ex(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const ::core::ffi::c_char,
-        datum_name: *const ::core::ffi::c_char,
-        datum_auth_name: *const ::core::ffi::c_char,
-        datum_code: *const ::core::ffi::c_char,
-        linear_units: *const ::core::ffi::c_char,
+        crs_name: *const ::std::os::raw::c_char,
+        datum_name: *const ::std::os::raw::c_char,
+        datum_auth_name: *const ::std::os::raw::c_char,
+        datum_code: *const ::std::os::raw::c_char,
+        linear_units: *const ::std::os::raw::c_char,
         linear_units_conv: f64,
-        geoid_model_name: *const ::core::ffi::c_char,
-        geoid_model_auth_name: *const ::core::ffi::c_char,
-        geoid_model_code: *const ::core::ffi::c_char,
+        geoid_model_name: *const ::std::os::raw::c_char,
+        geoid_model_auth_name: *const ::std::os::raw::c_char,
+        geoid_model_code: *const ::std::os::raw::c_char,
         geoid_geog_crs: *const PJ,
-        options: *const *const ::core::ffi::c_char,
+        options: *const *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_compound_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const ::core::ffi::c_char,
+        crs_name: *const ::std::os::raw::c_char,
         horiz_crs: *const PJ,
         vert_crs: *const PJ,
     ) -> *mut PJ;
@@ -2406,29 +2409,29 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn proj_create_conversion(
         ctx: *mut PJ_CONTEXT,
-        name: *const ::core::ffi::c_char,
-        auth_name: *const ::core::ffi::c_char,
-        code: *const ::core::ffi::c_char,
-        method_name: *const ::core::ffi::c_char,
-        method_auth_name: *const ::core::ffi::c_char,
-        method_code: *const ::core::ffi::c_char,
-        param_count: ::core::ffi::c_int,
+        name: *const ::std::os::raw::c_char,
+        auth_name: *const ::std::os::raw::c_char,
+        code: *const ::std::os::raw::c_char,
+        method_name: *const ::std::os::raw::c_char,
+        method_auth_name: *const ::std::os::raw::c_char,
+        method_code: *const ::std::os::raw::c_char,
+        param_count: ::std::os::raw::c_int,
         params: *const PJ_PARAM_DESCRIPTION,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_transformation(
         ctx: *mut PJ_CONTEXT,
-        name: *const ::core::ffi::c_char,
-        auth_name: *const ::core::ffi::c_char,
-        code: *const ::core::ffi::c_char,
+        name: *const ::std::os::raw::c_char,
+        auth_name: *const ::std::os::raw::c_char,
+        code: *const ::std::os::raw::c_char,
         source_crs: *const PJ,
         target_crs: *const PJ,
         interpolation_crs: *const PJ,
-        method_name: *const ::core::ffi::c_char,
-        method_auth_name: *const ::core::ffi::c_char,
-        method_code: *const ::core::ffi::c_char,
-        param_count: ::core::ffi::c_int,
+        method_name: *const ::std::os::raw::c_char,
+        method_auth_name: *const ::std::os::raw::c_char,
+        method_code: *const ::std::os::raw::c_char,
+        param_count: ::std::os::raw::c_int,
         params: *const PJ_PARAM_DESCRIPTION,
         accuracy: f64,
     ) -> *mut PJ;
@@ -2437,14 +2440,14 @@ unsafe extern "C" {
     pub fn proj_convert_conversion_to_other_method(
         ctx: *mut PJ_CONTEXT,
         conversion: *const PJ,
-        new_method_epsg_code: ::core::ffi::c_int,
-        new_method_name: *const ::core::ffi::c_char,
+        new_method_epsg_code: ::std::os::raw::c_int,
+        new_method_name: *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_projected_crs(
         ctx: *mut PJ_CONTEXT,
-        crs_name: *const ::core::ffi::c_char,
+        crs_name: *const ::std::os::raw::c_char,
         geodetic_crs: *const PJ,
         conversion: *const PJ,
         coordinate_system: *const PJ,
@@ -2462,7 +2465,7 @@ unsafe extern "C" {
     pub fn proj_crs_create_bound_crs_to_WGS84(
         ctx: *mut PJ_CONTEXT,
         crs: *const PJ,
-        options: *const *const ::core::ffi::c_char,
+        options: *const *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -2470,14 +2473,14 @@ unsafe extern "C" {
         ctx: *mut PJ_CONTEXT,
         vert_crs: *const PJ,
         hub_geographic_3D_crs: *const PJ,
-        grid_name: *const ::core::ffi::c_char,
+        grid_name: *const ::std::os::raw::c_char,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
     pub fn proj_create_conversion_utm(
         ctx: *mut PJ_CONTEXT,
-        zone: ::core::ffi::c_int,
-        north: ::core::ffi::c_int,
+        zone: ::std::os::raw::c_int,
+        north: ::std::os::raw::c_int,
     ) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -2488,9 +2491,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2502,9 +2505,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2516,9 +2519,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2531,9 +2534,9 @@ unsafe extern "C" {
         longitude_secon_point: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2544,9 +2547,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2557,9 +2560,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2572,9 +2575,9 @@ unsafe extern "C" {
         latitude_second_parallel: f64,
         easting_false_origin: f64,
         northing_false_origin: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2586,9 +2589,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2601,9 +2604,9 @@ unsafe extern "C" {
         longitude_false_origin: f64,
         easting_false_origin: f64,
         northing_false_origin: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2616,9 +2619,9 @@ unsafe extern "C" {
         latitude_second_parallel: f64,
         easting_false_origin: f64,
         northing_false_origin: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2632,9 +2635,9 @@ unsafe extern "C" {
         easting_false_origin: f64,
         northing_false_origin: f64,
         ellipsoid_scaling_factor: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2647,9 +2650,9 @@ unsafe extern "C" {
         latitude_second_parallel: f64,
         easting_false_origin: f64,
         northing_false_origin: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2660,9 +2663,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2673,9 +2676,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2686,9 +2689,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2699,9 +2702,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2712,9 +2715,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2725,9 +2728,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2740,9 +2743,9 @@ unsafe extern "C" {
         latitude_second_parallel: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2752,9 +2755,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2764,9 +2767,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2776,9 +2779,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2788,9 +2791,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2800,9 +2803,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2812,9 +2815,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2825,9 +2828,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2838,9 +2841,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2850,9 +2853,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2862,9 +2865,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2874,9 +2877,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2887,9 +2890,9 @@ unsafe extern "C" {
         height: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2900,9 +2903,9 @@ unsafe extern "C" {
         height: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2913,9 +2916,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2929,9 +2932,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2945,9 +2948,9 @@ unsafe extern "C" {
         scale: f64,
         easting_projection_centre: f64,
         northing_projection_centre: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2962,9 +2965,9 @@ unsafe extern "C" {
         scale: f64,
         easting_projection_centre: f64,
         northing_projection_centre: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2977,9 +2980,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -2991,9 +2994,9 @@ unsafe extern "C" {
         latitude_second_parallel: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3007,9 +3010,9 @@ unsafe extern "C" {
         scale_factor_pseudo_standard_parallel: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3023,9 +3026,9 @@ unsafe extern "C" {
         scale_factor_pseudo_standard_parallel: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3036,9 +3039,9 @@ unsafe extern "C" {
         longitude_nat_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3048,9 +3051,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3062,9 +3065,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3075,9 +3078,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3088,9 +3091,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3100,9 +3103,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3113,9 +3116,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3127,9 +3130,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3140,9 +3143,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3155,9 +3158,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3168,9 +3171,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3182,9 +3185,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3195,9 +3198,9 @@ unsafe extern "C" {
         longitude_of_origin: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3207,9 +3210,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3219,9 +3222,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3233,9 +3236,9 @@ unsafe extern "C" {
         scale: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3245,9 +3248,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3257,9 +3260,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3269,9 +3272,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3282,9 +3285,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3294,9 +3297,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3306,9 +3309,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3318,9 +3321,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3330,9 +3333,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3343,9 +3346,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3356,9 +3359,9 @@ unsafe extern "C" {
         peg_point_long: f64,
         peg_point_heading: f64,
         peg_point_height: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3368,9 +3371,9 @@ unsafe extern "C" {
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3383,9 +3386,9 @@ unsafe extern "C" {
         view_point_height: f64,
         false_easting: f64,
         false_northing: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
-        linear_unit_name: *const ::core::ffi::c_char,
+        linear_unit_name: *const ::std::os::raw::c_char,
         linear_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3395,7 +3398,7 @@ unsafe extern "C" {
         south_pole_lat_in_unrotated_crs: f64,
         south_pole_long_in_unrotated_crs: f64,
         axis_rotation: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
     ) -> *mut PJ;
 }
@@ -3405,7 +3408,7 @@ unsafe extern "C" {
         grid_north_pole_latitude: f64,
         grid_north_pole_longitude: f64,
         north_pole_grid_longitude: f64,
-        ang_unit_name: *const ::core::ffi::c_char,
+        ang_unit_name: *const ::std::os::raw::c_char,
         ang_unit_conv_factor: f64,
     ) -> *mut PJ;
 }

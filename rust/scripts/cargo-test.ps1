@@ -1,15 +1,10 @@
-param($package, $report = $true)
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 
 & $PSScriptRoot/set-env.ps1
-if ($package) {
-    $package = "-p", "$package"
-}
-else {
-    if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "proj" }
-    else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda", "-p", "proj" }
-}
+
+if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "proj" }
+else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda", "-p", "proj" }
 
 if ($IsWindows) {
     $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-windows-static/share/proj

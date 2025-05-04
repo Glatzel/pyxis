@@ -13,11 +13,9 @@ mod threading_contexts;
 mod transformation_setup;
 mod various;
 
-
-pub use distances::*;
-
-pub use info::*;
 // pub use iso19111::*;
 #[cfg(feature = "unsuggested")]
 pub use cleanup::*;
+pub use distances::*;
+pub use info::*;
 pub use lists::*;

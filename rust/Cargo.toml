@@ -7,11 +7,12 @@ edition = "2024"
 version = "0.0.18"
 
 [workspace.dependencies]
-pyxis = { path = "./crates/pyxis" }
-proj-sys = { path = "./crates/proj-sys" }
 proj = { path = "./crates/proj" }
+proj-sys = { path = "./crates/proj-sys" }
+pyxis = { path = "./crates/pyxis" }
 
 assert_cmd = "2.0"
+bindgen = "0.71"
 bpaf = { version = "0.9.17", features = ["derive", "batteries"] }
 clerk = { git = "https://github.com/Glatzel/clerk", tag = "v0.0.8" }
 criterion = { package = "codspeed-criterion-compat", version = "*" }
@@ -22,14 +23,13 @@ glob = "0.3.2"
 miette = { version = "7.5.0", features = ["fancy"] }
 num-traits = "0.2.19"
 path-slash = "0.2.1"
+pkg-config = "0.3.32"
 predicates = "3.1"
 rand = "0.9.0"
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
-pkg-config = "0.3.32"
-bindgen = "0.71"
 
 [profile.release]
 codegen-units = 1

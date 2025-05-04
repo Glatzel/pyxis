@@ -6,6 +6,6 @@ platforms = ["win-64", "linux-64"]
 version = "0.1.0"
 
 [dependencies]
+pkg-config = "==0.29.2"
 proj = { version = "==9.6.0", channel = "https://repo.prefix.dev/glatzel" }
 rattler-build = "==0.41.0"
-pkg-config = "==0.29.2"

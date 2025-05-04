@@ -22,10 +22,10 @@ impl From<PjLogLevel> for i32 {
 impl From<PjLogLevel> for u32 {
     fn from(value: PjLogLevel) -> Self {
         match value {
-            PjLogLevel::None => proj_sys::PJ_LOG_LEVEL_PJ_LOG_NONE,
-            PjLogLevel::Error => proj_sys::PJ_LOG_LEVEL_PJ_LOG_ERROR,
-            PjLogLevel::Debug => proj_sys::PJ_LOG_LEVEL_PJ_LOG_DEBUG,
-            PjLogLevel::Trace => proj_sys::PJ_LOG_LEVEL_PJ_LOG_TRACE,
+            PjLogLevel::None => proj_sys::PJ_LOG_LEVEL_PJ_LOG_NONE as u32,
+            PjLogLevel::Error => proj_sys::PJ_LOG_LEVEL_PJ_LOG_ERROR as u32,
+            PjLogLevel::Debug => proj_sys::PJ_LOG_LEVEL_PJ_LOG_DEBUG as u32,
+            PjLogLevel::Trace => proj_sys::PJ_LOG_LEVEL_PJ_LOG_TRACE as u32,
         }
     }
 }

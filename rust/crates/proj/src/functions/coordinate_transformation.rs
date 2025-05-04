@@ -86,7 +86,7 @@ impl crate::Pj {
     {
         let mut temp: Vec<proj_sys::PJ_COORD> = coord
             .iter()
-            .map(|c| array4_to_pj_coord(c.to_array4()).unwrap())
+            .map(|c| array4_to_pj_coord(c.clone().to_array4()).unwrap())
             .collect();
         let code = unsafe {
             proj_sys::proj_trans_array(

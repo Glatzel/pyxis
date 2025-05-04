@@ -1,5 +1,4 @@
 mod area;
-#[cfg(feature = "unsuggested")]
 mod cleanup;
 mod coordinate_transformation;
 mod custom_io;

@@ -75,5 +75,6 @@
             "random": "cpp",
             "algorithm": "cpp"
         },
+        "rust-analyzer.cargo.features": "all"
     }
 }

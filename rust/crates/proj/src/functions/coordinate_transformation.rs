@@ -20,7 +20,7 @@ impl crate::Pj {
         };
         check_pj_result!(self);
         let out_coord = unsafe {
-            T::from_array4(
+            T::from_pj_coord(
                 out_coord.xyzt.x,
                 out_coord.xyzt.y,
                 out_coord.xyzt.z,
@@ -97,7 +97,7 @@ impl crate::Pj {
             )
         };
         coord.iter_mut().zip(temp).for_each(|(c, t)| {
-            *c = unsafe { T::from_array4(t.xyzt.x, t.xyzt.y, t.xyzt.z, t.xyzt.t) }
+            *c = unsafe { T::from_pj_coord(t.xyzt.x, t.xyzt.y, t.xyzt.z, t.xyzt.t) }
         });
         check_pj_result!(self, code);
         Ok(self)

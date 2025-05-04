@@ -925,10 +925,7 @@ name = "proj-sys"
 version = "0.0.18"
 dependencies = [
  "bindgen",
- "clerk",
  "pkg-config",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]

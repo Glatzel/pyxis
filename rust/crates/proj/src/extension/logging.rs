@@ -14,7 +14,7 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
 impl crate::PjContext {
     pub fn set_log_level(&self, level: PjLogLevel) -> &Self {
         unsafe {
-            proj_sys::proj_log_level(self.ctx, i32::from(level));
+            proj_sys::proj_log_level(self.ctx, u32::from(level));
         };
         self
     }

@@ -15,7 +15,7 @@ impl crate::PjContext {
         };
         //initialize log
         unsafe {
-            proj_sys::proj_log_level(ctx.ctx, i32::from(crate::PjLogLevel::None));
+            proj_sys::proj_log_level(ctx.ctx, u32::from(crate::PjLogLevel::None));
             proj_sys::proj_log_func(ctx.ctx, null_mut::<c_void>(), Some(crate::proj_clerk));
         };
         ctx

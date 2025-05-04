@@ -4,7 +4,7 @@ name = "proj"
 version.workspace = true
 
 [dependencies]
-proj-sys = { workspace = true }
+proj-sys = { workspace = true,features = ["bindgen"]}
 clerk = { workspace = true }
 miette={ workspace = true }
 

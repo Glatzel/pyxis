@@ -23,7 +23,9 @@ $code = $code + $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::report"
-cargo +nightly llvm-cov report
+if ($report) {
+    cargo +nightly llvm-cov report
+}
 Write-Output "::endgroup::"
 
 Write-Output "::group::lcov"

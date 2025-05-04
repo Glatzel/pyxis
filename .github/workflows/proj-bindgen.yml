@@ -15,7 +15,7 @@ jobs:
             with:
               run-install: false
           - uses: dtolnay/rust-toolchain@stable
-          - name: cargo-fmt
+          - name: proj-bindings
             run: |
               ${{env.RUST_ROOT}}/scripts/proj-bindings.ps1
             shell: pwsh

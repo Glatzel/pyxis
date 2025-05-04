@@ -1,18 +1,11 @@
 #[allow(unused_imports)]
 use std::path::PathBuf;
 
-use tracing::level_filters::LevelFilter;
-use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::util::SubscriberInitExt;
 fn main() {
-    tracing_subscriber::registry()
-        .with(clerk::terminal_layer(LevelFilter::DEBUG, true))
-        .init();
-
     // check LIBCLANG_PATH
     #[cfg(target_os = "windows")]
     match std::env::var("LIBCLANG_PATH") {
-        Ok(path) => tracing::info!("Found `LIBCLANG_PATH`: {path}"),
+        Ok(path) => println!("Found `LIBCLANG_PATH`: {path}"),
         Err(_) => {
             let path = "C:/Program Files/LLVM/bin";
 
@@ -20,9 +13,8 @@ fn main() {
                 unsafe {
                     std::env::set_var("LIBCLANG_PATH", path);
                 }
-                tracing::info!("Set `LIBCLANG_PATH` to: {path}")
+                println!("Set `LIBCLANG_PATH` to: {path}")
             } else {
-                tracing::error!("`LIBCLANG_PATH` not found.");
                 panic!("`LIBCLANG_PATH` not found.");
             }
         }
@@ -62,7 +54,7 @@ fn link_lib(name: &str, lib: &str) -> pkg_config::Library {
     match pkg_config::Config::new().probe(name) {
         Ok(pklib) => {
             println!("cargo:rustc-link-lib=static={}", lib);
-            clerk::info!("Link to `{}`", lib);
+            println!("Link to `{}`", lib);
             pklib
         }
         Err(e) => panic!("cargo:warning=Pkg-config error: {:?}", e),

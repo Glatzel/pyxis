@@ -918,6 +918,8 @@ dependencies = [
  "float-cmp",
  "miette",
  "proj-sys",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]

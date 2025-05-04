@@ -4,13 +4,17 @@ name = "proj"
 version.workspace = true
 
 [dependencies]
-proj-sys = { workspace = true}
+proj-sys = { workspace = true }
 clerk = { workspace = true }
-miette={ workspace = true }
+miette = { workspace = true }
+
 
 [dev-dependencies]
 float-cmp = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+clerk = { workspace = true, features = ["log"]}
 
 [features]
 log = ["clerk/log"]
-unsuggested=[]
+unsuggested = []

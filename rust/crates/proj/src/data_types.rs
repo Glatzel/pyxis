@@ -12,5 +12,6 @@ pub(crate) use error_codes::*;
 pub use info_structures::*;
 pub use iso_19111::*;
 pub use list_structures::*;
+pub use logging::*;
 pub use projection_derivatives::*;
 pub use transformation_objects::*;

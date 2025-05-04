@@ -4,9 +4,13 @@ use std::path::PathBuf;
 use miette::IntoDiagnostic;
 
 const PROJ_DB: &[u8] = include_bytes!("proj.db");
-
 pub fn init_proj_builder() -> miette::Result<proj::PjContext> {
     let ctx = proj::PjContext::new();
+
+    // setup logging
+    ctx.set_log_level(proj::PjLogLevel::Trace);
+
+    // search for proj.db
     if let Ok(proj_data) = std::env::var("PROJ_DATA") {
         clerk::info!("PROJ_DATA environment variable is found: {proj_data}");
         ctx.set_search_paths(&[&PathBuf::from(proj_data)])?;

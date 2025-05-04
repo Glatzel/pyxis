@@ -12,20 +12,20 @@ impl Default for PjLogLevel {
 impl From<PjLogLevel> for i32 {
     fn from(value: PjLogLevel) -> Self {
         match value {
-            PjLogLevel::None => proj_sys::PJ_LOG_LEVEL_PJ_LOG_NONE as i32,
-            PjLogLevel::Error => proj_sys::PJ_LOG_LEVEL_PJ_LOG_ERROR as i32,
-            PjLogLevel::Debug => proj_sys::PJ_LOG_LEVEL_PJ_LOG_DEBUG as i32,
-            PjLogLevel::Trace => proj_sys::PJ_LOG_LEVEL_PJ_LOG_TRACE as i32,
+            PjLogLevel::None => 0,
+            PjLogLevel::Error => 1,
+            PjLogLevel::Debug => 2,
+            PjLogLevel::Trace => 3,
         }
     }
 }
 impl From<PjLogLevel> for u32 {
     fn from(value: PjLogLevel) -> Self {
         match value {
-            PjLogLevel::None => proj_sys::PJ_LOG_LEVEL_PJ_LOG_NONE as u32,
-            PjLogLevel::Error => proj_sys::PJ_LOG_LEVEL_PJ_LOG_ERROR as u32,
-            PjLogLevel::Debug => proj_sys::PJ_LOG_LEVEL_PJ_LOG_DEBUG as u32,
-            PjLogLevel::Trace => proj_sys::PJ_LOG_LEVEL_PJ_LOG_TRACE as u32,
+            PjLogLevel::None => 0,
+            PjLogLevel::Error => 1,
+            PjLogLevel::Debug => 2,
+            PjLogLevel::Trace => 3,
         }
     }
 }

@@ -21,12 +21,7 @@ impl crate::PjContext {
         let len = argv.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in argv {
-            ptrs.push(
-                std::ffi::CString::new(*s)
-                    .into_diagnostic()?
-                    .as_ptr()
-                    .cast_mut(),
-            );
+            ptrs.push(std::ffi::CString::new(*s).into_diagnostic()?.into_raw());
         }
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },

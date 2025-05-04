@@ -40,7 +40,8 @@ fn main() {
         bindings
             .write_to_file(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs"))
             .expect("Couldn't write bindings!");
-        #[cfg(feature = "update")]
+        //only allow linux bindgen
+        #[cfg(all(feature = "update", target_os = "linux"))]
         bindings
             .write_to_file("./src/bindings.rs")
             .expect("Couldn't write bindings!");

@@ -40,7 +40,6 @@ fn main() {
             .to_string();
         let bindings = bindgen::Builder::default()
             .header(header)
-            .use_core()
             .size_t_is_usize(true)
             .blocklist_type("max_align_t")
             .generate()

@@ -143,7 +143,7 @@ impl IPjCoord for [f64; 4] {
         &mut self[3]
     }
     fn to_array4(&self) -> [f64; 4] {
-        self.clone()
+        *self
     }
     fn from_array4(x: f64, y: f64, z: f64, t: f64) -> Self {
         [x, y, z, t]

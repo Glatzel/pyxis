@@ -26,4 +26,3 @@ jobs:
               path: |
                 rust/crates/proj-sys/src/bindings.rs
               if-no-files-found: error
-

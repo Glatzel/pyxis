@@ -107,7 +107,6 @@ impl ContextTransform {
     }
     pub fn proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
         let ctx = crate::proj_util::init_proj_builder()?;
-        ctx.proj_grid_cache_set_filename();
         let pj = ctx.create_crs_to_crs(from, to, &proj::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj).unwrap();
         (self.x, self.y) = pj.convert(&(self.x, self.y))?;

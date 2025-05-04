@@ -1,12 +1,14 @@
-use crate::{array4_to_pj_coord, check_pj_result};
+#[cfg(any(feature = "unsuggested", test))]
+use crate::_array4_to_pj_coord;
+use crate::check_pj_result;
 
 // region:Coordinate transformation
 /// # References
 ///<https://proj.org/en/stable/development/reference/functions.html#coordinate-transformation>
 impl crate::Pj {
-    ///Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
+    #[cfg(any(feature = "unsuggested", test))]
     pub fn trans<T>(&self, direction: crate::PjDirection, coord: T) -> miette::Result<T>
     where
         T: crate::IPjCoord,
@@ -15,7 +17,7 @@ impl crate::Pj {
             proj_sys::proj_trans(
                 self.pj,
                 i32::from(direction),
-                array4_to_pj_coord(coord.to_array4())?,
+                _array4_to_pj_coord(coord.to_array4())?,
             )
         };
         check_pj_result!(self);
@@ -31,7 +33,7 @@ impl crate::Pj {
     }
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    pub fn get_last_used_operation(&self) -> Self {
+    fn _get_last_used_operation(&self) -> Self {
         unimplemented!()
     }
     /// # References
@@ -76,6 +78,7 @@ impl crate::Pj {
     /// Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
+    #[cfg(any(feature = "unsuggested", test))]
     pub fn trans_array<T>(
         &self,
         direction: crate::PjDirection,
@@ -86,7 +89,7 @@ impl crate::Pj {
     {
         let mut temp: Vec<proj_sys::PJ_COORD> = coord
             .iter()
-            .map(|c| array4_to_pj_coord(c.clone().to_array4()).unwrap())
+            .map(|c| _array4_to_pj_coord(c.clone().to_array4()).unwrap())
             .collect();
         let code = unsafe {
             proj_sys::proj_trans_array(

@@ -1,5 +1,5 @@
 #[cfg(any(feature = "unsuggested", test))]
-use crate::_array4_to_pj_coord;
+use crate::array4_to_pj_coord;
 use crate::check_pj_result;
 
 // region:Coordinate transformation
@@ -17,7 +17,7 @@ impl crate::Pj {
             proj_sys::proj_trans(
                 self.pj,
                 i32::from(direction),
-                _array4_to_pj_coord(coord.to_array4())?,
+                array4_to_pj_coord(coord.to_array4())?,
             )
         };
         check_pj_result!(self);
@@ -89,7 +89,7 @@ impl crate::Pj {
     {
         let mut temp: Vec<proj_sys::PJ_COORD> = coord
             .iter()
-            .map(|c| _array4_to_pj_coord(c.clone().to_array4()).unwrap())
+            .map(|c| array4_to_pj_coord(c.clone().to_array4()).unwrap())
             .collect();
         let code = unsafe {
             proj_sys::proj_trans_array(

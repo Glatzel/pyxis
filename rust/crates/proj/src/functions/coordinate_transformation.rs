@@ -1,12 +1,14 @@
-use crate::{array4_to_pj_coord, check_pj_result};
+#[cfg(any(feature = "unsuggested", test))]
+use crate::array4_to_pj_coord;
+use crate::check_pj_result;
 
 // region:Coordinate transformation
 /// # References
 ///<https://proj.org/en/stable/development/reference/functions.html#coordinate-transformation>
 impl crate::Pj {
-    ///Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
+    #[cfg(any(feature = "unsuggested", test))]
     pub fn trans<T>(&self, direction: crate::PjDirection, coord: T) -> miette::Result<T>
     where
         T: crate::IPjCoord,
@@ -31,7 +33,7 @@ impl crate::Pj {
     }
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    pub fn get_last_used_operation(&self) -> Self {
+    fn _get_last_used_operation(&self) -> Self {
         unimplemented!()
     }
     /// # References
@@ -76,6 +78,7 @@ impl crate::Pj {
     /// Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
+    #[cfg(any(feature = "unsuggested", test))]
     pub fn trans_array<T>(
         &self,
         direction: crate::PjDirection,

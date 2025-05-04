@@ -17,16 +17,11 @@ impl crate::PjContext {
     }
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(&self, definition: &[&str]) -> miette::Result<crate::Pj> {
-        let len = definition.len();
+    pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Pj> {
+        let len = argv.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
-        for s in definition {
-            ptrs.push(
-                std::ffi::CString::new(*s)
-                    .into_diagnostic()?
-                    .as_ptr()
-                    .cast_mut(),
-            );
+        for s in argv {
+            ptrs.push(std::ffi::CString::new(*s).into_diagnostic()?.into_raw());
         }
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },
@@ -122,5 +117,26 @@ impl crate::PjContext {
 impl Drop for crate::Pj {
     fn drop(&mut self) {
         unsafe { proj_sys::proj_destroy(self.pj) };
+    }
+}
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_create() -> miette::Result<()> {
+        let ctx = crate::PjContext::default();
+        ctx.create("EPSG:4326")?;
+        Ok(())
+    }
+    #[test]
+    fn test_create_argv() -> miette::Result<()> {
+        let ctx = crate::PjContext::default();
+        ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
+        Ok(())
+    }
+    #[test]
+    fn test_create_crs_to_crs() -> miette::Result<()> {
+        let ctx = crate::PjContext::default();
+        ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
+        Ok(())
     }
 }

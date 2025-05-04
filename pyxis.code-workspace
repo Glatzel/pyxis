@@ -74,6 +74,6 @@
         "files.associations": {
             "random": "cpp",
             "algorithm": "cpp"
-        }
+        },
     }
 }

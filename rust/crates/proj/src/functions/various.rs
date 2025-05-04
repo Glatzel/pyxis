@@ -1,38 +1,38 @@
 impl crate::Pj {
-    pub fn roundtrip(&self) {
+    fn _roundtrip(&self) {
         unimplemented!()
     }
-    pub fn factors(&self) {
+    fn _factors(&self) {
         unimplemented!()
     }
-    pub fn angular_input(&self) {
+    fn _angular_input(&self) {
         unimplemented!()
     }
-    pub fn angular_output(&self) {
+    fn _angular_output(&self) {
         unimplemented!()
     }
-    pub fn degree_input(&self) {
+    fn _degree_input(&self) {
         unimplemented!()
     }
-    pub fn degree_output(&self) {
+    fn _degree_output(&self) {
         unimplemented!()
     }
 }
-pub fn coord() {
+fn _coord() {
     unimplemented!()
 }
-pub fn torad() {
+fn _torad() {
     unimplemented!()
 }
-pub fn todeg() {
+fn _todeg() {
     unimplemented!()
 }
-pub fn dmstor() {
+fn _dmstor() {
     unimplemented!()
 }
-pub fn rtodms() {
+fn _rtodms() {
     unimplemented!()
 }
-pub fn rtodms2() {
+fn _rtodms2() {
     unimplemented!()
 }

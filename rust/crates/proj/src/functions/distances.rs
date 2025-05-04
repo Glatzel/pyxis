@@ -6,7 +6,13 @@ impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
     pub fn lp_dist(&self, a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
-        let dist = unsafe { proj_sys::proj_lp_dist(self.pj, a.to_pj_coord(), b.to_pj_coord()) };
+        let dist = unsafe {
+            proj_sys::proj_lp_dist(
+                self.pj,
+                proj_sys::PJ_COORD { v: a.to_pj_coord() },
+                proj_sys::PJ_COORD { v: b.to_pj_coord() },
+            )
+        };
         check_pj_result!(self);
         if dist.is_nan() {
             miette::bail!(
@@ -23,7 +29,13 @@ impl crate::Pj {
         a: impl crate::IPjCoord,
         b: impl crate::IPjCoord,
     ) -> miette::Result<f64> {
-        let dist = unsafe { proj_sys::proj_lpz_dist(self.pj, a.to_pj_coord(), b.to_pj_coord()) };
+        let dist = unsafe {
+            proj_sys::proj_lpz_dist(
+                self.pj,
+                proj_sys::PJ_COORD { v: a.to_pj_coord() },
+                proj_sys::PJ_COORD { v: b.to_pj_coord() },
+            )
+        };
         check_pj_result!(self);
         if dist.is_nan() {
             miette::bail!(
@@ -40,7 +52,13 @@ impl crate::Pj {
         a: impl crate::IPjCoord,
         b: impl crate::IPjCoord,
     ) -> miette::Result<(f64, f64)> {
-        let dist = unsafe { proj_sys::proj_geod(self.pj, a.to_pj_coord(), b.to_pj_coord()) };
+        let dist = unsafe {
+            proj_sys::proj_geod(
+                self.pj,
+                proj_sys::PJ_COORD { v: a.to_pj_coord() },
+                proj_sys::PJ_COORD { v: b.to_pj_coord() },
+            )
+        };
         check_pj_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };
         if dist.is_nan() || reversed_azimuth.is_nan() {
@@ -54,11 +72,21 @@ impl crate::Pj {
 }
 
 pub fn xy_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> f64 {
-    unsafe { proj_sys::proj_xy_dist(a.to_pj_coord(), b.to_pj_coord()) }
+    unsafe {
+        proj_sys::proj_xy_dist(
+            proj_sys::PJ_COORD { v: a.to_pj_coord() },
+            proj_sys::PJ_COORD { v: b.to_pj_coord() },
+        )
+    }
 }
 
 pub fn xyz_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> f64 {
-    unsafe { proj_sys::proj_xyz_dist(a.to_pj_coord(), b.to_pj_coord()) }
+    unsafe {
+        proj_sys::proj_xyz_dist(
+            proj_sys::PJ_COORD { v: a.to_pj_coord() },
+            proj_sys::PJ_COORD { v: b.to_pj_coord() },
+        )
+    }
 }
 #[cfg(test)]
 mod test {

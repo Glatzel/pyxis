@@ -13,13 +13,4 @@ float-cmp = { workspace = true }
 
 [features]
 log = ["clerk/log"]
-# proj features
-full=["distances","info","iso19111","lists","network","various","unsuggested"]
-distances=[]
-info=[]
-iso19111=[]
-lists=[]
-network=[]
-various=[]
-
 unsuggested=[]

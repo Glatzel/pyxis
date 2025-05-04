@@ -1,3 +1,4 @@
+#[allow(unused_imports)]
 use std::path::PathBuf;
 
 use tracing::level_filters::LevelFilter;
@@ -31,7 +32,7 @@ fn main() {
     let _pk_proj = link_lib("proj", "proj");
 
     // generate bindings
-    #[cfg(feature = "bindgen")]
+    #[cfg(any(feature = "bindgen", feature = "update"))]
     {
         let header = &_pk_proj.include_paths[0]
             .join("proj.h")
@@ -39,11 +40,8 @@ fn main() {
             .to_string();
         let bindings = bindgen::Builder::default()
             .header(header)
-            .use_core()
-            .derive_eq(true)
-            .ctypes_prefix("libc")
-            .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
-            .generate_comments(true)
+            .size_t_is_usize(true)
+            .blocklist_type("max_align_t")
             .generate()
             .unwrap();
 

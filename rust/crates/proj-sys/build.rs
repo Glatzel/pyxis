@@ -31,7 +31,7 @@ fn main() {
     let _pk_proj = link_lib("proj", "proj");
 
     // generate bindings
-    #[cfg(feature = "bindgen")]
+    #[cfg(any(feature = "bindgen", feature = "update"))]
     {
         let header = &_pk_proj.include_paths[0]
             .join("proj.h")
@@ -54,10 +54,6 @@ fn main() {
         bindings
             .write_to_file("./src/bindings.rs")
             .expect("Couldn't write bindings!");
-        eprintln!(
-            "Build bingings to: {:?}",
-            PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs")
-        );
     }
 }
 fn link_lib(name: &str, lib: &str) -> pkg_config::Library {

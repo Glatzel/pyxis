@@ -193,4 +193,3 @@ jobs:
         run: |
           ${{env.RUST_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
-

@@ -1,4 +1,4 @@
-use crate::check_pj_result;
+use crate::{array4_to_pj_coord, check_pj_result};
 
 // region:Coordinate transformation
 /// # References
@@ -15,14 +15,12 @@ impl crate::Pj {
             proj_sys::proj_trans(
                 self.pj,
                 i32::from(direction),
-                proj_sys::PJ_COORD {
-                    v: coord.to_pj_coord(),
-                },
+                array4_to_pj_coord(coord.to_array4())?,
             )
         };
         check_pj_result!(self);
         let out_coord = unsafe {
-            T::from_pj_coord(
+            T::from_array4(
                 out_coord.xyzt.x,
                 out_coord.xyzt.y,
                 out_coord.xyzt.z,
@@ -88,7 +86,7 @@ impl crate::Pj {
     {
         let mut temp: Vec<proj_sys::PJ_COORD> = coord
             .iter()
-            .map(|c| proj_sys::PJ_COORD { v: c.to_pj_coord() })
+            .map(|c| array4_to_pj_coord(c.to_array4()).unwrap())
             .collect();
         let code = unsafe {
             proj_sys::proj_trans_array(
@@ -99,7 +97,7 @@ impl crate::Pj {
             )
         };
         coord.iter_mut().zip(temp).for_each(|(c, t)| {
-            *c = unsafe { T::from_pj_coord(t.xyzt.x, t.xyzt.y, t.xyzt.z, t.xyzt.t) }
+            *c = unsafe { T::from_array4(t.xyzt.x, t.xyzt.y, t.xyzt.z, t.xyzt.t) }
         });
         check_pj_result!(self, code);
         Ok(self)

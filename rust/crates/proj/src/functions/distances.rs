@@ -1,4 +1,4 @@
-use crate::check_pj_result;
+use crate::{array4_to_pj_coord, check_pj_result};
 ///# Distances
 /// # References
 ///<https://proj.org/en/stable/development/reference/functions.html#distances>
@@ -9,8 +9,8 @@ impl crate::Pj {
         let dist = unsafe {
             proj_sys::proj_lp_dist(
                 self.pj,
-                proj_sys::PJ_COORD { v: a.to_pj_coord() },
-                proj_sys::PJ_COORD { v: b.to_pj_coord() },
+                array4_to_pj_coord(a.to_array4())?,
+                array4_to_pj_coord(b.to_array4())?,
             )
         };
         check_pj_result!(self);
@@ -32,8 +32,8 @@ impl crate::Pj {
         let dist = unsafe {
             proj_sys::proj_lpz_dist(
                 self.pj,
-                proj_sys::PJ_COORD { v: a.to_pj_coord() },
-                proj_sys::PJ_COORD { v: b.to_pj_coord() },
+                array4_to_pj_coord(a.to_array4())?,
+                array4_to_pj_coord(b.to_array4())?,
             )
         };
         check_pj_result!(self);
@@ -55,8 +55,8 @@ impl crate::Pj {
         let dist = unsafe {
             proj_sys::proj_geod(
                 self.pj,
-                proj_sys::PJ_COORD { v: a.to_pj_coord() },
-                proj_sys::PJ_COORD { v: b.to_pj_coord() },
+                array4_to_pj_coord(a.to_array4())?,
+                array4_to_pj_coord(b.to_array4())?,
             )
         };
         check_pj_result!(self);
@@ -71,22 +71,22 @@ impl crate::Pj {
     }
 }
 
-pub fn xy_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> f64 {
-    unsafe {
+pub fn xy_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
+    Ok(unsafe {
         proj_sys::proj_xy_dist(
-            proj_sys::PJ_COORD { v: a.to_pj_coord() },
-            proj_sys::PJ_COORD { v: b.to_pj_coord() },
+            array4_to_pj_coord(a.to_array4())?,
+            array4_to_pj_coord(b.to_array4())?,
         )
-    }
+    })
 }
 
-pub fn xyz_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> f64 {
-    unsafe {
+pub fn xyz_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
+    Ok(unsafe {
         proj_sys::proj_xyz_dist(
-            proj_sys::PJ_COORD { v: a.to_pj_coord() },
-            proj_sys::PJ_COORD { v: b.to_pj_coord() },
+            array4_to_pj_coord(a.to_array4())?,
+            array4_to_pj_coord(b.to_array4())?,
         )
-    }
+    })
 }
 #[cfg(test)]
 mod test {
@@ -128,13 +128,13 @@ mod test {
     }
     #[test]
     fn test_xy_dist() -> miette::Result<()> {
-        let dist = super::xy_dist((1.0, 2.0), (4.0, 6.0));
+        let dist = super::xy_dist((1.0, 2.0), (4.0, 6.0))?;
         assert_approx_eq!(f64, dist, 5.0);
         Ok(())
     }
     #[test]
     fn test_xyz_dist() -> miette::Result<()> {
-        let dist = super::xyz_dist((1.0, 2.0, 1.0), (2.0, 4.0, 5.0));
+        let dist = super::xyz_dist((1.0, 2.0, 1.0), (2.0, 4.0, 5.0))?;
         assert_approx_eq!(f64, dist, 21.0f64.sqrt());
         Ok(())
     }

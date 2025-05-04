@@ -1,3 +1,4 @@
+name: proj-bindgen
 on:
     workflow_dispatch:
 env:

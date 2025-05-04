@@ -5,5 +5,5 @@ if ($IsLinux) {
     & $PSScriptRoot/set-env.ps1
     cargo build  --all-features -p proj-sys
     Set-Location $ROOT
-    
+
 }

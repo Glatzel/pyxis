@@ -19,4 +19,3 @@ impl From<PjLogLevel> for u32 {
         }
     }
 }
-

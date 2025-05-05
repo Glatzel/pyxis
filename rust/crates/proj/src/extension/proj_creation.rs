@@ -33,8 +33,8 @@ impl crate::PjContext {
     fn create_epsg_code(&self, code: u32) -> miette::Result<crate::Pj> {
         self.create(&format!("EPSG:{code}"))
     }
-    pub fn create_proj(&self, params: PJParams) -> miette::Result<crate::Pj> {
-        match params {
+    pub fn create_proj(&self, by: PJParams) -> miette::Result<crate::Pj> {
+        match by {
             // Transformation setup
             PJParams::ByDefination { definition } => self.create(definition),
             PJParams::ByArgv { argv } => self.create_argv(argv.as_slice()),
@@ -66,5 +66,14 @@ impl crate::PjContext {
             // Extension
             PJParams::ByEpsgCode { code } => self.create_epsg_code(code),
         }
+    }
+}
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_create_epsg_code() -> miette::Result<()> {
+        let ctx = crate::init_test_ctx();
+        ctx.create_epsg_code(4326)?;
+        Ok(())
     }
 }

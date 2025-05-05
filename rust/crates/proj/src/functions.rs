@@ -20,3 +20,4 @@ pub use cleanup::*;
 pub use distances::*;
 pub use info_functions::*;
 pub use lists::*;
+pub use various::*;

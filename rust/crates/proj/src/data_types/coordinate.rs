@@ -19,4 +19,5 @@ pub type PjEnu = proj_sys::PJ_ENU;
 pub type PjGeod = proj_sys::PJ_GEOD;
 
 // region:Complex
-// pub type PjCoord = proj_sys::PJ_COORD;
+#[cfg(any(feature = "unrecommended", test))]
+pub type PjCoord = proj_sys::PJ_COORD;

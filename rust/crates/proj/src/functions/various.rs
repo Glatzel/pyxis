@@ -6,9 +6,15 @@ impl crate::Pj {
     fn _degree_input(&self) { unimplemented!() }
     fn _degree_output(&self) { unimplemented!() }
 }
-fn _coord() { unimplemented!() }
+
+#[cfg(any(feature = "unrecommended", test))]
+pub fn coord(x: f64, y: f64, z: f64, t: f64) -> proj_sys::PJ_COORD {
+    unsafe { proj_sys::proj_coord(x, y, z, t) }
+}
+#[deprecated(note = "Use `f64::to_radians(self)` instead")]
 fn _torad() { unimplemented!() }
+#[deprecated(note = "Use `f64::to_degrees(self)` instead")]
 fn _todeg() { unimplemented!() }
-fn _dmstor() { unimplemented!() }
-fn _rtodms() { unimplemented!() }
-fn _rtodms2() { unimplemented!() }
+pub fn dmstor() { unimplemented!() }
+pub fn rtodms() { unimplemented!() }
+pub fn rtodms2() { unimplemented!() }

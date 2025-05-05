@@ -5,9 +5,7 @@ pub enum PjLogLevel {
     Trace,
 }
 impl Default for PjLogLevel {
-    fn default() -> Self {
-        Self::Error
-    }
+    fn default() -> Self { Self::Error }
 }
 impl From<PjLogLevel> for i32 {
     fn from(value: PjLogLevel) -> Self {

@@ -3,3 +3,4 @@ imports_granularity = "Module"
 reorder_imports = true
 ignore = ["crates/proj-sys/src/bindings.rs"]
 wrap_comments = true
+fn_single_line = true

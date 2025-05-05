@@ -136,9 +136,7 @@ impl crate::PjContext {
 }
 
 impl Drop for crate::Pj {
-    fn drop(&mut self) {
-        unsafe { proj_sys::proj_destroy(self.pj) };
-    }
+    fn drop(&mut self) { unsafe { proj_sys::proj_destroy(self.pj) }; }
 }
 #[cfg(test)]
 mod test {

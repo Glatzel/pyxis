@@ -133,32 +133,20 @@ impl<T: GeoFloat> Ellipsoid<T> {
         }
     }
     /// Returns the semi-major axis of the ellipsoid.
-    pub fn semi_major_axis(&self) -> T {
-        self.semi_major_axis
-    }
+    pub fn semi_major_axis(&self) -> T { self.semi_major_axis }
 
     /// Returns the semi-minor axis of the ellipsoid.
-    pub fn semi_minor_axis(&self) -> T {
-        self.semi_minor_axis
-    }
+    pub fn semi_minor_axis(&self) -> T { self.semi_minor_axis }
 
     /// Returns the eccentricity (`e`) of the ellipsoid.
-    pub fn eccentricity(&self) -> T {
-        self.eccentricity
-    }
+    pub fn eccentricity(&self) -> T { self.eccentricity }
 
     /// Returns the squared eccentricity (`e²`) of the ellipsoid.
-    pub fn eccentricity2(&self) -> T {
-        self.eccentricity2
-    }
+    pub fn eccentricity2(&self) -> T { self.eccentricity2 }
 
     /// Returns the flattening (`f`) of the ellipsoid.
-    pub fn flattening(&self) -> T {
-        self.flattening
-    }
+    pub fn flattening(&self) -> T { self.flattening }
 
     /// Returns the inverse flattening (`1/f`) of the ellipsoid.
-    pub fn inverse_flattening(&self) -> T {
-        self.inverse_flattening
-    }
+    pub fn inverse_flattening(&self) -> T { self.inverse_flattening }
 }

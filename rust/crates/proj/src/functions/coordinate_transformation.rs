@@ -31,9 +31,7 @@ impl crate::Pj {
     }
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    fn _get_last_used_operation(&self) -> Self {
-        unimplemented!()
-    }
+    fn _get_last_used_operation(&self) -> Self { unimplemented!() }
     /// # Safety
     /// If x,y is not null pointer.
     /// # References

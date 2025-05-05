@@ -1,5 +1,3 @@
-use std::path::Path;
-
 use miette::IntoDiagnostic;
 /// Get information about the current instance of the PROJ library.
 ///
@@ -38,15 +36,11 @@ impl crate::Pj {
 ///
 /// References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
-pub fn grid_info(grid: &Path) -> miette::Result<crate::PjGridInfo> {
-    if !grid.exists() {
-        miette::bail!("Grid file doesn't exist: {:?}", &grid)
-    }
-    let gridname_cstr =
-        std::ffi::CString::new(grid.to_string_lossy().to_string()).into_diagnostic()?;
+pub fn grid_info(grid: &str) -> miette::Result<crate::PjGridInfo> {
+    let gridname_cstr = std::ffi::CString::new(grid).into_diagnostic()?;
     let src = unsafe { proj_sys::proj_grid_info(gridname_cstr.as_ptr()) };
     if crate::c_char_to_string(src.format.as_ptr()) == "missing" {
-        miette::bail!("Invalid grid: {:?}", grid)
+        miette::bail!("Invalid grid: {}", grid)
     }
     Ok(crate::PjGridInfo::new(
         crate::c_char_to_string(src.gridname.as_ptr()),
@@ -94,22 +88,28 @@ mod test {
     }
 
     #[test]
-    fn test_grid_info() -> miette::Result<()> {
+    fn test_grid_info_gsb() -> miette::Result<()> {
         let workspace_dir = PathBuf::from(std::env::var("CARGO_WORKSPACE_DIR").into_diagnostic()?);
-        let info = grid_info(&workspace_dir.join("external/ntv2-file-routines/samples/mne.gsb"))?;
+        let info = grid_info(
+            workspace_dir
+                .join("external/ntv2-file-routines/samples/mne.gsb")
+                .to_str()
+                .unwrap(),
+        )?;
         println!("{:?}", info);
         assert_eq!(info.format(), "ntv2");
         Ok(())
     }
+
     #[test]
     fn test_grid_info_invalid_grid() -> miette::Result<()> {
-        let info = grid_info(&PathBuf::from("Cargo.toml"));
+        let info = grid_info(&"Cargo.toml");
         assert!(info.is_err());
         Ok(())
     }
     #[test]
     fn test_grid_info_not_exists() -> miette::Result<()> {
-        let info = grid_info(&PathBuf::from("invalid.tiff"));
+        let info = grid_info(&"invalid.tiff");
         assert!(info.is_err());
         Ok(())
     }

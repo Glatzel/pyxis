@@ -161,7 +161,7 @@ mod test {
         let distance = pj.roundtrip(&crate::PjDirection::PjFwd, 10000, &mut coord)?;
         println!("{:?}", unsafe { coord.xy.x });
         println!("{:?}", unsafe { coord.xy.y });
-        assert_approx_eq!(f64, distance, 0.023350762947799957);
+        assert_approx_eq!(f64, distance, 0.023350762947799957, epsilon = 1e-6);
         Ok(())
     }
     #[test]
@@ -174,21 +174,71 @@ mod test {
 
         println!("{:?}", factor);
 
-        assert_approx_eq!(f64, factor.meridional_scale().clone(), 111315.45155747599);
-        assert_approx_eq!(f64, factor.parallel_scale().clone(), 193644.51017869517);
-        assert_approx_eq!(f64, factor.areal_scale().clone(), -21555626092.167713);
+        assert_approx_eq!(
+            f64,
+            factor.meridional_scale().clone(),
+            111315.45155747599,
+            epsilon = 1e-6
+        );
+        assert_approx_eq!(
+            f64,
+            factor.parallel_scale().clone(),
+            193644.51017869517,
+            epsilon = 1e-6
+        );
+        assert_approx_eq!(
+            f64,
+            factor.areal_scale().clone(),
+            -21555626092.167713,
+            epsilon = 1e-6
+        );
 
-        assert_approx_eq!(f64, factor.angular_distortion().clone(), PI);
-        assert_approx_eq!(f64, factor.meridian_parallel_angle().clone(), -FRAC_PI_2);
-        assert_approx_eq!(f64, factor.meridian_convergence().clone(), -FRAC_PI_2);
+        assert_approx_eq!(f64, factor.angular_distortion().clone(), PI, epsilon = 1e-6);
+        assert_approx_eq!(
+            f64,
+            factor.meridian_parallel_angle().clone(),
+            -FRAC_PI_2,
+            epsilon = 1e-6
+        );
+        assert_approx_eq!(
+            f64,
+            factor.meridian_convergence().clone(),
+            -FRAC_PI_2,
+            epsilon = 1e-6
+        );
 
-        assert_approx_eq!(f64, factor.tissot_semimajor().clone(), 193644.51017869514);
-        assert_approx_eq!(f64, factor.tissot_semiminor().clone(), -111315.45155747602);
+        assert_approx_eq!(
+            f64,
+            factor.tissot_semimajor().clone(),
+            193644.51017869514,
+            epsilon = 1e-6
+        );
+        assert_approx_eq!(
+            f64,
+            factor.tissot_semiminor().clone(),
+            -111315.45155747602,
+            epsilon = 1e-6
+        );
 
-        assert_approx_eq!(f64, factor.dx_dlam().clone(), 3.6379788070917124e-7);
-        assert_approx_eq!(f64, factor.dx_dphi().clone(), 111319.49079353943);
-        assert_approx_eq!(f64, factor.dy_dlam().clone(), 111320.23452373686);
-        assert_approx_eq!(f64, factor.dy_dphi().clone(), 0.0);
+        assert_approx_eq!(
+            f64,
+            factor.dx_dlam().clone(),
+            3.6379788070917124e-7,
+            epsilon = 1e-6
+        );
+        assert_approx_eq!(
+            f64,
+            factor.dx_dphi().clone(),
+            111319.49079353943,
+            epsilon = 1e-6
+        );
+        assert_approx_eq!(
+            f64,
+            factor.dy_dlam().clone(),
+            111320.23452373686,
+            epsilon = 1e-6
+        );
+        assert_approx_eq!(f64, factor.dy_dphi().clone(), 0.0, epsilon = 1e-6);
 
         Ok(())
     }

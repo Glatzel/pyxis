@@ -73,6 +73,7 @@ impl crate::Pj {
         check_result!(self);
         Ok(result)
     }
+
     /// Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
@@ -104,6 +105,7 @@ impl crate::Pj {
         Ok(self)
     }
 }
+
 impl crate::PjContext {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
@@ -142,6 +144,7 @@ impl crate::PjContext {
         }
         Ok(self)
     }
+
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
     pub fn trans_bounds_3d(
@@ -191,6 +194,7 @@ impl crate::PjContext {
 #[cfg(test)]
 mod test {
     use float_cmp::assert_approx_eq;
+
     #[test]
     fn test_trans() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
@@ -201,6 +205,7 @@ mod test {
         assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
         Ok(())
     }
+
     #[test]
     fn test_trans_array() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
@@ -217,6 +222,7 @@ mod test {
         );
         Ok(())
     }
+
     #[test]
     fn test_trans_bounds() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
@@ -250,6 +256,7 @@ mod test {
         assert_approx_eq!(f64, out_ymax, 19555124.881683525);
         Ok(())
     }
+
     #[test]
     fn test_trans_bounds_3d() -> miette::Result<()> {
         let ctx = crate::PjContext::default();

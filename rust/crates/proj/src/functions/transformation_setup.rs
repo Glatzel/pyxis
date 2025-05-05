@@ -7,7 +7,7 @@ use crate::check_result;
 impl crate::PjContext {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn create(&self, definition: &str) -> miette::Result<crate::Pj> {
+    pub(crate) fn create(&self, definition: &str) -> miette::Result<crate::Pj> {
         let definition = CString::new(definition).into_diagnostic()?;
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr()) },
@@ -18,7 +18,7 @@ impl crate::PjContext {
 
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Pj> {
+    pub(crate) fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Pj> {
         let len = argv.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in argv {
@@ -33,7 +33,7 @@ impl crate::PjContext {
 
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
-    pub fn create_crs_to_crs(
+    pub(crate) fn create_crs_to_crs(
         &self,
         source_crs: &str,
         target_crs: &str,
@@ -57,7 +57,7 @@ impl crate::PjContext {
 
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
-    pub fn create_crs_to_crs_from_pj(
+    pub(crate) fn create_crs_to_crs_from_pj(
         &self,
         source_crs: crate::Pj,
         target_crs: crate::Pj,

@@ -187,6 +187,8 @@ jobs:
         with:
           run-install: false
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
       - name: cargo-fmt
         run: |
           ${{env.RUST_ROOT}}/scripts/cargo-fmt.ps1

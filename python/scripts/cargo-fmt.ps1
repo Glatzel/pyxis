@@ -4,10 +4,11 @@ $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 
 if ($env:CI) {
-    cargo +nightly fmt --all -- --check
+    cargo fmt --all -- --check --unstable-features
 }
 else {
-    cargo +nightly fmt --all
+    cargo fmt --all -- --unstable-features
 }
+
 
 Set-Location $ROOT

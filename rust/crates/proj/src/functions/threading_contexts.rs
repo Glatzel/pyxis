@@ -19,6 +19,7 @@ impl crate::PjContext {
         ctx
     }
 }
+
 impl Clone for crate::PjContext {
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone>
@@ -28,6 +29,7 @@ impl Clone for crate::PjContext {
         }
     }
 }
+
 impl Drop for crate::PjContext {
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>

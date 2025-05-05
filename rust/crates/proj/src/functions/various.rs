@@ -3,6 +3,7 @@ use std::ffi::CString;
 
 use miette::IntoDiagnostic;
 
+#[cfg(any(feature = "unrecommended", test))]
 use crate::check_result;
 
 /// # Various
@@ -39,7 +40,7 @@ impl crate::Pj {
     /// object, the above steps will modify the internal state of the provided P
     /// object, and thus calling this function concurrently from multiple
     /// threads on the same P object will no longer be supported.
-    /// 
+    ///
     ///The input geodetic coordinate lp should be such that lp.lam is the
     /// longitude in radian, and lp.phi the latitude in radian (thus
     /// independently of the definition of the base CRS, if P is a projected
@@ -145,6 +146,8 @@ pub fn rtodms2(r: f64, pos: char, neg: char) -> miette::Result<String> {
 
 #[cfg(test)]
 mod test {
+    use std::f64::consts::{FRAC_PI_2, PI};
+
     use crate::IPjCoord;
 
     #[test]
@@ -173,8 +176,8 @@ mod test {
         assert_eq!(factor.parallel_scale(), &193644.51017869517);
         assert_eq!(factor.areal_scale(), &-21555626092.167713);
 
-        assert_eq!(factor.angular_distortion(), &3.141592653589793);
-        assert_eq!(factor.meridian_parallel_angle(), &-1.5707963267948966);
+        assert_eq!(factor.angular_distortion(), &PI);
+        assert_eq!(factor.meridian_parallel_angle(), &FRAC_PI_2);
         assert_eq!(factor.meridian_convergence(), &-1.5707963267948966);
 
         assert_eq!(factor.tissot_semimajor(), &193644.51017869514);

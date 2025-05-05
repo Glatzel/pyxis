@@ -44,7 +44,7 @@ fn main() {
             .expect("Couldn't write bindings!");
         //only allow linux bindgen
 
-        if env!("UPDATE") == "true" {
+        if std::env::var("UPDATE").unwrap_or("false".to_string()) == "true" {
             bindings
                 .write_to_file("./src/bindings.rs")
                 .expect("Couldn't write bindings!");

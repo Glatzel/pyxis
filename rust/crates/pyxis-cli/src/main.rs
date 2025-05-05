@@ -1,5 +1,3 @@
 mod cli;
 mod proj_util;
-fn main() {
-    cli::main();
-}
+fn main() { cli::main(); }

@@ -48,7 +48,8 @@ where
     ((x.powi(2) + y.powi(2)).sqrt(), y.atan2(x))
 }
 
-/// Converts Cartesian coordinates (x, y, z) to cylindrical coordinates (r, u, z).
+/// Converts Cartesian coordinates (x, y, z) to cylindrical coordinates (r, u,
+/// z).
 ///
 /// # Arguments
 /// - `x`: The x-coordinate in Cartesian space (in any unit).
@@ -105,7 +106,8 @@ where
     (y.atan2(x), (z / r).acos(), r)
 }
 
-/// Converts cylindrical coordinates (r, u, z) to Cartesian coordinates (x, y, z).
+/// Converts cylindrical coordinates (r, u, z) to Cartesian coordinates (x, y,
+/// z).
 ///
 /// # Arguments
 /// - `r`: The radial distance from the z-axis in the x-y plane.
@@ -133,7 +135,8 @@ where
     (r * u.cos(), r * u.sin(), z)
 }
 
-/// Converts cylindrical coordinates (r, u, z) to spherical coordinates (u, v, r).
+/// Converts cylindrical coordinates (r, u, z) to spherical coordinates (u, v,
+/// r).
 ///
 /// # Arguments
 /// - `r`: The radial distance in the x-y plane.
@@ -189,7 +192,8 @@ where
     (r * v.sin() * u.cos(), r * v.sin() * u.sin(), r * v.cos())
 }
 
-/// Converts spherical coordinates (u, v, r) to cylindrical coordinates (r, u, z).
+/// Converts spherical coordinates (u, v, r) to cylindrical coordinates (r, u,
+/// z).
 ///
 /// # Arguments
 /// - `u`: The azimuthal angle in the x-y plane (in radians).

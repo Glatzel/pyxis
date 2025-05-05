@@ -1,9 +1,7 @@
 impl Default for crate::PjArea {
-    fn default() -> Self {
-        Self::new()
-    }
+    fn default() -> Self { Self::new() }
 }
-
+///# Area of interest
 impl crate::PjArea {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>
@@ -35,7 +33,5 @@ impl crate::PjArea {
 }
 
 impl Drop for crate::PjArea {
-    fn drop(&mut self) {
-        unsafe { proj_sys::proj_area_destroy(self.area) };
-    }
+    fn drop(&mut self) { unsafe { proj_sys::proj_area_destroy(self.area) }; }
 }

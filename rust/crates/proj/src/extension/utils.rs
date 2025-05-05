@@ -6,7 +6,7 @@ pub(crate) fn c_char_to_string(ptr: *const c_char) -> String {
     }
     unsafe { CStr::from_ptr(ptr) }.to_string_lossy().to_string()
 }
-#[allow(dead_code)]
+
 pub(crate) fn array4_to_pj_coord(array4: [f64; 4]) -> miette::Result<proj_sys::PJ_COORD> {
     let coord = match (array4[2].is_nan(), array4[3].is_nan()) {
         (true, true) => proj_sys::PJ_COORD {

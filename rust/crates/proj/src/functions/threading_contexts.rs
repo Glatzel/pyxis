@@ -1,9 +1,7 @@
 use std::ffi::c_void;
 use std::ptr::null_mut;
 impl Default for crate::PjContext {
-    fn default() -> Self {
-        Self::new()
-    }
+    fn default() -> Self { Self::new() }
 }
 
 impl crate::PjContext {
@@ -33,7 +31,5 @@ impl Clone for crate::PjContext {
 impl Drop for crate::PjContext {
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
-    fn drop(&mut self) {
-        unsafe { proj_sys::proj_context_destroy(self.ctx) };
-    }
+    fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(self.ctx) }; }
 }

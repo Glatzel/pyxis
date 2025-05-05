@@ -17,17 +17,12 @@ impl<T: GeoFloat> DatumCompenseParms<T> {
     }
 }
 impl<T: GeoFloat> IDatumCompenseParms<T> for DatumCompenseParms<T> {
-    fn x0(&self) -> T {
-        self.x0
-    }
-    fn y0(&self) -> T {
-        self.y0
-    }
-    fn factor(&self) -> T {
-        self.factor
-    }
+    fn x0(&self) -> T { self.x0 }
+    fn y0(&self) -> T { self.y0 }
+    fn factor(&self) -> T { self.factor }
 }
-/// Converts projected XY coordinates from the height compensation plane to the sea level plane.
+/// Converts projected XY coordinates from the height compensation plane to the
+/// sea level plane.
 ///
 /// # Arguments
 ///
@@ -38,7 +33,8 @@ impl<T: GeoFloat> IDatumCompenseParms<T> for DatumCompenseParms<T> {
 ///
 /// # Returns
 ///
-/// A tuple containing the projected XY coordinates of the sea level plane (in meters).
+/// A tuple containing the projected XY coordinates of the sea level plane (in
+/// meters).
 ///
 ///
 /// # References

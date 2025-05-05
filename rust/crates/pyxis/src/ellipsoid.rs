@@ -1,7 +1,8 @@
 use crate::GeoFloat;
 
-/// Represents an ellipsoid with semi-major axis `a`, semi-minor axis `b`, eccentricity `e`,
-/// squared eccentricity `e²`, flattening `f`, and inverse flattening `1/f` in the `pyxis` crate.
+/// Represents an ellipsoid with semi-major axis `a`, semi-minor axis `b`,
+/// eccentricity `e`, squared eccentricity `e²`, flattening `f`, and inverse
+/// flattening `1/f` in the `pyxis` crate.
 ///
 /// # Examples
 ///
@@ -29,7 +30,8 @@ pub struct Ellipsoid<T> {
 }
 
 impl<T: GeoFloat> Ellipsoid<T> {
-    /// Creates a new `Ellipsoid` from semi-major axis (`a`) and inverse flattening (`1/f`).
+    /// Creates a new `Ellipsoid` from semi-major axis (`a`) and inverse
+    /// flattening (`1/f`).
     ///
     /// # Arguments
     ///
@@ -75,13 +77,16 @@ impl<T: GeoFloat> Ellipsoid<T> {
     ///
     /// # Arguments
     ///
-    /// - `semi_major_axis`: The semi-major axis (`a`) of the ellipsoid (in meters).
-    /// - `semi_minor_axis`: The semi-minor axis (`b`) of the ellipsoid (in meters).
+    /// - `semi_major_axis`: The semi-major axis (`a`) of the ellipsoid (in
+    ///   meters).
+    /// - `semi_minor_axis`: The semi-minor axis (`b`) of the ellipsoid (in
+    ///   meters).
     ///
     /// # Returns
     ///
-    /// Returns an `Ellipsoid` instance with the provided semi-major axis and semi-minor axis,
-    /// along with the calculated values for flattening, eccentricity, and inverse flattening.
+    /// Returns an `Ellipsoid` instance with the provided semi-major axis and
+    /// semi-minor axis, along with the calculated values for flattening,
+    /// eccentricity, and inverse flattening.
     ///
     /// # Calculation
     ///
@@ -105,7 +110,9 @@ impl<T: GeoFloat> Ellipsoid<T> {
     /// ```
     ///
     /// # Notes
-    /// This function is useful when you only know the semi-major axis and semi-minor axis and need to compute the rest of the ellipsoid parameters.
+    /// This function is useful when you only know the semi-major axis and
+    /// semi-minor axis and need to compute the rest of the ellipsoid
+    /// parameters.
     pub fn from_semi_axis(semi_major_axis: T, semi_minor_axis: T) -> Self {
         // Calculate flattening
         let flattening = (semi_major_axis - semi_minor_axis) / semi_major_axis;
@@ -126,32 +133,20 @@ impl<T: GeoFloat> Ellipsoid<T> {
         }
     }
     /// Returns the semi-major axis of the ellipsoid.
-    pub fn semi_major_axis(&self) -> T {
-        self.semi_major_axis
-    }
+    pub fn semi_major_axis(&self) -> T { self.semi_major_axis }
 
     /// Returns the semi-minor axis of the ellipsoid.
-    pub fn semi_minor_axis(&self) -> T {
-        self.semi_minor_axis
-    }
+    pub fn semi_minor_axis(&self) -> T { self.semi_minor_axis }
 
     /// Returns the eccentricity (`e`) of the ellipsoid.
-    pub fn eccentricity(&self) -> T {
-        self.eccentricity
-    }
+    pub fn eccentricity(&self) -> T { self.eccentricity }
 
     /// Returns the squared eccentricity (`e²`) of the ellipsoid.
-    pub fn eccentricity2(&self) -> T {
-        self.eccentricity2
-    }
+    pub fn eccentricity2(&self) -> T { self.eccentricity2 }
 
     /// Returns the flattening (`f`) of the ellipsoid.
-    pub fn flattening(&self) -> T {
-        self.flattening
-    }
+    pub fn flattening(&self) -> T { self.flattening }
 
     /// Returns the inverse flattening (`1/f`) of the ellipsoid.
-    pub fn inverse_flattening(&self) -> T {
-        self.inverse_flattening
-    }
+    pub fn inverse_flattening(&self) -> T { self.inverse_flattening }
 }

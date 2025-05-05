@@ -1,4 +1,4 @@
-pub enum PjGuessedWktDialect {
+enum _PjGuessedWktDialect {
     Wkt2_2019,
     Wkt2_2018,
     Wkt2_2015,
@@ -6,7 +6,7 @@ pub enum PjGuessedWktDialect {
     Wkt1Esri,
     NotWkt,
 }
-pub enum PjCategory {
+enum _PjCategory {
     Ellipsoid,
     PrimeMeridian,
     Datum,
@@ -14,7 +14,7 @@ pub enum PjCategory {
     CoordinateOperation,
     DatumEnsemble,
 }
-pub enum PjType {
+enum _PjType {
     Unknown,
     Ellipsoid,
     PrimeMeridian,
@@ -46,12 +46,12 @@ pub enum PjType {
     DerivedProjectedCrs,
     CoordinateMetadata,
 }
-pub enum PjComparisonCriterion {
+enum _PjComparisonCriterion {
     Strict,
     Equivalent,
     EquivalentExceptAxisOrderGeogcrs,
 }
-pub enum PjWktType {
+enum _PjWktType {
     Wkt2_2015,
     Wkt2_2015Simplified,
     Wkt2_2019,
@@ -61,35 +61,35 @@ pub enum PjWktType {
     Wkt1Gdal,
     Wkt1Esri,
 }
-pub enum ProjCrsExtentUse {
+enum _ProjCrsExtentUse {
     None,
     Both,
     Intersection,
     Smallest,
 }
-pub enum ProjGridAvailabilityUse {
+enum _ProjGridAvailabilityUse {
     UsedForSorting,
     DiscardOperationIfMissingGrid,
     Ignored,
     KnownAvailable,
 }
 
-pub enum PjProjStringType {
+enum _PjProjStringType {
     Proj5,
     Proj4,
 }
 
-pub enum ProjSpatialCriterion {
+enum _ProjSpatialCriterion {
     StrictContainment,
     PartialIntersection,
 }
-pub enum ProjIntermediateCrsUse {
+enum _ProjIntermediateCrsUse {
     Always,
     IfNoDirectTransformation,
     Never,
 }
 
-pub enum PjCoordinateSystemType {
+enum _PjCoordinateSystemType {
     Unknown,
     Cartesian,
     Ellipsoidal,
@@ -110,7 +110,7 @@ pub enum PjCoordinateSystemType {
 
 // pub struct PROJ_CELESTIAL_BODY_INFO
 
-pub enum PjUnitType {
+enum _PjUnitType {
     Angular,
     Linear,
     Scale,
@@ -118,7 +118,7 @@ pub enum PjUnitType {
     Parametric,
 }
 
-pub enum PjCartesianCs2dType {
+enum _PjCartesianCs2dType {
     EastingNorthing,
     NorthingEasting,
     NorthPoleEastingSouthNorthingSouth,
@@ -126,12 +126,12 @@ pub enum PjCartesianCs2dType {
     WestingSouthing,
 }
 
-pub enum PjEllipsoidalCs2dType {
+enum _PjEllipsoidalCs2dType {
     LongitudeLatitude,
     LatitudeLongitude,
 }
 
-pub enum PjEllipsoidalCs3dType {
+enum _PjEllipsoidalCs3dType {
     LongitudeLatitudeHeight,
     LatitudeLongitudeHeight,
 }

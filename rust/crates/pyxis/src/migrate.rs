@@ -66,8 +66,8 @@ where
     )
 }
 
-// pub fn rotate_matrix_3d(rx: f64, ry: f64, rz: f64, order: RotareOrder) -> [[f64; 3]; 3] {
-//     [
+// pub fn rotate_matrix_3d(rx: f64, ry: f64, rz: f64, order: RotareOrder) ->
+// [[f64; 3]; 3] {     [
 //         [radians.cos(), radians.sin()],
 //         [-radians.sin(), radians.cos()],
 //     ]

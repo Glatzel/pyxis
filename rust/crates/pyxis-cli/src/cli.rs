@@ -25,21 +25,18 @@ pub enum Commands {
         ///  - longitude (in degrees).
         ///  - radius of cylindrical (in meters).
         ///  - u of spherical (in radians).
-        ///
         x: f64,
         #[bpaf(short, long, fallback(0.0), display_fallback)]
         /// - Y coordinate (in meters).
         ///  - latitude (in degrees).
         ///  - u of cylindrical (in radians).
         ///  - v of spherical (in radians).
-        ///
         y: f64,
         #[bpaf(short, long, fallback(0.0), display_fallback)]
         /// - Z coordinate (in meters).
         ///  - elevation (in meters).
         ///  - z of cylindrical (in meters).
         ///  - radius of spherical (in meters).
-        ///
         z: f64,
         #[bpaf(
             short,

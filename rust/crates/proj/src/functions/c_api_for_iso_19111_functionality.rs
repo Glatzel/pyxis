@@ -1,628 +1,214 @@
 impl crate::PjContext {
-    fn _context_set_autoclose_database(&self) {
-        unimplemented!()
-    }
-    fn _context_set_database_path(&self) {
-        unimplemented!()
-    }
-    fn _context_get_database_path(&self) {
-        unimplemented!()
-    }
-    fn _context_get_database_metadata(&self) {
-        unimplemented!()
-    }
-    fn _context_get_database_structure(&self) {
-        unimplemented!()
-    }
-    fn _context_guess_wkt_dialect(&self) {
-        unimplemented!()
-    }
-    fn _create_from_wkt(&self) {
-        unimplemented!()
-    }
-    fn _create_from_database(&self) {
-        unimplemented!()
-    }
-    fn _uom_get_info_from_database(&self) {
-        unimplemented!()
-    }
-    fn _grid_get_info_from_database(&self) {
-        unimplemented!()
-    }
-    fn _clone(&self) {
-        unimplemented!()
-    }
-    fn _create_from_name(&self) {
-        unimplemented!()
-    }
-    fn _get_non_deprecated(&self) {
-        unimplemented!()
-    }
-    fn _is_equivalent_to_with_ctx(&self) {
-        unimplemented!()
-    }
-    fn _get_area_of_use(&self) {
-        unimplemented!()
-    }
-    fn _get_area_of_use_ex(&self) {
-        unimplemented!()
-    }
-    fn _as_wkt(&self) {
-        unimplemented!()
-    }
-    fn _as_proj_string(&self) {
-        unimplemented!()
-    }
-    fn _as_projjson(&self) {
-        unimplemented!()
-    }
-    fn _get_source_crs(&self) {
-        unimplemented!()
-    }
-    fn _get_target_crs(&self) {
-        unimplemented!()
-    }
-    fn _identify(&self) {
-        unimplemented!()
-    }
-    fn _get_geoid_models_from_database(&self) {
-        unimplemented!()
-    }
-    fn _get_authorities_from_database(&self) {
-        unimplemented!()
-    }
-    fn _get_codes_from_database(&self) {
-        unimplemented!()
-    }
-    fn _get_celestial_body_list_from_database(&self) {
-        unimplemented!()
-    }
-    fn _get_crs_info_list_from_database(&self) {
-        unimplemented!()
-    }
-    fn _get_units_from_database(&self) {
-        unimplemented!()
-    }
-    fn _insert_object_session_create(&self) {
-        unimplemented!()
-    }
-    fn _insert_object_session_destroy(&self) {
-        unimplemented!()
-    }
-    fn _get_insert_statements(&self) {
-        unimplemented!()
-    }
-    fn _suggests_code_for(&self) {
-        unimplemented!()
-    }
-    fn _create_operation_factory_context(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_desired_accuracy(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_area_of_interest(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_area_of_interest_name(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_crs_extent_use(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_spatial_criterion(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_grid_availability_use(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_use_proj_alternative_grid_names(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_allow_use_intermediate_crs(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_allowed_intermediate_crs(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_discard_superseded(&self) {
-        unimplemented!()
-    }
-    fn _operation_factory_context_set_allow_ballpark_transformations(&self) {
-        unimplemented!()
-    }
-    fn _create_operations(&self) {
-        unimplemented!()
-    }
-    fn _list_get(&self) {
-        unimplemented!()
-    }
-    fn _get_suggested_operation(&self) {
-        unimplemented!()
-    }
-    fn _crs_is_derived(&self) {
-        unimplemented!()
-    }
-    fn _crs_get_geodetic_crs(&self) {
-        unimplemented!()
-    }
-    fn _crs_get_horizontal_datum(&self) {
-        unimplemented!()
-    }
-    fn _crs_get_sub_crs(&self) {
-        unimplemented!()
-    }
-    fn _crs_get_datum(&self) {
-        unimplemented!()
-    }
-    fn _crs_get_datum_ensemble(&self) {
-        unimplemented!()
-    }
-    fn _crs_get_datum_forced(&self) {
-        unimplemented!()
-    }
-    fn _crs_has_point_motion_operation(&self) {
-        unimplemented!()
-    }
-    fn _datum_ensemble_get_member_count(&self) {
-        unimplemented!()
-    }
-    fn _datum_ensemble_get_accuracy(&self) {
-        unimplemented!()
-    }
-    fn _datum_ensemble_get_member(&self) {
-        unimplemented!()
-    }
-    fn _dynamic_datum_get_frame_reference_epoch(&self) {
-        unimplemented!()
-    }
-    fn _crs_get_coordinate_system(&self) {
-        unimplemented!()
-    }
-    fn _cs_get_type(&self) {
-        unimplemented!()
-    }
-    fn _cs_get_axis_count(&self) {
-        unimplemented!()
-    }
-    fn _cs_get_axis_info(&self) {
-        unimplemented!()
-    }
-    fn _get_ellipsoid(&self) {
-        unimplemented!()
-    }
-    fn _ellipsoid_get_parameters(&self) {
-        unimplemented!()
-    }
-    fn _get_celestial_body_name(&self) {
-        unimplemented!()
-    }
-    fn _get_prime_meridian(&self) {
-        unimplemented!()
-    }
-    fn _prime_meridian_get_parameters(&self) {
-        unimplemented!()
-    }
-    fn _crs_get_coordoperation(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_get_method_info(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_is_instantiable(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_has_ballpark_transformation(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_requires_per_coordinate_input_time(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_get_param_count(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_get_param_index(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_get_param(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_get_grid_used_count(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_get_grid_used(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_get_accuracy(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_get_towgs84_values(&self) {
-        unimplemented!()
-    }
-    fn _coordoperation_create_inverse(&self) {
-        unimplemented!()
-    }
-    fn _concatoperation_get_step_count(&self) {
-        unimplemented!()
-    }
-    fn _concatoperation_get_step(&self) {
-        unimplemented!()
-    }
-    fn _coordinate_metadata_create(&self) {
-        unimplemented!()
-    }
-    fn _coordinate_metadata_get_epoch(&self) {
-        unimplemented!()
-    }
-    fn _create_cs(&self) {
-        unimplemented!()
-    }
-    fn _create_cartesian_2d_cs(&self) {
-        unimplemented!()
-    }
-    fn _create_ellipsoidal_2d_cs(&self) {
-        unimplemented!()
-    }
-    fn _create_ellipsoidal_3d_cs(&self) {
-        unimplemented!()
-    }
-    fn _query_geodetic_crs_from_datum(&self) {
-        unimplemented!()
-    }
-    fn _create_geographic_crs(&self) {
-        unimplemented!()
-    }
-    fn _create_geographic_crs_from_datum(&self) {
-        unimplemented!()
-    }
-    fn _create_geocentric_crs(&self) {
-        unimplemented!()
-    }
-    fn _create_geocentric_crs_from_datum(&self) {
-        unimplemented!()
-    }
-    fn _create_derived_geographic_crs(&self) {
-        unimplemented!()
-    }
-    fn _is_derived_crs(&self) {
-        unimplemented!()
-    }
-    fn _alter_name(&self) {
-        unimplemented!()
-    }
-    fn _alter_id(&self) {
-        unimplemented!()
-    }
-    fn _crs_alter_geodetic_crs(&self) {
-        unimplemented!()
-    }
-    fn _crs_alter_cs_angular_unit(&self) {
-        unimplemented!()
-    }
-    fn _crs_alter_cs_linear_unit(&self) {
-        unimplemented!()
-    }
-    fn _crs_alter_parameters_linear_unit(&self) {
-        unimplemented!()
-    }
-    fn _crs_promote_to_3d(&self) {
-        unimplemented!()
-    }
-    fn _crs_create_projected_3d_crs_from_2d(&self) {
-        unimplemented!()
-    }
-    fn _crs_demote_to_2d(&self) {
-        unimplemented!()
-    }
-    fn _create_engineering_crs(&self) {
-        unimplemented!()
-    }
-    fn _create_vertical_crs(&self) {
-        unimplemented!()
-    }
-    fn _create_vertical_crs_ex(&self) {
-        unimplemented!()
-    }
-    fn _create_compound_crs(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion(&self) {
-        unimplemented!()
-    }
-    fn _create_transformation(&self) {
-        unimplemented!()
-    }
-    fn _convert_conversion_to_other_method(&self) {
-        unimplemented!()
-    }
-    fn _create_projected_crs(&self) {
-        unimplemented!()
-    }
-    fn _crs_create_bound_crs(&self) {
-        unimplemented!()
-    }
-    fn _crs_create_bound_crs_to_wgs84(&self) {
-        unimplemented!()
-    }
-    fn _crs_create_bound_vertical_crs(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_utm(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_transverse_mercator(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_gauss_schreiber_transverse_mercator(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_transverse_mercator_south_oriented(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_two_point_equidistant(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_tunisia_mapping_grid(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_tunisia_mining_grid(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_albers_equal_area(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_lambert_conic_conformal_1sp(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_lambert_conic_conformal_1sp_variant_b(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_lambert_conic_conformal_2sp(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_lambert_conic_conformal_2sp_michigan(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_lambert_conic_conformal_2sp_belgium(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_azimuthal_equidistant(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_guam_projection(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_bonne(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_lambert_cylindrical_equal_area_spherical(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_lambert_cylindrical_equal_area(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_cassini_soldner(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_equidistant_conic(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_eckert_i(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_eckert_ii(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_eckert_iii(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_eckert_iv(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_eckert_v(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_eckert_vi(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_equidistant_cylindrical(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_equidistant_cylindrical_spherical(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_gall(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_goode_homolosine(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_interrupted_goode_homolosine(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_geostationary_satellite_sweep_x(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_geostationary_satellite_sweep_y(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_gnomonic(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_hotine_oblique_mercator_variant_a(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_hotine_oblique_mercator_variant_b(&self) {
-        unimplemented!()
-    }
+    fn _context_set_autoclose_database(&self) { unimplemented!() }
+    fn _context_set_database_path(&self) { unimplemented!() }
+    fn _context_get_database_path(&self) { unimplemented!() }
+    fn _context_get_database_metadata(&self) { unimplemented!() }
+    fn _context_get_database_structure(&self) { unimplemented!() }
+    fn _context_guess_wkt_dialect(&self) { unimplemented!() }
+    fn _create_from_wkt(&self) { unimplemented!() }
+    fn _create_from_database(&self) { unimplemented!() }
+    fn _uom_get_info_from_database(&self) { unimplemented!() }
+    fn _grid_get_info_from_database(&self) { unimplemented!() }
+    fn _clone(&self) { unimplemented!() }
+    fn _create_from_name(&self) { unimplemented!() }
+    fn _get_non_deprecated(&self) { unimplemented!() }
+    fn _is_equivalent_to_with_ctx(&self) { unimplemented!() }
+    fn _get_area_of_use(&self) { unimplemented!() }
+    fn _get_area_of_use_ex(&self) { unimplemented!() }
+    fn _as_wkt(&self) { unimplemented!() }
+    fn _as_proj_string(&self) { unimplemented!() }
+    fn _as_projjson(&self) { unimplemented!() }
+    fn _get_source_crs(&self) { unimplemented!() }
+    fn _get_target_crs(&self) { unimplemented!() }
+    fn _identify(&self) { unimplemented!() }
+    fn _get_geoid_models_from_database(&self) { unimplemented!() }
+    fn _get_authorities_from_database(&self) { unimplemented!() }
+    fn _get_codes_from_database(&self) { unimplemented!() }
+    fn _get_celestial_body_list_from_database(&self) { unimplemented!() }
+    fn _get_crs_info_list_from_database(&self) { unimplemented!() }
+    fn _get_units_from_database(&self) { unimplemented!() }
+    fn _insert_object_session_create(&self) { unimplemented!() }
+    fn _insert_object_session_destroy(&self) { unimplemented!() }
+    fn _get_insert_statements(&self) { unimplemented!() }
+    fn _suggests_code_for(&self) { unimplemented!() }
+    fn _create_operation_factory_context(&self) { unimplemented!() }
+    fn _operation_factory_context_set_desired_accuracy(&self) { unimplemented!() }
+    fn _operation_factory_context_set_area_of_interest(&self) { unimplemented!() }
+    fn _operation_factory_context_set_area_of_interest_name(&self) { unimplemented!() }
+    fn _operation_factory_context_set_crs_extent_use(&self) { unimplemented!() }
+    fn _operation_factory_context_set_spatial_criterion(&self) { unimplemented!() }
+    fn _operation_factory_context_set_grid_availability_use(&self) { unimplemented!() }
+    fn _operation_factory_context_set_use_proj_alternative_grid_names(&self) { unimplemented!() }
+    fn _operation_factory_context_set_allow_use_intermediate_crs(&self) { unimplemented!() }
+    fn _operation_factory_context_set_allowed_intermediate_crs(&self) { unimplemented!() }
+    fn _operation_factory_context_set_discard_superseded(&self) { unimplemented!() }
+    fn _operation_factory_context_set_allow_ballpark_transformations(&self) { unimplemented!() }
+    fn _create_operations(&self) { unimplemented!() }
+    fn _list_get(&self) { unimplemented!() }
+    fn _get_suggested_operation(&self) { unimplemented!() }
+    fn _crs_is_derived(&self) { unimplemented!() }
+    fn _crs_get_geodetic_crs(&self) { unimplemented!() }
+    fn _crs_get_horizontal_datum(&self) { unimplemented!() }
+    fn _crs_get_sub_crs(&self) { unimplemented!() }
+    fn _crs_get_datum(&self) { unimplemented!() }
+    fn _crs_get_datum_ensemble(&self) { unimplemented!() }
+    fn _crs_get_datum_forced(&self) { unimplemented!() }
+    fn _crs_has_point_motion_operation(&self) { unimplemented!() }
+    fn _datum_ensemble_get_member_count(&self) { unimplemented!() }
+    fn _datum_ensemble_get_accuracy(&self) { unimplemented!() }
+    fn _datum_ensemble_get_member(&self) { unimplemented!() }
+    fn _dynamic_datum_get_frame_reference_epoch(&self) { unimplemented!() }
+    fn _crs_get_coordinate_system(&self) { unimplemented!() }
+    fn _cs_get_type(&self) { unimplemented!() }
+    fn _cs_get_axis_count(&self) { unimplemented!() }
+    fn _cs_get_axis_info(&self) { unimplemented!() }
+    fn _get_ellipsoid(&self) { unimplemented!() }
+    fn _ellipsoid_get_parameters(&self) { unimplemented!() }
+    fn _get_celestial_body_name(&self) { unimplemented!() }
+    fn _get_prime_meridian(&self) { unimplemented!() }
+    fn _prime_meridian_get_parameters(&self) { unimplemented!() }
+    fn _crs_get_coordoperation(&self) { unimplemented!() }
+    fn _coordoperation_get_method_info(&self) { unimplemented!() }
+    fn _coordoperation_is_instantiable(&self) { unimplemented!() }
+    fn _coordoperation_has_ballpark_transformation(&self) { unimplemented!() }
+    fn _coordoperation_requires_per_coordinate_input_time(&self) { unimplemented!() }
+    fn _coordoperation_get_param_count(&self) { unimplemented!() }
+    fn _coordoperation_get_param_index(&self) { unimplemented!() }
+    fn _coordoperation_get_param(&self) { unimplemented!() }
+    fn _coordoperation_get_grid_used_count(&self) { unimplemented!() }
+    fn _coordoperation_get_grid_used(&self) { unimplemented!() }
+    fn _coordoperation_get_accuracy(&self) { unimplemented!() }
+    fn _coordoperation_get_towgs84_values(&self) { unimplemented!() }
+    fn _coordoperation_create_inverse(&self) { unimplemented!() }
+    fn _concatoperation_get_step_count(&self) { unimplemented!() }
+    fn _concatoperation_get_step(&self) { unimplemented!() }
+    fn _coordinate_metadata_create(&self) { unimplemented!() }
+    fn _coordinate_metadata_get_epoch(&self) { unimplemented!() }
+    fn _create_cs(&self) { unimplemented!() }
+    fn _create_cartesian_2d_cs(&self) { unimplemented!() }
+    fn _create_ellipsoidal_2d_cs(&self) { unimplemented!() }
+    fn _create_ellipsoidal_3d_cs(&self) { unimplemented!() }
+    fn _query_geodetic_crs_from_datum(&self) { unimplemented!() }
+    fn _create_geographic_crs(&self) { unimplemented!() }
+    fn _create_geographic_crs_from_datum(&self) { unimplemented!() }
+    fn _create_geocentric_crs(&self) { unimplemented!() }
+    fn _create_geocentric_crs_from_datum(&self) { unimplemented!() }
+    fn _create_derived_geographic_crs(&self) { unimplemented!() }
+    fn _is_derived_crs(&self) { unimplemented!() }
+    fn _alter_name(&self) { unimplemented!() }
+    fn _alter_id(&self) { unimplemented!() }
+    fn _crs_alter_geodetic_crs(&self) { unimplemented!() }
+    fn _crs_alter_cs_angular_unit(&self) { unimplemented!() }
+    fn _crs_alter_cs_linear_unit(&self) { unimplemented!() }
+    fn _crs_alter_parameters_linear_unit(&self) { unimplemented!() }
+    fn _crs_promote_to_3d(&self) { unimplemented!() }
+    fn _crs_create_projected_3d_crs_from_2d(&self) { unimplemented!() }
+    fn _crs_demote_to_2d(&self) { unimplemented!() }
+    fn _create_engineering_crs(&self) { unimplemented!() }
+    fn _create_vertical_crs(&self) { unimplemented!() }
+    fn _create_vertical_crs_ex(&self) { unimplemented!() }
+    fn _create_compound_crs(&self) { unimplemented!() }
+    fn _create_conversion(&self) { unimplemented!() }
+    fn _create_transformation(&self) { unimplemented!() }
+    fn _convert_conversion_to_other_method(&self) { unimplemented!() }
+    fn _create_projected_crs(&self) { unimplemented!() }
+    fn _crs_create_bound_crs(&self) { unimplemented!() }
+    fn _crs_create_bound_crs_to_wgs84(&self) { unimplemented!() }
+    fn _crs_create_bound_vertical_crs(&self) { unimplemented!() }
+    fn _create_conversion_utm(&self) { unimplemented!() }
+    fn _create_conversion_transverse_mercator(&self) { unimplemented!() }
+    fn _create_conversion_gauss_schreiber_transverse_mercator(&self) { unimplemented!() }
+    fn _create_conversion_transverse_mercator_south_oriented(&self) { unimplemented!() }
+    fn _create_conversion_two_point_equidistant(&self) { unimplemented!() }
+    fn _create_conversion_tunisia_mapping_grid(&self) { unimplemented!() }
+    fn _create_conversion_tunisia_mining_grid(&self) { unimplemented!() }
+    fn _create_conversion_albers_equal_area(&self) { unimplemented!() }
+    fn _create_conversion_lambert_conic_conformal_1sp(&self) { unimplemented!() }
+    fn _create_conversion_lambert_conic_conformal_1sp_variant_b(&self) { unimplemented!() }
+    fn _create_conversion_lambert_conic_conformal_2sp(&self) { unimplemented!() }
+    fn _create_conversion_lambert_conic_conformal_2sp_michigan(&self) { unimplemented!() }
+    fn _create_conversion_lambert_conic_conformal_2sp_belgium(&self) { unimplemented!() }
+    fn _create_conversion_azimuthal_equidistant(&self) { unimplemented!() }
+    fn _create_conversion_guam_projection(&self) { unimplemented!() }
+    fn _create_conversion_bonne(&self) { unimplemented!() }
+    fn _create_conversion_lambert_cylindrical_equal_area_spherical(&self) { unimplemented!() }
+    fn _create_conversion_lambert_cylindrical_equal_area(&self) { unimplemented!() }
+    fn _create_conversion_cassini_soldner(&self) { unimplemented!() }
+    fn _create_conversion_equidistant_conic(&self) { unimplemented!() }
+    fn _create_conversion_eckert_i(&self) { unimplemented!() }
+    fn _create_conversion_eckert_ii(&self) { unimplemented!() }
+    fn _create_conversion_eckert_iii(&self) { unimplemented!() }
+    fn _create_conversion_eckert_iv(&self) { unimplemented!() }
+    fn _create_conversion_eckert_v(&self) { unimplemented!() }
+    fn _create_conversion_eckert_vi(&self) { unimplemented!() }
+    fn _create_conversion_equidistant_cylindrical(&self) { unimplemented!() }
+    fn _create_conversion_equidistant_cylindrical_spherical(&self) { unimplemented!() }
+    fn _create_conversion_gall(&self) { unimplemented!() }
+    fn _create_conversion_goode_homolosine(&self) { unimplemented!() }
+    fn _create_conversion_interrupted_goode_homolosine(&self) { unimplemented!() }
+    fn _create_conversion_geostationary_satellite_sweep_x(&self) { unimplemented!() }
+    fn _create_conversion_geostationary_satellite_sweep_y(&self) { unimplemented!() }
+    fn _create_conversion_gnomonic(&self) { unimplemented!() }
+    fn _create_conversion_hotine_oblique_mercator_variant_a(&self) { unimplemented!() }
+    fn _create_conversion_hotine_oblique_mercator_variant_b(&self) { unimplemented!() }
     fn _create_conversion_hotine_oblique_mercator_two_point_natural_origin(&self) {
         unimplemented!()
     }
-    fn _create_conversion_laborde_oblique_mercator(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_international_map_world_polyconic(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_krovak_north_oriented(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_krovak(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_lambert_azimuthal_equal_area(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_miller_cylindrical(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_mercator_variant_a(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_mercator_variant_b(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_popular_visualisation_pseudo_mercator(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_mollweide(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_new_zealand_mapping_grid(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_oblique_stereographic(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_orthographic(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_local_orthographic(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_american_polyconic(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_polar_stereographic_variant_a(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_polar_stereographic_variant_b(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_robinson(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_sinusoidal(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_stereographic(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_wagner_i(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_wagner_ii(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_wagner_iii(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_wagner_iv(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_wagner_v(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_wagner_vi(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_wagner_vii(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_quadrilateralized_spherical_cube(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_spherical_cross_track_height(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_equal_earth(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_vertical_perspective(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_pole_rotation_grib_convention(&self) {
-        unimplemented!()
-    }
-    fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) {
-        unimplemented!()
-    }
+    fn _create_conversion_laborde_oblique_mercator(&self) { unimplemented!() }
+    fn _create_conversion_international_map_world_polyconic(&self) { unimplemented!() }
+    fn _create_conversion_krovak_north_oriented(&self) { unimplemented!() }
+    fn _create_conversion_krovak(&self) { unimplemented!() }
+    fn _create_conversion_lambert_azimuthal_equal_area(&self) { unimplemented!() }
+    fn _create_conversion_miller_cylindrical(&self) { unimplemented!() }
+    fn _create_conversion_mercator_variant_a(&self) { unimplemented!() }
+    fn _create_conversion_mercator_variant_b(&self) { unimplemented!() }
+    fn _create_conversion_popular_visualisation_pseudo_mercator(&self) { unimplemented!() }
+    fn _create_conversion_mollweide(&self) { unimplemented!() }
+    fn _create_conversion_new_zealand_mapping_grid(&self) { unimplemented!() }
+    fn _create_conversion_oblique_stereographic(&self) { unimplemented!() }
+    fn _create_conversion_orthographic(&self) { unimplemented!() }
+    fn _create_conversion_local_orthographic(&self) { unimplemented!() }
+    fn _create_conversion_american_polyconic(&self) { unimplemented!() }
+    fn _create_conversion_polar_stereographic_variant_a(&self) { unimplemented!() }
+    fn _create_conversion_polar_stereographic_variant_b(&self) { unimplemented!() }
+    fn _create_conversion_robinson(&self) { unimplemented!() }
+    fn _create_conversion_sinusoidal(&self) { unimplemented!() }
+    fn _create_conversion_stereographic(&self) { unimplemented!() }
+    fn _create_conversion_wagner_i(&self) { unimplemented!() }
+    fn _create_conversion_wagner_ii(&self) { unimplemented!() }
+    fn _create_conversion_wagner_iii(&self) { unimplemented!() }
+    fn _create_conversion_wagner_iv(&self) { unimplemented!() }
+    fn _create_conversion_wagner_v(&self) { unimplemented!() }
+    fn _create_conversion_wagner_vi(&self) { unimplemented!() }
+    fn _create_conversion_wagner_vii(&self) { unimplemented!() }
+    fn _create_conversion_quadrilateralized_spherical_cube(&self) { unimplemented!() }
+    fn _create_conversion_spherical_cross_track_height(&self) { unimplemented!() }
+    fn _create_conversion_equal_earth(&self) { unimplemented!() }
+    fn _create_conversion_vertical_perspective(&self) { unimplemented!() }
+    fn _create_conversion_pole_rotation_grib_convention(&self) { unimplemented!() }
+    fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { unimplemented!() }
 }
 impl crate::Pj {
-    fn _get_type(&self) {
-        unimplemented!()
-    }
-    fn _is_equivalent_to(&self) {
-        unimplemented!()
-    }
-    fn _is_crs(&self) {
-        unimplemented!()
-    }
-    fn _get_name(&self) {
-        unimplemented!()
-    }
-    fn _get_id_auth_name(&self) {
-        unimplemented!()
-    }
-    fn _get_id_code(&self) {
-        unimplemented!()
-    }
-    fn _get_remarks(&self) {
-        unimplemented!()
-    }
-    fn _get_domain_count(&self) {
-        unimplemented!()
-    }
-    fn _get_scope(&self) {
-        unimplemented!()
-    }
-    fn _get_scope_ex(&self) {
-        unimplemented!()
-    }
+    fn _get_type(&self) { unimplemented!() }
+    fn _is_equivalent_to(&self) { unimplemented!() }
+    fn _is_crs(&self) { unimplemented!() }
+    fn _get_name(&self) { unimplemented!() }
+    fn _get_id_auth_name(&self) { unimplemented!() }
+    fn _get_id_code(&self) { unimplemented!() }
+    fn _get_remarks(&self) { unimplemented!() }
+    fn _get_domain_count(&self) { unimplemented!() }
+    fn _get_scope(&self) { unimplemented!() }
+    fn _get_scope_ex(&self) { unimplemented!() }
 }
-fn _proj_string_list_destroy() {
-    unimplemented!()
-}
-fn _proj_int_list_destroy() {
-    unimplemented!()
-}
-fn _proj_celestial_body_list_destroy() {
-    unimplemented!()
-}
-fn _proj_get_crs_list_parameters_create() {
-    unimplemented!()
-}
-fn _proj_get_crs_list_parameters_destroy() {
-    unimplemented!()
-}
-fn _proj_crs_info_list_destroy() {
-    unimplemented!()
-}
-fn _proj_unit_list_destroy() {
-    unimplemented!()
-}
-fn _proj_insert_object_session_create() {
-    unimplemented!()
-}
-fn _proj_string_destroy() {
-    unimplemented!()
-}
-fn _proj_operation_factory_context_destroy() {
-    unimplemented!()
-}
-fn _proj_list_get_count() {
-    unimplemented!()
-}
-fn _proj_list_destroy() {
-    unimplemented!()
-}
+fn _proj_string_list_destroy() { unimplemented!() }
+fn _proj_int_list_destroy() { unimplemented!() }
+fn _proj_celestial_body_list_destroy() { unimplemented!() }
+fn _proj_get_crs_list_parameters_create() { unimplemented!() }
+fn _proj_get_crs_list_parameters_destroy() { unimplemented!() }
+fn _proj_crs_info_list_destroy() { unimplemented!() }
+fn _proj_unit_list_destroy() { unimplemented!() }
+fn _proj_insert_object_session_create() { unimplemented!() }
+fn _proj_string_destroy() { unimplemented!() }
+fn _proj_operation_factory_context_destroy() { unimplemented!() }
+fn _proj_list_get_count() { unimplemented!() }
+fn _proj_list_destroy() { unimplemented!() }

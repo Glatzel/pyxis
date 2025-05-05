@@ -136,7 +136,8 @@ where
 ///
 /// # Returns
 ///
-/// A tuple `(lon, lat)` representing the coordinates in the `GCJ02` coordinate system:
+/// A tuple `(lon, lat)` representing the coordinates in the `GCJ02` coordinate
+/// system:
 /// - `lon`: Longitude in the `GCJ02` coordinate system.
 /// - `lat`: Latitude in the `GCJ02` coordinate system.
 ///
@@ -172,7 +173,8 @@ where
 ///
 /// # Returns
 ///
-/// A tuple `(lon, lat)` representing the coordinates in the `WGS84` coordinate system:
+/// A tuple `(lon, lat)` representing the coordinates in the `WGS84` coordinate
+/// system:
 /// - `lon`: Longitude in the `WGS84` coordinate system.
 /// - `lat`: Latitude in the `WGS84` coordinate system.
 ///
@@ -202,7 +204,8 @@ where
 ///
 /// # Returns
 ///
-/// A tuple `(lon, lat)` representing the coordinates in the `WGS84` coordinate system:
+/// A tuple `(lon, lat)` representing the coordinates in the `WGS84` coordinate
+/// system:
 /// - `lon`: Longitude in the `WGS84` coordinate system.
 /// - `lat`: Latitude in the `WGS84` coordinate system.
 ///
@@ -232,7 +235,8 @@ where
 ///
 /// # Returns
 ///
-/// A tuple `(lon, lat)` representing the coordinates in the `BD09` coordinate system:
+/// A tuple `(lon, lat)` representing the coordinates in the `BD09` coordinate
+/// system:
 /// - `lon`: Longitude in the `BD09` coordinate system.
 /// - `lat`: Latitude in the `BD09` coordinate system.
 ///
@@ -267,7 +271,8 @@ where
 ///
 /// # Returns
 ///
-/// A tuple `(lon, lat)` representing the coordinates in the `GCJ02` coordinate system:
+/// A tuple `(lon, lat)` representing the coordinates in the `GCJ02` coordinate
+/// system:
 /// - `lon`: Longitude in the `GCJ02` coordinate system.
 /// - `lat`: Latitude in the `GCJ02` coordinate system.
 ///
@@ -298,7 +303,8 @@ where
 ///
 /// # Returns
 ///
-/// A tuple `(lon, lat)` representing the coordinates in the `WGS84` coordinate system:
+/// A tuple `(lon, lat)` representing the coordinates in the `WGS84` coordinate
+/// system:
 /// - `wgs84_lon`: Longitude in the `WGS84` coordinate system.
 /// - `wgs84_lat`: Latitude in the `WGS84` coordinate system.
 ///
@@ -414,7 +420,8 @@ where
     }
     (dst_lon, dst_lat)
 }
-/// distance calculate the distance between point(lat_a, lon_a) and point(lat_b, lon_b), unit in meter.
+/// distance calculate the distance between point(lat_a, lon_a) and point(lat_b,
+/// lon_b), unit in meter.
 pub fn haversine_distance<T>(lon_a: T, lat_a: T, lon_b: T, lat_b: T) -> T
 where
     T: GeoFloat + ConstEllipsoid<T> + 'static,

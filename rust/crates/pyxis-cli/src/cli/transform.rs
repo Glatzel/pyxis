@@ -19,7 +19,8 @@ pub enum TransformCommands {
     },
 
     #[bpaf(command, adjacent)]
-    /// Converts projected XY coordinates from the height compensation plane to the sea level plane.
+    /// Converts projected XY coordinates from the height compensation plane to
+    /// the sea level plane.
     DatumCompense {
         #[bpaf(short, long)]
         /// Elevation of the height compensation plane (in meters).
@@ -57,12 +58,15 @@ pub enum TransformCommands {
     Normalize {},
 
     #[bpaf(command, adjacent)]
-    /// Transform coordinate from one known coordinate reference systems to another.
+    /// Transform coordinate from one known coordinate reference systems to
+    /// another.
     ///
     ///  The `from` and `to` can be:
     ///  - an "AUTHORITY:CODE", like "EPSG:25832".
-    ///  - a PROJ string, like "+proj=longlat +datum=WGS84". When using that syntax, the unit is expected to be degrees.
-    ///  - the name of a CRS as found in the PROJ database, e.g "WGS84", "NAD27", etc.
+    ///  - a PROJ string, like "+proj=longlat +datum=WGS84". When using that
+    ///    syntax, the unit is expected to be degrees.
+    ///  - the name of a CRS as found in the PROJ database, e.g "WGS84",
+    ///    "NAD27", etc.
     Proj {
         #[bpaf(short, long, argument("PROJ"))]
         from: String,
@@ -105,7 +109,8 @@ pub enum TransformCommands {
     },
 
     #[bpaf(command, adjacent)]
-    /// Transforms coordinates between Cartesian, cylindrical, and spherical coordinate systems.
+    /// Transforms coordinates between Cartesian, cylindrical, and spherical
+    /// coordinate systems.
     Space {
         #[bpaf(short, long)]
         from: CoordSpace,

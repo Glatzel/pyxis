@@ -1,6 +1,12 @@
 fn _list_operations() -> Vec<crate::PjOperations> {
     unimplemented!()
 }
+///Get a pointer to an array of ellipsoids defined in PROJ. The last entry of
+/// the returned array is a NULL-entry. The array is statically allocated and
+/// does not need to be freed after use.
+///
+/// # References
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_ellps>
 pub fn list_ellps() -> Vec<crate::PjEllps> {
     let ptr = unsafe { proj_sys::proj_list_ellps() };
     let mut out_vec = Vec::new();

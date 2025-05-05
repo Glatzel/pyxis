@@ -25,7 +25,8 @@ pub fn compute_version(maj: u32, min: u32, patch: u32) -> u32 {
 pub const PROJ_VERSION_NUMBER: u32 =
     PROJ_VERSION_MAJOR * 10000 + PROJ_VERSION_MINOR * 100 + PROJ_VERSION_PATCH;
 
-///Macro that returns true if the current PROJ version is at least the version specified by (maj,min,patch)
+///Macro that returns true if the current PROJ version is at least the version
+/// specified by (maj,min,patch)
 ///
 ///Equivalent to `PROJ_VERSION_NUMBER >= PROJ_COMPUTE_VERSION(maj,min,patch)`
 ///# Reference

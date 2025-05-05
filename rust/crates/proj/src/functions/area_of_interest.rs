@@ -3,7 +3,7 @@ impl Default for crate::PjArea {
         Self::new()
     }
 }
-
+///# Area of interest
 impl crate::PjArea {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>

@@ -1,7 +1,5 @@
 use crate::{array4_to_pj_coord, check_result};
 ///# Distances
-/// # References
-///<https://proj.org/en/stable/development/reference/functions.html#distances>
 impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>

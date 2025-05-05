@@ -1,3 +1,4 @@
+///# Error reporting
 impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_errno>
@@ -27,6 +28,7 @@ impl crate::Pj {
         crate::c_char_to_string(unsafe { proj_sys::proj_errno_string(i32::from(err)) })
     }
 }
+///# Error reporting
 impl crate::PjContext {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno>

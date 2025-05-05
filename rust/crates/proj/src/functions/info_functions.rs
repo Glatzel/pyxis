@@ -14,7 +14,7 @@ pub fn info() -> crate::PjInfo {
         crate::c_char_to_string(src.searchpath),
     )
 }
-///Info functions
+///# Info functions
 impl crate::Pj {
     /// Get information about a specific grid.
     ///

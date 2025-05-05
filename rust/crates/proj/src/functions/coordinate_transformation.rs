@@ -3,8 +3,6 @@ use crate::array4_to_pj_coord;
 use crate::check_result;
 
 // region:Coordinate transformation
-/// # References
-///<https://proj.org/en/stable/development/reference/functions.html#coordinate-transformation>
 impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>

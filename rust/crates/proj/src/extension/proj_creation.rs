@@ -1,16 +1,20 @@
 pub enum PJParams<'a> {
     // Transformation setup
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     ByDefination {
         definition: &'a str,
     },
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     ByArgv {
         argv: Vec<&'a str>,
     },
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     ByCrsToCrs {
         source_crs: &'a str,
         target_crs: &'a str,
         area: &'a crate::PjArea,
     },
+    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     ByCrsToCrsFromPj {
         source_crs: crate::Pj,
         target_crs: crate::Pj,

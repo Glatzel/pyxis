@@ -22,6 +22,7 @@ pub(crate) enum PjErrorCode {
     OtherNoInverseOp,
     OtherNetworkError,
 }
+
 impl From<u32> for PjErrorCode {
     fn from(value: u32) -> Self {
         match value {
@@ -58,6 +59,7 @@ impl From<u32> for PjErrorCode {
         }
     }
 }
+
 impl From<&PjErrorCode> for i32 {
     fn from(value: &PjErrorCode) -> Self {
         match value {

@@ -1,6 +1,7 @@
 use std::ffi::c_void;
 
 use crate::PjLogLevel;
+
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
     let message = crate::c_char_to_string(info);
 
@@ -11,6 +12,7 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
         _ => (),
     };
 }
+
 impl crate::PjContext {
     pub fn set_log_level(&self, level: PjLogLevel) -> &Self {
         unsafe {
@@ -19,11 +21,13 @@ impl crate::PjContext {
         self
     }
 }
+
 #[cfg(test)]
 mod test {
     use tracing::level_filters::LevelFilter;
     use tracing_subscriber::layer::SubscriberExt;
     use tracing_subscriber::util::SubscriberInitExt;
+
     #[test]
     fn test_log() -> miette::Result<()> {
         tracing_subscriber::registry()
@@ -35,6 +39,7 @@ mod test {
 
         Ok(())
     }
+
     #[test]
     fn test_log_error() -> miette::Result<()> {
         tracing_subscriber::registry()
@@ -46,6 +51,7 @@ mod test {
         assert!(pj.is_err());
         Ok(())
     }
+
     #[test]
     fn test_log_change_level() -> miette::Result<()> {
         tracing_subscriber::registry()

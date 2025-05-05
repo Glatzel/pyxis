@@ -47,7 +47,7 @@
         "rust-analyzer.cargo.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
             "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig",
-           "PATH": "${workspaceFolder}/rust/.pixi/envs/default/Library/bin;${env:Path}"
+            "PATH": "${workspaceFolder}/rust/.pixi/envs/default/Library/bin;${env:Path}"
         },
         "rust-analyzer.runnables.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
@@ -74,7 +74,12 @@
         "files.associations": {
             "random": "cpp",
             "algorithm": "cpp"
-        }
+        },
+        "rust-analyzer.rustfmt.extraArgs": [
+            "+nightly",
+            "--config-path",
+            "${workspaceFolder}/rust/rustfmt.toml"
+        ]
         // ,"rust-analyzer.cargo.features": "all"
     }
 }

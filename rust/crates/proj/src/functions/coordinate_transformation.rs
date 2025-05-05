@@ -36,6 +36,8 @@ impl crate::Pj {
     fn _get_last_used_operation(&self) -> Self {
         unimplemented!()
     }
+    /// # Safety
+    /// If x,y is not null pointer.
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
     pub unsafe fn trans_generic(

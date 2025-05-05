@@ -98,7 +98,7 @@ mod test {
 
     #[test]
     fn test_lp_dist() -> miette::Result<()> {
-        let ctx = crate::init_test_ctx();
+        let ctx = crate::new_test_ctx();
         let pj = ctx.create("EPSG:4326")?;
         let dist = pj.lp_dist(
             (1.0f64.to_radians(), 2.0f64.to_radians()),
@@ -109,7 +109,7 @@ mod test {
     }
     #[test]
     fn test_lpz_dist() -> miette::Result<()> {
-        let ctx = crate::init_test_ctx();
+        let ctx = crate::new_test_ctx();
         let pj = ctx.create("EPSG:4326")?;
         let dist = pj.lpz_dist(
             (118.0f64.to_radians(), 30.0f64.to_radians(), 1.0),
@@ -120,7 +120,7 @@ mod test {
     }
     #[test]
     fn test_geod() -> miette::Result<()> {
-        let ctx = crate::init_test_ctx();
+        let ctx = crate::new_test_ctx();
         let pj = ctx.create("EPSG:4326")?;
         let (dist, reversed_azimuth) = pj.geod(
             (1.0f64.to_radians(), 2.0f64.to_radians()),

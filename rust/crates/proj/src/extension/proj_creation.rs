@@ -72,7 +72,7 @@ impl crate::PjContext {
 mod test {
     #[test]
     fn test_create_epsg_code() -> miette::Result<()> {
-        let ctx = crate::init_test_ctx();
+        let ctx = crate::new_test_ctx();
         ctx.create_epsg_code(4326)?;
         Ok(())
     }

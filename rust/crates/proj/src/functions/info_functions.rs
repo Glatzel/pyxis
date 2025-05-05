@@ -76,7 +76,7 @@ mod test {
     use super::*;
     #[test]
     fn test_ctx_info() -> miette::Result<()> {
-        let ctx = crate::init_test_ctx();
+        let ctx = crate::new_test_ctx();
         let pj = ctx.create("EPSG:4326")?;
         println!("{:?}", pj.info());
         Ok(())

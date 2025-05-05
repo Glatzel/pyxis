@@ -20,6 +20,9 @@ pub fn compute_version(maj: u32, min: u32, patch: u32) -> u32 {
     (maj) * 10000 + (min) * 100 + (patch)
 }
 
+///Total version number, equal to `PROJ_COMPUTE_VERSION(PROJ_VERSION_MAJOR,
+/// PROJ_VERSION_MINOR,PROJ_VERSION_PATCH)`
+///
 ///# Reference
 /// <https://proj.org/en/stable/development/reference/macros.html#c.PROJ_VERSION_NUMBER>
 pub const PROJ_VERSION_NUMBER: u32 =
@@ -29,6 +32,7 @@ pub const PROJ_VERSION_NUMBER: u32 =
 /// specified by (maj,min,patch)
 ///
 ///Equivalent to `PROJ_VERSION_NUMBER >= PROJ_COMPUTE_VERSION(maj,min,patch)`
+///
 ///# Reference
 /// <https://proj.org/en/stable/development/reference/macros.html#c.PROJ_AT_LEAST_VERSION>
 pub fn at_least_version(maj: u32, min: u32, patch: u32) -> bool {

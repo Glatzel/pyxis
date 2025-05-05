@@ -29,6 +29,12 @@ pub fn list_ellps() -> Vec<crate::PjEllps> {
     }
     out_vec
 }
+///Get a pointer to an array of distance units defined in PROJ. The last entry
+/// of the returned array is a NULL-entry. The array is statically allocated and
+/// does not need to be freed after use.
+///
+/// # References
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_units>
 pub fn list_units() -> Vec<crate::PjUnits> {
     let ptr = unsafe { proj_sys::proj_list_units() };
     let mut out_vec = Vec::new();
@@ -50,6 +56,13 @@ pub fn list_units() -> Vec<crate::PjUnits> {
     }
     out_vec
 }
+///Get a pointer to an array of hard-coded prime meridians defined in PROJ.
+/// Note that this list is no longer updated. The last entry of the returned
+/// array is a NULL-entry. The array is statically allocated and does not need
+/// to be freed after use.
+///
+/// # References
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_prime_meridians>
 pub fn list_prime_meridians() -> Vec<crate::PjPrimeMeridians> {
     let ptr = unsafe { proj_sys::proj_list_prime_meridians() };
     let mut out_vec = Vec::new();

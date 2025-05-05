@@ -2,6 +2,10 @@ pub struct Pj {
     pub(crate) pj: *mut proj_sys::PJ,
 }
 
+/// Enumeration that is used to convey in which direction a given transformation
+/// should be performed. Used in transformation function call as described in
+/// the section on transformation functions.
+///
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_DIRECTION>
 pub enum PjDirection {

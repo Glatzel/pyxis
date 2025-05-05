@@ -70,7 +70,10 @@ impl crate::Pj {
         Ok((dist, reversed_azimuth))
     }
 }
-
+/// Calculate 2-dimensional euclidean between two projected coordinates.
+///
+/// # References
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
 pub fn xy_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
     Ok(unsafe {
         proj_sys::proj_xy_dist(
@@ -79,7 +82,10 @@ pub fn xy_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Resu
         )
     })
 }
-
+/// Calculate 3-dimensional euclidean between two projected coordinates.
+///
+/// # References
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_xyz_dist>
 pub fn xyz_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
     Ok(unsafe {
         proj_sys::proj_xyz_dist(

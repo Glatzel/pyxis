@@ -1,6 +1,6 @@
 #[cfg(any(feature = "unsuggested", test))]
 use crate::array4_to_pj_coord;
-use crate::check_pj_result;
+use crate::check_result;
 
 // region:Coordinate transformation
 /// # References
@@ -20,7 +20,7 @@ impl crate::Pj {
                 array4_to_pj_coord(coord.to_array4())?,
             )
         };
-        check_pj_result!(self);
+        check_result!(self);
         let out_coord = unsafe {
             T::from_pj_coord(
                 out_coord.xyzt.x,
@@ -38,7 +38,7 @@ impl crate::Pj {
     }
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
-    pub(crate) fn trans_generic(
+    pub unsafe fn trans_generic(
         &self,
         direction: crate::PjDirection,
         x: *mut f64,
@@ -72,7 +72,7 @@ impl crate::Pj {
                 nt,
             )
         };
-        check_pj_result!(self);
+        check_result!(self);
         Ok(result)
     }
     /// Not suggested
@@ -102,7 +102,7 @@ impl crate::Pj {
         coord.iter_mut().zip(temp).for_each(|(c, t)| {
             *c = unsafe { T::from_pj_coord(t.xyzt.x, t.xyzt.y, t.xyzt.z, t.xyzt.t) }
         });
-        check_pj_result!(self, code);
+        check_result!(self, code);
         Ok(self)
     }
 }

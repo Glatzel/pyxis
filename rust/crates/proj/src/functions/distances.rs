@@ -1,4 +1,4 @@
-use crate::{array4_to_pj_coord, check_pj_result};
+use crate::{array4_to_pj_coord, check_result};
 ///# Distances
 /// # References
 ///<https://proj.org/en/stable/development/reference/functions.html#distances>
@@ -13,7 +13,7 @@ impl crate::Pj {
                 array4_to_pj_coord(b.to_array4())?,
             )
         };
-        check_pj_result!(self);
+        check_result!(self);
         if dist.is_nan() {
             miette::bail!(
                 help = "Check Pj object and make sure input coordinates are in radians.",
@@ -36,7 +36,7 @@ impl crate::Pj {
                 array4_to_pj_coord(b.to_array4())?,
             )
         };
-        check_pj_result!(self);
+        check_result!(self);
         if dist.is_nan() {
             miette::bail!(
                 help = "Check Pj object and make sure input coordinates are in radians.",
@@ -59,7 +59,7 @@ impl crate::Pj {
                 array4_to_pj_coord(b.to_array4())?,
             )
         };
-        check_pj_result!(self);
+        check_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };
         if dist.is_nan() || reversed_azimuth.is_nan() {
             miette::bail!(

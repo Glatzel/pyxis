@@ -1,6 +1,6 @@
 use miette::IntoDiagnostic;
 
-use crate::check_context_result;
+use crate::check_result;
 /// # Transformation setup
 /// ## References
 ///<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
@@ -12,7 +12,7 @@ impl crate::PjContext {
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr()) },
         };
-        check_context_result!(self);
+        check_result!(self);
         Ok(pj)
     }
     /// # References
@@ -26,7 +26,7 @@ impl crate::PjContext {
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },
         };
-        check_context_result!(self);
+        check_result!(self);
         Ok(pj)
     }
     /// # References
@@ -49,7 +49,7 @@ impl crate::PjContext {
                 )
             },
         };
-        check_context_result!(self);
+        check_result!(self);
         Ok(pj)
     }
     /// # References
@@ -102,7 +102,7 @@ impl crate::PjContext {
                 )
             },
         };
-        check_context_result!(self);
+        check_result!(self);
         Ok(pj)
     }
     /// # References

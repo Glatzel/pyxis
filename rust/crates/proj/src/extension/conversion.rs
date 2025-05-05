@@ -15,15 +15,15 @@ impl crate::Pj {
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => {
-                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0)
+                unsafe { self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0) }
             }
             //3d
             (false, false, false, true) => {
-                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0)
+                unsafe { self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0) }
             }
             //4d
             (false, false, false, false) => {
-                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)
+                unsafe { self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1) }
             }
             (x, y, z, t) => {
                 miette::bail!(format!(
@@ -46,15 +46,15 @@ impl crate::Pj {
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => {
-                self.trans_generic(PjFwd, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0)
+                unsafe { self.trans_generic(PjFwd, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0) }
             }
             //3d
             (false, false, false, true) => {
-                self.trans_generic(PjFwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0)
+                unsafe { self.trans_generic(PjFwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0) }
             }
             //4d
             (false, false, false, false) => {
-                self.trans_generic(PjFwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)
+                unsafe { self.trans_generic(PjFwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1) }
             }
             (x, y, z, t) => {
                 miette::bail!(format!(
@@ -82,17 +82,17 @@ impl crate::Pj {
 
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
-            (false, false, true, true) => self.trans_generic(
+            (false, false, true, true) => unsafe { self.trans_generic(
                 direction, x, size, length, y, size, length, z, 0, 0, t, 0, 0,
-            ),
+            ) },
             //3d
-            (false, false, false, true) => self.trans_generic(
+            (false, false, false, true) => unsafe { self.trans_generic(
                 direction, x, size, length, y, size, length, z, size, length, t, 0, 0,
-            ),
+            ) },
             //4d
-            (false, false, false, false) => self.trans_generic(
+            (false, false, false, false) => unsafe { self.trans_generic(
                 direction, x, size, length, y, size, length, z, size, length, t, size, length,
-            ),
+            ) },
             (x, y, z, t) => {
                 miette::bail!(format!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
@@ -116,17 +116,17 @@ impl crate::Pj {
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => {
-                self.trans_generic(PjFwd, x, size, length, y, size, length, z, 0, 0, t, 0, 0)
+                unsafe { self.trans_generic(PjFwd, x, size, length, y, size, length, z, 0, 0, t, 0, 0) }
             }
 
             //3d
-            (false, false, false, true) => self.trans_generic(
+            (false, false, false, true) => unsafe { self.trans_generic(
                 PjFwd, x, size, length, y, size, length, z, size, length, t, 0, 0,
-            ),
+            ) },
             //4d
-            (false, false, false, false) => self.trans_generic(
+            (false, false, false, false) => unsafe { self.trans_generic(
                 PjFwd, x, size, length, y, size, length, z, size, length, t, size, length,
-            ),
+            ) },
             (x, y, z, t) => {
                 miette::bail!(format!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"

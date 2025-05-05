@@ -12,7 +12,7 @@ impl crate::Pj {
     }
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_reset>
-    pub(crate) fn errno_reset(&self) -> crate::PjErrorCode {
+    pub(crate) fn _errno_reset(&self) -> crate::PjErrorCode {
         crate::PjErrorCode::from(unsafe { proj_sys::proj_errno_reset(self.pj) } as u32)
     }
     /// # References

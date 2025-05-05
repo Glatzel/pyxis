@@ -1,7 +1,7 @@
 use std::ffi::CString;
 use std::path::Path;
 
-use crate::check_context_result;
+use crate::check_result;
 
 impl crate::PjContext {
     pub fn set_fileapi(&self) {
@@ -24,7 +24,7 @@ impl crate::PjContext {
         unsafe {
             proj_sys::proj_context_set_search_paths(self.ctx, len as i32, paths_ptr.as_ptr());
         };
-        check_context_result!(self);
+        check_result!(self);
         Ok(self)
     }
     pub fn set_ca_bundle_path(&self) {

@@ -179,7 +179,7 @@ mod test {
         assert_approx_eq!(f64, factor.areal_scale().clone(), -21555626092.167713);
 
         assert_approx_eq!(f64, factor.angular_distortion().clone(), PI);
-        assert_approx_eq!(f64, factor.meridian_parallel_angle().clone(), FRAC_PI_2);
+        assert_approx_eq!(f64, factor.meridian_parallel_angle().clone(), -FRAC_PI_2);
         assert_approx_eq!(f64, factor.meridian_convergence().clone(), -FRAC_PI_2);
 
         assert_approx_eq!(f64, factor.tissot_semimajor().clone(), 193644.51017869514);

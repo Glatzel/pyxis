@@ -8,6 +8,7 @@ use crate::check_result;
 ///Setting custom I/O functions
 impl crate::PjContext {
     fn _set_fileapi(&self) { unimplemented!() }
+
     ///Set the name of a custom SQLite3 VFS.
     ///
     ///This should be a valid SQLite3 VFS name, such as the one passed to the
@@ -26,6 +27,7 @@ impl crate::PjContext {
         check_result!(self);
         Ok(self)
     }
+
     fn _set_file_finder(&self) { unimplemented!() }
     ///Sets search paths.
     ///
@@ -53,6 +55,7 @@ impl crate::PjContext {
         check_result!(self);
         Ok(self)
     }
+
     ///Sets CA Bundle path.
     ///
     ///Those CA Bundle path will be used by PROJ when curl and PROJ_NETWORK are

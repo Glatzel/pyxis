@@ -4,8 +4,6 @@ use miette::IntoDiagnostic;
 
 use crate::check_result;
 /// # Transformation setup
-/// ## References
-///<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 impl crate::PjContext {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
@@ -17,6 +15,7 @@ impl crate::PjContext {
         check_result!(self);
         Ok(pj)
     }
+
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Pj> {
@@ -31,6 +30,7 @@ impl crate::PjContext {
         check_result!(self);
         Ok(pj)
     }
+
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     pub fn create_crs_to_crs(
@@ -54,6 +54,7 @@ impl crate::PjContext {
         check_result!(self);
         Ok(pj)
     }
+
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub fn create_crs_to_crs_from_pj(
@@ -142,25 +143,28 @@ impl Drop for crate::Pj {
 mod test {
     #[test]
     fn test_create() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         ctx.create("EPSG:4326")?;
         Ok(())
     }
+
     #[test]
     fn test_create_argv() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
         Ok(())
     }
+
     #[test]
     fn test_create_crs_to_crs() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         Ok(())
     }
+
     #[test]
     fn test_create_crs_to_crs_from_pj() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4978")?;
         ctx.create_crs_to_crs_from_pj(

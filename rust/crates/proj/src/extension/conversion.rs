@@ -1,12 +1,12 @@
 use super::IPjCoord;
-use crate::PjDirection::{PjFwd, PjInv};
+use crate::PjDirection::{Fwd, Inv};
 
 impl crate::Pj {
     pub fn project<T>(&self, inv: bool, coord: &T) -> miette::Result<T>
     where
         T: IPjCoord,
     {
-        let direction = if inv { PjInv } else { PjFwd };
+        let direction = if inv { Inv } else { Fwd };
         let mut coord = coord.clone();
         let x = coord.pj_x();
         let y = coord.pj_y();
@@ -46,15 +46,15 @@ impl crate::Pj {
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => unsafe {
-                self.trans_generic(PjFwd, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0)
+                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0)
             },
             //3d
             (false, false, false, true) => unsafe {
-                self.trans_generic(PjFwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0)
+                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0)
             },
             //4d
             (false, false, false, false) => unsafe {
-                self.trans_generic(PjFwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)
+                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)
             },
             (x, y, z, t) => {
                 miette::bail!(format!(
@@ -72,7 +72,7 @@ impl crate::Pj {
     where
         T: IPjCoord,
     {
-        let direction = if inv { PjInv } else { PjFwd };
+        let direction = if inv { Inv } else { Fwd };
         let length = coord.len();
         let size = size_of::<T>();
         let x = coord[0].pj_x();
@@ -122,19 +122,19 @@ impl crate::Pj {
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => unsafe {
-                self.trans_generic(PjFwd, x, size, length, y, size, length, z, 0, 0, t, 0, 0)
+                self.trans_generic(Fwd, x, size, length, y, size, length, z, 0, 0, t, 0, 0)
             },
 
             //3d
             (false, false, false, true) => unsafe {
                 self.trans_generic(
-                    PjFwd, x, size, length, y, size, length, z, size, length, t, 0, 0,
+                    Fwd, x, size, length, y, size, length, z, size, length, t, 0, 0,
                 )
             },
             //4d
             (false, false, false, false) => unsafe {
                 self.trans_generic(
-                    PjFwd, x, size, length, y, size, length, z, size, length, t, size, length,
+                    Fwd, x, size, length, y, size, length, z, size, length, t, size, length,
                 )
             },
             (x, y, z, t) => {
@@ -151,7 +151,7 @@ impl crate::Pj {
 mod test {
     #[test]
     fn test_project_2d() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         // array
         {
@@ -171,7 +171,7 @@ mod test {
     }
     #[test]
     fn test_project_3d() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         // array
@@ -196,7 +196,7 @@ mod test {
     }
     #[test]
     fn test_convert_2d() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         // array
         {
@@ -217,7 +217,7 @@ mod test {
     }
     #[test]
     fn test_convert_3d() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         // array
@@ -242,7 +242,7 @@ mod test {
     }
     #[test]
     fn test_project_array_2d() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
@@ -259,7 +259,7 @@ mod test {
     }
     #[test]
     fn test_project_array_3d() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
@@ -276,7 +276,7 @@ mod test {
     }
     #[test]
     fn test_convert_array_2d() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
@@ -293,7 +293,7 @@ mod test {
     }
     #[test]
     fn test_convert_array_3d() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];

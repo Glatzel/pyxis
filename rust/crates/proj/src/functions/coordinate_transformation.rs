@@ -1,32 +1,17 @@
-#[cfg(any(feature = "unsuggested", test))]
-use crate::array4_to_pj_coord;
 use crate::check_result;
 
 // region:Coordinate transformation
 impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
-    #[cfg(any(feature = "unsuggested", test))]
-    pub fn trans<T>(&self, direction: crate::PjDirection, coord: T) -> miette::Result<T>
-    where
-        T: crate::IPjCoord,
-    {
-        let out_coord = unsafe {
-            proj_sys::proj_trans(
-                self.pj,
-                i32::from(direction),
-                array4_to_pj_coord(coord.to_array4())?,
-            )
-        };
+    #[cfg(any(feature = "unrecommended", test))]
+    pub fn trans(
+        &self,
+        direction: crate::PjDirection,
+        coord: crate::PjCoord,
+    ) -> miette::Result<crate::PjCoord> {
+        let out_coord = unsafe { proj_sys::proj_trans(self.pj, i32::from(direction), coord) };
         check_result!(self);
-        let out_coord = unsafe {
-            T::from_pj_coord(
-                out_coord.xyzt.x,
-                out_coord.xyzt.y,
-                out_coord.xyzt.z,
-                out_coord.xyzt.t,
-            )
-        };
         Ok(out_coord)
     }
     /// # References
@@ -73,37 +58,30 @@ impl crate::Pj {
         check_result!(self);
         Ok(result)
     }
+
     /// Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
-    #[cfg(any(feature = "unsuggested", test))]
-    pub fn trans_array<T>(
+    #[cfg(any(feature = "unrecommended", test))]
+    pub fn trans_array(
         &self,
         direction: crate::PjDirection,
-        coord: &mut [T],
-    ) -> miette::Result<&Self>
-    where
-        T: crate::IPjCoord,
-    {
-        let mut temp: Vec<proj_sys::PJ_COORD> = coord
-            .iter()
-            .map(|c| array4_to_pj_coord(c.clone().to_array4()).unwrap())
-            .collect();
+        coord: &mut [crate::PjCoord],
+    ) -> miette::Result<&Self> {
         let code = unsafe {
             proj_sys::proj_trans_array(
                 self.pj,
                 i32::from(direction),
                 coord.len(),
-                temp.as_mut_ptr(),
+                coord.as_mut_ptr(),
             )
         };
-        coord.iter_mut().zip(temp).for_each(|(c, t)| {
-            *c = unsafe { T::from_pj_coord(t.xyzt.x, t.xyzt.y, t.xyzt.z, t.xyzt.t) }
-        });
+
         check_result!(self, code);
         Ok(self)
     }
 }
+
 impl crate::PjContext {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
@@ -142,6 +120,7 @@ impl crate::PjContext {
         }
         Ok(self)
     }
+
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
     pub fn trans_bounds_3d(
@@ -191,35 +170,46 @@ impl crate::PjContext {
 #[cfg(test)]
 mod test {
     use float_cmp::assert_approx_eq;
+
     #[test]
     fn test_trans() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let coord = [120.0, 30.0];
-        let coord = pj.trans(crate::PjDirection::PjFwd, coord)?;
-        assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
+        let coord = crate::PjCoord {
+            xy: crate::PjXy { x: 120.0, y: 30.0 },
+        };
+        let coord = pj.trans(crate::PjDirection::Fwd, coord)?;
+
+        assert_eq!(unsafe { coord.xy.x }, 19955590.73888901);
+        assert_eq!(unsafe { coord.xy.y }, 3416780.562127255);
         Ok(())
     }
+
     #[test]
     fn test_trans_array() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let mut coord = [[120.0, 30.0], [50.0, -80.0]];
-        pj.trans_array(crate::PjDirection::PjFwd, &mut coord)?;
-        assert_eq!(
-            coord,
-            [
-                [19955590.73888901, 3416780.562127255],
-                [17583572.872089125, -9356989.97994042]
-            ]
-        );
+        let mut coord = [
+            crate::PjCoord {
+                xy: crate::PjXy { x: 120.0, y: 30.0 },
+            },
+            crate::PjCoord {
+                xy: crate::PjXy { x: 50.0, y: -80.0 },
+            },
+        ];
+        pj.trans_array(crate::PjDirection::Fwd, &mut coord)?;
+        assert_eq!(unsafe { coord[0].xy.x }, 19955590.73888901);
+        assert_eq!(unsafe { coord[0].xy.y }, 3416780.562127255);
+        assert_eq!(unsafe { coord[1].xy.x }, 17583572.872089125);
+        assert_eq!(unsafe { coord[1].xy.y }, -9356989.97994042);
         Ok(())
     }
+
     #[test]
     fn test_trans_bounds() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let xmin = 0.0;
@@ -233,7 +223,7 @@ mod test {
 
         ctx.trans_bounds(
             &pj,
-            crate::PjDirection::PjFwd,
+            crate::PjDirection::Fwd,
             xmin,
             ymin,
             xmax,
@@ -250,9 +240,10 @@ mod test {
         assert_approx_eq!(f64, out_ymax, 19555124.881683525);
         Ok(())
     }
+
     #[test]
     fn test_trans_bounds_3d() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let xmin = 0.0;
@@ -270,7 +261,7 @@ mod test {
 
         ctx.trans_bounds_3d(
             &pj,
-            crate::PjDirection::PjFwd,
+            crate::PjDirection::Fwd,
             xmin,
             ymin,
             zmin,

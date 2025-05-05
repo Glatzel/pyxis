@@ -22,6 +22,7 @@ pub(crate) enum PjErrorCode {
     OtherNoInverseOp,
     OtherNetworkError,
 }
+
 impl From<u32> for PjErrorCode {
     fn from(value: u32) -> Self {
         match value {
@@ -58,6 +59,7 @@ impl From<u32> for PjErrorCode {
         }
     }
 }
+
 impl From<&PjErrorCode> for i32 {
     fn from(value: &PjErrorCode) -> Self {
         match value {
@@ -104,5 +106,41 @@ impl From<&PjErrorCode> for i32 {
             PjErrorCode::OtherNoInverseOp => proj_sys::PROJ_ERR_OTHER_NO_INVERSE_OP as i32,
             PjErrorCode::OtherNetworkError => proj_sys::PROJ_ERR_OTHER_NETWORK_ERROR as i32,
         }
+    }
+}
+
+impl From<&PjErrorCode> for String {
+    fn from(value: &PjErrorCode) -> Self {
+        match value {
+            PjErrorCode::ProjSuccess => "SUCCESS",
+            //Errors in class PROJ_ERR_INVALID_OP
+            PjErrorCode::InvalidOp => "PROJ_ERR_INVALID_OP",
+            PjErrorCode::InvalidOpWrongSyntax => "PROJ_ERR_INVALID_OP_WRONG_SYNTAX",
+            PjErrorCode::InvalidOpMissingArg => "PROJ_ERR_INVALID_OP_MISSING_ARG",
+            PjErrorCode::InvalidOpIllegalArgValue => "PROJ_ERR_INVALID_OP_ILLEGAL_ARG_VALUE",
+            PjErrorCode::InvalidOpMutuallyExclusiveArgs => {
+                "PROJ_ERR_INVALID_OP_MUTUALLY_EXCLUSIVE_ARGS"
+            }
+            PjErrorCode::InvalidOpFileNotFoundOrInvalid => {
+                "PROJ_ERR_INVALID_OP_FILE_NOT_FOUND_OR_INVALID"
+            }
+            //Errors in class PROJ_ERR_COORD_TRANSFM
+            PjErrorCode::CoordTransfm => "PROJ_ERR_COORD_TRANSFM",
+            PjErrorCode::CoordTransfmInvalidCoord => "PROJ_ERR_COORD_TRANSFM_INVALID_COORD",
+            PjErrorCode::CoordTransfmOutsideProjectionDomain => {
+                "PROJ_ERR_COORD_TRANSFM_OUTSIDE_PROJECTION_DOMAIN"
+            }
+            PjErrorCode::CoordTransfmNoOperation => "PROJ_ERR_COORD_TRANSFM_NO_OPERATION",
+            PjErrorCode::CoordTransfmOutsideGrid => "PROJ_ERR_COORD_TRANSFM_OUTSIDE_GRID",
+            PjErrorCode::CoordTransfmGridAtNodata => "PROJ_ERR_COORD_TRANSFM_GRID_AT_NODATA",
+            PjErrorCode::CoordTransfmNoConvergence => "PROJ_ERR_COORD_TRANSFM_NO_CONVERGENCE",
+            PjErrorCode::CoordTransfmMissingTime => "PROJ_ERR_COORD_TRANSFM_MISSING_TIME",
+            //Errors in class PROJ_ERR_OTHER
+            PjErrorCode::Other => "PROJ_ERR_OTHER",
+            PjErrorCode::OtherApiMisuse => "PROJ_ERR_OTHER_API_MISUSE",
+            PjErrorCode::OtherNoInverseOp => "PROJ_ERR_OTHER_NO_INVERSE_OP",
+            PjErrorCode::OtherNetworkError => "PROJ_ERR_OTHER_NETWORK_ERROR",
+        }
+        .to_string()
     }
 }

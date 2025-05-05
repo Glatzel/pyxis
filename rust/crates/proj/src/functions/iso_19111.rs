@@ -188,6 +188,7 @@ impl crate::PjContext {
     fn _create_conversion_pole_rotation_grib_convention(&self) { unimplemented!() }
     fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { unimplemented!() }
 }
+
 impl crate::Pj {
     fn _get_type(&self) { unimplemented!() }
     fn _is_equivalent_to(&self) { unimplemented!() }
@@ -200,6 +201,7 @@ impl crate::Pj {
     fn _get_scope(&self) { unimplemented!() }
     fn _get_scope_ex(&self) { unimplemented!() }
 }
+
 fn _proj_string_list_destroy() { unimplemented!() }
 fn _proj_int_list_destroy() { unimplemented!() }
 fn _proj_celestial_body_list_destroy() { unimplemented!() }

@@ -143,28 +143,28 @@ impl Drop for crate::Pj {
 mod test {
     #[test]
     fn test_create() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         ctx.create("EPSG:4326")?;
         Ok(())
     }
 
     #[test]
     fn test_create_argv() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
         Ok(())
     }
 
     #[test]
     fn test_create_crs_to_crs() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         Ok(())
     }
 
     #[test]
     fn test_create_crs_to_crs_from_pj() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4978")?;
         ctx.create_crs_to_crs_from_pj(

@@ -152,7 +152,7 @@ mod test {
 
     #[test]
     fn test_roundtrip() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("+proj=tmerc +lat_0=0 +lon_0=75 +k=1 +x_0=13500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs","EPSG:4326",  &crate::PjArea::default())?;
         let mut coord =
             crate::array4_to_pj_coord((5877537.151800396, 4477291.358855194).to_array4())?;
@@ -164,7 +164,7 @@ mod test {
     }
     #[test]
     fn test_factors() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::PjArea::default())?;
         let factor = pj.factors(crate::array4_to_pj_coord(
             (12.0f64.to_radians(), 55.0f64.to_radians()).to_array4(),
@@ -193,7 +193,7 @@ mod test {
 
     #[test]
     fn test_factors_fail() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create("EPSG:4326")?;
         let factor = pj.factors(crate::array4_to_pj_coord(
             (12.0f64.to_radians(), 55.0f64.to_radians()).to_array4(),
@@ -215,7 +215,7 @@ mod test {
     }
     #[test]
     fn test_input_output_angle_format() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         assert!(!(pj.angular_input(&crate::PjDirection::PjFwd)?));
         assert!(!(pj.angular_output(&crate::PjDirection::PjFwd)?));

@@ -33,7 +33,7 @@ mod test {
         tracing_subscriber::registry()
             .with(clerk::terminal_layer(LevelFilter::TRACE, true))
             .init();
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         ctx.set_log_level(crate::PjLogLevel::Trace);
         let _ = ctx.create("EPSG:4326")?;
 
@@ -45,7 +45,7 @@ mod test {
         tracing_subscriber::registry()
             .with(clerk::terminal_layer(LevelFilter::DEBUG, true))
             .init();
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         ctx.set_log_level(crate::PjLogLevel::Trace);
         let pj = ctx.create("unknow crs");
         assert!(pj.is_err());
@@ -57,7 +57,7 @@ mod test {
         tracing_subscriber::registry()
             .with(clerk::terminal_layer(LevelFilter::TRACE, true))
             .init();
-        let ctx = crate::PjContext::default();
+        let ctx = crate::init_ctx();
         ctx.set_log_level(crate::PjLogLevel::Debug);
         let pj = ctx.create("Show log");
         assert!(pj.is_err());

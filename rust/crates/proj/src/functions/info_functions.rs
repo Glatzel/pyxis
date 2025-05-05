@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use miette::IntoDiagnostic;
 /// Get information about the current instance of the PROJ library.
 ///
@@ -36,9 +38,16 @@ impl crate::Pj {
 ///
 /// References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
-pub fn grid_info(gridname: &str) -> miette::Result<crate::PjGridInfo> {
-    let gridname = std::ffi::CString::new(gridname).into_diagnostic()?;
-    let src = unsafe { proj_sys::proj_grid_info(gridname.as_ptr()) };
+pub fn grid_info(grid: &Path) -> miette::Result<crate::PjGridInfo> {
+    if !grid.exists() {
+        miette::bail!("Grid file doesn't exist: {:?}", &grid)
+    }
+    let gridname_cstr =
+        std::ffi::CString::new(grid.to_string_lossy().to_string()).into_diagnostic()?;
+    let src = unsafe { proj_sys::proj_grid_info(gridname_cstr.as_ptr()) };
+    if crate::c_char_to_string(src.format.as_ptr()) == "missing" {
+        miette::bail!("Invalid grid: {:?}", grid)
+    }
     Ok(crate::PjGridInfo::new(
         crate::c_char_to_string(src.gridname.as_ptr()),
         crate::c_char_to_string(src.filename.as_ptr()),
@@ -68,10 +77,12 @@ pub fn init_info(initname: &str) -> miette::Result<crate::PjInitInfo> {
 }
 #[cfg(test)]
 mod test {
+    use std::path::PathBuf;
+
     use super::*;
     #[test]
     fn test_ctx_info() -> miette::Result<()> {
-        let ctx = crate::init_ctx();
+        let ctx = crate::init_test_ctx();
         let pj = ctx.create("EPSG:4326")?;
         println!("{:?}", pj.info());
         Ok(())
@@ -80,5 +91,26 @@ mod test {
     fn test_pj_info() {
         let info = info();
         println!("{:?}", info);
+    }
+
+    #[test]
+    fn test_grid_info() -> miette::Result<()> {
+        let workspace_dir = PathBuf::from(std::env::var("CARGO_WORKSPACE_DIR").into_diagnostic()?);
+        let info = grid_info(&workspace_dir.join("external/ntv2-file-routines/samples/mne.gsb"))?;
+        println!("{:?}", info);
+        assert_eq!(info.format(), "ntv2");
+        Ok(())
+    }
+    #[test]
+    fn test_grid_info_invalid_grid() -> miette::Result<()> {
+        let info = grid_info(&PathBuf::from("Cargo.toml"));
+        assert!(info.is_err());
+        Ok(())
+    }
+    #[test]
+    fn test_grid_info_not_exists() -> miette::Result<()> {
+        let info = grid_info(&PathBuf::from("invalid.tiff"));
+        assert!(info.is_err());
+        Ok(())
     }
 }

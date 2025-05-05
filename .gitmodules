@@ -1,0 +1,3 @@
+[submodule "rust/external/ntv2-file-routines"]
+	path = rust/external/ntv2-file-routines
+	url = https://github.com/Esri/ntv2-file-routines

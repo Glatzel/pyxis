@@ -178,7 +178,7 @@ mod test {
 
         assert_eq!(factor.angular_distortion(), &PI);
         assert_eq!(factor.meridian_parallel_angle(), &FRAC_PI_2);
-        assert_eq!(factor.meridian_convergence(), &-1.5707963267948966);
+        assert_eq!(factor.meridian_convergence(), &-FRAC_PI_2);
 
         assert_eq!(factor.tissot_semimajor(), &193644.51017869514);
         assert_eq!(factor.tissot_semiminor(), &-111315.45155747602);

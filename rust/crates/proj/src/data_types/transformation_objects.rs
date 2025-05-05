@@ -27,7 +27,8 @@ impl From<PjDirection> for i32 {
             PjDirection::PjInv => -1,
         }
     }
-}impl From<&PjDirection> for i32 {
+}
+impl From<&PjDirection> for i32 {
     fn from(value: &PjDirection) -> Self {
         match value {
             PjDirection::PjFwd => 1,

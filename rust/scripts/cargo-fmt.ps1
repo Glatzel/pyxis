@@ -5,10 +5,11 @@ Set-Location $PSScriptRoot/..
 & $PSScriptRoot/set-env.ps1
 
 if ($env:CI) {
-    cargo fmt --all -- --check --unstable-features
+    cargo +nightly fmt --all -- --check
 }
 else {
-    cargo fmt --all -- --unstable-features
+    cargo +nightly fmt --all
 }
+
 
 Set-Location $ROOT

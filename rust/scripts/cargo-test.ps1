@@ -2,7 +2,7 @@ $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 
 & $PSScriptRoot/set-env.ps1
-
+git submodule update --init --recursive
 if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "proj" }
 else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda", "-p", "proj" }
 

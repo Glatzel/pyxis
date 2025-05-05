@@ -188,18 +188,22 @@ mod test {
 
     #[test]
     fn test_trans_array() -> miette::Result<()> {
-        // let ctx = crate::PjContext::default();
-        // let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496",
-        // &crate::PjArea::default())?; let pj = ctx.
-        // normalize_for_visualization(&pj)?; let mut coord = [[120.0, 30.0],
-        // [50.0, -80.0]]; pj.trans_array(crate::PjDirection::PjFwd, &mut
-        // coord)?; assert_eq!(
-        //     coord,
-        //     [
-        //         [19955590.73888901, 3416780.562127255],
-        //         [17583572.872089125, -9356989.97994042]
-        //     ]
-        // );
+        let ctx = crate::PjContext::default();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
+        let mut coord = [
+            crate::PjCoord {
+                xy: crate::PjXy { x: 120.0, y: 30.0 },
+            },
+            crate::PjCoord {
+                xy: crate::PjXy { x: 50.0, y: -80.0 },
+            },
+        ];
+        pj.trans_array(crate::PjDirection::PjFwd, &mut coord)?;
+        assert_eq!(unsafe { coord[0].xy.x }, 19955590.73888901);
+        assert_eq!(unsafe { coord[0].xy.y }, 3416780.562127255);
+        assert_eq!(unsafe { coord[1].xy.x }, 17583572.872089125);
+        assert_eq!(unsafe { coord[1].xy.y }, -9356989.97994042);
         Ok(())
     }
 

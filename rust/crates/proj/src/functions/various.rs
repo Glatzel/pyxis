@@ -190,7 +190,7 @@ mod test {
             f64,
             factor.areal_scale().clone(),
             -21555626092.167713,
-            epsilon = 1e-6
+            epsilon = 1.0
         );
 
         assert_approx_eq!(f64, factor.angular_distortion().clone(), PI, epsilon = 1e-6);

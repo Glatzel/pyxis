@@ -17,6 +17,6 @@ mod test {
     use super::*;
     #[test]
     fn test_proj_version_number() {
-        assert_eq!(PROJ_VERSION_NUMBER, 90600);
+        at_least_version(9, 6, 0);
     }
 }

@@ -17,4 +17,4 @@ tracing-subscriber = { workspace = true }
 
 [features]
 log = ["clerk/log"]
-unsuggested = []
+unrecommended = []

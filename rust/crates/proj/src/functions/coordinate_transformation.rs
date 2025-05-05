@@ -1,4 +1,4 @@
-#[cfg(any(feature = "unsuggested", test))]
+#[cfg(any(feature = "unrecommended", test))]
 use crate::array4_to_pj_coord;
 use crate::check_result;
 
@@ -6,7 +6,7 @@ use crate::check_result;
 impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
-    #[cfg(any(feature = "unsuggested", test))]
+    #[cfg(any(feature = "unrecommended", test))]
     pub fn trans<T>(&self, direction: crate::PjDirection, coord: T) -> miette::Result<T>
     where
         T: crate::IPjCoord,
@@ -77,7 +77,7 @@ impl crate::Pj {
     /// Not suggested
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
-    #[cfg(any(feature = "unsuggested", test))]
+    #[cfg(any(feature = "unrecommended", test))]
     pub fn trans_array<T>(
         &self,
         direction: crate::PjDirection,

@@ -1,6 +1,6 @@
 mod area_of_interest;
 mod c_api_for_iso_19111_functionality;
-#[cfg(feature = "unsuggested")]
+#[cfg(feature = "unrecommended")]
 mod cleanup;
 mod coordinate_transformation;
 mod distances;
@@ -15,7 +15,7 @@ mod transformation_setup;
 mod various;
 
 // pub use iso19111::*;
-#[cfg(feature = "unsuggested")]
+#[cfg(feature = "unrecommended")]
 pub use cleanup::*;
 pub use distances::*;
 pub use info_functions::*;

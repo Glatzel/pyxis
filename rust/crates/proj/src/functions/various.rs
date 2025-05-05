@@ -214,10 +214,10 @@ mod test {
     fn test_input_output_angle_format() -> miette::Result<()> {
         let ctx = crate::PjContext::default();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
-        assert_eq!(pj.angular_input(&crate::PjDirection::PjFwd)?, false);
-        assert_eq!(pj.angular_output(&crate::PjDirection::PjFwd)?, false);
-        assert_eq!(pj.degree_input(&crate::PjDirection::PjFwd)?, true);
-        assert_eq!(pj.degree_output(&crate::PjDirection::PjFwd)?, false);
+        assert!(!(pj.angular_input(&crate::PjDirection::PjFwd)?));
+        assert!(!(pj.angular_output(&crate::PjDirection::PjFwd)?));
+        assert!(pj.degree_input(&crate::PjDirection::PjFwd)?);
+        assert!(!(pj.degree_output(&crate::PjDirection::PjFwd)?));
         Ok(())
     }
 }

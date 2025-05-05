@@ -2,6 +2,7 @@
 macro_rules! check_result {
     ($self:expr) => {
         let code = $self.errno();
+        let code_str = String::from(&code);
 
         match code {
             $crate::PjErrorCode::ProjSuccess => {
@@ -10,12 +11,14 @@ macro_rules! check_result {
             ecode => {
                 let report = $self.errno_string(&ecode);
                 clerk::error!(
-                    "Proj Process Failed. Exist code: {}. {}",
+                    "Proj Process Failed. Exist code: {}<{}>. {}",
+                    code_str,
                     i32::from(&ecode),
                     report
                 );
                 miette::bail!(
-                    "Proj Process Failed. Exist code: {}. {}",
+                    "Proj Process Failed. Exist code: {}<{}>. {}",
+                    code_str,
                     i32::from(&ecode),
                     report
                 )
@@ -24,6 +27,7 @@ macro_rules! check_result {
     };
     ($self:expr,$code:expr) => {
         let code = $crate::PjErrorCode::from($code as u32);
+        let code_str = String::from(&code);
         match code {
             $crate::PjErrorCode::ProjSuccess => {
                 clerk::debug!("Proj Process successed.");
@@ -31,12 +35,14 @@ macro_rules! check_result {
             ecode => {
                 let report = $self.errno_string(&ecode);
                 clerk::error!(
-                    "Proj Process Failed. Exist code: {}. {}",
+                    "Proj Process Failed. Exist code: {}<{}>. {}",
+                    code_str,
                     i32::from(&ecode),
                     report
                 );
                 miette::bail!(
-                    "Proj Process Failed. Exist code: {}. {}",
+                    "Proj Process Failed. Exist code: {}<{}>. {}",
+                    code_str,
                     i32::from(&ecode),
                     report
                 )

@@ -3,6 +3,7 @@ pub enum PjLogLevel {
     Error,
     Debug,
     Trace,
+    Tell,
 }
 impl Default for PjLogLevel {
     fn default() -> Self { Self::Error }
@@ -14,6 +15,7 @@ impl From<PjLogLevel> for i32 {
             PjLogLevel::Error => 1,
             PjLogLevel::Debug => 2,
             PjLogLevel::Trace => 3,
+            PjLogLevel::Tell => 4,
         }
     }
 }
@@ -24,6 +26,7 @@ impl From<PjLogLevel> for u32 {
             PjLogLevel::Error => 1,
             PjLogLevel::Debug => 2,
             PjLogLevel::Trace => 3,
+            PjLogLevel::Tell => 4,
         }
     }
 }

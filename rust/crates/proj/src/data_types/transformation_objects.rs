@@ -27,6 +27,14 @@ impl From<PjDirection> for i32 {
             PjDirection::PjInv => -1,
         }
     }
+}impl From<&PjDirection> for i32 {
+    fn from(value: &PjDirection) -> Self {
+        match value {
+            PjDirection::PjFwd => 1,
+            PjDirection::PjIdent => 0,
+            PjDirection::PjInv => -1,
+        }
+    }
 }
 ///Context objects enable safe multi-threaded usage of PROJ. Each PJ object is
 /// connected to a context (if not specified, the default context is used). All

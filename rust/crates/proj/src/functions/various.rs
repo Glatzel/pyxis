@@ -161,7 +161,7 @@ mod test {
         let distance = pj.roundtrip(&crate::PjDirection::PjFwd, 10000, &mut coord)?;
         println!("{:?}", unsafe { coord.xy.x });
         println!("{:?}", unsafe { coord.xy.y });
-        assert_eq!(distance, 0.023350762947799957);
+        assert_approx_eq!(f64, distance, 0.023350762947799957);
         Ok(())
     }
     #[test]

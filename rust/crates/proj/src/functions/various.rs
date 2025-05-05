@@ -39,7 +39,7 @@ impl crate::Pj {
     /// object, the above steps will modify the internal state of the provided P
     /// object, and thus calling this function concurrently from multiple
     /// threads on the same P object will no longer be supported.
-
+    /// 
     ///The input geodetic coordinate lp should be such that lp.lam is the
     /// longitude in radian, and lp.phi the latitude in radian (thus
     /// independently of the definition of the base CRS, if P is a projected

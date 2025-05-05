@@ -76,6 +76,7 @@
             "algorithm": "cpp"
         },
         "rust-analyzer.rustfmt.extraArgs": [
+            "--unstable-features",
             "--config-path",
             "${workspaceFolder}/rust/rustfmt.toml"
         ]

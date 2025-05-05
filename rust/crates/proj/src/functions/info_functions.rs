@@ -103,13 +103,13 @@ mod test {
 
     #[test]
     fn test_grid_info_invalid_grid() -> miette::Result<()> {
-        let info = grid_info(&"Cargo.toml");
+        let info = grid_info("Cargo.toml");
         assert!(info.is_err());
         Ok(())
     }
     #[test]
     fn test_grid_info_not_exists() -> miette::Result<()> {
-        let info = grid_info(&"invalid.tiff");
+        let info = grid_info("invalid.tiff");
         assert!(info.is_err());
         Ok(())
     }

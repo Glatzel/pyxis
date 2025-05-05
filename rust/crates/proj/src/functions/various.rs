@@ -158,7 +158,7 @@ mod test {
         let pj = ctx.create_crs_to_crs("+proj=tmerc +lat_0=0 +lon_0=75 +k=1 +x_0=13500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs","EPSG:4326",  &crate::PjArea::default())?;
         let mut coord =
             crate::array4_to_pj_coord((5877537.151800396, 4477291.358855194).to_array4())?;
-        let distance = pj.roundtrip(&crate::PjDirection::PjFwd, 10000, &mut coord)?;
+        let distance = pj.roundtrip(&crate::PjDirection::Fwd, 10000, &mut coord)?;
         println!("{:?}", unsafe { coord.xy.x });
         println!("{:?}", unsafe { coord.xy.y });
         assert_approx_eq!(f64, distance, 0.023350762947799957, epsilon = 1e-6);
@@ -269,10 +269,10 @@ mod test {
     fn test_input_output_angle_format() -> miette::Result<()> {
         let ctx = crate::init_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
-        assert!(!(pj.angular_input(&crate::PjDirection::PjFwd)?));
-        assert!(!(pj.angular_output(&crate::PjDirection::PjFwd)?));
-        assert!(pj.degree_input(&crate::PjDirection::PjFwd)?);
-        assert!(!(pj.degree_output(&crate::PjDirection::PjFwd)?));
+        assert!(!(pj.angular_input(&crate::PjDirection::Fwd)?));
+        assert!(!(pj.angular_output(&crate::PjDirection::Fwd)?));
+        assert!(pj.degree_input(&crate::PjDirection::Fwd)?);
+        assert!(!(pj.degree_output(&crate::PjDirection::Fwd)?));
         Ok(())
     }
 }

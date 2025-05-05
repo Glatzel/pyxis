@@ -15,25 +15,25 @@ pub struct Pj {
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_DIRECTION>
 pub enum PjDirection {
-    PjFwd,
-    PjIdent,
-    PjInv,
+    Fwd,
+    Ident,
+    Inv,
 }
 impl From<PjDirection> for i32 {
     fn from(value: PjDirection) -> Self {
         match value {
-            PjDirection::PjFwd => 1,
-            PjDirection::PjIdent => 0,
-            PjDirection::PjInv => -1,
+            PjDirection::Fwd => 1,
+            PjDirection::Ident => 0,
+            PjDirection::Inv => -1,
         }
     }
 }
 impl From<&PjDirection> for i32 {
     fn from(value: &PjDirection) -> Self {
         match value {
-            PjDirection::PjFwd => 1,
-            PjDirection::PjIdent => 0,
-            PjDirection::PjInv => -1,
+            PjDirection::Fwd => 1,
+            PjDirection::Ident => 0,
+            PjDirection::Inv => -1,
         }
     }
 }

@@ -179,7 +179,7 @@ mod test {
         let coord = crate::PjCoord {
             xy: crate::PjXy { x: 120.0, y: 30.0 },
         };
-        let coord = pj.trans(crate::PjDirection::PjFwd, coord)?;
+        let coord = pj.trans(crate::PjDirection::Fwd, coord)?;
 
         assert_eq!(unsafe { coord.xy.x }, 19955590.73888901);
         assert_eq!(unsafe { coord.xy.y }, 3416780.562127255);
@@ -199,7 +199,7 @@ mod test {
                 xy: crate::PjXy { x: 50.0, y: -80.0 },
             },
         ];
-        pj.trans_array(crate::PjDirection::PjFwd, &mut coord)?;
+        pj.trans_array(crate::PjDirection::Fwd, &mut coord)?;
         assert_eq!(unsafe { coord[0].xy.x }, 19955590.73888901);
         assert_eq!(unsafe { coord[0].xy.y }, 3416780.562127255);
         assert_eq!(unsafe { coord[1].xy.x }, 17583572.872089125);
@@ -223,7 +223,7 @@ mod test {
 
         ctx.trans_bounds(
             &pj,
-            crate::PjDirection::PjFwd,
+            crate::PjDirection::Fwd,
             xmin,
             ymin,
             xmax,
@@ -261,7 +261,7 @@ mod test {
 
         ctx.trans_bounds_3d(
             &pj,
-            crate::PjDirection::PjFwd,
+            crate::PjDirection::Fwd,
             xmin,
             ymin,
             zmin,

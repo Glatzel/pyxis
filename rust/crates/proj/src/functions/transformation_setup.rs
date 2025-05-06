@@ -2,7 +2,7 @@ use std::ffi::CString;
 
 use miette::IntoDiagnostic;
 
-use crate::{check_result, proj_sys};
+use crate::check_result;
 /// # Transformation setup
 impl crate::PjContext {
     /// # References

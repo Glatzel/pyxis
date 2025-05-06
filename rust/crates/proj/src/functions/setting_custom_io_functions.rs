@@ -3,7 +3,7 @@ use std::path::Path;
 
 use miette::IntoDiagnostic;
 
-use crate::{check_result, proj_sys};
+use crate::check_result;
 
 ///Setting custom I/O functions
 impl crate::PjContext {

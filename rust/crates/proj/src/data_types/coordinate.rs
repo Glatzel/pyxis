@@ -1,5 +1,3 @@
-use crate::proj_sys;
-
 // region:2D
 pub type PjLp = proj_sys::PJ_LP;
 pub type PjXy = proj_sys::PJ_XY;

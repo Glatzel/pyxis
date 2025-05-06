@@ -3,6 +3,6 @@ Set-Location $PSScriptRoot/..
 $env:RUSTFLAGS = "-Dwarnings"
 $env:UPDATE = "true"
 & $PSScriptRoot/set-env.ps1
-cargo build -p proj
+cargo build -p proj-sys
 $env:UPDATE = "false"
 Set-Location $ROOT

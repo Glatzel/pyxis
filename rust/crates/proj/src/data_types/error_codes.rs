@@ -1,5 +1,3 @@
-use crate::proj_sys;
-
 #[derive(Debug)]
 pub(crate) enum PjErrorCode {
     Success,

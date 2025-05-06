@@ -920,6 +920,7 @@ dependencies = [
  "libc",
  "miette",
  "pkg-config",
+ "proj-sys",
  "serde",
  "tracing",
  "tracing-subscriber",
@@ -931,6 +932,7 @@ version = "9.6.0"
 dependencies = [
  "bindgen",
  "libc",
+ "miette",
  "pkg-config",
  "serde",
 ]

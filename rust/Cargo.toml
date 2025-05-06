@@ -8,6 +8,7 @@ version = "0.0.19"
 
 [workspace.dependencies]
 proj = { path = "./crates/proj" }
+proj-sys = { path = "./crates/proj-sys" }
 pyxis = { path = "./crates/pyxis" }
 
 assert_cmd = "2.0"

@@ -6,12 +6,11 @@ version = "9.6.0"
 [dependencies]
 libc = { workspace = true }
 serde = { workspace = true, optional = true }
+miette = { workspace = true }
 
 [build-dependencies]
-bindgen = { workspace = true, optional = true }
+bindgen = { workspace = true }
 pkg-config = { workspace = true }
 
 [features]
 serde = ["dep:serde"]
-bindgen = ["dep:bindgen"]
-update = []

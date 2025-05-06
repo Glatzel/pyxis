@@ -5,7 +5,6 @@ use miette::IntoDiagnostic;
 
 #[cfg(any(feature = "unrecommended", test))]
 use crate::check_result;
-use crate::proj_sys;
 
 /// # Various
 impl crate::Pj {
@@ -23,8 +22,6 @@ impl crate::Pj {
         n: i32,
         coord: &mut proj_sys::PJ_COORD,
     ) -> miette::Result<f64> {
-        use crate::proj_sys;
-
         let distance = unsafe { proj_sys::proj_roundtrip(self.pj, i32::from(dir), n, coord) };
         check_result!(self);
         Ok(distance)
@@ -158,11 +155,13 @@ mod test {
 
     use float_cmp::assert_approx_eq;
 
+    use crate::IPjCoord;
+
     #[test]
     fn test_roundtrip() -> miette::Result<()> {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("+proj=tmerc +lat_0=0 +lon_0=75 +k=1 +x_0=13500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs","EPSG:4326",  &crate::PjArea::default())?;
-        let mut coord = (5877537.151800396, 4477291.358855194).into();
+        let mut coord = (5877537.151800396, 4477291.358855194).to_coord()?;
         let distance = pj.roundtrip(&crate::PjDirection::Fwd, 10000, &mut coord)?;
         println!("{:?}", unsafe { coord.xy.x });
         println!("{:?}", unsafe { coord.xy.y });
@@ -173,7 +172,7 @@ mod test {
     fn test_factors() -> miette::Result<()> {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::PjArea::default())?;
-        let factor = pj.factors((12.0f64.to_radians(), 55.0f64.to_radians()).into())?;
+        let factor = pj.factors((12.0f64.to_radians(), 55.0f64.to_radians()).to_coord()?)?;
 
         println!("{:?}", factor);
 
@@ -250,7 +249,7 @@ mod test {
     fn test_factors_fail() -> miette::Result<()> {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create("EPSG:4326")?;
-        let factor = pj.factors((12.0f64.to_radians(), 55.0f64.to_radians()).into());
+        let factor = pj.factors((12.0f64.to_radians(), 55.0f64.to_radians()).to_coord()?);
         assert!(factor.is_err());
         Ok(())
     }

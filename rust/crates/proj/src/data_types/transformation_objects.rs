@@ -1,5 +1,3 @@
-use crate::proj_sys;
-
 ///Object containing everything related to a given projection or
 /// transformation. As a user of the PROJ library you are only exposed to
 /// pointers to this object and the contents is hidden behind the public API.
@@ -7,7 +5,7 @@ use crate::proj_sys;
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ>
 pub struct Pj {
-    pub(crate) pj: *mut crate::proj_sys::PJ,
+    pub(crate) pj: *mut proj_sys::PJ,
 }
 
 /// Enumeration that is used to convey in which direction a given transformation

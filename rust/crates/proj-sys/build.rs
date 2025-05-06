@@ -39,7 +39,7 @@ fn main() {
         .size_t_is_usize(true)
         .blocklist_type("max_align_t")
         .ctypes_prefix("libc")
-        // .use_core()
+        .use_core()
         .generate()
         .unwrap();
 

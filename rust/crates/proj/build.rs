@@ -2,6 +2,7 @@
 use std::path::PathBuf;
 
 fn main() {
+    println!("cargo:rustc-cfg=UPDATE=true");
     #[cfg(feature = "bindgen")]
     main_wrapper();
 }
@@ -47,12 +48,14 @@ fn main_wrapper() {
                 .write_to_file("./src/proj_sys/bindings.rs")
                 .expect("Couldn't write bindings!");
         } else {
+            println!("cargo:rustc-cfg=UPDATE=false");
             bindings
                 .write_to_file(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs"))
                 .expect("Couldn't write bindings!");
         }
     }
 }
+#[cfg(feature = "bindgen")]
 fn link_lib(name: &str, lib: &str) -> pkg_config::Library {
     match pkg_config::Config::new().probe(name) {
         Ok(pklib) => {

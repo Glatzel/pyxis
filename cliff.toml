@@ -33,14 +33,27 @@ body = """
 {% endif -%}
 
 {% for group, commits in commits | group_by(attribute="group") %}
-    ### {{ group | upper_first }}{{"\n"}}
+    ### {{ group | upper_first }}{{"\n"}}{{"\n"}}
     {%- for commit in commits %}
-        - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
+        {%- if commit.scope -%}
+        {% else -%}
+            - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
             {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif -%}
             {% if commit.remote.pr_number %} in \
             [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }}) \
             {%- endif -%}
+        {%- endif -%}
     {% endfor %}
+    {% for group, commits in commits | group_by(attribute="scope") %}
+        #### {{ group | upper_first }}
+        {% for commit in commits %}
+            - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
+            {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif -%}
+            {% if commit.remote.pr_number %} in \
+            [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }}) \
+            {%- endif -%}
+        {% endfor %}
+    {% endfor %}\
 {% endfor %}\n
 """
 # template for the changelog footer

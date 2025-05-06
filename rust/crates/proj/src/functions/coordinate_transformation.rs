@@ -18,7 +18,15 @@ impl crate::Pj {
     }
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    fn _get_last_used_operation(&self) -> Self { unimplemented!() }
+    #[cfg(any(feature = "unrecommended", test))]
+    pub fn get_last_used_operation(&self) -> Option<Self> {
+        let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.pj) };
+        if ptr.is_null() {
+            return None;
+        }
+        let pj = Self { pj: ptr };
+        Some(pj)
+    }
 
     /// # Safety
     /// If x,y is not null pointer.
@@ -176,6 +184,7 @@ impl crate::PjContext {
 mod test {
     use float_cmp::assert_approx_eq;
 
+    use crate::IPjCoord;
     use crate::data_types::{PjCoord, PjXy};
 
     #[test]
@@ -183,13 +192,29 @@ mod test {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let coord = PjCoord {
-            xy: PjXy { x: 120.0, y: 30.0 },
-        };
-        let coord = pj.trans(crate::PjDirection::Fwd, coord)?;
+        let coord = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).to_coord()?)?;
 
         assert_eq!(unsafe { coord.xy.x }, 19955590.73888901);
         assert_eq!(unsafe { coord.xy.y }, 3416780.562127255);
+        Ok(())
+    }
+    #[test]
+    fn test_get_last_used_operation() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
+        let _ = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).to_coord()?)?;
+        let last_op = pj.get_last_used_operation();
+        assert!(!last_op.is_none());
+        println!("{:?}", last_op.unwrap().info());
+        Ok(())
+    }
+    #[test]
+    fn test_get_last_used_operation_null() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx();
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
+        let last_op = pj.get_last_used_operation();
+        assert!(last_op.is_none());
         Ok(())
     }
 

@@ -6,7 +6,7 @@ pub trait IPjCoord: Clone {
     fn y(&mut self) -> *mut f64;
     fn z(&mut self) -> *mut f64;
     fn t(&mut self) -> *mut f64;
-    fn to_coord(self) -> miette::Result<proj_sys::PJ_COORD> {
+    fn to_coord(&self) -> miette::Result<proj_sys::PJ_COORD> {
         let mut src = self.clone();
         let x = src.x();
         let y = src.y();

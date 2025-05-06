@@ -1,8 +1,15 @@
-#![allow(non_camel_case_types, non_upper_case_globals, non_snake_case)]
+#![no_std]
+#![allow(
+    non_camel_case_types,
+    non_upper_case_globals,
+    non_snake_case,
+    unexpected_cfgs,
+    dead_code
+)]
 
-#[cfg(not(feature = "bindgen"))]
-include!("bindings.rs");
-#[cfg(feature = "bindgen")]
+#[cfg(not(bindgen))]
+include!("./bindings.rs");
+#[cfg(bindgen)]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 // impl serde

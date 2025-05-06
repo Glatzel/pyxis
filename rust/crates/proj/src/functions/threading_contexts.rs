@@ -2,6 +2,7 @@ use std::ffi::c_void;
 use std::ptr::null_mut;
 
 use crate::data_types::PjLogLevel;
+
 impl Default for crate::PjContext {
     fn default() -> Self { Self::new() }
 }

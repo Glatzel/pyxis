@@ -1,7 +1,6 @@
+// coordinate type conversion
 use std::ptr::null_mut;
-
 const NULL_PTR: *mut f64 = null_mut::<f64>();
-
 pub trait IPjCoord: Clone {
     fn x(&mut self) -> *mut f64;
     fn y(&mut self) -> *mut f64;
@@ -13,6 +12,7 @@ pub trait IPjCoord: Clone {
         let y = src.y();
         let z = src.z();
         let t = src.t();
+
         let coord = match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => proj_sys::PJ_COORD {
@@ -38,11 +38,9 @@ pub trait IPjCoord: Clone {
                     t: unsafe { *t },
                 },
             },
-            (x, y, z, t) => {
-                miette::bail!(format!(
-                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                ))
-            }
+            (x, y, z, t) => miette::bail!(format!(
+                "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
+            )),
         };
         Ok(coord)
     }

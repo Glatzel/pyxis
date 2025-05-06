@@ -1,4 +1,4 @@
-use super::IPjCoord;
+use crate::IPjCoord;
 use crate::PjDirection::{Fwd, Inv};
 
 impl crate::Pj {

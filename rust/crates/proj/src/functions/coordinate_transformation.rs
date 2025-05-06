@@ -184,15 +184,12 @@ impl crate::PjContext {
 mod test {
     use float_cmp::assert_approx_eq;
 
-    use crate::IPjCoord;
-    use crate::data_types::{PjCoord, PjXy};
-
     #[test]
     fn test_trans() -> miette::Result<()> {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let coord = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).to_coord()?)?;
+        let coord = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).into())?;
 
         assert_eq!(unsafe { coord.xy.x }, 19955590.73888901);
         assert_eq!(unsafe { coord.xy.y }, 3416780.562127255);
@@ -203,7 +200,7 @@ mod test {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let _ = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).to_coord()?)?;
+        let _ = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).into())?;
         let last_op = pj.get_last_used_operation();
         assert!(!last_op.is_none());
         println!("{:?}", last_op.unwrap().info());
@@ -223,14 +220,7 @@ mod test {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let mut coord = [
-            PjCoord {
-                xy: PjXy { x: 120.0, y: 30.0 },
-            },
-            PjCoord {
-                xy: PjXy { x: 50.0, y: -80.0 },
-            },
-        ];
+        let mut coord = [[120.0, 30.0].into(), [50.0, -80.0].into()];
         pj.trans_array(crate::PjDirection::Fwd, &mut coord)?;
         assert_eq!(unsafe { coord[0].xy.x }, 19955590.73888901);
         assert_eq!(unsafe { coord[0].xy.y }, 3416780.562127255);

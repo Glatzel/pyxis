@@ -7,7 +7,6 @@ version.workspace = true
 clerk = { workspace = true }
 miette = { workspace = true }
 serde = { workspace = true, optional = true }
-libc = { workspace = true }
 proj-sys = { workspace = true }
 
 [dev-dependencies]
@@ -22,5 +21,5 @@ pkg-config = { workspace = true }
 
 [features]
 log = ["clerk/log"]
-serde = ["dep:serde"]
+serde = ["dep:serde","proj-sys/serde"]
 unrecommended = []

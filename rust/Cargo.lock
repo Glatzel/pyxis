@@ -917,7 +917,6 @@ dependencies = [
  "bindgen",
  "clerk",
  "float-cmp",
- "libc",
  "miette",
  "pkg-config",
  "proj-sys",

@@ -1,5 +1,6 @@
 use std::ptr::null_mut;
 const NULL_PTR: *mut f64 = null_mut::<f64>();
+const NULL_PTR: *mut f64 = null_mut::<f64>();
 pub trait IPjCoord: Clone {
     fn x(&mut self) -> *mut f64;
     fn y(&mut self) -> *mut f64;

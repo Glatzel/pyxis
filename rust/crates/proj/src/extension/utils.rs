@@ -7,8 +7,6 @@ pub(crate) fn c_char_to_string(ptr: *const c_char) -> String {
     unsafe { CStr::from_ptr(ptr) }.to_string_lossy().to_string()
 }
 
-
-
 macro_rules! create_readonly_struct {
     ($name:ident, $struct_doc:expr, $({$field:ident: $type:ty $(, $field_doc:expr)?}),*) => {
 

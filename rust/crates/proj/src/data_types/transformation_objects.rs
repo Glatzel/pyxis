@@ -1,3 +1,5 @@
+use crate::proj_sys;
+
 ///Object containing everything related to a given projection or
 /// transformation. As a user of the PROJ library you are only exposed to
 /// pointers to this object and the contents is hidden behind the public API.

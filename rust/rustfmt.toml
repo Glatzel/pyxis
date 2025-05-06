@@ -1,6 +1,6 @@
 fn_single_line = true
 group_imports = "StdExternalCrate"
-ignore = ["crates/proj-sys/src/bindings.rs"]
+ignore = ["crates/proj/src/proj-sys/bindings.rs"]
 imports_granularity = "Module"
 reorder_imports = true
 wrap_comments = true

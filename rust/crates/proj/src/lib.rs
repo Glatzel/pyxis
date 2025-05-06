@@ -9,10 +9,11 @@ pub mod extension;
 /// # References
 ///<https://proj.org/en/stable/development/reference/functions.html>
 pub mod functions;
+
+mod proj_sys;
 /// Proj version
 pub mod version;
 
 pub use data_types::{Pj, PjArea, PjContext, PjDirection, PjLogLevel};
 pub use extension::PJParams;
 pub(crate) use extension::*;
-pub use proj_sys::IPjCoord;

@@ -992,7 +992,7 @@ unsafe extern "C" {
 }
 unsafe extern "C" {
     pub fn proj_context_errno_string(ctx: *mut PJ_CONTEXT, err: libc::c_int)
-        -> *const libc::c_char;
+    -> *const libc::c_char;
 }
 unsafe extern "C" {
     pub fn proj_log_level(ctx: *mut PJ_CONTEXT, log_level: PJ_LOG_LEVEL) -> PJ_LOG_LEVEL;
@@ -1852,7 +1852,7 @@ unsafe extern "C" {
 }
 unsafe extern "C" {
     pub fn proj_crs_has_point_motion_operation(ctx: *mut PJ_CONTEXT, crs: *const PJ)
-        -> libc::c_int;
+    -> libc::c_int;
 }
 unsafe extern "C" {
     pub fn proj_datum_ensemble_get_member_count(
@@ -1862,7 +1862,7 @@ unsafe extern "C" {
 }
 unsafe extern "C" {
     pub fn proj_datum_ensemble_get_accuracy(ctx: *mut PJ_CONTEXT, datum_ensemble: *const PJ)
-        -> f64;
+    -> f64;
 }
 unsafe extern "C" {
     pub fn proj_datum_ensemble_get_member(

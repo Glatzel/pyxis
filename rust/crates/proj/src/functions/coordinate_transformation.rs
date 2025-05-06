@@ -1,4 +1,4 @@
-use crate::check_result;
+use crate::{check_result, proj_sys};
 // region:Coordinate transformation
 impl crate::Pj {
     /// <div class="warning">Available on <b>crate feature</b>

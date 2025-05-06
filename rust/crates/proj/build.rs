@@ -2,6 +2,11 @@
 use std::path::PathBuf;
 
 fn main() {
+    #[cfg(feature = "bindgen")]
+    main_wrapper();
+}
+#[cfg(feature = "bindgen")]
+fn main_wrapper() {
     // check LIBCLANG_PATH
     #[cfg(target_os = "windows")]
     match std::env::var("LIBCLANG_PATH") {
@@ -24,8 +29,7 @@ fn main() {
     let _pk_proj = link_lib("proj", "proj");
 
     // generate bindings
-    #[cfg(feature = "update")]
-    {
+    if std::env::var("BINDGEN").unwrap_or("false".to_string()) == "true" {
         let header = &_pk_proj.include_paths[0]
             .join("proj.h")
             .to_string_lossy()
@@ -38,15 +42,13 @@ fn main() {
             .use_core()
             .generate()
             .unwrap();
-
-        bindings
-            .write_to_file(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs"))
-            .expect("Couldn't write bindings!");
-        //only allow linux bindgen
-
         if std::env::var("UPDATE").unwrap_or("false".to_string()) == "true" {
             bindings
-                .write_to_file("./src/bindings.rs")
+                .write_to_file("./src/proj_sys/bindings.rs")
+                .expect("Couldn't write bindings!");
+        } else {
+            bindings
+                .write_to_file(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs"))
                 .expect("Couldn't write bindings!");
         }
     }

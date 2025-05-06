@@ -6,16 +6,20 @@ version.workspace = true
 [dependencies]
 clerk = { workspace = true }
 miette = { workspace = true }
-proj-sys = { workspace = true }
 serde = { workspace = true, optional = true }
-
+libc = { workspace = true }
 [dev-dependencies]
 clerk = { workspace = true, features = ["log"] }
 float-cmp = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 
+[build-dependencies]
+bindgen = { workspace = true, optional = true }
+pkg-config = { workspace = true }
+
 [features]
+bindgen = ["dep:bindgen"]
 log = ["clerk/log"]
-serde = ["dep:serde","proj-sys/serde"]
+serde = ["dep:serde"]
 unrecommended = []

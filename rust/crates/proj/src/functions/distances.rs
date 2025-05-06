@@ -1,4 +1,4 @@
-use crate::check_result;
+use crate::{check_result, proj_sys};
 ///# Distances
 impl crate::Pj {
     /// # References

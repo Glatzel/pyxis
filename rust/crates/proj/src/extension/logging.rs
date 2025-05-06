@@ -1,6 +1,7 @@
 use std::ffi::c_void;
 
 use crate::data_types::PjLogLevel;
+use crate::proj_sys;
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
     let message = crate::c_char_to_string(info);

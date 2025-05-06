@@ -161,8 +161,7 @@ mod test {
     fn test_roundtrip() -> miette::Result<()> {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("+proj=tmerc +lat_0=0 +lon_0=75 +k=1 +x_0=13500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs","EPSG:4326",  &crate::PjArea::default())?;
-        let mut coord =
-            crate::array4_to_pj_coord((5877537.151800396, 4477291.358855194).to_array4())?;
+        let mut coord = (5877537.151800396, 4477291.358855194).to_coord()?;
         let distance = pj.roundtrip(&crate::PjDirection::Fwd, 10000, &mut coord)?;
         println!("{:?}", unsafe { coord.xy.x });
         println!("{:?}", unsafe { coord.xy.y });
@@ -173,9 +172,7 @@ mod test {
     fn test_factors() -> miette::Result<()> {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::PjArea::default())?;
-        let factor = pj.factors(crate::array4_to_pj_coord(
-            (12.0f64.to_radians(), 55.0f64.to_radians()).to_array4(),
-        )?)?;
+        let factor = pj.factors((12.0f64.to_radians(), 55.0f64.to_radians()).to_coord()?)?;
 
         println!("{:?}", factor);
 
@@ -252,9 +249,7 @@ mod test {
     fn test_factors_fail() -> miette::Result<()> {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create("EPSG:4326")?;
-        let factor = pj.factors(crate::array4_to_pj_coord(
-            (12.0f64.to_radians(), 55.0f64.to_radians()).to_array4(),
-        )?);
+        let factor = pj.factors((12.0f64.to_radians(), 55.0f64.to_radians()).to_coord()?);
         assert!(factor.is_err());
         Ok(())
     }

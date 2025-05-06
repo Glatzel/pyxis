@@ -8,10 +8,10 @@ impl crate::Pj {
     {
         let direction = if inv { Inv } else { Fwd };
         let mut coord = coord.clone();
-        let x = coord.pj_x();
-        let y = coord.pj_y();
-        let z = coord.pj_z();
-        let t = coord.pj_t();
+        let x = coord.x();
+        let y = coord.y();
+        let z = coord.z();
+        let t = coord.t();
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => unsafe {
@@ -39,10 +39,10 @@ impl crate::Pj {
         T: IPjCoord,
     {
         let mut coord = coord.clone();
-        let x = coord.pj_x();
-        let y = coord.pj_y();
-        let z = coord.pj_z();
-        let t = coord.pj_t();
+        let x = coord.x();
+        let y = coord.y();
+        let z = coord.z();
+        let t = coord.t();
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => unsafe {
@@ -75,10 +75,10 @@ impl crate::Pj {
         let direction = if inv { Inv } else { Fwd };
         let length = coord.len();
         let size = size_of::<T>();
-        let x = coord[0].pj_x();
-        let y = coord[0].pj_y();
-        let z = coord[0].pj_z();
-        let t = coord[0].pj_t();
+        let x = coord[0].x();
+        let y = coord[0].y();
+        let z = coord[0].z();
+        let t = coord[0].t();
 
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
@@ -114,10 +114,10 @@ impl crate::Pj {
         let length = coord.len();
         let size = size_of::<T>();
         println!("{length},{size}");
-        let x = coord[0].pj_x();
-        let y = coord[0].pj_y();
-        let z = coord[0].pj_z();
-        let t = coord[0].pj_t();
+        let x = coord[0].x();
+        let y = coord[0].y();
+        let z = coord[0].z();
+        let t = coord[0].t();
 
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d

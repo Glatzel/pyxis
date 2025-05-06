@@ -926,6 +926,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "proj-sys"
+version = "9.6.0"
+dependencies = [
+ "bindgen",
+ "libc",
+ "pkg-config",
+ "serde",
+]
+
+[[package]]
 name = "pyxis"
 version = "0.0.19"
 dependencies = [

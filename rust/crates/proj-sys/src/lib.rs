@@ -23,7 +23,7 @@ macro_rules! impl_serde_for_proj_type {
             where
                 D: serde::Deserializer<'de>,
             {
-                let ($($field),+) = <( $($f64,),+ )>::deserialize(deserializer)?;
+                let ($($field),+) = <( $($f64,)+ )>::deserialize(deserializer)?;
                 Ok(Self { $($field),+ })
             }
         }

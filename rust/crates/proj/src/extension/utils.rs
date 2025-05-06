@@ -30,7 +30,6 @@ pub(crate) fn array4_to_pj_coord(array4: [f64; 4]) -> miette::Result<proj_sys::P
     Ok(coord)
 }
 
-#[macro_export]
 macro_rules! create_readonly_struct {
     ($name:ident, $struct_doc:expr, $({$field:ident: $type:ty $(, $field_doc:expr)?}),*) => {
 
@@ -58,3 +57,4 @@ macro_rules! create_readonly_struct {
         }
     }
 }
+pub(crate) use create_readonly_struct;

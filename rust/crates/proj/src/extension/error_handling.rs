@@ -1,4 +1,3 @@
-#[macro_export]
 macro_rules! check_result {
     ($self:expr) => {
         let code = $self.errno();
@@ -50,3 +49,4 @@ macro_rules! check_result {
         }
     };
 }
+pub(crate) use check_result;

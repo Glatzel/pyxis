@@ -1,11 +1,13 @@
 use miette::IntoDiagnostic;
+
+use crate::data_types::{PjGridInfo, PjInfo, PjInitInfo, PjProjInfo};
 /// Get information about the current instance of the PROJ library.
 ///
 /// References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_info>
-pub fn info() -> crate::PjInfo {
+pub fn info() -> PjInfo {
     let src = unsafe { proj_sys::proj_info() };
-    crate::PjInfo::new(
+    PjInfo::new(
         src.major,
         src.minor,
         src.patch,
@@ -20,9 +22,9 @@ impl crate::Pj {
     ///
     /// References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_pj_info>
-    pub fn info(&self) -> crate::PjProjInfo {
+    pub fn info(&self) -> PjProjInfo {
         let src = unsafe { proj_sys::proj_pj_info(self.pj) };
-        crate::PjProjInfo::new(
+        PjProjInfo::new(
             crate::c_char_to_string(src.id),
             crate::c_char_to_string(src.description),
             crate::c_char_to_string(src.definition),
@@ -36,13 +38,13 @@ impl crate::Pj {
 ///
 /// References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
-pub fn grid_info(grid: &str) -> miette::Result<crate::PjGridInfo> {
+pub fn grid_info(grid: &str) -> miette::Result<PjGridInfo> {
     let gridname_cstr = std::ffi::CString::new(grid).into_diagnostic()?;
     let src = unsafe { proj_sys::proj_grid_info(gridname_cstr.as_ptr()) };
     if crate::c_char_to_string(src.format.as_ptr()) == "missing" {
         miette::bail!("Invalid grid: {}", grid)
     }
-    Ok(crate::PjGridInfo::new(
+    Ok(PjGridInfo::new(
         crate::c_char_to_string(src.gridname.as_ptr()),
         crate::c_char_to_string(src.filename.as_ptr()),
         crate::c_char_to_string(src.format.as_ptr()),
@@ -58,10 +60,10 @@ pub fn grid_info(grid: &str) -> miette::Result<crate::PjGridInfo> {
 ///
 /// References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
-pub fn init_info(initname: &str) -> miette::Result<crate::PjInitInfo> {
+pub fn init_info(initname: &str) -> miette::Result<PjInitInfo> {
     let initname = std::ffi::CString::new(initname).into_diagnostic()?;
     let src = unsafe { proj_sys::proj_init_info(initname.as_ptr()) };
-    Ok(crate::PjInitInfo::new(
+    Ok(PjInitInfo::new(
         crate::c_char_to_string(src.name.as_ptr()),
         crate::c_char_to_string(src.filename.as_ptr()),
         crate::c_char_to_string(src.version.as_ptr()),

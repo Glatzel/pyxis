@@ -1,5 +1,7 @@
 use std::ffi::c_void;
 use std::ptr::null_mut;
+
+use crate::data_types::PjLogLevel;
 impl Default for crate::PjContext {
     fn default() -> Self { Self::new() }
 }
@@ -13,7 +15,7 @@ impl crate::PjContext {
         };
         //initialize log
         unsafe {
-            proj_sys::proj_log_level(ctx.ctx, crate::PjLogLevel::None.into());
+            proj_sys::proj_log_level(ctx.ctx, PjLogLevel::None.into());
             proj_sys::proj_log_func(ctx.ctx, null_mut::<c_void>(), Some(crate::proj_clerk));
         };
         ctx

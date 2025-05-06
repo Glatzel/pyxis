@@ -20,7 +20,7 @@ impl crate::Pj {
         &self,
         dir: &crate::PjDirection,
         n: i32,
-        coord: &mut crate::PjCoord,
+        coord: &mut proj_sys::PJ_COORD,
     ) -> miette::Result<f64> {
         let distance = unsafe { proj_sys::proj_roundtrip(self.pj, i32::from(dir), n, coord) };
         check_result!(self);
@@ -49,17 +49,22 @@ impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_factors>
     #[cfg(any(feature = "unrecommended", test))]
-    pub fn factors(&self, coord: crate::PjCoord) -> miette::Result<crate::PjFactors> {
+    pub fn factors(
+        &self,
+        coord: crate::data_types::PjCoord,
+    ) -> miette::Result<crate::data_types::PjFactors> {
+        use crate::data_types::PjFactors;
+
         let factor = unsafe { proj_sys::proj_factors(self.pj, coord) };
         match self.errno() {
-            crate::PjErrorCode::ProjSuccess => (),
-            crate::PjErrorCode::CoordTransfmOutsideProjectionDomain => (),
+            crate::data_types::PjErrorCode::ProjSuccess => (),
+            crate::data_types::PjErrorCode::CoordTransfmOutsideProjectionDomain => (),
             _ => {
                 check_result!(self);
             }
         };
 
-        let factor = crate::PjFactors::new(
+        let factor = PjFactors::new(
             factor.meridional_scale,
             factor.parallel_scale,
             factor.areal_scale,

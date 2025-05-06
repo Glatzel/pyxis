@@ -5,7 +5,7 @@ mod coordinate_transformation;
 mod distances;
 mod error_reporting;
 mod info_functions;
-mod iso_19111;
+mod iso19111;
 mod lists;
 mod logging;
 mod network_related_functionality;

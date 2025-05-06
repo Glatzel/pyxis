@@ -1,7 +1,7 @@
 mod coordinate;
 mod error_codes;
 mod info_structures;
-mod iso_19111;
+mod iso19111;
 mod list_structures;
 mod logging;
 mod projection_derivatives;

@@ -1,5 +1,5 @@
 pub(crate) enum PjErrorCode {
-    ProjSuccess,
+    Success,
     //Errors in class PROJ_ERR_INVALID_OP
     InvalidOp,
     InvalidOpWrongSyntax,
@@ -26,7 +26,7 @@ pub(crate) enum PjErrorCode {
 impl From<u32> for PjErrorCode {
     fn from(value: u32) -> Self {
         match value {
-            0 => Self::ProjSuccess,
+            0 => Self::Success,
             //Errors in class PROJ_ERR_INVALID_OP
             proj_sys::PROJ_ERR_INVALID_OP => Self::InvalidOp,
             proj_sys::PROJ_ERR_INVALID_OP_WRONG_SYNTAX => Self::InvalidOpWrongSyntax,
@@ -63,7 +63,7 @@ impl From<u32> for PjErrorCode {
 impl From<&PjErrorCode> for i32 {
     fn from(value: &PjErrorCode) -> Self {
         match value {
-            PjErrorCode::ProjSuccess => 0,
+            PjErrorCode::Success => 0,
             //Errors in class PROJ_ERR_INVALID_OP
             PjErrorCode::InvalidOp => proj_sys::PROJ_ERR_INVALID_OP as i32,
             PjErrorCode::InvalidOpWrongSyntax => proj_sys::PROJ_ERR_INVALID_OP_WRONG_SYNTAX as i32,
@@ -112,7 +112,7 @@ impl From<&PjErrorCode> for i32 {
 impl From<&PjErrorCode> for String {
     fn from(value: &PjErrorCode) -> Self {
         match value {
-            PjErrorCode::ProjSuccess => "SUCCESS",
+            PjErrorCode::Success => "SUCCESS",
             //Errors in class PROJ_ERR_INVALID_OP
             PjErrorCode::InvalidOp => "PROJ_ERR_INVALID_OP",
             PjErrorCode::InvalidOpWrongSyntax => "PROJ_ERR_INVALID_OP_WRONG_SYNTAX",

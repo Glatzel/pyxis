@@ -4,7 +4,7 @@ macro_rules! check_result {
         let code_str = String::from(&code);
 
         match code {
-            $crate::data_types::PjErrorCode::ProjSuccess => {
+            $crate::data_types::PjErrorCode::Success => {
                 clerk::debug!("Proj Process successed.");
             }
             ecode => {
@@ -28,7 +28,7 @@ macro_rules! check_result {
         let code = $crate::data_types::PjErrorCode::from($code as u32);
         let code_str = String::from(&code);
         match code {
-            $crate::data_types::PjErrorCode::ProjSuccess => {
+            $crate::data_types::PjErrorCode::Success => {
                 clerk::debug!("Proj Process successed.");
             }
             ecode => {

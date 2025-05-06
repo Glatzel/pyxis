@@ -5,9 +5,9 @@
     unexpected_cfgs
 )]
 
-#[cfg(not(buildtime_bindgen))]
+#[cfg(not(bindgen))]
 include!("bindings.rs");
-#[cfg(buildtime_bindgen)]
+#[cfg(bindgen)]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 // impl serde

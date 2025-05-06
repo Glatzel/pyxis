@@ -6,9 +6,9 @@
     unexpected_cfgs
 )]
 
-#[cfg(any(not(feature = "bindgen"), not(buildtime_bindgen)))]
+#[cfg(not(buildtime_bindgen))]
 include!("./proj_sys/bindings.rs");
-#[cfg(all(feature = "bindgen", buildtime_bindgen))]
+#[cfg(buildtime_bindgen)]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 // impl serde

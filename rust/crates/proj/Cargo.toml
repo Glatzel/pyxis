@@ -15,11 +15,10 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 
 [build-dependencies]
-bindgen = { workspace = true, optional = true }
+bindgen = { workspace = true }
 pkg-config = { workspace = true }
 
 [features]
-bindgen = ["dep:bindgen"]
 log = ["clerk/log"]
 serde = ["dep:serde"]
 unrecommended = []

@@ -2,10 +2,13 @@
 use std::path::PathBuf;
 
 fn main() {
-    #[cfg(feature = "bindgen")]
-    main_wrapper();
+    if std::env::var("BINDGEN").unwrap_or("false".to_string()) == "true"
+        || std::env::var("UPDATE").unwrap_or("false".to_string()) == "true"
+    {
+        main_wrapper();
+    }
 }
-#[cfg(feature = "bindgen")]
+
 fn main_wrapper() {
     // check LIBCLANG_PATH
     #[cfg(target_os = "windows")]
@@ -53,7 +56,6 @@ fn main_wrapper() {
     }
 }
 
-#[cfg(feature = "bindgen")]
 fn link_lib(name: &str, lib: &str) -> pkg_config::Library {
     match pkg_config::Config::new().probe(name) {
         Ok(pklib) => {

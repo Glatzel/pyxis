@@ -61,8 +61,18 @@ pub fn grid_info(grid: &str) -> miette::Result<PjGridInfo> {
 /// References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
 pub fn init_info(initname: &str) -> miette::Result<PjInitInfo> {
-    let initname = std::ffi::CString::new(initname).into_diagnostic()?;
-    let src = unsafe { proj_sys::proj_init_info(initname.as_ptr()) };
+    let initname_cstr = std::ffi::CString::new(initname).into_diagnostic()?;
+    let src = unsafe { proj_sys::proj_init_info(initname_cstr.as_ptr()) };
+    let info = PjInitInfo::new(
+        crate::c_char_to_string(src.name.as_ptr()),
+        crate::c_char_to_string(src.filename.as_ptr()),
+        crate::c_char_to_string(src.version.as_ptr()),
+        crate::c_char_to_string(src.origin.as_ptr()),
+        crate::c_char_to_string(src.lastupdate.as_ptr()),
+    );
+    if info.version() == "" {
+        miette::bail!(format!("Invalid proj init file or name: {}", initname))
+    }
     Ok(PjInitInfo::new(
         crate::c_char_to_string(src.name.as_ptr()),
         crate::c_char_to_string(src.filename.as_ptr()),
@@ -109,9 +119,24 @@ mod test {
         assert!(info.is_err());
         Ok(())
     }
+
     #[test]
     fn test_grid_info_not_exists() -> miette::Result<()> {
         let info = grid_info("invalid.tiff");
+        assert!(info.is_err());
+        Ok(())
+    }
+
+    #[test]
+    fn test_init_info() -> miette::Result<()> {
+        let info = init_info("ITRF2000")?;
+        println!("{:?}", info);
+        Ok(())
+    }
+    
+    #[test]
+    fn test_init_info_fail() -> miette::Result<()> {
+        let info = init_info("invalid init");
         assert!(info.is_err());
         Ok(())
     }

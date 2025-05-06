@@ -84,7 +84,6 @@ jobs:
           name: pyxis-python-${{matrix.machine}}
           path: |
             ${{env.PYTHON_ROOT}}/rattler/output/${{matrix.os}}/*.conda
-            ${{env.PYTHON_ROOT}}/dist/*.whl
           if-no-files-found: error
 
       - name: Upload results to Codecov

@@ -6,7 +6,7 @@
 )]
 #[cfg(any(not(feature = "bindgen"), update_bindings = "true"))]
 include!("./proj_sys/bindings.rs");
-#[cfg(all(feature = "bindgen", not(update_bindings)))]
+#[cfg(all(feature = "bindgen", update_bindings = "false"))]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 // impl serde

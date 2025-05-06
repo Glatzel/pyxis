@@ -133,7 +133,7 @@ mod test {
         println!("{:?}", info);
         Ok(())
     }
-    
+
     #[test]
     fn test_init_info_fail() -> miette::Result<()> {
         let info = init_info("invalid init");

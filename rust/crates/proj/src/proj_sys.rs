@@ -2,11 +2,13 @@
     dead_code,
     non_camel_case_types,
     non_upper_case_globals,
-    non_snake_case
+    non_snake_case,
+    unexpected_cfgs
 )]
-#[cfg(any(not(feature = "bindgen"), update = "true"))]
+
+#[cfg(any(not(feature = "bindgen"), not(buildtime_bindgen)))]
 include!("./proj_sys/bindings.rs");
-#[cfg(all(feature = "bindgen", update = "false"))]
+#[cfg(all(feature = "bindgen", buildtime_bindgen))]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 // impl serde

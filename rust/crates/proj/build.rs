@@ -2,7 +2,6 @@
 use std::path::PathBuf;
 
 fn main() {
-    println!("cargo:rustc-cfg=update=\"true\"");
     #[cfg(feature = "bindgen")]
     main_wrapper();
 }
@@ -30,31 +29,30 @@ fn main_wrapper() {
     let _pk_proj = link_lib("proj", "proj");
 
     // generate bindings
-    if std::env::var("BINDGEN").unwrap_or("false".to_string()) == "true" {
-        let header = &_pk_proj.include_paths[0]
-            .join("proj.h")
-            .to_string_lossy()
-            .to_string();
-        let bindings = bindgen::Builder::default()
-            .header(header)
-            .size_t_is_usize(true)
-            .blocklist_type("max_align_t")
-            .ctypes_prefix("libc")
-            .use_core()
-            .generate()
-            .unwrap();
-        if std::env::var("UPDATE").unwrap_or("false".to_string()) == "true" {
-            bindings
-                .write_to_file("./src/proj_sys/bindings.rs")
-                .expect("Couldn't write bindings!");
-        } else {
-            println!("cargo:rustc-cfg=UPDATE=\"false\"");
-            bindings
-                .write_to_file(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs"))
-                .expect("Couldn't write bindings!");
-        }
+    let header = &_pk_proj.include_paths[0]
+        .join("proj.h")
+        .to_string_lossy()
+        .to_string();
+    let bindings = bindgen::Builder::default()
+        .header(header)
+        .size_t_is_usize(true)
+        .blocklist_type("max_align_t")
+        .ctypes_prefix("libc")
+        .use_core()
+        .generate()
+        .unwrap();
+    if std::env::var("UPDATE").unwrap_or("false".to_string()) == "true" {
+        bindings
+            .write_to_file("./src/proj_sys/bindings.rs")
+            .expect("Couldn't write bindings!");
+    } else {
+        println!("cargo:rustc-cfg=buildtime_bindgen");
+        bindings
+            .write_to_file(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs"))
+            .expect("Couldn't write bindings!");
     }
 }
+
 #[cfg(feature = "bindgen")]
 fn link_lib(name: &str, lib: &str) -> pkg_config::Library {
     match pkg_config::Config::new().probe(name) {

@@ -4,3 +4,7 @@
 include!("bindings.rs");
 #[cfg(feature = "bindgen")]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+
+// :#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg(feature = "serde")]
+impl serde::Serialize for PJ_LP {}

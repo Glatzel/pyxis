@@ -1,5 +1,4 @@
 // region:2D
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub type PjLp = proj_sys::PJ_LP;
 pub type PjXy = proj_sys::PJ_XY;
 pub type PjUv = proj_sys::PJ_UV;

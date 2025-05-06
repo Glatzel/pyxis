@@ -930,6 +930,7 @@ dependencies = [
  "bindgen",
  "libc",
  "pkg-config",
+ "serde",
 ]
 
 [[package]]

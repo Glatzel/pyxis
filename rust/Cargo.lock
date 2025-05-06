@@ -912,7 +912,7 @@ dependencies = [
 
 [[package]]
 name = "proj"
-version = "0.0.18"
+version = "0.0.19"
 dependencies = [
  "clerk",
  "float-cmp",
@@ -924,7 +924,7 @@ dependencies = [
 
 [[package]]
 name = "proj-sys"
-version = "0.0.18"
+version = "9.6.0"
 dependencies = [
  "bindgen",
  "libc",
@@ -933,7 +933,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.18"
+version = "0.0.19"
 dependencies = [
  "clerk",
  "codspeed-criterion-compat",
@@ -946,7 +946,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cli"
-version = "0.0.18"
+version = "0.0.19"
 dependencies = [
  "assert_cmd",
  "bpaf",
@@ -964,7 +964,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cuda"
-version = "0.0.18"
+version = "0.0.19"
 dependencies = [
  "clerk",
  "codspeed-criterion-compat",

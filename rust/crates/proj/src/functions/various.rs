@@ -20,7 +20,7 @@ impl crate::Pj {
         &self,
         dir: &crate::PjDirection,
         n: i32,
-        coord: &mut crate::PjCoord,
+        coord: &mut proj_sys::PJ_COORD,
     ) -> miette::Result<f64> {
         let distance = unsafe { proj_sys::proj_roundtrip(self.pj, i32::from(dir), n, coord) };
         check_result!(self);
@@ -49,17 +49,22 @@ impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_factors>
     #[cfg(any(feature = "unrecommended", test))]
-    pub fn factors(&self, coord: crate::PjCoord) -> miette::Result<crate::PjFactors> {
+    pub fn factors(
+        &self,
+        coord: crate::data_types::PjCoord,
+    ) -> miette::Result<crate::data_types::PjFactors> {
+        use crate::data_types::PjFactors;
+
         let factor = unsafe { proj_sys::proj_factors(self.pj, coord) };
         match self.errno() {
-            crate::PjErrorCode::ProjSuccess => (),
-            crate::PjErrorCode::CoordTransfmOutsideProjectionDomain => (),
+            crate::data_types::PjErrorCode::ProjSuccess => (),
+            crate::data_types::PjErrorCode::CoordTransfmOutsideProjectionDomain => (),
             _ => {
                 check_result!(self);
             }
         };
 
-        let factor = crate::PjFactors::new(
+        let factor = PjFactors::new(
             factor.meridional_scale,
             factor.parallel_scale,
             factor.areal_scale,
@@ -123,10 +128,10 @@ pub fn coord(x: f64, y: f64, z: f64, t: f64) -> proj_sys::PJ_COORD {
     unsafe { proj_sys::proj_coord(x, y, z, t) }
 }
 
-#[deprecated(note = "Use `f64::to_radians(self)` instead")]
+#[deprecated(note = "Use `f64::to_radians()` instead")]
 fn _torad() { unimplemented!() }
 
-#[deprecated(note = "Use `f64::to_degrees(self)` instead")]
+#[deprecated(note = "Use `f64::to_degrees()` instead")]
 fn _todeg() { unimplemented!() }
 
 pub fn dmstor() -> f64 { unimplemented!() }
@@ -154,7 +159,7 @@ mod test {
 
     #[test]
     fn test_roundtrip() -> miette::Result<()> {
-        let ctx = crate::init_test_ctx();
+        let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("+proj=tmerc +lat_0=0 +lon_0=75 +k=1 +x_0=13500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs","EPSG:4326",  &crate::PjArea::default())?;
         let mut coord =
             crate::array4_to_pj_coord((5877537.151800396, 4477291.358855194).to_array4())?;
@@ -166,7 +171,7 @@ mod test {
     }
     #[test]
     fn test_factors() -> miette::Result<()> {
-        let ctx = crate::init_test_ctx();
+        let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::PjArea::default())?;
         let factor = pj.factors(crate::array4_to_pj_coord(
             (12.0f64.to_radians(), 55.0f64.to_radians()).to_array4(),
@@ -245,7 +250,7 @@ mod test {
 
     #[test]
     fn test_factors_fail() -> miette::Result<()> {
-        let ctx = crate::init_test_ctx();
+        let ctx = crate::new_test_ctx();
         let pj = ctx.create("EPSG:4326")?;
         let factor = pj.factors(crate::array4_to_pj_coord(
             (12.0f64.to_radians(), 55.0f64.to_radians()).to_array4(),
@@ -267,7 +272,7 @@ mod test {
     }
     #[test]
     fn test_input_output_angle_format() -> miette::Result<()> {
-        let ctx = crate::init_test_ctx();
+        let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         assert!(!(pj.angular_input(&crate::PjDirection::Fwd)?));
         assert!(!(pj.angular_output(&crate::PjDirection::Fwd)?));

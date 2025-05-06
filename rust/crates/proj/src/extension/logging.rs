@@ -1,6 +1,6 @@
 use std::ffi::c_void;
 
-use crate::PjLogLevel;
+use crate::data_types::PjLogLevel;
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
     let message = crate::c_char_to_string(info);
@@ -28,13 +28,15 @@ mod test {
     use tracing_subscriber::layer::SubscriberExt;
     use tracing_subscriber::util::SubscriberInitExt;
 
+    use crate::data_types::PjLogLevel;
+
     #[test]
     fn test_log() -> miette::Result<()> {
         tracing_subscriber::registry()
             .with(clerk::terminal_layer(LevelFilter::TRACE, true))
             .init();
         let ctx = crate::PjContext::default();
-        ctx.set_log_level(crate::PjLogLevel::Trace);
+        ctx.set_log_level(PjLogLevel::Trace);
         let _ = ctx.create("EPSG:4326")?;
 
         Ok(())
@@ -46,7 +48,7 @@ mod test {
             .with(clerk::terminal_layer(LevelFilter::DEBUG, true))
             .init();
         let ctx = crate::PjContext::default();
-        ctx.set_log_level(crate::PjLogLevel::Trace);
+        ctx.set_log_level(PjLogLevel::Trace);
         let pj = ctx.create("unknow crs");
         assert!(pj.is_err());
         Ok(())
@@ -58,10 +60,10 @@ mod test {
             .with(clerk::terminal_layer(LevelFilter::TRACE, true))
             .init();
         let ctx = crate::PjContext::default();
-        ctx.set_log_level(crate::PjLogLevel::Debug);
+        ctx.set_log_level(PjLogLevel::Debug);
         let pj = ctx.create("Show log");
         assert!(pj.is_err());
-        ctx.set_log_level(crate::PjLogLevel::None);
+        ctx.set_log_level(PjLogLevel::None);
         let pj = ctx.create("Hide log");
         assert!(pj.is_err());
         Ok(())

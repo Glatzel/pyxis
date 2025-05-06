@@ -5,9 +5,26 @@ include!("bindings.rs");
 #[cfg(feature = "bindgen")]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
+// impl serde
 #[cfg(feature = "serde")]
 use serde;
+
 #[cfg(feature = "serde")]
-impl serde::Serialize for PJ_LP {}
+impl serde::Serialize for PJ_LP {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        (self.lam, self.phi).serialize(serializer)
+    }
+}
 #[cfg(feature = "serde")]
-impl serde::Deserialize for PJ_LP {}
+impl<'de> serde::Deserialize<'de> for PJ_LP {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let (lam, phi) = <(f64, f64)>::deserialize(deserializer)?;
+        Ok(Self { lam, phi })
+    }
+}

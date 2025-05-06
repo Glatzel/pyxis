@@ -56,7 +56,8 @@ where
         let y = src.y();
         let z = src.z();
         let t = src.t();
-        let coord = match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
+
+        match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => proj_sys::PJ_COORD {
                 xy: proj_sys::PJ_XY {
@@ -86,7 +87,6 @@ where
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
                 )
             }
-        };
-        coord
+        }
     }
 }

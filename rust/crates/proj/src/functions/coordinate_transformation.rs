@@ -206,7 +206,7 @@ mod test {
         let pj = ctx.normalize_for_visualization(&pj)?;
         let _ = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).into())?;
         let last_op = pj.get_last_used_operation();
-        assert!(!last_op.is_none());
+        assert!(last_op.is_some());
         println!("{:?}", last_op.unwrap().info());
         Ok(())
     }

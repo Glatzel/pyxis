@@ -158,8 +158,6 @@ mod test {
 
     use float_cmp::assert_approx_eq;
 
-   
-
     #[test]
     fn test_roundtrip() -> miette::Result<()> {
         let ctx = crate::new_test_ctx();

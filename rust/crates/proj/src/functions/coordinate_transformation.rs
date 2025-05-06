@@ -184,7 +184,6 @@ impl crate::PjContext {
 mod test {
     use float_cmp::assert_approx_eq;
 
-    use crate::IPjCoord;
     use crate::data_types::{PjCoord, PjXy};
 
     #[test]
@@ -192,7 +191,7 @@ mod test {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let coord = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).to_coord()?)?;
+        let coord = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).into())?;
 
         assert_eq!(unsafe { coord.xy.x }, 19955590.73888901);
         assert_eq!(unsafe { coord.xy.y }, 3416780.562127255);
@@ -203,7 +202,7 @@ mod test {
         let ctx = crate::new_test_ctx();
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let _ = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).to_coord()?)?;
+        let _ = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).into())?;
         let last_op = pj.get_last_used_operation();
         assert!(!last_op.is_none());
         println!("{:?}", last_op.unwrap().info());

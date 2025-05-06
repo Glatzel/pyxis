@@ -1,8 +1,13 @@
-#![allow(non_camel_case_types, non_upper_case_globals, non_snake_case)]
+#![allow(
+    non_camel_case_types,
+    non_upper_case_globals,
+    non_snake_case,
+    unexpected_cfgs
+)]
 
-#[cfg(not(feature = "bindgen"))]
+#[cfg(not(buildtime_bindgen))]
 include!("bindings.rs");
-#[cfg(feature = "bindgen")]
+#[cfg(buildtime_bindgen)]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 // impl serde
@@ -113,7 +118,7 @@ where
         let y = src.y();
         let z = src.z();
         let t = src.t();
-        
+
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => PJ_COORD {

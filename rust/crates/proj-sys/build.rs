@@ -39,14 +39,14 @@ fn main() {
             .generate()
             .unwrap();
 
-        bindings
-            .write_to_file(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs"))
-            .expect("Couldn't write bindings!");
-        //only allow linux bindgen
-
         if std::env::var("UPDATE").unwrap_or("false".to_string()) == "true" {
             bindings
                 .write_to_file("./src/bindings.rs")
+                .expect("Couldn't write bindings!");
+        } else {
+            println!("cargo:rustc-cfg=buildtime_bindgen");
+            bindings
+                .write_to_file(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs"))
                 .expect("Couldn't write bindings!");
         }
     }

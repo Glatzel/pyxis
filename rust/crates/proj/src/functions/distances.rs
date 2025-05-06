@@ -1,16 +1,10 @@
-use crate::{array4_to_pj_coord, check_result};
+use crate::check_result;
 ///# Distances
 impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
     pub fn lp_dist(&self, a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
-        let dist = unsafe {
-            proj_sys::proj_lp_dist(
-                self.pj,
-                array4_to_pj_coord(a.to_array4())?,
-                array4_to_pj_coord(b.to_array4())?,
-            )
-        };
+        let dist = unsafe { proj_sys::proj_lp_dist(self.pj, a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         if dist.is_nan() {
             miette::bail!(
@@ -27,13 +21,7 @@ impl crate::Pj {
         a: impl crate::IPjCoord,
         b: impl crate::IPjCoord,
     ) -> miette::Result<f64> {
-        let dist = unsafe {
-            proj_sys::proj_lpz_dist(
-                self.pj,
-                array4_to_pj_coord(a.to_array4())?,
-                array4_to_pj_coord(b.to_array4())?,
-            )
-        };
+        let dist = unsafe { proj_sys::proj_lpz_dist(self.pj, a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         if dist.is_nan() {
             miette::bail!(
@@ -50,13 +38,7 @@ impl crate::Pj {
         a: impl crate::IPjCoord,
         b: impl crate::IPjCoord,
     ) -> miette::Result<(f64, f64)> {
-        let dist = unsafe {
-            proj_sys::proj_geod(
-                self.pj,
-                array4_to_pj_coord(a.to_array4())?,
-                array4_to_pj_coord(b.to_array4())?,
-            )
-        };
+        let dist = unsafe { proj_sys::proj_geod(self.pj, a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };
         if dist.is_nan() || reversed_azimuth.is_nan() {
@@ -73,24 +55,14 @@ impl crate::Pj {
 /// # References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
 pub fn xy_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
-    Ok(unsafe {
-        proj_sys::proj_xy_dist(
-            array4_to_pj_coord(a.to_array4())?,
-            array4_to_pj_coord(b.to_array4())?,
-        )
-    })
+    Ok(unsafe { proj_sys::proj_xy_dist(a.to_coord()?, b.to_coord()?) })
 }
 /// Calculate 3-dimensional euclidean between two projected coordinates.
 ///
 /// # References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_xyz_dist>
 pub fn xyz_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
-    Ok(unsafe {
-        proj_sys::proj_xyz_dist(
-            array4_to_pj_coord(a.to_array4())?,
-            array4_to_pj_coord(b.to_array4())?,
-        )
-    })
+    Ok(unsafe { proj_sys::proj_xyz_dist(a.to_coord()?, b.to_coord()?) })
 }
 #[cfg(test)]
 mod test {

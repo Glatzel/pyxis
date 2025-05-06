@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.19] - 2025-05-06
+
+### Added
+
+- Add some proj features by @Glatzel in [#305](https://github.com/Glatzel/pyxis/pull/305)
+- Add proj logging by @Glatzel in [#306](https://github.com/Glatzel/pyxis/pull/306)
+
+### Changed
+
+- Replace some functions by proj by @Glatzel in [#290](https://github.com/Glatzel/pyxis/pull/290)
+- Proj convert array by @Glatzel in [#291](https://github.com/Glatzel/pyxis/pull/291)
+- Simplify proj trait by @Glatzel in [#296](https://github.com/Glatzel/pyxis/pull/296)
+- Omit unsafe PJ_COORD struct by @Glatzel in [#299](https://github.com/Glatzel/pyxis/pull/299)
+- Centralize proj creation by @Glatzel in [#312](https://github.com/Glatzel/pyxis/pull/312)
+- Optimize IPyCoord trait by @Glatzel in [#314](https://github.com/Glatzel/pyxis/pull/314)
+
+### Fixed
+
+- Proj bindings c char type by @Glatzel in [#307](https://github.com/Glatzel/pyxis/pull/307)
+
+### Removed
+
+- Remove pkg config lite in python ci by @Glatzel in [#292](https://github.com/Glatzel/pyxis/pull/292)
+- Remove some useless crates by @Glatzel in [#304](https://github.com/Glatzel/pyxis/pull/304)
+
+### Testing
+
+- Proj extension conversion by @Glatzel in [#293](https://github.com/Glatzel/pyxis/pull/293)
+- Proj function distance by @Glatzel in [#295](https://github.com/Glatzel/pyxis/pull/295)
+- Proj function coordinate_transformation by @Glatzel in [#298](https://github.com/Glatzel/pyxis/pull/298)
+- Proj transformation_setup by @Glatzel in [#308](https://github.com/Glatzel/pyxis/pull/308)
+- Proj grid info by @Glatzel in [#310](https://github.com/Glatzel/pyxis/pull/310)
+
 ## [0.0.18] - 2025-05-02
 
 ### Added
@@ -314,6 +347,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.19]: https://github.com/Glatzel/pyxis/compare/v0.0.18..v0.0.19
 [0.0.18]: https://github.com/Glatzel/pyxis/compare/v0.0.17..v0.0.18
 [0.0.17]: https://github.com/Glatzel/pyxis/compare/v0.0.16..v0.0.17
 [0.0.16]: https://github.com/Glatzel/pyxis/compare/v0.0.15..v0.0.16

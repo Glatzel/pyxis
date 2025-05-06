@@ -1,5 +1,7 @@
 use std::ptr::null_mut;
 
+use crate::proj_sys;
+
 const NULL_PTR: *mut f64 = null_mut::<f64>();
 
 pub trait IPjCoord: Clone {

@@ -1,3 +1,4 @@
+use crate::proj_sys;
 ///This function frees global resources (grids, cache of +init files). It
 /// should be called typically before process termination, and after having
 /// freed PJ and PJ_CONTEXT objects.

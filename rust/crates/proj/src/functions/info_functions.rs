@@ -1,6 +1,6 @@
 use miette::IntoDiagnostic;
 
-use crate::data_types::{PjGridInfo, PjInfo, PjInitInfo, PjProjInfo};
+use crate::{data_types::{PjGridInfo, PjInfo, PjInitInfo, PjProjInfo}, proj_sys};
 /// Get information about the current instance of the PROJ library.
 ///
 /// References

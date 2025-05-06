@@ -1,4 +1,4 @@
-use crate::check_result;
+use crate::{check_result, proj_sys};
 // region:Coordinate transformation
 impl crate::Pj {
     /// <div class="warning">Available on <b>crate feature</b>
@@ -12,6 +12,8 @@ impl crate::Pj {
         direction: crate::PjDirection,
         coord: crate::data_types::PjCoord,
     ) -> miette::Result<crate::data_types::PjCoord> {
+        use crate::proj_sys;
+
         let out_coord = unsafe { proj_sys::proj_trans(self.pj, i32::from(direction), coord) };
         check_result!(self);
         Ok(out_coord)
@@ -20,6 +22,8 @@ impl crate::Pj {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn get_last_used_operation(&self) -> Option<Self> {
+        use crate::proj_sys;
+
         let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.pj) };
         if ptr.is_null() {
             return None;

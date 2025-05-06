@@ -5,6 +5,7 @@ use miette::IntoDiagnostic;
 
 #[cfg(any(feature = "unrecommended", test))]
 use crate::check_result;
+use crate::proj_sys;
 
 /// # Various
 impl crate::Pj {
@@ -22,6 +23,8 @@ impl crate::Pj {
         n: i32,
         coord: &mut proj_sys::PJ_COORD,
     ) -> miette::Result<f64> {
+        use crate::proj_sys;
+
         let distance = unsafe { proj_sys::proj_roundtrip(self.pj, i32::from(dir), n, coord) };
         check_result!(self);
         Ok(distance)

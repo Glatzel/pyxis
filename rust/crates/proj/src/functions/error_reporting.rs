@@ -1,4 +1,4 @@
-use crate::data_types::PjErrorCode;
+use crate::{data_types::PjErrorCode, proj_sys};
 
 ///# Error reporting
 impl crate::Pj {

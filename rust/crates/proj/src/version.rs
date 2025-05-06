@@ -1,3 +1,5 @@
+use crate::proj_sys;
+
 ///Major version number, e.g. 8 for PROJ 8.0.1
 /// # Reference
 /// <https://proj.org/en/stable/development/reference/macros.html#c.PROJ_VERSION_MAJOR>

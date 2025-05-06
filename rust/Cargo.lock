@@ -914,23 +914,15 @@ dependencies = [
 name = "proj"
 version = "0.0.19"
 dependencies = [
+ "bindgen",
  "clerk",
  "float-cmp",
+ "libc",
  "miette",
- "proj-sys",
+ "pkg-config",
  "serde",
  "tracing",
  "tracing-subscriber",
-]
-
-[[package]]
-name = "proj-sys"
-version = "9.6.0"
-dependencies = [
- "bindgen",
- "libc",
- "pkg-config",
- "serde",
 ]
 
 [[package]]

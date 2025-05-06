@@ -1,3 +1,5 @@
+use crate::proj_sys;
+
 impl Default for crate::PjArea {
     fn default() -> Self { Self::new() }
 }

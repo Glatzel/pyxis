@@ -9,6 +9,7 @@ pub mod extension;
 /// # References
 ///<https://proj.org/en/stable/development/reference/functions.html>
 pub mod functions;
+mod proj_sys;
 /// Proj version
 pub mod version;
 

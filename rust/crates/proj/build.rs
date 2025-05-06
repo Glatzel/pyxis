@@ -45,7 +45,7 @@ fn main() {
 
     if std::env::var("UPDATE").unwrap_or("false".to_string()) == "true" {
         bindings
-            .write_to_file("./src/bindings.rs")
+            .write_to_file("./src/proj_sys/bindings.rs")
             .expect("Couldn't write bindings!");
     }
     if std::env::var("BINDGEN").unwrap_or("false".to_string()) == "true" {

@@ -1,14 +1,21 @@
 use std::ffi::c_void;
 
-use crate::{data_types::PjLogLevel, proj_sys};
+use crate::data_types::PjLogLevel;
+use crate::proj_sys;
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
-    let message = crate::c_char_to_string(info);
+    let _message = crate::c_char_to_string(info);
 
     match level {
-        1 => clerk::error!("{}", message),
-        2 => clerk::debug!("{}", message),
-        3 => clerk::trace!("{}", message),
+        1 => {
+            clerk::error!("{}", _message);
+        }
+        2 => {
+            clerk::debug!("{}", _message);
+        }
+        3 => {
+            clerk::trace!("{}", _message);
+        }
         _ => (),
     };
 }

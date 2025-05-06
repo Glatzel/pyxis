@@ -8,10 +8,9 @@ libc = { workspace = true }
 serde = { workspace = true, optional = true }
 
 [build-dependencies]
-bindgen = { workspace = true, optional = true }
+bindgen = { workspace = true }
 pkg-config = { workspace = true }
 
 [features]
 serde = ["dep:serde"]
-bindgen = ["dep:bindgen"]
 update = []

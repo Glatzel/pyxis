@@ -36,6 +36,7 @@ fn main() {
             .blocklist_type("max_align_t")
             .ctypes_prefix("libc")
             .use_core()
+            .derive_debug(true)
             .generate()
             .unwrap();
 

@@ -1,8 +1,17 @@
+/// This section describes the numerous data types in use in PROJ.
+///
+/// # References
+///<https://proj.org/en/stable/development/reference/datatypes.html>
 pub mod data_types;
-mod extension;
-mod functions;
+pub mod extension;
+/// Proj functions
+///
+/// # References
+///<https://proj.org/en/stable/development/reference/functions.html>
+pub mod functions;
+/// Proj version
 pub mod version;
 
 pub use data_types::{Pj, PjArea, PjContext, PjDirection, PjLogLevel};
-pub use extension::*;
-pub use functions::*;
+pub(crate) use extension::*;
+pub use extension::{IPjCoord, PJParams};

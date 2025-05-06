@@ -128,10 +128,10 @@ pub fn coord(x: f64, y: f64, z: f64, t: f64) -> proj_sys::PJ_COORD {
     unsafe { proj_sys::proj_coord(x, y, z, t) }
 }
 
-#[deprecated(note = "Use `f64::to_radians(self)` instead")]
+#[deprecated(note = "Use `f64::to_radians()` instead")]
 fn _torad() { unimplemented!() }
 
-#[deprecated(note = "Use `f64::to_degrees(self)` instead")]
+#[deprecated(note = "Use `f64::to_degrees()` instead")]
 fn _todeg() { unimplemented!() }
 
 pub fn dmstor() -> f64 { unimplemented!() }

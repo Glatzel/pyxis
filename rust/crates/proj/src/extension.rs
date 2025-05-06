@@ -9,7 +9,7 @@ mod utils;
 
 pub(crate) use error_handling::*;
 pub(crate) use logging::*;
-pub use proj_creation::*;
+pub use proj_creation::PJParams;
 #[cfg(test)]
 pub(crate) use test_utils::*;
 pub use traits::*;

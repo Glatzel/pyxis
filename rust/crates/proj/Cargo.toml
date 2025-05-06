@@ -15,10 +15,6 @@ float-cmp = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 
-[build-dependencies]
-bindgen = { workspace = true }
-pkg-config = { workspace = true }
-
 [features]
 log = ["clerk/log"]
 serde = ["dep:serde","proj-sys/serde"]

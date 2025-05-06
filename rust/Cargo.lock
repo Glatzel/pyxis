@@ -914,11 +914,9 @@ dependencies = [
 name = "proj"
 version = "0.0.19"
 dependencies = [
- "bindgen",
  "clerk",
  "float-cmp",
  "miette",
- "pkg-config",
  "proj-sys",
  "serde",
  "tracing",

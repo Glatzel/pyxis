@@ -2,8 +2,11 @@ use crate::check_result;
 
 // region:Coordinate transformation
 impl crate::Pj {
+    /// <div class="warning">Available on <b>crate feature</b>
+    /// <code>unrecommended</code> only.</div>
+    ///
     /// # References
-    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn trans(
         &self,
@@ -17,6 +20,7 @@ impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     fn _get_last_used_operation(&self) -> Self { unimplemented!() }
+
     /// # Safety
     /// If x,y is not null pointer.
     /// # References
@@ -59,8 +63,10 @@ impl crate::Pj {
         Ok(result)
     }
 
-    /// Not suggested
-    /// # References
+    /// <div class="warning">Available on <b>crate feature</b>
+    /// <code>unrecommended</code> only.</div>
+    ///
+    ///  # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn trans_array(

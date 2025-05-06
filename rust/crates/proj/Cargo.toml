@@ -7,7 +7,7 @@ version.workspace = true
 clerk = { workspace = true }
 miette = { workspace = true }
 proj-sys = { workspace = true }
-
+serde = { workspace = true, optional = true }
 
 [dev-dependencies]
 clerk = { workspace = true, features = ["log"] }
@@ -17,4 +17,5 @@ tracing-subscriber = { workspace = true }
 
 [features]
 log = ["clerk/log"]
+serde = ["dep:serde"]
 unrecommended = []

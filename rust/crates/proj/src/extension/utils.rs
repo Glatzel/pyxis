@@ -11,6 +11,7 @@ macro_rules! create_readonly_struct {
     ($name:ident, $struct_doc:expr, $({$field:ident: $type:ty $(, $field_doc:expr)?}),*) => {
 
         #[doc=$struct_doc]
+        #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
         #[derive(Debug)]
         pub struct $name {
             $( $field: $type ),*
@@ -26,7 +27,6 @@ macro_rules! create_readonly_struct {
 
             // Getter methods for each field
             $(
-
                 pub fn $field(&self) -> &$type {
                     &self.$field
                 }

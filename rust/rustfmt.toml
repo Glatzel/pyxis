@@ -4,3 +4,4 @@ ignore = ["crates/proj-sys/src/bindings.rs"]
 imports_granularity = "Module"
 reorder_imports = true
 wrap_comments = true
+overflow_delimited_expr = true

@@ -14,6 +14,7 @@ pub struct Pj {
 ///
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_DIRECTION>
+#[derive(Debug)]
 pub enum PjDirection {
     Fwd,
     Ident,

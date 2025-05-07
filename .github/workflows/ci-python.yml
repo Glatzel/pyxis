@@ -102,7 +102,7 @@ jobs:
       - name: cargo-clippy
         run: ${{env.PYTHON_ROOT}}/scripts/cargo-clippy.ps1
         shell: pwsh
-        
+
       - name: cargo-fmt
         run: ${{env.PYTHON_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh

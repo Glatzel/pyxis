@@ -8,7 +8,7 @@ build:
     - if: win
       then:
         - pwsh -f %RECIPE_DIR%/build-pyxis-py.ps1
-    - if: linux
+    - if: unix
       then:
         - pwsh -f $RECIPE_DIR/build-pyxis-py.ps1
 

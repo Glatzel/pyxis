@@ -52,7 +52,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest]
+        machine: [windows-latest, ubuntu-latest,macos-latest]
         include:
           - machine: windows-latest
             os: win-64

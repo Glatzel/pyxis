@@ -1,7 +1,18 @@
 use assert_cmd::Command;
 use predicates::prelude::*;
+fn clear_screen() {
+    if cfg!(target_os = "windows") {
+        std::process::Command::new("cmd")
+            .args(["/C", "cls"])
+            .status()
+            .unwrap();
+    } else {
+        std::process::Command::new("clear").status().unwrap();
+    }
+}
 #[test]
 fn test_output_plain_no_name() {
+    clear_screen();
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([
@@ -34,6 +45,7 @@ x: 1450880.2910605022, y: 1141263.0111604782, z: 0"#,
 }
 #[test]
 fn test_output_plain_with_name() {
+    clear_screen();
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([
@@ -68,6 +80,7 @@ x: 1450880.2910605022, y: 1141263.0111604782, z: 0"#,
 }
 #[test]
 fn test_json() {
+    clear_screen();
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([

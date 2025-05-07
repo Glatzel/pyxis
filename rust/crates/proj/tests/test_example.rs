@@ -4,7 +4,7 @@ use assert_cmd::Command;
 fn get_example_exe(name: &str) -> PathBuf {
     let root = PathBuf::from(std::env::var("CARGO_WORKSPACE_DIR").unwrap());
     let mut exe = root.clone();
-    #[cfg(target_os = "linux")]
+    #[cfg(not(target_os = "windows"))]
     exe.push(format!("target/llvm-cov-target/debug/examples/{name}"));
     #[cfg(target_os = "windows")]
     exe.push(format!("target/llvm-cov-target/debug/examples/{name}.exe"));

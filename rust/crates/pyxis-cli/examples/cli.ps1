@@ -5,7 +5,7 @@ Set-Location "$ROOT/rust/dist/cli"
 if ($IsWindows) {
     $pyxis = "./pyxis.exe"
 }
-elseif ($IsLinux) {
+elseif ($IsLinux -or $IsMacOS) {
     $pyxis = "./pyxis"
 }
 

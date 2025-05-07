@@ -8,7 +8,7 @@ build:
     - if: win
       then:
         - pwsh -f %RECIPE_DIR%/build-pyxis-py.ps1
-    - if: linux
+    - if: unix
       then:
         - pwsh -f $RECIPE_DIR/build-pyxis-py.ps1
 
@@ -17,11 +17,26 @@ requirements:
     - python 3.11.*
     - pip
   run:
-    - python >= 3.11
-    - lazy-loader
-    - numpy
-    - scipy
-    - ${{ cuda_variant }}
+    - if: win
+      then:
+        - python >= 3.11
+        - lazy-loader
+        - numpy
+        - scipy
+        - ${{ if cuda_variant }}
+    - if: linux
+      then:
+        - python >= 3.11
+        - lazy-loader
+        - numpy
+        - scipy
+        - ${{ if cuda_variant }}
+    - if: osx
+      then:
+        - python >= 3.11
+        - lazy-loader
+        - numpy
+        - scipy
 
 tests:
   - python:

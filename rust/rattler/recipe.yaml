@@ -7,7 +7,7 @@ build:
     - if: win
       then:
         - pwsh -f %RECIPE_DIR%/build-pyxis-cli.ps1
-    - if: linux
+    - if: unix
       then:
         - pwsh -f $RECIPE_DIR/build-pyxis-cli.ps1
 tests:
@@ -15,6 +15,6 @@ tests:
   - if: win
     then:
       - '%PREFIX%/bin/pyxis-cli/pyxis.exe --help'
-  - if: linux
+  - if: unix
     then:
       - '$PREFIX/bin/pyxis-cli/pyxis --help'

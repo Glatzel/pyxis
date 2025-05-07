@@ -12,6 +12,9 @@ if ($IsWindows) {
 if ($IsLinux) {
     $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/share/proj
 }
+if ($IsMacOS) {
+    $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-osx-release/share/proj
+}
 Write-Output "::group::nextest"
 cargo +nightly llvm-cov nextest --no-report --all-features $package --branch --no-fail-fast
 $code = $LASTEXITCODE

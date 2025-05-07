@@ -87,7 +87,7 @@ mod test {
             (118.0f64.to_radians(), 30.0f64.to_radians(), 1.0),
             (119.0f64.to_radians(), 40.0f64.to_radians(), 2000.0),
         )?;
-        assert_eq!(dist, 1113143.341157136);
+        assert_approx_eq!(f64, dist, 1113143.341157136);
         Ok(())
     }
     #[test]

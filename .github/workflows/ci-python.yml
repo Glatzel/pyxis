@@ -69,6 +69,7 @@ jobs:
         with:
           run-install: false
       - uses: Jimver/cuda-toolkit@v0.2.23
+        if: ${{matrix.machine != 'macos-latest'}}
         with:
           cuda: "12.8.0"
           sub-packages: ${{matrix.sub-packages}}

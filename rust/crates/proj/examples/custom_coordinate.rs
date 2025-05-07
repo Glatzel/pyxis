@@ -1,5 +1,6 @@
 use std::ptr::null_mut;
 
+use float_cmp::assert_approx_eq;
 use proj::PjParams::CrsToCrs;
 use proj::{IPjCoord, PjArea};
 #[derive(Clone)]
@@ -30,8 +31,8 @@ fn convert_scalar() -> miette::Result<()> {
     let pj = ctx.normalize_for_visualization(&pj)?;
     let coord = MyCoord { a: 120.0, b: 30.0 };
     let coord = pj.convert(&coord)?;
-    assert_eq!(coord.a, 19955590.73888901);
-    assert_eq!(coord.b, 3416780.562127255);
+    assert_approx_eq!(f64, coord.a, 19955590.73888901);
+    assert_approx_eq!(f64, coord.b, 3416780.562127255);
     Ok(())
 }
 fn convert_array() -> miette::Result<()> {
@@ -45,7 +46,7 @@ fn convert_array() -> miette::Result<()> {
     let pj = ctx.normalize_for_visualization(&pj)?;
     let mut coord = [MyCoord { a: 120.0, b: 30.0 }, MyCoord { a: 50.0, b: -80.0 }];
     pj.convert_array(&mut coord)?;
-    assert_eq!(coord[0].a, 19955590.73888901);
-    assert_eq!(coord[0].b, 3416780.562127255);
+    assert_approx_eq!(f64, coord[0].a, 19955590.73888901);
+    assert_approx_eq!(f64, coord[0].b, 3416780.562127255);
     Ok(())
 }

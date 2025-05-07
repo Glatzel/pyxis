@@ -30,3 +30,18 @@ impl From<PjLogLevel> for u32 {
         }
     }
 }
+impl TryFrom<u32> for PjLogLevel {
+    type Error = miette::Report;
+
+    fn try_from(value: u32) -> miette::Result<PjLogLevel> {
+        let level = match value {
+            0 => PjLogLevel::None,
+            1 => PjLogLevel::Error,
+            2 => PjLogLevel::Debug,
+            3 => PjLogLevel::Trace,
+            4 => PjLogLevel::Tell,
+            level => miette::bail!("Unknow log level:{}", level),
+        };
+        Ok(level)
+    }
+}

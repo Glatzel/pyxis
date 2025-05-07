@@ -113,7 +113,6 @@ impl crate::Pj {
     {
         let length = coord.len();
         let size = size_of::<T>();
-        println!("{length},{size}");
         let x = coord[0].x();
         let y = coord[0].y();
         let z = coord[0].z();
@@ -151,7 +150,7 @@ impl crate::Pj {
 mod test {
     #[test]
     fn test_project_2d() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         // array
         {
@@ -171,7 +170,7 @@ mod test {
     }
     #[test]
     fn test_project_3d() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         // array
@@ -196,7 +195,7 @@ mod test {
     }
     #[test]
     fn test_convert_2d() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         // array
         {
@@ -217,7 +216,7 @@ mod test {
     }
     #[test]
     fn test_convert_3d() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         // array
@@ -242,7 +241,7 @@ mod test {
     }
     #[test]
     fn test_project_array_2d() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
@@ -259,7 +258,7 @@ mod test {
     }
     #[test]
     fn test_project_array_3d() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
@@ -276,7 +275,7 @@ mod test {
     }
     #[test]
     fn test_convert_array_2d() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
@@ -293,7 +292,7 @@ mod test {
     }
     #[test]
     fn test_convert_array_3d() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];

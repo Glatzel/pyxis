@@ -5,6 +5,8 @@ use miette::IntoDiagnostic;
 use crate::check_result;
 /// # Transformation setup
 impl crate::PjContext {
+    /// See [`Self::create_proj`], [`crate::PjParams::Defination`]
+    ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub(crate) fn create(&self, definition: &str) -> miette::Result<crate::Pj> {
@@ -15,7 +17,8 @@ impl crate::PjContext {
         check_result!(self);
         Ok(pj)
     }
-
+    /// See [`Self::create_proj`], [`crate::PjParams::Argv`]
+    ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     pub(crate) fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Pj> {
@@ -30,7 +33,8 @@ impl crate::PjContext {
         check_result!(self);
         Ok(pj)
     }
-
+    /// See [`Self::create_proj`], [`crate::PjParams::CrsToCrs`]
+    ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     pub(crate) fn create_crs_to_crs(
@@ -54,7 +58,8 @@ impl crate::PjContext {
         check_result!(self);
         Ok(pj)
     }
-
+    /// See [`Self::create_proj`], [`crate::PjParams::CrsToCrsFromPj`]
+    ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub(crate) fn create_crs_to_crs_from_pj(
@@ -143,28 +148,28 @@ impl Drop for crate::Pj {
 mod test {
     #[test]
     fn test_create() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         ctx.create("EPSG:4326")?;
         Ok(())
     }
 
     #[test]
     fn test_create_argv() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
         Ok(())
     }
 
     #[test]
     fn test_create_crs_to_crs() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
         Ok(())
     }
 
     #[test]
     fn test_create_crs_to_crs_from_pj() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4978")?;
         ctx.create_crs_to_crs_from_pj(

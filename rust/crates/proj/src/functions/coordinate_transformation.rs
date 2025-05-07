@@ -4,6 +4,8 @@ impl crate::Pj {
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
     ///
+    /// See [`Self::convert`], [`Self::project`]
+    ///
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
     #[cfg(any(feature = "unrecommended", test))]
@@ -72,6 +74,8 @@ impl crate::Pj {
 
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
+    ///
+    /// /// See [`Self::convert_array`], [`Self::project_array`]
     ///
     ///  # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
@@ -188,7 +192,7 @@ mod test {
 
     #[test]
     fn test_trans() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let coord = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).to_coord()?)?;
@@ -199,7 +203,7 @@ mod test {
     }
     #[test]
     fn test_get_last_used_operation() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let _ = pj.trans(crate::PjDirection::Fwd, (120.0, 30.0).to_coord()?)?;
@@ -210,7 +214,7 @@ mod test {
     }
     #[test]
     fn test_get_last_used_operation_null() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let last_op = pj.get_last_used_operation();
         assert!(last_op.is_none());
@@ -219,7 +223,7 @@ mod test {
 
     #[test]
     fn test_trans_array() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0].to_coord()?, [50.0, -80.0].to_coord()?];
@@ -233,7 +237,7 @@ mod test {
 
     #[test]
     fn test_trans_bounds() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let xmin = 0.0;
@@ -267,7 +271,7 @@ mod test {
 
     #[test]
     fn test_trans_bounds_3d() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx();
+        let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::PjArea::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let xmin = 0.0;

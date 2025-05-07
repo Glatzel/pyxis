@@ -4,22 +4,22 @@ use std::ptr::null_mut;
 use crate::data_types::PjLogLevel;
 
 impl Default for crate::PjContext {
-    fn default() -> Self { Self::new() }
+    fn default() -> Self {
+        let ctx = Self::new();
+        ctx.set_log_level(PjLogLevel::None).unwrap();
+        ctx.set_log_func(null_mut::<c_void>(), Some(crate::proj_clerk))
+            .unwrap();
+        ctx
+    }
 }
 
 impl crate::PjContext {
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
     pub fn new() -> Self {
-        let ctx = Self {
+        Self {
             ctx: unsafe { proj_sys::proj_context_create() },
-        };
-        //initialize log
-        unsafe {
-            proj_sys::proj_log_level(ctx.ctx, PjLogLevel::None.into());
-            proj_sys::proj_log_func(ctx.ctx, null_mut::<c_void>(), Some(crate::proj_clerk));
-        };
-        ctx
+        }
     }
 }
 

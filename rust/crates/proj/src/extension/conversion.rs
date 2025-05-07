@@ -148,6 +148,7 @@ impl crate::Pj {
 }
 #[cfg(test)]
 mod test {
+    use float_cmp::assert_approx_eq;
     #[test]
     fn test_project_2d() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
@@ -157,14 +158,16 @@ mod test {
             let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = [120.0, 30.0];
             let coord = pj.project(false, &coord)?;
-            assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
+            assert_approx_eq!(f64, coord[0], 19955590.73888901);
+            assert_approx_eq!(f64, coord[1], 3416780.562127255);
         }
         // tuple
         {
             let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = (120.0, 30.0);
             let coord = pj.project(false, &coord)?;
-            assert_eq!(coord, (19955590.73888901, 3416780.562127255));
+            assert_approx_eq!(f64, coord.0, 19955590.73888901);
+            assert_approx_eq!(f64, coord.1, 3416780.562127255);
         }
         Ok(())
     }
@@ -177,19 +180,17 @@ mod test {
         {
             let coord = [120.0, 30.0, 10.0];
             let coord = pj.project(false, &coord)?;
-            assert_eq!(
-                coord,
-                [-2764132.649773435, 4787618.188267582, 3170378.735383637]
-            );
+            assert_approx_eq!(f64, coord[0], -2764132.649773435);
+            assert_approx_eq!(f64, coord[1], 4787618.188267582);
+            assert_approx_eq!(f64, coord[2], 3170378.735383637);
         }
         // tuple
         {
             let coord = (120.0, 30.0, 10.0);
             let coord = pj.project(false, &coord)?;
-            assert_eq!(
-                coord,
-                (-2764132.649773435, 4787618.188267582, 3170378.735383637)
-            );
+            assert_approx_eq!(f64, coord.0, -2764132.649773435);
+            assert_approx_eq!(f64, coord.1, 4787618.188267582);
+            assert_approx_eq!(f64, coord.2, 3170378.735383637);
         }
         Ok(())
     }
@@ -202,15 +203,16 @@ mod test {
             let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = [120.0, 30.0];
             let coord = pj.convert(&coord)?;
-            assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
+            assert_approx_eq!(f64, coord[0], 19955590.73888901);
+            assert_approx_eq!(f64, coord[1], 3416780.562127255);
         }
         // tuple
         {
             let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = (120.0, 30.0);
-
             let coord = pj.convert(&coord)?;
-            assert_eq!(coord, (19955590.73888901, 3416780.562127255));
+            assert_approx_eq!(f64, coord.0, 19955590.73888901);
+            assert_approx_eq!(f64, coord.1, 3416780.562127255);
         }
         Ok(())
     }
@@ -223,19 +225,17 @@ mod test {
         {
             let coord = [120.0, 30.0, 10.0];
             let coord = pj.convert(&coord)?;
-            assert_eq!(
-                coord,
-                [-2764132.649773435, 4787618.188267582, 3170378.735383637]
-            );
+            assert_approx_eq!(f64, coord[0], -2764132.649773435);
+            assert_approx_eq!(f64, coord[1], 4787618.188267582);
+            assert_approx_eq!(f64, coord[2], 3170378.735383637);
         }
         // tuple
         {
             let coord = (120.0, 30.0, 10.0);
             let coord = pj.convert(&coord)?;
-            assert_eq!(
-                coord,
-                (-2764132.649773435, 4787618.188267582, 3170378.735383637)
-            );
+            assert_approx_eq!(f64, coord.0, -2764132.649773435);
+            assert_approx_eq!(f64, coord.1, 4787618.188267582);
+            assert_approx_eq!(f64, coord.2, 3170378.735383637);
         }
         Ok(())
     }
@@ -247,13 +247,10 @@ mod test {
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
 
         pj.project_array(false, coord.as_mut_slice())?;
-        assert_eq!(
-            coord,
-            [
-                [19955590.73888901, 3416780.562127255],
-                [17583572.872089125, -9356989.97994042]
-            ]
-        );
+        assert_approx_eq!(f64, coord[0][0], 19955590.73888901);
+        assert_approx_eq!(f64, coord[0][1], 3416780.562127255);
+        assert_approx_eq!(f64, coord[1][0], 17583572.872089125);
+        assert_approx_eq!(f64, coord[1][1], -9356989.97994042);
         Ok(())
     }
     #[test]
@@ -264,13 +261,13 @@ mod test {
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
 
         pj.project_array(false, coord.as_mut_slice())?;
-        assert_eq!(
-            coord,
-            [
-                [-2764132.649773435, 4787618.188267582, 3170378.735383637],
-                [714243.0112756203, 851201.6746730272, -6259542.96102869]
-            ]
-        );
+        assert_approx_eq!(f64, coord[0][0], -2764132.649773435);
+        assert_approx_eq!(f64, coord[0][1], 4787618.188267582);
+        assert_approx_eq!(f64, coord[0][2], 3170378.735383637);
+        assert_approx_eq!(f64, coord[1][0], 714243.0112756203);
+        assert_approx_eq!(f64, coord[1][1], 851201.6746730272);
+        assert_approx_eq!(f64, coord[1][2], -6259542.96102869);
+
         Ok(())
     }
     #[test]
@@ -281,13 +278,10 @@ mod test {
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
 
         pj.convert_array(coord.as_mut_slice())?;
-        assert_eq!(
-            coord,
-            [
-                [19955590.73888901, 3416780.562127255],
-                [17583572.872089125, -9356989.97994042]
-            ]
-        );
+        assert_approx_eq!(f64, coord[0][0], 19955590.73888901);
+        assert_approx_eq!(f64, coord[0][1], 3416780.562127255);
+        assert_approx_eq!(f64, coord[1][0], 17583572.872089125);
+        assert_approx_eq!(f64, coord[1][1], -9356989.97994042);
         Ok(())
     }
     #[test]
@@ -298,13 +292,12 @@ mod test {
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
 
         pj.convert_array(coord.as_mut_slice())?;
-        assert_eq!(
-            coord,
-            [
-                [-2764132.649773435, 4787618.188267582, 3170378.735383637],
-                [714243.0112756203, 851201.6746730272, -6259542.96102869]
-            ]
-        );
+        assert_approx_eq!(f64, coord[0][0], -2764132.649773435);
+        assert_approx_eq!(f64, coord[0][1], 4787618.188267582);
+        assert_approx_eq!(f64, coord[0][2], 3170378.735383637);
+        assert_approx_eq!(f64, coord[1][0], 714243.0112756203);
+        assert_approx_eq!(f64, coord[1][1], 851201.6746730272);
+        assert_approx_eq!(f64, coord[1][2], -6259542.96102869);
         Ok(())
     }
 }

@@ -189,7 +189,7 @@ impl crate::PjContext {
     fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { unimplemented!() }
 }
 
-impl crate::Proj {
+impl crate::Pj {
     fn _get_type(&self) { unimplemented!() }
     fn _is_equivalent_to(&self) { unimplemented!() }
     fn _is_crs(&self) { unimplemented!() }

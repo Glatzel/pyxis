@@ -1,7 +1,7 @@
 use crate::data_types::PjError;
 
 ///# Error reporting
-impl crate::Proj {
+impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_errno>
     pub(crate) fn errno(&self) -> PjError {

@@ -4,7 +4,7 @@
 ///
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ>
-pub struct Proj {
+pub struct Pj {
     pub(crate) pj: *mut proj_sys::PJ,
 }
 

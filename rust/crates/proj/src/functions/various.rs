@@ -7,7 +7,7 @@ use miette::IntoDiagnostic;
 use crate::check_result;
 
 /// # Various
-impl crate::Proj {
+impl crate::Pj {
     ///Measure internal consistency of a given transformation. The function
     /// performs n round trip transformations starting in either the forward or
     /// reverse direction. Returns the euclidean distance of the starting point

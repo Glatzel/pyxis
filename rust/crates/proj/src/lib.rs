@@ -12,6 +12,6 @@ pub mod functions;
 /// Proj version
 pub mod version;
 
-pub use data_types::{PjArea, PjContext, PjDirection, PjLogLevel, Proj};
+pub use data_types::{Pj, PjArea, PjContext, PjDirection, PjLogLevel};
 pub(crate) use extension::*;
 pub use extension::{IPjCoord, PJParams};

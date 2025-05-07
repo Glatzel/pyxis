@@ -13,4 +13,4 @@ pub(crate) use info_structures::*;
 pub(crate) use list_structures::*;
 pub use logging::PjLogLevel;
 pub use projection_derivatives::PjFactors;
-pub use transformation_objects::{PjArea, PjContext, PjDirection, Proj};
+pub use transformation_objects::{Pj, PjArea, PjContext, PjDirection};

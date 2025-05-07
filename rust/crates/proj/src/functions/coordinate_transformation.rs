@@ -4,6 +4,8 @@ impl crate::Pj {
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
     ///
+    /// See [`Self::convert`], [`Self::project`]
+    ///
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
     #[cfg(any(feature = "unrecommended", test))]
@@ -72,6 +74,8 @@ impl crate::Pj {
 
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
+    ///
+    /// /// See [`Self::convert_array`], [`Self::project_array`]
     ///
     ///  # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>

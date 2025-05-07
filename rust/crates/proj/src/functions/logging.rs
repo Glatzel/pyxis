@@ -4,6 +4,8 @@ use crate::check_result;
 use crate::data_types::PjLogLevel;
 /// # Logging
 impl crate::PjContext {
+    /// See [`Self::set_log_level`]
+    ///
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_level>
     pub fn log_level(&self, level: PjLogLevel) -> miette::Result<PjLogLevel> {
@@ -12,6 +14,8 @@ impl crate::PjContext {
         let level = PjLogLevel::try_from(level)?;
         Ok(level)
     }
+    /// See [`Self::set_log_func`]
+    ///
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_func>
     pub(crate) fn log_func(

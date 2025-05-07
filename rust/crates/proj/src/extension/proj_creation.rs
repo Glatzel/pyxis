@@ -1,21 +1,21 @@
-pub enum PJParams<'a> {
+pub enum PjParams<'a> {
     // Transformation setup
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    ByDefination {
+    Defination {
         definition: &'a str,
     },
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    ByArgv {
+    Argv {
         argv: Vec<&'a str>,
     },
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
-    ByCrsToCrs {
+    CrsToCrs {
         source_crs: &'a str,
         target_crs: &'a str,
         area: &'a crate::PjArea,
     },
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
-    ByCrsToCrsFromPj {
+    CrsToCrsFromPj {
         source_crs: crate::Pj,
         target_crs: crate::Pj,
         area: &'a crate::PjArea,
@@ -28,26 +28,27 @@ pub enum PJParams<'a> {
     //Iso19111
 
     // Extension
-    ByEpsgCode {
+    EpsgCode {
         code: u32,
     },
 }
+
 /// Proj Creation
 impl crate::PjContext {
     fn create_epsg_code(&self, code: u32) -> miette::Result<crate::Pj> {
         self.create(&format!("EPSG:{code}"))
     }
-    pub fn create_proj(&self, by: PJParams) -> miette::Result<crate::Pj> {
+    pub fn create_proj(&self, by: PjParams) -> miette::Result<crate::Pj> {
         match by {
             // Transformation setup
-            PJParams::ByDefination { definition } => self.create(definition),
-            PJParams::ByArgv { argv } => self.create_argv(argv.as_slice()),
-            PJParams::ByCrsToCrs {
+            PjParams::Defination { definition } => self.create(definition),
+            PjParams::Argv { argv } => self.create_argv(argv.as_slice()),
+            PjParams::CrsToCrs {
                 source_crs,
                 target_crs,
                 area,
             } => self.create_crs_to_crs(source_crs, target_crs, area),
-            PJParams::ByCrsToCrsFromPj {
+            PjParams::CrsToCrsFromPj {
                 source_crs,
                 target_crs,
                 area,
@@ -68,7 +69,7 @@ impl crate::PjContext {
             ),
             // Iso19111
             // Extension
-            PJParams::ByEpsgCode { code } => self.create_epsg_code(code),
+            PjParams::EpsgCode { code } => self.create_epsg_code(code),
         }
     }
 }

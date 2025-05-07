@@ -1,4 +1,4 @@
-use proj::PJParams::ByCrsToCrs;
+use proj::PjParams::CrsToCrs;
 
 use super::{CoordSpace, CryptoSpace, MigrateOption2d, RotateUnit, options};
 pub struct ContextTransform {
@@ -109,7 +109,7 @@ impl ContextTransform {
     }
     pub fn proj(&mut self, from: &str, to: &str) -> miette::Result<()> {
         let ctx = crate::proj_util::init_proj_builder()?;
-        let pj = ctx.create_proj(ByCrsToCrs {
+        let pj = ctx.create_proj(CrsToCrs {
             source_crs: from,
             target_crs: to,
             area: &proj::PjArea::default(),

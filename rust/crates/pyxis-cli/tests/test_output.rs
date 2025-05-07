@@ -1,11 +1,13 @@
 use assert_cmd::Command;
 use predicates::prelude::*;
-#[cfg(not(target_os = "macos"))]
 #[test]
 fn test_output_plain_no_name() {
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([
+            "-q",
+            "-q",
+            "-q",
             "transform",
             "-x",
             "4760096.421921",
@@ -33,12 +35,14 @@ x: 4760096.421921, y: 3744293.729449, z: 0
 x: 1450880.2910605022, y: 1141263.0111604782, z: 0"#,
         ));
 }
-#[cfg(not(target_os = "macos"))]
 #[test]
 fn test_output_plain_with_name() {
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([
+            "-q",
+            "-q",
+            "-q",
             "transform",
             "-n",
             "Test",
@@ -68,12 +72,14 @@ x: 4760096.421921, y: 3744293.729449, z: 0
 x: 1450880.2910605022, y: 1141263.0111604782, z: 0"#,
         ));
 }
-#[cfg(not(target_os = "macos"))]
 #[test]
 fn test_json() {
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([
+            "-q",
+            "-q",
+            "-q",
             "transform",
             "-n",
             "Test",

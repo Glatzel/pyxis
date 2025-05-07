@@ -25,7 +25,7 @@ fn cvt_3d() -> miette::Result<()> {
         area: &proj::PjArea::default(),
     })?;
     let pj = ctx.normalize_for_visualization(&pj)?;
-    
+
     let coord = [120.0, 30.0, 10.0];
     let coord = pj.convert(&coord)?;
     assert_eq!(

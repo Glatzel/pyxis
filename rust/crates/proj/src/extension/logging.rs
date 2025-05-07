@@ -26,6 +26,13 @@ impl crate::PjContext {
         };
         self
     }
+    pub fn set_log_func(
+        &self,
+        app_data: *mut c_void,
+        logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
+    ) -> miette::Result<&Self> {
+        self.log_func(app_data, logf)
+    }
 }
 
 #[cfg(test)]

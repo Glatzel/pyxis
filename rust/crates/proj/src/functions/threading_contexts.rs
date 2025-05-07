@@ -6,7 +6,6 @@ use crate::data_types::PjLogLevel;
 impl Default for crate::PjContext {
     fn default() -> Self {
         let ctx = Self::new();
-
         ctx.log_level(PjLogLevel::None.into()).unwrap();
         ctx.log_func(null_mut::<c_void>(), Some(crate::proj_clerk))
             .unwrap();

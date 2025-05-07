@@ -14,8 +14,7 @@ impl crate::PjContext {
     }
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_func>
-
-    pub fn log_func(
+    pub(crate) fn log_func(
         &self,
         app_data: *mut c_void,
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,

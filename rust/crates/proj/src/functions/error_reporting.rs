@@ -3,7 +3,7 @@ use crate::data_types::PjError;
 ///# Error reporting
 impl crate::Pj {
     /// See [`crate::check_result`]
-    /// 
+    ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_errno>
     pub(crate) fn errno(&self) -> PjError {
@@ -31,7 +31,7 @@ impl crate::Pj {
     }
 
     /// See [`crate::check_result`]
-    /// 
+    ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     pub(crate) fn errno_string(&self, err: &PjError) -> String {
@@ -42,7 +42,7 @@ impl crate::Pj {
 ///# Error reporting
 impl crate::PjContext {
     /// See [`crate::check_result`]
-    /// 
+    ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno>
     pub(crate) fn errno(&self) -> PjError {
@@ -50,7 +50,7 @@ impl crate::PjContext {
     }
 
     /// See [`crate::check_result`]
-    /// /// 
+    /// ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     pub(crate) fn errno_string(&self, err: &PjError) -> String {

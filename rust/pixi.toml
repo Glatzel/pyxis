@@ -2,7 +2,7 @@
 authors = ["Glatzel"]
 channels = ["conda-forge", "https://repo.prefix.dev/glatzel"]
 name = "pyxis-rust"
-platforms = ["win-64", "linux-64"]
+platforms = ["win-64", "linux-64", "osx-arm64"]
 version = "0.1.0"
 
 [dependencies]

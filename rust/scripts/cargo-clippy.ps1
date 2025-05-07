@@ -5,7 +5,7 @@ Set-Location $PSScriptRoot/..
 & $PSScriptRoot/set-env.ps1
 
 if ($env:CI) {
-    cargo clippy --fix --all-features -- -D warnings -p pyxis -p pyxis-cli -p proj
+    cargo clippy +stable --fix --all-features -- -D warnings -p pyxis -p pyxis-cli -p proj
 }
 else {
     cargo clippy --fix --all-targets --all-features -- -D warnings

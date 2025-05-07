@@ -115,7 +115,7 @@ pub enum PjStringType {
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_SPATIAL_CRITERION>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum ProjSpatialCriterion {
+pub enum PjSpatialCriterion {
     StrictContainment,
     PartialIntersection,
 }

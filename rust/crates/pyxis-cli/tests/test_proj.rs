@@ -5,9 +5,6 @@ fn test_proj() {
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "-q",
-            "-q",
-            "-q",
             "transform",
             "-x",
             "4760096.421921",

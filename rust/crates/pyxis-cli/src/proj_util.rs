@@ -5,7 +5,7 @@ use miette::IntoDiagnostic;
 
 const PROJ_DB: &[u8] = include_bytes!("proj.db");
 pub fn init_proj_builder() -> miette::Result<proj::PjContext> {
-    let ctx = proj::PjContext::new();
+    let ctx = proj::PjContext::default();
 
     // setup logging
     ctx.set_log_level(proj::PjLogLevel::Trace)?;

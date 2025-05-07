@@ -5,9 +5,6 @@ fn test_output_plain_no_name() {
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "-q",
-            "-q",
-            "-q",
             "transform",
             "-x",
             "4760096.421921",
@@ -40,9 +37,6 @@ fn test_output_plain_with_name() {
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "-q",
-            "-q",
-            "-q",
             "transform",
             "-n",
             "Test",
@@ -77,9 +71,6 @@ fn test_json() {
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "-q",
-            "-q",
-            "-q",
             "transform",
             "-n",
             "Test",

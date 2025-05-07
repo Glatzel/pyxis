@@ -12,3 +12,14 @@ fn test_example_convert() {
     }
     Command::new(exe).current_dir(root).assert().success();
 }
+#[test]
+fn test_example_custom_coordinate() {
+    let root = PathBuf::from(std::env::var("CARGO_WORKSPACE_DIR").unwrap());
+    let mut exe = root.clone();
+    exe.push("target/llvm-cov-target/debug/examples/custom_coordinate");
+    if !exe.exists() {
+        exe = root.clone();
+        exe.push("target/debug/examples/custom_coordinate")
+    }
+    Command::new(exe).current_dir(root).assert().success();
+}

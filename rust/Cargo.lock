@@ -914,6 +914,7 @@ dependencies = [
 name = "proj"
 version = "0.0.19"
 dependencies = [
+ "assert_cmd",
  "clerk",
  "float-cmp",
  "miette",

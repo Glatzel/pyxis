@@ -10,7 +10,6 @@ impl crate::PjContext {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_level>
     pub fn log_level(&self, level: PjLogLevel) -> miette::Result<PjLogLevel> {
         let level = unsafe { proj_sys::proj_log_level(self.ctx, level.into()) };
-        check_result!(self);
         let level = PjLogLevel::try_from(level)?;
         Ok(level)
     }

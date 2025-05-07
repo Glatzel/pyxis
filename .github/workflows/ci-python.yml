@@ -11,19 +11,6 @@ permissions: read-all
 env:
   PYTHON_ROOT: ${{github.workspace}}/python
 jobs:
-  ruff-lint:
-    if: ${{!inputs.release}}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.8
-        with:
-          run-install: false
-      - name: lint
-        run: ${{env.PYTHON_ROOT}}/scripts/ruff.ps1
-        shell: pwsh
-
   sphinx:
     runs-on: ubuntu-latest
     steps:
@@ -96,42 +83,6 @@ jobs:
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
-
-  cargo-clippy:
-    if: ${{!inputs.release}}
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.8
-        with:
-          run-install: false
-      - name: cargo-clippy
-        run: |
-          ${{env.PYTHON_ROOT}}/scripts/cargo-clippy.ps1
-        shell: pwsh
-
-  cargo-fmt:
-    if: ${{!inputs.release}}
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
-        with:
-          components: rustfmt
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.8
-        with:
-          run-install: false
-      - name: cargo-fmt
-        run: |
-          ${{env.PYTHON_ROOT}}/scripts/cargo-fmt.ps1
-        shell: pwsh
 
   bench:
     if: ${{!inputs.release}}

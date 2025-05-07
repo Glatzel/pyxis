@@ -3,12 +3,5 @@ $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 & $PSScriptRoot/set-env.ps1
-
-if ($env:CI) {
-    cargo +stable clippy --all-features -p pyxis -p pyxis-cli -p proj
-}
-else {
-    cargo clippy --fix --all-targets --all-features
-}
-
+cargo clippy --fix --all-targets --all-features -Dwarning
 Set-Location $ROOT

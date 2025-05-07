@@ -1,3 +1,6 @@
+use proj::PjArea;
+use proj::PjParams::CrsToCrs;
+
 fn main() -> miette::Result<()> {
     cvt_2d()?;
     cvt_3d()?;
@@ -5,10 +8,10 @@ fn main() -> miette::Result<()> {
 }
 fn cvt_2d() -> miette::Result<()> {
     let ctx = proj::PjContext::default();
-    let pj = ctx.create_proj(proj::PjParams::CrsToCrs {
+    let pj = ctx.create_proj(CrsToCrs {
         source_crs: "EPSG:4326",
         target_crs: "EPSG:4496",
-        area: &proj::PjArea::default(),
+        area: &PjArea::default(),
     })?;
 
     let pj = ctx.normalize_for_visualization(&pj)?;
@@ -19,10 +22,10 @@ fn cvt_2d() -> miette::Result<()> {
 }
 fn cvt_3d() -> miette::Result<()> {
     let ctx = proj::PjContext::default();
-    let pj = ctx.create_proj(proj::PjParams::CrsToCrs {
+    let pj = ctx.create_proj(CrsToCrs {
         source_crs: "EPSG:4326",
         target_crs: "EPSG:4978",
-        area: &proj::PjArea::default(),
+        area: &PjArea::default(),
     })?;
     let pj = ctx.normalize_for_visualization(&pj)?;
 

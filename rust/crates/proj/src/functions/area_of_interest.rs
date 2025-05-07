@@ -6,7 +6,7 @@ impl crate::PjArea {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>
     pub fn new() -> Self {
-        let a=3.14159265358979;
+        let a = 3.14159265358979;
         Self {
             area: unsafe { proj_sys::proj_area_create() },
         }

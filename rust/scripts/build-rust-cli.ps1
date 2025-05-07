@@ -24,7 +24,7 @@ if ($IsWindows) {
     # pack
     Write-Output "::group::Pack pyxis-windows-x64-self-contained.7z"
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "./dist/pyxis-cli-windows-x64.7z" "./dist/cli/pyxis.exe"
+        "./dist/pyxis-cli-windows-x64.7z" "./dist/cli/*"
     Write-Output "::endgroup::"
 }
 elseif ($IsLinux) {
@@ -56,7 +56,7 @@ elseif ($IsMacOS) {
     Write-Output "::endgroup::"
 
     # pack
-    Write-Output "::group::Pack pyxis-linux-arm64.7z"
+    Write-Output "::group::Pack pyxis-cli-macos-arm64.7z"
     7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
         "./dist/pyxis-cli-macos-arm64.7z" "./dist/cli/*"
     Write-Output "::endgroup::"

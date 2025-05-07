@@ -1,6 +1,6 @@
 use crate::check_result;
 // region:Coordinate transformation
-impl crate::Pj {
+impl crate::Proj {
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
     ///
@@ -100,7 +100,7 @@ impl crate::PjContext {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
     pub fn trans_bounds(
         &self,
-        p: &crate::Pj,
+        p: &crate::Proj,
         direction: crate::PjDirection,
         xmin: f64,
         ymin: f64,
@@ -138,7 +138,7 @@ impl crate::PjContext {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
     pub fn trans_bounds_3d(
         &self,
-        p: &crate::Pj,
+        p: &crate::Proj,
         direction: crate::PjDirection,
         xmin: f64,
         ymin: f64,

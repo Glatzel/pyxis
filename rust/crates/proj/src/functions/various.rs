@@ -7,7 +7,7 @@ use miette::IntoDiagnostic;
 use crate::check_result;
 
 /// # Various
-impl crate::Pj {
+impl crate::Proj {
     ///Measure internal consistency of a given transformation. The function
     /// performs n round trip transformations starting in either the forward or
     /// reverse direction. Returns the euclidean distance of the starting point
@@ -57,8 +57,8 @@ impl crate::Pj {
 
         let factor = unsafe { proj_sys::proj_factors(self.pj, coord) };
         match self.errno() {
-            crate::data_types::PjErrorCode::Success => (),
-            crate::data_types::PjErrorCode::CoordTransfmOutsideProjectionDomain => (),
+            crate::data_types::PjError::Success => (),
+            crate::data_types::PjError::CoordTransfmOutsideProjectionDomain => (),
             _ => {
                 check_result!(self);
             }

@@ -16,8 +16,8 @@ pub enum PJParams<'a> {
     },
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     ByCrsToCrsFromPj {
-        source_crs: crate::Pj,
-        target_crs: crate::Pj,
+        source_crs: crate::Proj,
+        target_crs: crate::Proj,
         area: &'a crate::PjArea,
         authority: Option<&'a str>,
         accuracy: Option<f64>,
@@ -34,10 +34,10 @@ pub enum PJParams<'a> {
 }
 /// Proj Creation
 impl crate::PjContext {
-    fn create_epsg_code(&self, code: u32) -> miette::Result<crate::Pj> {
+    fn create_epsg_code(&self, code: u32) -> miette::Result<crate::Proj> {
         self.create(&format!("EPSG:{code}"))
     }
-    pub fn create_proj(&self, by: PJParams) -> miette::Result<crate::Pj> {
+    pub fn create_proj(&self, by: PJParams) -> miette::Result<crate::Proj> {
         match by {
             // Transformation setup
             PJParams::ByDefination { definition } => self.create(definition),

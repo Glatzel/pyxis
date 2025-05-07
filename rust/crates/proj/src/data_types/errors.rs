@@ -1,5 +1,5 @@
 #[derive(Debug)]
-pub(crate) enum PjErrorCode {
+pub(crate) enum PjError {
     Success,
     //Errors in class PROJ_ERR_INVALID_OP
     InvalidOp,
@@ -24,7 +24,7 @@ pub(crate) enum PjErrorCode {
     OtherNetworkError,
 }
 
-impl From<u32> for PjErrorCode {
+impl From<u32> for PjError {
     fn from(value: u32) -> Self {
         match value {
             0 => Self::Success,
@@ -61,51 +61,51 @@ impl From<u32> for PjErrorCode {
     }
 }
 
-impl From<&PjErrorCode> for i32 {
-    fn from(value: &PjErrorCode) -> Self {
+impl From<&PjError> for i32 {
+    fn from(value: &PjError) -> Self {
         match value {
-            PjErrorCode::Success => 0,
+            PjError::Success => 0,
             //Errors in class PROJ_ERR_INVALID_OP
-            PjErrorCode::InvalidOp => proj_sys::PROJ_ERR_INVALID_OP as i32,
-            PjErrorCode::InvalidOpWrongSyntax => proj_sys::PROJ_ERR_INVALID_OP_WRONG_SYNTAX as i32,
-            PjErrorCode::InvalidOpMissingArg => proj_sys::PROJ_ERR_INVALID_OP_MISSING_ARG as i32,
-            PjErrorCode::InvalidOpIllegalArgValue => {
+            PjError::InvalidOp => proj_sys::PROJ_ERR_INVALID_OP as i32,
+            PjError::InvalidOpWrongSyntax => proj_sys::PROJ_ERR_INVALID_OP_WRONG_SYNTAX as i32,
+            PjError::InvalidOpMissingArg => proj_sys::PROJ_ERR_INVALID_OP_MISSING_ARG as i32,
+            PjError::InvalidOpIllegalArgValue => {
                 proj_sys::PROJ_ERR_INVALID_OP_ILLEGAL_ARG_VALUE as i32
             }
-            PjErrorCode::InvalidOpMutuallyExclusiveArgs => {
+            PjError::InvalidOpMutuallyExclusiveArgs => {
                 proj_sys::PROJ_ERR_INVALID_OP_MUTUALLY_EXCLUSIVE_ARGS as i32
             }
-            PjErrorCode::InvalidOpFileNotFoundOrInvalid => {
+            PjError::InvalidOpFileNotFoundOrInvalid => {
                 proj_sys::PROJ_ERR_INVALID_OP_FILE_NOT_FOUND_OR_INVALID as i32
             }
             //Errors in class PROJ_ERR_COORD_TRANSFM
-            PjErrorCode::CoordTransfm => proj_sys::PROJ_ERR_COORD_TRANSFM as i32,
-            PjErrorCode::CoordTransfmInvalidCoord => {
+            PjError::CoordTransfm => proj_sys::PROJ_ERR_COORD_TRANSFM as i32,
+            PjError::CoordTransfmInvalidCoord => {
                 proj_sys::PROJ_ERR_COORD_TRANSFM_INVALID_COORD as i32
             }
-            PjErrorCode::CoordTransfmOutsideProjectionDomain => {
+            PjError::CoordTransfmOutsideProjectionDomain => {
                 proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_PROJECTION_DOMAIN as i32
             }
-            PjErrorCode::CoordTransfmNoOperation => {
+            PjError::CoordTransfmNoOperation => {
                 proj_sys::PROJ_ERR_COORD_TRANSFM_NO_OPERATION as i32
             }
-            PjErrorCode::CoordTransfmOutsideGrid => {
+            PjError::CoordTransfmOutsideGrid => {
                 proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_GRID as i32
             }
-            PjErrorCode::CoordTransfmGridAtNodata => {
+            PjError::CoordTransfmGridAtNodata => {
                 proj_sys::PROJ_ERR_COORD_TRANSFM_GRID_AT_NODATA as i32
             }
-            PjErrorCode::CoordTransfmNoConvergence => {
+            PjError::CoordTransfmNoConvergence => {
                 proj_sys::PROJ_ERR_COORD_TRANSFM_NO_CONVERGENCE as i32
             }
-            PjErrorCode::CoordTransfmMissingTime => {
+            PjError::CoordTransfmMissingTime => {
                 proj_sys::PROJ_ERR_COORD_TRANSFM_MISSING_TIME as i32
             }
             //Errors in class PROJ_ERR_OTHER
-            PjErrorCode::Other => proj_sys::PROJ_ERR_OTHER as i32,
-            PjErrorCode::OtherApiMisuse => proj_sys::PROJ_ERR_OTHER_API_MISUSE as i32,
-            PjErrorCode::OtherNoInverseOp => proj_sys::PROJ_ERR_OTHER_NO_INVERSE_OP as i32,
-            PjErrorCode::OtherNetworkError => proj_sys::PROJ_ERR_OTHER_NETWORK_ERROR as i32,
+            PjError::Other => proj_sys::PROJ_ERR_OTHER as i32,
+            PjError::OtherApiMisuse => proj_sys::PROJ_ERR_OTHER_API_MISUSE as i32,
+            PjError::OtherNoInverseOp => proj_sys::PROJ_ERR_OTHER_NO_INVERSE_OP as i32,
+            PjError::OtherNetworkError => proj_sys::PROJ_ERR_OTHER_NETWORK_ERROR as i32,
         }
     }
 }

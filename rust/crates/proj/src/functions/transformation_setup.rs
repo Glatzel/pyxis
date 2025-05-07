@@ -7,9 +7,9 @@ use crate::check_result;
 impl crate::PjContext {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub(crate) fn create(&self, definition: &str) -> miette::Result<crate::Pj> {
+    pub(crate) fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
         let definition = CString::new(definition).into_diagnostic()?;
-        let pj = crate::Pj {
+        let pj = crate::Proj {
             pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr()) },
         };
         check_result!(self);
@@ -18,13 +18,13 @@ impl crate::PjContext {
 
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub(crate) fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Pj> {
+    pub(crate) fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Proj> {
         let len = argv.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in argv {
             ptrs.push(CString::new(*s).into_diagnostic()?.into_raw());
         }
-        let pj = crate::Pj {
+        let pj = crate::Proj {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },
         };
         check_result!(self);
@@ -38,10 +38,10 @@ impl crate::PjContext {
         source_crs: &str,
         target_crs: &str,
         area: &crate::PjArea,
-    ) -> miette::Result<crate::Pj> {
+    ) -> miette::Result<crate::Proj> {
         let source_crs = CString::new(source_crs).into_diagnostic()?;
         let target_crs = CString::new(target_crs).into_diagnostic()?;
-        let pj = crate::Pj {
+        let pj = crate::Proj {
             pj: unsafe {
                 proj_sys::proj_create_crs_to_crs(
                     self.ctx,
@@ -59,15 +59,15 @@ impl crate::PjContext {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub(crate) fn create_crs_to_crs_from_pj(
         &self,
-        source_crs: crate::Pj,
-        target_crs: crate::Pj,
+        source_crs: crate::Proj,
+        target_crs: crate::Proj,
         area: &crate::PjArea,
         authority: Option<&str>,
         accuracy: Option<f64>,
         allow_ballpark: Option<bool>,
         only_best: Option<bool>,
         force_over: Option<bool>,
-    ) -> miette::Result<crate::Pj> {
+    ) -> miette::Result<crate::Proj> {
         let mut options: Vec<*const i8> = Vec::with_capacity(5);
         if let Some(authority) = authority {
             options.push(
@@ -113,7 +113,7 @@ impl crate::PjContext {
                 .as_ptr(),
             );
         }
-        let pj = crate::Pj {
+        let pj = crate::Proj {
             pj: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(
                     self.ctx,
@@ -129,14 +129,14 @@ impl crate::PjContext {
     }
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
-    pub fn normalize_for_visualization(&self, obj: &crate::Pj) -> miette::Result<crate::Pj> {
-        Ok(crate::Pj {
+    pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<crate::Proj> {
+        Ok(crate::Proj {
             pj: unsafe { proj_sys::proj_normalize_for_visualization(self.ctx, obj.pj) },
         })
     }
 }
 
-impl Drop for crate::Pj {
+impl Drop for crate::Proj {
     fn drop(&mut self) { unsafe { proj_sys::proj_destroy(self.pj) }; }
 }
 #[cfg(test)]

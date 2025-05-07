@@ -33,14 +33,6 @@ jobs:
           token: ${{ secrets.CODSPEED_TOKEN }}
           working-directory: ${{env.RUST_ROOT}}
 
-  cargo-machete:
-    if: ${{!inputs.release}}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Machete
-        uses: bnjbvr/cargo-machete@main
-
   cargo-test:
     if: ${{!inputs.release}}
     strategy:
@@ -158,7 +150,7 @@ jobs:
         run: ${{env.RUST_ROOT}}/scripts/build-rust-cuda.ps1 ${{ inputs.release && '-config release' || null }}
         shell: pwsh
 
-  cargo-clippy:
+  check:
     if: ${{!inputs.release}}
     runs-on: ubuntu-latest
     env:
@@ -166,30 +158,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+            components: rustfmt
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@v0.8.8
         with:
           run-install: false
       - name: cargo-clippy
-        run: |
-          ${{env.RUST_ROOT}}/scripts/cargo-clippy.ps1
+        if: ${{!cancelled ()}}
+        run: ${{env.RUST_ROOT}}/scripts/cargo-clippy.ps1
         shell: pwsh
-
-  cargo-fmt:
-    if: ${{!inputs.release}}
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.8
-        with:
-          run-install: false
-      - uses: dtolnay/rust-toolchain@nightly
-        with:
-            components: rustfmt
       - name: cargo-fmt
-        run: |
-          ${{env.RUST_ROOT}}/scripts/cargo-fmt.ps1
+        if: ${{!cancelled ()}}
+        run: ${{env.RUST_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
+      - name: cargo-machete
+        if: ${{!cancelled ()}}
+        uses: bnjbvr/cargo-machete@main

@@ -113,7 +113,6 @@ impl crate::Pj {
     {
         let length = coord.len();
         let size = size_of::<T>();
-        println!("{length},{size}");
         let x = coord[0].x();
         let y = coord[0].y();
         let z = coord[0].z();

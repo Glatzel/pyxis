@@ -17,7 +17,7 @@ fn cvt_2d() -> miette::Result<()> {
 
     let pj = ctx.normalize_for_visualization(&pj)?;
     let coord = [120.0, 30.0];
-    let coord = pj.project(false, &coord)?;
+    let coord = pj.convert(&coord)?;
     assert_eq!(coord, [19955590.73888901, 3416780.562127255]);
     Ok(())
 }

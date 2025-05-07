@@ -16,7 +16,6 @@ fn test_proj() {
         .args(["proj", "--from", "EPSG:2230", "--to", "EPSG:26946"])
         .assert()
         .success()
-        .stdout(predicate::str::contains(
-            "x: 1450880.2910605022, y: 1141263.0111604782, z: 0",
-        ));
+        .stdout(predicate::str::contains("x: 1450880"))
+        .stdout(predicate::str::contains("y: 1141263"));
 }

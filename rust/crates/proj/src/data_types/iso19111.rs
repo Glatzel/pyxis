@@ -87,7 +87,7 @@ pub enum PjWktType {
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_EXTENT_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum ProjCrsExtentUse {
+pub enum PjCrsExtentUse {
     None,
     Both,
     Intersection,
@@ -97,7 +97,7 @@ pub enum ProjCrsExtentUse {
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_GRID_AVAILABILITY_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum ProjGridAvailabilityUse {
+pub enum PjGridAvailabilityUse {
     UsedForSorting,
     DiscardOperationIfMissingGrid,
     Ignored,
@@ -107,7 +107,7 @@ pub enum ProjGridAvailabilityUse {
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_STRING_TYPE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum PjProjStringType {
+pub enum PjStringType {
     Proj5,
     Proj4,
 }
@@ -115,7 +115,7 @@ pub enum PjProjStringType {
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_SPATIAL_CRITERION>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum ProjSpatialCriterion {
+pub enum PjSpatialCriterion {
     StrictContainment,
     PartialIntersection,
 }
@@ -123,7 +123,7 @@ pub enum ProjSpatialCriterion {
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_INTERMEDIATE_CRS_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum ProjIntermediateCrsUse {
+pub enum PjIntermediateCrsUse {
     Always,
     IfNoDirectTransformation,
     Never,
@@ -145,7 +145,7 @@ pub enum PjCoordinateSystemType {
     Temporalmeasure,
 }
 create_readonly_struct!(
-    ProjCrsInfo,
+    PjCrsInfo,
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_INFO>",
     {auth_name:String},
     {code:String},
@@ -163,7 +163,7 @@ create_readonly_struct!(
 );
 
 create_readonly_struct!(
-    ProjCrsListParameters,
+    PjCrsListParameters,
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_LIST_PARAMETERS>",
     {types:Vec<PjType>},
     {types_count:usize},
@@ -178,7 +178,7 @@ create_readonly_struct!(
 );
 
 create_readonly_struct!(
-    ProjUnitInfo ,
+    PjUnitInfo ,
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_UNIT_INFO>",
     {auth_name: String},
     {code: String},
@@ -190,7 +190,7 @@ create_readonly_struct!(
 );
 
 create_readonly_struct!(
-    ProjCelestialBodyInfo,
+    PjCelestialBodyInfo,
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CELESTIAL_BODY_INFO>",
     {auth_name:String},
     {name:String}

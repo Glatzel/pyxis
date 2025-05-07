@@ -57,8 +57,8 @@ impl crate::Pj {
 
         let factor = unsafe { proj_sys::proj_factors(self.pj, coord) };
         match self.errno() {
-            crate::data_types::PjErrorCode::Success => (),
-            crate::data_types::PjErrorCode::CoordTransfmOutsideProjectionDomain => (),
+            crate::data_types::PjError::Success => (),
+            crate::data_types::PjError::CoordTransfmOutsideProjectionDomain => (),
             _ => {
                 check_result!(self);
             }

@@ -8,7 +8,7 @@ pub fn init_proj_builder() -> miette::Result<proj::PjContext> {
     let ctx = proj::PjContext::new();
 
     // setup logging
-    ctx.set_log_level(proj::PjLogLevel::Trace);
+    ctx.set_log_level(proj::PjLogLevel::Trace)?;
 
     // search for proj.db
     if let Ok(proj_data) = std::env::var("PROJ_DATA") {

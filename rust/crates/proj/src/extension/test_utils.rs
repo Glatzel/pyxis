@@ -8,6 +8,6 @@ pub(crate) fn new_test_ctx() -> crate::PjContext {
         .with(clerk::terminal_layer(LevelFilter::TRACE, true))
         .init();
     let ctx = crate::PjContext::default();
-    ctx.set_log_level(PjLogLevel::Trace);
+    ctx.set_log_level(PjLogLevel::Trace)?;
     ctx
 }

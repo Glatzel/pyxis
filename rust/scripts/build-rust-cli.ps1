@@ -57,7 +57,7 @@ elseif ($IsMacOS) {
 
     # pack
     Write-Output "::group::Pack pyxis-cli-macos-arm64.7z"
-    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
+    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=256 -ms=on -mqs=on `
         "./dist/pyxis-cli-macos-arm64.7z" "./dist/cli/*"
     Write-Output "::endgroup::"
 }

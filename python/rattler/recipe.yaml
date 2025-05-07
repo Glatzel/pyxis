@@ -21,7 +21,7 @@ requirements:
     - lazy-loader
     - numpy
     - scipy
-    - ${{ if cuda_variant }}
+    - ${{ cuda_variant }}
 
 tests:
   - python:

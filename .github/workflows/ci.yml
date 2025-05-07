@@ -28,6 +28,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pre-commit:
+    if: ${{ !inputs.release }}
+    uses: Glatzel/template/.github/workflows/pre-commit.yml@main
   changed:
     outputs:
       changed-cpp: ${{steps.main.outputs.cpp_any_changed}}

@@ -17,26 +17,11 @@ requirements:
     - python 3.11.*
     - pip
   run:
-    - if: win
-      then:
-        - python >= 3.11
-        - lazy-loader
-        - numpy
-        - scipy
-        - ${{ if cuda_variant }}
-    - if: linux
-      then:
-        - python >= 3.11
-        - lazy-loader
-        - numpy
-        - scipy
-        - ${{ if cuda_variant }}
-    - if: osx
-      then:
-        - python >= 3.11
-        - lazy-loader
-        - numpy
-        - scipy
+    - python >= 3.11
+    - lazy-loader
+    - numpy
+    - scipy
+    - ${{ if cuda_variant }}
 
 tests:
   - python:

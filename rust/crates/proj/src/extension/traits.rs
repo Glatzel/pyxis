@@ -38,6 +38,7 @@ const NULL_PTR: *mut f64 = null_mut();
 /// 3D coordinate
 /// ```
 /// use std::ptr::null_mut;
+/// #[derive(Clone)]
 /// struct MyCoord {
 ///     x: f64,
 ///     y: f64,

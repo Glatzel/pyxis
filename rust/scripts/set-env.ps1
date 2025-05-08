@@ -1,6 +1,6 @@
 $current_dir = Resolve-Path $PWD
 Set-Location $PSScriptRoot/..
-pixi install
+pixi install -q
 
 if ($IsWindows) {
     $pkg_config_exe = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin

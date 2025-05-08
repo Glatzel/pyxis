@@ -7,7 +7,9 @@ pub enum PjLogLevel {
 }
 impl Default for PjLogLevel {
     fn default() -> Self {
-        let a = 1;
+        let mut a = 5;
+        let b = 0;
+        a += b;
         Self::Error
     }
 }

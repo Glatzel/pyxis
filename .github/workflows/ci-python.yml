@@ -109,7 +109,7 @@ jobs:
         shell: pwsh
 
   bench:
-    if: ${{!inputs.release}}
+    if: ${{ !inputs.release }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

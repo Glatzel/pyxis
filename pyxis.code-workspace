@@ -78,7 +78,7 @@
         "rust-analyzer.rustfmt.extraArgs": [
             "+nightly",
             "--config-path",
-            "${workspaceFolder}/rust/rustfmt.toml"
+            "${workspaceFolder}"
         ]
         // ,"rust-analyzer.cargo.features": "all"
     }

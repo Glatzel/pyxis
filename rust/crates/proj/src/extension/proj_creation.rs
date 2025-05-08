@@ -1,13 +1,9 @@
 pub enum PjParams<'a> {
     // Transformation setup
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    Defination {
-        definition: &'a str,
-    },
+    Defination(&'a str),
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    Argv {
-        argv: Vec<&'a str>,
-    },
+    Argv(Vec<&'a str>),
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     CrsToCrs {
         source_crs: &'a str,
@@ -28,9 +24,7 @@ pub enum PjParams<'a> {
     //Iso19111
 
     // Extension
-    EpsgCode {
-        code: u32,
-    },
+    EpsgCode(u32),
 }
 
 /// Proj Creation
@@ -41,8 +35,8 @@ impl crate::PjContext {
     pub fn create_proj(&self, by: PjParams) -> miette::Result<crate::Pj> {
         match by {
             // Transformation setup
-            PjParams::Defination { definition } => self.create(definition),
-            PjParams::Argv { argv } => self.create_argv(argv.as_slice()),
+            PjParams::Defination(definition) => self.create(definition),
+            PjParams::Argv(argv) => self.create_argv(argv.as_slice()),
             PjParams::CrsToCrs {
                 source_crs,
                 target_crs,
@@ -69,7 +63,7 @@ impl crate::PjContext {
             ),
             // Iso19111
             // Extension
-            PjParams::EpsgCode { code } => self.create_epsg_code(code),
+            PjParams::EpsgCode(code) => self.create_epsg_code(code),
         }
     }
 }

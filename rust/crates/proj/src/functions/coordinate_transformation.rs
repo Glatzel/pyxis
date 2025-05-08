@@ -188,7 +188,7 @@ impl crate::PjContext {
 mod test {
     use float_cmp::assert_approx_eq;
 
-    use crate::IPjCoord;
+    use crate::ToCoord;
 
     #[test]
     fn test_trans() -> miette::Result<()> {

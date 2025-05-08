@@ -35,3 +35,15 @@ impl crate::PjArea {
 impl Drop for crate::PjArea {
     fn drop(&mut self) { unsafe { proj_sys::proj_area_destroy(self.area) }; }
 }
+#[cfg(test)]
+mod test {
+
+    use crate::PjArea;
+
+    #[test]
+    fn test_set_bbox() -> miette::Result<()> {
+        let area = PjArea::new();
+        area.set_bbox(1.0, 2.0, 3.0, 4.0);
+        Ok(())
+    }
+}

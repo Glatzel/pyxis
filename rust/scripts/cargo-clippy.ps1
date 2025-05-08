@@ -7,14 +7,13 @@
 #     cargo +stable clippy --all-features -p pyxis -p pyxis-cli -p proj -- -D warnings
 # }
 # else {
-    cargo +stable clippy --fix --all
-    cargo +stable clippy --all
+    # cargo +stable clippy --fix --all
+    # cargo +stable clippy --all
 # } 
 
 # Set-Location $ROOT
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
-throw "$pwd"
-# cargo +stable clippy --fix --all
-# cargo +stable clippy --all
+cargo +stable clippy --fix --all
+cargo +stable clippy --all
 Set-Location $ROOT

@@ -2,8 +2,8 @@ mod conversion;
 mod error_handling;
 mod logging;
 mod proj_creation;
-mod test_utils;
 #[cfg(test)]
+mod test_utils;
 mod traits;
 mod utils;
 

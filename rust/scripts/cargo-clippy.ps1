@@ -7,7 +7,7 @@ if ($env:CI) {
     cargo +stable clippy --all-features -p pyxis -p pyxis-cli -p proj -- -D warnings
 }
 else {
-    cargo clippy --fix --all-features -- -D warnings
-    cargo clippy --all-targets --all-features -- -D warnings
+    cargo clippy --fix --all -- -D warnings
+    cargo clippy --all -- -D warnings
 }
 Set-Location $ROOT

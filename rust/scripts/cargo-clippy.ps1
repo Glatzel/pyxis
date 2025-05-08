@@ -1,5 +1,3 @@
-$ErrorActionPreference = "Stop"
-$PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 & $PSScriptRoot/set-env.ps1
@@ -12,5 +10,4 @@ else {
     cargo clippy --fix --all-features -- -D warnings
     cargo clippy --all-targets --all-features -- -D warnings
 }
-Write-Error "fas"
 Set-Location $ROOT

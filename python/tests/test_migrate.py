@@ -1,8 +1,7 @@
 import numpy as np
 import pytest
-from numpy import cos, radians, sin
-
 import pyxis
+from numpy import cos, radians, sin
 
 
 class TestCoordMigrate:

@@ -103,7 +103,6 @@ def test_pyxis_copy(benchmark, sample_coords):
 @pytest.mark.cuda
 def test_pyxis_cuda(benchmark, sample_coords):
     import cupy as cp
-
     import pyxis
 
     def vector(x, y, h):

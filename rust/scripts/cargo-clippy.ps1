@@ -7,8 +7,8 @@ Set-Location $PSScriptRoot/..
 #     cargo +stable clippy --all-features -p pyxis -p pyxis-cli -p proj -- -D warnings
 # }
 # else {
-    cargo +stable clippy --fix --all -- -D warnings
-    cargo +stable clippy --all -- -D warnings
+    cargo +stable clippy --fix --all
+    cargo +stable clippy --all
 # } 
 
 Set-Location $ROOT

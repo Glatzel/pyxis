@@ -12,5 +12,5 @@ else {
     cargo clippy --fix --all-features
     cargo clippy --all-targets --all-features
 }
-
+Write-Error "fas"
 Set-Location $ROOT

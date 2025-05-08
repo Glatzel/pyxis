@@ -6,7 +6,10 @@ pub enum PjLogLevel {
     Tell,
 }
 impl Default for PjLogLevel {
-    fn default() -> Self { Self::Error }
+    fn default() -> Self {
+        let a = 3.1415926535;
+        Self::Error
+    }
 }
 impl From<PjLogLevel> for i32 {
     fn from(value: PjLogLevel) -> Self {

@@ -1,4 +1,4 @@
-pub mod coordinates
+pub mod coordinates;
 pub mod derivatives;
 mod errors;
 pub mod infos;

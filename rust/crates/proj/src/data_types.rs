@@ -1,4 +1,4 @@
-
+pub mod coordinates;
 pub mod derivatives;
 mod errors;
 pub mod infos;
@@ -6,7 +6,6 @@ pub mod iso19111;
 pub mod list_structures;
 pub mod logging;
 pub mod transformation;
-pub mod coordinates;
 
 pub(crate) use coordinates::*;
 pub use derivatives::PjFactors;

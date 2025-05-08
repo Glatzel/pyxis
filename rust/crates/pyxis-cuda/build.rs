@@ -39,9 +39,9 @@ fn main() {
     #[cfg(target_os = "windows")]
     let new_path_env_var = format!(
         "{};{};{}",
-        std::env::var("PATH").unwrap(),
         "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64",
-        "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64"
+        "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64",
+        std::env::var("PATH").unwrap(),
     );
     #[cfg(target_os = "linux")]
     let new_path_env_var = std::env::var("PATH").unwrap();

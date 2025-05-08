@@ -3,5 +3,5 @@ $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 & $PSScriptRoot/set-env.ps1
-cargo +nightly fmt --all --check
+cargo +nightly fmt --all 
 Set-Location $ROOT

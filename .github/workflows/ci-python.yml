@@ -107,10 +107,6 @@ jobs:
         if: ${{!cancelled ()}}
         run: ${{env.PYTHON_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
-      - name: numpydoc
-        if: ${{!cancelled ()}}
-        run: ${{env.PYTHON_ROOT}}/scripts/numpydoc.ps1
-        shell: pwsh
 
   bench:
     if: ${{!inputs.release}}

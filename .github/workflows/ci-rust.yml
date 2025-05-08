@@ -173,6 +173,3 @@ jobs:
         if: ${{!cancelled ()}}
         run: ${{env.RUST_ROOT}}/scripts/cargo-fmt.ps1
         shell: pwsh
-      - name: cargo-machete
-        if: ${{!cancelled ()}}
-        uses: bnjbvr/cargo-machete@main

@@ -4,4 +4,4 @@ ignore = ["**/bindings.rs"]
 imports_granularity = "Module"
 reorder_imports = true
 wrap_comments = true
-format_code_in_doc_comments
+format_code_in_doc_comments = true

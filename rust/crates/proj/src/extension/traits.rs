@@ -51,6 +51,7 @@ const NULL_PTR: *mut f64 = null_mut();
 ///     fn t(&mut self) -> *mut f64 { null_mut() }
 /// }
 /// ```
+/// 
 /// 4D coordinate
 /// ```rust
 /// #[derive(Clone)]

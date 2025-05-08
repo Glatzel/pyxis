@@ -2,7 +2,6 @@ from copy import deepcopy
 
 import numpy as np
 import pytest
-
 import pyxis
 import pyxis.pyxis_cuda
 from pyxis import COORD_CRYPTO_SPACE

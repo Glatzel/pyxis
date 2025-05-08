@@ -13,7 +13,6 @@ python = "3.11.*"
 maturin = "1.8.*"
 pip = "25.1.*"
 rattler-build = "0.41.*"
-ruff = "0.11.*"
 
 [feature.py-deps.dependencies]
 cupy-core = "==13.4.1"
@@ -28,7 +27,6 @@ pytest-cov = "6.1.*"
 
 [feature.py-doc.dependencies]
 autodocsumm = "==0.2.14"
-numpydoc = "==1.8.0"
 pydata-sphinx-theme = "==0.16.1"
 sphinx = "==8.2.3"
 sphinx-autosummary-accessors = "==2025.3.1"

@@ -1,4 +1,4 @@
-use crate::check_result;
+use crate::{ToCoord, check_result};
 ///# Distances
 impl crate::Pj {
     /// # References

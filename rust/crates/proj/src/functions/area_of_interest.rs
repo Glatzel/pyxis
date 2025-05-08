@@ -35,3 +35,17 @@ impl crate::PjArea {
 impl Drop for crate::PjArea {
     fn drop(&mut self) { unsafe { proj_sys::proj_area_destroy(self.area) }; }
 }
+#[cfg(test)]
+mod test {
+    use float_cmp::assert_approx_eq;
+
+    use crate::PjArea;
+
+    #[test]
+    fn test_set_bbox() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let area = PjArea::new();
+       area.set_bbox(1, 2, 3, 4.0);
+        Ok(())
+    }
+}

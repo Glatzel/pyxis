@@ -1,19 +1,13 @@
-# $ROOT = git rev-parse --show-toplevel
-# Set-Location $PSScriptRoot/..
-# & $PSScriptRoot/set-env.ps1
-
-# if ($env:CI) {
-#     cargo +stable clippy --fix --all-features -p pyxis -p pyxis-cli -p proj -- -D warnings
-#     cargo +stable clippy --all-features -p pyxis -p pyxis-cli -p proj -- -D warnings
-# }
-# else {
-    # cargo +stable clippy --fix --all
-    # cargo +stable clippy --all
-# } 
-
-# Set-Location $ROOT
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
-cargo +stable clippy --fix --all
-cargo +stable clippy --all
+& $PSScriptRoot/set-env.ps1
+
+if ($env:CI) {
+    cargo +stable clippy --fix --all-features -p pyxis -p pyxis-cli -p proj -- -D warnings
+    cargo +stable clippy --all-features -p pyxis -p pyxis-cli -p proj -- -D warnings
+}
+else {
+    cargo +stable clippy --fix --all
+    cargo +stable clippy --all
+} 
 Set-Location $ROOT

@@ -4,7 +4,7 @@ mod logging;
 mod proj_creation;
 mod test_utils;
 #[cfg(test)]
-mod traits
+mod traits;
 mod utils;
 
 pub(crate) use error_handling::*;

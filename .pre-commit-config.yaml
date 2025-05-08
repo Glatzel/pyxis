@@ -115,7 +115,7 @@ repos:
       #rust
       - id: cargo-fmt
         name: cargo-fmt
-        entry: pwsh -NoProfile -Command "foreach ($f in $args) { Write-Host \"Running $f\"; & $f; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }"
+        entry: pwsh -NoProfile -Command "$ErrorActionPreference ='Stop';$PSNativeCommandUseErrorActionPreference = $true;foreach ($f in $args) { &$f}"
         language: system
         files: '.*/cargo-fmt.ps1'
         require_serial: true
@@ -123,7 +123,7 @@ repos:
 
       - id: cargo-clippy
         name: cargo-clippy
-        entry: pwsh -NoProfile -Command "foreach ($f in $args) { Write-Host \"Running $f\"; & $f; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }"
+        entry: pwsh -NoProfile -Command "$ErrorActionPreference ='Stop';$PSNativeCommandUseErrorActionPreference = $true;foreach ($f in $args) { &$f}"
         language: system
         files: '.*/cargo-clippy.ps1'
         require_serial: true

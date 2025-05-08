@@ -47,10 +47,10 @@ const NULL_PTR: *mut f64 = null_mut();
 ///     z: f64
 /// }
 /// impl IPjCoord for MyCoord {
-///     fn x(&mut self) -> *mut f64 { &mut self.x }
-///     fn y(&mut self) -> *mut f64 { &mut self.y }
-///     fn z(&mut self) -> *mut f64 { &mut self.z }
-///     fn t(&mut self) -> *mut f64 { null_mut() }
+///  fn x(&mut self) -> *mut f64 { &mut self.x }
+///  fn y(&mut self) -> *mut f64 { &mut self.y }
+///  fn z(&mut self) -> *mut f64 { &mut self.z }
+///  fn t(&mut self) -> *mut f64 { null_mut() }
 /// }
 /// ```
 ///

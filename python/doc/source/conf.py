@@ -37,7 +37,6 @@ extensions = [
     "sphinx.ext.viewcode",
     # Third-party extensions
     "autodocsumm",
-    "numpydoc",
     "sphinx_copybutton",
 ]
 maximum_signature_line_length = 88
@@ -66,6 +65,3 @@ intersphinx_mapping = {
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-
-# numpydoc
-numpydoc_class_members_toctree = False

@@ -7,5 +7,5 @@ if ($env:CI) {
 }
 else {
     cargo +stable clippy --fix --all -- -D warnings
-} 
+}
 Set-Location $ROOT

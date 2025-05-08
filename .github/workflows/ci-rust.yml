@@ -149,4 +149,3 @@ jobs:
       - name: build cuda
         run: ${{env.RUST_ROOT}}/scripts/build-rust-cuda.ps1 ${{ inputs.release && '-config release' || null }}
         shell: pwsh
-

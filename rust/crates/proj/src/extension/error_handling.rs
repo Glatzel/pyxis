@@ -5,7 +5,7 @@ macro_rules! check_result {
 
         match code {
             $crate::data_types::PjError::Success => {
-                clerk::debug!("Proj Process successed.");
+                clerk::debug!("Proj Process succeeded.");
             }
             ecode => {
                 let report = $self.errno_string(&ecode);
@@ -29,7 +29,7 @@ macro_rules! check_result {
         let code_str = format!("{:?}", code);
         match code {
             $crate::data_types::PjError::Success => {
-                clerk::debug!("Proj Process successed.");
+                clerk::debug!("Proj Process succeeded.");
             }
             ecode => {
                 let report = $self.errno_string(&ecode);

@@ -49,11 +49,11 @@ impl ContextTransform {
         };
     }
 
-    pub fn datum_compense(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
-        (self.x, self.y) = pyxis::datum_compense(
+    pub fn datum_compensate(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
+        (self.x, self.y) = pyxis::datum_compensate(
             self.x,
             self.y,
-            &pyxis::DatumCompenseParms::new(hb, r, x0, y0),
+            &pyxis::DatumCompensateParms::new(hb, r, x0, y0),
         );
     }
     pub fn migrate2d(

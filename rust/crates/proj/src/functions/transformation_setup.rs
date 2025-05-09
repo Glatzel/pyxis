@@ -5,7 +5,7 @@ use miette::IntoDiagnostic;
 use crate::check_result;
 /// # Transformation setup
 impl crate::PjContext {
-    /// See [`Self::create_proj`], [`crate::PjParams::Defination`]
+    /// See [`Self::create_proj`], [`crate::PjParams::Definition`]
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>

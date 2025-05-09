@@ -82,7 +82,7 @@ Check examples folder.
 
 ### General Rules
 
-* `data_type`, `functions` folder only contains native Proj objects and implemention for `std`.
+* `data_type`, `functions` folder only contains native Proj objects and implementation for `std`.
 * To add new tools or APIs, put them in `extension` folder.
 * If extended API cover the native function, consider to set the native function private and add link to extended API in native function doc.
 

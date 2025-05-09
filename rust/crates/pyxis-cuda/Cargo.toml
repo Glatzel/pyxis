@@ -23,7 +23,7 @@ log = ["clerk/log"]
 
 [[bench]]
 harness = false
-name = "datum_compense_cuda"
+name = "datum_compensate_cuda"
 
 [[bench]]
 harness = false

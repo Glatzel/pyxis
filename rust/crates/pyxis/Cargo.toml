@@ -24,4 +24,4 @@ name = "crypto"
 
 [[bench]]
 harness = false
-name = "datum_compense"
+name = "datum_compensate"

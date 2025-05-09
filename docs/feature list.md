@@ -49,7 +49,7 @@ style rust-cuda fill  : #f7c9a8, stroke: #a8e64d, stroke-width: 4px
 
 | feature        | c++ | c#  | cuda | opencl | python | python(cuda) | rust | rust(cuda) |
 | -------------- | --- | --- | ---- | ------ | ------ | ------------ | ---- | ---------- |
-| boundingbox    | X   | O   | X    | X      | X      | X            | X    | X          |
+| bbox           | X   | O   | X    | X      | X      | X            | X    | X          |
 | crypto         | O   | X   | O    | X      | O      | O            | O    | O          |
 | datum_compense | O   | X   | O    | X      | O      | O            | O    | O          |
 | migrate        | X   | X   | X    | X      | O      | X            | O    | X          |

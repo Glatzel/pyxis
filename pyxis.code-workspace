@@ -74,12 +74,7 @@
         "files.associations": {
             "random": "cpp",
             "algorithm": "cpp"
-        },
-        "rust-analyzer.rustfmt.extraArgs": [
-            "+nightly",
-            "--config-path",
-            "${workspaceFolder}"
-        ]
+        }
         // ,"rust-analyzer.cargo.features": "all"
     }
 }

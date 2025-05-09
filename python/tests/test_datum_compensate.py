@@ -3,9 +3,9 @@ import pytest
 import pyxis
 
 
-def test_datum_compense_scalar():
+def test_datum_compensate_scalar():
     expected_x, expected_y = 469706.56912942487, 2821763.831232311
-    test_x, test_y = pyxis.datum_compense(
+    test_x, test_y = pyxis.datum_compensate(
         xc=469704.6693,
         yc=2821940.796,
         hb=400,
@@ -33,11 +33,11 @@ def test_datum_compense_scalar():
         ),
     ],
 )
-def test_datum_compense_vector(x, y):
+def test_datum_compensate_vector(x, y):
     expected_x = 469706.56912942487
     expected_y = 2821763.831232311
 
-    test_x, test_y = pyxis.datum_compense(
+    test_x, test_y = pyxis.datum_compensate(
         xc=x,
         yc=y,
         hb=400,

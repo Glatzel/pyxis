@@ -1,12 +1,12 @@
 use assert_cmd::Command;
 use predicates::prelude::*;
 #[test]
-fn test_datum_compense() {
+fn test_datum_compensate() {
     Command::cargo_bin("pyxis")
         .unwrap()
         .args(["transform", "-x", "469704.6693", "-y", "2821940.796"])
         .args([
-            "datum-compense",
+            "datum-compensate",
             "--hb",
             "400",
             "--radius",

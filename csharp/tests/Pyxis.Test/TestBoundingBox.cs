@@ -34,7 +34,7 @@ public class TestBoundingBox
     }
 
     [Fact]
-    public void TestContructor()
+    public void TestConstructor()
     {
         {
             BoundingBox bbox = new();

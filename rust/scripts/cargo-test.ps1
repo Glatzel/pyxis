@@ -41,7 +41,7 @@ if ($code -ne 0) {
     Write-Host "Test failed." -ForegroundColor Red
 }
 else {
-    Write-Host "Test successed." -ForegroundColor Green
+    Write-Host "Test succeeded." -ForegroundColor Green
 }
 Write-Output "::endgroup::"
 Set-Location $ROOT

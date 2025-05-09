@@ -1,7 +1,7 @@
 use assert_cmd::Command;
 use predicates::prelude::*;
 
-const PARM: (f64, f64, f64, f64, f64) = (10.0, 20.0, 2.0, -1.0, 150.0);
+const PARAM: (f64, f64, f64, f64, f64) = (10.0, 20.0, 2.0, -1.0, 150.0);
 
 #[test]
 fn test_rel_2d() {
@@ -10,8 +10,8 @@ fn test_rel_2d() {
         .args([
             "transform",
             "-x",
-            &PARM.2.to_string(),
-            &format!("-y={}", &PARM.3.to_string()),
+            &PARAM.2.to_string(),
+            &format!("-y={}", &PARAM.3.to_string()),
         ])
         .args([
             "migrate2d",
@@ -20,10 +20,10 @@ fn test_rel_2d() {
             "-a",
             "origin",
             "--another-x",
-            &PARM.0.to_string(),
-            &format!("--another-y={}", &PARM.1.to_string()),
+            &PARAM.0.to_string(),
+            &format!("--another-y={}", &PARAM.1.to_string()),
             "-r",
-            &PARM.4.to_string(),
+            &PARAM.4.to_string(),
             "-u",
             "degrees",
         ])
@@ -36,8 +36,8 @@ fn test_rel_2d() {
         .args([
             "transform",
             "-x",
-            &PARM.0.to_string(),
-            &format!("-y={}", &PARM.1.to_string()),
+            &PARAM.0.to_string(),
+            &format!("-y={}", &PARAM.1.to_string()),
         ])
         .args([
             "migrate2d",
@@ -46,10 +46,10 @@ fn test_rel_2d() {
             "-a",
             "absolute",
             "--another-x",
-            &PARM.2.to_string(),
-            &format!("--another-y={}", &PARM.3.to_string()),
+            &PARAM.2.to_string(),
+            &format!("--another-y={}", &PARAM.3.to_string()),
             "-r",
-            &PARM.4.to_string(),
+            &PARAM.4.to_string(),
             "-u",
             "degrees",
         ])
@@ -65,8 +65,8 @@ fn test_abs_2d() {
         .args([
             "transform",
             "-x",
-            &PARM.2.to_string(),
-            &format!("-y={}", &PARM.3.to_string()),
+            &PARAM.2.to_string(),
+            &format!("-y={}", &PARAM.3.to_string()),
         ])
         .args([
             "migrate2d",
@@ -75,10 +75,10 @@ fn test_abs_2d() {
             "-a",
             "origin",
             "--another-x",
-            &PARM.0.to_string(),
-            &format!("--another-y={}", &PARM.1.to_string()),
+            &PARAM.0.to_string(),
+            &format!("--another-y={}", &PARAM.1.to_string()),
             "-r",
-            &PARM.4.to_string(),
+            &PARAM.4.to_string(),
             "-u",
             "degrees",
         ])
@@ -91,8 +91,8 @@ fn test_abs_2d() {
         .args([
             "transform",
             "-x",
-            &PARM.0.to_string(),
-            &format!("-y={}", &PARM.1.to_string()),
+            &PARAM.0.to_string(),
+            &format!("-y={}", &PARAM.1.to_string()),
         ])
         .args([
             "migrate2d",
@@ -101,10 +101,10 @@ fn test_abs_2d() {
             "-a",
             "relative",
             "--another-x",
-            &PARM.2.to_string(),
-            &format!("--another-y={}", &PARM.3.to_string()),
+            &PARAM.2.to_string(),
+            &format!("--another-y={}", &PARAM.3.to_string()),
             "-r",
-            &PARM.4.to_string(),
+            &PARAM.4.to_string(),
             "-u",
             "degrees",
         ])
@@ -120,8 +120,8 @@ fn test_origin_2d() {
         .args([
             "transform",
             "-x",
-            &PARM.2.to_string(),
-            &format!("-y={}", &PARM.3.to_string()),
+            &PARAM.2.to_string(),
+            &format!("-y={}", &PARAM.3.to_string()),
         ])
         .args([
             "migrate2d",
@@ -130,10 +130,10 @@ fn test_origin_2d() {
             "-a",
             "absolute",
             "--another-x",
-            &PARM.0.to_string(),
-            &format!("--another-y={}", &PARM.1.to_string()),
+            &PARAM.0.to_string(),
+            &format!("--another-y={}", &PARAM.1.to_string()),
             "-r",
-            &PARM.4.to_string(),
+            &PARAM.4.to_string(),
             "-u",
             "degrees",
         ])
@@ -146,8 +146,8 @@ fn test_origin_2d() {
         .args([
             "transform",
             "-x",
-            &PARM.0.to_string(),
-            &format!("-y={}", &PARM.1.to_string()),
+            &PARAM.0.to_string(),
+            &format!("-y={}", &PARAM.1.to_string()),
         ])
         .args([
             "migrate2d",
@@ -156,10 +156,10 @@ fn test_origin_2d() {
             "-a",
             "relative",
             "--another-x",
-            &PARM.2.to_string(),
-            &format!("--another-y={}", &PARM.3.to_string()),
+            &PARAM.2.to_string(),
+            &format!("--another-y={}", &PARAM.3.to_string()),
             "-r",
-            &PARM.4.to_string(),
+            &PARAM.4.to_string(),
             "-u",
             "degrees",
         ])

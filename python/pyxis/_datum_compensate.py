@@ -7,7 +7,7 @@ from ._utils import TCoordArray, TCoordScalar, coord_util
 
 
 @overload
-def datum_compense(
+def datum_compensate(
     xc: TCoordScalar,
     yc: TCoordScalar,
     hb: float,
@@ -17,7 +17,7 @@ def datum_compense(
     clone: bool = True,
 ) -> tuple[float, float]: ...
 @overload
-def datum_compense(
+def datum_compensate(
     xc: TCoordArray,
     yc: TCoordArray,
     hb: float,
@@ -26,7 +26,7 @@ def datum_compense(
     y0: float,
     clone: bool = True,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]: ...
-def datum_compense(
+def datum_compensate(
     xc,
     yc,
     hb: float,
@@ -63,11 +63,11 @@ def datum_compense(
     ----------
     - 杨元兴.抵偿高程面的选择与计算[J].城市勘测,2008(02):72-74.
     """
-    from .pyxis_py import py_datum_compense  # type: ignore
+    from .pyxis_py import py_datum_compensate  # type: ignore
 
     xc = coord_util("xc", xc, clone)
     yc = coord_util("yc", yc, clone)
 
-    xc, yc = py_datum_compense(xc, yc, hb, radius, x0, y0)
+    xc, yc = py_datum_compensate(xc, yc, hb, radius, x0, y0)
 
     return xc, yc

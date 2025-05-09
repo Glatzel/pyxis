@@ -1,5 +1,5 @@
 mod crypto;
-mod datum_compense;
+mod datum_compensate;
 mod space;
 use pyo3::prelude::*;
 
@@ -11,7 +11,7 @@ fn pyxis_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // space
     m.add_wrapped(wrap_pyfunction!(space::py_space))?;
 
-    m.add_wrapped(wrap_pyfunction!(datum_compense::py_datum_compense))?;
+    m.add_wrapped(wrap_pyfunction!(datum_compensate::py_datum_compensate))?;
 
     Ok(())
 }

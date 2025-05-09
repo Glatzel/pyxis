@@ -1,11 +1,11 @@
 pub mod crypto;
-mod datum_compense;
+mod datum_compensate;
 mod ellipsoid;
 mod linear;
 pub mod migrate;
 mod space;
 mod types;
-pub use datum_compense::*;
+pub use datum_compensate::*;
 pub use ellipsoid::*;
 pub use linear::*;
 pub use space::*;

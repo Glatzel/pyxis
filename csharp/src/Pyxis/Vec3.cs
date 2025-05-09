@@ -33,7 +33,7 @@ public struct Vec3 : IEquatable<Vec3>, IFormattable
     {
         if (v.Length != 3)
         {
-            string msg = $"Lenth of input is not 3, get {v.Length}.";
+            string msg = $"Length of input is not 3, get {v.Length}.";
             Log.Error(msg);
             throw new ArgumentException(msg);
         }

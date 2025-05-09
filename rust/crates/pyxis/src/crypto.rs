@@ -400,7 +400,7 @@ where
             haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
         );
         if _i == max_iter - 1 {
-            clerk::warn!("Exeed max iteration num!ber: {max_iter}");
+            clerk::warn!("Exceed max iteration num!ber: {max_iter}");
         }
 
         match threshold_mode {

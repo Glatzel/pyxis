@@ -1,6 +1,6 @@
-#include "datum_compense.h"
+#include "datum_compensate.h"
 template <typename T>
-CUDA_HOST_DEVICE void datum_compense(
+CUDA_HOST_DEVICE void datum_compensate(
     T xc,
     T yc,
     T factor,

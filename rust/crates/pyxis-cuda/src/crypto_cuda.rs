@@ -7,7 +7,7 @@ use crate::{PyxisCudaContext, PyxisPtx};
 
 const PTX_STR: &str = include_str!("./crypto_cuda.ptx");
 const PTX: PyxisPtx = crate::PyxisPtx {
-    name: "datum_compense_cuda",
+    name: "datum_compensate_cuda",
     content: PTX_STR,
     size: PTX_STR.len(),
 };

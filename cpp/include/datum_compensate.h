@@ -2,7 +2,7 @@
 #include "cuda_macro.h"
 
 template <typename T>
-CUDA_HOST_DEVICE void datum_compense(T xc,
+CUDA_HOST_DEVICE void datum_compensate(T xc,
                                      T yc,
                                      T factor,
                                      T x0,

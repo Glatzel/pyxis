@@ -40,7 +40,7 @@ impl TryFrom<u32> for PjLogLevel {
             2 => PjLogLevel::Debug,
             3 => PjLogLevel::Trace,
             4 => PjLogLevel::Tell,
-            level => miette::bail!("Unknow log level:{}", level),
+            level => miette::bail!("Unknown log level:{}", level),
         };
         Ok(level)
     }

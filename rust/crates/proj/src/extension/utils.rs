@@ -18,7 +18,6 @@ macro_rules! create_readonly_struct {
 
         impl $name {
             // Constructor function to initialize the struct
-            #[allow(clippy::too_many_arguments)]
             pub fn new($($field: $type),*) -> Self {
                 $name {
                     $( $field ),*

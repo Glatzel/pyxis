@@ -4,10 +4,6 @@
 # Lines starting with "#" are comments.
 # Configuration options are organized into tables and keys.
 # See documentation for more information on available options.
-[remote.github]
-owner = "Glatzel"
-repo = "pyxis"
-
 [changelog]
 # template for the changelog header
 header = """
@@ -31,30 +27,31 @@ body = """
 {% else -%}
     ## [Unreleased]
 {% endif -%}
-
 {% for group, commits in commits | group_by(attribute="group") %}
-    ### {{ group | upper_first }}{{"\n"}}{{"\n"}}
-    {%- for commit in commits %}
-        {%- if commit.scope -%}
-        {% else -%}
+    ### {{ group | upper_first }}{{"\n"}}{{"\n"}}\
+    {%- for commit in commits %}\
+        {%- if commit.scope -%}\
+        {% else -%}\
             - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
             {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif -%}
             {% if commit.remote.pr_number %} in \
-            [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }}) \
-            {%- endif -%}
-        {%- endif -%}
-    {% endfor %}
-    {% for group, commits in commits | group_by(attribute="scope") %}
-        #### {{ group | upper_first }}
-        {% for commit in commits %}
-            - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
-            {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif -%}
-            {% if commit.remote.pr_number %} in \
-            [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }}) \
-            {%- endif -%}
-        {% endfor %}
+            [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }}){{"\n"}}\
+            {%- endif -%}\
+        {%- endif -%}\
     {% endfor %}\
-{% endfor %}\n
+    {% for group, commits in commits | group_by(attribute="scope") %}\
+        {%- if group -%}\
+            {{"\n"}}#### {{ group | upper_first }}
+            {% for commit in commits %}
+                - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
+                {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif -%}
+                {% if commit.remote.pr_number %} in \
+                [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }})\
+                {%- endif -%}
+            {% endfor %}
+        {%- endif -%}{{"\n"}}\
+    {% endfor %}\
+{% endfor %}{{"\n"}}
 """
 # template for the changelog footer
 footer = """

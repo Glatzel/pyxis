@@ -53,7 +53,7 @@ impl ContextTransform {
         (self.x, self.y) = pyxis::datum_compensate(
             self.x,
             self.y,
-            &pyxis::DatumCompensateParms::new(hb, r, x0, y0),
+            &pyxis::DatumCompensateParams::new(hb, r, x0, y0),
         );
     }
     pub fn migrate2d(

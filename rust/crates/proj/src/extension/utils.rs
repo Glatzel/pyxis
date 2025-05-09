@@ -9,7 +9,6 @@ pub(crate) fn c_char_to_string(ptr: *const c_char) -> String {
 
 macro_rules! create_readonly_struct {
     ($name:ident, $struct_doc:expr, $({$field:ident: $type:ty $(, $field_doc:expr)?}),*) => {
-        #[allow(clippy::too_many_arguments)]
         #[doc=$struct_doc]
         #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
         #[derive(Debug)]
@@ -19,6 +18,7 @@ macro_rules! create_readonly_struct {
 
         impl $name {
             // Constructor function to initialize the struct
+            #[allow(clippy::too_many_arguments)]
             pub fn new($($field: $type),*) -> Self {
                 $name {
                     $( $field ),*

@@ -1,7 +1,7 @@
 repos:
-  - repo: https://github.com/Glatzel/template
-    rev: 84656f0f496a247788be8c9673ef6f655ea7f294
-    hooks:
+  # - repo: https://github.com/Glatzel/template
+  #   rev: f892554354018696c6013bbd145a237358672d54
+  #   hooks:
       # pre-commit-hooks
       - id: check-added-large-files
       - id: check-ast
@@ -25,3 +25,4 @@ repos:
       # misc
       - id: taplo-format
       - id: actionlint
+      - id: typos

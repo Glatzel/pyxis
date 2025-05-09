@@ -184,7 +184,7 @@ where
 /// use pyxis::crypto::*;
 /// let p = (GCJ02_LON, GCJ02_LAT);
 /// let p = gcj02_to_wgs84(p.0, p.1);
-/// assert_approx_eq!(f64, p.0, WGS84_LON , epsilon = 1e-5);
+/// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-5);
 /// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-7);
 /// ```
 pub fn gcj02_to_wgs84<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
@@ -280,9 +280,9 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// let p = (WGS84_LON,WGS84_LAT );
+/// let p = (WGS84_LON, WGS84_LAT);
 /// let p = wgs84_to_gcj02(p.0, p.1);
-/// println!("{:.60},{:.60}",p.0,p.1);
+/// println!("{:.60},{:.60}", p.0, p.1);
 /// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, GCJ02_LAT, epsilon = 1e-17);
 /// ```
@@ -312,11 +312,11 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// let p = (WGS84_LON,WGS84_LAT );
+/// let p = (WGS84_LON, WGS84_LAT);
 /// let p = wgs84_to_bd09(p.0, p.1);
-/// println!("{:.60},{:.60}",p.0,p.1);
+/// println!("{:.60},{:.60}", p.0, p.1);
 /// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
-/// assert_approx_eq!(f64, p.1, BD09_LAT,  epsilon = 1e-17);
+/// assert_approx_eq!(f64, p.1, BD09_LAT, epsilon = 1e-17);
 /// ```
 pub fn wgs84_to_bd09<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
 where
@@ -329,46 +329,46 @@ where
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
+/// use pyxis::crypto::*;
+/// use tracing_subscriber::filter::LevelFilter;
 /// use tracing_subscriber::layer::SubscriberExt;
 /// use tracing_subscriber::util::SubscriberInitExt;
-/// use tracing_subscriber::filter::LevelFilter;
-/// use pyxis::crypto::*;
 /// tracing_subscriber::registry()
-///     .with(clerk::terminal_layer(LevelFilter::TRACE,true))
+///     .with(clerk::terminal_layer(LevelFilter::TRACE, true))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = crypto_exact(
-///             p.0,
-///             p.1,
-///             &bd09_to_wgs84,
-///             &wgs84_to_bd09,
-///             1e-17,
-///             CryptoThresholdMode::LonLat,
-///             100,
-///         );
+///     p.0,
+///     p.1,
+///     &bd09_to_wgs84,
+///     &wgs84_to_bd09,
+///     1e-17,
+///     CryptoThresholdMode::LonLat,
+///     100,
+/// );
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-13);
 /// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-13);
 /// ```
 ///
 /// ```
 /// use float_cmp::assert_approx_eq;
+/// use pyxis::crypto::*;
+/// use tracing_subscriber::filter::LevelFilter;
 /// use tracing_subscriber::layer::SubscriberExt;
 /// use tracing_subscriber::util::SubscriberInitExt;
-/// use tracing_subscriber::filter::LevelFilter;
-/// use pyxis::crypto::*;
 /// tracing_subscriber::registry()
-///     .with(clerk::terminal_layer(LevelFilter::TRACE,true))
+///     .with(clerk::terminal_layer(LevelFilter::TRACE, true))
 ///     .init();
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = crypto_exact(
-///             p.0,
-///             p.1,
-///             &bd09_to_wgs84,
-///             &wgs84_to_bd09,
-///             1e-4,
-///             CryptoThresholdMode::Distance,
-///             100,
-///         );
+///     p.0,
+///     p.1,
+///     &bd09_to_wgs84,
+///     &wgs84_to_bd09,
+///     1e-4,
+///     CryptoThresholdMode::Distance,
+///     100,
+/// );
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-8);
 /// assert_approx_eq!(f64, p.1, WGS84_LAT, epsilon = 1e-8);
 /// ```

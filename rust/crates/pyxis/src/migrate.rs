@@ -3,8 +3,8 @@ use crate::GeoFloat;
 /// # Examples
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let m=pyxis::rotate_matrix_2d(150.0f64.to_radians());
-/// let result=pyxis::migrate::rel_2d(10.0, 20.0, 2.0, -1.0,&m);
+/// let m = pyxis::rotate_matrix_2d(150.0f64.to_radians());
+/// let result = pyxis::migrate::rel_2d(10.0, 20.0, 2.0, -1.0, &m);
 /// assert_approx_eq!(f64, result.0, -3.5717967697244886, epsilon = 1e-17);
 /// assert_approx_eq!(f64, result.1, 22.186533479473212, epsilon = 1e-18);
 /// ```
@@ -28,8 +28,8 @@ where
 /// # Examples
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let m=pyxis::rotate_matrix_2d(150.0f64.to_radians());
-/// let result=pyxis::migrate::abs_2d(10.0, 20.0, 2.0, -1.0, &m);
+/// let m = pyxis::rotate_matrix_2d(150.0f64.to_radians());
+/// let result = pyxis::migrate::abs_2d(10.0, 20.0, 2.0, -1.0, &m);
 /// assert_approx_eq!(f64, result.0, 8.767949192431123, epsilon = 1e-17);
 /// assert_approx_eq!(f64, result.1, 21.866025403784437, epsilon = 1e-17);
 /// ```
@@ -51,8 +51,8 @@ where
 /// # Examples
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let m=pyxis::rotate_matrix_2d(150.0f64.to_radians());
-/// let result=pyxis::migrate::origin_2d(10.0, 20.0, 2.0, -1.0, &m);
+/// let m = pyxis::rotate_matrix_2d(150.0f64.to_radians());
+/// let result = pyxis::migrate::origin_2d(10.0, 20.0, 2.0, -1.0, &m);
 /// assert_approx_eq!(f64, result.0, 11.232050807568877, epsilon = 1e-17);
 /// assert_approx_eq!(f64, result.1, 18.133974596215563, epsilon = 1e-17);
 /// ```

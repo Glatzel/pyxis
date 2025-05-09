@@ -21,8 +21,9 @@ const NULL_PTR: *mut f64 = null_mut();
 /// # Minimal Example
 /// 2D coordinate
 /// ```
-/// use proj::IPjCoord;
 /// use std::ptr::null_mut;
+///
+/// use proj::IPjCoord;
 /// #[derive(Clone)]
 /// struct MyCoord {
 ///     x: f64,
@@ -38,19 +39,20 @@ const NULL_PTR: *mut f64 = null_mut();
 ///
 /// 3D coordinate
 /// ```
-/// use proj::IPjCoord;
 /// use std::ptr::null_mut;
+///
+/// use proj::IPjCoord;
 /// #[derive(Clone)]
 /// struct MyCoord {
 ///     x: f64,
 ///     y: f64,
-///     z: f64
+///     z: f64,
 /// }
 /// impl IPjCoord for MyCoord {
-///  fn x(&mut self) -> *mut f64 { &mut self.x }
-///  fn y(&mut self) -> *mut f64 { &mut self.y }
-///  fn z(&mut self) -> *mut f64 { &mut self.z }
-///  fn t(&mut self) -> *mut f64 { null_mut() }
+///     fn x(&mut self) -> *mut f64 { &mut self.x }
+///     fn y(&mut self) -> *mut f64 { &mut self.y }
+///     fn z(&mut self) -> *mut f64 { &mut self.z }
+///     fn t(&mut self) -> *mut f64 { null_mut() }
 /// }
 /// ```
 ///

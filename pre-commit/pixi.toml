@@ -8,7 +8,7 @@ pre-commit-run = "pre-commit run --all-files"
 hook-csharpier = "cd ..;dotnet-csharpier . ; dotnet-csharpier . --check"
 # csharpier >=1.0.0
 # hook-csharpier = " csharpier format .; csharpier check ."
-hook-numpydoc = "bash -c 'numpydoc lint \"$@\" --ignore ES01 EX01 GL08 PR04 RT03 SA01 SA04' --"
+hook-numpydoc = "cd ..;bash -c 'numpydoc lint \"$@\" --ignore ES01 EX01 GL08 PR04 RT03 SA01 SA04' --"
 hook-ruff-format = "cd ..;ruff format --force-exclude --exit-non-zero-on-format"
 hook-ruff-lint = "cd ..;ruff check --fix --show-fixes --exit-non-zero-on-fix --force-exclude"
 hook-taplo = { cmd = "taplo fmt", env = { RUST_LOG = "warn" } }

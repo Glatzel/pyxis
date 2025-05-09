@@ -4,4 +4,4 @@ Transform
 .. autosummary::
    :toctree: ./api/transform
 
-   datum_compense
+   datum_compensate

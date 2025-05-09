@@ -21,7 +21,7 @@ pub enum TransformCommands {
     #[bpaf(command, adjacent)]
     /// Converts projected XY coordinates from the height compensation plane to
     /// the sea level plane.
-    DatumCompense {
+    DatumCompensate {
         #[bpaf(short, long)]
         /// Elevation of the height compensation plane (in meters).
         hb: f64,
@@ -171,16 +171,16 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::DatumCompense {
+            TransformCommands::DatumCompensate {
                 hb,
                 radius: r,
                 x0,
                 y0,
             } => {
-                ctx.datum_compense(*hb, *r, *x0, *y0);
+                ctx.datum_compensate(*hb, *r, *x0, *y0);
                 let record = Record {
                     idx: (i + 1) as u8,
-                    method: "datum compense".to_string(),
+                    method: "datum compensate".to_string(),
                     parameter: serde_json::json!({
                         "hb": hb,
                         "r": r,

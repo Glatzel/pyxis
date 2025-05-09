@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Add source files
 set(SOURCES
-src/datum_compense.cpp
+src/datum_compensate.cpp
 src/crypto.cpp
 )
 set_source_files_properties(${SOURCES} PROPERTIES LANGUAGE CXX)

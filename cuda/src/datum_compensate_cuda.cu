@@ -1,7 +1,7 @@
-#include "datum_compense.cpp"
+#include "datum_compensate.cpp"
 #pragma region generics
 template <typename T>
-__global__ void datum_compense_cuda(
+__global__ void datum_compensate_cuda(
     const int N,
     const T *xc,
     const T *yc,
@@ -14,13 +14,13 @@ __global__ void datum_compense_cuda(
     int i = threadIdx.x + blockIdx.x * blockDim.x;
     if (i >= N)
         return;
-    datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
+    datum_compensate(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
 };
 #pragma endregion
 #pragma region float
 extern "C"
 {
-    __global__ void datum_compense_cuda_float(
+    __global__ void datum_compensate_cuda_float(
         const int N,
         const float *xc,
         const float *yc,
@@ -33,14 +33,14 @@ extern "C"
         int i = threadIdx.x + blockIdx.x * blockDim.x;
         if (i >= N)
             return;
-        datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
+        datum_compensate(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
     };
 }
 #pragma endregion
 #pragma region double
 extern "C"
 {
-    __global__ void datum_compense_cuda_double(
+    __global__ void datum_compensate_cuda_double(
         const int N,
         const double *xc,
         const double *yc,
@@ -53,7 +53,7 @@ extern "C"
         int i = threadIdx.x + blockIdx.x * blockDim.x;
         if (i >= N)
             return;
-        datum_compense(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
+        datum_compensate(xc[i], yc[i], factor, x0, y0, out_xc[i], out_yc[i]);
     };
 }
 #pragma endregion

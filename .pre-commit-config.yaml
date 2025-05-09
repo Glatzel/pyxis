@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/Glatzel/template
-    rev: 84656f0f496a247788be8c9673ef6f655ea7f294
+    rev: v0.0.1
     hooks:
       # pre-commit-hooks
       - id: check-added-large-files
@@ -23,5 +23,6 @@ repos:
       - id: ruff-format
       - id: numpydoc
       # misc
-      - id: taplo-format
+      - id: taplo
       - id: actionlint
+      - id: typos

@@ -1,3 +1,4 @@
+#![allow(clippy::too_many_arguments)]
 /// This section describes the numerous data types in use in PROJ.
 ///
 /// # References

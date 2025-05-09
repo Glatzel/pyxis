@@ -1,4 +1,11 @@
-param ([switch]$update)
+param ([switch]$update,[switch] $v)
 Set-Location $PSScriptRoot/..
-pixi run --manifest-path ./pre-commit/pixi.toml pre-commit autoupdate
-pixi run --manifest-path ./pre-commit/pixi.toml pre-commit-run --color=always --show-diff-on-failure -v
+if ($update) {
+    pixi run --manifest-path ./pre-commit/pixi.toml pre-commit autoupdate
+}
+if ($v) {
+    pixi run --manifest-path ./pre-commit/pixi.toml pre-commit-run --color=always --show-diff-on-failure -v
+}
+else {
+    pixi run --manifest-path ./pre-commit/pixi.toml pre-commit-run --color=always --show-diff-on-failure
+}

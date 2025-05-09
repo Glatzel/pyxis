@@ -1,4 +1,4 @@
-param ([switch]$update, $v)
+param ([switch]$update,[switch] $v)
 Set-Location $PSScriptRoot/..
 if ($update) {
     pixi run --manifest-path ./pre-commit/pixi.toml pre-commit autoupdate

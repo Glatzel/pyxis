@@ -4,7 +4,7 @@ $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 
-# set cmake taget config
+# set cmake target config
 if ($config) { $config = "-DCMAKE_BUILD_TYPE=$config" }
 
 # create install dir

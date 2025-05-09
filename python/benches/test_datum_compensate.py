@@ -5,7 +5,7 @@ import pytest
 
 rng = np.random.default_rng(1337)
 npr = rng.random
-group = "datum compense vector"
+group = "datum compensate vector"
 
 
 def data_figures():
@@ -84,7 +84,7 @@ def test_pyxis_inplace(benchmark, sample_coords):
     import pyxis
 
     def vector(x, y, h):
-        pyxis.datum_compense(x, y, h, radius=6378_137, x0=500_000, y0=0, clone=False)
+        pyxis.datum_compensate(x, y, h, radius=6378_137, x0=500_000, y0=0, clone=False)
 
     benchmark.group = group + str(sample_coords[0])
     benchmark(vector, npr(sample_coords[0]) + 2821940.796, npr(sample_coords[0]) + 2821940.796 + 469704.6693, 400)
@@ -94,7 +94,7 @@ def test_pyxis_copy(benchmark, sample_coords):
     import pyxis
 
     def vector(x, y, h):
-        pyxis.datum_compense(x, y, h, radius=6378_137, x0=500_000, y0=0)
+        pyxis.datum_compensate(x, y, h, radius=6378_137, x0=500_000, y0=0)
 
     benchmark.group = group + str(sample_coords[0])
     benchmark(vector, npr(sample_coords[0]) + 2821940.796, npr(sample_coords[0]) + 2821940.796 + 469704.6693, 400)
@@ -106,8 +106,8 @@ def test_pyxis_cuda(benchmark, sample_coords):
     import pyxis
 
     def vector(x, y, h):
-        module = pyxis.pyxis_cuda.DatumCompenseCuda()
-        module.datum_compense_cuda("double", x, y, h, radius=6378_137, x0=500_000, y0=0)
+        module = pyxis.pyxis_cuda.DatumCompensateCuda()
+        module.datum_compensate_cuda("double", x, y, h, radius=6378_137, x0=500_000, y0=0)
 
     benchmark.group = group + str(sample_coords[0])
     benchmark(

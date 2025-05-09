@@ -4,11 +4,11 @@ from pyxis.pyxis_cuda import get_grid_block
 from pyxis.pyxis_cuda._utils import PTX_PATH, TDTYPE
 
 
-class DatumCompenseCuda:
+class DatumCompensateCuda:
     def __init__(self) -> None:
-        self.module = cp.RawModule(path=str(PTX_PATH / "datum_compense_cuda.ptx"))
+        self.module = cp.RawModule(path=str(PTX_PATH / "datum_compensate_cuda.ptx"))
 
-    def datum_compense_cuda(
+    def datum_compensate_cuda(
         self,
         dtype: TDTYPE,
         xc: cp.ndarray,
@@ -18,7 +18,7 @@ class DatumCompenseCuda:
         x0: float,
         y0: float,
     ):
-        fn = self.module.get_function(f"datum_compense_cuda_{dtype}")
+        fn = self.module.get_function(f"datum_compensate_cuda_{dtype}")
         ratio = hb / radius / (1.0 + hb / radius)
         grid_size, block_size = get_grid_block(xc.size)
         print(grid_size, block_size)

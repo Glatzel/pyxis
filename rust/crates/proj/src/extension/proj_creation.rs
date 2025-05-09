@@ -1,7 +1,7 @@
 pub enum PjParams<'a> {
     // Transformation setup
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    Defination(&'a str),
+    Definition(&'a str),
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     Argv(Vec<&'a str>),
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
@@ -35,7 +35,7 @@ impl crate::PjContext {
     pub fn create_proj(&self, by: PjParams) -> miette::Result<crate::Pj> {
         match by {
             // Transformation setup
-            PjParams::Defination(definition) => self.create(definition),
+            PjParams::Definition(definition) => self.create(definition),
             PjParams::Argv(argv) => self.create_argv(argv.as_slice()),
             PjParams::CrsToCrs {
                 source_crs,

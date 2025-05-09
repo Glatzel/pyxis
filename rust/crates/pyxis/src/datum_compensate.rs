@@ -1,22 +1,22 @@
 use crate::GeoFloat;
-pub trait IDatumCompenseParms<T: GeoFloat> {
+pub trait IDatumCompensateParms<T: GeoFloat> {
     fn x0(&self) -> T;
     fn y0(&self) -> T;
     fn factor(&self) -> T;
 }
-pub struct DatumCompenseParms<T: GeoFloat> {
+pub struct DatumCompensateParms<T: GeoFloat> {
     x0: T,
     y0: T,
     factor: T,
 }
-impl<T: GeoFloat> DatumCompenseParms<T> {
+impl<T: GeoFloat> DatumCompensateParms<T> {
     pub fn new(hb: T, radius: T, x0: T, y0: T) -> Self {
         let ratio = hb / radius;
         let factor = ratio / (T::ONE + ratio);
         Self { x0, y0, factor }
     }
 }
-impl<T: GeoFloat> IDatumCompenseParms<T> for DatumCompenseParms<T> {
+impl<T: GeoFloat> IDatumCompensateParms<T> for DatumCompensateParms<T> {
     fn x0(&self) -> T { self.x0 }
     fn y0(&self) -> T { self.y0 }
     fn factor(&self) -> T { self.factor }
@@ -44,12 +44,12 @@ impl<T: GeoFloat> IDatumCompenseParms<T> for DatumCompenseParms<T> {
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// let p = (469704.6693, 2821940.796);
-/// let parms = pyxis::DatumCompenseParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);
-/// let p = pyxis::datum_compense(p.0, p.1, &parms);
+/// let parms = pyxis::DatumCompensateParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);
+/// let p = pyxis::datum_compensate(p.0, p.1, &parms);
 /// assert_approx_eq!(f64, p.0, 469706.56912942487, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 2821763.831232311, epsilon = 1e-17);
 /// ```
-pub fn datum_compense<T>(xc: T, yc: T, parms: &impl IDatumCompenseParms<T>) -> (T, T)
+pub fn datum_compensate<T>(xc: T, yc: T, parms: &impl IDatumCompensateParms<T>) -> (T, T)
 where
     T: GeoFloat,
 {

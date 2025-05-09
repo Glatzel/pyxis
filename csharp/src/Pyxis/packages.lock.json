@@ -2,12 +2,6 @@
   "version": 1,
   "dependencies": {
     ".NETFramework,Version=v4.8": {
-      "CSharpier.MsBuild": {
-        "type": "Direct",
-        "requested": "[1.0.1, )",
-        "resolved": "1.0.1",
-        "contentHash": "K1S0hjUoshr3dz9NoijnJWj4OltTyOEq/wl59tUwnErvq1ZcZsI4ar0NmnKf2hQbhlVmei95llk4HfN6WZ5m6A=="
-      },
       "Microsoft.Bcl.HashCode": {
         "type": "Direct",
         "requested": "[6.0.0, )",
@@ -40,12 +34,6 @@
       }
     },
     "net8.0-windows7.0": {
-      "CSharpier.MsBuild": {
-        "type": "Direct",
-        "requested": "[1.0.1, )",
-        "resolved": "1.0.1",
-        "contentHash": "K1S0hjUoshr3dz9NoijnJWj4OltTyOEq/wl59tUwnErvq1ZcZsI4ar0NmnKf2hQbhlVmei95llk4HfN6WZ5m6A=="
-      },
       "Microsoft.Bcl.HashCode": {
         "type": "Direct",
         "requested": "[6.0.0, )",
@@ -78,12 +66,6 @@
       }
     },
     "net9.0-windows7.0": {
-      "CSharpier.MsBuild": {
-        "type": "Direct",
-        "requested": "[1.0.1, )",
-        "resolved": "1.0.1",
-        "contentHash": "K1S0hjUoshr3dz9NoijnJWj4OltTyOEq/wl59tUwnErvq1ZcZsI4ar0NmnKf2hQbhlVmei95llk4HfN6WZ5m6A=="
-      },
       "Microsoft.Bcl.HashCode": {
         "type": "Direct",
         "requested": "[6.0.0, )",

@@ -18,47 +18,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # template for the changelog body
 # https://keats.github.io/tera/docs/#introduction
 body = """
-{%- macro remote_url() -%}
-  https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}
-{%- endmacro -%}
-
-{% if version -%}
-    ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
-{% else -%}
+{% macro remote_url() %}\
+  https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}\
+{% endmacro %}\
+{% if version %}\
+    ## {{ version | trim_start_matches(pat="v") }} - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else %}\
     ## [Unreleased]
-{% endif -%}
-{% for group, commits in commits | group_by(attribute="group") %}
-    ### {{ group | upper_first }}{{"\n"}}{{"\n"}}\
-    {%- for commit in commits %}\
-        {%- if commit.scope -%}\
-        {% else -%}\
-            - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
-            {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif -%}
+{% endif %}
+{% for group, commits in commits | group_by(attribute="group") %}\
+    ### {{ group | upper_first }}
+
+     {% for commit in commits %}\
+        {% if commit.scope %}\
+            - **({{commit.scope}})** {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
+            {% if commit.remote.username %} by @{{ commit.remote.username }}{% endif %}\
             {% if commit.remote.pr_number %} in \
-            [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }}){{"\n"}}\
-            {%- endif -%}\
-        {%- endif -%}\
-    {% endfor %}\
-    {% for group, commits in commits | group_by(attribute="scope") %}\
-        {%- if group -%}\
-            {{"\n"}}#### {{ group | upper_first }}
-            {% for commit in commits %}
-                - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
-                {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif -%}
-                {% if commit.remote.pr_number %} in \
-                [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }})\
-                {%- endif -%}
-            {% endfor %}
-        {%- endif -%}{{"\n"}}\
-    {% endfor %}\
-{% endfor %}{{"\n"}}
+            [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }})\
+            {% endif %}\
+        {% else %}\
+            - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
+            {% if commit.remote.username %} by @{{ commit.remote.username }}{% endif %}\
+            {% if commit.remote.pr_number %} in \
+            [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }})\
+            {% endif %}\
+        {% endif %}
+    {% endfor %}
+{% endfor %}
 """
 # template for the changelog footer
 footer = """
-{%- macro remote_url() -%}
+{% macro remote_url() -%}
   https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}
 {%- endmacro -%}
-
 {% for release in releases -%}
     {% if release.version -%}
         {% if release.previous.version -%}
@@ -75,7 +67,7 @@ footer = """
 trim = true
 # postprocessors
 postprocessors = [
-  # { pattern = '<REPO>', replace = "https://github.com/orhun/git-cliff" }, # replace repository URL
+    # { pattern = '<REPO>', replace = "https://github.com/orhun/git-cliff" }, # replace repository URL
 ]
 # render body even when there are no releases to process
 # render_always = true
@@ -91,27 +83,27 @@ filter_unconventional = true
 split_commits = false
 # regex for preprocessing the commit messages
 commit_preprocessors = [
-  # remove issue numbers from commits
-  { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
+    # remove issue numbers from commits
+    { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
 ]
 # regex for parsing and grouping commits
 commit_parsers = [
-  { message = "^fix", group = "Fixed" },
-  { message = "^docs", group = "Documentation" },
-  { message = "^style", skip = true },
-  { message = "^refactor", group = "Refactor" },
-  { message = "^perf", group = "Performance" },
-  { message = "^test", group = "Testing" },
-  { message = "^revert", group = "Revert" },
-  { message = "^.*: add", group = "Added" },
-  { message = "^.*: support", group = "Added" },
-  { message = "^.*: initial", group = "Added" },
-  { message = "^.*: remove", group = "Removed" },
-  { message = "^.*: delete", group = "Removed" },
-  { message = "^build", skip = true },
-  { message = "^ci", skip = true },
-  { message = "^chore", skip = true },
-  { message = "^.*:", group = "Changed" },
+    { message = "^fix", group = "Fixed" },
+    { message = "^docs", group = "Documentation" },
+    { message = "^style", skip = true },
+    { message = "^refactor", group = "Refactor" },
+    { message = "^perf", group = "Performance" },
+    { message = "^test", group = "Testing" },
+    { message = "^revert", group = "Revert" },
+    { message = "^.*: add", group = "Added" },
+    { message = "^.*: support", group = "Added" },
+    { message = "^.*: initial", group = "Added" },
+    { message = "^.*: remove", group = "Removed" },
+    { message = "^.*: delete", group = "Removed" },
+    { message = "^build", skip = true },
+    { message = "^ci", skip = true },
+    { message = "^chore", skip = true },
+    { message = "^.*:", group = "Changed" },
 ]
 # filter out the commits that are not matched by commit parsers
 filter_commits = false

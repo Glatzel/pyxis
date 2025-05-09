@@ -5,7 +5,7 @@ fn bench_datum_compensate_cuda(c: &mut Criterion) {
     let mut rng = rand::rng();
     let ctx = &pyxis_cuda::CONTEXT;
     for i in [0, 2, 4, 6, 8].iter() {
-        let parms = pyxis::DatumCompensateParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);
+        let params = pyxis::DatumCompensateParams::new(400.0, 6_378_137.0, 500_000.0, 0.0);
         let count = 10i32.pow(*i);
         let xc: Vec<f64> = (0..count)
             .map(|_| 469704.6693 + rng.random::<f64>())

@@ -1,3 +1,4 @@
+#![allow(clippy::too_many_arguments)]
 // mod context;
 mod crypto_cuda;
 // pub use context::*;

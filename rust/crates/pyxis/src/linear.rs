@@ -44,9 +44,19 @@ where
 /// use float_cmp::assert_approx_eq;
 /// let radians = 30.0f64.to_radians(); // 90 degrees in radians
 /// let m = pyxis::rotate_matrix_2d(radians);
-/// let result=pyxis::rotate_2d (3.0,2.0,&m);
-/// assert_approx_eq!(f64, result.0, 3.0 * radians.cos() - 2.0 * radians.sin(), epsilon = 1e-17);
-/// assert_approx_eq!(f64, result.1, 3.0 * radians.sin() + 2.0 * radians.cos(), epsilon = 1e-17);
+/// let result = pyxis::rotate_2d(3.0, 2.0, &m);
+/// assert_approx_eq!(
+///     f64,
+///     result.0,
+///     3.0 * radians.cos() - 2.0 * radians.sin(),
+///     epsilon = 1e-17
+/// );
+/// assert_approx_eq!(
+///     f64,
+///     result.1,
+///     3.0 * radians.sin() + 2.0 * radians.cos(),
+///     epsilon = 1e-17
+/// );
 /// ```
 pub fn rotate_2d<T>(x: T, y: T, rotate_matrix: &[[T; 2]; 2]) -> (T, T)
 where

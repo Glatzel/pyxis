@@ -7,17 +7,27 @@ use crate::GeoFloat;
 /// # Examples
 ///
 /// ```
-/// use pyxis::Ellipsoid;
 /// use float_cmp::assert_approx_eq;
+/// use pyxis::Ellipsoid;
 ///
-/// let semi_major_axis = 6378137.0;  // Semi-major axis in meters
-/// let inverse_flattening = 298.257223563;  // Inverse flattening
+/// let semi_major_axis = 6378137.0; // Semi-major axis in meters
+/// let inverse_flattening = 298.257223563; // Inverse flattening
 /// let ellipsoid = Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
 ///
 /// assert_eq!(ellipsoid.semi_major_axis(), 6378137.0);
 /// assert_eq!(ellipsoid.inverse_flattening(), 298.257223563);
-/// assert_approx_eq!(f64, ellipsoid.eccentricity(), 0.081819190842622, epsilon = 1e-12);
-/// assert_approx_eq!(f64, ellipsoid.flattening(), 0.0033528106647474805, epsilon = 1e-12);
+/// assert_approx_eq!(
+///     f64,
+///     ellipsoid.eccentricity(),
+///     0.081819190842622,
+///     epsilon = 1e-12
+/// );
+/// assert_approx_eq!(
+///     f64,
+///     ellipsoid.flattening(),
+///     0.0033528106647474805,
+///     epsilon = 1e-12
+/// );
 /// ```
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Ellipsoid<T> {
@@ -45,18 +55,28 @@ impl<T: GeoFloat> Ellipsoid<T> {
     /// # Examples
     ///
     /// ```
-    /// use pyxis::Ellipsoid;
     /// use float_cmp::assert_approx_eq;
+    /// use pyxis::Ellipsoid;
     ///
-    /// let semi_major_axis = 6378137.0;  // WGS84 semi-major axis in meters
-    /// let inverse_flattening = 298.257223563;  // WGS84 inverse flattening
+    /// let semi_major_axis = 6378137.0; // WGS84 semi-major axis in meters
+    /// let inverse_flattening = 298.257223563; // WGS84 inverse flattening
     ///
     /// let ellipsoid = Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
     ///
     /// assert_eq!(ellipsoid.semi_major_axis(), 6378137.0);
     /// assert_eq!(ellipsoid.inverse_flattening(), 298.257223563);
-    /// assert_approx_eq!(f64, ellipsoid.eccentricity(), 0.081819190842622, epsilon = 1e-12);
-    /// assert_approx_eq!(f64, ellipsoid.flattening(), 0.0033528106647474805, epsilon = 1e-12);
+    /// assert_approx_eq!(
+    ///     f64,
+    ///     ellipsoid.eccentricity(),
+    ///     0.081819190842622,
+    ///     epsilon = 1e-12
+    /// );
+    /// assert_approx_eq!(
+    ///     f64,
+    ///     ellipsoid.flattening(),
+    ///     0.0033528106647474805,
+    ///     epsilon = 1e-12
+    /// );
     /// ```
     pub fn from_semi_major_and_invf(semi_major_axis: T, inverse_flattening: T) -> Self {
         let flattening: T = T::ONE / inverse_flattening;
@@ -105,8 +125,18 @@ impl<T: GeoFloat> Ellipsoid<T> {
     /// let ellipsoid = Ellipsoid::from_semi_axis(6378137.0, 6356752.314245);
     /// assert_eq!(ellipsoid.semi_major_axis(), 6378137.0);
     /// assert_eq!(ellipsoid.semi_minor_axis(), 6356752.314245);
-    /// float_cmp::assert_approx_eq!(f64, ellipsoid.eccentricity(), 0.081819190842622, epsilon = 1e-6);
-    /// float_cmp::assert_approx_eq!(f64, ellipsoid.flattening(), 0.0033528106647474805, epsilon = 1e-10);
+    /// float_cmp::assert_approx_eq!(
+    ///     f64,
+    ///     ellipsoid.eccentricity(),
+    ///     0.081819190842622,
+    ///     epsilon = 1e-6
+    /// );
+    /// float_cmp::assert_approx_eq!(
+    ///     f64,
+    ///     ellipsoid.flattening(),
+    ///     0.0033528106647474805,
+    ///     epsilon = 1e-10
+    /// );
     /// ```
     ///
     /// # Notes

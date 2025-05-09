@@ -43,8 +43,8 @@ impl<T: GeoFloat> IDatumCompenseParms<T> for DatumCompenseParms<T> {
 /// # Examples
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// let p =(469704.6693, 2821940.796);
-/// let parms=pyxis::DatumCompenseParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);
+/// let p = (469704.6693, 2821940.796);
+/// let parms = pyxis::DatumCompenseParms::new(400.0, 6_378_137.0, 500_000.0, 0.0);
 /// let p = pyxis::datum_compense(p.0, p.1, &parms);
 /// assert_approx_eq!(f64, p.0, 469706.56912942487, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 2821763.831232311, epsilon = 1e-17);

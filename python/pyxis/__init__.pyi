@@ -1,6 +1,6 @@
 from ._angle import angle2dms, dms2angle
 from ._crypto import COORD_CRYPTO_SPACE, crypto
-from ._datum_compense import datum_compense
+from ._datum_compensate import datum_compensate
 from ._migrate import CoordMigrate
 from ._space import COORD_SPACE, space
 from ._transformation_residuals import transformation_residuals3, transformation_residuals6, transformation_residuals7
@@ -11,7 +11,7 @@ __all__ = [
     "CoordMigrate",
     "angle2dms",
     "crypto",
-    "datum_compense",
+    "datum_compensate",
     "dms2angle",
     "space",
     "transformation_residuals3",

@@ -153,7 +153,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial pyxis-cuda by @Glatzel in [#150](https://github.com/Glatzel/pyxis/pull/150)
-- Add some check and log to datum_compense cuda by @Glatzel in [#151](https://github.com/Glatzel/pyxis/pull/151)
+- Add some check and log to datum_compensate cuda by @Glatzel in [#151](https://github.com/Glatzel/pyxis/pull/151)
 - Add util fn to calculate block and grid size by @Glatzel in [#152](https://github.com/Glatzel/pyxis/pull/152)
 - Add gcj bd crypto cuda by @Glatzel in [#153](https://github.com/Glatzel/pyxis/pull/153)
 - Add .pc file in cmake project by @Glatzel in [#167](https://github.com/Glatzel/pyxis/pull/167)
@@ -169,7 +169,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Refactor
 
-- Reconstruct folers by @Glatzel in [#157](https://github.com/Glatzel/pyxis/pull/157)
+- Reconstruct folders by @Glatzel in [#157](https://github.com/Glatzel/pyxis/pull/157)
 
 ### Removed
 
@@ -185,7 +185,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Performance
 
 - Improve const ellipsoid performance by @Glatzel in [#129](https://github.com/Glatzel/pyxis/pull/129)
-- Optimize datum_compense and crypto_exact by @Glatzel in [#142](https://github.com/Glatzel/pyxis/pull/142)
+- Optimize datum_compensate and crypto_exact by @Glatzel in [#142](https://github.com/Glatzel/pyxis/pull/142)
 
 ### Refactor
 
@@ -241,7 +241,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Optimize crypto bench by @Glatzel in [#87](https://github.com/Glatzel/pyxis/pull/87)
 - Revert to use threshold to bench crypto exact by @Glatzel in [#88](https://github.com/Glatzel/pyxis/pull/88)
-- Add new thershold to crypto bench by @Glatzel in [#90](https://github.com/Glatzel/pyxis/pull/90)
+- Add new threshold to crypto bench by @Glatzel in [#90](https://github.com/Glatzel/pyxis/pull/90)
 - Modify some test precision assert by @Glatzel in [#91](https://github.com/Glatzel/pyxis/pull/91)
 - Optimize crypto exact bench input value by @Glatzel in [#100](https://github.com/Glatzel/pyxis/pull/100)
 

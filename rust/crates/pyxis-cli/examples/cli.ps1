@@ -12,7 +12,7 @@ elseif ($IsLinux -or $IsMacOS) {
 # Zhengyong expressway Dehua east interchange
 & "$pyxis" -v `
     transform -n "Zhengyong expressway Dehua east interchange" -x 469704.6693 -y 2821940.796 -z 0 -o plain `
-    datum-compense --hb 400 -r 6378137 --x0 500000 --y0 0 `
+    datum-compensate --hb 400 -r 6378137 --x0 500000 --y0 0 `
     proj --from "+proj=tmerc +lat_0=0 +lon_0=118.5 +k=1 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs" `
     --to "+proj=longlat +datum=WGS84 +no_defs +type=crs"
 Write-Output ""

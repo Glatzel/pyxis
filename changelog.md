@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Add fmt and clippy to pre-commit by @Glatzel in [#337](https://github.com/Glatzel/pyxis/pull/337)
+- Add pre-commit to ignore by @Glatzel in [#343](https://github.com/Glatzel/pyxis/pull/343)
+- Add csharp hook by @Glatzel in [#344](https://github.com/Glatzel/pyxis/pull/344)
+
+#### Cpp,rust
+
+- Support macos arm64 by @Glatzel in [#327](https://github.com/Glatzel/pyxis/pull/327)
+
+#### Rust
+
+- Add proj iso19111 types by @Glatzel in [#319](https://github.com/Glatzel/pyxis/pull/319)
+- Add proj native log_level and log_func by @Glatzel in [#326](https://github.com/Glatzel/pyxis/pull/326)
+
+### Changed
+
+
+#### Rust
+
+- Proj get_last_used_operation by @Glatzel in [#320](https://github.com/Glatzel/pyxis/pull/320)
+
+### Fixed
+
+
+#### Rust
+
+- Proj-sys build by @Glatzel in [#324](https://github.com/Glatzel/pyxis/pull/324)
+
+### Removed
+
+- Remove whl asset by @Glatzel in [#318](https://github.com/Glatzel/pyxis/pull/318)
+- Delete pre-commit/pixi.toml by @Glatzel in [#342](https://github.com/Glatzel/pyxis/pull/342)
+
+### Testing
+
+
+#### Rust
+
+- Proj init info by @Glatzel in [#317](https://github.com/Glatzel/pyxis/pull/317)
+
 ## [0.0.19] - 2025-05-06
 
 ### Added
@@ -347,6 +390,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[unreleased]: https://github.com/Glatzel/pyxis/compare/v0.0.19..HEAD
 [0.0.19]: https://github.com/Glatzel/pyxis/compare/v0.0.18..v0.0.19
 [0.0.18]: https://github.com/Glatzel/pyxis/compare/v0.0.17..v0.0.18
 [0.0.17]: https://github.com/Glatzel/pyxis/compare/v0.0.16..v0.0.17

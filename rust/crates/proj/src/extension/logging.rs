@@ -60,7 +60,7 @@ mod test {
             .init();
         let ctx = crate::PjContext::default();
         ctx.set_log_level(PjLogLevel::Trace)?;
-        let pj = ctx.create("unknow crs");
+        let pj = ctx.create("Unknown crs");
         assert!(pj.is_err());
         Ok(())
     }

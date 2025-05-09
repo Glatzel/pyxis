@@ -17,7 +17,7 @@ fn bench_datum_compensate_cuda(c: &mut Criterion) {
         let mut dxc = ctx.device_buffer_from_slice(&xc);
         let mut dyc = ctx.device_buffer_from_slice(&yc);
         group.bench_with_input(BenchmarkId::new("length", i), i, |b, _| {
-            b.iter(|| ctx.datum_compensate_cuda(&mut dxc, &mut dyc, &parms))
+            b.iter(|| ctx.datum_compensate_cuda(&mut dxc, &mut dyc, &params))
         });
     }
 }

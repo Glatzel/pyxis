@@ -1,13 +1,13 @@
 [build-system]
-requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
+requires = ["maturin>=1.0,<2.0"]
 
 [project]
-name = "pyxis"
-requires-python = ">=3.11"
-dynamic = ["version"]
 authors = [{ name = "Glatzel", email = "893016099@qq.com" }]
 dependencies = ["lazy-loader", "numpy", "scipy"]
+dynamic = ["version"]
+name = "pyxis"
+requires-python = ">=3.11"
 
 [project.optional-dependencies]
 gpu = ["cupy"]

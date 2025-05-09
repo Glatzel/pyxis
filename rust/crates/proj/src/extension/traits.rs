@@ -17,7 +17,7 @@ const NULL_PTR: *mut f64 = null_mut();
 ///   additional dimensions are not needed.
 /// - All pointers must be aligned and safe to dereference during the lifetime
 ///   of the mutable borrow.
-/// #[doc(hidden)]
+///
 /// # Minimal Example
 /// 2D coordinate
 /// ```

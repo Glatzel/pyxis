@@ -6,20 +6,3 @@ platforms = ["win-64", "linux-64", "osx-arm64"]
 pkg-config = "==0.29.2"
 proj = { version = "==9.6.0" }
 rattler-build = "==0.41.0"
-
-[feature.gpu]
-platforms = ["win-64", "linux-64"]
-[feature.gpu.target.win-64.activation.env]
-PATH = ".pixi/envs/gpu/Library/bin;%PATH%"
-CUDA_ROOT=".pixi/envs/gpu/Library"
-CUDA_LIBRARY_PATH=".pixi/envs/gpu/Library/lib"
-[feature.gpu.target.linux-64.activation.env]
-PATH = ".pixi/envs/gpu/bin:$PATH"
-CUDA_ROOT = ".pixi/envs/gpu"
-[feature.gpu.dependencies]
-cuda-cudart = "12.9.*"
-cuda-nvcc = "12.9.*"
-
-[environments]
-all = ["gpu"]
-gpu = { features = ["gpu"], no-default-feature = true }

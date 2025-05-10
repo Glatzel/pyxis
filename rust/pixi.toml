@@ -12,6 +12,7 @@ platforms = ["win-64", "linux-64"]
 [feature.gpu.target.win-64.activation.env]
 PATH = ".pixi/envs/gpu/Library/bin;%PATH%"
 CUDA_ROOT=".pixi/envs/gpu/Library"
+CUDA_LIBRARY_PATH=".pixi/envs/gpu/Library/lib"
 [feature.gpu.target.linux-64.activation.env]
 PATH = ".pixi/envs/gpu/bin:$PATH"
 CUDA_ROOT = ".pixi/envs/gpu"

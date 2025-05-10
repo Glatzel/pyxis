@@ -3,7 +3,8 @@ package:
   name: pyxis-py
 build:
   number: 0
-  string: ${{ "cpu" if cuda_variant == "numpy" else ( 'gpu' if cuda_variant=='cupy-core' else 'gpu_cudart')}}_${{ hash }}_${{ build_number }}
+  string: ${{ "cpu" if cuda_variant == "numpy" or osx else ( 'gpu' if cuda_variant=='cupy-core' else 'gpu_cudart')}}_${{ hash }}_${{ build_number }}
+
   script:
     - if: win
       then:
@@ -21,7 +22,9 @@ requirements:
     - lazy-loader
     - numpy
     - scipy
-    - ${{ cuda_variant }}
+    - if: win and linux
+      then:
+        - ${{cuda_variant}}
 
 tests:
   - python:

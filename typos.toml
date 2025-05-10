@@ -1,1 +1,1 @@
-files.extend-exclude = ["changelog.md"]
+files.extend-exclude = ["CHANGELOG.md"]

@@ -43,13 +43,13 @@ jobs:
         include:
           - machine: windows-latest
             os: win-64
-           
+
           - machine: ubuntu-latest
             os: linux-64
 
           - machine: macos-latest
             os: macos-64
-          
+
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4

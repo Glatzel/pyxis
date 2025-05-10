@@ -129,20 +129,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - machine: windows-latest
-            sub-packages: '["nvcc","cudart"]'
-          - machine: ubuntu-latest
-            sub-packages: '["nvcc"]'
+        machine: [ windows-latest, ubuntu-latest]
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Jimver/cuda-toolkit@v0.2.23
+      - name: Add msbuild to PATH
+        if: ${{runner.os == 'Windows'}}
+        uses: microsoft/setup-msbuild@v2
         with:
-          cuda: "12.8.0"
-          sub-packages: ${{matrix.sub-packages}}
-          method: network
+          msbuild-architecture: x64
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.8
+        with:
+          run-install: false
+      - uses: dtolnay/rust-toolchain@stable
       - name: clippy
         run: ${{env.RUST_ROOT}}/scripts/cargo-clippy-cuda.ps1
         shell: pwsh

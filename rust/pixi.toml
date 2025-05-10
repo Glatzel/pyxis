@@ -1,11 +1,23 @@
 [workspace]
-authors = ["Glatzel"]
-channels = ["https://repo.prefix.dev/glatzel", "conda-forge"]
-name = "pyxis-rust"
+channels = ["https://repo.prefix.dev/glatzel", "conda-forge", "nvidia"]
 platforms = ["win-64", "linux-64", "osx-arm64"]
-version = "0.1.0"
 
 [dependencies]
 pkg-config = "==0.29.2"
 proj = { version = "==9.6.0" }
 rattler-build = "==0.41.0"
+
+
+[feature.gpu]
+platforms = ["win-64", "linux-64"]
+[feature.gpu.target.win-64.activation.env]
+PATH = ".pixi/envs/gpu/Library/bin;%PATH%"
+[feature.gpu.target.linux-64.activation.env]
+PATH = ".pixi/envs/gpu/bin/nvcc:$PATH"
+[feature.gpu.dependencies]
+cuda-cudart = "12.9.*"
+cuda-nvcc = "12.9.*"
+
+[environments]
+all = ["gpu"]
+gpu = { features = ["gpu"], no-default-feature = true }

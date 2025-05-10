@@ -16,8 +16,8 @@ $install = "-DCMAKE_INSTALL_PREFIX=$install"
 New-Item ./build/ptx -ItemType Directory -ErrorAction SilentlyContinue
 
 # build
-cmake -B build $install $config -DBUILD_CUDA=ON
-cmake --build build --target install
+pixi run cmake -B build $install $config -DBUILD_CUDA=ON
+pixi run cmake --build build --target install
 
 # pack output files
 if ($IsWindows) {

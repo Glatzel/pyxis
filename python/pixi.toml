@@ -1,10 +1,6 @@
 [workspace]
-authors = ["Glatzel <893016099@qq.com>"]
 channels = ["conda-forge"]
-description = "Add a short description here"
-name = "pyxis"
 platforms = ["win-64", "linux-64", "osx-arm64"]
-version = "0.1.0"
 
 [feature.py311.dependencies]
 python = "3.11.*"

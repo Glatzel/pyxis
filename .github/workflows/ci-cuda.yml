@@ -20,6 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Add msbuild to PATH
+        if: ${{runner.os == 'Windows'}}
         uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64

@@ -129,20 +129,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - machine: windows-latest
-            sub-packages: '["nvcc","cudart"]'
-          - machine: ubuntu-latest
-            sub-packages: '["nvcc"]'
+        machine: [ windows-latest, ubuntu-latest]
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - uses: Jimver/cuda-toolkit@v0.2.23
-        with:
-          cuda: "12.8.0"
-          sub-packages: ${{matrix.sub-packages}}
-          method: network
       - name: clippy
         run: ${{env.RUST_ROOT}}/scripts/cargo-clippy-cuda.ps1
         shell: pwsh

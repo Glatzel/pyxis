@@ -19,6 +19,14 @@ jobs:
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.8
+        with:
+          run-install: false
 
       - name: build cuda
         run: ${{env.CUDA_ROOT}}/scripts/build-cuda.ps1

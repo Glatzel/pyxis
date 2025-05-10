@@ -1,8 +1,17 @@
 [workspace]
-channels = ["https://repo.prefix.dev/glatzel", "conda-forge"]
+channels = ["https://repo.prefix.dev/glatzel", "conda-forge", "nvidia"]
 platforms = ["win-64", "linux-64", "osx-arm64"]
 
 [dependencies]
 pkg-config = "==0.29.2"
 proj = { version = "==9.6.0" }
 rattler-build = "==0.41.0"
+
+[feature.gpu]
+platforms = ["win-64", "linux-64"]
+[feature.gpu.dependencies]
+cuda-cudart = "12.9.*"
+cuda-nvcc = "12.9.*"
+
+[environments]
+gpu = { features = ["gpu"], no-default-feature = true }

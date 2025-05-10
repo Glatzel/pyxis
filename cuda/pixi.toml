@@ -1,0 +1,9 @@
+[workspace]
+channels = ["https://repo.prefix.dev/glatzel-private", "conda-forge", "nvidia"]
+platforms = ["win-64", "linux-64"]
+
+[tasks]
+nvcc = "$CONDA_PREFIX/Library/bin/nvcc"
+[dependencies]
+cuda-cudart = "12.9.*"
+cuda-nvcc = "12.9.*"

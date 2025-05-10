@@ -48,7 +48,7 @@ jobs:
             os: linux-64
 
           - machine: macos-latest
-            os: macos-64
+            os: osx-arm64
 
     runs-on: ${{matrix.machine}}
     steps:

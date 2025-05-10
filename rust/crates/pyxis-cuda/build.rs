@@ -3,7 +3,7 @@ use std::path::Path;
 
 use dunce::canonicalize;
 use glob::glob;
-use path_slash::{self, PathExt};
+use path_slash::PathExt;
 fn main() {
     let cpp_src_dir = canonicalize(Path::new("."))
         .unwrap()

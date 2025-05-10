@@ -1,6 +1,6 @@
 [workspace]
 channels = ["conda-forge"]
-platforms = ["win-64", "linux-64"]
+platforms = ["win-64", "linux-64", "osx-arm64"]
 
 [feature.py311.dependencies]
 python = "3.11.*"
@@ -11,11 +11,14 @@ pip = "25.1.*"
 rattler-build = "0.41.*"
 
 [feature.py-deps.dependencies]
-cupy-core = "==13.4.1"
 lazy-loader = "==0.4"
 nomkl = "==1.0"
 numpy = "==2.2.5"
 scipy = "==1.15.2"
+[feature.py-deps.target.linux-64.dependencies]
+cupy-core = "==13.4.1"
+[feature.py-deps.target.win-64.dependencies]
+cupy-core = "==13.4.1"
 
 [feature.py-test.dependencies]
 pytest = "8.3.*"

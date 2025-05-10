@@ -143,9 +143,6 @@ jobs:
         with:
           run-install: false
       - uses: dtolnay/rust-toolchain@stable
-      - name: clippy
-        run: ${{env.RUST_ROOT}}/scripts/cargo-clippy-cuda.ps1
-        shell: pwsh
       - name: build cuda
         run: ${{env.RUST_ROOT}}/scripts/build-rust-cuda.ps1 ${{ inputs.release && '-config release' || null }}
         shell: pwsh

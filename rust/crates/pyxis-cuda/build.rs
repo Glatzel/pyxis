@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::{env, path::Path};
 
 use dunce::canonicalize;
 use glob::glob;
@@ -53,7 +53,7 @@ fn main() {
         .arg("--ptx")
         .args(cu_files)
         .args(["-odir", "./src"])
-        .env("PATH", std::env::var("PATH").unwrap())
+        .env("PATH", env::var("PATH").unwrap())
         .output()
         .expect("Failed to execute script");
     println!("Stdout:/n{}", String::from_utf8_lossy(&output.stdout));

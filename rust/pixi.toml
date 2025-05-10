@@ -19,4 +19,5 @@ cuda-cudart = "12.9.*"
 cuda-nvcc = "12.9.*"
 
 [environments]
+all = ["gpu"]
 gpu = { features = ["gpu"], no-default-feature = true }

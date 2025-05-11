@@ -103,7 +103,7 @@ jobs:
 
   python-cuda-ci:
     needs: changed
-    if: ${{ needs.changed.outputs.changed-python != 'false' }}
+    if: ${{ needs.changed.outputs.changed-python-cuda != 'false' }}
     uses: ./.github/workflows/ci-python-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}

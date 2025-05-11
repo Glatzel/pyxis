@@ -6,13 +6,15 @@ $python_root = Resolve-Path $PSScriptRoot/..
 $env:PYTHONPATH = "$env:PYTHONPATH;$python_root"
 if ($env:CI) {
     $markers = "not cuda"
+    $pixi_env = "default"
 }
 else {
     $markers = ""
+    $pixi_env = "local"
 }
 
 # run test
-pixi run pytest `
+pixi run -e  $pixi_env pytest `
     ./tests `
     -v `
     -m $markers `

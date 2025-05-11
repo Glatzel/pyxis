@@ -10,21 +10,22 @@ maturin = "1.8.*"
 pip = "25.1.*"
 rattler-build = "0.41.*"
 
-[feature.py-deps.dependencies]
+[feature.deps.dependencies]
 lazy-loader = "==0.4"
 nomkl = "==1.0"
 numpy = "==2.2.5"
 scipy = "==1.15.2"
-[feature.py-deps.target.linux-64.dependencies]
-cupy-core = "==13.4.1"
-[feature.py-deps.target.win-64.dependencies]
-cupy-core = "==13.4.1"
 
-[feature.py-test.dependencies]
+[feature.py-deps-local.target.linux-64.dependencies]
+cupy = "==13.4.1"
+[feature.py-deps-local.target.win-64.dependencies]
+cupy = "==13.4.1"
+
+[feature.test.dependencies]
 pytest = "8.3.*"
 pytest-cov = "6.1.*"
 
-[feature.py-doc.dependencies]
+[feature.doc.dependencies]
 autodocsumm = "==0.2.14"
 pydata-sphinx-theme = "==0.16.1"
 sphinx = "==8.2.3"
@@ -39,5 +40,6 @@ numexpr = "==2.10.2"
 pytest-codspeed = "==3.2.0"
 
 [environments]
-bench = ["py311", "build", "py-test", "py-deps", "bench"]
-default = ["py311", "build", "py-deps", "py-test", "py-doc"]
+local = ["py311", "build", "deps","deps-local", "test", "doc"]
+bench = ["py311", "build", "test", "deps", "bench"]
+default = ["py311", "build", "deps", "test", "doc"]

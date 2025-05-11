@@ -107,6 +107,7 @@ jobs:
     uses: ./.github/workflows/ci-python-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
+      envet: ${{github.event_name }}
 
   rust-ci:
     needs: changed
@@ -121,3 +122,4 @@ jobs:
     uses: ./.github/workflows/ci-rust-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
+      envet: ${{github.event_name }}

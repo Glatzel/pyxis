@@ -1,0 +1,15 @@
+[workspace]
+channels = ["conda-forge", "nvidia"]
+platforms = ["win-64", "linux-64"]
+
+[dependencies]
+cuda-cudart = "12.8.*"
+cuda-nvcc = "12.8.*"
+
+[tasks]
+nvcc = "$CONDA_PREFIX/Library/bin/nvcc"
+
+[target.win-64.dependencies]
+vswhere = "==3.1.7"
+[target.win-64.tasks]
+vswhere = "$CONDA_PREFIX/Library/bin/vswhere"

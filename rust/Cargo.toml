@@ -15,15 +15,11 @@ assert_cmd = "2.0"
 bindgen = "0.71"
 bpaf = { version = "0.9.17", features = ["derive", "batteries"] }
 clerk = { git = "https://github.com/Glatzel/clerk", tag = "v0.0.8" }
-criterion = { package = "codspeed-criterion-compat", version = "*" }
-cust = "0.3"
-dunce = "1.0.5"
+criterion = { package = "codspeed-criterion-compat", version = "2.10.1" }
 float-cmp = "0.10.0"
-glob = "0.3.2"
 libc = "0.2"
 miette = { version = "7.5.0", features = ["fancy"] }
 num-traits = "0.2.19"
-path-slash = "0.2.1"
 pkg-config = "0.3.32"
 predicates = "3.1"
 rand = "0.9.0"

@@ -98,21 +98,3 @@ def test_pyxis_copy(benchmark, sample_coords):
 
     benchmark.group = group + str(sample_coords[0])
     benchmark(vector, npr(sample_coords[0]) + 2821940.796, npr(sample_coords[0]) + 2821940.796 + 469704.6693, 400)
-
-
-@pytest.mark.cuda
-def test_pyxis_cuda(benchmark, sample_coords):
-    import cupy as cp
-    import pyxis
-
-    def vector(x, y, h):
-        module = pyxis.pyxis_cuda.DatumCompensateCuda()
-        module.datum_compensate_cuda("double", x, y, h, radius=6378_137, x0=500_000, y0=0)
-
-    benchmark.group = group + str(sample_coords[0])
-    benchmark(
-        vector,
-        cp.asarray(npr(sample_coords[0]) + 2821940.796),
-        cp.asarray(npr(sample_coords[0]) + 2821940.796 + 469704.6693),
-        400,
-    )

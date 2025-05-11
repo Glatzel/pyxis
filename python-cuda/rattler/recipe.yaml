@@ -1,0 +1,28 @@
+package:
+  version: 0.0.19
+  name: pyxis-cuda-py
+build:
+  number: 0
+  string: ${{ 'gpu' if cuda_variant=='cupy-core' else 'gpu_cudart'}}_${{ hash }}_${{ build_number }}
+
+  script:
+    - if: win
+      then:
+        - pwsh -f %RECIPE_DIR%/build-pyxis-cuda-py.ps1
+    - if: unix
+      then:
+        - pwsh -f $RECIPE_DIR/build-pyxis-cuda-py.ps1
+
+requirements:
+  host:
+    - python 3.11.*
+    - pip
+  run:
+    - python >= 3.11
+    - lazy-loader
+    - ${{cuda_variant}}
+
+tests:
+  - python:
+      imports:
+        - pyxis_cuda

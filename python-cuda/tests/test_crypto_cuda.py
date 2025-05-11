@@ -1,9 +1,9 @@
 from copy import deepcopy
 
+import cupy as cp  # type: ignore
 import numpy as np
 import pytest
-import pyxis
-import pyxis.pyxis_cuda
+import pyxis_cuda
 from pyxis import COORD_CRYPTO_SPACE
 
 bd09 = (121.10271724622564, 30.61484575976839)
@@ -35,12 +35,10 @@ wgs84_array = (
     ],
 )
 def test_exact(src, dst, input, expected):
-    import cupy as cp
-
     in_lon = cp.asarray(deepcopy(input[0]), cp.float64)
     in_lat = cp.asarray(deepcopy(input[1]), cp.float64)
     print(cp.asnumpy(in_lon))
-    module = pyxis.pyxis_cuda.CryptoCuda()
+    module = pyxis_cuda.CryptoCuda()
     module.crypto_exact("double", in_lon, in_lat, src, dst, 1e-17, 100)
     assert cp.asnumpy(in_lon)[0] == pytest.approx(expected[0])
     assert cp.asnumpy(in_lat)[0] == pytest.approx(expected[1])

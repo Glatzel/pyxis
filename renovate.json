@@ -1,4 +1,18 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended","github>Glatzel/template//renovate"]
+  "extends": [
+    "config:recommended",
+    "github>Glatzel/template//renovate"
+  ],
+  "packageRules": [
+    {
+      "groupName": "cuda",
+      "matchManagers": [
+        "pixi"
+      ],
+      "matchPackageNames": [
+        "cuda-"
+      ]
+    }
+  ]
 }

@@ -4,7 +4,7 @@ param (
 )
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
-& $PSScriptRoot/set-env.ps1
+& $PSScriptRoot/setup.ps1
 
 # clean dist folder
 Remove-Item ./dist/cli -Recurse -ErrorAction SilentlyContinue
@@ -13,7 +13,6 @@ Remove-Item ./dist/pyxis-cli*.7z -Recurse -Force -ErrorAction SilentlyContinue
 if ($IsWindows) {
     Write-Output "::group::Build static"
     # build
-    & $PSScriptRoot/set-env.ps1
     cargo build --profile $config -p pyxis-cli
 
     # copy build file to dist
@@ -30,7 +29,6 @@ if ($IsWindows) {
 elseif ($IsLinux) {
     # build
     Write-Output "::group::Build static"
-    & $PSScriptRoot/set-env.ps1
     cargo build --profile $config -p pyxis-cli
 
     #copy to dist
@@ -47,7 +45,6 @@ elseif ($IsLinux) {
 elseif ($IsMacOS) {
     # build
     Write-Output "::group::Build static"
-    & $PSScriptRoot/set-env.ps1
     cargo build --profile $config -p pyxis-cli
 
     #copy to dist

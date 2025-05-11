@@ -4,18 +4,11 @@ Set-Location $PSScriptRoot/..
 # only run cuda test in local machine
 $python_root = Resolve-Path $PSScriptRoot/..
 $env:PYTHONPATH = "$env:PYTHONPATH;$python_root"
-if ($env:CI) {
-    $markers = "not cuda"
-}
-else {
-    $markers = ""
-}
 
 # run test
 pixi run pytest `
     ./tests `
     -v `
-    -m $markers `
     --durations=10 `
     --junitxml=tests_report/junit.xml `
     -o junit_family=legacy `

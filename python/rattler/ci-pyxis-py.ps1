@@ -7,7 +7,6 @@ $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot
 
-& "$PSScriptRoot/../scripts/build-cuda.ps1"
 if ($config -eq 'develop') {
     & "$PSScriptRoot/../scripts/maturin-develop.ps1" -config $config
     & "$PSScriptRoot/../scripts/pytest.ps1"

@@ -1,11 +1,10 @@
+import cupy as cp  # type: ignore
 import pytest
+from pyxis_cuda import DatumCompensateCuda
 
 
 @pytest.mark.cuda
 def test_datum_compensate_cuda():
-    import cupy as cp
-    from pyxis.pyxis_cuda import DatumCompensateCuda
-
     x = cp.array([469704.6693] * 2, dtype=cp.float64)
     y = cp.array([2821940.796] * 2, dtype=cp.float64)
     module = DatumCompensateCuda()

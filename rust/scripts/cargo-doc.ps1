@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
-& $PSScriptRoot/set-env.ps1
+& $PSScriptRoot/setup.ps1
 Set-Location $PSScriptRoot/..
 
 cargo doc --no-deps --all-features -p pyxis -p proj

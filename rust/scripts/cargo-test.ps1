@@ -1,11 +1,8 @@
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 
-& $PSScriptRoot/set-env.ps1
+& $PSScriptRoot/setup.ps1
 git submodule update --init --recursive
-if ($env:CI) { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "proj" }
-else { $package = "-p", "pyxis", "-p", "pyxis-cli", "-p", "pyxis-cuda", "-p", "proj" }
-
 if ($IsWindows) {
     $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-windows-static/share/proj
 }
@@ -15,13 +12,14 @@ if ($IsLinux) {
 if ($IsMacOS) {
     $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-osx-release/share/proj
 }
+
 Write-Output "::group::nextest"
-cargo +nightly llvm-cov nextest --no-report --all-features $package --branch --no-fail-fast
+pixi run cargo +nightly llvm-cov nextest --no-report --all --branch --no-fail-fast
 $code = $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::doctest"
-cargo +nightly llvm-cov --no-report --all-features $package --branch --no-fail-fast --doc
+pixi run cargo +nightly llvm-cov --no-report --all $package --branch --no-fail-fast --doc
 $code = $code + $LASTEXITCODE
 Write-Output "::endgroup::"
 

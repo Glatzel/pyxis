@@ -1,4 +1,4 @@
-param($install="./dist")
+param($install = "./dist")
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
@@ -16,7 +16,9 @@ $install = "-DCMAKE_INSTALL_PREFIX=$install"
 New-Item ./build/ptx -ItemType Directory -ErrorAction SilentlyContinue
 
 # build
-pixi run cmake -G "Visual Studio 17 2022" -B build $install $config -DBUILD_CUDA=ON
+if ($IsWindows) {
+    pixi run cmake -G "Visual Studio 17 2022" -B build $install $config -DBUILD_CUDA=ON
+}
 pixi run cmake --build build --target install
 
 # pack output files

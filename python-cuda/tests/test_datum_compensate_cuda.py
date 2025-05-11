@@ -1,4 +1,4 @@
-import cupy as cp
+import cupy as cp  # type: ignore
 import pytest
 from pyxis_cuda import DatumCompensateCuda
 

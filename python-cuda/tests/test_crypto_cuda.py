@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-import cupy as cp
+import cupy as cp  # type: ignore
 import numpy as np
 import pytest
 import pyxis_cuda

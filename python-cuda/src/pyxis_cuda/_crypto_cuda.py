@@ -1,6 +1,6 @@
 from enum import Enum
 
-import cupy as cp
+import cupy as cp  # type: ignore
 
 from pyxis_cuda import get_grid_block
 from pyxis_cuda._utils import PTX_PATH, TDTYPE

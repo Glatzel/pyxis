@@ -1,4 +1,4 @@
-import cupy as cp
+import cupy as cp  # type: ignore
 
 from ._context import get_grid_block
 from ._utils import PTX_PATH, TDTYPE

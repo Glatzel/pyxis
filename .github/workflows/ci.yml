@@ -60,7 +60,7 @@ jobs:
               - ./.github/workflows/ci-cuda.yml
             python:
               - ./python/**
-              - ./.github/workflows/ci-python-cuda.yml
+              - ./.github/workflows/ci-python.yml
             python_cuda:
               - ./python-cuda/**
               - ./.github/workflows/ci-python-cuda.yml

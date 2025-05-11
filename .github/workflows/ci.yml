@@ -60,7 +60,7 @@ jobs:
               - ./.github/workflows/ci-cuda.yml
             python:
               - ./python/**
-              - ./.github/workflows/ci-python-cuda.yml
+              - ./.github/workflows/ci-python.yml
             python_cuda:
               - ./python-cuda/**
               - ./.github/workflows/ci-python-cuda.yml
@@ -107,6 +107,7 @@ jobs:
     uses: ./.github/workflows/ci-python-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
+      event: ${{ github.event_name }}
 
   rust-ci:
     needs: changed
@@ -121,3 +122,4 @@ jobs:
     uses: ./.github/workflows/ci-rust-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
+      event: ${{github.event_name }}

@@ -4,17 +4,9 @@ Set-Location $PSScriptRoot/..
 # only run cuda test in local machine
 $python_root = Resolve-Path $PSScriptRoot/..
 $env:PYTHONPATH = "$env:PYTHONPATH;$python_root"
-if ($env:CI -or $IsMacOS) {
-    $markers = "not cuda"
-    $pixi_env = "default"
-}
-else {
-    $markers = ""
-    $pixi_env = "gpu"
-}
 
 # run test
-pixi run -e  $pixi_env pytest `
+pixi run pytest `
     ./tests `
     -v `
     -m $markers `

@@ -16,11 +16,6 @@ nomkl = "==1.0"
 numpy = "==2.2.5"
 scipy = "==1.15.2"
 
-[feature.deps-gpu.target.linux-64.dependencies]
-cupy = "==13.4.1"
-[feature.deps-gpu.target.win-64.dependencies]
-cupy = "==13.4.1"
-
 [feature.test.dependencies]
 pytest = "8.3.*"
 pytest-cov = "6.1.*"
@@ -40,6 +35,5 @@ numexpr = "==2.10.2"
 pytest-codspeed = "==3.2.0"
 
 [environments]
-gpu = ["py311", "build", "deps","deps-gpu", "test", "doc"]
 bench = ["py311", "build", "test", "deps", "bench"]
 default = ["py311", "build", "deps", "test", "doc"]

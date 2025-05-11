@@ -9,6 +9,7 @@ $code = $code + $LASTEXITCODE
 cargo +nightly llvm-cov report
 cargo +nightly llvm-cov report --lcov --output-path lcov.info
 $code = $code + $LASTEXITCODE
+Copy-Item ./target/lcov.info ./
 if ($code -ne 0) {
     Write-Host "Test failed." -ForegroundColor Red
 }

@@ -4,7 +4,6 @@
 # rust
 dist
 target
-lcov.info
 
 # misc
 proj.db

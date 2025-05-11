@@ -38,6 +38,7 @@ jobs:
       changed-cuda: ${{steps.main.outputs.cuda_any_changed}}
       changed-python: ${{steps.main.outputs.python_any_changed}}
       changed-rust: ${{steps.main.outputs.rust_any_changed}}
+      changed-rust-cuda: ${{steps.main.outputs.rust_cuda_any_changed}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,6 +63,9 @@ jobs:
             rust:
               - ./rust/**
               - ./.github/workflows/ci-rust.yml
+            rust_cuda:
+              - ./rust-cuda/**
+              - ./.github/workflows/ci-rust-cuda.yml
 
   ci-cpp:
     needs: changed
@@ -97,3 +101,11 @@ jobs:
     uses: ./.github/workflows/ci-rust.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
+  
+  rust-cuda-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-rust-cuda != 'false' }}
+    uses: ./.github/workflows/ci-rust-cuda.yml
+    with:
+      release: ${{inputs.release&& inputs.release || false}}
+

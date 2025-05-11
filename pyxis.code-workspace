@@ -7,6 +7,9 @@
         {
             "name": ".github",
             "path": ".github"
+        },  {
+            "name": "pre-commit",
+            "path": "pre-commit"
         },
         {
             "name": "cpp",
@@ -29,8 +32,16 @@
             "path": "python"
         },
         {
+            "name": "python-cuda",
+            "path": "python-cuda"
+        },
+        {
             "name": "rust",
             "path": "rust"
+        },
+        {
+            "name": "rust-cuda",
+            "path": "rust-cuda"
         }
     ],
     "settings": {

@@ -9,11 +9,9 @@ else {
 
 if ($IsWindows) {
     # find visual studio
-    if (-not $env:CI) {
-        $path = pixi run vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-        $cl_path = join-path $path 'VC\Tools\MSVC\14.43.34808\bin\Hostx64\x64'
-        $env:INCLUDE = join-path $path  'VC\Tools\MSVC\14.43.34808\include'
-    }
+    $path = pixi run vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+    $cl_path = join-path $path 'VC\Tools\MSVC\14.43.34808\bin\Hostx64\x64'
+    $env:INCLUDE = join-path $path  'VC\Tools\MSVC\14.43.34808\include'
 
     $pkg_config_exe = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin
     $nvcc_path = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin

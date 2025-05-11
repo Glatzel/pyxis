@@ -26,7 +26,7 @@ jobs:
           files: |
             ${{!env.PYTHON_CUDA_ROOT}}/junit.xml
             ${{!env.PYTHON_CUDA_ROOT}}/coverage.xml
-            
+
       - if: ${{steps.change.ouputs.all_modified  != 'true'}}
         run: |
           echo "::error title=Test Report Outdated::Run test on local machine and update the test report."

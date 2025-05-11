@@ -37,6 +37,7 @@ jobs:
       changed-csharp: ${{steps.main.outputs.csharp_any_changed }}
       changed-cuda: ${{steps.main.outputs.cuda_any_changed}}
       changed-python: ${{steps.main.outputs.python_any_changed}}
+      changed-python-cuda: ${{steps.main.outputs.python_cuda_any_changed}}
       changed-rust: ${{steps.main.outputs.rust_any_changed}}
       changed-rust-cuda: ${{steps.main.outputs.rust_cuda_any_changed}}
     runs-on: ubuntu-latest
@@ -59,7 +60,10 @@ jobs:
               - ./.github/workflows/ci-cuda.yml
             python:
               - ./python/**
-              - ./.github/workflows/ci-python.yml
+              - ./.github/workflows/ci-python-cuda.yml
+            python_cuda:
+              - ./python-cuda/**
+              - ./.github/workflows/ci-python-cuda.yml
             rust:
               - ./rust/**
               - ./.github/workflows/ci-rust.yml
@@ -92,6 +96,13 @@ jobs:
     needs: changed
     if: ${{ needs.changed.outputs.changed-python != 'false' }}
     uses: ./.github/workflows/ci-python.yml
+    with:
+      release: ${{inputs.release&& inputs.release || false}}
+
+  python-cuda-ci:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-python != 'false' }}
+    uses: ./.github/workflows/ci-python-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
 

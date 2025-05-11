@@ -33,7 +33,7 @@ jobs:
           path: ${{env.PYTHON_ROOT}}/dist/*.7z
           if-no-files-found: error
 
-  rattler-pyxis-py:
+  rattler-build:
     env:
       PYTEST_ADDOPTS: "--color=yes"
     strategy:

@@ -18,13 +18,12 @@ env:
 
 jobs:
   check-test:
+    if: ${{inputs.event == 'pull_request'}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        if: ${{github.event_name == 'pull_request'}}
       - id: change
         uses: tj-actions/changed-files@v46
-        if: ${{github.event_name == 'pull_request'}}
         with:
           files: |
             ${{!env.RUST_CUDA_ROOT}}/lcov.info
@@ -33,6 +32,7 @@ jobs:
         run: |
           echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
           exit 1
+  
   upload-cov:
     if: ${{!inputs.release}}
     strategy:

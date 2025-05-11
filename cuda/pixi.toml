@@ -7,3 +7,7 @@ nvcc = "$CONDA_PREFIX/Library/bin/nvcc"
 [dependencies]
 cuda-cudart = "12.9.*"
 cuda-nvcc = "12.9.*"
+[target.win-64.dependencies]
+vswhere = "==3.1.7"
+[target.win-64.tasks]
+vswhere="$CONDA_PREFIX/Library/bin/vswhere"

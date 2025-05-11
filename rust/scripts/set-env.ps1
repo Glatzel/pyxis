@@ -10,18 +10,19 @@ else {
 if ($IsWindows) {
     # find visual studio
     if (-not $env:CI) {
-        $vsPath = & pixi run vswhere `
-            -latest `
-            -requires Microsoft.Component.MSBuild `
-            -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
-            -property installationPath
-        & "$vsPath\VC\Auxiliary\Build\vcvars64.bat"
+        if (-not $env:CI) {
+            $path = pixi run vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+            $cl_path = join-path $path 'VC\Tools\MSVC\14.43.34808\bin\Hostx64\x64'
+            $includes = join-path $path 'VC\Tools\MSVC\14.43.34808\bin\Hostx64\include'
+            # $env:INCLUDES =$includes.Replace("\","/")
+            Write-Host $env:INCLUDES 
+        }
     }
 
     $pkg_config_exe = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin
     $nvcc_path = Resolve-Path $PSScriptRoot/../.pixi/envs/gpu/Library/bin
     $env:CUDA_ROOT = Resolve-Path $PSScriptRoot/../.pixi/envs/gpu/Library
-    $env:PATH = "$nvcc_path;$pkg_config_exe;$env:PATH"
+    $env:PATH = "$cl_path;$nvcc_path;$pkg_config_exe;$env:PATH"
     $env:PKG_CONFIG_PATH = Resolve-Path "./.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
     Copy-Item ./.pixi/envs/default/proj/x64-windows-static/share/proj/proj.db ./crates/pyxis-cli/src/proj.db
 }

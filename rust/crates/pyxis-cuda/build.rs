@@ -45,7 +45,6 @@ fn main() {
                 .to_string()
         })
         .collect::<Vec<String>>();
-
     let output = std::process::Command::new("nvcc")
         .arg("-fmad=false")
         .args(["-I", cpp_src_dir.to_slash_lossy().to_string().as_str()])

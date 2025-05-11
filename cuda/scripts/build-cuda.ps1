@@ -1,3 +1,4 @@
+param($install="./dist")
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
@@ -5,7 +6,6 @@ Set-Location $PSScriptRoot/..
 $config = "-DCMAKE_BUILD_TYPE=Release"
 
 # create install dir
-$install = "./dist"
 Remove-Item $install -Recurse -ErrorAction SilentlyContinue
 New-Item $install -ItemType Directory -ErrorAction SilentlyContinue
 $install = Resolve-Path $install
@@ -14,16 +14,6 @@ $install = "-DCMAKE_INSTALL_PREFIX=$install"
 
 # create ptx output dir
 New-Item ./build/ptx -ItemType Directory -ErrorAction SilentlyContinue
-
-# find visual studio
-if (-not $env:CI) {
-    $vsPath = & pixi run vswhere `
-        -latest `
-        -requires Microsoft.Component.MSBuild `
-        -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
-        -property installationPath
-    & "$vsPath\VC\Auxiliary\Build\vcvars64.bat"
-}
 
 # build
 pixi run cmake -G "Visual Studio 17 2022" -B build $install $config -DBUILD_CUDA=ON

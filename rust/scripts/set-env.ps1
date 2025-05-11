@@ -10,19 +10,21 @@ else {
 if ($IsWindows) {
     # find visual studio
     $path = pixi run vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-    $cl_path = join-path $path 'VC\Tools\MSVC\14.43.34808\bin\Hostx64\x64'
+    $cl_path = join-path $path 'VC\Tools\MSVC\14.43.34808\bin\Hostx64\x64;'
     $env:INCLUDE = join-path $path  'VC\Tools\MSVC\14.43.34808\include'
 
     # find cuda
     $nvcc_path = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin
     $lib_path = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/lib
+    $lib_path = "$lib_path;"
     $env:CUDA_ROOT = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library
 
     # pkg-config
     $pkg_config_exe = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin
+    $pkg_config_exe = "$pkg_config_exe;"
     $env:PKG_CONFIG_PATH = Resolve-Path "./.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
 
-    $env:PATH = "$env:PATH"+"$lib_path;$cl_path;$nvcc_path;$pkg_config_exe;"
+    $env:PATH = "$env:PATH" + "$lib_path" + "$cl_path" + "$nvcc_path;$pkg_config_exe"
     Copy-Item ./.pixi/envs/default/proj/x64-windows-static/share/proj/proj.db ./crates/pyxis-cli/src/proj.db
 }
 if ($IsMacOS) {

@@ -8,6 +8,16 @@ else {
 }
 
 if ($IsWindows) {
+    # find visual studio
+    if ($env:CI) {
+        $vsPath = & pixi run vswhere `
+            -latest `
+            -requires Microsoft.Component.MSBuild `
+            -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+            -property installationPath
+        & "$vsPath\VC\Auxiliary\Build\vcvars64.bat"
+    }
+
     $pkg_config_exe = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin
     $nvcc_path = Resolve-Path $PSScriptRoot/../.pixi/envs/gpu/Library/bin
     $env:CUDA_ROOT = Resolve-Path $PSScriptRoot/../.pixi/envs/gpu/Library
@@ -24,7 +34,7 @@ if ($IsMacOS) {
 if ($IsLinux) {
     $pkg_config_exe = Resolve-Path $PSScriptRoot/../.pixi/envs/default/bin
     $nvcc_path = Resolve-Path $PSScriptRoot/../.pixi/envs/gpu/bin
-    $env:CUDA_LIBRARY_PATH=Resolve-Path $PSScriptRoot/../.pixi/envs/gpu
+    $env:CUDA_LIBRARY_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/gpu
     $env:PATH = "$nvcc_path" + ":" + "$pkg_config_exe" + ":" + "$env:PATH"
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig
     Copy-Item ./.pixi/envs/default/proj/x64-linux-release/share/proj/proj.db ./crates/pyxis-cli/src/proj.db

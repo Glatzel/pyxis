@@ -15,8 +15,18 @@ $install = "-DCMAKE_INSTALL_PREFIX=$install"
 # create ptx output dir
 New-Item ./build/ptx -ItemType Directory -ErrorAction SilentlyContinue
 
+# find visual studio
+if ($env:CI) {
+    $vsPath = & pixi run vswhere `
+        -latest `
+        -requires Microsoft.Component.MSBuild `
+        -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+        -property installationPath
+    & "$vsPath\VC\Auxiliary\Build\vcvars64.bat"
+}
+
 # build
-pixi run cmake -B build $install $config -DBUILD_CUDA=ON
+pixi run cmake -G "Visual Studio 17 2022" -B build $install $config -DBUILD_CUDA=ON
 pixi run cmake --build build --target install
 
 # pack output files

@@ -28,3 +28,13 @@ name = "datum_compensate_cuda"
 [[bench]]
 harness = false
 name = "crypto_cuda"
+
+[profile.release]
+codegen-units = 1
+debug = false
+lto = "fat"
+opt-level = 3
+strip = true
+
+[profile.develop]
+inherits = "dev"

@@ -1,7 +1,7 @@
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 
-& $PSScriptRoot/set-env.ps1
+& $PSScriptRoot/setup.ps1
 git submodule update --init --recursive
 if ($IsWindows) {
     $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-windows-static/share/proj

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nextest-run" tests="11" failures="0" errors="0" uuid="7d1f497e-dcc2-4d5f-9e4c-1a2c614bce86" timestamp="2025-05-11T17:58:08.281+08:00" time="1.152">
+    <testsuite name="pyxis-cuda" tests="11" disabled="0" errors="0" failures="0">
+        <testcase name="crypto_cuda::test::test_bd09_to_wgs84_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.283+08:00" time="0.334">
+        </testcase>
+        <testcase name="crypto_cuda::test::test_bd09_to_wgs84_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.283+08:00" time="0.462">
+        </testcase>
+        <testcase name="crypto_cuda::test::test_gcj02_to_bd09_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.284+08:00" time="0.508">
+        </testcase>
+        <testcase name="crypto_cuda::test::test_gcj02_to_wgs84_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.285+08:00" time="0.533">
+        </testcase>
+        <testcase name="crypto_cuda::test::test_bd09_to_gcj02_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.286+08:00" time="0.553">
+        </testcase>
+        <testcase name="crypto_cuda::test::test_gcj02_to_wgs84_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.286+08:00" time="0.572">
+        </testcase>
+        <testcase name="crypto_cuda::test::test_wgs84_to_gcj02_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.286+08:00" time="0.591">
+        </testcase>
+        <testcase name="crypto_cuda::test::test_bd09_to_gcj02_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.286+08:00" time="0.606">
+        </testcase>
+        <testcase name="datum_compensate_cuda::test::test_datum_compensate_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.286+08:00" time="0.621">
+        </testcase>
+        <testcase name="crypto_cuda::test::test_wgs84_to_bd09_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.287+08:00" time="0.640">
+        </testcase>
+        <testcase name="crypto_cuda::test::test_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-11T17:58:08.285+08:00" time="1.148">
+        </testcase>
+    </testsuite>
+</testsuites>

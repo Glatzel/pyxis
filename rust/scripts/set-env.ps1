@@ -22,7 +22,7 @@ if ($IsWindows) {
     $pkg_config_exe = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin
     $env:PKG_CONFIG_PATH = Resolve-Path "./.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
 
-    $env:PATH = "$lib_path;$cl_path;$nvcc_path;$pkg_config_exe;$env:PATH"
+    $env:PATH = "$env:PATH"+"$lib_path;$cl_path;$nvcc_path;$pkg_config_exe;"
     Copy-Item ./.pixi/envs/default/proj/x64-windows-static/share/proj/proj.db ./crates/pyxis-cli/src/proj.db
 }
 if ($IsMacOS) {

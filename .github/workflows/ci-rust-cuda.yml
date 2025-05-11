@@ -7,6 +7,9 @@ on:
       release:
         type: boolean
         default: false
+      event:
+        type: string
+        required: true
 
 permissions: read-all
 

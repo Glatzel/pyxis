@@ -11,7 +11,7 @@
         "pixi"
       ],
       "matchPackageNames": [
-        "cuda-"
+        "cuda-*"
       ]
     }
   ]

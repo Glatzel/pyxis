@@ -4,6 +4,7 @@ param (
 )
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
+& $PSScriptRoot/set-env.ps1
 $env:RUST_BACKTRACE=1
 $env:CARGO_PROFILE_DEVELOP_BUILD_OVERRIDE_DEBUG="true"
 pixi run -e gpu cargo build --profile $config -p pyxis-cuda

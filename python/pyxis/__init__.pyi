@@ -18,9 +18,5 @@ __all__ = [
     "transformation_residuals6",
     "transformation_residuals7",
 ]
-import importlib
 
-if importlib.util.find_spec("cupy"):  # type: ignore
-    from . import pyxis_cuda  # noqa: F401
 
-    __all__.append("pyxis_cuda")  # type: ignore

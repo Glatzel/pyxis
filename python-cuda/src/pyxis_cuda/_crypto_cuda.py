@@ -1,7 +1,21 @@
+from enum import Enum
+
 import cupy as cp
-from pyxis import COORD_CRYPTO_SPACE
-from pyxis.pyxis_cuda import get_grid_block
-from pyxis.pyxis_cuda._utils import PTX_PATH, TDTYPE
+
+from pyxis_cuda import get_grid_block
+from pyxis_cuda._utils import PTX_PATH, TDTYPE
+
+
+class COORD_CRYPTO_SPACE(str, Enum):
+    """COORD_CRYPTO_SPACE."""
+
+    WGS84 = "WGS84"
+    GCJ02 = "GCJ02"
+    BD09 = "BD09"
+
+    @classmethod
+    def list(cls):
+        return list(map(str, cls))
 
 
 class CryptoCuda:

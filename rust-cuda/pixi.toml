@@ -1,5 +1,5 @@
 [workspace]
-channels = ["https://repo.prefix.dev/glatzel", "conda-forge", "nvidia"]
+channels = ["conda-forge", "nvidia"]
 platforms = ["win-64", "linux-64"]
 
 [dependencies]
@@ -12,4 +12,4 @@ nvcc = "$CONDA_PREFIX/Library/bin/nvcc"
 [target.win-64.dependencies]
 vswhere = "==3.1.7"
 [target.win-64.tasks]
-vswhere="$CONDA_PREFIX/Library/bin/vswhere"
+vswhere = "$CONDA_PREFIX/Library/bin/vswhere"

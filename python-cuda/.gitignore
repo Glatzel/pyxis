@@ -1,9 +1,6 @@
 # cuda
 *.ptx
 
-# dev
-dist
-
 # python
 __pycache__
 .coverage
@@ -15,9 +12,7 @@ python/doc/source/reference/api
 diff.md
 tests_report
 .codspeed
-
-# rust
-target
+build
 
 # rattler
 rattler/output

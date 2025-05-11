@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+authors = [{ name = "Glatzel", email = "893016099@qq.com" }]
+dynamic = ["version"]
+name = "pyxis-cuda"
+requires-python = ">=3.11"
+
+[tool.setuptools]
+include-package-data = true
+[tool.setuptools.package-data]
+"pyxis_cuda" = ["ptx/*.ptx"]

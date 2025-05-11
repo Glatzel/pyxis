@@ -1,6 +1,7 @@
 import cupy as cp
-from pyxis.pyxis_cuda import get_grid_block
-from pyxis.pyxis_cuda._utils import PTX_PATH, TDTYPE
+
+from ._context import get_grid_block
+from ._utils import PTX_PATH, TDTYPE
 
 
 class DatumCompensateCuda:

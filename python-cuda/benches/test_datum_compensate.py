@@ -21,6 +21,7 @@ def sample_coords(request):
     # to skew results.
     return 10**request.param, 2821940.796, 469704.6693, 400.0
 
+
 @pytest.mark.cuda
 def test_pyxis_cuda(benchmark, sample_coords):
     import cupy as cp

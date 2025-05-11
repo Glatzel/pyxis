@@ -7,8 +7,6 @@ fn main() {
     let cpp_src_dir = canonicalize(Path::new("."))
         .unwrap()
         .parent()
-        .unwrap() //crates
-        .parent()
         .unwrap() //rust
         .parent()
         .unwrap() //root
@@ -17,8 +15,6 @@ fn main() {
     let cpp_include_dir = canonicalize(Path::new("."))
         .unwrap()
         .parent()
-        .unwrap() //crates
-        .parent()
         .unwrap() //rust
         .parent()
         .unwrap() //root
@@ -26,8 +22,6 @@ fn main() {
         .join("include");
     let cu_kernel_dir = canonicalize(Path::new("."))
         .unwrap()
-        .parent()
-        .unwrap() //crates
         .parent()
         .unwrap() //rust
         .parent()
@@ -54,7 +48,6 @@ fn main() {
         .args(["-odir", "./src"])
         .output()
         .expect("Failed to execute script");
-
     println!("Stdout:/n{}", String::from_utf8_lossy(&output.stdout));
     println!("Stderr:/n{}", String::from_utf8_lossy(&output.stderr));
     if !output.status.success() {

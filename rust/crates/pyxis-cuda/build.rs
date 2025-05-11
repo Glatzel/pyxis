@@ -34,6 +34,7 @@ fn main() {
         .unwrap() //root
         .join("cuda")
         .join("src");
+    println!("cargo:rerun-if-changed=./src");
     println!("cargo:rerun-if-changed={}", cpp_src_dir.to_str().unwrap());
     println!("cargo:rerun-if-changed={}", cu_kernel_dir.to_str().unwrap());
     let cu_files = glob(cu_kernel_dir.join("*.cu").to_str().unwrap())

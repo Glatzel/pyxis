@@ -2,7 +2,6 @@ version: 6
 environments:
   default:
     channels:
-    - url: https://repo.prefix.dev/glatzel/
     - url: https://conda.anaconda.org/conda-forge/
     - url: https://conda.anaconda.org/nvidia/
     packages:

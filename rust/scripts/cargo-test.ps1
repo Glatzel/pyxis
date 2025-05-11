@@ -16,12 +16,12 @@ if ($IsMacOS) {
     $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-osx-release/share/proj
 }
 Write-Output "::group::nextest"
-cargo +nightly llvm-cov nextest --no-report --all-features $package --branch --no-fail-fast
+pixi run -e all cargo +nightly llvm-cov nextest --no-report --all-features $package --branch --no-fail-fast
 $code = $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::doctest"
-cargo +nightly llvm-cov --no-report --all-features $package --branch --no-fail-fast --doc
+pixi run -e all cargo +nightly llvm-cov --no-report --all-features $package --branch --no-fail-fast --doc
 $code = $code + $LASTEXITCODE
 Write-Output "::endgroup::"
 

@@ -7,20 +7,14 @@ pkg-config = "==0.29.2"
 proj = { version = "==9.6.0" }
 rattler-build = "==0.41.0"
 
+[tasks]
+nvcc = "$CONDA_PREFIX/Library/bin/nvcc"
+
 [target.win-64.dependencies]
 vswhere = "==3.1.7"
-[target.win-64.tasks]
-vswhere="$CONDA_PREFIX/Library/bin/vswhere"
-
-[feature.gpu]
-platforms = ["win-64", "linux-64"]
-[feature.gpu.tasks]
-nvcc = "$CONDA_PREFIX/Library/bin/nvcc"
-[feature.gpu.dependencies]
 cuda-cudart = "12.9.*"
 cuda-nvcc = "12.9.*"
-
-
-[environments]
-all = ["gpu"]
-gpu = { features = ["gpu"], no-default-feature = true }
+[target.win-64.tasks]
+vswhere="$CONDA_PREFIX/Library/bin/vswhere"
+cuda-cudart = "12.9.*"
+cuda-nvcc = "12.9.*"

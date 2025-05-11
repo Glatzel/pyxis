@@ -1,0 +1,23 @@
+# cuda
+*.ptx
+
+# dev
+dist
+
+# python
+__pycache__
+.coverage
+.pixi
+*.egg-info
+*.pyd
+python/doc/build
+python/doc/source/reference/api
+diff.md
+tests_report
+.codspeed
+
+# rust
+target
+
+# rattler
+rattler/output

@@ -1,3 +1,6 @@
+# cuda
+*.ptx
+
 # dev
 dist
 

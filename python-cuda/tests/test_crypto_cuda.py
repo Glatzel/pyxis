@@ -4,7 +4,6 @@ import cupy as cp
 import numpy as np
 import pytest
 import pyxis
-import pyxis_cuda
 from pyxis import COORD_CRYPTO_SPACE
 
 bd09 = (121.10271724622564, 30.61484575976839)

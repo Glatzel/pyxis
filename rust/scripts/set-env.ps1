@@ -9,7 +9,7 @@ else {
 
 if ($IsWindows) {
     # find visual studio
-    if ($env:CI) {
+    if (-not $env:CI) {
         $vsPath = & pixi run vswhere `
             -latest `
             -requires Microsoft.Component.MSBuild `

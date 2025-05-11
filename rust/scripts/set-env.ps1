@@ -8,18 +8,6 @@ else {
 }
 
 if ($IsWindows) {
-    if (-not $env:CI) {
-        $path = pixi run -e default vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-        if ($path) {
-            $path = join-path $path 'Common7\Tools\vsdevcmd.bat'
-            if (test-path $path) {
-                cmd /s /c """$path"" $args && set" | where { $_ -match '(\w+)=(.*)' } | foreach {
-                    $null = new-item -force -path "Env:\$($Matches[1])" -value $Matches[2]
-                }
-            }
-        }
-    }
-
     $pkg_config_exe = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin
     $nvcc_path = Resolve-Path $PSScriptRoot/../.pixi/envs/gpu/Library/bin
     $env:CUDA_ROOT = Resolve-Path $PSScriptRoot/../.pixi/envs/gpu/Library

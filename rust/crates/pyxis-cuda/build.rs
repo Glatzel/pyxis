@@ -54,7 +54,6 @@ fn main() {
         .arg("--ptx")
         .args(cu_files)
         .args(["-odir", "./src"])
-        .env("PATH", env::var("PATH").unwrap())
         .output()
         .expect("Failed to execute script");
     println!("Stdout:/n{}", String::from_utf8_lossy(&output.stdout));

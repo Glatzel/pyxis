@@ -1,10 +1,10 @@
 $current_dir = Resolve-Path $PWD
 Set-Location $PSScriptRoot/..
 if ($env:CI) {
-    pixi install --no-progress
+    pixi install --all --no-progress
 }
 else {
-    pixi install
+    pixi install --all
 }
 
 if ($IsWindows) {

@@ -64,12 +64,14 @@ jobs:
             python_cuda:
               - ./python-cuda/**
               - ./.github/workflows/ci-python-cuda.yml
+              - ./.github/workflows/ci-cuda.yml
             rust:
               - ./rust/**
               - ./.github/workflows/ci-rust.yml
             rust_cuda:
               - ./rust-cuda/**
               - ./.github/workflows/ci-rust-cuda.yml
+              - ./.github/workflows/ci-cuda.yml
 
   ci-cpp:
     needs: changed

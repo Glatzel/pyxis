@@ -15,7 +15,7 @@ if ($IsWindows) {
             $cl_path = join-path $path 'VC\Tools\MSVC\14.43.34808\bin\Hostx64\x64'
             $includes = 'C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/include;'
             $env:INCLUDES = $includes
-            Write-Host $env:INCLUDES 
+            Write-Host $env:INCLUDES
         }
     }
 

@@ -3,7 +3,7 @@ package:
   name: pyxis-cuda-py
 build:
   number: 0
-  string: ${{ 'gpu' if cuda_variant=='cupy-core' else 'gpu_cudart'}}_${{ hash }}_${{ build_number }}
+  string: ${{ 'core' if cuda_variant=='cupy-core' else 'full'}}_${{ hash }}_${{ build_number }}
 
   script:
     - if: win

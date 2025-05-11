@@ -16,5 +16,8 @@ cuda-cudart = "12.9.*"
 cuda-nvcc = "12.9.*"
 [target.win-64.tasks]
 vswhere="$CONDA_PREFIX/Library/bin/vswhere"
+
+
+[target.linux-64.dependencies]
 cuda-cudart = "12.9.*"
 cuda-nvcc = "12.9.*"

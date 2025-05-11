@@ -79,9 +79,6 @@
         "cmake.autoSelectActiveFolder": false,
         "cmake.configureOnOpen": false,
         "cmake.configureOnEdit": false,
-        "python.analysis.exclude": [
-            "**/.pixi"
-        ],
         "files.associations": {
             "random": "cpp",
             "algorithm": "cpp"

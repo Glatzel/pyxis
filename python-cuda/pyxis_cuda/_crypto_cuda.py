@@ -1,5 +1,4 @@
 import cupy as cp
-
 from pyxis import COORD_CRYPTO_SPACE
 from pyxis.pyxis_cuda import get_grid_block
 from pyxis.pyxis_cuda._utils import PTX_PATH, TDTYPE

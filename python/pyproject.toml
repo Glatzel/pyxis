@@ -9,9 +9,6 @@ dynamic = ["version"]
 name = "pyxis"
 requires-python = ">=3.11"
 
-[project.optional-dependencies]
-gpu = ["cupy"]
-
 [tool.maturin]
 features = ["pyo3/extension-module"]
 module-name = "pyxis.pyxis_py"

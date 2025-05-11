@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
           exit 1
-  
+
   upload-cov:
     if: ${{!inputs.release}}
     strategy:

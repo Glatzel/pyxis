@@ -24,7 +24,7 @@ if ($IsMacOS) {
 if ($IsLinux) {
     $pkg_config_exe = Resolve-Path $PSScriptRoot/../.pixi/envs/default/bin
     $nvcc_path = Resolve-Path $PSScriptRoot/../.pixi/envs/gpu/bin
-    $env:CUDA_ROOT = Resolve-Path $PSScriptRoot/../.pixi/envs/gpu
+    $env:CUDA_LIBRARY_PATH=Resolve-Path $PSScriptRoot/../.pixi/envs/lib
     $env:PATH = "$nvcc_path" + ":" + "$pkg_config_exe" + ":" + "$env:PATH"
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig
     Copy-Item ./.pixi/envs/default/proj/x64-linux-release/share/proj/proj.db ./crates/pyxis-cli/src/proj.db

@@ -16,9 +16,9 @@ nomkl = "==1.0"
 numpy = "==2.2.5"
 scipy = "==1.15.2"
 
-[feature.py-deps-local.target.linux-64.dependencies]
+[feature.deps-local.target.linux-64.dependencies]
 cupy = "==13.4.1"
-[feature.py-deps-local.target.win-64.dependencies]
+[feature.deps-local.target.win-64.dependencies]
 cupy = "==13.4.1"
 
 [feature.test.dependencies]

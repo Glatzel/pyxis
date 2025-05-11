@@ -18,5 +18,3 @@ __all__ = [
     "transformation_residuals6",
     "transformation_residuals7",
 ]
-
-

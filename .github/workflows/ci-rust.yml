@@ -7,9 +7,6 @@ on:
       release:
         type: boolean
         default: false
-      event:
-        type: string
-        required: true
 
 permissions: read-all
 
@@ -17,7 +14,7 @@ env:
   RUST_ROOT: ./rust
 
 jobs:
-  upload-test:
+  cargo-bench:
     if: ${{!inputs.release}}
     runs-on: ubuntu-latest
     steps:

@@ -75,7 +75,7 @@
             "PATH": "${workspaceFolder}/rust/.pixi/envs/default/Library/bin;${env:Path}",
             "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
         },
-        
+
         "rust-analyzer.testExplorer": true,
         "VSCodeCounter.exclude": [
             "**/.gitignore",

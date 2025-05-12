@@ -23,8 +23,8 @@ jobs:
         uses: tj-actions/changed-files@v46
         with:
           files: |
-            ${{!env.PYTHON_CUDA_ROOT}}/junit.xml
-            ${{!env.PYTHON_CUDA_ROOT}}/coverage.xml
+            ${{env.PYTHON_CUDA_ROOT}}/junit.xml
+            ${{env.PYTHON_CUDA_ROOT}}/coverage.xml
       - if: ${{steps.change.outputs.all_modified  != 'true'}}
         run: |
           echo "::error title=Test Report Outdated::Run test on local machine and update the test report."

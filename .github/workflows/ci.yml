@@ -107,7 +107,29 @@ jobs:
     uses: ./.github/workflows/ci-python-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
-      event: ${{ github.event_name }}
+  check-test:
+    needs: changed
+    if: ${{github.event_name == 'pull_request' && needs.changed.outputs.changed-python-cuda != 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: change
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            ./python-cuda/junit.xml
+            ./python-cuda/coverage.xml
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.change.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
+      - if: ${{steps.change.outputs.all_changed_files_count  != '2'}}
+        run: |
+          echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
+          exit 1
 
   rust-ci:
     needs: changed
@@ -122,4 +144,27 @@ jobs:
     uses: ./.github/workflows/ci-rust-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
-      event: ${{github.event_name }}
+ 
+  rust-cuda-check-test:
+      needs: changed
+      if: ${{github.event_name == 'pull_request'&&needs.changed.outputs.changed-rust-cuda != 'false' }}
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - id: change
+          uses: tj-actions/changed-files@v46
+          with:
+            files: |
+              ./rust-cuda/lcov.info
+              ./rust-cuda/nextest.junit.xml
+        - name: List all changed files
+          env:
+            ALL_CHANGED_FILES: ${{ steps.change.outputs.all_changed_files }}
+          run: |
+            for file in ${ALL_CHANGED_FILES}; do
+              echo "$file was changed"
+            done
+        - if: ${{steps.change.outputs.all_changed_files_count  != '2'}}
+          run: |
+            echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
+            exit 1

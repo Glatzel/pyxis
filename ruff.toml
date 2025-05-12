@@ -17,7 +17,6 @@ select = [
   "F",      # Pyflakes
   "FA",     # flake8-future-annotations
   "FURB",   # refurb
-  "FBT001", # flake8-boolean-trap
   "I",      # isort
   "ICN",    # flake8-import-conventions
   "INT",    # flake8-gettext

@@ -13,7 +13,7 @@ pub fn py_datum_compensate(
     x0: f64,
     y0: f64,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
-    let params = pyxis::DatumCompensateParams::new(hb, r, x0, y0);
+    let params = pyxis::DatumCompensate::new(hb, r, x0, y0);
     if let (Ok(xc_ref), Ok(yc_ref)) = (
         xc_py.downcast_bound::<PyArrayDyn<f64>>(py),
         yc_py.downcast_bound::<PyArrayDyn<f64>>(py),

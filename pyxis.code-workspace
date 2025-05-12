@@ -62,9 +62,7 @@
             "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
         },
         "rust-analyzer.linkedProjects": [
-            "${workspaceFolder}/rust/Cargo.toml",
-            "${workspaceFolder}/python/Cargo.toml",
-            "${workspaceFolder}/rust-cuda/Cargo.toml"
+            "${workspaceFolder}/rust/Cargo.toml"
         ],
         "rust-analyzer.runnables.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",

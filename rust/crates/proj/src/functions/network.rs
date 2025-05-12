@@ -112,7 +112,7 @@ impl crate::PjContext {
     }
     /// # References
     /// <>
-    fn _download_file<T>(
+    fn _download_file(
         &self,
         // url_or_filename: &str,
         // ignore_ttl_setting: bool,

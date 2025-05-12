@@ -7,7 +7,7 @@ fn bench_datum_compensate(c: &mut Criterion) {
             processor.datum_compensate(
                 black_box(469704.6693f64),
                 black_box(2821940.796f64),
-                &processor,
+            
             )
         })
     });

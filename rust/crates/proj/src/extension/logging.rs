@@ -1,20 +1,15 @@
 use std::ffi::c_void;
 
+use crate::check_result;
 use crate::data_types::PjLogLevel;
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
     let _message = crate::c_char_to_string(info);
 
     match level {
-        1 => {
-            clerk::error!("{}", _message);
-        }
-        2 => {
-            clerk::debug!("{}", _message);
-        }
-        3 => {
-            clerk::trace!("{}", _message);
-        }
+        1 => clerk::error!("{}", _message),
+        2 => clerk::debug!("{}", _message),
+        3 => clerk::trace!("{}", _message),
         _ => (),
     };
 }
@@ -24,12 +19,29 @@ impl crate::PjContext {
         self.log_level(level)?;
         Ok(self)
     }
+    #[cfg(feature = "unrecommended")]
     pub fn set_log_func(
         &self,
         app_data: *mut c_void,
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
     ) -> miette::Result<&Self> {
-        self.log_func(app_data, logf)
+        unsafe {
+            proj_sys::proj_log_func(self.ctx, app_data, logf);
+        };
+        check_result!(self);
+        Ok(self)
+    }
+    #[cfg(not(feature = "unrecommended"))]
+    pub(crate) fn set_log_func(
+        &self,
+        app_data: *mut c_void,
+        logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
+    ) -> miette::Result<&Self> {
+        unsafe {
+            proj_sys::proj_log_func(self.ctx, app_data, logf);
+        };
+        check_result!(self);
+        Ok(self)
     }
 }
 

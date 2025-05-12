@@ -12,7 +12,7 @@ on:
         required: true
 permissions: read-all
 env:
-  PYTHON_CUDA_ROOT: ${{github.workspace}}/python-cuda
+  PYTHON_CUDA_ROOT: ./python-cuda
 jobs:
   check-test:
     if: ${{inputs.event == 'pull_request'}}
@@ -23,9 +23,16 @@ jobs:
         uses: tj-actions/changed-files@v46
         with:
           files: |
-            ${{!env.PYTHON_CUDA_ROOT}}/junit.xml
-            ${{!env.PYTHON_CUDA_ROOT}}/coverage.xml
-      - if: ${{steps.change.outputs.all_modified  != 'true'}}
+            ${{env.PYTHON_CUDA_ROOT}}/junit.xml
+            ${{env.PYTHON_CUDA_ROOT}}/coverage.xml
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.change.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
+      - if: ${{steps.change.outputs.all_changed_files_count  != '2'}}
         run: |
           echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
           exit 1

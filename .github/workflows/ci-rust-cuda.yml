@@ -26,9 +26,16 @@ jobs:
         uses: tj-actions/changed-files@v46
         with:
           files: |
-            ${{!env.RUST_CUDA_ROOT}}/lcov.info
-            ${{!env.RUST_CUDA_ROOT}}/nextest.junit.xml
-      - if: ${{steps.change.outputs.all_modified  != 'true'}}
+            ${{env.RUST_CUDA_ROOT}}/lcov.info
+            ${{env.RUST_CUDA_ROOT}}/nextest.junit.xml
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.change.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
+      - if: ${{steps.change.outputs.all_changed_files_count  != '2'}}
         run: |
           echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
           exit 1

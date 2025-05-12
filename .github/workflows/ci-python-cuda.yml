@@ -25,6 +25,13 @@ jobs:
           files: |
             ${{env.PYTHON_CUDA_ROOT}}/junit.xml
             ${{env.PYTHON_CUDA_ROOT}}/coverage.xml
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.change.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
       - if: ${{steps.change.outputs.all_changed_files_count  != '2'}}
         run: |
           echo "::error title=Test Report Outdated::Run test on local machine and update the test report."

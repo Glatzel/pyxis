@@ -1,5 +1,5 @@
 [workspace]
-channels = ["https://repo.prefix.dev/glatzel-private", "conda-forge", "nvidia"]
+channels = ["conda-forge", "nvidia"]
 platforms = ["win-64", "linux-64"]
 
 [tasks]

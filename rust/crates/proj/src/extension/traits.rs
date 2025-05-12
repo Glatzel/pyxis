@@ -19,7 +19,9 @@ const NULL_PTR: *mut f64 = null_mut();
 ///   of the mutable borrow.
 ///
 /// # Minimal Example
-/// 2D coordinate
+/// <details>
+/// <summary>2D Coordinate</summary>
+///
 /// ```
 /// use std::ptr::null_mut;
 ///
@@ -36,8 +38,11 @@ const NULL_PTR: *mut f64 = null_mut();
 ///     fn t(&mut self) -> *mut f64 { null_mut() }
 /// }
 /// ```
+///</details>
 ///
-/// 3D coordinate
+/// <details>
+/// <summary>3D Coordinate</summary>
+///
 /// ```
 /// use std::ptr::null_mut;
 ///
@@ -55,8 +60,11 @@ const NULL_PTR: *mut f64 = null_mut();
 ///     fn t(&mut self) -> *mut f64 { null_mut() }
 /// }
 /// ```
+///</details>
 ///
-/// 4D coordinate
+/// <details>
+/// <summary>4D Coordinate</summary>
+///
 /// ```rust
 /// use proj::IPjCoord;
 /// #[derive(Clone)]
@@ -73,6 +81,7 @@ const NULL_PTR: *mut f64 = null_mut();
 ///     fn t(&mut self) -> *mut f64 { &mut self.t }
 /// }
 /// ```
+/// </details>
 pub trait IPjCoord: Clone {
     fn x(&mut self) -> *mut f64;
     fn y(&mut self) -> *mut f64;

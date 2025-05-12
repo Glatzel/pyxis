@@ -30,7 +30,7 @@ jobs:
             ${{!env.RUST_CUDA_ROOT}}/nextest.junit.xml
       - if: ${{steps.change.outputs.all_modified  != 'true'}}
         run: |
-          echo "::debug::Modified: \n${{steps.change.outputs}} "
+          echo "::debug::Modified: \n${{steps.change.outputs.all_changed}} "
           echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
           exit 1
 

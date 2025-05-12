@@ -144,7 +144,7 @@ jobs:
     uses: ./.github/workflows/ci-rust-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
- 
+
   rust-cuda-check-test:
       needs: changed
       if: ${{github.event_name == 'pull_request'&&needs.changed.outputs.changed-rust-cuda != 'false' }}

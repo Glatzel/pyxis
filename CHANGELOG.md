@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.20] - 2025-05-12
+
+### Added
+
+- **(rust)** Add proj iso19111 types by @Glatzel in [#319](https://github.com/Glatzel/pyxis/pull/319)
+- **(rust)** Add proj native log_level and log_func by @Glatzel in [#326](https://github.com/Glatzel/pyxis/pull/326)
+- **(cpp,rust)** Support macos arm64 by @Glatzel in [#327](https://github.com/Glatzel/pyxis/pull/327)
+- Add fmt and clippy to pre-commit by @Glatzel in [#337](https://github.com/Glatzel/pyxis/pull/337)
+- Add pre-commit to ignore by @Glatzel in [#343](https://github.com/Glatzel/pyxis/pull/343)
+- Add csharp hook by @Glatzel in [#344](https://github.com/Glatzel/pyxis/pull/344)
+
+### Changed
+
+- **(rust)** Proj get_last_used_operation by @Glatzel in [#320](https://github.com/Glatzel/pyxis/pull/320)
+- **(rust)** Inital proj network by @Glatzel in [#364](https://github.com/Glatzel/pyxis/pull/364)
+
+### Fixed
+
+- **(rust)** Proj-sys build by @Glatzel in [#324](https://github.com/Glatzel/pyxis/pull/324)
+
+### Removed
+
+- Remove whl asset by @Glatzel in [#318](https://github.com/Glatzel/pyxis/pull/318)
+- Delete pre-commit/pixi.toml by @Glatzel in [#342](https://github.com/Glatzel/pyxis/pull/342)
+
+### Testing
+
+- **(rust)** Proj init info by @Glatzel in [#317](https://github.com/Glatzel/pyxis/pull/317)
+
 ## [0.0.19] - 2025-05-06
 
 ### Added
@@ -347,6 +376,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.20]: https://github.com/Glatzel/pyxis/compare/v0.0.19..v0.0.20
 [0.0.19]: https://github.com/Glatzel/pyxis/compare/v0.0.18..v0.0.19
 [0.0.18]: https://github.com/Glatzel/pyxis/compare/v0.0.17..v0.0.18
 [0.0.17]: https://github.com/Glatzel/pyxis/compare/v0.0.16..v0.0.17

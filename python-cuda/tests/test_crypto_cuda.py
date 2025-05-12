@@ -4,7 +4,7 @@ import cupy as cp  # type: ignore
 import numpy as np
 import pytest
 import pyxis_cuda
-from pyxis import COORD_CRYPTO_SPACE
+from pyxis import COORD_CRYPTO_SPACE  # type: ignore
 
 bd09 = (121.10271724622564, 30.61484575976839)
 gcj02 = (121.09626927850977, 30.608604331756705)

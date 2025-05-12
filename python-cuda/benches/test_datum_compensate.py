@@ -3,7 +3,7 @@ import os
 import cupy as cp  # type: ignore
 import numpy as np
 import pytest
-import pyxis
+import pyxis_cuda
 
 rng = np.random.default_rng(1337)
 npr = rng.random
@@ -27,7 +27,7 @@ def sample_coords(request):
 @pytest.mark.cuda
 def test_pyxis_cuda(benchmark, sample_coords):
     def vector(x, y, h):
-        module = pyxis.pyxis_cuda.DatumCompensateCuda()
+        module = pyxis_cuda.DatumCompensateCuda()
         module.datum_compensate_cuda("double", x, y, h, radius=6378_137, x0=500_000, y0=0)
 
     benchmark.group = group + str(sample_coords[0])

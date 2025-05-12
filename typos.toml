@@ -1,1 +1,1 @@
-files.extend-exclude = ["CHANGELOG.md"]
+files.extend-exclude = ["CHANGELOG.md","lcov.info","*.junit.xml"]

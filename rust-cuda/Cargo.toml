@@ -1,7 +1,7 @@
 [package]
 name = "pyxis-cuda"
 edition = "2024"
-version = "0.0.19"
+version = "0.0.20"
 
 [dependencies]
 clerk = { git = "https://github.com/Glatzel/clerk", tag = "v0.0.8" }

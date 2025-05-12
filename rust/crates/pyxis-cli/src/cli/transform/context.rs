@@ -51,7 +51,7 @@ impl ContextTransform {
 
     pub fn datum_compensate(&mut self, hb: f64, r: f64, x0: f64, y0: f64) {
         let processor = pyxis::DatumCompensate::new(hb, r, x0, y0);
-        (self.x, self.y) = processor.datum_compensate(self.x, self.y);
+        (self.x, self.y) = processor.transfrom(self.x, self.y);
     }
     pub fn migrate2d(
         &mut self,

@@ -35,7 +35,7 @@ impl<T: GeoFloat> DatumCompensate<T> {
     /// use float_cmp::assert_approx_eq;
     /// let p = (469704.6693, 2821940.796);
     /// let processor = pyxis::DatumCompensate::new(400.0, 6_378_137.0, 500_000.0, 0.0);
-    /// let p = processor.(p.0, p.1);
+    /// let p = processor.datum_compensate(p.0, p.1);
     /// assert_approx_eq!(f64, p.0, 469706.56912942487, epsilon = 1e-17);
     /// assert_approx_eq!(f64, p.1, 2821763.831232311, epsilon = 1e-17);
     /// ```

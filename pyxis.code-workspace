@@ -46,15 +46,6 @@
         }
     ],
     "settings": {
-        "cmake.automaticReconfigure": false,
-        "cmake.autoSelectActiveFolder": false,
-        "cmake.configureOnEdit": false,
-        "cmake.configureOnOpen": false,
-        "cmake.ignoreCMakeListsMissing": true,
-        "files.associations": {
-            "algorithm": "cpp",
-            "random": "cpp"
-        },
         // ,"rust-analyzer.cargo.features": "all"
         "rust-analyzer.cargo.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
@@ -62,7 +53,8 @@
             "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
         },
         "rust-analyzer.linkedProjects": [
-            "${workspaceFolder}/rust/Cargo.toml"
+            "${workspaceFolder}/rust/Cargo.toml",
+            "${workspaceFolder}/python/Cargo.toml"
         ],
         "rust-analyzer.runnables.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
@@ -74,7 +66,6 @@
             "PATH": "${workspaceFolder}/rust/.pixi/envs/default/Library/bin;${env:Path}",
             "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
         },
-
         "rust-analyzer.testExplorer": true,
         "VSCodeCounter.exclude": [
             "**/.gitignore",

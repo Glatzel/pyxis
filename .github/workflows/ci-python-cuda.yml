@@ -12,7 +12,7 @@ on:
         required: true
 permissions: read-all
 env:
-  PYTHON_CUDA_ROOT: ${{github.workspace}}/python-cuda
+  PYTHON_CUDA_ROOT: ./python-cuda
 jobs:
   check-test:
     if: ${{inputs.event == 'pull_request'}}

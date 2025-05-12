@@ -63,15 +63,15 @@ jobs:
               - ./.github/workflows/ci-python.yml
             python_cuda:
               - ./python-cuda/**
+              - ./cuda/**
               - ./.github/workflows/ci-python-cuda.yml
-              - ./.github/workflows/ci-cuda.yml
             rust:
               - ./rust/**
               - ./.github/workflows/ci-rust.yml
             rust_cuda:
               - ./rust-cuda/**
+              - ./cuda/**
               - ./.github/workflows/ci-rust-cuda.yml
-              - ./.github/workflows/ci-cuda.yml
 
   ci-cpp:
     needs: changed

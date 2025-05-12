@@ -55,7 +55,7 @@ mod test {
         let mut dxc = ctx.device_buffer_from_slice(&xc);
         let mut dyc = ctx.device_buffer_from_slice(&yc);
         let processor = pyxis::DatumCompensate::new(400.0, 6_378_137.0, 500_000.0, 0.0);
-        ctx.datum_compensate_cuda(&mut dxc, &mut dyc, &params);
+        ctx.datum_compensate_cuda(&mut dxc, &mut dyc,processor);
         dxc.copy_to(&mut xc).unwrap();
         dyc.copy_to(&mut yc).unwrap();
 

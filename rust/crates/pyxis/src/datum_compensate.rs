@@ -39,7 +39,7 @@ impl<T: GeoFloat> DatumCompensate<T> {
     /// assert_approx_eq!(f64, p.0, 469706.56912942487, epsilon = 1e-17);
     /// assert_approx_eq!(f64, p.1, 2821763.831232311, epsilon = 1e-17);
     /// ```
-    pub fn datum_compensate<T>(&self, xc: T, yc: T, params: &impl IDatumCompensate<T>) -> (T, T)
+    pub fn datum_compensate(&self, xc: T, yc: T) -> (T, T)
     where
         T: GeoFloat,
     {

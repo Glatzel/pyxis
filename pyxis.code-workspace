@@ -63,7 +63,8 @@
         },
         "rust-analyzer.linkedProjects": [
             "${workspaceFolder}/rust/Cargo.toml",
-            "${workspaceFolder}/python/Cargo.toml"
+            "${workspaceFolder}/python/Cargo.toml",
+            "${workspaceFolder}/rust-cuda/Cargo.toml"
         ],
         "rust-analyzer.runnables.extraEnv": {
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",

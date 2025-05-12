@@ -24,11 +24,11 @@ pub fn py_datum_compensate(
             .par_iter_mut()
             .zip(yc_array.par_iter_mut())
             .for_each(|(x, y)| {
-                (*x, *y) = processor.datum_compensate(*x, *y);
+                (*x, *y) = processor.transform(*x, *y);
             });
         (xc_ref, yc_ref).into_pyobject(py)
     } else if let (Ok(xc), Ok(yc)) = (xc_py.extract::<f64>(py), yc_py.extract::<f64>(py)) {
-        processor.datum_compensate(xc, yc).into_pyobject(py)
+        processor.transform(xc, yc).into_pyobject(py)
     } else {
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",

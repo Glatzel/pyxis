@@ -50,11 +50,11 @@
         "rust-analyzer.cargo.extraEnv": {
             "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
         },
-        "rust-analyzer.linkedProjects": [
-            "${workspaceFolder}/rust/Cargo.toml",
-            "${workspaceFolder}/rust-cuda/Cargo.toml",
-            "${workspaceFolder}/python/Cargo.toml"
-        ],
+        // "rust-analyzer.linkedProjects": [
+        //     "${workspaceFolder}/rust/Cargo.toml",
+        //     "${workspaceFolder}/rust-cuda/Cargo.toml",
+        //     "${workspaceFolder}/python/Cargo.toml"
+        // ],
         "rust-analyzer.runnables.extraEnv": {
             "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
         },

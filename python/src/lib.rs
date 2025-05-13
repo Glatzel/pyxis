@@ -10,8 +10,6 @@ fn pyxis_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // space
     m.add_wrapped(wrap_pyfunction!(space::py_space))?;
-
     m.add_wrapped(wrap_pyfunction!(datum_compensate::py_datum_compensate))?;
-
     Ok(())
 }

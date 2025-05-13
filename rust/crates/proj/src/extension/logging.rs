@@ -55,9 +55,6 @@ mod test {
 
     #[test]
     fn test_log() -> miette::Result<()> {
-        tracing_subscriber::registry()
-            .with(clerk::terminal_layer(LevelFilter::TRACE, true))
-            .init();
         let ctx = crate::PjContext::default();
         ctx.set_log_level(PjLogLevel::Trace)?;
         let _ = ctx.create("EPSG:4326")?;
@@ -67,9 +64,6 @@ mod test {
 
     #[test]
     fn test_log_error() -> miette::Result<()> {
-        tracing_subscriber::registry()
-            .with(clerk::terminal_layer(LevelFilter::DEBUG, true))
-            .init();
         let ctx = crate::PjContext::default();
         ctx.set_log_level(PjLogLevel::Trace)?;
         let pj = ctx.create("Unknown crs");
@@ -79,9 +73,6 @@ mod test {
 
     #[test]
     fn test_log_change_level() -> miette::Result<()> {
-        tracing_subscriber::registry()
-            .with(clerk::terminal_layer(LevelFilter::TRACE, true))
-            .init();
         let ctx = crate::PjContext::default();
         ctx.set_log_level(PjLogLevel::Debug)?;
         let pj = ctx.create("Show log");

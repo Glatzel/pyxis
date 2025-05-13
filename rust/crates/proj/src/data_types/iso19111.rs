@@ -1,3 +1,5 @@
+use num_enum::{IntoPrimitive, TryFromPrimitive};
+
 use crate::create_readonly_struct;
 /// # References
 /// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GUESSED_WKT_DIALECT>
@@ -26,39 +28,40 @@ pub enum PjCategory {
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>
-#[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[repr(u32)]
 pub enum PjType {
-    Unknown,
-    Ellipsoid,
-    PrimeMeridian,
-    GeodeticReferenceFrame,
-    DynamicGeodeticReferenceFrame,
-    VerticalReferenceFrame,
-    DynamicVerticalReferenceFrame,
-    DatumEnsemble,
-    Crs,
-    GeodeticCrs,
-    GeocentricCrs,
-    GeographicCr,
-    Geographic2dCrs,
-    Geographic3dCrs,
-    VerticalCrs,
-    ProjectedCrs,
-    CompoundCrs,
-    TemporalCrs,
-    EngineeringCrs,
-    BoundCrs,
-    OtherCrs,
-    Conversion,
-    Transformation,
-    ConcatenatedOperation,
-    OtherCoordinateOperation,
-    TemporalDatum,
-    EngineeringDatum,
-    ParametricDatum,
-    DerivedProjectedCrs,
-    CoordinateMetadata,
+    Unknown = proj_sys::PJ_TYPE_PJ_TYPE_UNKNOWN,
+    Ellipsoid = proj_sys::PJ_TYPE_PJ_TYPE_ELLIPSOID,
+    PrimeMeridian = proj_sys::PJ_TYPE_PJ_TYPE_PRIME_MERIDIAN,
+    GeodeticReferenceFrame = proj_sys::PJ_TYPE_PJ_TYPE_GEODETIC_REFERENCE_FRAME,
+    DynamicGeodeticReferenceFrame = proj_sys::PJ_TYPE_PJ_TYPE_DYNAMIC_GEODETIC_REFERENCE_FRAME,
+    VerticalReferenceFrame = proj_sys::PJ_TYPE_PJ_TYPE_VERTICAL_REFERENCE_FRAME,
+    DynamicVerticalReferenceFrame = proj_sys::PJ_TYPE_PJ_TYPE_DYNAMIC_VERTICAL_REFERENCE_FRAME,
+    DatumEnsemble = proj_sys::PJ_TYPE_PJ_TYPE_DATUM_ENSEMBLE,
+    Crs = proj_sys::PJ_TYPE_PJ_TYPE_CRS,
+    GeodeticCrs = proj_sys::PJ_TYPE_PJ_TYPE_GEODETIC_CRS,
+    GeocentricCrs = proj_sys::PJ_TYPE_PJ_TYPE_GEOCENTRIC_CRS,
+    GeographicCr = proj_sys::PJ_TYPE_PJ_TYPE_GEOGRAPHIC_CRS,
+    Geographic2dCrs = proj_sys::PJ_TYPE_PJ_TYPE_GEOGRAPHIC_2D_CRS,
+    Geographic3dCrs = proj_sys::PJ_TYPE_PJ_TYPE_GEOGRAPHIC_3D_CRS,
+    VerticalCrs = proj_sys::PJ_TYPE_PJ_TYPE_VERTICAL_CRS,
+    ProjectedCrs = proj_sys::PJ_TYPE_PJ_TYPE_PROJECTED_CRS,
+    CompoundCrs = proj_sys::PJ_TYPE_PJ_TYPE_COMPOUND_CRS,
+    TemporalCrs = proj_sys::PJ_TYPE_PJ_TYPE_TEMPORAL_CRS,
+    EngineeringCrs = proj_sys::PJ_TYPE_PJ_TYPE_ENGINEERING_CRS,
+    BoundCrs = proj_sys::PJ_TYPE_PJ_TYPE_BOUND_CRS,
+    OtherCrs = proj_sys::PJ_TYPE_PJ_TYPE_OTHER_CRS,
+    Conversion = proj_sys::PJ_TYPE_PJ_TYPE_CONVERSION,
+    Transformation = proj_sys::PJ_TYPE_PJ_TYPE_TRANSFORMATION,
+    ConcatenatedOperation = proj_sys::PJ_TYPE_PJ_TYPE_CONCATENATED_OPERATION,
+    OtherCoordinateOperation = proj_sys::PJ_TYPE_PJ_TYPE_OTHER_COORDINATE_OPERATION,
+    TemporalDatum = proj_sys::PJ_TYPE_PJ_TYPE_TEMPORAL_DATUM,
+    EngineeringDatum = proj_sys::PJ_TYPE_PJ_TYPE_ENGINEERING_DATUM,
+    ParametricDatum = proj_sys::PJ_TYPE_PJ_TYPE_PARAMETRIC_DATUM,
+    DerivedProjectedCrs = proj_sys::PJ_TYPE_PJ_TYPE_DERIVED_PROJECTED_CRS,
+    CoordinateMetadata = proj_sys::PJ_TYPE_PJ_TYPE_COORDINATE_METADATA,
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COMPARISON_CRITERION>

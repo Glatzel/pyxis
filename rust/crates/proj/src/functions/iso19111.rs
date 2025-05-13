@@ -1,3 +1,5 @@
+use miette::IntoDiagnostic;
+
 impl crate::PjContext {
     fn _context_set_autoclose_database(&self) { unimplemented!() }
     fn _context_set_database_path(&self) { unimplemented!() }
@@ -190,7 +192,11 @@ impl crate::PjContext {
 }
 
 impl crate::Pj {
-    fn _get_type(&self) { unimplemented!() }
+    pub fn get_type(&self) -> miette::Result<crate::data_types::iso19111::PjType> {
+        let result = unsafe { proj_sys::proj_get_type(self.pj) };
+        crate::data_types::iso19111::PjType::try_from(result).into_diagnostic()
+    }
+    pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.pj) != 0 } }
     fn _is_equivalent_to(&self) { unimplemented!() }
     fn _is_crs(&self) { unimplemented!() }
     fn _get_name(&self) { unimplemented!() }
@@ -214,3 +220,27 @@ fn _proj_string_destroy() { unimplemented!() }
 fn _proj_operation_factory_context_destroy() { unimplemented!() }
 fn _proj_list_get_count() { unimplemented!() }
 fn _proj_list_destroy() { unimplemented!() }
+
+#[cfg(test)]
+mod test_context {}
+#[cfg(test)]
+mod test_proj {
+    #[test]
+    fn test_get_type() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let t = pj.get_type()?;
+        println!("{t:?}");
+        Ok(())
+    }
+    #[test]
+    fn test_is_deprecated() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let deprecated = pj.is_deprecated();
+        assert!(!deprecated);
+        Ok(())
+    }
+}
+#[cfg(test)]
+mod test_other {}

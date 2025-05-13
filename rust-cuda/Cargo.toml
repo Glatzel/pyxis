@@ -6,12 +6,13 @@ version = "0.0.20"
 [dependencies]
 clerk = { git = "https://github.com/Glatzel/clerk", tag = "v0.0.10" }
 cust = "0.3"
-pyxis = { path = "./../rust/crates/pyxis/" }
+
 
 [dev-dependencies]
 float-cmp = "0.10.0"
 rand = "0.9.0"
 criterion = "0.5.1"
+pyxis = { path = "./../rust/crates/pyxis/" }
 
 [build-dependencies]
 dunce = "1.0.5"

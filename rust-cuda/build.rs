@@ -98,7 +98,8 @@ fn build_win() {
         .args(["-I", cpp_include_dir.to_slash_lossy().to_string().as_str()])
         .arg("--ptx")
         .args(cu_files)
-        .args(["-odir", "./src"]).env("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")
+        .args(["-odir", "./src"])
+        .env("PATH", format!("{nvcc_exe_dir};{cl_path};{path}"))
         .output()
         .expect("Failed to execute script");
     println!("Stdout:n{}", String::from_utf8_lossy(&output.stdout));

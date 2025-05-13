@@ -1,6 +1,7 @@
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 git submodule update --init --recursive
+pixi install
 
 Write-Output "::group::nextest"
 cargo +nightly llvm-cov nextest --no-report --all --branch --no-fail-fast

@@ -1,4 +1,5 @@
 use std::env::{self};
+use std::fmt::format;
 #[allow(unused_imports)]
 use std::path::PathBuf;
 
@@ -17,6 +18,9 @@ fn main() {
             .to_string_lossy()
             .to_string();
         println!("cargo:rustc-env=PATH={pkg_exe_dir};{path}");
+        unsafe {
+            env::set_var("PATH", format!("{pkg_exe_dir};{path}"));
+        }
     }
     let default_pkg_config_path = match env::var("CARGO_CFG_TARGET_OS").unwrap().as_str() {
         "windows" => {

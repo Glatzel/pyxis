@@ -51,12 +51,8 @@ fn main() {
         Ok(path) => println!("Found `LIBCLANG_PATH`: {path}"),
         Err(_) => {
             let path = "C:/Program Files/LLVM/bin";
-
             if PathBuf::from(path).exists() {
-                unsafe {
-                    env::set_var("LIBCLANG_PATH", path);
-                }
-                println!("Set `LIBCLANG_PATH` to: {path}")
+                println!("cargo:rustc-env=LIBCLANG_PATH={path}");
             } else {
                 panic!("`LIBCLANG_PATH` not found.");
             }

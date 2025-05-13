@@ -3,12 +3,14 @@ use std::env::{self};
 use std::path::PathBuf;
 
 fn main() {
-    // pkg-config
+    // run pixi install
     std::process::Command::new("pixi")
         .arg("install")
         .current_dir(env::var("CARGO_WORKSPACE_DIR").unwrap())
         .output()
         .expect("Failed to execute script");
+
+    // pkg-config
     #[cfg(target_os = "windows")]
     {
         let path = env::var("PATH").unwrap().to_string();

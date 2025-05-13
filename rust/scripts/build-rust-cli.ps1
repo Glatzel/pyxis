@@ -4,7 +4,6 @@ param (
 )
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
-& $PSScriptRoot/setup.ps1
 
 # clean dist folder
 Remove-Item ./dist/cli -Recurse -ErrorAction SilentlyContinue

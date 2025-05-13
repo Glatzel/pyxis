@@ -22,3 +22,6 @@ tracing-subscriber = { workspace = true }
 assert_cmd = { workspace = true }
 float-cmp = { workspace = true }
 predicates = { workspace = true }
+
+[build-dependencies]
+dunce = { workspace = true }

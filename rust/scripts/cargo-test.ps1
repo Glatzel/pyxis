@@ -1,17 +1,6 @@
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
-
-& $PSScriptRoot/setup.ps1
 git submodule update --init --recursive
-if ($IsWindows) {
-    $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-windows-static/share/proj
-}
-if ($IsLinux) {
-    $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/share/proj
-}
-if ($IsMacOS) {
-    $env:PROJ_DATA = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-osx-release/share/proj
-}
 
 Write-Output "::group::nextest"
 pixi run cargo +nightly llvm-cov nextest --no-report --all --branch --no-fail-fast

@@ -842,6 +842,7 @@ dependencies = [
  "assert_cmd",
  "bpaf",
  "clerk",
+ "dunce",
  "float-cmp",
  "miette",
  "predicates",

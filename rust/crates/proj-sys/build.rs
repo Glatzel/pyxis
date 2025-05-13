@@ -45,7 +45,7 @@ fn main() {
     };
     if env::var("PKG_CONFIG_PATH").is_err() {
         unsafe {
-            env::set_var("PKG_CONFIG_PATH", format!("{default_pkg_config_path}"));
+            env::set_var("PKG_CONFIG_PATH", &default_pkg_config_path);
         }
     }
 

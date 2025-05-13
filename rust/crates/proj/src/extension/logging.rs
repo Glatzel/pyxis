@@ -4,7 +4,7 @@ use crate::check_result;
 use crate::data_types::PjLogLevel;
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
-    let _message = crate::c_char_to_string(info);
+    let _message = crate::c_char_to_string(info).unwrap_or_default();
 
     match level {
         1 => clerk::error!("{}", _message),

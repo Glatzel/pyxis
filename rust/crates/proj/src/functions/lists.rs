@@ -17,10 +17,10 @@ pub fn list_ellps() -> Vec<crate::data_types::PjEllps> {
         } else {
             let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
             out_vec.push(crate::data_types::PjEllps::new(
-                crate::c_char_to_string(src.id),
-                crate::c_char_to_string(src.major),
-                crate::c_char_to_string(src.ell),
-                crate::c_char_to_string(src.name),
+                crate::c_char_to_string(src.id).unwrap_or_default(),
+                crate::c_char_to_string(src.major).unwrap_or_default(),
+                crate::c_char_to_string(src.ell).unwrap_or_default(),
+                crate::c_char_to_string(src.name).unwrap_or_default(),
             ));
             offset += 1;
         }
@@ -44,9 +44,9 @@ pub fn list_units() -> Vec<crate::data_types::PjUnits> {
         } else {
             let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
             out_vec.push(crate::data_types::PjUnits::new(
-                crate::c_char_to_string(src.id),
-                crate::c_char_to_string(src.to_meter),
-                crate::c_char_to_string(src.name),
+                crate::c_char_to_string(src.id).unwrap_or_default(),
+                crate::c_char_to_string(src.to_meter).unwrap_or_default(),
+                crate::c_char_to_string(src.name).unwrap_or_default(),
                 src.factor,
             ));
             offset += 1;
@@ -72,8 +72,8 @@ pub fn list_prime_meridians() -> Vec<crate::data_types::PjPrimeMeridians> {
         } else {
             let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
             out_vec.push(crate::data_types::PjPrimeMeridians::new(
-                crate::c_char_to_string(src.id),
-                crate::c_char_to_string(src.defn),
+                crate::c_char_to_string(src.id).unwrap_or_default(),
+                crate::c_char_to_string(src.defn).unwrap_or_default(),
             ));
             offset += 1;
         }

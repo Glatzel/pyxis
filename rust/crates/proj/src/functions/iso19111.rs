@@ -777,19 +777,33 @@ impl crate::Pj {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_name>
-    pub fn get_name(&self) { unimplemented!() }
+    pub fn get_name(&self) -> String {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_name(self.pj) }).unwrap_or_default()
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
-    pub fn _get_id_auth_name(&self) { unimplemented!() }
+    pub fn get_id_auth_name(&self, index: i32) -> miette::Result<String> {
+        Ok(
+            crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.pj, index) })
+                .expect("Error or missing name"),
+        )
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
-    pub fn _get_id_code(&self) { unimplemented!() }
+    pub fn get_id_code(&self, index: i32) -> miette::Result<String> {
+        Ok(
+            crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.pj, index) })
+                .expect("Error or missing name"),
+        )
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_remarks>
-    pub fn _get_remarks(&self) { unimplemented!() }
+    pub fn get_remarks(&self) -> String {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_remarks(self.pj) }).unwrap_or_default()
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
@@ -877,6 +891,38 @@ mod test_proj {
         let pj = ctx.create("EPSG:4326")?;
         let result = pj.is_crs();
         assert!(result);
+        Ok(())
+    }
+    #[test]
+    fn test_get_name() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let name = pj.get_name();
+        println!("{name}");
+        Ok(())
+    }
+    #[test]
+    fn test_get_id_auth_name() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let id_auth_name = pj.get_id_auth_name(0)?;
+        println!("{id_auth_name}");
+        Ok(())
+    }
+    #[test]
+    fn test_get_id_code() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let id = pj.get_id_code(0)?;
+        println!("{id}");
+        Ok(())
+    }
+    #[test]
+    fn test_get_remarks() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let remarks = pj.get_remarks();
+        println!("{remarks}");
         Ok(())
     }
 }

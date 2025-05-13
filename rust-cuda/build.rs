@@ -39,6 +39,7 @@ fn main() {
         let cl_path = String::from_utf8_lossy(&output.stdout).replace("\n", "");
         let path = env::var("PATH").unwrap().to_string();
         unsafe { env::set_var("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")) };
+        println!("{}",env::var("PATH").unwrap());
 
         let output = std::process::Command::new("pixi")
             .args([

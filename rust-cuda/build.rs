@@ -104,8 +104,8 @@ fn main() {
         .args(["-odir", "./src"])
         .output()
         .expect("Failed to execute script");
-    println!("Stdout:/n{}", String::from_utf8_lossy(&output.stdout));
-    println!("Stderr:/n{}", String::from_utf8_lossy(&output.stderr));
+    println!("Stdout:n{}", String::from_utf8_lossy(&output.stdout));
+    println!("Stderr:{}", String::from_utf8_lossy(&output.stderr));
     if !output.status.success() {
         panic!("Build failed.",);
     }

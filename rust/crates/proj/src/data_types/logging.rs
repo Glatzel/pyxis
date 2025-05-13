@@ -1,4 +1,3 @@
-
 pub enum PjLogLevel {
     None,
     Error,

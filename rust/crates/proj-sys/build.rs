@@ -46,9 +46,10 @@ fn main() {
         }
     };
     if env::var("PKG_CONFIG_PATH").is_err() {
-        unsafe {
-            env::set_var("PKG_CONFIG_PATH", &default_pkg_config_path);
-        }
+        // unsafe {
+        //     env::set_var("PKG_CONFIG_PATH", &default_pkg_config_path);
+        // }
+        println!("cargo:rustc-env=PKG_CONFIG_PATH={default_pkg_config_path}");
     }
 
     // check LIBCLANG_PATH

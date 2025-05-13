@@ -3,12 +3,12 @@ Set-Location $PSScriptRoot/..
 git submodule update --init --recursive
 
 Write-Output "::group::nextest"
-pixi run cargo +nightly llvm-cov nextest --no-report --all --branch --no-fail-fast
+cargo +nightly llvm-cov nextest --no-report --all --branch --no-fail-fast
 $code = $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::doctest"
-pixi run cargo +nightly llvm-cov --no-report --all $package --branch --no-fail-fast --doc
+cargo +nightly llvm-cov --no-report --all $package --branch --no-fail-fast --doc
 $code = $code + $LASTEXITCODE
 Write-Output "::endgroup::"
 

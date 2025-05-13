@@ -1,4 +1,4 @@
-name: csharp-CI
+name: csharp
 
 on:
   workflow_dispatch:

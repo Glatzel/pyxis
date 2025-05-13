@@ -71,7 +71,8 @@ fn build_win() {
         ])
         .output()
         .expect("Failed to execute script");
-    let cl_path = String::from_utf8_lossy(&output.stdout).replace("\n", "");
+    let cl_path = String::from_utf8_lossy(&output.stdout);
+    let cl_path = cl_path.replace("\n", "");
 
     let path = env::var("PATH").unwrap().to_string();
     println!("{cl_path};{nvcc_exe_dir};{path}");

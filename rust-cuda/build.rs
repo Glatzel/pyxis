@@ -1,5 +1,5 @@
 use std::env;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use dunce::canonicalize;
 use glob::glob;
@@ -12,13 +12,50 @@ fn main() {
         .expect("Failed to execute script");
     // env
     if cfg!(target_os = "windows") {
-        build_win()
+        let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/Library/bin")
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
+
+        let cl_path = if env::var("CI").is_ok() {
+            String::from(
+                "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64",
+            )
+        } else {
+            String::from(
+                "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64",
+            )
+        };
+
+        let path = env::var("PATH").unwrap().to_string();
+        unsafe { env::set_var("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")) };
+        println!("{}", env::var("PATH").unwrap());
+
+        let output = std::process::Command::new("pixi")
+            .args([
+                "run",
+                "vswhere",
+                "-latest",
+                "-products",
+                "*",
+                "-requires",
+                "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+                "-find",
+                "VC\\Tools\\MSVC\\*\\include",
+            ])
+            .output()
+            .expect("Failed to execute script");
+        let include_path = String::from_utf8_lossy(&output.stdout);
+        unsafe { env::set_var("INCLUDE", format!("{include_path}")) };
     }
     if cfg!(target_os = "linux") {
-        build_linux()
+        let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/bin")
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
+        let path = env::var("PATH").unwrap().to_string();
+        unsafe { env::set_var("PATH", format!("{nvcc_exe_dir}:{path}")) }
     }
-}
-fn get_src() -> (PathBuf, PathBuf, Vec<String>) {
     //set src code dir
     let cpp_src_dir = canonicalize(Path::new("."))
         .unwrap()
@@ -49,78 +86,6 @@ fn get_src() -> (PathBuf, PathBuf, Vec<String>) {
                 .to_string()
         })
         .collect::<Vec<String>>();
-    (cpp_src_dir, cpp_include_dir, cu_files)
-}
-fn build_win() {
-    //set path
-    let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/Library/bin")
-        .unwrap()
-        .to_string_lossy()
-        .to_string();
-    let output = std::process::Command::new("pixi")
-        .args([
-            "run",
-            "vswhere",
-            "-latest",
-            "-products",
-            "*",
-            "-requires",
-            "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
-            "-find",
-            "**\\Hostx64\\x64",
-        ])
-        .output()
-        .expect("Failed to execute script");
-    let cl_path = String::from_utf8_lossy(&output.stdout);
-    let cl_path = cl_path.replace("\n", "");
-    println!("{cl_path}");
-    let path = env::var("PATH").unwrap().to_string();
-    println!("{cl_path};{nvcc_exe_dir}");
-    //set include
-    let output = std::process::Command::new("pixi")
-        .args([
-            "run",
-            "vswhere",
-            "-latest",
-            "-products",
-            "*",
-            "-requires",
-            "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
-            "-find",
-            "VC\\Tools\\MSVC\\*\\include",
-        ])
-        .output()
-        .expect("Failed to execute script");
-    let include_path = String::from_utf8_lossy(&output.stdout);
-    unsafe { env::set_var("INCLUDE", format!("{include_path}")) };
-    //build
-    let (cpp_src_dir, cpp_include_dir, cu_files) = get_src();
-    let output = std::process::Command::new("nvcc")
-        .arg("-fmad=false")
-        .args(["-I", cpp_src_dir.to_slash_lossy().to_string().as_str()])
-        .args(["-I", cpp_include_dir.to_slash_lossy().to_string().as_str()])
-        .arg("--ptx")
-        .args(cu_files)
-        .args(["-odir", "./src"])
-        .env("PATH", format!("{nvcc_exe_dir};{cl_path};{path}"))
-        .output()
-        .expect("Failed to execute script");
-    println!("Stdout:n{}", String::from_utf8_lossy(&output.stdout));
-    println!("Stderr:{}", String::from_utf8_lossy(&output.stderr));
-    if !output.status.success() {
-        panic!("Build failed.",);
-    }
-}
-fn build_linux() {
-    //set env
-    let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/bin")
-        .unwrap()
-        .to_string_lossy()
-        .to_string();
-    let path = env::var("PATH").unwrap().to_string();
-    unsafe { env::set_var("PATH", format!("{nvcc_exe_dir}:{path}")) }
-    //build
-    let (cpp_src_dir, cpp_include_dir, cu_files) = get_src();
     let output = std::process::Command::new("nvcc")
         .arg("-fmad=false")
         .args(["-I", cpp_src_dir.to_slash_lossy().to_string().as_str()])

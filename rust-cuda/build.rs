@@ -12,25 +12,59 @@ fn main() {
         .expect("Failed to execute script");
     // env
     if cfg!(target_os = "windows") {
-        unsafe {
-            env::set_var(
-                "INCLUDE",
-                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include",
-            )
-        };
+        // unsafe {
+        //     env::set_var(
+        //         "INCLUDE",
+        //         "C:/Program Files/Microsoft Visual
+        // Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include",     )
+        // };
         let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/Library/bin")
             .unwrap()
             .to_string_lossy()
             .to_string();
-        let cl_path = "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64";
+        let output = std::process::Command::new("pixi")
+            .args([
+                "run",
+                "vswhere",
+                "-latest",
+                "-products",
+                "*",
+                "-requires",
+                "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+                "-find",
+                "**\\Hostx64\\x64",
+            ])
+            .output()
+            .expect("Failed to execute script");
+        let cl_path = String::from_utf8_lossy(&output.stdout);
         let path = env::var("PATH").unwrap().to_string();
         unsafe { env::set_var("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")) };
+
+        let output = std::process::Command::new("pixi")
+            .args([
+                "run",
+                "vswhere",
+                "-latest",
+                "-products",
+                "*",
+                "-requires",
+                "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+                "-find",
+                "VC\\Tools\\MSVC\\*\\include",
+            ])
+            .output()
+            .expect("Failed to execute script");
+        let include_path = String::from_utf8_lossy(&output.stdout);
+        unsafe { env::set_var("INCLUDE", format!("{nvcc_exe_dir};{cl_path};{path}")) };
     }
-    if cfg!(target_os = "linux") {let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/bin")
+    if cfg!(target_os = "linux") {
+        let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/bin")
             .unwrap()
             .to_string_lossy()
-            .to_string();let path = env::var("PATH").unwrap().to_string();
- unsafe { env::set_var("PATH", format!("{nvcc_exe_dir}:{path}"))}}
+            .to_string();
+        let path = env::var("PATH").unwrap().to_string();
+        unsafe { env::set_var("PATH", format!("{nvcc_exe_dir}:{path}")) }
+    }
     //set src code dir
     let cpp_src_dir = canonicalize(Path::new("."))
         .unwrap()

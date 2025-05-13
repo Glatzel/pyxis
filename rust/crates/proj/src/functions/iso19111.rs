@@ -1,6 +1,5 @@
 use miette::IntoDiagnostic;
 
-use crate::check_result;
 use crate::data_types::iso19111::{PjComparisonCriterion, PjType};
 
 /// ISO-19111

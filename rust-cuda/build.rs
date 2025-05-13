@@ -72,10 +72,7 @@ fn build_win() {
         .output()
         .expect("Failed to execute script");
     let cl_path = String::from_utf8_lossy(&output.stdout).replace("\n", "");
-    println!("{cl_path}");
     let path = env::var("PATH").unwrap().to_string();
-    unsafe { env::set_var("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")) };
-    println!("{}", env::var("PATH").unwrap());
     //set include
     let output = std::process::Command::new("pixi")
         .args([
@@ -101,7 +98,7 @@ fn build_win() {
         .args(["-I", cpp_include_dir.to_slash_lossy().to_string().as_str()])
         .arg("--ptx")
         .args(cu_files)
-        .args(["-odir", "./src"])
+        .args(["-odir", "./src"]).env("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")
         .output()
         .expect("Failed to execute script");
     println!("Stdout:n{}", String::from_utf8_lossy(&output.stdout));

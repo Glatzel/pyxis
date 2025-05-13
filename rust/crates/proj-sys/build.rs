@@ -1,5 +1,4 @@
 use std::env::{self};
-use std::fmt::format;
 #[allow(unused_imports)]
 use std::path::PathBuf;
 
@@ -17,7 +16,6 @@ fn main() {
             .unwrap()
             .to_string_lossy()
             .to_string();
-        println!("cargo:rustc-env=PATH={pkg_exe_dir};{path}");
         unsafe {
             env::set_var("PATH", format!("{pkg_exe_dir};{path}"));
         }
@@ -46,7 +44,9 @@ fn main() {
         }
     };
     if env::var("PKG_CONFIG_PATH").is_err() {
-        println!("cargo:rustc-env=PKG_CONFIG_PATH={default_pkg_config_path}");
+        unsafe {
+            env::set_var("PKG_CONFIG_PATH", format!("{default_pkg_config_path}"));
+        }
     }
 
     // check LIBCLANG_PATH

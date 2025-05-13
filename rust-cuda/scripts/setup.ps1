@@ -6,4 +6,3 @@ if ($IsWindows) {
 if ($IsLinux) {
     $env:CUDA_LIBRARY_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default
 }
-

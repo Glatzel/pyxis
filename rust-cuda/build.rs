@@ -12,12 +12,6 @@ fn main() {
         .expect("Failed to execute script");
     // env
     if cfg!(target_os = "windows") {
-        // unsafe {
-        //     env::set_var(
-        //         "INCLUDE",
-        //         "C:/Program Files/Microsoft Visual
-        // Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include",     )
-        // };
         let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/Library/bin")
             .unwrap()
             .to_string_lossy()
@@ -37,6 +31,7 @@ fn main() {
             .output()
             .expect("Failed to execute script");
         let cl_path = String::from_utf8_lossy(&output.stdout).replace("\n", "");
+        println!("{cl_path}");
         let path = env::var("PATH").unwrap().to_string();
         unsafe { env::set_var("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")) };
         println!("{}",env::var("PATH").unwrap());

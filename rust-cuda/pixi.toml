@@ -8,4 +8,3 @@ cuda-nvcc = "12.8.*"
 
 [tasks]
 nvcc = "$CONDA_PREFIX/Library/bin/nvcc"
-

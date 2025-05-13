@@ -36,7 +36,7 @@ fn main() {
             ])
             .output()
             .expect("Failed to execute script");
-        let cl_path = String::from_utf8_lossy(&output.stdout);
+        let cl_path = String::from_utf8_lossy(&output.stdout).replace("\n", "");
         let path = env::var("PATH").unwrap().to_string();
         unsafe { env::set_var("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")) };
 

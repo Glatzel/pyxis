@@ -26,7 +26,7 @@ fn main() {
         let path = env::var("PATH").unwrap().to_string();
         unsafe { env::set_var("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")) };
     }
-    if cfg!(target_os = "linux") {let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/Library/bin")
+    if cfg!(target_os = "linux") {let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/bin")
             .unwrap()
             .to_string_lossy()
             .to_string();let path = env::var("PATH").unwrap().to_string();

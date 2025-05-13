@@ -51,7 +51,7 @@ mod test {
 
     #[test]
     fn test_log() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::new_test_ctx()?;
         ctx.set_log_level(PjLogLevel::Trace)?;
         let _ = ctx.create("EPSG:4326")?;
 
@@ -60,7 +60,7 @@ mod test {
 
     #[test]
     fn test_log_error() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::new_test_ctx()?;
         ctx.set_log_level(PjLogLevel::Trace)?;
         let pj = ctx.create("Unknown crs");
         assert!(pj.is_err());
@@ -69,7 +69,7 @@ mod test {
 
     #[test]
     fn test_log_change_level() -> miette::Result<()> {
-        let ctx = crate::PjContext::default();
+        let ctx = crate::new_test_ctx()?;
         ctx.set_log_level(PjLogLevel::Debug)?;
         let pj = ctx.create("Show log");
         assert!(pj.is_err());

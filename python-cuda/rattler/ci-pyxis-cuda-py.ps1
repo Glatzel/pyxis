@@ -5,8 +5,8 @@ param (
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot
 
+Set-Location $PSScriptRoot
 & "$PSScriptRoot/../scripts/build-cuda.ps1"
 
 Set-Location $PSScriptRoot

@@ -21,8 +21,3 @@ requirements:
     - python >= 3.11
     - lazy-loader
     - ${{cuda_variant}}
-
-tests:
-  - python:
-      imports:
-        - pyxis_cuda

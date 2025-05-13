@@ -15,6 +15,7 @@ clerk = { workspace = true, features = ["log"] }
 float-cmp = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
+dunce= { workspace = true }
 
 [features]
 log = ["clerk/log"]

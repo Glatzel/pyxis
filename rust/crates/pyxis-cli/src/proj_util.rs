@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use miette::IntoDiagnostic;
 
-const PROJ_DB: &[u8] = include_bytes!("proj.db");
+const PROJ_DB: &[u8] = include_bytes!(concat!(env!("PROJ_DATA"), "/proj.db"));
 pub fn init_proj_builder() -> miette::Result<proj::PjContext> {
     let ctx = proj::PjContext::default();
 

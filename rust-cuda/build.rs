@@ -8,38 +8,23 @@ fn main() {
     // run pixi install
     std::process::Command::new("pixi")
         .arg("install")
-        .current_dir(env::var("CARGO_WORKSPACE_DIR").unwrap())
         .output()
         .expect("Failed to execute script");
     // env
     if cfg!(target_os = "windows") {
-        println!(
-            "cargo:rustc-env=INCLUDE=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include"
-        );
-    }
-    if env::var("CUDA_PATH").is_err() {
-        let cuda_path = dunce::canonicalize("../../.pixi/envs/default/Library")
+        unsafe {
+            env::set_var(
+                "INCLUDE",
+                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include",
+            )
+        };
+        let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/Library/bin")
             .unwrap()
             .to_string_lossy()
             .to_string();
-        println!("cargo:rustc-env=CUDA_PATH={cuda_path}");
+        let cl_path = "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64";
         let path = env::var("PATH").unwrap().to_string();
-        let nvcc_exe_dir = dunce::canonicalize("../../.pixi/envs/default/Library/bin")
-            .unwrap()
-            .to_string_lossy()
-            .to_string();
-        let cuda_library_path = dunce::canonicalize("../../.pixi/envs/default/Library/lib")
-            .unwrap()
-            .to_string_lossy()
-            .to_string();
-        if cfg!(target_os = "windows") {
-            let cl_path = "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64";
-            let include = "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include";
-            println!("cargo:rustc-env=PATH={nvcc_exe_dir};{cl_path};{path}");
-            println!("cargo:rustc-env=INCLUDE={include}");
-        } else {
-            println!("cargo:rustc-env=CUDA_LIBRARY_PATH={cuda_library_path}");
-        }
+        unsafe { env::set_var("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")) };
     }
     //set src code dir
     let cpp_src_dir = canonicalize(Path::new("."))

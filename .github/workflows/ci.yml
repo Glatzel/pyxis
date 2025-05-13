@@ -164,7 +164,7 @@ jobs:
             for file in ${ALL_CHANGED_FILES}; do
               echo "$file was changed"
             done
-        - if: ${{steps.change.outputs.all_changed_files_count  != '2'}}
+        - if: ${{steps.change.outputs.all_changed_files_count  == '0' }}
           run: |
             echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
             exit 1

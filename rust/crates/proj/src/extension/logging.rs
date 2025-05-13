@@ -47,10 +47,6 @@ impl crate::PjContext {
 
 #[cfg(test)]
 mod test {
-    use tracing::level_filters::LevelFilter;
-    use tracing_subscriber::layer::SubscriberExt;
-    use tracing_subscriber::util::SubscriberInitExt;
-
     use crate::data_types::PjLogLevel;
 
     #[test]

@@ -1,7 +1,6 @@
-use miette::IntoDiagnostic;
-use num_enum::{IntoPrimitive, TryFromPrimitive};
+use num_enum::{FromPrimitive, IntoPrimitive};
 
-#[derive(Debug, Clone, TryFromPrimitive, IntoPrimitive)]
+#[derive(Debug, Clone, FromPrimitive, IntoPrimitive)]
 #[repr(u32)]
 pub(crate) enum PjError {
     Success = 0,
@@ -23,6 +22,7 @@ pub(crate) enum PjError {
     CoordTransfmNoConvergence = proj_sys::PROJ_ERR_COORD_TRANSFM_NO_CONVERGENCE,
     CoordTransfmMissingTime = proj_sys::PROJ_ERR_COORD_TRANSFM_MISSING_TIME,
     //Errors in class PROJ_ERR_OTHER
+    #[num_enum(default)]
     Other = proj_sys::PROJ_ERR_OTHER,
     OtherApiMisuse = proj_sys::PROJ_ERR_OTHER_API_MISUSE,
     OtherNoInverseOp = proj_sys::PROJ_ERR_OTHER_NO_INVERSE_OP,
@@ -35,9 +35,6 @@ impl From<PjError> for i32 {
 impl From<&PjError> for i32 {
     fn from(value: &PjError) -> Self { Into::<u32>::into(value.clone()) as i32 }
 }
-impl TryFrom<i32> for PjError {
-    type Error = miette::Report;
-    fn try_from(value: i32) -> Result<Self, Self::Error> {
-        PjError::try_from(value as u32).into_diagnostic()
-    }
+impl From<i32> for PjError {
+    fn from(value: i32) -> PjError { PjError::from(value as u32) }
 }

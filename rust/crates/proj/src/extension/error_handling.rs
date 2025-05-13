@@ -25,7 +25,7 @@ macro_rules! check_result {
         }
     };
     ($self:expr,$code:expr) => {
-        let code = $crate::data_types::PjError::try_from($code).unwrap();
+        let code = $crate::data_types::PjError::from($code);
         let code_str = format!("{:?}", code);
         match code {
             $crate::data_types::PjError::Success => {

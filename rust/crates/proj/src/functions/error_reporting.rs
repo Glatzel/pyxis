@@ -7,7 +7,7 @@ impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_errno>
     pub(crate) fn errno(&self) -> PjError {
-        PjError::try_from(unsafe { proj_sys::proj_errno(self.pj) }).unwrap()
+        PjError::from(unsafe { proj_sys::proj_errno(self.pj) })
     }
 
     /// # References
@@ -20,7 +20,7 @@ impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_reset>
     pub(crate) fn _errno_reset(&self) -> PjError {
-        PjError::try_from(unsafe { proj_sys::proj_errno_reset(self.pj) }).unwrap()
+        PjError::from(unsafe { proj_sys::proj_errno_reset(self.pj) })
     }
 
     /// # References
@@ -47,7 +47,7 @@ impl crate::PjContext {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno>
     pub(crate) fn errno(&self) -> PjError {
-        PjError::try_from(unsafe { proj_sys::proj_context_errno(self.ctx) }).unwrap()
+        PjError::from(unsafe { proj_sys::proj_context_errno(self.ctx) })
     }
 
     /// See [`crate::check_result`]

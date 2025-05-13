@@ -1,5 +1,6 @@
 use miette::IntoDiagnostic;
 
+use crate::check_result;
 use crate::data_types::iso19111::{PjComparisonCriterion, PjType};
 
 /// ISO-19111
@@ -783,20 +784,14 @@ impl crate::Pj {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
-    pub fn get_id_auth_name(&self, index: i32) -> miette::Result<String> {
-        Ok(
-            crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.pj, index) })
-                .expect("Error or missing name"),
-        )
+    pub fn get_id_auth_name(&self, index: i32) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.pj, index) })
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
-    pub fn get_id_code(&self, index: i32) -> miette::Result<String> {
-        Ok(
-            crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.pj, index) })
-                .expect("Error or missing name"),
-        )
+    pub fn get_id_code(&self, index: i32) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.pj, index) })
     }
     ///# References
     ///
@@ -899,22 +894,25 @@ mod test_proj {
         let pj = ctx.create("EPSG:4326")?;
         let name = pj.get_name();
         println!("{name}");
+        assert_eq!(name, "WGS 84");
         Ok(())
     }
     #[test]
     fn test_get_id_auth_name() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let id_auth_name = pj.get_id_auth_name(0)?;
+        let id_auth_name = pj.get_id_auth_name(0).expect("No id_auth_name");
         println!("{id_auth_name}");
+        assert_eq!(id_auth_name, "EPSG");
         Ok(())
     }
     #[test]
     fn test_get_id_code() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let id = pj.get_id_code(0)?;
+        let id = pj.get_id_code(0).expect("No id_code");
         println!("{id}");
+        assert_eq!(id, "4326");
         Ok(())
     }
     #[test]

@@ -72,7 +72,9 @@ fn build_win() {
         .output()
         .expect("Failed to execute script");
     let cl_path = String::from_utf8_lossy(&output.stdout).replace("\n", "");
+
     let path = env::var("PATH").unwrap().to_string();
+    println!("{cl_path};{nvcc_exe_dir};{path}");
     //set include
     let output = std::process::Command::new("pixi")
         .args([

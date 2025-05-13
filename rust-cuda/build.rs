@@ -75,7 +75,7 @@ fn build_win() {
     let cl_path = cl_path.replace("\n", "");
     println!("{cl_path}");
     let path = env::var("PATH").unwrap().to_string();
-    println!("{cl_path};{nvcc_exe_dir};{path}");
+    println!("{cl_path};{nvcc_exe_dir}");
     //set include
     let output = std::process::Command::new("pixi")
         .args([

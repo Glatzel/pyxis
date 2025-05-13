@@ -6,7 +6,6 @@ Set-Location $PSScriptRoot/..
 $config = "-DCMAKE_BUILD_TYPE=Release"
 
 # create install dir
-Remove-Item $install -Recurse -ErrorAction SilentlyContinue
 New-Item $install -ItemType Directory -ErrorAction SilentlyContinue
 $install = Resolve-Path $install
 $install = "$install".Replace('\', '/')
@@ -16,6 +15,7 @@ $install = "-DCMAKE_INSTALL_PREFIX=$install"
 New-Item ./build/ptx -ItemType Directory -ErrorAction SilentlyContinue
 
 # build
+Remove-Item ./build -Recurse -Force -ErrorAction SilentlyContinue
 if ($IsWindows) { pixi run cmake -G "Visual Studio 17 2022" -B build $install $config -DBUILD_CUDA=ON }
 else { pixi run cmake -B build $install $config -DBUILD_CUDA=ON }
 pixi run cmake --build build --target install

@@ -1,17 +1,60 @@
+use std::env::{self};
 #[allow(unused_imports)]
 use std::path::PathBuf;
 
 fn main() {
+    // pkg-config
+    std::process::Command::new("pixi")
+        .arg("install")
+        .current_dir(env::var("CARGO_WORKSPACE_DIR").unwrap())
+        .output()
+        .expect("Failed to execute script");
+    #[cfg(target_os = "windows")]
+    {
+        let path = env::var("PATH").unwrap().to_string();
+        let pkg_exe_dir = dunce::canonicalize("../../.pixi/envs/default/Library/bin")
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
+        println!("cargo:rustc-env=PATH={pkg_exe_dir};{path}");
+    }
+    let default_pkg_config_path = match env::var("CARGO_CFG_TARGET_OS").unwrap().as_str() {
+        "windows" => {
+            dunce::canonicalize("../../.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig")
+                .unwrap()
+                .to_string_lossy()
+                .to_string()
+        }
+        "linux" => {
+            dunce::canonicalize("../../.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig")
+                .unwrap()
+                .to_string_lossy()
+                .to_string()
+        }
+        "macos" => {
+            dunce::canonicalize("../../.pixi/envs/default/proj/arm64-osx-release/lib/pkgconfig")
+                .unwrap()
+                .to_string_lossy()
+                .to_string()
+        }
+        other => {
+            panic!("Unsupported OS: {}", other)
+        }
+    };
+    if env::var("PKG_CONFIG_PATH").is_err() {
+        println!("cargo:rustc-env=PKG_CONFIG_PATH={default_pkg_config_path}");
+    }
+
     // check LIBCLANG_PATH
     #[cfg(target_os = "windows")]
-    match std::env::var("LIBCLANG_PATH") {
+    match env::var("LIBCLANG_PATH") {
         Ok(path) => println!("Found `LIBCLANG_PATH`: {path}"),
         Err(_) => {
             let path = "C:/Program Files/LLVM/bin";
 
             if PathBuf::from(path).exists() {
                 unsafe {
-                    std::env::set_var("LIBCLANG_PATH", path);
+                    env::set_var("LIBCLANG_PATH", path);
                 }
                 println!("Set `LIBCLANG_PATH` to: {path}")
             } else {
@@ -24,8 +67,8 @@ fn main() {
     let pk_proj = link_lib("proj", "proj");
 
     //bindgen
-    if std::env::var("UPDATE").unwrap_or("false".to_string()) != "true"
-        && std::env::var("BINDGEN").unwrap_or("false".to_string()) != "true"
+    if env::var("UPDATE").unwrap_or("false".to_string()) != "true"
+        && env::var("BINDGEN").unwrap_or("false".to_string()) != "true"
     {
         return;
     }
@@ -43,15 +86,15 @@ fn main() {
         .generate()
         .unwrap();
 
-    if std::env::var("UPDATE").unwrap_or("false".to_string()) == "true" {
+    if env::var("UPDATE").unwrap_or("false".to_string()) == "true" {
         bindings
             .write_to_file("./src/proj_sys/bindings.rs")
             .expect("Couldn't write bindings!");
     }
-    if std::env::var("BINDGEN").unwrap_or("false".to_string()) == "true" {
+    if env::var("BINDGEN").unwrap_or("false".to_string()) == "true" {
         println!("cargo:rustc-cfg=bindgen");
         bindings
-            .write_to_file(PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("bindings.rs"))
+            .write_to_file(PathBuf::from(env::var("OUT_DIR").unwrap()).join("bindings.rs"))
             .expect("Couldn't write bindings!");
     }
 }

@@ -65,12 +65,14 @@ pub enum PjType {
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COMPARISON_CRITERION>
-#[derive(Debug)]
+#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[repr(u32)]
 pub enum PjComparisonCriterion {
-    Strict,
-    Equivalent,
-    EquivalentExceptAxisOrderGeogcrs,
+    Strict = proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_STRICT,
+    Equivalent = proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT,
+    EquivalentExceptAxisOrderGeogcrs =
+        proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS,
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_WKT_TYPE>

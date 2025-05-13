@@ -2,7 +2,6 @@ use std::env;
 use std::path::PathBuf;
 
 use tracing::level_filters::LevelFilter;
-use tracing_subscriber::fmt::format;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 
@@ -39,6 +38,6 @@ pub(crate) fn new_test_ctx() -> miette::Result<crate::PjContext> {
             panic!("Unsupported OS: {}", other)
         }
     };
-    ctx.set_search_paths(&[&PathBuf::from(default_proj_data)]);
+    ctx.set_search_paths(&[&PathBuf::from(default_proj_data)])?;
     Ok(ctx)
 }

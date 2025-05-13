@@ -47,29 +47,26 @@
     ],
     "settings": {
         // ,"rust-analyzer.cargo.features": "all"
-        "rust-analyzer.cargo.extraEnv": {
-            "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
-            "PATH": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/bin;${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/lib;C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64;${env:Path}",
-            "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
-            "INCLUDE": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include;C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/ucrt"
-        },
+        // "rust-analyzer.cargo.extraEnv": {
+        //     "PATH": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/bin;${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/lib;C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64;${env:Path}",
+        //     "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
+        //     "INCLUDE": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include;C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/ucrt"
+        // },
         "rust-analyzer.linkedProjects": [
             "${workspaceFolder}/rust/Cargo.toml",
             "${workspaceFolder}/rust-cuda/Cargo.toml",
             "${workspaceFolder}/python/Cargo.toml"
         ],
-        "rust-analyzer.runnables.extraEnv": {
-            "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
-            "PATH": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/bin;${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/lib;C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64;${env:Path}",
-            "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
-            "INCLUDE": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include;C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/ucrt"
-        },
-        "rust-analyzer.server.extraEnv": {
-            "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default",
-            "PATH": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/bin;${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/lib;C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64;${env:Path}",
-            "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
-            "INCLUDE": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include;C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/ucrt"
-        },
+        // "rust-analyzer.runnables.extraEnv": {
+        //     "PATH": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/bin;${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/lib;C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64;${env:Path}",
+        //     "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
+        //     "INCLUDE": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include;C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/ucrt"
+        // },
+        // "rust-analyzer.server.extraEnv": {
+        //     "PATH": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/bin;${workspaceFolder}/rust-cuda/.pixi/envs/default/Library/lib;C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64;${env:Path}",
+        //     "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
+        //     "INCLUDE": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/include;C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/ucrt"
+        // },
         "rust-analyzer.testExplorer": true,
         "VSCodeCounter.exclude": [
             "**/.gitignore",

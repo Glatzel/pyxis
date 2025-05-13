@@ -35,5 +35,6 @@ fn main() {
         unsafe {
             env::set_var("PROJ_DATA", &default_proj_data);
         }
+        println!("cargo:rustc-env=PROJ_DATA={default_proj_data}");
     }
 }

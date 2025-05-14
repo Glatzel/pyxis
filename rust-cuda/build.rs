@@ -27,7 +27,14 @@ fn main() {
         unsafe {
             env::set_var(
                 "PATH",
-                format!("{nvcc_exe_dir};{};{path}", cl_paths.first().unwrap().to_string_lossy().replace("/", "\\")),
+                format!(
+                    "{nvcc_exe_dir};{};{path}",
+                    cl_paths
+                        .first()
+                        .unwrap()
+                        .to_string_lossy()
+                        .replace("/", "\\")
+                ),
             )
         };
         println!("{}", env::var("PATH").unwrap());
@@ -37,7 +44,19 @@ fn main() {
                 .expect("Failed to read glob pattern")
                 .filter_map(Result::ok)
                 .collect::<Vec<std::path::PathBuf>>();
-        unsafe { env::set_var("INCLUDE", format!("{:?}", include_paths.first().unwrap())) };
+        unsafe {
+            env::set_var(
+                "INCLUDE",
+                format!(
+                    "{:?}",
+                    include_paths
+                        .first()
+                        .unwrap()
+                        .to_string_lossy()
+                        .replace("/", "\\")
+                ),
+            )
+        };
     }
     if cfg!(target_os = "linux") {
         let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/bin")

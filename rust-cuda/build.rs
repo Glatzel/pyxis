@@ -22,7 +22,7 @@ fn main() {
                 .expect("Failed to read glob pattern")
                 .filter_map(Result::ok)
                 .collect::<Vec<std::path::PathBuf>>();
-        println!("{:?}", cl_paths.first().unwrap().to_slash_lossy());
+        println!("{:?}", cl_paths.first().unwrap().to_string_lossy());
 
         let path = env::var("PATH").unwrap().to_string();
         unsafe {

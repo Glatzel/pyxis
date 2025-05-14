@@ -12,29 +12,31 @@ fn main() {
         .expect("Failed to execute script");
     // env
     if cfg!(target_os = "windows") {
+        //path
         let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/Library/bin")
             .unwrap()
             .to_string_lossy()
             .to_string();
 
-        let cl_path = if env::var("CI").is_ok() {
-            String::from(
-                "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64",
-            )
-        } else {
-            String::from(
-                "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64",
-            )
-        };
+        let cl_paths =
+            glob("C:/Program Files/Microsoft Visual Studio/2022/*/VC/Tools/MSVC/*/bin/Hostx64/x64")
+                .expect("Failed to read glob pattern")
+                .filter_map(Result::ok)
+                .collect::<Vec<std::path::PathBuf>>();
 
         let path = env::var("PATH").unwrap().to_string();
-        unsafe { env::set_var("PATH", format!("{nvcc_exe_dir};{cl_path};{path}")) };
-        println!("{}", env::var("PATH").unwrap());
-
-        let output = std::process::Command::new("pixi")
+        unsafe {
+            env::set_var(
+                "PATH",
+                format!(
+                    "{nvcc_exe_dir};{};{path}",
+                    cl_paths.last().unwrap().to_string_lossy()
+                ),
+            )
+        };
+        //init vs and add include
+        let output = std::process::Command::new("vswhere")
             .args([
-                "run",
-                "vswhere",
                 "-latest",
                 "-products",
                 "*",

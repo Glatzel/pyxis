@@ -73,43 +73,44 @@ jobs:
               - ./cuda/**
               - ./.github/workflows/ci-rust-cuda.yml
 
-  ci-cpp:
+  cpp:
     needs: changed
     if: ${{ needs.changed.outputs.changed-cpp != 'false'}}
     uses: ./.github/workflows/ci-cpp.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
 
-  csharp-ci:
+  csharp:
     needs: changed
-    if: ${{ needs.changed.outputs.changed-csharp != 'false'}}
+    if: ${{ needs.changed.outputs.changed-csharp != 'false'|| cancelled()||success()}}
     uses: ./.github/workflows/ci-csharp.yml
     with:
       release: ${{inputs.release && inputs.release || false }}
 
-  cuda-ci:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-cuda != 'false' }}
+  cuda:
+    needs: [changed,cpp]
+    if: ${{ needs.changed.outputs.changed-cuda != 'false' || cancelled()||success()}}
     uses: ./.github/workflows/ci-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
 
-  python-ci:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-python != 'false' }}
+  python:
+    needs: [changed,rust]
+    if: ${{ needs.changed.outputs.changed-python != 'false' || cancelled()||success()}}
     uses: ./.github/workflows/ci-python.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
 
-  python-cuda-ci:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-python-cuda != 'false' }}
+  python-cuda:
+    needs: [changed,cuda]
+    if: ${{ needs.changed.outputs.changed-python-cuda != 'false' || cancelled()||success()}}
     uses: ./.github/workflows/ci-python-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
+
   check-test:
-    needs: changed
-    if: ${{github.event_name == 'pull_request' && needs.changed.outputs.changed-python-cuda != 'false' }}
+    needs: [changed,cuda]
+    if: ${{github.event_name == 'pull_request' && needs.changed.outputs.changed-python-cuda != 'false' || cancelled()||success()}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -131,40 +132,40 @@ jobs:
           echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
           exit 1
 
-  rust-ci:
+  rust:
     needs: changed
     if: ${{ needs.changed.outputs.changed-rust != 'false' }}
     uses: ./.github/workflows/ci-rust.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
 
-  rust-cuda-ci:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-rust-cuda != 'false' }}
+  rust-cuda:
+    needs: [changed,rust,cuda]
+    if: ${{ needs.changed.outputs.changed-rust-cuda != 'false' || cancelled()||success()}}
     uses: ./.github/workflows/ci-rust-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
 
   rust-cuda-check-test:
-      needs: changed
-      if: ${{github.event_name == 'pull_request'&&needs.changed.outputs.changed-rust-cuda != 'false' }}
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - id: change
-          uses: tj-actions/changed-files@v46
-          with:
-            files: |
-              ./rust-cuda/lcov.info
-              ./rust-cuda/nextest.junit.xml
-        - name: List all changed files
-          env:
-            ALL_CHANGED_FILES: ${{ steps.change.outputs.all_changed_files }}
-          run: |
-            for file in ${ALL_CHANGED_FILES}; do
-              echo "$file was changed"
-            done
-        - if: ${{steps.change.outputs.all_changed_files_count  == '0' }}
-          run: |
-            echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
-            exit 1
+    needs: [changed,cuda]
+    if: ${{github.event_name == 'pull_request'&&needs.changed.outputs.changed-rust-cuda != 'false'|| cancelled()||success() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: change
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            ./rust-cuda/lcov.info
+            ./rust-cuda/nextest.junit.xml
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.change.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
+      - if: ${{steps.change.outputs.all_changed_files_count  == '0' }}
+        run: |
+          echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
+          exit 1

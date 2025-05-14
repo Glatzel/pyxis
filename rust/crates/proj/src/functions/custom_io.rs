@@ -22,7 +22,7 @@ impl crate::PjContext {
     pub fn set_sqlite3_vfs_name(&self, name: &str) -> miette::Result<&Self> {
         let name = std::ffi::CString::new(name).into_diagnostic()?;
         unsafe {
-            proj_sys::proj_context_set_sqlite3_vfs_name(self.ctx, name.as_ptr());
+            proj_sys::proj_context_set_sqlite3_vfs_name(self.ptr, name.as_ptr());
         };
         check_result!(self);
         Ok(self)
@@ -50,7 +50,7 @@ impl crate::PjContext {
             .collect();
         let paths_ptr: Vec<*const i8> = paths.iter().map(|p| p.as_ptr()).collect();
         unsafe {
-            proj_sys::proj_context_set_search_paths(self.ctx, len as i32, paths_ptr.as_ptr());
+            proj_sys::proj_context_set_search_paths(self.ptr, len as i32, paths_ptr.as_ptr());
         };
         check_result!(self);
         Ok(self)
@@ -71,7 +71,7 @@ impl crate::PjContext {
     pub fn set_ca_bundle_path(&self, path: &Path) -> miette::Result<&Self> {
         let path = std::ffi::CString::new(path.to_str().unwrap()).into_diagnostic()?;
         unsafe {
-            proj_sys::proj_context_set_ca_bundle_path(self.ctx, path.as_ptr());
+            proj_sys::proj_context_set_ca_bundle_path(self.ptr, path.as_ptr());
         };
         check_result!(self);
         Ok(self)

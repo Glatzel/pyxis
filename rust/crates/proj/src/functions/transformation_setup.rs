@@ -9,10 +9,11 @@ impl crate::PjContext {
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub(crate) fn create(&self, definition: &str) -> miette::Result<crate::Pj> {
+    pub fn create(&self, definition: &str) -> miette::Result<crate::Pj> {
         let definition = CString::new(definition).into_diagnostic()?;
         let pj = crate::Pj {
-            pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr()) },
+            ptr: unsafe { proj_sys::proj_create(self.ptr, definition.as_ptr()) },
+            ctx: self,
         };
         check_result!(self);
         Ok(pj)
@@ -21,14 +22,15 @@ impl crate::PjContext {
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub(crate) fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Pj> {
+    pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Pj> {
         let len = argv.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in argv {
             ptrs.push(CString::new(*s).into_diagnostic()?.into_raw());
         }
         let pj = crate::Pj {
-            pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },
+            ptr: unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, ptrs.as_mut_ptr()) },
+            ctx: self,
         };
         check_result!(self);
         Ok(pj)
@@ -37,7 +39,7 @@ impl crate::PjContext {
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
-    pub(crate) fn create_crs_to_crs(
+    pub fn create_crs_to_crs(
         &self,
         source_crs: &str,
         target_crs: &str,
@@ -46,14 +48,15 @@ impl crate::PjContext {
         let source_crs = CString::new(source_crs).into_diagnostic()?;
         let target_crs = CString::new(target_crs).into_diagnostic()?;
         let pj = crate::Pj {
-            pj: unsafe {
+            ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs(
-                    self.ctx,
+                    self.ptr,
                     source_crs.as_ptr(),
                     target_crs.as_ptr(),
                     area.area,
                 )
             },
+            ctx: self,
         };
         check_result!(self);
         Ok(pj)
@@ -62,7 +65,7 @@ impl crate::PjContext {
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
-    pub(crate) fn create_crs_to_crs_from_pj(
+    pub fn create_crs_to_crs_from_pj(
         &self,
         source_crs: crate::Pj,
         target_crs: crate::Pj,
@@ -119,15 +122,16 @@ impl crate::PjContext {
             );
         }
         let pj = crate::Pj {
-            pj: unsafe {
+            ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(
-                    self.ctx,
-                    source_crs.pj,
-                    target_crs.pj,
+                    self.ptr,
+                    source_crs.ptr,
+                    target_crs.ptr,
                     area.area,
                     options.as_ptr(),
                 )
             },
+            ctx: self,
         };
         check_result!(self);
         Ok(pj)
@@ -136,13 +140,14 @@ impl crate::PjContext {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
     pub fn normalize_for_visualization(&self, obj: &crate::Pj) -> miette::Result<crate::Pj> {
         Ok(crate::Pj {
-            pj: unsafe { proj_sys::proj_normalize_for_visualization(self.ctx, obj.pj) },
+            ptr: unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr) },
+            ctx: self,
         })
     }
 }
 
-impl Drop for crate::Pj {
-    fn drop(&mut self) { unsafe { proj_sys::proj_destroy(self.pj) }; }
+impl Drop for crate::Pj<'_> {
+    fn drop(&mut self) { unsafe { proj_sys::proj_destroy(self.ptr) }; }
 }
 #[cfg(test)]
 mod test {

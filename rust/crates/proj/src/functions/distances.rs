@@ -1,10 +1,10 @@
 use crate::{ToCoord, check_result};
 ///# Distances
-impl crate::Pj {
+impl crate::Pj<'_> {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
     pub fn lp_dist(&self, a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
-        let dist = unsafe { proj_sys::proj_lp_dist(self.pj, a.to_coord()?, b.to_coord()?) };
+        let dist = unsafe { proj_sys::proj_lp_dist(self.ptr, a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         if dist.is_nan() {
             miette::bail!(
@@ -21,7 +21,7 @@ impl crate::Pj {
         a: impl crate::IPjCoord,
         b: impl crate::IPjCoord,
     ) -> miette::Result<f64> {
-        let dist = unsafe { proj_sys::proj_lpz_dist(self.pj, a.to_coord()?, b.to_coord()?) };
+        let dist = unsafe { proj_sys::proj_lpz_dist(self.ptr, a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         if dist.is_nan() {
             miette::bail!(
@@ -38,7 +38,7 @@ impl crate::Pj {
         a: impl crate::IPjCoord,
         b: impl crate::IPjCoord,
     ) -> miette::Result<(f64, f64)> {
-        let dist = unsafe { proj_sys::proj_geod(self.pj, a.to_coord()?, b.to_coord()?) };
+        let dist = unsafe { proj_sys::proj_geod(self.ptr, a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };
         if dist.is_nan() || reversed_azimuth.is_nan() {

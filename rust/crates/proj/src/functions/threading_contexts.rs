@@ -18,7 +18,7 @@ impl crate::PjContext {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
     pub fn new() -> Self {
         Self {
-            ctx: unsafe { proj_sys::proj_context_create() },
+            ptr: unsafe { proj_sys::proj_context_create() },
         }
     }
 }
@@ -28,7 +28,7 @@ impl Clone for crate::PjContext {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone>
     fn clone(&self) -> Self {
         Self {
-            ctx: unsafe { proj_sys::proj_context_clone(self.ctx) },
+            ptr: unsafe { proj_sys::proj_context_clone(self.ptr) },
         }
     }
 }
@@ -36,5 +36,5 @@ impl Clone for crate::PjContext {
 impl Drop for crate::PjContext {
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
-    fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(self.ctx) }; }
+    fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(self.ptr) }; }
 }

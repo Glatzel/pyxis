@@ -14,25 +14,6 @@ env:
   RUST_ROOT: ./rust
 
 jobs:
-  cargo-bench:
-    if: ${{!inputs.release}}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - run: cargo install cargo-codspeed --locked
-
-      - name: Build the benchmark target(s)
-        run: cargo codspeed build -p pyxis
-        working-directory: ${{env.RUST_ROOT}}
-
-      - name: Run the benchmarks
-        uses: CodSpeedHQ/action@v3
-        with:
-          run: cargo codspeed run
-          token: ${{ secrets.CODSPEED_TOKEN }}
-          working-directory: ${{env.RUST_ROOT}}
-
   cargo-test:
     if: ${{!inputs.release}}
     strategy:
@@ -94,6 +75,7 @@ jobs:
           if-no-files-found: error
 
   rattler-pyxis-cli:
+    needs: cargo-test
     strategy:
       fail-fast: false
       matrix:
@@ -123,3 +105,23 @@ jobs:
             rust/rattler/output/${{matrix.os}}/*.conda
             rust/dist/*.7z
           if-no-files-found: error
+
+  cargo-bench:
+    needs: cargo-test
+    if: ${{!inputs.release}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo install cargo-codspeed --locked
+
+      - name: Build the benchmark target(s)
+        run: cargo codspeed build -p pyxis
+        working-directory: ${{env.RUST_ROOT}}
+
+      - name: Run the benchmarks
+        uses: CodSpeedHQ/action@v3
+        with:
+          run: cargo codspeed run
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          working-directory: ${{env.RUST_ROOT}}

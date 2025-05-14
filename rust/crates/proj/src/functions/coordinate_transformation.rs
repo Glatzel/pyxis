@@ -1,6 +1,6 @@
 use crate::check_result;
 // region:Coordinate transformation
-impl crate::Pj {
+impl crate::Pj<'_> {
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
     ///
@@ -14,7 +14,7 @@ impl crate::Pj {
         direction: crate::PjDirection,
         coord: crate::data_types::PjCoord,
     ) -> miette::Result<crate::data_types::PjCoord> {
-        let out_coord = unsafe { proj_sys::proj_trans(self.pj, i32::from(direction), coord) };
+        let out_coord = unsafe { proj_sys::proj_trans(self.ptr, i32::from(direction), coord) };
         check_result!(self);
         Ok(out_coord)
     }
@@ -22,11 +22,11 @@ impl crate::Pj {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn get_last_used_operation(&self) -> Option<Self> {
-        let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.pj) };
+        let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr) };
         if ptr.is_null() {
             return None;
         }
-        let pj = Self { pj: ptr };
+        let pj = Self { ptr, ctx: self.ctx };
         Some(pj)
     }
 
@@ -52,7 +52,7 @@ impl crate::Pj {
     ) -> miette::Result<usize> {
         let result = unsafe {
             proj_sys::proj_trans_generic(
-                self.pj,
+                self.ptr,
                 i32::from(direction),
                 x,
                 sx,
@@ -87,7 +87,7 @@ impl crate::Pj {
     ) -> miette::Result<&Self> {
         let code = unsafe {
             proj_sys::proj_trans_array(
-                self.pj,
+                self.ptr,
                 i32::from(direction),
                 coord.len(),
                 coord.as_mut_ptr(),
@@ -118,8 +118,8 @@ impl crate::PjContext {
     ) -> miette::Result<&Self> {
         let code = unsafe {
             proj_sys::proj_trans_bounds(
-                self.ctx,
-                p.pj,
+                self.ptr,
+                p.ptr,
                 i32::from(direction),
                 xmin,
                 ymin,
@@ -160,8 +160,8 @@ impl crate::PjContext {
     ) -> miette::Result<&Self> {
         let code = unsafe {
             proj_sys::proj_trans_bounds_3D(
-                self.ctx,
-                p.pj,
+                self.ptr,
+                p.ptr,
                 i32::from(direction),
                 xmin,
                 ymin,

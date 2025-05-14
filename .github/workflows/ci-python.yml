@@ -82,6 +82,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   bench:
+    needs: rattler-build
     if: ${{ !inputs.release }}
     runs-on: ubuntu-latest
     steps:

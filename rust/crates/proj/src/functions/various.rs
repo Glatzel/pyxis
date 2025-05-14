@@ -7,7 +7,7 @@ use miette::IntoDiagnostic;
 use crate::check_result;
 
 /// # Various
-impl crate::Pj {
+impl crate::Pj<'_> {
     ///Measure internal consistency of a given transformation. The function
     /// performs n round trip transformations starting in either the forward or
     /// reverse direction. Returns the euclidean distance of the starting point
@@ -22,7 +22,7 @@ impl crate::Pj {
         n: i32,
         coord: &mut proj_sys::PJ_COORD,
     ) -> miette::Result<f64> {
-        let distance = unsafe { proj_sys::proj_roundtrip(self.pj, i32::from(dir), n, coord) };
+        let distance = unsafe { proj_sys::proj_roundtrip(self.ptr, i32::from(dir), n, coord) };
         check_result!(self);
         Ok(distance)
     }
@@ -55,7 +55,7 @@ impl crate::Pj {
     ) -> miette::Result<crate::data_types::PjFactors> {
         use crate::data_types::PjFactors;
 
-        let factor = unsafe { proj_sys::proj_factors(self.pj, coord) };
+        let factor = unsafe { proj_sys::proj_factors(self.ptr, coord) };
         match self.errno() {
             crate::data_types::PjError::Success => (),
             crate::data_types::PjError::CoordTransfmOutsideProjectionDomain => (),
@@ -86,7 +86,7 @@ impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_input>
     pub fn angular_input(&self, dir: &crate::PjDirection) -> miette::Result<bool> {
-        let result = unsafe { proj_sys::proj_angular_input(self.pj, i32::from(dir)) } != 0;
+        let result = unsafe { proj_sys::proj_angular_input(self.ptr, i32::from(dir)) } != 0;
         Ok(result)
     }
 
@@ -95,7 +95,7 @@ impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_output>
     pub fn angular_output(&self, dir: &crate::PjDirection) -> miette::Result<bool> {
-        let result = unsafe { proj_sys::proj_angular_output(self.pj, i32::from(dir)) } != 0;
+        let result = unsafe { proj_sys::proj_angular_output(self.ptr, i32::from(dir)) } != 0;
         Ok(result)
     }
 
@@ -104,7 +104,7 @@ impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_input>
     pub fn degree_input(&self, dir: &crate::PjDirection) -> miette::Result<bool> {
-        let result = unsafe { proj_sys::proj_degree_input(self.pj, i32::from(dir)) } != 0;
+        let result = unsafe { proj_sys::proj_degree_input(self.ptr, i32::from(dir)) } != 0;
         Ok(result)
     }
 
@@ -113,7 +113,7 @@ impl crate::Pj {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_output>
     pub fn degree_output(&self, dir: &crate::PjDirection) -> miette::Result<bool> {
-        let result = unsafe { proj_sys::proj_degree_output(self.pj, i32::from(dir)) } != 0;
+        let result = unsafe { proj_sys::proj_degree_output(self.ptr, i32::from(dir)) } != 0;
         Ok(result)
     }
 }

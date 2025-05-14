@@ -18,13 +18,13 @@ pub fn info() -> PjInfo {
     )
 }
 ///# Info functions
-impl crate::Pj {
+impl crate::Pj<'_> {
     /// Get information about a specific grid.
     ///
     /// References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_pj_info>
     pub fn info(&self) -> PjProjInfo {
-        let src = unsafe { proj_sys::proj_pj_info(self.pj) };
+        let src = unsafe { proj_sys::proj_pj_info(self.ptr) };
         PjProjInfo::new(
             crate::c_char_to_string(src.id).unwrap_or_default(),
             crate::c_char_to_string(src.description).unwrap_or_default(),

@@ -34,6 +34,7 @@ fn main() {
                 ),
             )
         };
+        //init vs
         std::process::Command::new("pixi")
             .args([
                 "run",

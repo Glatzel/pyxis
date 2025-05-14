@@ -12,19 +12,6 @@ fn main() {
         .expect("Failed to execute script");
     // env
     if cfg!(target_os = "windows") {
-        //init vs
-        let vcvars64_paths =
-            glob("C:/Program Files/Microsoft Visual Studio/2022/*/Auxiliary/Build/vcvars64.bat")
-                .expect("Failed to read glob pattern")
-                .filter_map(Result::ok)
-                .collect::<Vec<std::path::PathBuf>>();
-        std::process::Command::new("nvcc")
-            .arg(format!(
-                "{}",
-                vcvars64_paths.first().unwrap().to_string_lossy()
-            ))
-            .output()
-            .unwrap();
         //path
         let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/Library/bin")
             .unwrap()

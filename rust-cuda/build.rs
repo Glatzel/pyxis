@@ -30,7 +30,7 @@ fn main() {
                 format!(
                     "{nvcc_exe_dir};{};{path}",
                     cl_paths
-                        .first()
+                        .last()
                         .unwrap()
                         .to_string_lossy()
                         .replace("/", "\\")
@@ -50,7 +50,7 @@ fn main() {
                 format!(
                     "{:?}",
                     include_paths
-                        .first()
+                        .last()
                         .unwrap()
                         .to_string_lossy()
                         .replace("/", "\\")

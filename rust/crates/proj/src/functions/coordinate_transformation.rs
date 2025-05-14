@@ -26,10 +26,7 @@ impl crate::Pj<'_> {
         if ptr.is_null() {
             return None;
         }
-        let pj = Self {
-            ptr,
-            ctx: self.ctx,
-        };
+        let pj = Self { ptr, ctx: self.ctx };
         Some(pj)
     }
 

@@ -210,7 +210,7 @@ impl PyxisCudaContext {
     }
 }
 
-#[cfg(all(test))]
+#[cfg(test)]
 mod test {
     use cust::memory::CopyDestination;
     use float_cmp::assert_approx_eq;

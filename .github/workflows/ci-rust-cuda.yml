@@ -1,4 +1,4 @@
-name: rust-CI
+name: rust-cuda
 
 on:
   workflow_dispatch:
@@ -7,9 +7,6 @@ on:
       release:
         type: boolean
         default: false
-      event:
-        type: string
-        required: true
 
 permissions: read-all
 
@@ -17,22 +14,6 @@ env:
   RUST_CUDA_ROOT: ./rust-cuda
 
 jobs:
-  check-test:
-    if: ${{inputs.event == 'pull_request'}}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: change
-        uses: tj-actions/changed-files@v46
-        with:
-          files: |
-            ${{!env.RUST_CUDA_ROOT}}/lcov.info
-            ${{!env.RUST_CUDA_ROOT}}/nextest.junit.xml
-      - if: ${{steps.change.outputs.all_modified  != 'true'}}
-        run: |
-          echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
-          exit 1
-
   upload-cov:
     if: ${{!inputs.release}}
     strategy:

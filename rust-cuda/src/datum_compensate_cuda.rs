@@ -1,6 +1,6 @@
 use cust::memory::DeviceCopy;
 use cust::prelude::*;
-use pyxis::{GeoFloat, IDatumCompensateParams};
+use pyxis::GeoFloat;
 
 use crate::context::PyxisCudaContext;
 
@@ -15,7 +15,10 @@ impl PyxisCudaContext {
         &self,
         xc: &mut DeviceBuffer<T>,
         yc: &mut DeviceBuffer<T>,
-        params: &impl IDatumCompensateParams<T>,
+        hb: T,
+        radius: T,
+        x0: T,
+        y0: T,
     ) {
         assert_eq!(xc.len(), yc.len());
         let length: usize = xc.len();
@@ -25,14 +28,17 @@ impl PyxisCudaContext {
         let stream = &self.stream;
         let (grid_size, block_size) = self.get_grid_block(length);
 
+        let ratio = hb / radius;
+        let factor = ratio / (T::ONE + ratio);
+
         unsafe {
             launch!(
                 func<<<grid_size, block_size, 0, stream>>>(length,
                     xc.as_device_ptr(),
                     yc.as_device_ptr(),
-                    params.factor(),
-                    params.x0(),
-                    params.y0(),
+                   factor,
+                   x0,
+                   y0,
                     xc.as_device_ptr(),
                     yc.as_device_ptr(),
                 )
@@ -54,8 +60,7 @@ mod test {
         let ctx = &crate::CONTEXT;
         let mut dxc = ctx.device_buffer_from_slice(&xc);
         let mut dyc = ctx.device_buffer_from_slice(&yc);
-        let params = pyxis::DatumCompensateParams::new(400.0, 6_378_137.0, 500_000.0, 0.0);
-        ctx.datum_compensate_cuda(&mut dxc, &mut dyc, &params);
+        ctx.datum_compensate_cuda(&mut dxc, &mut dyc, 400.0, 6_378_137.0, 500_000.0, 0.0);
         dxc.copy_to(&mut xc).unwrap();
         dyc.copy_to(&mut yc).unwrap();
 

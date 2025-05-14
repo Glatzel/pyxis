@@ -1,4 +1,4 @@
-name: python-CI
+name: python
 
 on:
   workflow_dispatch:
@@ -7,29 +7,10 @@ on:
       release:
         type: boolean
         default: false
-      event:
-        type: string
-        required: true
 permissions: read-all
 env:
-  PYTHON_CUDA_ROOT: ${{github.workspace}}/python-cuda
+  PYTHON_CUDA_ROOT: ./python-cuda
 jobs:
-  check-test:
-    if: ${{inputs.event == 'pull_request'}}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: change
-        uses: tj-actions/changed-files@v46
-        with:
-          files: |
-            ${{!env.PYTHON_CUDA_ROOT}}/junit.xml
-            ${{!env.PYTHON_CUDA_ROOT}}/coverage.xml
-      - if: ${{steps.change.outputs.all_modified  != 'true'}}
-        run: |
-          echo "::error title=Test Report Outdated::Run test on local machine and update the test report."
-          exit 1
-
   rattler-build:
     env:
       PYTEST_ADDOPTS: "--color=yes"

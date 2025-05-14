@@ -1,4 +1,4 @@
-name: cuda-CI
+name: cuda
 on:
   workflow_dispatch:
   workflow_call:

@@ -12,9 +12,9 @@ pub fn info() -> PjInfo {
         src.major,
         src.minor,
         src.patch,
-        crate::c_char_to_string(src.release),
-        crate::c_char_to_string(src.version),
-        crate::c_char_to_string(src.searchpath),
+        crate::c_char_to_string(src.release).unwrap_or_default(),
+        crate::c_char_to_string(src.version).unwrap_or_default(),
+        crate::c_char_to_string(src.searchpath).unwrap_or_default(),
     )
 }
 ///# Info functions
@@ -26,9 +26,9 @@ impl crate::Pj {
     pub fn info(&self) -> PjProjInfo {
         let src = unsafe { proj_sys::proj_pj_info(self.pj) };
         PjProjInfo::new(
-            crate::c_char_to_string(src.id),
-            crate::c_char_to_string(src.description),
-            crate::c_char_to_string(src.definition),
+            crate::c_char_to_string(src.id).unwrap_or_default(),
+            crate::c_char_to_string(src.description).unwrap_or_default(),
+            crate::c_char_to_string(src.definition).unwrap_or_default(),
             src.has_inverse != 0,
             src.accuracy,
         )
@@ -42,13 +42,13 @@ impl crate::Pj {
 pub fn grid_info(grid: &str) -> miette::Result<PjGridInfo> {
     let gridname_cstr = std::ffi::CString::new(grid).into_diagnostic()?;
     let src = unsafe { proj_sys::proj_grid_info(gridname_cstr.as_ptr()) };
-    if crate::c_char_to_string(src.format.as_ptr()) == "missing" {
+    if crate::c_char_to_string(src.format.as_ptr()).unwrap_or_default() == "missing" {
         miette::bail!("Invalid grid: {}", grid)
     }
     Ok(PjGridInfo::new(
-        crate::c_char_to_string(src.gridname.as_ptr()),
-        crate::c_char_to_string(src.filename.as_ptr()),
-        crate::c_char_to_string(src.format.as_ptr()),
+        crate::c_char_to_string(src.gridname.as_ptr()).unwrap_or_default(),
+        crate::c_char_to_string(src.filename.as_ptr()).unwrap_or_default(),
+        crate::c_char_to_string(src.format.as_ptr()).unwrap_or_default(),
         src.lowerleft,
         src.upperright,
         src.n_lon,
@@ -65,21 +65,21 @@ pub fn init_info(initname: &str) -> miette::Result<PjInitInfo> {
     let initname_cstr = std::ffi::CString::new(initname).into_diagnostic()?;
     let src = unsafe { proj_sys::proj_init_info(initname_cstr.as_ptr()) };
     let info = PjInitInfo::new(
-        crate::c_char_to_string(src.name.as_ptr()),
-        crate::c_char_to_string(src.filename.as_ptr()),
-        crate::c_char_to_string(src.version.as_ptr()),
-        crate::c_char_to_string(src.origin.as_ptr()),
-        crate::c_char_to_string(src.lastupdate.as_ptr()),
+        crate::c_char_to_string(src.name.as_ptr()).unwrap_or_default(),
+        crate::c_char_to_string(src.filename.as_ptr()).unwrap_or_default(),
+        crate::c_char_to_string(src.version.as_ptr()).unwrap_or_default(),
+        crate::c_char_to_string(src.origin.as_ptr()).unwrap_or_default(),
+        crate::c_char_to_string(src.lastupdate.as_ptr()).unwrap_or_default(),
     );
     if info.version() == "" {
         miette::bail!(format!("Invalid proj init file or name: {}", initname))
     }
     Ok(PjInitInfo::new(
-        crate::c_char_to_string(src.name.as_ptr()),
-        crate::c_char_to_string(src.filename.as_ptr()),
-        crate::c_char_to_string(src.version.as_ptr()),
-        crate::c_char_to_string(src.origin.as_ptr()),
-        crate::c_char_to_string(src.lastupdate.as_ptr()),
+        crate::c_char_to_string(src.name.as_ptr()).unwrap_or_default(),
+        crate::c_char_to_string(src.filename.as_ptr()).unwrap_or_default(),
+        crate::c_char_to_string(src.version.as_ptr()).unwrap_or_default(),
+        crate::c_char_to_string(src.origin.as_ptr()).unwrap_or_default(),
+        crate::c_char_to_string(src.lastupdate.as_ptr()).unwrap_or_default(),
     ))
 }
 #[cfg(test)]

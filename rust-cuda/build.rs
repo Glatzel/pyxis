@@ -34,7 +34,7 @@ fn main() {
                 ),
             )
         };
-        //init vs
+        //init vs and add include
         let output = std::process::Command::new("vswhere")
             .args([
                 "-latest",

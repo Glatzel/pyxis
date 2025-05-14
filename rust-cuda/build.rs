@@ -50,7 +50,6 @@ fn main() {
                         .last()
                         .unwrap()
                         .to_string_lossy()
-                        .replace("/", "/")
                 ),
             )
         };

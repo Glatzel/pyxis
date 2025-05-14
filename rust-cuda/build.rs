@@ -22,14 +22,19 @@ fn main() {
                 .expect("Failed to read glob pattern")
                 .filter_map(Result::ok)
                 .collect::<Vec<std::path::PathBuf>>();
-
+        assert_eq!(
+            String::from(
+                "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64",
+            ),
+            cl_paths.last().unwrap().to_string_lossy()
+        );
         let path = env::var("PATH").unwrap().to_string();
         unsafe {
             env::set_var(
                 "PATH",
                 format!(
                     "{nvcc_exe_dir};{};{path}",
-                    cl_paths.last().unwrap().clone().to_string_lossy()
+                    cl_paths.last().unwrap().to_string_lossy()
                 ),
             )
         };

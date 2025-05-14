@@ -27,7 +27,7 @@ fn main() {
         unsafe {
             env::set_var(
                 "PATH",
-                format!("{nvcc_exe_dir};{};{path}", cl_paths.first().unwrap().to_string_lossy()),
+                format!("{nvcc_exe_dir};{};{path}", cl_paths.first().unwrap().to_string_lossy().replace("/", "\\")),
             )
         };
         println!("{}", env::var("PATH").unwrap());

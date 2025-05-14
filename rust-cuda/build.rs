@@ -35,7 +35,7 @@ fn main() {
             )
         };
         //init vs
-        std::process::Command::new("vswhere")
+        let output = std::process::Command::new("vswhere")
             .args([
                 "-latest",
                 "-products",
@@ -47,6 +47,8 @@ fn main() {
             ])
             .output()
             .expect("Failed to execute script");
+        let include_path = String::from_utf8_lossy(&output.stdout);
+        unsafe { env::set_var("INCLUDE", format!("{include_path}")) };
     }
     if cfg!(target_os = "linux") {
         let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/bin")

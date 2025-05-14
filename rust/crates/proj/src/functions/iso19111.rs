@@ -801,15 +801,25 @@ impl crate::Pj {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
-    pub fn _get_domain_count(&self) { unimplemented!() }
+    pub fn get_domain_count(&self) -> miette::Result<u32> {
+        let count = unsafe { proj_sys::proj_get_domain_count(self.pj) };
+        if count == 0 {
+            miette::bail!("get_domain_count error.")
+        };
+        Ok(count as u32)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope>
-    pub fn _get_scope(&self) { unimplemented!() }
+    pub fn get_scope(&self) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope(self.pj) })
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
-    pub fn _get_scope_ex(&self) { unimplemented!() }
+    pub fn get_scope_ex(&self, domain_idx: i32) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope_ex(self.pj, domain_idx) })
+    }
 }
 ///# References
 /// <>
@@ -920,6 +930,32 @@ mod test_proj {
         let pj = ctx.create("EPSG:4326")?;
         let remarks = pj.get_remarks();
         println!("{remarks}");
+        Ok(())
+    }
+    #[test]
+    fn test_get_domain_count() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let count = pj.get_domain_count()?;
+        assert_eq!(count, 1);
+        Ok(())
+    }
+    #[test]
+    fn test_get_scope() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let scope = pj.get_scope().expect("No scope");
+        println!("{scope}");
+        assert_eq!(scope, "Horizontal component of 3D system.");
+        Ok(())
+    }
+    #[test]
+    fn test_get_scope_ex() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let scope = pj.get_scope_ex(0).expect("No scope");
+        println!("{scope}");
+        assert_eq!(scope, "Horizontal component of 3D system.");
         Ok(())
     }
 }

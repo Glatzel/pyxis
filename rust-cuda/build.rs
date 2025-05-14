@@ -35,10 +35,8 @@ fn main() {
             )
         };
         //init vs
-        std::process::Command::new("pixi")
+        std::process::Command::new("vswhere")
             .args([
-                "run",
-                "vswhere",
                 "-latest",
                 "-products",
                 "*",

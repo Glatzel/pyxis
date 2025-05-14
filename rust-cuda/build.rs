@@ -29,8 +29,10 @@ fn main() {
             env::set_var(
                 "PATH",
                 format!(
-                    "{nvcc_exe_dir};{};{path}",
-                    cl_paths.last().unwrap().to_string_lossy()
+                    "{nvcc_exe_dir};{};{path}",String::from(
+                        "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64",
+                    )
+                    // cl_paths.last().unwrap().to_string_lossy()
                 ),
             )
         };

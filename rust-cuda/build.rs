@@ -18,7 +18,7 @@ fn main() {
             .to_string();
 
         let cl_paths =
-            glob("C:/Program Files/Microsoft Visual Studio/2022/*/VC/Tools/MSVC/*/bin/Hostx64/x64")
+            glob("C:\\Program Files\\Microsoft Visual Studio\\2022\\*/VC\\Tools\\MSVC\\*\\bin\\Hostx64\\x64")
                 .expect("Failed to read glob pattern")
                 .filter_map(Result::ok)
                 .collect::<Vec<std::path::PathBuf>>();
@@ -40,7 +40,7 @@ fn main() {
         println!("{}", env::var("PATH").unwrap());
 
         let include_paths =
-            glob("C:/Program Files/Microsoft Visual Studio/2022/*/VC/Tools/MSVC/*/include")
+            glob("C:\\Program Files\\Microsoft Visual Studio\\2022\\*\\VC\\Tools\\MSVC\\*\\include")
                 .expect("Failed to read glob pattern")
                 .filter_map(Result::ok)
                 .collect::<Vec<std::path::PathBuf>>();

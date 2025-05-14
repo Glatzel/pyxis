@@ -3,10 +3,11 @@ use std::env::{self};
 use std::path::PathBuf;
 
 fn main() {
+    let workspace_root = env::var("CARGO_WORKSPACE_DIR").unwrap();
     // run pixi install
     std::process::Command::new("pixi")
         .arg("install")
-        .current_dir(env::var("CARGO_WORKSPACE_DIR").unwrap())
+        .current_dir(&workspace_root)
         .output()
         .expect("Failed to execute script");
 
@@ -23,24 +24,24 @@ fn main() {
         }
     }
     let default_pkg_config_path = match env::var("CARGO_CFG_TARGET_OS").unwrap().as_str() {
-        "windows" => {
-            dunce::canonicalize("../../.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig")
-                .unwrap()
-                .to_string_lossy()
-                .to_string()
-        }
-        "linux" => {
-            dunce::canonicalize("../../.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig")
-                .unwrap()
-                .to_string_lossy()
-                .to_string()
-        }
-        "macos" => {
-            dunce::canonicalize("../../.pixi/envs/default/proj/arm64-osx-release/lib/pkgconfig")
-                .unwrap()
-                .to_string_lossy()
-                .to_string()
-        }
+        "windows" => dunce::canonicalize(format!(
+            "{workspace_root}/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
+        ))
+        .unwrap()
+        .to_string_lossy()
+        .to_string(),
+        "linux" => dunce::canonicalize(format!(
+            "{workspace_root}/.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig"
+        ))
+        .unwrap()
+        .to_string_lossy()
+        .to_string(),
+        "macos" => dunce::canonicalize(format!(
+            "{workspace_root}/.pixi/envs/default/proj/arm64-osx-release/lib/pkgconfig"
+        ))
+        .unwrap()
+        .to_string_lossy()
+        .to_string(),
         other => {
             panic!("Unsupported OS: {}", other)
         }

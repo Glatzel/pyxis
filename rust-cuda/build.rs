@@ -18,11 +18,10 @@ fn main() {
             .to_string();
 
         let cl_paths =
-            glob("C:\\Program Files\\Microsoft Visual Studio\\2022\\*\\VC\\Tools\\MSVC\\*\\bin\\Hostx64\\x64")
+            glob("C:/Program Files/Microsoft Visual Studio/2022/*/VC/Tools/MSVC/*/bin/Hostx64/x64")
                 .expect("Failed to read glob pattern")
                 .filter_map(Result::ok)
                 .collect::<Vec<std::path::PathBuf>>();
-        println!("{:?}", cl_paths.first().unwrap().to_string_lossy());
 
         let path = env::var("PATH").unwrap().to_string();
         unsafe {
@@ -31,6 +30,7 @@ fn main() {
                 format!("{nvcc_exe_dir};{};{path}", cl_paths.first().unwrap().to_string_lossy()),
             )
         };
+        println!("{}", env::var("PATH").unwrap())
 
         let include_paths =
             glob("C:/Program Files/Microsoft Visual Studio/2022/*/VC/Tools/MSVC/*/include")

@@ -29,18 +29,25 @@ fn main() {
                 "PATH",
                 format!(
                     "{nvcc_exe_dir};{};{path}",
-                    String::from(cl_paths.last().unwrap().to_str().unwrap())
+                    String::from(
+                        cl_paths
+                            .last()
+                            .unwrap()
+                            .clone()
+                            .into_os_string()
+                            .to_string_lossy()
+                            .to_string()
+                    )
                 ),
             )
         };
         println!("{}", env::var("PATH").unwrap());
 
-        let include_paths = glob(
-            "C:/Program Files/Microsoft Visual Studio/2022/*/VC/Tools/MSVC/*/include",
-        )
-        .expect("Failed to read glob pattern")
-        .filter_map(Result::ok)
-        .collect::<Vec<std::path::PathBuf>>();
+        let include_paths =
+            glob("C:/Program Files/Microsoft Visual Studio/2022/*/VC/Tools/MSVC/*/include")
+                .expect("Failed to read glob pattern")
+                .filter_map(Result::ok)
+                .collect::<Vec<std::path::PathBuf>>();
         unsafe {
             env::set_var(
                 "INCLUDE",
@@ -49,7 +56,10 @@ fn main() {
                     include_paths
                         .last()
                         .unwrap()
+                        .clone()
+                        .into_os_string()
                         .to_string_lossy()
+                        .to_string()
                 ),
             )
         };

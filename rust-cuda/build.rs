@@ -34,8 +34,20 @@ fn main() {
                 ),
             )
         };
-        println!("{}", env::var("PATH").unwrap());
-        unsafe { env::set_var("INCLUDE", "") };
+        std::process::Command::new("pixi")
+            .args([
+                "run",
+                "vswhere",
+                "-latest",
+                "-products",
+                "*",
+                "-requires",
+                "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+                "-find",
+                "VC\\Tools\\MSVC\\*\\include",
+            ])
+            .output()
+            .expect("Failed to execute script");
     }
     if cfg!(target_os = "linux") {
         let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/bin")

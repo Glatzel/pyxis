@@ -108,9 +108,9 @@ jobs:
     with:
       release: ${{inputs.release&& inputs.release || false}}
 
-  check-test:
-    needs: [changed,cuda]
-    if: ${{github.event_name == 'pull_request' && needs.changed.outputs.changed-python-cuda != 'false' || cancelled()||success()}}
+  python-cuda-check-test:
+    needs: [changed]
+    if: ${{github.event_name == 'pull_request' && needs.changed.outputs.changed-python-cuda != 'false'}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -148,7 +148,7 @@ jobs:
 
   rust-cuda-check-test:
     needs: [changed,cuda]
-    if: ${{github.event_name == 'pull_request'&&needs.changed.outputs.changed-rust-cuda != 'false'|| cancelled()||success() }}
+    if: ${{github.event_name == 'pull_request'&&needs.changed.outputs.changed-rust-cuda != 'false'}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

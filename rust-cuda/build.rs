@@ -35,18 +35,7 @@ fn main() {
             )
         };
         println!("{}", env::var("PATH").unwrap());
-        //include
-        // let include_paths =
-        //     glob("C:/Program Files/Microsoft Visual
-        // Studio/2022/*/VC/Tools/MSVC/*/include")         .expect("
-        // Failed to read glob pattern")         .filter_map(Result::ok)
-        //         .collect::<Vec<std::path::PathBuf>>();
-        // unsafe {
-        //     env::set_var(
-        //         "INCLUDE",
-        //         format!("{:?}",
-        // include_paths.last().unwrap().to_string_lossy()),     )
-        // };
+        unsafe { env::set_var("INCLUDE", "") };
     }
     if cfg!(target_os = "linux") {
         let nvcc_exe_dir = dunce::canonicalize(".pixi/envs/default/bin")

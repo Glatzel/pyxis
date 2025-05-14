@@ -22,12 +22,7 @@ fn main() {
                 .expect("Failed to read glob pattern")
                 .filter_map(Result::ok)
                 .collect::<Vec<std::path::PathBuf>>();
-        assert_eq!(
-            String::from(
-                "C:/Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64",
-            ),
-            cl_paths.last().unwrap().to_string_lossy()
-        );
+
         let path = env::var("PATH").unwrap().to_string();
         unsafe {
             env::set_var(
@@ -48,10 +43,7 @@ fn main() {
         unsafe {
             env::set_var(
                 "INCLUDE",
-                format!(
-                    "{:?}",
-                    include_paths.last().unwrap().clone().to_string_lossy()
-                ),
+                format!("{:?}", include_paths.last().unwrap().to_string_lossy()),
             )
         };
     }

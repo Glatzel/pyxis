@@ -1,5 +1,4 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
-use proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015_SIMPLIFIED;
 
 use crate::create_readonly_struct;
 /// # References
@@ -92,14 +91,14 @@ pub enum PjWktType {
 impl From<PjWktType> for u32 {
     fn from(value: PjWktType) -> Self {
         match value {
-            PjWktType::Wkt2_2015 => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015 as u32,
-            PjWktType::Wkt2_2015Simplified => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015_SIMPLIFIED as u32,
-            PjWktType::Wkt2_2019 => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019 as u32,
-            PjWktType::Wkt2_2018 => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018 as u32,
-            PjWktType::Wkt2_2019Simplified => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019_SIMPLIFIED as u32,
-            PjWktType::Wkt2_2018Simplified => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018_SIMPLIFIED as u32,
-            PjWktType::Wkt1Gdal => proj_sys::PJ_WKT_TYPE_PJ_WKT1_GDAL as u32,
-            PjWktType::Wkt1Esri => proj_sys::PJ_WKT_TYPE_PJ_WKT1_ESRI as u32,
+            PjWktType::Wkt2_2015 => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015,
+            PjWktType::Wkt2_2015Simplified => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015_SIMPLIFIED,
+            PjWktType::Wkt2_2019 => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019,
+            PjWktType::Wkt2_2018 => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018,
+            PjWktType::Wkt2_2019Simplified => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019_SIMPLIFIED,
+            PjWktType::Wkt2_2018Simplified => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018_SIMPLIFIED,
+            PjWktType::Wkt1Gdal => proj_sys::PJ_WKT_TYPE_PJ_WKT1_GDAL,
+            PjWktType::Wkt1Esri => proj_sys::PJ_WKT_TYPE_PJ_WKT1_ESRI,
         }
     }
 }

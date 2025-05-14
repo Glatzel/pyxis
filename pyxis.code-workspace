@@ -55,16 +55,6 @@
         },
         "rust-analyzer.server.extraEnv": {
             "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
-        },
-        "rust-analyzer.testExplorer": true,
-        "VSCodeCounter.exclude": [
-            "**/.gitignore",
-            "**/node_modules/**",
-            "tests_report",
-            "**/*.lock",
-            "**/changelog.md",
-            "**.code-workspace",
-            "**/*lock.json"
-        ]
+        }
     }
 }

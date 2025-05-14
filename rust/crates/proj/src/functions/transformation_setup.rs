@@ -13,6 +13,7 @@ impl crate::PjContext {
         let definition = CString::new(definition).into_diagnostic()?;
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create(self.ctx, definition.as_ptr()) },
+            ctx: self,
         };
         check_result!(self);
         Ok(pj)
@@ -29,6 +30,7 @@ impl crate::PjContext {
         }
         let pj = crate::Pj {
             pj: unsafe { proj_sys::proj_create_argv(self.ctx, len as i32, ptrs.as_mut_ptr()) },
+            ctx: self,
         };
         check_result!(self);
         Ok(pj)
@@ -54,6 +56,7 @@ impl crate::PjContext {
                     area.area,
                 )
             },
+            ctx: self,
         };
         check_result!(self);
         Ok(pj)
@@ -128,6 +131,7 @@ impl crate::PjContext {
                     options.as_ptr(),
                 )
             },
+            ctx: self,
         };
         check_result!(self);
         Ok(pj)
@@ -137,11 +141,12 @@ impl crate::PjContext {
     pub fn normalize_for_visualization(&self, obj: &crate::Pj) -> miette::Result<crate::Pj> {
         Ok(crate::Pj {
             pj: unsafe { proj_sys::proj_normalize_for_visualization(self.ctx, obj.pj) },
+            ctx: self,
         })
     }
 }
 
-impl Drop for crate::Pj {
+impl Drop for crate::Pj<'_> {
     fn drop(&mut self) { unsafe { proj_sys::proj_destroy(self.pj) }; }
 }
 #[cfg(test)]

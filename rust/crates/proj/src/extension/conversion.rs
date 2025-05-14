@@ -1,7 +1,7 @@
 use crate::IPjCoord;
 use crate::PjDirection::{Fwd, Inv};
 
-impl crate::Pj {
+impl crate::Pj<'_> {
     pub fn project<T>(&self, inv: bool, coord: &T) -> miette::Result<T>
     where
         T: IPjCoord,
@@ -67,7 +67,7 @@ impl crate::Pj {
     }
 }
 
-impl crate::Pj {
+impl crate::Pj<'_> {
     pub fn project_array<T>(&self, inv: bool, coord: &mut [T]) -> miette::Result<&Self>
     where
         T: IPjCoord,

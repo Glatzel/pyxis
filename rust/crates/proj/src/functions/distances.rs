@@ -1,6 +1,6 @@
 use crate::{ToCoord, check_result};
 ///# Distances
-impl crate::Pj {
+impl crate::Pj<'_> {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
     pub fn lp_dist(&self, a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {

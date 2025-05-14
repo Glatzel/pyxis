@@ -12,8 +12,8 @@ pub enum PjParams<'a> {
     },
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     CrsToCrsFromPj {
-        source_crs: crate::Pj,
-        target_crs: crate::Pj,
+        source_crs: crate::Pj<'a>,
+        target_crs: crate::Pj<'a>,
         area: &'a crate::PjArea,
         authority: Option<&'a str>,
         accuracy: Option<f64>,

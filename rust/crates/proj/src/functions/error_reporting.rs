@@ -1,7 +1,7 @@
 use crate::data_types::PjError;
 
 ///# Error reporting
-impl crate::Pj {
+impl crate::Pj<'_> {
     /// See [`crate::check_result`]
     ///
     /// # References

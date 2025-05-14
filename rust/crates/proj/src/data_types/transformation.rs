@@ -4,8 +4,9 @@
 ///
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ>
-pub struct Pj {
+pub struct Pj<'a> {
     pub(crate) pj: *mut proj_sys::PJ,
+    pub(crate) ctx: &'a crate::PjContext,
 }
 
 /// Enumeration that is used to convey in which direction a given transformation

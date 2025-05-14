@@ -752,7 +752,7 @@ impl crate::PjContext {
     fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { unimplemented!() }
 }
 /// ISO-19111
-impl crate::Pj {
+impl crate::Pj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>

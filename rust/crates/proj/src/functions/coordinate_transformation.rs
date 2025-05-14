@@ -1,6 +1,6 @@
 use crate::check_result;
 // region:Coordinate transformation
-impl crate::Pj {
+impl crate::Pj<'_> {
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
     ///
@@ -26,7 +26,10 @@ impl crate::Pj {
         if ptr.is_null() {
             return None;
         }
-        let pj = Self { pj: ptr };
+        let pj = Self {
+            pj: ptr,
+            ctx: self.ctx,
+        };
         Some(pj)
     }
 

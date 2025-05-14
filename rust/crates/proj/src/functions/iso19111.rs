@@ -3,7 +3,7 @@ use miette::IntoDiagnostic;
 use crate::data_types::iso19111::{PjComparisonCriterion, PjType, PjWktType};
 use crate::{Pj, c_char_to_string};
 
-/// ISO-19111
+/// # ISO-19111
 impl crate::PjContext {
     ///# References
     ///
@@ -746,7 +746,7 @@ impl crate::PjContext {
     /// <>
     fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { unimplemented!() }
 }
-/// ISO-19111
+/// # ISO-19111
 impl Pj<'_> {
     ///# References
     ///

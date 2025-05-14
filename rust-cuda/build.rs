@@ -30,7 +30,7 @@ fn main() {
                 format!("{nvcc_exe_dir};{};{path}", cl_paths.first().unwrap().to_string_lossy()),
             )
         };
-        println!("{}", env::var("PATH").unwrap())
+        println!("{}", env::var("PATH").unwrap());
 
         let include_paths =
             glob("C:/Program Files/Microsoft Visual Studio/2022/*/VC/Tools/MSVC/*/include")

@@ -29,15 +29,7 @@ fn main() {
                 "PATH",
                 format!(
                     "{nvcc_exe_dir};{};{path}",
-                    String::from(
-                        cl_paths
-                            .last()
-                            .unwrap()
-                            .clone()
-                            .into_os_string()
-                            .to_string_lossy()
-                            .to_string()
-                    )
+                    cl_paths.last().unwrap().clone().to_string_lossy()
                 ),
             )
         };
@@ -53,13 +45,7 @@ fn main() {
                 "INCLUDE",
                 format!(
                     "{:?}",
-                    include_paths
-                        .last()
-                        .unwrap()
-                        .clone()
-                        .into_os_string()
-                        .to_string_lossy()
-                        .to_string()
+                    include_paths.last().unwrap().clone().to_string_lossy()
                 ),
             )
         };

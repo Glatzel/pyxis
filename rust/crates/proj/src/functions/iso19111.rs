@@ -1,6 +1,7 @@
 use miette::IntoDiagnostic;
 
-use crate::data_types::iso19111::{PjComparisonCriterion, PjType};
+use crate::c_char_to_string;
+use crate::data_types::iso19111::{PjComparisonCriterion, PjType, PjWktType};
 
 /// ISO-19111
 impl crate::PjContext {
@@ -68,10 +69,7 @@ impl crate::PjContext {
     ///
     /// <>
     fn _get_area_of_use_ex(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _as_wkt(&self) { unimplemented!() }
+
     ///# References
     ///
     /// <>
@@ -757,52 +755,52 @@ impl crate::Pj<'_> {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
     pub fn get_type(&self) -> miette::Result<PjType> {
-        let result = unsafe { proj_sys::proj_get_type(self.pj) };
+        let result = unsafe { proj_sys::proj_get_type(self.ptr) };
         PjType::try_from(result).into_diagnostic()
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_deprecated>
-    pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.pj) != 0 } }
+    pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.ptr) != 0 } }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
     pub fn is_equivalent_to(&self, other: &crate::Pj, criterion: PjComparisonCriterion) -> bool {
-        unsafe { proj_sys::proj_is_equivalent_to(self.pj, other.pj, criterion.into()) != 0 }
+        unsafe { proj_sys::proj_is_equivalent_to(self.ptr, other.ptr, criterion.into()) != 0 }
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_crs>
-    pub fn is_crs(&self) -> bool { unsafe { proj_sys::proj_is_crs(self.pj) != 0 } }
+    pub fn is_crs(&self) -> bool { unsafe { proj_sys::proj_is_crs(self.ptr) != 0 } }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_name>
     pub fn get_name(&self) -> String {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_name(self.pj) }).unwrap_or_default()
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_name(self.ptr) }).unwrap_or_default()
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
     pub fn get_id_auth_name(&self, index: i32) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.pj, index) })
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.ptr, index) })
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
     pub fn get_id_code(&self, index: i32) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.pj, index) })
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.ptr, index) })
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_remarks>
     pub fn get_remarks(&self) -> String {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_remarks(self.pj) }).unwrap_or_default()
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_remarks(self.ptr) }).unwrap_or_default()
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
     pub fn get_domain_count(&self) -> miette::Result<u32> {
-        let count = unsafe { proj_sys::proj_get_domain_count(self.pj) };
+        let count = unsafe { proj_sys::proj_get_domain_count(self.ptr) };
         if count == 0 {
             miette::bail!("get_domain_count error.")
         };
@@ -812,13 +810,32 @@ impl crate::Pj<'_> {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope>
     pub fn get_scope(&self) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope(self.pj) })
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope(self.ptr) })
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
     pub fn get_scope_ex(&self, domain_idx: i32) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope_ex(self.pj, domain_idx) })
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope_ex(self.ptr, domain_idx) })
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_wkt>
+    pub fn as_wkt(
+        &self,
+        wkt_type: PjWktType,
+        multiline: Option<bool>,
+        indentation_width: Option<usize>,
+        output_axis: Option<bool>,
+        strict: Option<bool>,
+        allow_ellipsoidal_height_as_vertical_crs: Option<bool>,
+        allow_linunit_node: Option<bool>,
+    ) -> miette::Result<String> {
+        let result = c_char_to_string(unsafe {
+            proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), "options".as_ptr())
+        })
+        .expect("Error");
+        Ok(result)
     }
 }
 ///# References

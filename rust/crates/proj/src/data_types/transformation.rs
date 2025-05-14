@@ -5,7 +5,7 @@
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ>
 pub struct Pj<'a> {
-    pub(crate) pj: *mut proj_sys::PJ,
+    pub(crate) ptr: *mut proj_sys::PJ,
     pub(crate) ctx: &'a crate::PjContext,
 }
 
@@ -46,7 +46,7 @@ impl From<&PjDirection> for i32 {
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CONTEXT>
 pub struct PjContext {
-    pub(crate) ctx: *mut proj_sys::PJ_CONTEXT,
+    pub(crate) ptr: *mut proj_sys::PJ_CONTEXT,
 }
 ///Opaque object describing an area in which a transformation is performed.
 ///

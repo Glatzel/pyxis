@@ -24,7 +24,7 @@ fn main() {
                 .collect::<Vec<std::path::PathBuf>>();
         assert_eq!(
             String::from(
-                "C:/Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64",
+                "C:/Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.35207\\bin\\Hostx64\\x64",
             ),
             cl_paths.last().unwrap().to_string_lossy()
         );

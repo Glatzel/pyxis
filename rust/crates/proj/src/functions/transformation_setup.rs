@@ -83,12 +83,13 @@ impl crate::PjContext {
             .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")?
             .push_optional_pass(only_best, "ONLY_BEST")?
             .push_optional_pass(force_over, "FORCE_OVER")?;
-        let ptr = options
+        let mut ptrs = Vec::with_capacity(5);
+        options
             .options
             .iter()
-            .map(|cs| cs.as_c_str().as_ptr())
-            .collect::<Vec<*const i8>>();
-        println!("{:?}", ptr);
+            .for_each(|cs| ptrs.push(cs.as_ptr()));
+        println!("{:?}",ptrs);
+        println!("{:?}", options.options);
         let pj = crate::Pj {
             ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(
@@ -96,7 +97,7 @@ impl crate::PjContext {
                     source_crs.ptr,
                     target_crs.ptr,
                     area.ptr,
-                    ptr.as_ptr(),
+                    ptrs.as_ptr(),
                 )
             },
             ctx: self,

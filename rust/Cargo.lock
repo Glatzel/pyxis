@@ -857,6 +857,7 @@ dependencies = [
  "clerk",
  "dunce",
  "float-cmp",
+ "libc",
  "miette",
  "num_enum",
  "proj-sys",

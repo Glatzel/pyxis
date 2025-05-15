@@ -1,6 +1,6 @@
 use std::ffi::CString;
-use std::os::raw::c_char;
 
+use libc::c_char;
 pub(crate) const PJ_OPTION_YES: &str = "YES";
 pub(crate) const PJ_OPTION_NO: &str = "NO";
 pub(crate) trait ToPjOptionString {

@@ -1024,7 +1024,7 @@ mod test_proj {
             None,
         )?;
         println!("{wkt}");
-        assert!(wkt.contains("WGS 84"))
+        assert!(wkt.contains("WGS 84"));
         Ok(())
     }
 }

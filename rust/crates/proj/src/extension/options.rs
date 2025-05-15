@@ -41,7 +41,7 @@ impl PjOptions {
 
         Ok(self)
     }
-    pub fn push_optional<T: ToPjOptionString>(
+    pub fn _push_optional<T: ToPjOptionString>(
         &mut self,
         opt: Option<T>,
         name: &str,

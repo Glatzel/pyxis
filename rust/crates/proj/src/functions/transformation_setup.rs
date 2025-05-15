@@ -77,12 +77,14 @@ impl crate::PjContext {
         force_over: Option<bool>,
     ) -> miette::Result<crate::Pj> {
         let mut options = crate::PjOptions::new(5);
-        options.push_optional_pass(authority, "AUTHORITY");
-        options.push_optional_pass(accuracy, "ACCURACY");
-        options.push_optional_pass(allow_ballpark, "ALLOW_BALLPARK");
-        options.push_optional_pass(only_best, "ONLY_BEST");
-        options.push_optional_pass(force_over, "FORCE_OVER");
-        let cstr = options.to_vec_cstring();
+        options
+            .push_optional_pass(authority, "AUTHORITY")?
+            .push_optional_pass(accuracy, "ACCURACY")?
+            .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")?
+            .push_optional_pass(only_best, "ONLY_BEST")?
+            .push_optional_pass(force_over, "FORCE_OVER")?;
+        println!("{:?}", options.options);
+
         let pj = crate::Pj {
             ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(
@@ -90,7 +92,9 @@ impl crate::PjContext {
                     source_crs.ptr,
                     target_crs.ptr,
                     area.area,
-                    cstr.iter()
+                    options
+                        .options
+                        .iter()
                         .map(|cs| cs.as_ptr())
                         .collect::<Vec<*const i8>>()
                         .as_ptr(),

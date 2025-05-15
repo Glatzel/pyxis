@@ -818,33 +818,33 @@ impl Pj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_wkt>
-    pub fn as_wkt(
-        &self,
-        wkt_type: PjWktType,
-        multiline: Option<bool>,
-        indentation_width: Option<usize>,
-        output_axis: Option<bool>,
-        strict: Option<bool>,
-        allow_ellipsoidal_height_as_vertical_crs: Option<bool>,
-        allow_linunit_node: Option<bool>,
-    ) -> miette::Result<String> {
-        let mut options = crate::PjOptions::new(6);
-        options.push_optional(multiline, "MULTILINE", PJ_OPTION_YES);
-        options.push_optional(indentation_width, "INDENTATION_WIDTH", "4");
-        options.push_optional(output_axis, "OUTPUT_AXIS", "AUTO");
-        options.push_optional(strict, "STRICT", PJ_OPTION_YES);
-        options.push_optional(
-            allow_ellipsoidal_height_as_vertical_crs,
-            "ALLOW_ELLIPSOIDAL_HEIGHT_AS_VERTICAL_CRS",
-            PJ_OPTION_NO,
-        );
-        options.push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", PJ_OPTION_YES);
-        let result = c_char_to_string(unsafe {
-            proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), std::ptr::null())
-        });
-        check_result!(self);
-        Ok(result.expect("Error"))
-    }
+    // pub fn as_wkt(
+    //     &self,
+    //     wkt_type: PjWktType,
+    //     multiline: Option<bool>,
+    //     indentation_width: Option<usize>,
+    //     output_axis: Option<bool>,
+    //     strict: Option<bool>,
+    //     allow_ellipsoidal_height_as_vertical_crs: Option<bool>,
+    //     allow_linunit_node: Option<bool>,
+    // ) -> miette::Result<String> {
+    //     let mut options = crate::PjOptions::new(6);
+    //     options.push_optional(multiline, "MULTILINE", PJ_OPTION_YES);
+    //     options.push_optional(indentation_width, "INDENTATION_WIDTH", "4");
+    //     options.push_optional(output_axis, "OUTPUT_AXIS", "AUTO");
+    //     options.push_optional(strict, "STRICT", PJ_OPTION_YES);
+    //     options.push_optional(
+    //         allow_ellipsoidal_height_as_vertical_crs,
+    //         "ALLOW_ELLIPSOIDAL_HEIGHT_AS_VERTICAL_CRS",
+    //         PJ_OPTION_NO,
+    //     );
+    //     options.push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", PJ_OPTION_YES);
+    //     let result = c_char_to_string(unsafe {
+    //         proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), std::ptr::null())
+    //     });
+    //     check_result!(self);
+    //     Ok(result.expect("Error"))
+    // }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
@@ -1009,22 +1009,22 @@ mod test_proj {
         assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");
         Ok(())
     }
-    #[test]
-    pub fn test_as_wkt() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create("EPSG:4326")?;
-        let wkt = pj.as_wkt(
-            crate::data_types::iso19111::PjWktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
-        assert_eq!(wkt, "WGS 84 / Pseudo-Mercator");
-        Ok(())
-    }
+    // #[test]
+    // pub fn test_as_wkt() -> miette::Result<()> {
+    //     let ctx = crate::new_test_ctx()?;
+    //     let pj = ctx.create("EPSG:4326")?;
+    //     let wkt = pj.as_wkt(
+    //         crate::data_types::iso19111::PjWktType::Wkt2_2019,
+    //         None,
+    //         None,
+    //         None,
+    //         None,
+    //         None,
+    //         None,
+    //     )?;
+    //     assert_eq!(wkt, "WGS 84 / Pseudo-Mercator");
+    //     Ok(())
+    // }
 }
 #[cfg(test)]
 mod test_other {}

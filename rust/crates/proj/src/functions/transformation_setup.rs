@@ -86,7 +86,7 @@ impl crate::PjContext {
         let mut ptrs = Vec::with_capacity(5);
         options
             .options
-            .iter()
+            .into_iter()
             .for_each(|cs| ptrs.push(cs.as_ptr()));
 
         let pj = crate::Pj {
@@ -122,21 +122,24 @@ mod test {
     #[test]
     fn test_create() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.create("EPSG:4326")?;
+        let pj = ctx.create("EPSG:4326")?;
+        assert!(!pj.ptr.is_null());
         Ok(())
     }
 
     #[test]
     fn test_create_argv() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
+        let pj = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
+        assert!(!pj.ptr.is_null());
         Ok(())
     }
 
     #[test]
     fn test_create_crs_to_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
+        assert!(!pj.ptr.is_null());
         Ok(())
     }
 
@@ -145,7 +148,8 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4978")?;
-        ctx.create_crs_to_crs_from_pj(
+
+        let pj3 = ctx.create_crs_to_crs_from_pj(
             pj1,
             pj2,
             &crate::PjArea::default(),
@@ -155,6 +159,7 @@ mod test {
             Some(true),
             Some(true),
         )?;
+        assert!(!pj3.ptr.is_null());
         Ok(())
     }
 }

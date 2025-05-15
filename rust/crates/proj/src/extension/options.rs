@@ -1,4 +1,4 @@
-use std::ffi::{CString, c_char};
+use std::ffi::CString;
 use std::ptr::null;
 
 pub(crate) const PJ_OPTION_YES: &str = "YES";

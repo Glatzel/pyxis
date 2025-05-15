@@ -83,8 +83,16 @@ impl crate::PjContext {
             .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")?
             .push_optional_pass(only_best, "ONLY_BEST")?
             .push_optional_pass(force_over, "FORCE_OVER")?;
-        println!("{:?}", options.options);
 
+        let coptions = options
+            .options
+            .iter()
+            .map(|s| CString::new(s.as_str()).expect("CString::new failed"))
+            .collect::<Vec<CString>>();
+        let ptr_vec = coptions
+            .iter()
+            .map(|cs| cs.as_ptr())
+            .collect::<Vec<*const i8>>();
         let pj = crate::Pj {
             ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(
@@ -92,12 +100,7 @@ impl crate::PjContext {
                     source_crs.ptr,
                     target_crs.ptr,
                     area.area,
-                    options
-                        .options
-                        .iter()
-                        .map(|cs| cs.as_ptr())
-                        .collect::<Vec<*const i8>>()
-                        .as_ptr(),
+                    ptr_vec.as_ptr(),
                 )
             },
             ctx: self,

@@ -1,7 +1,7 @@
 use miette::IntoDiagnostic;
 
-use crate::data_types::iso19111::{PjComparisonCriterion, PjType, PjWktType};
-use crate::{PJ_OPTION_NO, PJ_OPTION_YES, Pj, c_char_to_string, check_result};
+use crate::data_types::iso19111::{PjComparisonCriterion, PjType};
+use crate::Pj;
 
 /// # ISO-19111
 impl crate::PjContext {

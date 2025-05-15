@@ -1,7 +1,5 @@
 use std::ffi::CString;
 
-use miette::IntoDiagnostic;
-
 pub(crate) const PJ_OPTION_YES: &str = "YES";
 pub(crate) const PJ_OPTION_NO: &str = "NO";
 pub(crate) trait ToPjOptionString {
@@ -35,45 +33,51 @@ impl PjOptions {
         }
     }
 
-    pub fn _push<T: ToPjOptionString>(&mut self, opt: T, name: &str) -> miette::Result<&mut Self> {
-        self.options
-            .push(CString::new(format!("{name}={}", opt.to_option_string())).into_diagnostic()?);
+    pub fn _push<T: ToPjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
+        self.options.push(
+            CString::new(format!("{name}={}", opt.to_option_string()))
+                .expect("Error creating CString"),
+        );
 
-        Ok(self)
+        self
     }
     pub fn push_optional<T: ToPjOptionString>(
         &mut self,
         opt: Option<T>,
         name: &str,
         default_value: &str,
-    ) -> miette::Result<&mut Self> {
+    ) -> &mut Self {
         match opt {
             Some(opt) => {
                 self.options.push(
-                    CString::new(format!("{name}={}", opt.to_option_string())).into_diagnostic()?,
+                    CString::new(format!("{name}={}", opt.to_option_string()))
+                        .expect("Error creating CString"),
                 );
             }
             None => {
-                self.options
-                    .push(CString::new(format!("{name}={default_value}")).into_diagnostic()?);
+                self.options.push(
+                    CString::new(format!("{name}={default_value}"))
+                        .expect("Error creating CString"),
+                );
             }
         }
-        Ok(self)
+        self
     }
     pub fn push_optional_pass<T: ToPjOptionString>(
         &mut self,
         opt: Option<T>,
         name: &str,
-    ) -> miette::Result<&mut Self> {
+    ) -> &mut Self {
         match opt {
             Some(opt) => {
                 self.options.push(
-                    CString::new(format!("{name}={}", opt.to_option_string())).into_diagnostic()?,
+                    CString::new(format!("{name}={}", opt.to_option_string()))
+                        .expect("Error creating CString"),
                 );
             }
             None => (),
         }
-        Ok(self)
+        self
     }
     pub fn as_ptr(&self) -> *const *const i8 {
         let mut ptrs = Vec::with_capacity(self.options.len() + 1);

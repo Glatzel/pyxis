@@ -78,11 +78,11 @@ impl crate::PjContext {
     ) -> miette::Result<crate::Pj> {
         let mut options = crate::PjOptions::new(5);
         options
-            .push_optional_pass(authority, "AUTHORITY")?
-            .push_optional_pass(accuracy, "ACCURACY")?
-            .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")?
-            .push_optional_pass(only_best, "ONLY_BEST")?
-            .push_optional_pass(force_over, "FORCE_OVER")?;
+            .push_optional_pass(authority, "AUTHORITY")
+            .push_optional_pass(accuracy, "ACCURACY")
+            .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")
+            .push_optional_pass(only_best, "ONLY_BEST")
+            .push_optional_pass(force_over, "FORCE_OVER");
 
         let pj = crate::Pj {
             ptr: unsafe {

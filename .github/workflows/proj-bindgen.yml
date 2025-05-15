@@ -3,6 +3,8 @@ on:
     workflow_dispatch:
 env:
   RUST_ROOT: ./rust
+permissions:
+  contents: read
 jobs:
     proj-bindings:
       runs-on: ubuntu-latest

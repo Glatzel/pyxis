@@ -125,11 +125,13 @@ pub enum PjGridAvailabilityUse {
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_STRING_TYPE>
-#[derive(Debug)]
+
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[repr(u32)]
 pub enum PjStringType {
-    Proj5,
-    Proj4,
+    Proj5 = proj_sys::PJ_PROJ_STRING_TYPE_PJ_PROJ_5,
+    Proj4 = proj_sys::PJ_PROJ_STRING_TYPE_PJ_PROJ_4,
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_SPATIAL_CRITERION>

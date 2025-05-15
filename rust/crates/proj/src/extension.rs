@@ -1,6 +1,7 @@
 mod conversion;
 mod error_handling;
 mod logging;
+mod options;
 mod proj_creation;
 #[cfg(test)]
 mod test_utils;
@@ -9,6 +10,7 @@ mod utils;
 
 pub(crate) use error_handling::*;
 pub(crate) use logging::*;
+pub(crate) use options::*;
 pub use proj_creation::PjParams;
 #[cfg(test)]
 pub(crate) use test_utils::*;

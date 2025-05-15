@@ -56,5 +56,5 @@ pub struct PjContext {
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AREA>
 pub struct PjArea {
-    pub(crate) area: *mut proj_sys::PJ_AREA,
+    pub(crate) ptr: *mut proj_sys::PJ_AREA,
 }

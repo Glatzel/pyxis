@@ -53,7 +53,7 @@ impl crate::PjContext {
                     self.ptr,
                     source_crs.as_ptr(),
                     target_crs.as_ptr(),
-                    area.area,
+                    area.ptr,
                 )
             },
             ctx: self,
@@ -76,59 +76,23 @@ impl crate::PjContext {
         only_best: Option<bool>,
         force_over: Option<bool>,
     ) -> miette::Result<crate::Pj> {
-        let mut options: Vec<*const i8> = Vec::with_capacity(5);
-        if let Some(authority) = authority {
-            options.push(
-                CString::new(format!("AUTHORITY={}", authority))
-                    .into_diagnostic()?
-                    .as_ptr(),
-            );
-        }
-        if let Some(accuracy) = accuracy {
-            options.push(
-                CString::new(format!("ACCURACY={}", accuracy))
-                    .into_diagnostic()?
-                    .as_ptr(),
-            );
-        }
-        if let Some(allow_ballpark) = allow_ballpark {
-            options.push(
-                CString::new(format!(
-                    "ALLOW_BALLPARK={}",
-                    if allow_ballpark { "YES" } else { "NO" }
-                ))
-                .into_diagnostic()?
-                .as_ptr(),
-            );
-        }
-        if let Some(only_best) = only_best {
-            options.push(
-                CString::new(format!(
-                    "ONLY_BEST={}",
-                    if only_best { "YES" } else { "NO" }
-                ))
-                .into_diagnostic()?
-                .as_ptr(),
-            );
-        }
-        if let Some(force_over) = force_over {
-            options.push(
-                CString::new(format!(
-                    "FORCE_OVER={}",
-                    if force_over { "YES" } else { "NO" }
-                ))
-                .into_diagnostic()?
-                .as_ptr(),
-            );
-        }
+        let mut options = crate::PjOptions::new(5);
+        options
+            .push_optional_pass(authority, "AUTHORITY")
+            .push_optional_pass(accuracy, "ACCURACY")
+            .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")
+            .push_optional_pass(only_best, "ONLY_BEST")
+            .push_optional_pass(force_over, "FORCE_OVER");
+        let ptrs = options.vec_ptr();
+
         let pj = crate::Pj {
             ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(
                     self.ptr,
                     source_crs.ptr,
                     target_crs.ptr,
-                    area.area,
-                    options.as_ptr(),
+                    area.ptr,
+                    ptrs.as_ptr(),
                 )
             },
             ctx: self,
@@ -154,21 +118,24 @@ mod test {
     #[test]
     fn test_create() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.create("EPSG:4326")?;
+        let pj = ctx.create("EPSG:4326")?;
+        assert!(!pj.ptr.is_null());
         Ok(())
     }
 
     #[test]
     fn test_create_argv() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
+        let pj = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
+        assert!(!pj.ptr.is_null());
         Ok(())
     }
 
     #[test]
     fn test_create_crs_to_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
+        assert!(!pj.ptr.is_null());
         Ok(())
     }
 
@@ -177,7 +144,8 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4978")?;
-        ctx.create_crs_to_crs_from_pj(
+
+        let pj3 = ctx.create_crs_to_crs_from_pj(
             pj1,
             pj2,
             &crate::PjArea::default(),
@@ -187,6 +155,7 @@ mod test {
             Some(true),
             Some(true),
         )?;
+        assert!(!pj3.ptr.is_null());
         Ok(())
     }
 }

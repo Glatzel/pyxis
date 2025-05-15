@@ -91,7 +91,7 @@ fn main() {
 
     if env::var("UPDATE").unwrap_or("false".to_string()) == "true" {
         bindings
-            .write_to_file("./src/proj_sys/bindings.rs")
+            .write_to_file("./src/bindings.rs")
             .expect("Couldn't write bindings!");
     }
     if env::var("BINDGEN").unwrap_or("false".to_string()) == "true" {

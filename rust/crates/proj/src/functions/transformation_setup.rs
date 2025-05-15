@@ -83,8 +83,6 @@ impl crate::PjContext {
             .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")
             .push_optional_pass(only_best, "ONLY_BEST")
             .push_optional_pass(force_over, "FORCE_OVER");
-        println!("{:?}", options.as_ptr());
-        assert!(false);
 
         let pj = crate::Pj {
             ptr: unsafe {

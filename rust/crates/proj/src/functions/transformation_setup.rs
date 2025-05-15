@@ -87,9 +87,8 @@ impl crate::PjContext {
         options
             .options
             .iter()
-            .for_each(|cs| ptrs.push(cs.as_ptr()));
-        println!("{:?}",ptrs);
-        println!("{:?}", options.options);
+            .for_each(|cs| ptrs.push(cs.clone().as_ptr()));
+
         let pj = crate::Pj {
             ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(

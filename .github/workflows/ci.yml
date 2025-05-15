@@ -140,7 +140,7 @@ jobs:
       release: ${{inputs.release&& inputs.release || false}}
 
   rust-cuda:
-    needs: [changed,rust,cuda]
+    needs: changed
     if: ${{ needs.changed.outputs.changed-rust-cuda != 'false' }}
     uses: ./.github/workflows/ci-rust-cuda.yml
     with:

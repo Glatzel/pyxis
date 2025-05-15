@@ -6,7 +6,7 @@ platforms = ["win-64", "linux-64", "osx-arm64"]
 python = "3.11.*"
 
 [feature.build.dependencies]
-maturin = "==1.8.4"
+maturin = "==1.8.6"
 pip = "==25.1.1"
 rattler-build = "==0.41.0"
 

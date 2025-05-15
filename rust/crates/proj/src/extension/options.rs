@@ -1,6 +1,5 @@
-use std::ffi::c_char;
+use std::ffi::{CString, c_char};
 
-use super::string_to_c_char;
 pub(crate) const PJ_OPTION_YES: &str = "YES";
 pub(crate) const PJ_OPTION_NO: &str = "NO";
 pub(crate) trait ToPjOptionString {
@@ -25,7 +24,7 @@ impl ToPjOptionString for usize {
     fn to_option_string(&self) -> String { self.to_string() }
 }
 pub(crate) struct PjOptions {
-    options: Vec<String>,
+    pub(crate) options: Vec<String>,
 }
 impl PjOptions {
     pub fn new(capacity: usize) -> PjOptions {
@@ -71,12 +70,15 @@ impl PjOptions {
         }
         self
     }
-    pub fn as_ptr(&mut self) -> *const *const c_char {
-        let c_options: Vec<*const c_char> = self
+    pub fn to_cvec_ptr(self) -> (*const *const i8, Vec<CString>) {
+        clerk::debug!("Options: {:?}", self.options);
+        let cstrings: Vec<CString> = self
             .options
-            .iter()
-            .map(|s| string_to_c_char(s).unwrap())
+            .into_iter()
+            .map(|s| CString::new(s).expect("CString::new failed"))
             .collect();
-        c_options.as_ptr()
+        // Convert CStrings to *const c_char
+        let ptrs: Vec<*const c_char> = cstrings.iter().map(|cs| cs.as_ptr()).collect();
+        (ptrs.as_ptr(), cstrings)
     }
 }

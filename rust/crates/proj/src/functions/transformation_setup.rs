@@ -1,9 +1,8 @@
-use std::any::Any;
 use std::ffi::CString;
 
 use miette::IntoDiagnostic;
 
-use crate::{check_result, string_to_c_char};
+use crate::check_result;
 /// # Transformation setup
 impl crate::PjContext {
     /// See [`Self::create_proj`], [`crate::PjParams::Definition`]
@@ -83,6 +82,7 @@ impl crate::PjContext {
         options.push_optional_pass(allow_ballpark, "ALLOW_BALLPARK");
         options.push_optional_pass(only_best, "ONLY_BEST");
         options.push_optional_pass(force_over, "FORCE_OVER");
+        let (ptr, _) = options.to_cvec_ptr();
         let pj = crate::Pj {
             ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(
@@ -90,7 +90,7 @@ impl crate::PjContext {
                     source_crs.ptr,
                     target_crs.ptr,
                     area.area,
-                    options.as_ptr(),
+                    ptr,
                 )
             },
             ctx: self,

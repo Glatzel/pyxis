@@ -75,7 +75,6 @@ jobs:
           if-no-files-found: error
 
   rattler-pyxis-cli:
-    needs: cargo-test
     strategy:
       fail-fast: false
       matrix:
@@ -107,7 +106,6 @@ jobs:
           if-no-files-found: error
 
   cargo-bench:
-    needs: cargo-test
     if: ${{!inputs.release}}
     runs-on: ubuntu-latest
     steps:

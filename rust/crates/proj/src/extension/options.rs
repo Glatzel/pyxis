@@ -26,7 +26,7 @@ impl ToPjOptionString for usize {
     fn to_option_string(&self) -> String { self.to_string() }
 }
 pub(crate) struct PjOptions {
-    pub(crate) options: Vec<String>,
+    pub(crate) options: Vec<CString>,
 }
 impl PjOptions {
     pub fn new(capacity: usize) -> PjOptions {
@@ -37,7 +37,7 @@ impl PjOptions {
 
     pub fn _push<T: ToPjOptionString>(&mut self, opt: T, name: &str) -> miette::Result<&mut Self> {
         self.options
-            .push(format!("{name}={}", opt.to_option_string()));
+            .push(CString::new(format!("{name}={}", opt.to_option_string())).into_diagnostic()?);
 
         Ok(self)
     }
@@ -49,11 +49,13 @@ impl PjOptions {
     ) -> miette::Result<&mut Self> {
         match opt {
             Some(opt) => {
-                self.options
-                    .push(format!("{name}={}", opt.to_option_string()));
+                self.options.push(
+                    CString::new(format!("{name}={}", opt.to_option_string())).into_diagnostic()?,
+                );
             }
             None => {
-                self.options.push(format!("{name}={default_value}"));
+                self.options
+                    .push(CString::new(format!("{name}={default_value}")).into_diagnostic()?);
             }
         }
         Ok(self)
@@ -65,8 +67,9 @@ impl PjOptions {
     ) -> miette::Result<&mut Self> {
         match opt {
             Some(opt) => {
-                self.options
-                    .push(format!("{name}={}", opt.to_option_string()));
+                self.options.push(
+                    CString::new(format!("{name}={}", opt.to_option_string())).into_diagnostic()?,
+                );
             }
             None => (),
         }

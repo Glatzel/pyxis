@@ -7,7 +7,7 @@ impl crate::PjArea {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>
     pub fn new() -> Self {
         Self {
-            area: unsafe { proj_sys::proj_area_create() },
+            ptr: unsafe { proj_sys::proj_area_create() },
         }
     }
     /// # References
@@ -21,7 +21,7 @@ impl crate::PjArea {
     ) -> &Self {
         unsafe {
             proj_sys::proj_area_set_bbox(
-                self.area,
+                self.ptr,
                 west_lon_degree,
                 south_lat_degree,
                 east_lon_degree,
@@ -33,7 +33,7 @@ impl crate::PjArea {
 }
 
 impl Drop for crate::PjArea {
-    fn drop(&mut self) { unsafe { proj_sys::proj_area_destroy(self.area) }; }
+    fn drop(&mut self) { unsafe { proj_sys::proj_area_destroy(self.ptr) }; }
 }
 #[cfg(test)]
 mod test {

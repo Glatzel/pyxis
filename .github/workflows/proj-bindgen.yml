@@ -5,24 +5,35 @@ env:
   RUST_ROOT: ./rust
 jobs:
     proj-bindings:
-        runs-on: ubuntu-latest
-        env:
-          RUSTFLAGS: "-Dwarnings"
-        steps:
-          - uses: actions/checkout@v4
-          - name: Set up pixi
-            uses: prefix-dev/setup-pixi@v0.8.8
-            with:
-              run-install: false
-          - uses: dtolnay/rust-toolchain@stable
-          - name: proj-bindings
-            run: |
-              ${{env.RUST_ROOT}}/scripts/proj-bindings.ps1
-            shell: pwsh
-          - name: upload
-            uses: actions/upload-artifact@v4
-            with:
-              name: proj-bindings
-              path: |
-                rust/crates/proj-sys/src/bindings.rs
-              if-no-files-found: error
+      strategy:
+        fail-fast: false
+        matrix:
+          machine: [windows-latest, ubuntu-latest,macos-latest]
+          include:
+            - machine: windows-latest
+              os: win
+            - machine: ubuntu-latest
+              os: linux
+            - machine: macos-latest
+              os: macos
+      runs-on: ubuntu-latest
+      env:
+        RUSTFLAGS: "-Dwarnings"
+      steps:
+        - uses: actions/checkout@v4
+        - name: Set up pixi
+          uses: prefix-dev/setup-pixi@v0.8.8
+          with:
+            run-install: false
+        - uses: dtolnay/rust-toolchain@stable
+        - name: proj-bindings
+          run: |
+            ${{env.RUST_ROOT}}/scripts/proj-bindings.ps1
+          shell: pwsh
+        - name: upload
+          uses: actions/upload-artifact@v4
+          with:
+            name: proj-bindings--${{matrix.os}}
+            path: |
+              rust/crates/proj-sys/src/bindings.rs
+            if-no-files-found: error

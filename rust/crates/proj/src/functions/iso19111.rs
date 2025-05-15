@@ -1,6 +1,7 @@
 use miette::IntoDiagnostic;
+use proj_sys::PJ_PROJ_STRING_TYPE;
 
-use crate::data_types::iso19111::{PjComparisonCriterion, PjType, PjWktType};
+use crate::data_types::iso19111::{PjComparisonCriterion, PjStringType, PjType, PjWktType};
 use crate::{PJ_OPTION_NO, PJ_OPTION_YES, Pj, c_char_to_string, check_result};
 
 /// # ISO-19111
@@ -69,19 +70,6 @@ impl crate::PjContext {
     ///
     /// <>
     fn _get_area_of_use_ex(&self) { unimplemented!() }
-
-    ///# References
-    ///
-    /// <>
-    fn _as_proj_string(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _as_projjson(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _get_source_crs(&self) { unimplemented!() }
 
     ///# References
     ///
@@ -847,6 +835,67 @@ impl Pj<'_> {
         check_result!(self);
         Ok(result.expect("Error"))
     }
+
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_proj_string>
+    pub fn as_proj_string(
+        &self,
+        string_type: PjStringType,
+        multiline: Option<bool>,
+        indentation_width: Option<usize>,
+        max_line_length: Option<usize>,
+    ) -> miette::Result<String> {
+        let mut options = crate::PjOptions::new(6);
+        options
+            .push_optional(multiline, "MULTILINE", PJ_OPTION_NO)
+            .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
+            .push_optional(max_line_length, "MAX_LINE_LENGTH", "80");
+
+        let ptrs = options.vec_ptr();
+        let result = c_char_to_string(unsafe {
+            proj_sys::proj_as_proj_string(self.ctx.ptr, self.ptr, string_type.into(), ptrs.as_ptr())
+        });
+        check_result!(self);
+        Ok(result.expect("Error"))
+    }
+
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_projjson>
+    pub fn as_projjson(
+        &self,
+        multiline: Option<bool>,
+        indentation_width: Option<usize>,
+        schema: Option<&str>,
+    ) -> miette::Result<String> {
+        let mut options = crate::PjOptions::new(6);
+        options
+            .push_optional(multiline, "MULTILINE", PJ_OPTION_YES)
+            .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
+            .push_optional(schema, "SCHEMA", "");
+
+        let ptrs = options.vec_ptr();
+        let result = c_char_to_string(unsafe {
+            proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr, ptrs.as_ptr())
+        });
+        check_result!(self);
+        Ok(result.expect("Error"))
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
+    pub fn get_source_crs(&self) -> Option<Pj<'_>> {
+        let out_ptr = unsafe { proj_sys::proj_get_source_crs(self.ctx.ptr, self.ptr) };
+        if out_ptr.is_null() {
+            return None;
+        }
+        Some(Self {
+            ptr: out_ptr,
+            ctx: self.ctx,
+        })
+    }
+
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
@@ -1000,18 +1049,6 @@ mod test_proj {
         Ok(())
     }
     #[test]
-    pub fn test_get_target_crs() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_proj(crate::PjParams::CrsToCrs {
-            source_crs: "EPSG:4326",
-            target_crs: "EPSG:3857",
-            area: &PjArea::default(),
-        })?;
-        let target = pj.get_target_crs().unwrap();
-        assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");
-        Ok(())
-    }
-    #[test]
     pub fn test_as_wkt() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
@@ -1026,6 +1063,53 @@ mod test_proj {
         )?;
         println!("{wkt}");
         assert!(wkt.contains("WGS 84"));
+        Ok(())
+    }
+    #[test]
+    pub fn test_as_proj_string() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let proj_string = pj.as_proj_string(
+            crate::data_types::iso19111::PjStringType::Proj4,
+            None,
+            None,
+            None,
+        )?;
+        println!("{proj_string}");
+        assert_eq!(proj_string, "+proj=longlat +datum=WGS84 +no_defs +type=crs");
+        Ok(())
+    }
+    #[test]
+    pub fn test_as_projjson() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let json = pj.as_projjson(None, None, None)?;
+        println!("{json}");
+        assert!(json.contains("WGS 84"));
+        Ok(())
+    }
+    #[test]
+    pub fn test_get_source_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_proj(crate::PjParams::CrsToCrs {
+            source_crs: "EPSG:4326",
+            target_crs: "EPSG:3857",
+            area: &PjArea::default(),
+        })?;
+        let target = pj.get_source_crs().unwrap();
+        assert_eq!(target.get_name(), "WGS 84");
+        Ok(())
+    }
+    #[test]
+    pub fn test_get_target_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_proj(crate::PjParams::CrsToCrs {
+            source_crs: "EPSG:4326",
+            target_crs: "EPSG:3857",
+            area: &PjArea::default(),
+        })?;
+        let target = pj.get_target_crs().unwrap();
+        assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");
         Ok(())
     }
 }

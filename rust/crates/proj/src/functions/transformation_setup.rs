@@ -87,7 +87,7 @@ impl crate::PjContext {
         options
             .options
             .iter()
-            .for_each(|cs| ptrs.push(cs.clone().as_ptr()));
+            .for_each(|cs| ptrs.push(cs.as_ptr()));
 
         let pj = crate::Pj {
             ptr: unsafe {

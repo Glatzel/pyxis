@@ -69,14 +69,11 @@ impl PjOptions {
         opt: Option<T>,
         name: &str,
     ) -> &mut Self {
-        match opt {
-            Some(opt) => {
-                self.options.push(
-                    CString::new(format!("{name}={}", opt.to_option_string()))
-                        .expect("Error creating CString"),
-                );
-            }
-            None => (),
+        if let Some(opt) = opt {
+            self.options.push(
+                CString::new(format!("{name}={}", opt.to_option_string()))
+                    .expect("Error creating CString"),
+            );
         }
         self
     }

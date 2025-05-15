@@ -148,7 +148,7 @@ jobs:
 
   rust-cuda-check-test:
     needs: changed
-    if: ${{github.event_name == 'pull_request'&&needs.changed.outputs.changed-rust-cuda != 'false'}}
+    if: ${{github.event_name == 'pull_request'&& ( needs.changed.outputs.changed-rust-cuda != 'false' || needs.changed.outputs.changed-rust != 'false')}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -79,10 +79,8 @@ impl PjOptions {
     }
 
     pub fn as_ptr(&self) -> *const *const c_char {
-        let mut ptrs = Vec::with_capacity(self.options.len() + 1);
-        self.options
-            .iter()
-            .for_each(|cs| ptrs.push(cs.as_ptr() as *const u8));
+        let mut ptrs: Vec<*const c_char> = Vec::with_capacity(self.options.len() + 1);
+        self.options.iter().for_each(|cs| ptrs.push(cs.as_ptr()));
         ptrs.push(std::ptr::null());
         ptrs.as_ptr()
     }

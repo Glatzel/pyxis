@@ -39,4 +39,3 @@ macro_rules! create_readonly_struct {
     }
 }
 pub(crate) use create_readonly_struct;
-

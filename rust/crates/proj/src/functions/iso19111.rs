@@ -818,7 +818,7 @@ impl Pj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_wkt>
-   pub  fn as_wkt(
+    pub fn as_wkt(
         &self,
         wkt_type: PjWktType,
         multiline: Option<bool>,

@@ -83,7 +83,7 @@ impl PjOptions {
         self.options
             .iter()
             .for_each(|cs| ptrs.push(cs.as_ptr() as _));
-        ptrs.push(std::ptr::null());
+        // ptrs.push(std::ptr::null());
         ptrs.as_ptr()
     }
 }

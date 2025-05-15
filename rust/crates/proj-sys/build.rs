@@ -71,7 +71,7 @@ fn main() {
 
     //bindgen
     if env::var("UPDATE").unwrap_or("false".to_string()) != "true"
-        || env::var("BINDGEN").unwrap_or("false".to_string()) != "true"
+        && env::var("BINDGEN").unwrap_or("false".to_string()) != "true"
     {
         return;
     }

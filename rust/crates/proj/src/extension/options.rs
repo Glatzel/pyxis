@@ -1,4 +1,6 @@
-use std::ffi::{CString, c_char};
+use std::ffi::CString;
+
+use miette::IntoDiagnostic;
 
 pub(crate) const PJ_OPTION_YES: &str = "YES";
 pub(crate) const PJ_OPTION_NO: &str = "NO";
@@ -24,7 +26,7 @@ impl ToPjOptionString for usize {
     fn to_option_string(&self) -> String { self.to_string() }
 }
 pub(crate) struct PjOptions {
-    pub(crate) options: Vec<String>,
+    pub(crate) options: Vec<CString>,
 }
 impl PjOptions {
     pub fn new(capacity: usize) -> PjOptions {
@@ -33,52 +35,44 @@ impl PjOptions {
         }
     }
 
-    pub fn _push<T: ToPjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
+    pub fn _push<T: ToPjOptionString>(&mut self, opt: T, name: &str) -> miette::Result<&mut Self> {
         self.options
-            .push(format!("{name}={}", opt.to_option_string()));
+            .push(CString::new(format!("{name}={}", opt.to_option_string())).into_diagnostic()?);
 
-        self
+        Ok(self)
     }
     pub fn push_optional<T: ToPjOptionString>(
         &mut self,
         opt: Option<T>,
         name: &str,
         default_value: &str,
-    ) -> &mut Self {
+    ) -> miette::Result<&mut Self> {
         match opt {
             Some(opt) => {
-                self.options
-                    .push(format!("{name}={}", opt.to_option_string()));
+                self.options.push(
+                    CString::new(format!("{name}={}", opt.to_option_string())).into_diagnostic()?,
+                );
             }
             None => {
-                self.options.push(format!("{name}={default_value}"));
+                self.options
+                    .push(CString::new(format!("{name}={default_value}")).into_diagnostic()?);
             }
         }
-        self
+        Ok(self)
     }
     pub fn push_optional_pass<T: ToPjOptionString>(
         &mut self,
         opt: Option<T>,
         name: &str,
-    ) -> &mut Self {
+    ) -> miette::Result<&mut Self> {
         match opt {
             Some(opt) => {
-                self.options
-                    .push(format!("{name}={}", opt.to_option_string()));
+                self.options.push(
+                    CString::new(format!("{name}={}", opt.to_option_string())).into_diagnostic()?,
+                );
             }
             None => (),
         }
-        self
-    }
-    pub fn to_cvec_ptr(self) -> (*const *const i8, Vec<CString>) {
-        clerk::debug!("Options: {:?}", self.options);
-        let cstrings: Vec<CString> = self
-            .options
-            .into_iter()
-            .map(|s| CString::new(s).expect("CString::new failed"))
-            .collect();
-        // Convert CStrings to *const c_char
-        let ptrs: Vec<*const c_char> = cstrings.iter().map(|cs| cs.as_ptr()).collect();
-        (ptrs.as_ptr(), cstrings)
+        Ok(self)
     }
 }

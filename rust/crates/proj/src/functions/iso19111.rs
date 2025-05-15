@@ -1,7 +1,7 @@
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{PjComparisonCriterion, PjType, PjWktType};
-use crate::{PJ_OPTION_NO, PJ_OPTION_YES, Pj, c_char_to_string};
+use crate::{PJ_OPTION_NO, PJ_OPTION_YES, Pj, c_char_to_string, check_result};
 
 /// # ISO-19111
 impl crate::PjContext {
@@ -839,12 +839,11 @@ impl Pj<'_> {
             PJ_OPTION_NO,
         );
         options.push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", PJ_OPTION_YES);
-        let (ptr, _) = options.to_cvec_ptr();
         let result = c_char_to_string(unsafe {
-            proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), ptr)
-        })
-        .expect("Error:");
-        Ok(result)
+            proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), std::ptr::null())
+        });
+        check_result!(self);
+        Ok(result.expect("Error"))
     }
     ///# References
     ///
@@ -1015,7 +1014,7 @@ mod test_proj {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(
-            crate::data_types::iso19111::PjWktType::Wkt1Esri,
+            crate::data_types::iso19111::PjWktType::Wkt2_2019,
             None,
             None,
             None,

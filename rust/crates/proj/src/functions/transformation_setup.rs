@@ -84,11 +84,8 @@ impl crate::PjContext {
             .push_optional_pass(only_best, "ONLY_BEST")?
             .push_optional_pass(force_over, "FORCE_OVER")?;
         let mut ptrs = Vec::with_capacity(5);
-        options
-            .options
-            .iter()
-            .for_each(|cs| ptrs.push(cs.as_ptr()));
-        println!("{:?}",ptrs);
+        options.options.iter().for_each(|cs| ptrs.push(cs.as_ptr()));
+        println!("{:?}", ptrs);
         println!("{:?}", options.options);
         let pj = crate::Pj {
             ptr: unsafe {

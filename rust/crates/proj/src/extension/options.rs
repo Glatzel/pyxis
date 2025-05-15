@@ -76,10 +76,11 @@ impl PjOptions {
         Ok(self)
     }
     pub fn as_ptr(&self) -> *const *const i8 {
-        let mut ptrs = Vec::with_capacity(self.options.len());
+        let mut ptrs = Vec::with_capacity(self.options.len() + 1);
         self.options
             .iter()
-            .for_each(|cs| ptrs.push(cs.clone().as_ptr()));
+            .for_each(|cs| ptrs.push(cs.as_ptr()));
+        ptrs.push(std::ptr::null());
         ptrs.as_ptr()
     }
 }

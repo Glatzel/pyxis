@@ -1,6 +1,5 @@
-use std::ffi::CString;
+use std::ffi::{CString, c_char};
 
-use libc::c_char;
 pub(crate) const PJ_OPTION_YES: &str = "YES";
 pub(crate) const PJ_OPTION_NO: &str = "NO";
 pub(crate) trait ToPjOptionString {
@@ -79,7 +78,7 @@ impl PjOptions {
     }
 
     pub fn as_ptr(&self) -> *const *const c_char {
-        let mut ptrs: Vec<*const c_char> = Vec::with_capacity(self.options.len() + 2);
+        let mut ptrs = Vec::with_capacity(self.options.len() + 2);
         self.options.iter().for_each(|cs| ptrs.push(cs.as_ptr()));
         ptrs.push(std::ptr::null());
         ptrs.push(std::ptr::null());

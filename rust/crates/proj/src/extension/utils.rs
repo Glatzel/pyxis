@@ -1,6 +1,5 @@
-use std::ffi::CStr;
+use std::ffi::{CStr, c_char};
 
-use libc::c_char;
 pub(crate) fn c_char_to_string(ptr: *const c_char) -> Option<String> {
     if ptr.is_null() {
         return None;

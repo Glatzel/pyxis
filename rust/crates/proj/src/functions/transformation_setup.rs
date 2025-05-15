@@ -84,7 +84,6 @@ impl crate::PjContext {
             .push_optional_pass(only_best, "ONLY_BEST")?
             .push_optional_pass(force_over, "FORCE_OVER")?;
 
-
         let pj = crate::Pj {
             ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(

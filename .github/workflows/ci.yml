@@ -82,34 +82,34 @@ jobs:
 
   csharp:
     needs: changed
-    if: ${{ needs.changed.outputs.changed-csharp != 'false'|| cancelled()||success()}}
+    if: ${{ needs.changed.outputs.changed-csharp != 'false'}}
     uses: ./.github/workflows/ci-csharp.yml
     with:
       release: ${{inputs.release && inputs.release || false }}
 
   cuda:
-    needs: [changed,cpp]
-    if: ${{ needs.changed.outputs.changed-cuda != 'false' || cancelled()||success()}}
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-cuda != 'false'}}
     uses: ./.github/workflows/ci-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
 
   python:
-    needs: [changed,rust]
-    if: ${{ needs.changed.outputs.changed-python != 'false' || cancelled()||success()}}
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-python != 'false' }}
     uses: ./.github/workflows/ci-python.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
 
   python-cuda:
-    needs: [changed,cuda]
-    if: ${{ needs.changed.outputs.changed-python-cuda != 'false' || cancelled()||success()}}
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-python-cuda != 'false' }}
     uses: ./.github/workflows/ci-python-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
 
   python-cuda-check-test:
-    needs: [changed]
+    needs: changed
     if: ${{github.event_name == 'pull_request' && needs.changed.outputs.changed-python-cuda != 'false'}}
     runs-on: ubuntu-latest
     steps:
@@ -141,13 +141,13 @@ jobs:
 
   rust-cuda:
     needs: [changed,rust,cuda]
-    if: ${{ needs.changed.outputs.changed-rust-cuda != 'false' || cancelled()||success()}}
+    if: ${{ needs.changed.outputs.changed-rust-cuda != 'false' }}
     uses: ./.github/workflows/ci-rust-cuda.yml
     with:
       release: ${{inputs.release&& inputs.release || false}}
 
   rust-cuda-check-test:
-    needs: [changed,cuda]
+    needs: changed
     if: ${{github.event_name == 'pull_request'&&needs.changed.outputs.changed-rust-cuda != 'false'}}
     runs-on: ubuntu-latest
     steps:

@@ -1,4 +1,7 @@
-use std::ffi::{CStr, c_char};
+use std::ffi::{CStr, CString, c_char};
+use std::fmt::Display;
+
+use miette::IntoDiagnostic;
 
 pub(crate) fn c_char_to_string(ptr: *const c_char) -> Option<String> {
     if ptr.is_null() {
@@ -6,7 +9,9 @@ pub(crate) fn c_char_to_string(ptr: *const c_char) -> Option<String> {
     }
     Some(unsafe { CStr::from_ptr(ptr) }.to_string_lossy().to_string())
 }
-
+pub(crate) fn string_to_c_char(text: &str) -> miette::Result<*const c_char> {
+    Ok(CString::new(text).into_diagnostic()?.as_ptr())
+}
 macro_rules! create_readonly_struct {
     ($name:ident, $struct_doc:expr, $({$field:ident: $type:ty $(, $field_doc:expr)?}),*) => {
         #[doc=$struct_doc]
@@ -34,3 +39,4 @@ macro_rules! create_readonly_struct {
     }
 }
 pub(crate) use create_readonly_struct;
+

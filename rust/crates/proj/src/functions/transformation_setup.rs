@@ -1,8 +1,9 @@
+use std::any::Any;
 use std::ffi::CString;
 
 use miette::IntoDiagnostic;
 
-use crate::check_result;
+use crate::{check_result, string_to_c_char};
 /// # Transformation setup
 impl crate::PjContext {
     /// See [`Self::create_proj`], [`crate::PjParams::Definition`]
@@ -76,51 +77,12 @@ impl crate::PjContext {
         only_best: Option<bool>,
         force_over: Option<bool>,
     ) -> miette::Result<crate::Pj> {
-        let mut options: Vec<*const i8> = Vec::with_capacity(5);
-        if let Some(authority) = authority {
-            options.push(
-                CString::new(format!("AUTHORITY={}", authority))
-                    .into_diagnostic()?
-                    .as_ptr(),
-            );
-        }
-        if let Some(accuracy) = accuracy {
-            options.push(
-                CString::new(format!("ACCURACY={}", accuracy))
-                    .into_diagnostic()?
-                    .as_ptr(),
-            );
-        }
-        if let Some(allow_ballpark) = allow_ballpark {
-            options.push(
-                CString::new(format!(
-                    "ALLOW_BALLPARK={}",
-                    if allow_ballpark { "YES" } else { "NO" }
-                ))
-                .into_diagnostic()?
-                .as_ptr(),
-            );
-        }
-        if let Some(only_best) = only_best {
-            options.push(
-                CString::new(format!(
-                    "ONLY_BEST={}",
-                    if only_best { "YES" } else { "NO" }
-                ))
-                .into_diagnostic()?
-                .as_ptr(),
-            );
-        }
-        if let Some(force_over) = force_over {
-            options.push(
-                CString::new(format!(
-                    "FORCE_OVER={}",
-                    if force_over { "YES" } else { "NO" }
-                ))
-                .into_diagnostic()?
-                .as_ptr(),
-            );
-        }
+        let mut options = crate::PjOptions::new(5);
+        options.push_optional_pass(authority, "AUTHORITY");
+        options.push_optional_pass(accuracy, "ACCURACY");
+        options.push_optional_pass(allow_ballpark, "ALLOW_BALLPARK");
+        options.push_optional_pass(only_best, "ONLY_BEST");
+        options.push_optional_pass(force_over, "FORCE_OVER");
         let pj = crate::Pj {
             ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(

@@ -6,6 +6,7 @@ mod proj_creation;
 mod test_utils;
 mod traits;
 mod utils;
+mod options;
 
 pub(crate) use error_handling::*;
 pub(crate) use logging::*;
@@ -14,3 +15,4 @@ pub use proj_creation::PjParams;
 pub(crate) use test_utils::*;
 pub use traits::*;
 pub(crate) use utils::*;
+pub(crate) use options::*;

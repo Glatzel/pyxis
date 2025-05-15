@@ -83,6 +83,11 @@ impl crate::PjContext {
             .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")
             .push_optional_pass(only_best, "ONLY_BEST")
             .push_optional_pass(force_over, "FORCE_OVER");
+        let ptrs = options
+            .options
+            .iter()
+            .map(|s| s.as_ptr())
+            .collect::<Vec<_>>();
 
         let pj = crate::Pj {
             ptr: unsafe {
@@ -91,7 +96,7 @@ impl crate::PjContext {
                     source_crs.ptr,
                     target_crs.ptr,
                     area.ptr,
-                    options.as_ptr(),
+                    ptrs.as_ptr(),
                 )
             },
             ctx: self,

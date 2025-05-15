@@ -840,8 +840,9 @@ impl Pj<'_> {
                 PJ_OPTION_NO,
             )
             .push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", PJ_OPTION_YES);
+        let ptrs = options.vec_ptr();
         let result = c_char_to_string(unsafe {
-            proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), options.as_ptr())
+            proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), ptrs.as_ptr())
         });
         check_result!(self);
         Ok(result.expect("Error"))

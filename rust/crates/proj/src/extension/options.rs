@@ -1,4 +1,5 @@
 use std::ffi::{CString, c_char};
+use std::ptr::null;
 
 pub(crate) const PJ_OPTION_YES: &str = "YES";
 pub(crate) const PJ_OPTION_NO: &str = "NO";
@@ -77,8 +78,9 @@ impl PjOptions {
         self
     }
 
-    pub fn as_ptr(&self) -> *const *const c_char {
-        let ptrs = self.options.iter().map(|s| s.as_ptr()).collect::<Vec<_>>();
-        ptrs.as_ptr()
+    pub fn vec_ptr(&self) -> Vec<*const i8> {
+        let mut ptrs = self.options.iter().map(|s| s.as_ptr()).collect::<Vec<_>>();
+        ptrs.push(null());
+        ptrs
     }
 }

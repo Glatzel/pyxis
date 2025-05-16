@@ -13,7 +13,7 @@ set_source_files_properties(${SOURCES} PROPERTIES LANGUAGE CXX)
 # target pyxis_static###########################################################
 # Build a static library
 add_library(pyxis_static STATIC ${SOURCES})
-target_include_directories(pyxis_static PUBLIC include)
+target_include_directories(pyxis_static PUBLIC include include/pyxis)
 set_target_properties(pyxis_static PROPERTIES
     OUTPUT_NAME "pyxis"
     POSITION_INDEPENDENT_CODE ON) # Required for shared libraries
@@ -52,7 +52,9 @@ install(TARGETS pyxis_shared
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
         DESTINATION include
         FILES_MATCHING PATTERN "*.h")
-
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/pyxis
+        DESTINATION include/pyxis
+        FILES_MATCHING PATTERN "*.h")
 # Configure and install .pc files
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/pyxis_shared.pc.in

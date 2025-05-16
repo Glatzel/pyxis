@@ -1,4 +1,4 @@
-#include "datum_compensate.h"
+#include "pyxis.h"
 template <typename T>
 CUDA_HOST_DEVICE void datum_compensate(
     T xc,

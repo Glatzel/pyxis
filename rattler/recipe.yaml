@@ -2,7 +2,7 @@ package:
   version: 0.0.21
   name: pyxis-cli
 build:
-  number: 2
+  number: 0
   script:
     - if: win
       then:

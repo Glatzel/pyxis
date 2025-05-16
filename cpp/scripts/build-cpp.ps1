@@ -1,6 +1,5 @@
 param (
-    [ValidateSet("Debug", "Release")]
-    $config = "debug"
+    $config = "Debug"
 )
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true

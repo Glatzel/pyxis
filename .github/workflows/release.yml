@@ -179,7 +179,7 @@ jobs:
   release:
     permissions:
       contents: write
-    needs: [rattler,nukpg, cargo-doc, python-doc]
+    needs: [rattler-pyxis, rattler-python, rattler-python-cuda, nukpg, cargo-doc, python-doc]
     uses: Glatzel/template/.github/workflows/release.yml@main
     with:
       override: true

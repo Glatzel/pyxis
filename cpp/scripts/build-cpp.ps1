@@ -1,5 +1,5 @@
 param (
-    [ValidateSet("debug", "release")]
+    [ValidateSet("Debug", "Release")]
     $config = "debug"
 )
 $ErrorActionPreference = "Stop"

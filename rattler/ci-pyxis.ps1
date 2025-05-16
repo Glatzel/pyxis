@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
 
-& "$ROOT/cpp/scripts/build-cpp.ps1" -config release
+& "$ROOT/cpp/scripts/build-cpp.ps1" -config Release
 if (-not $IsMacOS) {
     & "$ROOT/cuda/scripts/build-cuda.ps1"
 }

@@ -2,7 +2,7 @@ use num_enum::{FromPrimitive, IntoPrimitive};
 
 #[derive(Debug, Clone, FromPrimitive, IntoPrimitive)]
 #[repr(u32)]
-pub(crate) enum PjError {
+pub(crate) enum ProjError {
     Success = 0,
     //Errors in class PROJ_ERR_INVALID_OP
     InvalidOp = proj_sys::PROJ_ERR_INVALID_OP,
@@ -28,13 +28,13 @@ pub(crate) enum PjError {
     OtherNoInverseOp = proj_sys::PROJ_ERR_OTHER_NO_INVERSE_OP,
     OtherNetworkError = proj_sys::PROJ_ERR_OTHER_NETWORK_ERROR,
 }
-impl From<PjError> for i32 {
-    fn from(value: PjError) -> Self { u32::from(value) as i32 }
+impl From<ProjError> for i32 {
+    fn from(value: ProjError) -> Self { u32::from(value) as i32 }
 }
 
-impl From<&PjError> for i32 {
-    fn from(value: &PjError) -> Self { Into::<u32>::into(value.clone()) as i32 }
+impl From<&ProjError> for i32 {
+    fn from(value: &ProjError) -> Self { Into::<u32>::into(value.clone()) as i32 }
 }
-impl From<i32> for PjError {
-    fn from(value: i32) -> PjError { PjError::from(value as u32) }
+impl From<i32> for ProjError {
+    fn from(value: i32) -> ProjError { ProjError::from(value as u32) }
 }

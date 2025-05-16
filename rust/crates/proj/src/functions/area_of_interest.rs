@@ -1,8 +1,8 @@
-impl Default for crate::PjArea {
+impl Default for crate::Area {
     fn default() -> Self { Self::new() }
 }
 ///# Area of interest
-impl crate::PjArea {
+impl crate::Area {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>
     pub fn new() -> Self {
@@ -32,17 +32,17 @@ impl crate::PjArea {
     }
 }
 
-impl Drop for crate::PjArea {
+impl Drop for crate::Area {
     fn drop(&mut self) { unsafe { proj_sys::proj_area_destroy(self.ptr) }; }
 }
 #[cfg(test)]
 mod test {
 
-    use crate::PjArea;
+    use crate::Area;
 
     #[test]
     fn test_set_bbox() -> miette::Result<()> {
-        let area = PjArea::new();
+        let area = Area::new();
         area.set_bbox(1.0, 2.0, 3.0, 4.0);
         Ok(())
     }

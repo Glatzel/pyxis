@@ -4,14 +4,14 @@ use miette::IntoDiagnostic;
 
 use crate::check_result;
 /// # Transformation setup
-impl crate::PjContext {
+impl crate::Context {
     /// See [`Self::create_proj`], [`crate::PjParams::Definition`]
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn create(&self, definition: &str) -> miette::Result<crate::Pj> {
+    pub fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
         let definition = CString::new(definition).into_diagnostic()?;
-        let pj = crate::Pj {
+        let pj = crate::Proj {
             ptr: unsafe { proj_sys::proj_create(self.ptr, definition.as_ptr()) },
             ctx: self,
         };
@@ -22,13 +22,13 @@ impl crate::PjContext {
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Pj> {
+    pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Proj> {
         let len = argv.len();
         let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in argv {
             ptrs.push(CString::new(*s).into_diagnostic()?.into_raw());
         }
-        let pj = crate::Pj {
+        let pj = crate::Proj {
             ptr: unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, ptrs.as_mut_ptr()) },
             ctx: self,
         };
@@ -43,11 +43,11 @@ impl crate::PjContext {
         &self,
         source_crs: &str,
         target_crs: &str,
-        area: &crate::PjArea,
-    ) -> miette::Result<crate::Pj> {
+        area: &crate::Area,
+    ) -> miette::Result<crate::Proj> {
         let source_crs = CString::new(source_crs).into_diagnostic()?;
         let target_crs = CString::new(target_crs).into_diagnostic()?;
-        let pj = crate::Pj {
+        let pj = crate::Proj {
             ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs(
                     self.ptr,
@@ -67,16 +67,16 @@ impl crate::PjContext {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub fn create_crs_to_crs_from_pj(
         &self,
-        source_crs: crate::Pj,
-        target_crs: crate::Pj,
-        area: &crate::PjArea,
+        source_crs: crate::Proj,
+        target_crs: crate::Proj,
+        area: &crate::Area,
         authority: Option<&str>,
         accuracy: Option<f64>,
         allow_ballpark: Option<bool>,
         only_best: Option<bool>,
         force_over: Option<bool>,
-    ) -> miette::Result<crate::Pj> {
-        let mut options = crate::PjOptions::new(5);
+    ) -> miette::Result<crate::Proj> {
+        let mut options = crate::ProjOptions::new(5);
         options
             .push_optional_pass(authority, "AUTHORITY")
             .push_optional_pass(accuracy, "ACCURACY")
@@ -85,7 +85,7 @@ impl crate::PjContext {
             .push_optional_pass(force_over, "FORCE_OVER");
         let ptrs = options.vec_ptr();
 
-        let pj = crate::Pj {
+        let pj = crate::Proj {
             ptr: unsafe {
                 proj_sys::proj_create_crs_to_crs_from_pj(
                     self.ptr,
@@ -102,15 +102,15 @@ impl crate::PjContext {
     }
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
-    pub fn normalize_for_visualization(&self, obj: &crate::Pj) -> miette::Result<crate::Pj> {
-        Ok(crate::Pj {
+    pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<crate::Proj> {
+        Ok(crate::Proj {
             ptr: unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr) },
             ctx: self,
         })
     }
 }
 
-impl Drop for crate::Pj<'_> {
+impl Drop for crate::Proj<'_> {
     fn drop(&mut self) { unsafe { proj_sys::proj_destroy(self.ptr) }; }
 }
 #[cfg(test)]
@@ -134,7 +134,7 @@ mod test {
     #[test]
     fn test_create_crs_to_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         assert!(!pj.ptr.is_null());
         Ok(())
     }
@@ -148,7 +148,7 @@ mod test {
         let pj3 = ctx.create_crs_to_crs_from_pj(
             pj1,
             pj2,
-            &crate::PjArea::default(),
+            &crate::Area::default(),
             Some("any"),
             Some(0.001),
             Some(true),

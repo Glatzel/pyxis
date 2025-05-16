@@ -5,7 +5,7 @@ use miette::IntoDiagnostic;
 
 use crate::check_result;
 
-impl crate::PjContext {
+impl crate::Context {
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_network_callbacks>
     fn _set_network_callbacks(&self) { unimplemented!() }

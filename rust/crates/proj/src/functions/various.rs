@@ -7,7 +7,7 @@ use miette::IntoDiagnostic;
 use crate::check_result;
 
 /// # Various
-impl crate::Pj<'_> {
+impl crate::Proj<'_> {
     ///Measure internal consistency of a given transformation. The function
     /// performs n round trip transformations starting in either the forward or
     /// reverse direction. Returns the euclidean distance of the starting point
@@ -18,11 +18,11 @@ impl crate::Pj<'_> {
     #[cfg(any(feature = "unrecommended", test))]
     pub fn roundtrip(
         &self,
-        dir: &crate::PjDirection,
+        dir: crate::Direction,
         n: i32,
         coord: &mut proj_sys::PJ_COORD,
     ) -> miette::Result<f64> {
-        let distance = unsafe { proj_sys::proj_roundtrip(self.ptr, i32::from(dir), n, coord) };
+        let distance = unsafe { proj_sys::proj_roundtrip(self.ptr, dir.into(), n, coord) };
         check_result!(self);
         Ok(distance)
     }
@@ -51,20 +51,20 @@ impl crate::Pj<'_> {
     #[cfg(any(feature = "unrecommended", test))]
     pub fn factors(
         &self,
-        coord: crate::data_types::PjCoord,
-    ) -> miette::Result<crate::data_types::PjFactors> {
-        use crate::data_types::PjFactors;
+        coord: crate::data_types::Coord,
+    ) -> miette::Result<crate::data_types::Factors> {
+        use crate::data_types::Factors;
 
         let factor = unsafe { proj_sys::proj_factors(self.ptr, coord) };
         match self.errno() {
-            crate::data_types::PjError::Success => (),
-            crate::data_types::PjError::CoordTransfmOutsideProjectionDomain => (),
+            crate::data_types::ProjError::Success => (),
+            crate::data_types::ProjError::CoordTransfmOutsideProjectionDomain => (),
             _ => {
                 check_result!(self);
             }
         };
 
-        let factor = PjFactors::new(
+        let factor = Factors::new(
             factor.meridional_scale,
             factor.parallel_scale,
             factor.areal_scale,
@@ -85,8 +85,8 @@ impl crate::Pj<'_> {
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_input>
-    pub fn angular_input(&self, dir: &crate::PjDirection) -> miette::Result<bool> {
-        let result = unsafe { proj_sys::proj_angular_input(self.ptr, i32::from(dir)) } != 0;
+    pub fn angular_input(&self, dir: crate::Direction) -> miette::Result<bool> {
+        let result = unsafe { proj_sys::proj_angular_input(self.ptr, i32::try_from(dir)?) } != 0;
         Ok(result)
     }
 
@@ -94,8 +94,8 @@ impl crate::Pj<'_> {
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_output>
-    pub fn angular_output(&self, dir: &crate::PjDirection) -> miette::Result<bool> {
-        let result = unsafe { proj_sys::proj_angular_output(self.ptr, i32::from(dir)) } != 0;
+    pub fn angular_output(&self, dir: crate::Direction) -> miette::Result<bool> {
+        let result = unsafe { proj_sys::proj_angular_output(self.ptr, i32::try_from(dir)?) } != 0;
         Ok(result)
     }
 
@@ -103,8 +103,8 @@ impl crate::Pj<'_> {
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_input>
-    pub fn degree_input(&self, dir: &crate::PjDirection) -> miette::Result<bool> {
-        let result = unsafe { proj_sys::proj_degree_input(self.ptr, i32::from(dir)) } != 0;
+    pub fn degree_input(&self, dir: crate::Direction) -> miette::Result<bool> {
+        let result = unsafe { proj_sys::proj_degree_input(self.ptr, dir.into()) } != 0;
         Ok(result)
     }
 
@@ -112,8 +112,8 @@ impl crate::Pj<'_> {
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_output>
-    pub fn degree_output(&self, dir: &crate::PjDirection) -> miette::Result<bool> {
-        let result = unsafe { proj_sys::proj_degree_output(self.ptr, i32::from(dir)) } != 0;
+    pub fn degree_output(&self, dir: crate::Direction) -> miette::Result<bool> {
+        let result = unsafe { proj_sys::proj_degree_output(self.ptr, dir.into()) } != 0;
         Ok(result)
     }
 }
@@ -160,9 +160,9 @@ mod test {
     #[test]
     fn test_roundtrip() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("+proj=tmerc +lat_0=0 +lon_0=75 +k=1 +x_0=13500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs","EPSG:4326",  &crate::PjArea::default())?;
+        let pj = ctx.create_crs_to_crs("+proj=tmerc +lat_0=0 +lon_0=75 +k=1 +x_0=13500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs","EPSG:4326",  &crate::Area::default())?;
         let mut coord = (5877537.151800396, 4477291.358855194).to_coord()?;
-        let distance = pj.roundtrip(&crate::PjDirection::Fwd, 10000, &mut coord)?;
+        let distance = pj.roundtrip(crate::Direction::Fwd, 10000, &mut coord)?;
         println!("{:?}", unsafe { coord.xy.x });
         println!("{:?}", unsafe { coord.xy.y });
         assert_approx_eq!(f64, distance, 0.023350762947799957, epsilon = 1e-6);
@@ -171,7 +171,7 @@ mod test {
     #[test]
     fn test_factors() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::PjArea::default())?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let factor = pj.factors((12.0f64.to_radians(), 55.0f64.to_radians()).to_coord()?)?;
 
         println!("{:?}", factor);
@@ -268,11 +268,11 @@ mod test {
     #[test]
     fn test_input_output_angle_format() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::PjArea::default())?;
-        assert!(!(pj.angular_input(&crate::PjDirection::Fwd)?));
-        assert!(!(pj.angular_output(&crate::PjDirection::Fwd)?));
-        assert!(pj.degree_input(&crate::PjDirection::Fwd)?);
-        assert!(!(pj.degree_output(&crate::PjDirection::Fwd)?));
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
+        assert!(!(pj.angular_input(crate::Direction::Fwd)?));
+        assert!(!(pj.angular_output(crate::Direction::Fwd)?));
+        assert!(pj.degree_input(crate::Direction::Fwd)?);
+        assert!(!(pj.degree_output(crate::Direction::Fwd)?));
         Ok(())
     }
 }

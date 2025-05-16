@@ -6,7 +6,7 @@ use miette::IntoDiagnostic;
 use crate::check_result;
 
 ///Setting custom I/O functions
-impl crate::PjContext {
+impl crate::Context {
     fn _set_fileapi(&self) { unimplemented!() }
 
     ///Set the name of a custom SQLite3 VFS.

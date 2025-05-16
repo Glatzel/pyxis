@@ -35,7 +35,7 @@ jobs:
         with:
           run-install: false
       - name: build
-        run: ./rattler/ci-pyxis-cli.ps1
+        run: ./rattler/ci-pyxis.ps1
         shell: pwsh
 
       - name: upload

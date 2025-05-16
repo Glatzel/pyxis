@@ -20,9 +20,7 @@ impl ToProjOptionString for bool {
 macro_rules! impl_to_option_string {
     ($t:ty) => {
         impl ToProjOptionString for $t {
-            fn to_option_string(&self) -> String {
-                self.to_string()
-            }
+            fn to_option_string(&self) -> String { self.to_string() }
         }
     };
 }

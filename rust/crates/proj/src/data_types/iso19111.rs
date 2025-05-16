@@ -3,15 +3,17 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 use crate::create_readonly_struct;
 /// # References
 /// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GUESSED_WKT_DIALECT>
-#[derive(Debug)]
+#[derive(Debug, IntoPrimitive, TryFromPrimitive, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[repr(u32)]
 pub enum PjGuessedWktDialect {
-    Wkt2_2019,
-    Wkt2_2018,
-    Wkt2_2015,
-    Wkt1Gdal,
-    Wkt1Esri,
-    NotWkt,
+    Wkt2_2019 = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2019,
+    // Deprecated alias for PJ_GUESSED_WKT2_2019
+    // Wkt2_2018 = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2018,
+    Wkt2_2015 = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2015,
+    Wkt1Gdal = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT1_GDAL,
+    Wkt1Esri = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT1_ESRI,
+    NotWkt = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_NOT_WKT,
 }
 
 /// # References
@@ -76,31 +78,20 @@ pub enum PjComparisonCriterion {
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_WKT_TYPE>
-#[derive(Debug)]
+#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[repr(u32)]
 pub enum PjWktType {
-    Wkt2_2015,
-    Wkt2_2015Simplified,
-    Wkt2_2019,
-    Wkt2_2018,
-    Wkt2_2019Simplified,
-    Wkt2_2018Simplified,
-    Wkt1Gdal,
-    Wkt1Esri,
-}
-impl From<PjWktType> for u32 {
-    fn from(value: PjWktType) -> Self {
-        match value {
-            PjWktType::Wkt2_2015 => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015,
-            PjWktType::Wkt2_2015Simplified => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015_SIMPLIFIED,
-            PjWktType::Wkt2_2019 => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019,
-            PjWktType::Wkt2_2018 => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018,
-            PjWktType::Wkt2_2019Simplified => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019_SIMPLIFIED,
-            PjWktType::Wkt2_2018Simplified => proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018_SIMPLIFIED,
-            PjWktType::Wkt1Gdal => proj_sys::PJ_WKT_TYPE_PJ_WKT1_GDAL,
-            PjWktType::Wkt1Esri => proj_sys::PJ_WKT_TYPE_PJ_WKT1_ESRI,
-        }
-    }
+    Wkt2_2015 = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015,
+    Wkt2_2015Simplified = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015_SIMPLIFIED,
+    Wkt2_2019 = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019,
+    //Deprecated alias for PJ_WKT2_2019
+    // Wkt2_2018=proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018,
+    Wkt2_2019Simplified = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019_SIMPLIFIED,
+    //Deprecated alias for PJ_WKT2_2019
+    // Wkt2_2018Simplified=proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018_SIMPLIFIED,
+    Wkt1Gdal = proj_sys::PJ_WKT_TYPE_PJ_WKT1_GDAL,
+    Wkt1Esri = proj_sys::PJ_WKT_TYPE_PJ_WKT1_ESRI,
 }
 
 ///# References

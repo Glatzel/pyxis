@@ -11,4 +11,3 @@ Copy-Item "$ROOT/cpp/dist/*" "$env:PREFIX/pyxis" -Recurse
 if (-not $IsMacOS) {
     Copy-Item "$ROOT/cuda/dist/*" "$env:PREFIX/pyxis" -Recurse
 }
-

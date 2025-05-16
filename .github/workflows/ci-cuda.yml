@@ -32,11 +32,3 @@ jobs:
       - name: build cuda
         run: ${{env.CUDA_ROOT}}/scripts/build-cuda.ps1
         shell: pwsh
-
-      - name: upload cuda
-        if: ${{inputs.release}}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-cuda-${{matrix.machine}}
-          path: ${{env.CUDA_ROOT}}/dist/*.7z
-          if-no-files-found: error

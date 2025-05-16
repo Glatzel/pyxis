@@ -16,13 +16,7 @@ if ($IsWindows) {
 
     # copy build file to dist
     New-Item ./dist/cli -ItemType Directory -ErrorAction SilentlyContinue
-    Copy-Item "target/$config/pyxis.exe" ./dist/cli/pyxis.exe
-    Write-Output "::endgroup::"
-
-    # pack
-    Write-Output "::group::Pack pyxis-windows-x64-self-contained.7z"
-    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "./dist/pyxis-cli-windows-x64.7z" "./dist/cli/*"
+    Copy-Item "target/$config/pyxis.exe" ./dist/cli
     Write-Output "::endgroup::"
 }
 elseif ($IsLinux) {
@@ -34,12 +28,6 @@ elseif ($IsLinux) {
     New-Item ./dist/cli -ItemType Directory -ErrorAction SilentlyContinue
     Copy-Item "target/$config/pyxis" ./dist/cli
     Write-Output "::endgroup::"
-
-    # pack
-    Write-Output "::group::Pack pyxis-linux-x64.7z"
-    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-        "./dist/pyxis-cli-linux-x64.7z" "./dist/cli/*"
-    Write-Output "::endgroup::"
 }
 elseif ($IsMacOS) {
     # build
@@ -49,12 +37,6 @@ elseif ($IsMacOS) {
     #copy to dist
     New-Item ./dist/cli -ItemType Directory -ErrorAction SilentlyContinue
     Copy-Item "target/$config/pyxis" ./dist/cli
-    Write-Output "::endgroup::"
-
-    # pack
-    Write-Output "::group::Pack pyxis-cli-macos-arm64.7z"
-    7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=512m -mfb=256 -ms=on -mqs=on `
-        "./dist/pyxis-cli-macos-arm64.7z" "./dist/cli/*"
     Write-Output "::endgroup::"
 }
 else {

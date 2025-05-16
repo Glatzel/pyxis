@@ -3,10 +3,6 @@ name: CI
 on:
   workflow_dispatch:
   workflow_call:
-    inputs:
-      release:
-        type: boolean
-        default: false
   push:
     branches: [main]
     paths-ignore:
@@ -29,7 +25,6 @@ concurrency:
 
 jobs:
   pre-commit:
-    if: ${{ !inputs.release }}
     uses: Glatzel/template/.github/workflows/pre-commit.yml@main
   changed:
     outputs:
@@ -75,38 +70,28 @@ jobs:
 
   cpp:
     needs: changed
-    if: ${{ needs.changed.outputs.changed-cpp != 'false'}}
+    if: ${{ needs.changed.outputs.changed-cpp != 'false' }}
     uses: ./.github/workflows/ci-cpp.yml
-    with:
-      release: ${{inputs.release&& inputs.release || false}}
 
   csharp:
     needs: changed
     if: ${{ needs.changed.outputs.changed-csharp != 'false'}}
     uses: ./.github/workflows/ci-csharp.yml
-    with:
-      release: ${{inputs.release && inputs.release || false }}
 
   cuda:
     needs: changed
     if: ${{ needs.changed.outputs.changed-cuda != 'false'}}
     uses: ./.github/workflows/ci-cuda.yml
-    with:
-      release: ${{inputs.release&& inputs.release || false}}
 
   python:
     needs: changed
     if: ${{ needs.changed.outputs.changed-python != 'false' }}
     uses: ./.github/workflows/ci-python.yml
-    with:
-      release: ${{inputs.release&& inputs.release || false}}
 
   python-cuda:
     needs: changed
     if: ${{ needs.changed.outputs.changed-python-cuda != 'false' }}
     uses: ./.github/workflows/ci-python-cuda.yml
-    with:
-      release: ${{inputs.release&& inputs.release || false}}
 
   python-cuda-check-test:
     needs: changed
@@ -136,15 +121,11 @@ jobs:
     needs: changed
     if: ${{ needs.changed.outputs.changed-rust != 'false' }}
     uses: ./.github/workflows/ci-rust.yml
-    with:
-      release: ${{inputs.release&& inputs.release || false}}
 
   rust-cuda:
     needs: changed
     if: ${{ needs.changed.outputs.changed-rust-cuda != 'false' }}
     uses: ./.github/workflows/ci-rust-cuda.yml
-    with:
-      release: ${{inputs.release&& inputs.release || false}}
 
   rust-cuda-check-test:
     needs: changed

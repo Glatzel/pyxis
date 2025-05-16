@@ -3,10 +3,6 @@ name: python
 on:
   workflow_dispatch:
   workflow_call:
-    inputs:
-      release:
-        type: boolean
-        default: false
 permissions: read-all
 env:
   PYTHON_CUDA_ROOT: ./python-cuda
@@ -34,32 +30,22 @@ jobs:
           run-install: false
 
       - name: build
-        run: ${{env.PYTHON_CUDA_ROOT}}/rattler/ci-pyxis-cuda-py.ps1 ${{ inputs.release && '-config  release' || null }}
+        run: ${{env.PYTHON_CUDA_ROOT}}/rattler/ci-pyxis-cuda-py.ps1
         shell: pwsh
 
-      - name: upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-cuda-python-${{matrix.machine}}
-          path: |
-            ${{env.PYTHON_CUDA_ROOT}}/rattler/output/${{matrix.os}}/*.conda
-          if-no-files-found: error
-
-
   upload-cov:
-    if: ${{!inputs.release}}
     strategy:
       fail-fast: false
       matrix:
-        machine: [ windows-latest, ubuntu-latest]
+        machine: [windows-latest, ubuntu-latest]
     runs-on: ${{matrix.machine}}
     steps:
-       - uses: actions/checkout@v4
-       - name: Upload results to Codecov
-         if: ${{ !cancelled() }}
-         uses: codecov/codecov-action@v5
-       - name: Upload test results to Codecov
-         if: ${{ !cancelled()}}
-         uses: codecov/test-results-action@v1
-         with:
-           fail_ci_if_error: true
+      - uses: actions/checkout@v4
+      - name: Upload results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v5
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled()}}
+        uses: codecov/test-results-action@v1
+        with:
+          fail_ci_if_error: true

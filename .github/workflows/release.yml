@@ -4,25 +4,182 @@ on:
   workflow_dispatch:
     inputs:
       tag:
+        description: "Tag to release"
         type: string
-        required:  true
-
+        required: true
 
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
-
+permissions:
+  contents: write
 jobs:
-  check-and-build:
-    permissions: read-all
-    uses: ./.github/workflows/ci.yml
-    with:
-      release: true
+  rattler-pyxis:
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - machine: windows-latest
+            os: win-64
+          - machine: ubuntu-latest
+            os: linux-64
+          - machine: macos-latest
+            os: osx-64
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.8
+        with:
+          run-install: false
+      - name: build
+        run: ./rattler/ci-pyxis-cli.ps1
+        shell: pwsh
+
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cli-${{matrix.machine}}
+          path: |
+            ./rattler/output/${{matrix.os}}/*.conda
+          if-no-files-found: error
+
+  rattler-python:
+    env:
+      PYTEST_ADDOPTS: "--color=yes"
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest, ubuntu-latest]
+        include:
+          - machine: windows-latest
+            os: win-64
+
+          - machine: ubuntu-latest
+            os: linux-64
+
+          - machine: macos-latest
+            os: osx-arm64
+
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.8
+        with:
+          run-install: false
+
+      - name: build
+        run: ./python/rattler/ci-pyxis-py.ps1 -config release
+        shell: pwsh
+
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-python-${{matrix.machine}}
+          path: |
+            ./python/rattler/output/${{matrix.os}}/*.conda
+          if-no-files-found: error
+
+  rattler-python-cuda:
+    env:
+      PYTEST_ADDOPTS: "--color=yes"
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest, ubuntu-latest]
+        include:
+          - machine: windows-latest
+            os: win-64
+          - machine: ubuntu-latest
+            os: linux-64
+
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.8
+        with:
+          run-install: false
+
+      - name: build
+        run: ./python-cuda/rattler/ci-pyxis-cuda-py.ps1
+        shell: pwsh
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-python-cuda-${{matrix.machine}}
+          path: |
+            ./python-cuda/rattler/output/${{matrix.os}}/*.conda
+          if-no-files-found: error
+
+  nukpg:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+      - name: pack
+        run: ./csharp/scripts/pack.ps1 -config Release
+      - name: upload nupkg
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-csharp
+          path: |
+            ./csharp/dist/*.nupkg
+          if-no-files-found: error
+
+  cargo-doc:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-Dwarnings"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.8
+        with:
+          run-install: false
+      - name: cargo-doc
+        run: ./rust/scripts/cargo-doc.ps1
+        shell: pwsh
+      - name: upload doc
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-doc
+          path: ./rust/dist/*.7z
+          if-no-files-found: error
+  python-doc:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-Dwarnings"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.8
+        with:
+          run-install: false
+      - name: python-doc
+        run: ./python/scripts/sphinx.ps1
+        shell: pwsh
+      - name: upload doc
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-doc
+          path: ./python/dist/*.7z
+          if-no-files-found: error
 
   release:
     permissions:
       contents: write
-    needs: [check-and-build]
+    needs: [rattler-pyxis, rattler-python, rattler-python-cuda, nukpg, cargo-doc, python-doc]
     uses: Glatzel/template/.github/workflows/release.yml@main
     with:
       override: true

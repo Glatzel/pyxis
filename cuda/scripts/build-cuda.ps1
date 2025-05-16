@@ -20,15 +20,4 @@ if ($IsWindows) { pixi run cmake -G "Visual Studio 17 2022" -B build $install $c
 else { pixi run cmake -B build $install $config -DBUILD_CUDA=ON }
 pixi run cmake --build build --target install
 
-# pack output files
-if (Test-Path "./dist") {
-    if ($IsWindows) {
-        7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-            "./dist/pyxis-cuda-windows-x64.7z" "./dist/"
-    }
-    elseif ($IsLinux) {
-        7z a -t7z -m0=LZMA2 -mmt=on -mx9 -md=4096m -mfb=273 -ms=on -mqs=on `
-            "./dist/pyxis-cuda-linux-x64.7z" "./dist/"
-    }
-}
 Set-Location $ROOT

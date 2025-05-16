@@ -1,14 +1,12 @@
-param (
-    [ValidateSet("develop","release")]
-    $config = "develop"
-)
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
-Set-Location $PSScriptRoot
 
-& "$PSScriptRoot/../scripts/build-rust-cli.ps1" -config $config
-& "$PSScriptRoot/../crates/pyxis-cli/examples/cli.ps1"
+& "$ROOT/cpp/scripts/build-cpp.ps1" -config Release
+if (-not $IsMacOS) {
+    & "$ROOT/cuda/scripts/build-cuda.ps1"
+}
+& "$ROOT/rust/scripts/build-rust-cli.ps1" -config release
 
 Set-Location $PSScriptRoot
 pixi run rattler-build build

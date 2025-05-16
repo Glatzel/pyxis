@@ -36,12 +36,6 @@ impl ToProjOptionString for bool {
 
 /// Macro to implement `ToProjOptionString` for types that can use
 /// `to_string()`.
-///
-/// # Example
-///
-/// ```rust
-/// impl_to_option_string!(usize);
-/// ```
 macro_rules! impl_to_option_string {
     ($t:ty) => {
         impl ToProjOptionString for $t {
@@ -49,7 +43,7 @@ macro_rules! impl_to_option_string {
         }
     };
 }
-pub(crate) use impl_to_option_string;
+
 // Use macro for simple types
 impl_to_option_string!(f64);
 impl_to_option_string!(usize);

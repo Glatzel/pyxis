@@ -3,12 +3,12 @@ use std::ffi::CString;
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
-    PjComparisonCriterion, PjGuessedWktDialect, PjStringType, PjType, PjWktType,
+    ComparisonCriterion, GuessedWktDialect, ProjStringType, ProjType, WktType,
 };
-use crate::{PJ_OPTION_NO, PJ_OPTION_YES, Pj, c_char_to_string, check_result};
+use crate::{PJ_OPTION_NO, PJ_OPTION_YES, Proj, c_char_to_string, check_result};
 
 /// # ISO-19111
-impl crate::PjContext {
+impl crate::Context {
     ///# References
     ///
     /// <>
@@ -32,8 +32,8 @@ impl crate::PjContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
-    pub fn guess_wkt_dialect(&self, wkt: &str) -> miette::Result<PjGuessedWktDialect> {
-        PjGuessedWktDialect::try_from(unsafe {
+    pub fn guess_wkt_dialect(&self, wkt: &str) -> miette::Result<GuessedWktDialect> {
+        GuessedWktDialect::try_from(unsafe {
             proj_sys::proj_context_guess_wkt_dialect(
                 self.ptr,
                 CString::new(wkt).expect("Error creating CString").as_ptr(),
@@ -740,13 +740,13 @@ impl crate::PjContext {
     fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { unimplemented!() }
 }
 /// # ISO-19111
-impl Pj<'_> {
+impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
-    pub fn get_type(&self) -> miette::Result<PjType> {
+    pub fn get_type(&self) -> miette::Result<ProjType> {
         let result = unsafe { proj_sys::proj_get_type(self.ptr) };
-        PjType::try_from(result).into_diagnostic()
+        ProjType::try_from(result).into_diagnostic()
     }
     ///# References
     ///
@@ -755,7 +755,7 @@ impl Pj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
-    pub fn is_equivalent_to(&self, other: &Pj, criterion: PjComparisonCriterion) -> bool {
+    pub fn is_equivalent_to(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
         unsafe { proj_sys::proj_is_equivalent_to(self.ptr, other.ptr, criterion.into()) != 0 }
     }
     ///# References
@@ -813,7 +813,7 @@ impl Pj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_wkt>
     pub fn as_wkt(
         &self,
-        wkt_type: PjWktType,
+        wkt_type: WktType,
         multiline: Option<bool>,
         indentation_width: Option<usize>,
         output_axis: Option<bool>,
@@ -846,7 +846,7 @@ impl Pj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_proj_string>
     pub fn as_proj_string(
         &self,
-        string_type: PjStringType,
+        string_type: ProjStringType,
         multiline: Option<bool>,
         indentation_width: Option<usize>,
         max_line_length: Option<usize>,
@@ -890,7 +890,7 @@ impl Pj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
-    pub fn get_source_crs(&self) -> Option<Pj<'_>> {
+    pub fn get_source_crs(&self) -> Option<Proj<'_>> {
         let out_ptr = unsafe { proj_sys::proj_get_source_crs(self.ctx.ptr, self.ptr) };
         if out_ptr.is_null() {
             return None;
@@ -904,7 +904,7 @@ impl Pj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
-    pub fn get_target_crs(&self) -> Option<Pj<'_>> {
+    pub fn get_target_crs(&self) -> Option<Proj<'_>> {
         let out_ptr = unsafe { proj_sys::proj_get_target_crs(self.ctx.ptr, self.ptr) };
         if out_ptr.is_null() {
             return None;
@@ -915,7 +915,7 @@ impl Pj<'_> {
         })
     }
 }
-impl Clone for Pj<'_> {
+impl Clone for Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_clone>
@@ -971,7 +971,7 @@ mod test_context {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(
-            crate::data_types::iso19111::PjWktType::Wkt2_2019,
+            crate::data_types::iso19111::WktType::Wkt2_2019,
             None,
             None,
             None,
@@ -980,14 +980,14 @@ mod test_context {
             None,
         )?;
         let dialect = ctx.guess_wkt_dialect(&wkt)?;
-        assert_eq!(dialect, PjGuessedWktDialect::Wkt2_2019);
+        assert_eq!(dialect, GuessedWktDialect::Wkt2_2019);
         Ok(())
     }
 }
 #[cfg(test)]
 mod test_proj {
-    use crate::PjArea;
-    use crate::data_types::iso19111::PjComparisonCriterion;
+    use crate::Area;
+    use crate::data_types::iso19111::ComparisonCriterion;
 
     #[test]
     fn test_get_type() -> miette::Result<()> {
@@ -1010,7 +1010,7 @@ mod test_proj {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4496")?;
-        let equivalent = pj1.is_equivalent_to(&pj2, PjComparisonCriterion::Equivalent);
+        let equivalent = pj1.is_equivalent_to(&pj2, ComparisonCriterion::Equivalent);
         assert!(!equivalent);
         Ok(())
     }
@@ -1088,7 +1088,7 @@ mod test_proj {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(
-            crate::data_types::iso19111::PjWktType::Wkt2_2019,
+            crate::data_types::iso19111::WktType::Wkt2_2019,
             None,
             None,
             None,
@@ -1105,7 +1105,7 @@ mod test_proj {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let proj_string = pj.as_proj_string(
-            crate::data_types::iso19111::PjStringType::Proj4,
+            crate::data_types::iso19111::ProjStringType::Proj4,
             None,
             None,
             None,
@@ -1129,7 +1129,7 @@ mod test_proj {
         let pj = ctx.create_proj(crate::PjParams::CrsToCrs {
             source_crs: "EPSG:4326",
             target_crs: "EPSG:3857",
-            area: &PjArea::default(),
+            area: &Area::default(),
         })?;
         let target = pj.get_source_crs().unwrap();
         assert_eq!(target.get_name(), "WGS 84");
@@ -1141,7 +1141,7 @@ mod test_proj {
         let pj = ctx.create_proj(crate::PjParams::CrsToCrs {
             source_crs: "EPSG:4326",
             target_crs: "EPSG:3857",
-            area: &PjArea::default(),
+            area: &Area::default(),
         })?;
         let target = pj.get_target_crs().unwrap();
         assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");

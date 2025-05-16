@@ -8,9 +8,9 @@ pub mod logging;
 pub mod transformation;
 
 pub(crate) use coordinates::*;
-pub use derivatives::PjFactors;
+pub use derivatives::Factors;
 pub(crate) use errors::*;
 pub(crate) use infos::*;
 pub(crate) use list_structures::*;
-pub use logging::PjLogLevel;
-pub use transformation::{Pj, PjArea, PjContext, PjDirection};
+pub use logging::LogLevel;
+pub use transformation::{Area, Context, Direction, Proj};

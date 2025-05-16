@@ -6,14 +6,14 @@ use tracing::level_filters::LevelFilter;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 
-use crate::data_types::PjLogLevel;
+use crate::data_types::LogLevel;
 
-pub(crate) fn new_test_ctx() -> miette::Result<crate::PjContext> {
+pub(crate) fn new_test_ctx() -> miette::Result<crate::Context> {
     tracing_subscriber::registry()
         .with(clerk::terminal_layer(LevelFilter::TRACE, true))
         .init();
-    let ctx = crate::PjContext::default();
-    ctx.set_log_level(PjLogLevel::Trace)?;
+    let ctx = crate::Context::default();
+    ctx.set_log_level(LogLevel::Trace)?;
     // PROJ_DATA
     let workspace_root = env::var("CARGO_WORKSPACE_DIR").unwrap();
     let default_proj_data = if cfg!(target_os = "windows") {

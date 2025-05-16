@@ -109,7 +109,7 @@ impl ContextTransform {
         let pj = ctx.create_proj(CrsToCrs {
             source_crs: from,
             target_crs: to,
-            area: &proj::PjArea::default(),
+            area: &proj::Area::default(),
         })?;
         let pj = ctx.normalize_for_visualization(&pj).unwrap();
         (self.x, self.y) = pj.convert(&(self.x, self.y))?;

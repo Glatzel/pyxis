@@ -1,12 +1,12 @@
 crate::create_readonly_struct!(
-    PjOperations,
+    Operations,
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPERATIONS>",
     {id: String},
     // PJ *(*proj)(PJ *);
     {descr: String}
 );
 crate::create_readonly_struct!(
-    PjEllps,
+    Ellps,
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPERATIONS>",
     {id: String},
     {major: String},
@@ -14,7 +14,7 @@ crate::create_readonly_struct!(
     {name: String}
 );
 crate::create_readonly_struct!(
-    PjUnits,
+    Units,
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPERATIONS>",
     {id: String},
     {to_meter: String},
@@ -22,7 +22,7 @@ crate::create_readonly_struct!(
     {factor: f64}
 );
 crate::create_readonly_struct!(
-    PjPrimeMeridians,
+    PrimeMeridians,
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPERATIONS>",
     {id: String},
     {defn: String}

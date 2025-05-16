@@ -1,11 +1,11 @@
-fn _list_operations() -> Vec<crate::data_types::PjOperations> { unimplemented!() }
+fn _list_operations() -> Vec<crate::data_types::Operations> { unimplemented!() }
 ///Get a pointer to an array of ellipsoids defined in PROJ. The last entry of
 /// the returned array is a NULL-entry. The array is statically allocated and
 /// does not need to be freed after use.
 ///
 /// # References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_ellps>
-pub fn list_ellps() -> Vec<crate::data_types::PjEllps> {
+pub fn list_ellps() -> Vec<crate::data_types::Ellps> {
     let ptr = unsafe { proj_sys::proj_list_ellps() };
     let mut out_vec = Vec::new();
 
@@ -16,7 +16,7 @@ pub fn list_ellps() -> Vec<crate::data_types::PjEllps> {
             break;
         } else {
             let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
-            out_vec.push(crate::data_types::PjEllps::new(
+            out_vec.push(crate::data_types::Ellps::new(
                 crate::c_char_to_string(src.id).unwrap_or_default(),
                 crate::c_char_to_string(src.major).unwrap_or_default(),
                 crate::c_char_to_string(src.ell).unwrap_or_default(),
@@ -33,7 +33,7 @@ pub fn list_ellps() -> Vec<crate::data_types::PjEllps> {
 ///
 /// # References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_units>
-pub fn list_units() -> Vec<crate::data_types::PjUnits> {
+pub fn list_units() -> Vec<crate::data_types::Units> {
     let ptr = unsafe { proj_sys::proj_list_units() };
     let mut out_vec = Vec::new();
     let mut offset = 0;
@@ -43,7 +43,7 @@ pub fn list_units() -> Vec<crate::data_types::PjUnits> {
             break;
         } else {
             let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
-            out_vec.push(crate::data_types::PjUnits::new(
+            out_vec.push(crate::data_types::Units::new(
                 crate::c_char_to_string(src.id).unwrap_or_default(),
                 crate::c_char_to_string(src.to_meter).unwrap_or_default(),
                 crate::c_char_to_string(src.name).unwrap_or_default(),
@@ -61,7 +61,7 @@ pub fn list_units() -> Vec<crate::data_types::PjUnits> {
 ///
 /// # References
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_prime_meridians>
-pub fn list_prime_meridians() -> Vec<crate::data_types::PjPrimeMeridians> {
+pub fn list_prime_meridians() -> Vec<crate::data_types::PrimeMeridians> {
     let ptr = unsafe { proj_sys::proj_list_prime_meridians() };
     let mut out_vec = Vec::new();
     let mut offset = 0;
@@ -71,7 +71,7 @@ pub fn list_prime_meridians() -> Vec<crate::data_types::PjPrimeMeridians> {
             break;
         } else {
             let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
-            out_vec.push(crate::data_types::PjPrimeMeridians::new(
+            out_vec.push(crate::data_types::PrimeMeridians::new(
                 crate::c_char_to_string(src.id).unwrap_or_default(),
                 crate::c_char_to_string(src.defn).unwrap_or_default(),
             ));

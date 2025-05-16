@@ -18,7 +18,7 @@ pub fn info() -> PjInfo {
     )
 }
 ///# Info functions
-impl crate::Pj<'_> {
+impl crate::Proj<'_> {
     /// Get information about a specific grid.
     ///
     /// References

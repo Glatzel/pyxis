@@ -1,12 +1,14 @@
+use num_enum::{IntoPrimitive, TryFromPrimitive};
+
 ///Object containing everything related to a given projection or
 /// transformation. As a user of the PROJ library you are only exposed to
 /// pointers to this object and the contents is hidden behind the public API.
 ///
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ>
-pub struct Pj<'a> {
+pub struct Proj<'a> {
     pub(crate) ptr: *mut proj_sys::PJ,
-    pub(crate) ctx: &'a crate::PjContext,
+    pub(crate) ctx: &'a crate::Context,
 }
 
 /// Enumeration that is used to convey in which direction a given transformation
@@ -15,37 +17,21 @@ pub struct Pj<'a> {
 ///
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_DIRECTION>
-#[derive(Debug)]
-pub enum PjDirection {
-    Fwd,
-    Ident,
-    Inv,
+#[derive(Debug, TryFromPrimitive, IntoPrimitive)]
+#[repr(i32)]
+pub enum Direction {
+    Fwd = proj_sys::PJ_DIRECTION_PJ_FWD,
+    Ident = proj_sys::PJ_DIRECTION_PJ_IDENT,
+    Inv = proj_sys::PJ_DIRECTION_PJ_INV,
 }
-impl From<PjDirection> for i32 {
-    fn from(value: PjDirection) -> Self {
-        match value {
-            PjDirection::Fwd => 1,
-            PjDirection::Ident => 0,
-            PjDirection::Inv => -1,
-        }
-    }
-}
-impl From<&PjDirection> for i32 {
-    fn from(value: &PjDirection) -> Self {
-        match value {
-            PjDirection::Fwd => 1,
-            PjDirection::Ident => 0,
-            PjDirection::Inv => -1,
-        }
-    }
-}
+
 ///Context objects enable safe multi-threaded usage of PROJ. Each PJ object is
 /// connected to a context (if not specified, the default context is used). All
 /// operations within a context should be performed in the same thread.
 ///
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CONTEXT>
-pub struct PjContext {
+pub struct Context {
     pub(crate) ptr: *mut proj_sys::PJ_CONTEXT,
 }
 ///Opaque object describing an area in which a transformation is performed.
@@ -55,6 +41,6 @@ pub struct PjContext {
 ///
 /// # References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AREA>
-pub struct PjArea {
+pub struct Area {
     pub(crate) ptr: *mut proj_sys::PJ_AREA,
 }

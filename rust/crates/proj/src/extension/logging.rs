@@ -1,7 +1,7 @@
 use std::ffi::c_void;
 
 use crate::check_result;
-use crate::data_types::PjLogLevel;
+use crate::data_types::LogLevel;
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
     let _message = crate::c_char_to_string(info).unwrap_or_default();
@@ -14,8 +14,8 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
     };
 }
 
-impl crate::PjContext {
-    pub fn set_log_level(&self, level: PjLogLevel) -> miette::Result<&Self> {
+impl crate::Context {
+    pub fn set_log_level(&self, level: LogLevel) -> miette::Result<&Self> {
         self.log_level(level)?;
         Ok(self)
     }
@@ -47,12 +47,12 @@ impl crate::PjContext {
 
 #[cfg(test)]
 mod test {
-    use crate::data_types::PjLogLevel;
+    use crate::data_types::LogLevel;
 
     #[test]
     fn test_log() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.set_log_level(PjLogLevel::Trace)?;
+        ctx.set_log_level(LogLevel::Trace)?;
         let _ = ctx.create("EPSG:4326")?;
 
         Ok(())
@@ -61,7 +61,7 @@ mod test {
     #[test]
     fn test_log_error() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.set_log_level(PjLogLevel::Trace)?;
+        ctx.set_log_level(LogLevel::Trace)?;
         let pj = ctx.create("Unknown crs");
         assert!(pj.is_err());
         Ok(())
@@ -70,10 +70,10 @@ mod test {
     #[test]
     fn test_log_change_level() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.set_log_level(PjLogLevel::Debug)?;
+        ctx.set_log_level(LogLevel::Debug)?;
         let pj = ctx.create("Show log");
         assert!(pj.is_err());
-        ctx.set_log_level(PjLogLevel::None)?;
+        ctx.set_log_level(LogLevel::None)?;
         let pj = ctx.create("Hide log");
         assert!(pj.is_err());
         Ok(())

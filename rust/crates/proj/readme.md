@@ -55,23 +55,6 @@ Check examples folder.
 
 * [pixi](https://github.com/prefix-dev/pixi/?tab=readme-ov-file#installation)
 
-### Naming Schema
-
-#### Structs
-
-| Proj      | This crate |
-| --------- | ---------- |
-| PJ        | Pj         |
-| Pj_*      | Pj*        |
-| PROJ_*    | Pj*        |
-| Pj_PROJ_* | Pj*        |
-
-#### Functions
-
-| Proj | This crate |
-| ---- | ---------- |
-| PJ_* | *          |
-
 ### Folder Structure of src
 
 ```yaml

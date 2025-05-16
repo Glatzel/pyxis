@@ -25,7 +25,7 @@ jobs:
           - machine: ubuntu-latest
             os: linux-64
           - machine: macos-latest
-            os: osx-64
+            os: osx-arm64
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4

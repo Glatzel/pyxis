@@ -8,7 +8,6 @@
 //! - The `ProjOptions` struct for building and managing PROJ options as
 //!   CStrings.
 
-
 use std::ffi::CString;
 use std::ptr::null;
 

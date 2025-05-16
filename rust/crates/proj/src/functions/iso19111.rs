@@ -12,27 +12,27 @@ impl crate::PjContext {
     ///# References
     ///
     /// <>
-    fn _context_set_autoclose_database(&self) { unimplemented!() }
+    fn _set_autoclose_database(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _context_set_database_path(&self) { unimplemented!() }
+    fn _set_database_path(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _context_get_database_path(&self) { unimplemented!() }
+    fn _get_database_path(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _context_get_database_metadata(&self) { unimplemented!() }
+    fn _get_database_metadata(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _context_get_database_structure(&self) { unimplemented!() }
+    fn _get_database_structure(&self) { unimplemented!() }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
-    pub fn context_guess_wkt_dialect(&self, wkt: &str) -> miette::Result<PjGuessedWktDialect> {
+    pub fn guess_wkt_dialect(&self, wkt: &str) -> miette::Result<PjGuessedWktDialect> {
         PjGuessedWktDialect::try_from(unsafe {
             proj_sys::proj_context_guess_wkt_dialect(
                 self.ptr,
@@ -967,7 +967,7 @@ fn _proj_list_destroy() { unimplemented!() }
 mod test_context {
     use super::*;
     #[test]
-    fn test_context_guess_wkt_dialect() -> miette::Result<()> {
+    fn test_guess_wkt_dialect() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(
@@ -979,7 +979,7 @@ mod test_context {
             None,
             None,
         )?;
-        let dialect = ctx.context_guess_wkt_dialect(&wkt)?;
+        let dialect = ctx.guess_wkt_dialect(&wkt)?;
         assert_eq!(dialect, PjGuessedWktDialect::Wkt2_2019);
         Ok(())
     }

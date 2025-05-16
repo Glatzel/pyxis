@@ -3,4 +3,4 @@ channels = ["https://repo.prefix.dev/glatzel", "conda-forge"]
 platforms = ["win-64", "linux-64", "osx-arm64"]
 
 [dependencies]
-rattler="==0.41.0"
+rattler-build="==0.41.0"

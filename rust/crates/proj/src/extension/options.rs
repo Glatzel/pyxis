@@ -15,15 +15,23 @@ impl ToProjOptionString for bool {
         }
     }
 }
-impl ToProjOptionString for f64 {
-    fn to_option_string(&self) -> String { self.to_string() }
+
+// Macro to implement ToProjOptionString for types that can use to_string()
+macro_rules! impl_to_option_string {
+    ($t:ty) => {
+        impl ToProjOptionString for $t {
+            fn to_option_string(&self) -> String {
+                self.to_string()
+            }
+        }
+    };
 }
-impl ToProjOptionString for &str {
-    fn to_option_string(&self) -> String { self.to_string() }
-}
-impl ToProjOptionString for usize {
-    fn to_option_string(&self) -> String { self.to_string() }
-}
+
+// Use macro for simple types
+impl_to_option_string!(f64);
+impl_to_option_string!(usize);
+impl_to_option_string!(&str);
+
 pub(crate) struct ProjOptions {
     pub(crate) options: Vec<CString>,
 }

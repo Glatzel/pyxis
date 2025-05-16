@@ -2,7 +2,7 @@ use std::ptr::null_mut;
 
 use float_cmp::assert_approx_eq;
 use proj::PjParams::CrsToCrs;
-use proj::{IPjCoord, Area};
+use proj::{Area, IPjCoord};
 #[derive(Clone)]
 struct MyCoord {
     a: f64,

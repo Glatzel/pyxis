@@ -1,4 +1,3 @@
-
 pub enum LogLevel {
     None,
     Error,

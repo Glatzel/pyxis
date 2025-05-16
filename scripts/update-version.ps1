@@ -36,11 +36,12 @@ $cargoTomlPath = "./rust/Cargo.toml"
 (Get-Content -Path $cargoTomlPath) -replace '^version = .*', "version = `"$version`"" | Set-Content -Path $cargoTomlPath
 Write-Host "Updated rust version to $version"
 
-$recipe_path = "./rust/rattler/recipe.yaml"
-(Get-Content -Path $recipe_path) -replace '^  version: .*', "  version: $version" | Set-Content -Path $recipe_path
-Write-Host "Updated rust ratter version to $version"
-
 # rust-cuda
 $cargoTomlPath = "./rust-cuda/Cargo.toml"
 (Get-Content -Path $cargoTomlPath) -replace '^version = .*', "version = `"$version`"" | Set-Content -Path $cargoTomlPath
 Write-Host "Updated rust-cuda version to $version"
+
+# rattler
+$recipe_path = "./rattler/recipe.yaml"
+(Get-Content -Path $recipe_path) -replace '^  version: .*', "  version: $version" | Set-Content -Path $recipe_path
+Write-Host "Updated rust ratter version to $version"

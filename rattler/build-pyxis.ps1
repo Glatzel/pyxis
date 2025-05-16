@@ -1,7 +1,11 @@
-New-Item $env:PREFIX/bin/pyxis-cli -ItemType Directory
+New-Item $env:PREFIX/bin/pyxis -ItemType Directory -ErrorAction SilentlyContinue
+New-Item $env:PREFIX/bin/pyxis/bin -ItemType Directory -ErrorAction SilentlyContinue
+$ROOT = git rev-parse --show-toplevel
 if ($IsWindows) {
-    Copy-Item "$env:RECIPE_DIR/../dist/cli/pyxis.exe" "$env:PREFIX/bin/pyxis-cli/pyxis.exe"
+    Copy-Item "$ROOT/rust/dist/cli/pyxis.exe" "$env:PREFIX/bin/pyxis/pyxis.exe"
 }
 if ($IsLinux -or $IsMacOS) {
-    Copy-Item "$env:RECIPE_DIR/../dist/cli/pyxis" "$env:PREFIX/bin/pyxis-cli/pyxis"
+    Copy-Item "$ROOT/rust/dist/cli/pyxis" "$env:PREFIX/bin/pyxis/pyxis"
 }
+Copy-Item "$ROOT/cpp/dist/*" "$env:PREFIX/bin/pyxis/pyxis/" -Recurse
+Copy-Item "$ROOT/cuda/dist/*" "$env:PREFIX/bin/pyxis/pyxis/" -Recurse

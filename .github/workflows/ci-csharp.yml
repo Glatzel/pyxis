@@ -3,10 +3,6 @@ name: csharp
 on:
   workflow_dispatch:
   workflow_call:
-    inputs:
-      release:
-        type: boolean
-        default: false
 permissions: read-all
 env:
   CSHARP_ROOT: ./csharp
@@ -21,34 +17,20 @@ jobs:
           msbuild-architecture: x64
 
       - name: build
-        if: ${{!inputs.release}}
-        run: ${{env.CSHARP_ROOT}}/scripts/build.ps1 -config ${{ inputs.release && 'Release' || 'Debug' }}
+        run: ${{env.CSHARP_ROOT}}/scripts/build.ps1 -config Debug
 
       - name: test
-        if: ${{!inputs.release}}
         run: ${{env.CSHARP_ROOT}}/scripts/test.ps1
 
       - name: Upload cov results to Codecov
-        if: ${{ !cancelled() && !inputs.release}}
+        if: ${{ !cancelled()}}
         uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true
 
       - name: Upload test results to Codecov
-        if: ${{ !cancelled() && !inputs.release}}
+        if: ${{ !cancelled()}}
         uses: codecov/test-results-action@v1
         with:
           files: ./tests/*/TestResults/TestResults.xml
           fail_ci_if_error: true
-
-      - name: pack
-        if: ${{inputs.release}}
-        run: ${{env.CSHARP_ROOT}}/scripts/pack.ps1 -config ${{ inputs.release && 'Release' || 'Debug' }}
-      - name: upload nupkg
-        if: ${{inputs.release}}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pyxis-csharp
-          path: |
-            ${{env.CSHARP_ROOT}}/dist/*.nupkg
-          if-no-files-found: error

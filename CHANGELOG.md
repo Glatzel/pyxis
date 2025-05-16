@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.21] - 2025-05-16
+
+### Added
+
+- Add guess_wkt_dialect by @Glatzel in [#388](https://github.com/Glatzel/pyxis/pull/388)
+
+### Changed
+
+- **(rust)** Proj iso19111 pj by @Glatzel in [#377](https://github.com/Glatzel/pyxis/pull/377)
+- **(rust)** Proj option by @Glatzel in [#385](https://github.com/Glatzel/pyxis/pull/385)
+
+### Fixed
+
+- **(rust)** Clerk null macro by @Glatzel in [#371](https://github.com/Glatzel/pyxis/pull/371)
+- **(rust)** Proj option macro by @Glatzel in [#391](https://github.com/Glatzel/pyxis/pull/391)
+
+### Refactor
+
+- **(python,rust,rust-cuda)** Datum compensate by @Glatzel in [#372](https://github.com/Glatzel/pyxis/pull/372)
+- **(rust)** Pj by @Glatzel in [#380](https://github.com/Glatzel/pyxis/pull/380)
+
 ## [0.0.20] - 2025-05-12
 
 ### Added
@@ -376,6 +397,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.21]: https://github.com/Glatzel/pyxis/compare/v0.0.20..v0.0.21
 [0.0.20]: https://github.com/Glatzel/pyxis/compare/v0.0.19..v0.0.20
 [0.0.19]: https://github.com/Glatzel/pyxis/compare/v0.0.18..v0.0.19
 [0.0.18]: https://github.com/Glatzel/pyxis/compare/v0.0.17..v0.0.18

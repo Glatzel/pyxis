@@ -11,7 +11,8 @@ on:
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
-
+permissions:
+  contents: write
 jobs:
   rattler-pyxis:
     strategy:

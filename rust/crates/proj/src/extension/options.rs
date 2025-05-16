@@ -1,12 +1,12 @@
 use std::ffi::CString;
 use std::ptr::null;
 
-pub(crate) const PJ_OPTION_YES: &str = "YES";
-pub(crate) const PJ_OPTION_NO: &str = "NO";
-pub(crate) trait ToPjOptionString {
+pub(crate) const OPTION_YES: &str = "YES";
+pub(crate) const OPTION_NO: &str = "NO";
+pub(crate) trait ToProjOptionString {
     fn to_option_string(&self) -> String;
 }
-impl ToPjOptionString for bool {
+impl ToProjOptionString for bool {
     fn to_option_string(&self) -> String {
         if *self {
             "YES".to_string()
@@ -15,26 +15,26 @@ impl ToPjOptionString for bool {
         }
     }
 }
-impl ToPjOptionString for f64 {
+impl ToProjOptionString for f64 {
     fn to_option_string(&self) -> String { self.to_string() }
 }
-impl ToPjOptionString for &str {
+impl ToProjOptionString for &str {
     fn to_option_string(&self) -> String { self.to_string() }
 }
-impl ToPjOptionString for usize {
+impl ToProjOptionString for usize {
     fn to_option_string(&self) -> String { self.to_string() }
 }
-pub(crate) struct PjOptions {
+pub(crate) struct ProjOptions {
     pub(crate) options: Vec<CString>,
 }
-impl PjOptions {
-    pub fn new(capacity: usize) -> PjOptions {
+impl ProjOptions {
+    pub fn new(capacity: usize) -> ProjOptions {
         Self {
             options: Vec::with_capacity(capacity),
         }
     }
 
-    pub fn _push<T: ToPjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
+    pub fn _push<T: ToProjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
         self.options.push(
             CString::new(format!("{name}={}", opt.to_option_string()))
                 .expect("Error creating CString"),
@@ -42,7 +42,7 @@ impl PjOptions {
 
         self
     }
-    pub fn push_optional<T: ToPjOptionString>(
+    pub fn push_optional<T: ToProjOptionString>(
         &mut self,
         opt: Option<T>,
         name: &str,
@@ -64,7 +64,7 @@ impl PjOptions {
         }
         self
     }
-    pub fn push_optional_pass<T: ToPjOptionString>(
+    pub fn push_optional_pass<T: ToProjOptionString>(
         &mut self,
         opt: Option<T>,
         name: &str,

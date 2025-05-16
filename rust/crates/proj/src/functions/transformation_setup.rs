@@ -76,7 +76,7 @@ impl crate::Context {
         only_best: Option<bool>,
         force_over: Option<bool>,
     ) -> miette::Result<crate::Proj> {
-        let mut options = crate::PjOptions::new(5);
+        let mut options = crate::ProjOptions::new(5);
         options
             .push_optional_pass(authority, "AUTHORITY")
             .push_optional_pass(accuracy, "ACCURACY")

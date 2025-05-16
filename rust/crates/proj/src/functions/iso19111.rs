@@ -5,7 +5,7 @@ use miette::IntoDiagnostic;
 use crate::data_types::iso19111::{
     ComparisonCriterion, GuessedWktDialect, ProjStringType, ProjType, WktType,
 };
-use crate::{PJ_OPTION_NO, PJ_OPTION_YES, Proj, c_char_to_string, check_result};
+use crate::{OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
 
 /// # ISO-19111
 impl crate::Context {
@@ -821,18 +821,18 @@ impl Proj<'_> {
         allow_ellipsoidal_height_as_vertical_crs: Option<bool>,
         allow_linunit_node: Option<bool>,
     ) -> miette::Result<String> {
-        let mut options = crate::PjOptions::new(6);
+        let mut options = crate::ProjOptions::new(6);
         options
-            .push_optional(multiline, "MULTILINE", PJ_OPTION_YES)
+            .push_optional(multiline, "MULTILINE", OPTION_YES)
             .push_optional(indentation_width, "INDENTATION_WIDTH", "4")
             .push_optional(output_axis, "OUTPUT_AXIS", "AUTO")
-            .push_optional(strict, "STRICT", PJ_OPTION_YES)
+            .push_optional(strict, "STRICT", OPTION_YES)
             .push_optional(
                 allow_ellipsoidal_height_as_vertical_crs,
                 "ALLOW_ELLIPSOIDAL_HEIGHT_AS_VERTICAL_CRS",
-                PJ_OPTION_NO,
+                OPTION_NO,
             )
-            .push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", PJ_OPTION_YES);
+            .push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", OPTION_YES);
         let ptrs = options.vec_ptr();
         let result = c_char_to_string(unsafe {
             proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), ptrs.as_ptr())
@@ -851,9 +851,9 @@ impl Proj<'_> {
         indentation_width: Option<usize>,
         max_line_length: Option<usize>,
     ) -> miette::Result<String> {
-        let mut options = crate::PjOptions::new(6);
+        let mut options = crate::ProjOptions::new(6);
         options
-            .push_optional(multiline, "MULTILINE", PJ_OPTION_NO)
+            .push_optional(multiline, "MULTILINE", OPTION_NO)
             .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
             .push_optional(max_line_length, "MAX_LINE_LENGTH", "80");
 
@@ -874,9 +874,9 @@ impl Proj<'_> {
         indentation_width: Option<usize>,
         schema: Option<&str>,
     ) -> miette::Result<String> {
-        let mut options = crate::PjOptions::new(6);
+        let mut options = crate::ProjOptions::new(6);
         options
-            .push_optional(multiline, "MULTILINE", PJ_OPTION_YES)
+            .push_optional(multiline, "MULTILINE", OPTION_YES)
             .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
             .push_optional(schema, "SCHEMA", "");
 

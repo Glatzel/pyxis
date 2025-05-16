@@ -1,4 +1,7 @@
-param($config)
+param (
+    [ValidateSet("debug", "release")]
+    $config = "debug"
+)
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel

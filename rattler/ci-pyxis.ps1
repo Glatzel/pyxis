@@ -3,7 +3,9 @@ $PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
 
 & "$ROOT/cpp/scripts/build-cpp.ps1" -config release
-& "$ROOT/cuda/scripts/build-cuda.ps1"
+if (-not $IsMacOS) {
+    & "$ROOT/cuda/scripts/build-cuda.ps1"
+}
 & "$ROOT/rust/scripts/build-rust-cli.ps1" -config release
 
 Set-Location $PSScriptRoot

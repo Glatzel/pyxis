@@ -3,8 +3,8 @@ channels = ["conda-forge", "nvidia"]
 platforms = ["win-64", "linux-64"]
 
 [dependencies]
-cuda-cudart = "12.8.*"
-cuda-nvcc = "12.8.*"
+cuda-cudart = "12.9.*"
+cuda-nvcc = "12.9.*"
 
 [tasks]
 nvcc = "$CONDA_PREFIX/Library/bin/nvcc"

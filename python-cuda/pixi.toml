@@ -3,16 +3,16 @@ channels = ["conda-forge"]
 platforms = ["win-64", "linux-64"]
 
 [dependencies]
-python = "3.11.*"
-pip = "==25.1.1"
-rattler-build = "==0.42.1"
 lazy-loader = "==0.4"
+pip = "==25.1.1"
+python = "3.11.*"
+rattler-build = "==0.42.1"
 
 [feature.local-test.dependencies]
-pytest = "==8.3.5"
-pytest-cov = "==6.1.1"
-pytest-benchmark = "==5.1.0"
 cupy = "==13.4.1"
+pytest = "==8.3.5"
+pytest-benchmark = "==5.1.0"
+pytest-cov = "==6.1.1"
 
 [environments]
 local-test = ["local-test"]

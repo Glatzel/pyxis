@@ -9,8 +9,8 @@ serde = { workspace = true, optional = true }
 
 [build-dependencies]
 bindgen = { workspace = true }
-pkg-config = { workspace = true }
 dunce = { workspace = true }
+pkg-config = { workspace = true }
 
 [features]
 serde = ["dep:serde"]

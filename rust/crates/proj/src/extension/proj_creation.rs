@@ -22,7 +22,11 @@ pub enum PjParams<'a> {
         force_over: Option<bool>,
     },
     //Iso19111
-
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
+    Cs {
+        coordinate_system_type: crate::data_types::iso19111::CoordinateSystemType,
+        axis: &'a [crate::data_types::iso19111::AxisDescription],
+    },
     // Extension
     EpsgCode(u32),
 }
@@ -62,6 +66,10 @@ impl crate::Context {
                 force_over,
             ),
             // Iso19111
+            PjParams::Cs {
+                coordinate_system_type,
+                axis,
+            } => self.create_cs(coordinate_system_type, axis),
             // Extension
             PjParams::EpsgCode(code) => self.create_epsg_code(code),
         }

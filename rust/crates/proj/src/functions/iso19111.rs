@@ -5,9 +5,9 @@ use miette::IntoDiagnostic;
 use crate::data_types::iso19111::{
     ComparisonCriterion, GuessedWktDialect, ProjStringType, ProjType, WktType,
 };
-use crate::{OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
+use crate::{Context, OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
 
-/// # ISO-19111
+/// # ISO-19111 Base functions
 impl crate::Context {
     ///# References
     ///
@@ -332,10 +332,45 @@ impl crate::Context {
     ///
     /// <>
     fn _coordinate_metadata_get_epoch(&self) { unimplemented!() }
+}
+/// # ISO-19111 Advanced functions
+impl Context {
     ///# References
     ///
-    /// <>
-    fn _create_cs(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
+    pub fn create_cs(
+        &self,
+        coordinate_system_type: crate::data_types::iso19111::CoordinateSystemType,
+        axis: &[crate::data_types::iso19111::AxisDescription],
+    ) -> miette::Result<crate::Proj> {
+        let axis_count = axis.len();
+        let mut axis_vec: Vec<proj_sys::PJ_AXIS_DESCRIPTION> = Vec::with_capacity(axis_count);
+        for a in axis {
+            axis_vec.push(proj_sys::PJ_AXIS_DESCRIPTION {
+                name: a.name.as_ptr().cast_mut(),
+                abbreviation: a.abbreviation.as_ptr().cast_mut(),
+                direction: a.direction.as_ptr().cast_mut(),
+                unit_name: a.unit_name.as_ptr().cast_mut(),
+                unit_conv_factor: a.unit_conv_factor,
+                unit_type: a.unit_type.into(),
+            });
+        }
+        let ptr = unsafe {
+            proj_sys::proj_create_cs(
+                self.ptr,
+                coordinate_system_type.into(),
+                axis_count as i32,
+                axis_vec.as_ptr(),
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self,
+        })
+    }
     ///# References
     ///
     /// <>
@@ -739,7 +774,7 @@ impl crate::Context {
     /// <>
     fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { unimplemented!() }
 }
-/// # ISO-19111
+/// # ISO-19111 Base functions
 impl Proj<'_> {
     ///# References
     ///
@@ -915,6 +950,10 @@ impl Proj<'_> {
         })
     }
 }
+/// # ISO-19111 Advanced functions
+///
+/// <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
+impl Proj<'_> {}
 impl Clone for Proj<'_> {
     ///# References
     ///
@@ -964,7 +1003,7 @@ fn _proj_list_get_count() { unimplemented!() }
 fn _proj_list_destroy() { unimplemented!() }
 
 #[cfg(test)]
-mod test_context {
+mod test_context_basic {
     use super::*;
     #[test]
     fn test_guess_wkt_dialect() -> miette::Result<()> {
@@ -981,6 +1020,49 @@ mod test_context {
         )?;
         let dialect = ctx.guess_wkt_dialect(&wkt)?;
         assert_eq!(dialect, GuessedWktDialect::Wkt2_2019);
+        Ok(())
+    }
+}
+#[cfg(test)]
+mod test_context_advanced {
+    use crate::Proj;
+
+    #[test]
+    fn test_create_cs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_cs(
+            crate::data_types::iso19111::CoordinateSystemType::Cartesian,
+            &[
+                crate::data_types::iso19111::AxisDescription::new(
+                    crate::data_types::iso19111::AxisName::Longitude,
+                    crate::data_types::iso19111::AxisAbbreviation::Lon,
+                    crate::data_types::iso19111::AxisDirection::East,
+                    crate::data_types::iso19111::UnitName::Degree,
+                    1.0,
+                    crate::data_types::iso19111::UnitType::Angular,
+                ),
+                crate::data_types::iso19111::AxisDescription::new(
+                    crate::data_types::iso19111::AxisName::Latitude,
+                    crate::data_types::iso19111::AxisAbbreviation::Lat,
+                    crate::data_types::iso19111::AxisDirection::North,
+                    crate::data_types::iso19111::UnitName::Degree,
+                    1.0,
+                    crate::data_types::iso19111::UnitType::Angular,
+                ),
+            ],
+        )?;
+        println!(
+            "{}",
+            pj.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
         Ok(())
     }
 }

@@ -371,187 +371,6 @@ impl Context {
             ctx: self,
         })
     }
-}
-/// # ISO-19111 Base functions
-impl Proj<'_> {
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
-    pub fn get_type(&self) -> miette::Result<ProjType> {
-        let result = unsafe { proj_sys::proj_get_type(self.ptr) };
-        ProjType::try_from(result).into_diagnostic()
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_deprecated>
-    pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.ptr) != 0 } }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
-    pub fn is_equivalent_to(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
-        unsafe { proj_sys::proj_is_equivalent_to(self.ptr, other.ptr, criterion.into()) != 0 }
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_crs>
-    pub fn is_crs(&self) -> bool { unsafe { proj_sys::proj_is_crs(self.ptr) != 0 } }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_name>
-    pub fn get_name(&self) -> String {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_name(self.ptr) }).unwrap_or_default()
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
-    pub fn get_id_auth_name(&self, index: i32) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.ptr, index) })
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
-    pub fn get_id_code(&self, index: i32) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.ptr, index) })
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_remarks>
-    pub fn get_remarks(&self) -> String {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_remarks(self.ptr) }).unwrap_or_default()
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
-    pub fn get_domain_count(&self) -> miette::Result<u32> {
-        let count = unsafe { proj_sys::proj_get_domain_count(self.ptr) };
-        if count == 0 {
-            miette::bail!("get_domain_count error.")
-        };
-        Ok(count as u32)
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope>
-    pub fn get_scope(&self) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope(self.ptr) })
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
-    pub fn get_scope_ex(&self, domain_idx: i32) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope_ex(self.ptr, domain_idx) })
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_wkt>
-    pub fn as_wkt(
-        &self,
-        wkt_type: WktType,
-        multiline: Option<bool>,
-        indentation_width: Option<usize>,
-        output_axis: Option<bool>,
-        strict: Option<bool>,
-        allow_ellipsoidal_height_as_vertical_crs: Option<bool>,
-        allow_linunit_node: Option<bool>,
-    ) -> miette::Result<String> {
-        let mut options = crate::ProjOptions::new(6);
-        options
-            .push_optional(multiline, "MULTILINE", OPTION_YES)
-            .push_optional(indentation_width, "INDENTATION_WIDTH", "4")
-            .push_optional(output_axis, "OUTPUT_AXIS", "AUTO")
-            .push_optional(strict, "STRICT", OPTION_YES)
-            .push_optional(
-                allow_ellipsoidal_height_as_vertical_crs,
-                "ALLOW_ELLIPSOIDAL_HEIGHT_AS_VERTICAL_CRS",
-                OPTION_NO,
-            )
-            .push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", OPTION_YES);
-        let ptrs = options.vec_ptr();
-        let result = c_char_to_string(unsafe {
-            proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), ptrs.as_ptr())
-        });
-        check_result!(self);
-        Ok(result.expect("Error"))
-    }
-
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_proj_string>
-    pub fn as_proj_string(
-        &self,
-        string_type: ProjStringType,
-        multiline: Option<bool>,
-        indentation_width: Option<usize>,
-        max_line_length: Option<usize>,
-    ) -> miette::Result<String> {
-        let mut options = crate::ProjOptions::new(6);
-        options
-            .push_optional(multiline, "MULTILINE", OPTION_NO)
-            .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
-            .push_optional(max_line_length, "MAX_LINE_LENGTH", "80");
-
-        let ptrs = options.vec_ptr();
-        let result = c_char_to_string(unsafe {
-            proj_sys::proj_as_proj_string(self.ctx.ptr, self.ptr, string_type.into(), ptrs.as_ptr())
-        });
-        check_result!(self);
-        Ok(result.expect("Error"))
-    }
-
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_projjson>
-    pub fn as_projjson(
-        &self,
-        multiline: Option<bool>,
-        indentation_width: Option<usize>,
-        schema: Option<&str>,
-    ) -> miette::Result<String> {
-        let mut options = crate::ProjOptions::new(6);
-        options
-            .push_optional(multiline, "MULTILINE", OPTION_YES)
-            .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
-            .push_optional(schema, "SCHEMA", "");
-
-        let ptrs = options.vec_ptr();
-        let result = c_char_to_string(unsafe {
-            proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr, ptrs.as_ptr())
-        });
-        check_result!(self);
-        Ok(result.expect("Error"))
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
-    pub fn get_source_crs(&self) -> Option<Proj<'_>> {
-        let out_ptr = unsafe { proj_sys::proj_get_source_crs(self.ctx.ptr, self.ptr) };
-        if out_ptr.is_null() {
-            return None;
-        }
-        Some(Self {
-            ptr: out_ptr,
-            ctx: self.ctx,
-        })
-    }
-
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
-    pub fn get_target_crs(&self) -> Option<Proj<'_>> {
-        let out_ptr = unsafe { proj_sys::proj_get_target_crs(self.ctx.ptr, self.ptr) };
-        if out_ptr.is_null() {
-            return None;
-        }
-        Some(Self {
-            ptr: out_ptr,
-            ctx: self.ctx,
-        })
-    }
-}
-/// # ISO-19111 Advanced functions
-///
-/// <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
-impl Proj<'_> {
     ///# References
     ///
     /// <>
@@ -955,6 +774,186 @@ impl Proj<'_> {
     /// <>
     fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { unimplemented!() }
 }
+/// # ISO-19111 Base functions
+impl Proj<'_> {
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
+    pub fn get_type(&self) -> miette::Result<ProjType> {
+        let result = unsafe { proj_sys::proj_get_type(self.ptr) };
+        ProjType::try_from(result).into_diagnostic()
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_deprecated>
+    pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.ptr) != 0 } }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
+    pub fn is_equivalent_to(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
+        unsafe { proj_sys::proj_is_equivalent_to(self.ptr, other.ptr, criterion.into()) != 0 }
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_crs>
+    pub fn is_crs(&self) -> bool { unsafe { proj_sys::proj_is_crs(self.ptr) != 0 } }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_name>
+    pub fn get_name(&self) -> String {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_name(self.ptr) }).unwrap_or_default()
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
+    pub fn get_id_auth_name(&self, index: i32) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.ptr, index) })
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
+    pub fn get_id_code(&self, index: i32) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.ptr, index) })
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_remarks>
+    pub fn get_remarks(&self) -> String {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_remarks(self.ptr) }).unwrap_or_default()
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
+    pub fn get_domain_count(&self) -> miette::Result<u32> {
+        let count = unsafe { proj_sys::proj_get_domain_count(self.ptr) };
+        if count == 0 {
+            miette::bail!("get_domain_count error.")
+        };
+        Ok(count as u32)
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope>
+    pub fn get_scope(&self) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope(self.ptr) })
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
+    pub fn get_scope_ex(&self, domain_idx: i32) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope_ex(self.ptr, domain_idx) })
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_wkt>
+    pub fn as_wkt(
+        &self,
+        wkt_type: WktType,
+        multiline: Option<bool>,
+        indentation_width: Option<usize>,
+        output_axis: Option<bool>,
+        strict: Option<bool>,
+        allow_ellipsoidal_height_as_vertical_crs: Option<bool>,
+        allow_linunit_node: Option<bool>,
+    ) -> miette::Result<String> {
+        let mut options = crate::ProjOptions::new(6);
+        options
+            .push_optional(multiline, "MULTILINE", OPTION_YES)
+            .push_optional(indentation_width, "INDENTATION_WIDTH", "4")
+            .push_optional(output_axis, "OUTPUT_AXIS", "AUTO")
+            .push_optional(strict, "STRICT", OPTION_YES)
+            .push_optional(
+                allow_ellipsoidal_height_as_vertical_crs,
+                "ALLOW_ELLIPSOIDAL_HEIGHT_AS_VERTICAL_CRS",
+                OPTION_NO,
+            )
+            .push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", OPTION_YES);
+        let ptrs = options.vec_ptr();
+        let result = c_char_to_string(unsafe {
+            proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), ptrs.as_ptr())
+        });
+        check_result!(self);
+        Ok(result.expect("Error"))
+    }
+
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_proj_string>
+    pub fn as_proj_string(
+        &self,
+        string_type: ProjStringType,
+        multiline: Option<bool>,
+        indentation_width: Option<usize>,
+        max_line_length: Option<usize>,
+    ) -> miette::Result<String> {
+        let mut options = crate::ProjOptions::new(6);
+        options
+            .push_optional(multiline, "MULTILINE", OPTION_NO)
+            .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
+            .push_optional(max_line_length, "MAX_LINE_LENGTH", "80");
+
+        let ptrs = options.vec_ptr();
+        let result = c_char_to_string(unsafe {
+            proj_sys::proj_as_proj_string(self.ctx.ptr, self.ptr, string_type.into(), ptrs.as_ptr())
+        });
+        check_result!(self);
+        Ok(result.expect("Error"))
+    }
+
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_projjson>
+    pub fn as_projjson(
+        &self,
+        multiline: Option<bool>,
+        indentation_width: Option<usize>,
+        schema: Option<&str>,
+    ) -> miette::Result<String> {
+        let mut options = crate::ProjOptions::new(6);
+        options
+            .push_optional(multiline, "MULTILINE", OPTION_YES)
+            .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
+            .push_optional(schema, "SCHEMA", "");
+
+        let ptrs = options.vec_ptr();
+        let result = c_char_to_string(unsafe {
+            proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr, ptrs.as_ptr())
+        });
+        check_result!(self);
+        Ok(result.expect("Error"))
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
+    pub fn get_source_crs(&self) -> Option<Proj<'_>> {
+        let out_ptr = unsafe { proj_sys::proj_get_source_crs(self.ctx.ptr, self.ptr) };
+        if out_ptr.is_null() {
+            return None;
+        }
+        Some(Self {
+            ptr: out_ptr,
+            ctx: self.ctx,
+        })
+    }
+
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
+    pub fn get_target_crs(&self) -> Option<Proj<'_>> {
+        let out_ptr = unsafe { proj_sys::proj_get_target_crs(self.ctx.ptr, self.ptr) };
+        if out_ptr.is_null() {
+            return None;
+        }
+        Some(Self {
+            ptr: out_ptr,
+            ctx: self.ctx,
+        })
+    }
+}
+/// # ISO-19111 Advanced functions
+///
+/// <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
+impl Proj<'_> {}
 impl Clone for Proj<'_> {
     ///# References
     ///

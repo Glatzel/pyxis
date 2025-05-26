@@ -8,19 +8,17 @@ env:
   CSHARP_ROOT: ./csharp
 jobs:
   build-csharp:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
-        with:
-          msbuild-architecture: x64
 
       - name: build
         run: ${{env.CSHARP_ROOT}}/scripts/build.ps1 -config Debug
+        shell: pwsh
 
       - name: test
         run: ${{env.CSHARP_ROOT}}/scripts/test.ps1
+        shell: pwsh
 
       - name: Upload cov results to Codecov
         if: ${{ !cancelled()}}

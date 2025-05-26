@@ -164,6 +164,7 @@ mod test {
             only_best: Some(true),
             force_over: Some(true),
         })?;
+
         // Iso19111
         ctx.create_proj(PjParams::Cs {
             coordinate_system_type: crate::data_types::iso19111::CoordinateSystemType::Cartesian,
@@ -205,6 +206,7 @@ mod test {
             vertical_linear_unit_name: crate::data_types::iso19111::UnitName::Degree,
             vertical_linear_unit_conv_factor: 1.0,
         })?;
+
         // Extension
         ctx.create_proj(PjParams::EpsgCode(4326))?;
         Ok(())

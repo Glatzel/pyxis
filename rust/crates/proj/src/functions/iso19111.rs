@@ -3,7 +3,7 @@ use std::ffi::CString;
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
-    ComparisonCriterion, GuessedWktDialect, ProjStringType, ProjType, WktType,
+    ComparisonCriterion, GuessedWktDialect, ProjStringType, ProjType, UnitName, WktType,
 };
 use crate::{Context, OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
 
@@ -373,16 +373,83 @@ impl Context {
     }
     ///# References
     ///
-    /// <>
-    fn _create_cartesian_2d_cs(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
+    pub fn create_cartesian_2d_cs(
+        &self,
+        ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType,
+        unit_name: UnitName,
+        unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_cartesian_2D_cs(
+                self.ptr,
+                ellipsoidal_cs_2d_type.into(),
+                Into::<CString>::into(unit_name).as_ptr(),
+                unit_conv_factor,
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self,
+        })
+    }
     ///# References
     ///
-    /// <>
-    fn _create_ellipsoidal_2d_cs(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
+    pub fn create_ellipsoidal_2d_cs(
+        &self,
+        ellipsoidal_cs_2d_type: crate::data_types::iso19111::EllipsoidalCs2dType,
+        unit_name: UnitName,
+        unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_ellipsoidal_2D_cs(
+                self.ptr,
+                ellipsoidal_cs_2d_type.into(),
+                Into::<CString>::into(unit_name).as_ptr(),
+                unit_conv_factor,
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self,
+        })
+    }
     ///# References
     ///
-    /// <>
-    fn _create_ellipsoidal_3d_cs(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
+    pub fn create_ellipsoidal_3d_cs(
+        &self,
+        ellipsoidal_cs_3d_type: crate::data_types::iso19111::EllipsoidalCs3dType,
+        horizontal_angular_unit_name: UnitName,
+        horizontal_angular_unit_conv_factor: f64,
+        vertical_linear_unit_name: UnitName,
+        vertical_linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_ellipsoidal_3D_cs(
+                self.ptr,
+                ellipsoidal_cs_3d_type.into(),
+                Into::<CString>::into(horizontal_angular_unit_name).as_ptr(),
+                horizontal_angular_unit_conv_factor,
+                Into::<CString>::into(vertical_linear_unit_name).as_ptr(),
+                vertical_linear_unit_conv_factor,
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self,
+        })
+    }
     ///# References
     ///
     /// <>
@@ -1050,6 +1117,74 @@ mod test_context_advanced {
                     crate::data_types::iso19111::UnitType::Angular,
                 ),
             ],
+        )?;
+        println!(
+            "{}",
+            pj.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
+        Ok(())
+    }
+    #[test]
+    fn test_create_cartesian_2d_cs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_cartesian_2d_cs(
+            crate::data_types::iso19111::CartesianCs2dType::EastingNorthing,
+            crate::data_types::iso19111::UnitName::Degree,
+            1.0,
+        )?;
+        println!(
+            "{}",
+            pj.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
+        Ok(())
+    }
+    #[test]
+    fn test_create_ellipsoidal_2d_cs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_ellipsoidal_2d_cs(
+            crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
+            crate::data_types::iso19111::UnitName::Degree,
+            1.0,
+        )?;
+        println!(
+            "{}",
+            pj.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
+        Ok(())
+    }
+    #[test]
+    fn test_create_ellipsoidal_3d_cs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_ellipsoidal_3d_cs(
+            crate::data_types::iso19111::EllipsoidalCs3dType::LatitudeLongitudeHeight,
+            crate::data_types::iso19111::UnitName::Degree,
+            1.0,
+            crate::data_types::iso19111::UnitName::Degree,
+            1.0,
         )?;
         println!(
             "{}",

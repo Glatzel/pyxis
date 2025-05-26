@@ -1,3 +1,11 @@
+//!The objects returned by the functions defined in this section have minimal
+//! interaction with the functions of the C API for ISO-19111 functionality, and
+//! vice versa. See its introduction paragraph for more details.
+//!
+//! # References
+//!
+//!<https://proj.org/en/stable/development/reference/functions.html#c-api-for-iso-19111-functionality>
+
 use std::ffi::CString;
 
 use miette::IntoDiagnostic;

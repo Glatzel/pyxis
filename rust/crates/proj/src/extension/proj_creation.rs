@@ -1,3 +1,5 @@
+use crate::data_types::iso19111::UnitName;
+
 pub enum PjParams<'a> {
     // Transformation setup
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
@@ -26,6 +28,23 @@ pub enum PjParams<'a> {
     Cs {
         coordinate_system_type: crate::data_types::iso19111::CoordinateSystemType,
         axis: &'a [crate::data_types::iso19111::AxisDescription],
+    },
+    Cartesian2dCs {
+        ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType,
+        unit_name: UnitName,
+        unit_conv_factor: f64,
+    },
+    Ellipsoidal2dCs {
+        ellipsoidal_cs_2d_type: crate::data_types::iso19111::EllipsoidalCs2dType,
+        unit_name: UnitName,
+        unit_conv_factor: f64,
+    },
+    Ellipsoidal3dCs {
+        ellipsoidal_cs_3d_type: crate::data_types::iso19111::EllipsoidalCs3dType,
+        horizontal_angular_unit_name: UnitName,
+        horizontal_angular_unit_conv_factor: f64,
+        vertical_linear_unit_name: UnitName,
+        vertical_linear_unit_conv_factor: f64,
     },
     // Extension
     EpsgCode(u32),
@@ -70,6 +89,29 @@ impl crate::Context {
                 coordinate_system_type,
                 axis,
             } => self.create_cs(coordinate_system_type, axis),
+            PjParams::Cartesian2dCs {
+                ellipsoidal_cs_2d_type,
+                unit_name,
+                unit_conv_factor,
+            } => self.create_cartesian_2d_cs(ellipsoidal_cs_2d_type, unit_name, unit_conv_factor),
+            PjParams::Ellipsoidal2dCs {
+                ellipsoidal_cs_2d_type,
+                unit_name,
+                unit_conv_factor,
+            } => self.create_ellipsoidal_2d_cs(ellipsoidal_cs_2d_type, unit_name, unit_conv_factor),
+            PjParams::Ellipsoidal3dCs {
+                ellipsoidal_cs_3d_type,
+                horizontal_angular_unit_name,
+                horizontal_angular_unit_conv_factor,
+                vertical_linear_unit_name,
+                vertical_linear_unit_conv_factor,
+            } => self.create_ellipsoidal_3d_cs(
+                ellipsoidal_cs_3d_type,
+                horizontal_angular_unit_name,
+                horizontal_angular_unit_conv_factor,
+                vertical_linear_unit_name,
+                vertical_linear_unit_conv_factor,
+            ),
             // Extension
             PjParams::EpsgCode(code) => self.create_epsg_code(code),
         }

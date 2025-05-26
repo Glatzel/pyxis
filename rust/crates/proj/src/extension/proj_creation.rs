@@ -3,15 +3,15 @@ use crate::data_types::iso19111::UnitName;
 pub enum PjParams<'a> {
     // Transformation setup
     ///See [`crate::Context::create`]
-    /// 
+    ///
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     Definition(&'a str),
     ///See [`crate::Context::create_argv`]
-    /// 
+    ///
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     Argv(Vec<&'a str>),
     ///See [`crate::Context::create_crs_to_crs`]
-    /// 
+    ///
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     CrsToCrs {
         source_crs: &'a str,
@@ -19,7 +19,7 @@ pub enum PjParams<'a> {
         area: &'a crate::Area,
     },
     ///See [`crate::Context::create_crs_to_crs_from_pj`]
-    /// 
+    ///
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     CrsToCrsFromPj {
         source_crs: crate::Proj<'a>,
@@ -34,14 +34,14 @@ pub enum PjParams<'a> {
 
     //Iso19111
     ///See [`crate::Context::create_cs`]
-    /// 
+    ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
     Cs {
         coordinate_system_type: crate::data_types::iso19111::CoordinateSystemType,
-        axis: &'a [crate::data_types::iso19111::AxisDescription],
+        axis: Vec<crate::data_types::iso19111::AxisDescription>,
     },
     ///See [`crate::Context::create_cartesian_2d_cs`]
-    /// 
+    ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
     Cartesian2dCs {
         ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType,
@@ -49,15 +49,15 @@ pub enum PjParams<'a> {
         unit_conv_factor: f64,
     },
     ///See [`crate::Context::create_ellipsoidal_2d_cs`]
-    /// 
-     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
     Ellipsoidal2dCs {
         ellipsoidal_cs_2d_type: crate::data_types::iso19111::EllipsoidalCs2dType,
         unit_name: UnitName,
         unit_conv_factor: f64,
     },
     ///See [`crate::Context::create_ellipsoidal_3d_cs`]
-    /// 
+    ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
     Ellipsoidal3dCs {
         ellipsoidal_cs_3d_type: crate::data_types::iso19111::EllipsoidalCs3dType,
@@ -68,7 +68,6 @@ pub enum PjParams<'a> {
     },
     // Extension
     ///See [`crate::Context::create_epsg_code`]
-    /// 
     EpsgCode(u32),
 }
 
@@ -111,7 +110,7 @@ impl crate::Context {
             PjParams::Cs {
                 coordinate_system_type,
                 axis,
-            } => self.create_cs(coordinate_system_type, axis),
+            } => self.create_cs(coordinate_system_type, &axis),
             PjParams::Cartesian2dCs {
                 ellipsoidal_cs_2d_type,
                 unit_name,
@@ -148,9 +147,64 @@ mod test {
     fn test_proj_creation() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         // Transformation setup
-        ctx.create_proj(PjParams::Definition(())
+        ctx.create_proj(PjParams::Definition("EPSG:4326"))?;
+        ctx.create_proj(PjParams::Argv(vec!["proj=utm", "zone=32", "ellps=GRS80"]))?;
+        ctx.create_proj(PjParams::CrsToCrs {
+            source_crs: "EPSG:4326",
+            target_crs: "EPSG:4978",
+            area: &crate::Area::default(),
+        })?;
+        ctx.create_proj(PjParams::CrsToCrsFromPj {
+            source_crs: ctx.create("EPSG:4326")?,
+            target_crs: ctx.create("EPSG:4978")?,
+            area: &crate::Area::default(),
+            authority: Some("any"),
+            accuracy: Some(0.001),
+            allow_ballpark: Some(true),
+            only_best: Some(true),
+            force_over: Some(true),
+        })?;
         // Iso19111
-
+        ctx.create_proj(PjParams::Cs {
+            coordinate_system_type: crate::data_types::iso19111::CoordinateSystemType::Cartesian,
+            axis: vec![
+                crate::data_types::iso19111::AxisDescription::new(
+                    crate::data_types::iso19111::AxisName::Longitude,
+                    crate::data_types::iso19111::AxisAbbreviation::Lon,
+                    crate::data_types::iso19111::AxisDirection::East,
+                    crate::data_types::iso19111::UnitName::Degree,
+                    1.0,
+                    crate::data_types::iso19111::UnitType::Angular,
+                ),
+                crate::data_types::iso19111::AxisDescription::new(
+                    crate::data_types::iso19111::AxisName::Latitude,
+                    crate::data_types::iso19111::AxisAbbreviation::Lat,
+                    crate::data_types::iso19111::AxisDirection::North,
+                    crate::data_types::iso19111::UnitName::Degree,
+                    1.0,
+                    crate::data_types::iso19111::UnitType::Angular,
+                ),
+            ],
+        })?;
+        ctx.create_proj(PjParams::Cartesian2dCs {
+            ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType::EastingNorthing,
+            unit_name: crate::data_types::iso19111::UnitName::Degree,
+            unit_conv_factor: 1.0,
+        })?;
+        ctx.create_proj(PjParams::Ellipsoidal2dCs {
+            ellipsoidal_cs_2d_type:
+                crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
+            unit_name: crate::data_types::iso19111::UnitName::Degree,
+            unit_conv_factor: 1.0,
+        })?;
+        ctx.create_proj(PjParams::Ellipsoidal3dCs {
+            ellipsoidal_cs_3d_type:
+                crate::data_types::iso19111::EllipsoidalCs3dType::LatitudeLongitudeHeight,
+            horizontal_angular_unit_name: crate::data_types::iso19111::UnitName::Degree,
+            horizontal_angular_unit_conv_factor: 1.0,
+            vertical_linear_unit_name: crate::data_types::iso19111::UnitName::Degree,
+            vertical_linear_unit_conv_factor: 1.0,
+        })?;
         // Extension
         ctx.create_proj(PjParams::EpsgCode(4326))?;
         Ok(())

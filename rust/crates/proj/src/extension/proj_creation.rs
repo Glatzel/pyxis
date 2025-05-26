@@ -2,16 +2,24 @@ use crate::data_types::iso19111::UnitName;
 
 pub enum PjParams<'a> {
     // Transformation setup
+    ///See [`crate::Context::create`]
+    /// 
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     Definition(&'a str),
+    ///See [`crate::Context::create_argv`]
+    /// 
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     Argv(Vec<&'a str>),
+    ///See [`crate::Context::create_crs_to_crs`]
+    /// 
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     CrsToCrs {
         source_crs: &'a str,
         target_crs: &'a str,
         area: &'a crate::Area,
     },
+    ///See [`crate::Context::create_crs_to_crs_from_pj`]
+    /// 
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     CrsToCrsFromPj {
         source_crs: crate::Proj<'a>,
@@ -23,22 +31,34 @@ pub enum PjParams<'a> {
         only_best: Option<bool>,
         force_over: Option<bool>,
     },
+
     //Iso19111
+    ///See [`crate::Context::create_cs`]
+    /// 
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
     Cs {
         coordinate_system_type: crate::data_types::iso19111::CoordinateSystemType,
         axis: &'a [crate::data_types::iso19111::AxisDescription],
     },
+    ///See [`crate::Context::create_cartesian_2d_cs`]
+    /// 
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
     Cartesian2dCs {
         ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType,
         unit_name: UnitName,
         unit_conv_factor: f64,
     },
+    ///See [`crate::Context::create_ellipsoidal_2d_cs`]
+    /// 
+     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
     Ellipsoidal2dCs {
         ellipsoidal_cs_2d_type: crate::data_types::iso19111::EllipsoidalCs2dType,
         unit_name: UnitName,
         unit_conv_factor: f64,
     },
+    ///See [`crate::Context::create_ellipsoidal_3d_cs`]
+    /// 
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
     Ellipsoidal3dCs {
         ellipsoidal_cs_3d_type: crate::data_types::iso19111::EllipsoidalCs3dType,
         horizontal_angular_unit_name: UnitName,
@@ -47,12 +67,14 @@ pub enum PjParams<'a> {
         vertical_linear_unit_conv_factor: f64,
     },
     // Extension
+    ///See [`crate::Context::create_epsg_code`]
+    /// 
     EpsgCode(u32),
 }
 
 /// Proj Creation
 impl crate::Context {
-    fn create_epsg_code(&self, code: u32) -> miette::Result<crate::Proj> {
+    pub fn create_epsg_code(&self, code: u32) -> miette::Result<crate::Proj> {
         self.create(&format!("EPSG:{code}"))
     }
     pub fn create_proj(&self, by: PjParams) -> miette::Result<crate::Proj> {
@@ -113,7 +135,7 @@ impl crate::Context {
                 vertical_linear_unit_name,
                 vertical_linear_unit_conv_factor,
             ),
-            
+
             // Extension
             PjParams::EpsgCode(code) => self.create_epsg_code(code),
         }
@@ -121,10 +143,16 @@ impl crate::Context {
 }
 #[cfg(test)]
 mod test {
+    use super::*;
     #[test]
-    fn test_create_epsg_code() -> miette::Result<()> {
+    fn test_proj_creation() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.create_epsg_code(4326)?;
+        // Transformation setup
+        ctx.create_proj(PjParams::Definition(())
+        // Iso19111
+
+        // Extension
+        ctx.create_proj(PjParams::EpsgCode(4326))?;
         Ok(())
     }
 }

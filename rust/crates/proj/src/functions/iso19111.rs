@@ -18,8 +18,8 @@ use std::ffi::CString;
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
-    ComparisonCriterion, CoordinateSystemType, EllipsoidParameters, GuessedWktDialect,
-    ProjStringType, ProjType, WktType,
+    ComparisonCriterion, CoordOperationMethodInfo, CoordinateSystemType, EllipsoidParameters,
+    GuessedWktDialect, PrimeMeridianParameters, ProjStringType, ProjType, WktType,
 };
 use crate::{Context, OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
 
@@ -1196,39 +1196,126 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
-    pub fn _get_prime_meridian(&self) { unimplemented!() }
+    pub fn get_prime_meridian(&self) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx.ptr, self.ptr) };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_prime_meridian_get_parameters>
-    pub fn _prime_meridian_get_parameters(&self) { unimplemented!() }
+    pub fn prime_meridian_get_parameters(&self) -> miette::Result<PrimeMeridianParameters> {
+        let mut longitude = f64::default();
+        let mut unit_conv_factor = f64::default();
+        let unit_name = CString::default();
+
+        let result = unsafe {
+            proj_sys::proj_prime_meridian_get_parameters(
+                self.ctx.ptr,
+                self.ptr,
+                &mut longitude,
+                &mut unit_conv_factor,
+                &mut unit_name.as_ptr(),
+            )
+        };
+        if result != 0 {
+            miette::bail!("Error");
+        }
+        Ok(PrimeMeridianParameters::new(
+            longitude,
+            unit_conv_factor,
+            unit_name.to_string_lossy().to_string(),
+        ))
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
-    pub fn _crs_get_coordoperation(&self) { unimplemented!() }
+    pub fn crs_get_coordoperation(&self) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx.ptr, self.ptr) };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_method_info>
-    pub fn _coordoperation_get_method_info(&self) { unimplemented!() }
+    pub fn coordoperation_get_method_info(&self) -> miette::Result<CoordOperationMethodInfo> {
+        let mut method_name = CString::default();
+        let mut method_auth_name = CString::default();
+        let method_code = CString::default();
+
+        let result = unsafe {
+            proj_sys::proj_coordoperation_get_method_info(
+                self.ctx.ptr,
+                self.ptr,
+                &mut method_name.as_ptr(),
+                &mut method_auth_name.as_ptr(),
+                &mut method_code.as_ptr(),
+            )
+        };
+        if result != 0 {
+            miette::bail!("Error");
+        }
+        Ok(CoordOperationMethodInfo::new(
+            method_name.to_string_lossy().to_string(),
+            method_auth_name.to_string_lossy().to_string(),
+            method_code.to_string_lossy().to_string(),
+        ))
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_is_instantiable>
-    pub fn _coordoperation_is_instantiable(&self) { unimplemented!() }
+    pub fn coordoperation_is_instantiable(&self) -> bool {
+        unsafe { proj_sys::proj_coordoperation_is_instantiable(self.ctx.ptr, self.ptr) != 0 }
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_has_ballpark_transformation>
-    pub fn _coordoperation_has_ballpark_transformation(&self) { unimplemented!() }
+    pub fn coordoperation_has_ballpark_transformation(&self) -> bool {
+        unsafe {
+            proj_sys::proj_coordoperation_has_ballpark_transformation(self.ctx.ptr, self.ptr) != 0
+        }
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_requires_per_coordinate_input_time>
-    pub fn _coordoperation_requires_per_coordinate_input_time(&self) { unimplemented!() }
+    pub fn coordoperation_requires_per_coordinate_input_time(&self) -> bool {
+        unsafe {
+            proj_sys::proj_coordoperation_requires_per_coordinate_input_time(self.ctx.ptr, self.ptr)
+                != 0
+        }
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_count>
-    pub fn _coordoperation_get_param_count(&self) { unimplemented!() }
+    pub fn coordoperation_get_param_count(&self) -> u16 {
+        unsafe { proj_sys::proj_coordoperation_get_param_count(self.ctx.ptr, self.ptr) as u16 }
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_index>
-    pub fn _coordoperation_get_param_index(&self) { unimplemented!() }
+    pub fn coordoperation_get_param_index(&self, name: &str) -> miette::Result<u16> {
+        let result = unsafe {
+            proj_sys::proj_coordoperation_get_param_index(
+                self.ctx.ptr,
+                self.ptr,
+                CString::new(name).expect("Error creating CString").as_ptr(),
+            )
+        };
+        if result == -1 {
+            miette::bail!("Error");
+        }
+        Ok(result as u16)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param>

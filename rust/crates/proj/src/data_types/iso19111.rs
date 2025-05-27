@@ -402,3 +402,16 @@ create_readonly_struct!(
    {is_semi_minor_computed :bool},
    {inv_flattening :f64}
 );
+create_readonly_struct!(
+    PrimeMeridianParameters,
+    "",
+   {longitude: f64},
+   {unit_conv_factor : f64},
+   {unit_name :String}
+);
+create_readonly_struct!(
+CoordOperationMethodInfo, "",
+{method_name: String},
+{method_auth_name : String},
+{method_code :String}
+);

@@ -1,3 +1,5 @@
+use crate::Proj;
+
 pub enum PjParams<'a> {
     // Transformation setup
     ///See [`crate::Context::create`]
@@ -63,6 +65,21 @@ pub enum PjParams<'a> {
         horizontal_angular_unit_conv_factor: f64,
         vertical_linear_unit_name: Option<&'a str>,
         vertical_linear_unit_conv_factor: f64,
+    },
+    ///See [`crate::Context::create_geographic_crs`]
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
+    GeographicCrs {
+        crs_name: Option<&'a str>,
+        datum_name: Option<&'a str>,
+        ellps_name: Option<&'a str>,
+        semi_major_metre: f64,
+        inv_flattening: f64,
+        prime_meridian_name: Option<&'a str>,
+        prime_meridian_offset: f64,
+        pm_angular_units: Option<&'a str>,
+        pm_units_conv: f64,
+        ellipsoidal_cs: Proj<'a>,
     },
     // Extension
     ///See [`crate::Context::create_epsg_code`]
@@ -131,6 +148,29 @@ impl crate::Context {
                 horizontal_angular_unit_conv_factor,
                 vertical_linear_unit_name,
                 vertical_linear_unit_conv_factor,
+            ),
+            PjParams::GeographicCrs {
+                crs_name,
+                datum_name,
+                ellps_name,
+                semi_major_metre,
+                inv_flattening,
+                prime_meridian_name,
+                prime_meridian_offset,
+                pm_angular_units,
+                pm_units_conv,
+                ellipsoidal_cs,
+            } => self.create_geographic_crs(
+                crs_name,
+                datum_name,
+                ellps_name,
+                semi_major_metre,
+                inv_flattening,
+                prime_meridian_name,
+                prime_meridian_offset,
+                pm_angular_units,
+                pm_units_conv,
+                ellipsoidal_cs,
             ),
 
             // Extension
@@ -203,6 +243,22 @@ mod test {
             horizontal_angular_unit_conv_factor: 1.0,
             vertical_linear_unit_name: Some("Degree"),
             vertical_linear_unit_conv_factor: 1.0,
+        })?;
+        ctx.create_proj(PjParams::GeographicCrs {
+            crs_name: Some("WGS 84"),
+            datum_name: Some("World Geodetic System 1984"),
+            ellps_name: Some("WGS84"),
+            semi_major_metre: 6378137.0,
+            inv_flattening: 298.257223563,
+            prime_meridian_name: Some("Greenwich"),
+            prime_meridian_offset: 1.0,
+            pm_angular_units: Some("Degree"),
+            pm_units_conv: 1.0,
+            ellipsoidal_cs: ctx.create_ellipsoidal_2d_cs(
+                crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
+                Some("Degree"),
+                1.0,
+            )?,
         })?;
 
         // Extension

@@ -1,5 +1,6 @@
 use std::ffi::CString;
 
+use miette::IntoDiagnostic;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 use crate::create_readonly_struct;
@@ -415,3 +416,49 @@ CoordOperationMethodInfo, "",
 {method_auth_name : String},
 {method_code :String}
 );
+create_readonly_struct!(
+CoordOperationParam, "",
+{name : String},
+{auth_name  : String},
+{code  :String},
+{value   :f64},
+{value_string   :String},
+{unit_conv_factor   :f64},
+{unit_name   :String},
+{unit_auth_name   :String},
+{unit_code   :String},
+{unit_category   :UnitCategory}
+);
+pub enum UnitCategory {
+    Unknown,
+    None,
+    Linear,
+    LinearPerTime,
+    Angular,
+    AngularPerTime,
+    Scale,
+    ScalePerTime,
+    Time,
+    Parametric,
+    ParametricPerTime,
+}
+impl TryFrom<CString> for UnitCategory {
+    type Error = miette::Report;
+
+    fn try_from(value: CString) -> Result<Self, Self::Error> {
+        Ok(match value.to_str().into_diagnostic()? {
+            "unknown" => Self::Unknown,
+            "none" => Self::None,
+            "linear" => Self::Linear,
+            "linear_per_time" => Self::LinearPerTime,
+            "angular" => Self::Angular,
+            "angular_per_time" => Self::AngularPerTime,
+            "scale" => Self::Scale,
+            "scale_per_time" => Self::ScalePerTime,
+            "time" => Self::Time,
+            "parametric" => Self::Parametric,
+            "parametric_per_time" => Self::ParametricPerTime,
+            _ => miette::bail!("Unknown"),
+        })
+    }
+}

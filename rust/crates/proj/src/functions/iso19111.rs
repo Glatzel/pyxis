@@ -18,8 +18,9 @@ use std::ffi::CString;
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
-    ComparisonCriterion, CoordOperationMethodInfo, CoordinateSystemType, EllipsoidParameters,
-    GuessedWktDialect, PrimeMeridianParameters, ProjStringType, ProjType, WktType,
+    ComparisonCriterion, CoordOperationMethodInfo, CoordOperationParam, CoordinateSystemType,
+    EllipsoidParameters, GuessedWktDialect, PrimeMeridianParameters, ProjStringType, ProjType,
+    UnitCategory, WktType,
 };
 use crate::{Context, OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
 
@@ -1319,7 +1320,50 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param>
-    pub fn _coordoperation_get_param(&self) { unimplemented!() }
+    pub fn coordoperation_get_param(&self, index: u16) -> miette::Result<CoordOperationParam> {
+        let name = CString::default();
+        let auth_name = CString::default();
+        let code = CString::default();
+        let mut value = f64::default();
+        let value_string = CString::default();
+        let mut unit_conv_factor = f64::default();
+        let unit_name = CString::default();
+        let unit_auth_name = CString::default();
+        let unit_code = CString::default();
+        let unit_category = CString::default();
+        let result = unsafe {
+            proj_sys::proj_coordoperation_get_param(
+                self.ctx.ptr,
+                self.ptr,
+                index as i32,
+                &mut name.as_ptr(),
+                &mut auth_name.as_ptr(),
+                &mut code.as_ptr(),
+                &mut value,
+                &mut value_string.as_ptr(),
+                &mut unit_conv_factor,
+                &mut unit_name.as_ptr(),
+                &mut unit_auth_name.as_ptr(),
+                &mut unit_code.as_ptr(),
+                &mut unit_category.as_ptr(),
+            )
+        };
+        if result == -1 {
+            miette::bail!("Error");
+        }
+        Ok(CoordOperationParam::new(
+            name.to_string_lossy().to_string(),
+            auth_name.to_string_lossy().to_string(),
+            code.to_string_lossy().to_string(),
+            value,
+            value_string.to_string_lossy().to_string(),
+            unit_conv_factor,
+            unit_name.to_string_lossy().to_string(),
+            unit_auth_name.to_string_lossy().to_string(),
+            unit_code.to_string_lossy().to_string(),
+            UnitCategory::try_from(unit_category)?,
+        ))
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used_count>

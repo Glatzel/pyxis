@@ -5,15 +5,11 @@ on:
   workflow_call:
   push:
     branches: [main]
-    paths-ignore:
-      - "*.md"
   pull_request:
     types:
       - opened
       - synchronize
       - ready_for_review
-    paths-ignore:
-      - "*.md"
   schedule:
     - cron: 0 16 * * *
 

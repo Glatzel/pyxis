@@ -1249,8 +1249,8 @@ impl Proj<'_> {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_method_info>
     pub fn coordoperation_get_method_info(&self) -> miette::Result<CoordOperationMethodInfo> {
-        let mut method_name = CString::default();
-        let mut method_auth_name = CString::default();
+        let method_name = CString::default();
+        let method_auth_name = CString::default();
         let method_code = CString::default();
 
         let result = unsafe {

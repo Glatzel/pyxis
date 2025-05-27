@@ -1304,15 +1304,6 @@ mod test_context_basic {
         assert_eq!(dialect, GuessedWktDialect::Wkt2_2019);
         Ok(())
     }
-    #[test]
-    fn test_crs_get_datum() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;
-        assert!(pj.is_crs());
-        let datum = pj.crs_get_datum()?;
-        assert!(!datum.is_none());
-        Ok(())
-    }
 }
 #[cfg(test)]
 mod test_context_advanced {
@@ -1641,6 +1632,15 @@ mod test_proj {
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &Area::default())?;
         let target = pj.get_target_crs().unwrap();
         assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");
+        Ok(())
+    }
+    #[test]
+    fn test_crs_get_datum() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;
+        assert!(pj.is_crs());
+        let datum = pj.crs_get_datum()?;
+        assert!(!datum.is_none());
         Ok(())
     }
 }

@@ -1160,87 +1160,87 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_ellipsoid_get_parameters>
     pub fn _ellipsoid_get_parameters(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_name>
     pub fn _get_celestial_body_name(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
     pub fn _get_prime_meridian(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_prime_meridian_get_parameters>
     pub fn _prime_meridian_get_parameters(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
     pub fn _crs_get_coordoperation(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_method_info>
     pub fn _coordoperation_get_method_info(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_is_instantiable>
     pub fn _coordoperation_is_instantiable(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_has_ballpark_transformation>
     pub fn _coordoperation_has_ballpark_transformation(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_requires_per_coordinate_input_time>
     pub fn _coordoperation_requires_per_coordinate_input_time(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_count>
     pub fn _coordoperation_get_param_count(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_index>
     pub fn _coordoperation_get_param_index(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param>
     pub fn _coordoperation_get_param(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used_count>
     pub fn _coordoperation_get_grid_used_count(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used>
     pub fn _coordoperation_get_grid_used(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_accuracy>
     pub fn _coordoperation_get_accuracy(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_towgs84_values>
     pub fn _coordoperation_get_towgs84_values(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
     pub fn _coordoperation_create_inverse(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step_count>
     pub fn _concatoperation_get_step_count(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
     pub fn _concatoperation_get_step(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
     pub fn coordinate_metadata_create(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_get_epoch>
     pub fn coordinate_metadata_get_epoch(&self) { unimplemented!() }
 }
 /// # ISO-19111 Advanced functions

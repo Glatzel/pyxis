@@ -18,7 +18,8 @@ use std::ffi::CString;
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
-    ComparisonCriterion, CoordinateSystemType, GuessedWktDialect, ProjStringType, ProjType, WktType,
+    ComparisonCriterion, CoordinateSystemType, EllipsoidParameters, GuessedWktDialect,
+    ProjStringType, ProjType, WktType,
 };
 use crate::{Context, OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
 
@@ -1161,11 +1162,37 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_ellipsoid_get_parameters>
-    pub fn _ellipsoid_get_parameters(&self) { unimplemented!() }
+    pub fn ellipsoid_get_parameters(&self) -> miette::Result<EllipsoidParameters> {
+        let mut semi_major_metre = f64::default();
+        let mut semi_minor_metre = f64::default();
+        let mut is_semi_minor_computed = i32::default();
+        let mut inv_flattening = f64::default();
+        let result = unsafe {
+            proj_sys::proj_ellipsoid_get_parameters(
+                self.ctx.ptr,
+                self.ptr,
+                &mut semi_major_metre,
+                &mut semi_minor_metre,
+                &mut is_semi_minor_computed,
+                &mut inv_flattening,
+            )
+        };
+        if result != 0 {
+            miette::bail!("Error");
+        }
+        Ok(EllipsoidParameters::new(
+            semi_major_metre,
+            semi_minor_metre,
+            is_semi_minor_computed != 0,
+            inv_flattening,
+        ))
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_name>
-    pub fn _get_celestial_body_name(&self) { unimplemented!() }
+    pub fn get_celestial_body_name(&self) -> Option<String> {
+        c_char_to_string(unsafe { proj_sys::proj_get_celestial_body_name(self.ctx.ptr, self.ptr) })
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>

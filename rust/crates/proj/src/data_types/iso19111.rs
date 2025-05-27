@@ -394,3 +394,11 @@ impl From<AxisDirection> for CString {
         .expect("Error creating CString")
     }
 }
+create_readonly_struct!(
+    EllipsoidParameters, 
+    "",
+   {semi_major_metre: f64},
+   {semi_minor_metre: f64},
+   {is_semi_minor_computed :bool},
+   {inv_flattening :f64}
+);

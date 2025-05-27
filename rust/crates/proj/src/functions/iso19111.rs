@@ -2042,6 +2042,80 @@ mod test_proj {
         );
         Ok(())
     }
+    #[test]
+    fn test_ellipsoid_get_parameters() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let ellps = pj.get_ellipsoid()?;
+        let param = ellps.ellipsoid_get_parameters()?;
+        println!("{:?}", param);
+        Ok(())
+    }
+    #[test]
+    fn test_get_celestial_body_name() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let name = pj.get_celestial_body_name().unwrap();
+        assert_eq!(name, "Earth");
+        Ok(())
+    }
+    #[test]
+    fn test_get_prime_meridian() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let meridian = pj.get_prime_meridian()?;
+        println!(
+            "{}",
+            meridian.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
+        Ok(())
+    }
+    #[test]
+    fn test_prime_meridian_get_parameters() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let meridian = pj.get_prime_meridian()?;
+        let params = meridian.prime_meridian_get_parameters()?;
+        println!("{:?}", params);
+        Ok(())
+    }
+    #[test]
+    fn test_crs_get_coordoperation() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let coordoperation = pj.crs_get_coordoperation()?;
+        println!(
+            "{}",
+            coordoperation.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_get_method_info() -> miette::Result<()> {
+        // let ctx = crate::new_test_ctx()?;
+        // let pj = ctx.create("EPSG:4258")?;
+        // let coordoperation = pj.crs_get_coordoperation()?;
+        // let info = coordoperation.coordoperation_get_method_info()?;
+        // println!("{:?}", info);
+        assert!(false);
+        Ok(())
+    }
 }
 #[cfg(test)]
 mod test_other {}

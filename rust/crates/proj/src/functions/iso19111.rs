@@ -13,10 +13,9 @@
 //!
 //!<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
-use std::backtrace;
 use std::ffi::CString;
 
-use miette::{IntoDiagnostic, bail};
+use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
     ComparisonCriterion, CoordinateSystemType, GuessedWktDialect, ProjStringType, ProjType, WktType,

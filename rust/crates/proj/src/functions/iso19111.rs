@@ -511,7 +511,7 @@ impl Context {
         prime_meridian_offset: f64,
         pm_angular_units: Option<&str>,
         pm_units_conv: f64,
-        ellipsoidal_cs: Proj,
+        ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
         let crs_name = CString::new(crs_name.unwrap_or("")).expect("Error creating CString");
         let datum_name = CString::new(datum_name.unwrap_or("")).expect("Error creating CString");
@@ -1310,7 +1310,7 @@ mod test_context_advanced {
             1.0,
             Some("Degree"),
             1.0,
-            ctx.create_ellipsoidal_2d_cs(
+            &ctx.create_ellipsoidal_2d_cs(
                 crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
                 Some("Degree"),
                 1.0,

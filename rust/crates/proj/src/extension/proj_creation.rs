@@ -79,7 +79,7 @@ pub enum PjParams<'a> {
         prime_meridian_offset: f64,
         pm_angular_units: Option<&'a str>,
         pm_units_conv: f64,
-        ellipsoidal_cs: Proj<'a>,
+        ellipsoidal_cs: &'a Proj<'a>,
     },
     // Extension
     ///See [`crate::Context::create_epsg_code`]
@@ -254,7 +254,7 @@ mod test {
             prime_meridian_offset: 1.0,
             pm_angular_units: Some("Degree"),
             pm_units_conv: 1.0,
-            ellipsoidal_cs: ctx.create_ellipsoidal_2d_cs(
+            ellipsoidal_cs: &ctx.create_ellipsoidal_2d_cs(
                 crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
                 Some("Degree"),
                 1.0,

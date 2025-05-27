@@ -1121,11 +1121,11 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_type>
     fn _cs_get_type(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_count>
     fn _cs_get_axis_count(&self) { unimplemented!() }
     ///# References
     ///

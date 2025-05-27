@@ -13,9 +13,10 @@
 //!
 //!<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
+use std::backtrace;
 use std::ffi::CString;
 
-use miette::IntoDiagnostic;
+use miette::{IntoDiagnostic, bail};
 
 use crate::data_types::iso19111::{
     ComparisonCriterion, CoordinateSystemType, GuessedWktDialect, ProjStringType, ProjType, WktType,
@@ -828,14 +829,14 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
-    pub fn get_id_auth_name(&self, index: i32) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.ptr, index) })
+    pub fn get_id_auth_name(&self, index: u16) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.ptr, index as i32) })
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
-    pub fn get_id_code(&self, index: i32) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.ptr, index) })
+    pub fn get_id_code(&self, index: u16) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.ptr, index as i32) })
     }
     ///# References
     ///
@@ -862,8 +863,8 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
-    pub fn get_scope_ex(&self, domain_idx: i32) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope_ex(self.ptr, domain_idx) })
+    pub fn get_scope_ex(&self, domain_idx: u16) -> Option<String> {
+        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope_ex(self.ptr, domain_idx as i32) })
     }
     ///# References
     ///
@@ -1007,8 +1008,8 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
-    pub fn crs_get_sub_crs(&self, index: i32) -> miette::Result<Proj> {
-        let ptr = unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx.ptr, self.ptr, index) };
+    pub fn crs_get_sub_crs(&self, index: u16) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx.ptr, self.ptr, index as i32) };
         if ptr.is_null() {
             miette::bail!("Error");
         }
@@ -1068,8 +1069,8 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member_count>
-    pub fn datum_ensemble_get_member_count(&self) -> i32 {
-        unsafe { proj_sys::proj_datum_ensemble_get_member_count(self.ctx.ptr, self.ptr) }
+    pub fn datum_ensemble_get_member_count(&self) -> u16 {
+        unsafe { proj_sys::proj_datum_ensemble_get_member_count(self.ctx.ptr, self.ptr) as u16 }
     }
     ///# References
     ///
@@ -1080,9 +1081,9 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
-    pub fn datum_ensemble_get_member(&self, member_index: i32) -> miette::Result<Option<Proj>> {
+    pub fn datum_ensemble_get_member(&self, member_index: u16) -> miette::Result<Option<Proj>> {
         let ptr = unsafe {
-            proj_sys::proj_datum_ensemble_get_member(self.ctx.ptr, self.ptr, member_index)
+            proj_sys::proj_datum_ensemble_get_member(self.ctx.ptr, self.ptr, member_index as i32)
         };
         check_result!(self);
         if ptr.is_null() {
@@ -1134,15 +1135,30 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_count>
-    pub fn _cs_get_axis_count(&self) { unimplemented!() }
+    pub fn cs_get_axis_count(&self) -> miette::Result<u16> {
+        let count = unsafe { proj_sys::proj_cs_get_axis_count(self.ctx.ptr, self.ptr) };
+        if count == -1 {
+            miette::bail!("Error");
+        }
+        Ok(count as u16)
+    }
     ///# References
     ///
     /// <>
-    pub fn _cs_get_axis_info(&self) { unimplemented!() }
+    fn _cs_get_axis_info(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
-    pub fn _get_ellipsoid(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
+    pub fn get_ellipsoid(&self) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_get_ellipsoid(self.ctx.ptr, self.ptr) };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
     ///# References
     ///
     /// <>

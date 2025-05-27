@@ -198,58 +198,6 @@ impl crate::Context {
     ///# References
     ///
     /// <>
-    fn _crs_is_derived(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_geodetic_crs(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_horizontal_datum(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_sub_crs(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_datum(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_datum_ensemble(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_datum_forced(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_has_point_motion_operation(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _datum_ensemble_get_member_count(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _datum_ensemble_get_accuracy(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _datum_ensemble_get_member(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _dynamic_datum_get_frame_reference_epoch(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_coordinate_system(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
     fn _cs_get_type(&self) { unimplemented!() }
     ///# References
     ///
@@ -545,8 +493,30 @@ impl Context {
     }
     ///# References
     ///
-    /// <>
-    fn _create_geographic_crs_from_datum(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs_from_datum>
+    pub fn create_geographic_crs_from_datum(
+        &self,
+        crs_name: Option<&str>,
+        datum_or_datum_ensemble: &Proj,
+        ellipsoidal_cs: &Proj,
+    ) -> miette::Result<Proj> {
+        let crs_name = CString::new(crs_name.unwrap_or("")).expect("Error creating CString");
+        let ptr = unsafe {
+            proj_sys::proj_create_geographic_crs_from_datum(
+                self.ptr,
+                crs_name.as_ptr(),
+                datum_or_datum_ensemble.ptr,
+                ellipsoidal_cs.ptr,
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self,
+        })
+    }
     ///# References
     ///
     /// <>
@@ -930,6 +900,72 @@ impl Context {
 impl Proj<'_> {
     ///# References
     ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
+    pub fn crs_is_derived(&self) -> bool {
+        unsafe { proj_sys::proj_crs_is_derived(self.ctx.ptr, self.ptr) != 0 }
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
+    pub fn crs_get_datum(&self) -> miette::Result<Option<Proj>> {
+        let ptr = unsafe { proj_sys::proj_crs_get_datum(self.ctx.ptr, self.ptr) };
+        check_result!(self);
+        if ptr.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        }))
+    }
+    ///# References
+    ///
+    /// <>
+    fn _crs_get_geodetic_crs(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _crs_get_horizontal_datum(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _crs_get_sub_crs(&self) { unimplemented!() }
+
+    ///# References
+    ///
+    /// <>
+    fn _crs_get_datum_ensemble(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _crs_get_datum_forced(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _crs_has_point_motion_operation(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _datum_ensemble_get_member_count(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _datum_ensemble_get_accuracy(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _datum_ensemble_get_member(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _dynamic_datum_get_frame_reference_epoch(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _crs_get_coordinate_system(&self) { unimplemented!() }
+
+    ///# References
+    ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
     pub fn get_type(&self) -> miette::Result<ProjType> {
         let result = unsafe { proj_sys::proj_get_type(self.ptr) };
@@ -1186,6 +1222,15 @@ mod test_context_basic {
         assert_eq!(dialect, GuessedWktDialect::Wkt2_2019);
         Ok(())
     }
+    #[test]
+    fn test_crs_get_datum() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;
+        assert!(pj.is_crs());
+        let datum = pj.crs_get_datum()?;
+        assert!(!datum.is_none());
+        Ok(())
+    }
 }
 #[cfg(test)]
 mod test_context_advanced {
@@ -1310,6 +1355,35 @@ mod test_context_advanced {
             1.0,
             Some("Degree"),
             1.0,
+            &ctx.create_ellipsoidal_2d_cs(
+                crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
+                Some("Degree"),
+                1.0,
+            )?,
+        )?;
+        println!(
+            "{}",
+            pj.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
+
+        Ok(())
+    }
+    #[test]
+    fn test_create_geographic_crs_from_datum() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_geographic_crs_from_datum(
+            Some("WGS 84"),
+            &ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?
+                .crs_get_datum()?
+                .unwrap(),
             &ctx.create_ellipsoidal_2d_cs(
                 crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
                 Some("Degree"),
@@ -1474,11 +1548,7 @@ mod test_proj {
     #[test]
     pub fn test_get_source_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_proj(crate::PjParams::CrsToCrs {
-            source_crs: "EPSG:4326",
-            target_crs: "EPSG:3857",
-            area: &Area::default(),
-        })?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &Area::default())?;
         let target = pj.get_source_crs().unwrap();
         assert_eq!(target.get_name(), "WGS 84");
         Ok(())
@@ -1486,11 +1556,7 @@ mod test_proj {
     #[test]
     pub fn test_get_target_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_proj(crate::PjParams::CrsToCrs {
-            source_crs: "EPSG:4326",
-            target_crs: "EPSG:3857",
-            area: &Area::default(),
-        })?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &Area::default())?;
         let target = pj.get_target_crs().unwrap();
         assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");
         Ok(())

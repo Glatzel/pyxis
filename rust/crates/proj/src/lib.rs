@@ -14,5 +14,5 @@ pub mod functions;
 pub mod version;
 
 pub use data_types::{Area, Context, Direction, LogLevel, Proj};
+pub use extension::IPjCoord;
 pub(crate) use extension::*;
-pub use extension::{IPjCoord, PjParams};

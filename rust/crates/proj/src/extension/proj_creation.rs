@@ -1,4 +1,4 @@
-use crate::data_types::iso19111::UnitName;
+use crate::Proj;
 
 pub enum PjParams<'a> {
     // Transformation setup
@@ -45,7 +45,7 @@ pub enum PjParams<'a> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
     Cartesian2dCs {
         ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType,
-        unit_name: UnitName,
+        unit_name: Option<&'a str>,
         unit_conv_factor: f64,
     },
     ///See [`crate::Context::create_ellipsoidal_2d_cs`]
@@ -53,7 +53,7 @@ pub enum PjParams<'a> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
     Ellipsoidal2dCs {
         ellipsoidal_cs_2d_type: crate::data_types::iso19111::EllipsoidalCs2dType,
-        unit_name: UnitName,
+        unit_name: Option<&'a str>,
         unit_conv_factor: f64,
     },
     ///See [`crate::Context::create_ellipsoidal_3d_cs`]
@@ -61,10 +61,25 @@ pub enum PjParams<'a> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
     Ellipsoidal3dCs {
         ellipsoidal_cs_3d_type: crate::data_types::iso19111::EllipsoidalCs3dType,
-        horizontal_angular_unit_name: UnitName,
+        horizontal_angular_unit_name: Option<&'a str>,
         horizontal_angular_unit_conv_factor: f64,
-        vertical_linear_unit_name: UnitName,
+        vertical_linear_unit_name: Option<&'a str>,
         vertical_linear_unit_conv_factor: f64,
+    },
+    ///See [`crate::Context::create_geographic_crs`]
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
+    GeographicCrs {
+        crs_name: Option<&'a str>,
+        datum_name: Option<&'a str>,
+        ellps_name: Option<&'a str>,
+        semi_major_metre: f64,
+        inv_flattening: f64,
+        prime_meridian_name: Option<&'a str>,
+        prime_meridian_offset: f64,
+        pm_angular_units: Option<&'a str>,
+        pm_units_conv: f64,
+        ellipsoidal_cs: &'a Proj<'a>,
     },
     // Extension
     ///See [`crate::Context::create_epsg_code`]
@@ -134,6 +149,29 @@ impl crate::Context {
                 vertical_linear_unit_name,
                 vertical_linear_unit_conv_factor,
             ),
+            PjParams::GeographicCrs {
+                crs_name,
+                datum_name,
+                ellps_name,
+                semi_major_metre,
+                inv_flattening,
+                prime_meridian_name,
+                prime_meridian_offset,
+                pm_angular_units,
+                pm_units_conv,
+                ellipsoidal_cs,
+            } => self.create_geographic_crs(
+                crs_name,
+                datum_name,
+                ellps_name,
+                semi_major_metre,
+                inv_flattening,
+                prime_meridian_name,
+                prime_meridian_offset,
+                pm_angular_units,
+                pm_units_conv,
+                ellipsoidal_cs,
+            ),
 
             // Extension
             PjParams::EpsgCode(code) => self.create_epsg_code(code),
@@ -170,18 +208,18 @@ mod test {
             coordinate_system_type: crate::data_types::iso19111::CoordinateSystemType::Cartesian,
             axis: vec![
                 crate::data_types::iso19111::AxisDescription::new(
-                    crate::data_types::iso19111::AxisName::Longitude,
-                    crate::data_types::iso19111::AxisAbbreviation::Lon,
+                    Some("Longitude"),
+                    Some("lon"),
                     crate::data_types::iso19111::AxisDirection::East,
-                    crate::data_types::iso19111::UnitName::Degree,
+                    Some("Degree"),
                     1.0,
                     crate::data_types::iso19111::UnitType::Angular,
                 ),
                 crate::data_types::iso19111::AxisDescription::new(
-                    crate::data_types::iso19111::AxisName::Latitude,
-                    crate::data_types::iso19111::AxisAbbreviation::Lat,
+                    Some("Latitude"),
+                    Some("lat"),
                     crate::data_types::iso19111::AxisDirection::North,
-                    crate::data_types::iso19111::UnitName::Degree,
+                    Some("Degree"),
                     1.0,
                     crate::data_types::iso19111::UnitType::Angular,
                 ),
@@ -189,22 +227,38 @@ mod test {
         })?;
         ctx.create_proj(PjParams::Cartesian2dCs {
             ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType::EastingNorthing,
-            unit_name: crate::data_types::iso19111::UnitName::Degree,
+            unit_name: Some("Degree"),
             unit_conv_factor: 1.0,
         })?;
         ctx.create_proj(PjParams::Ellipsoidal2dCs {
             ellipsoidal_cs_2d_type:
                 crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
-            unit_name: crate::data_types::iso19111::UnitName::Degree,
+            unit_name: Some("Degree"),
             unit_conv_factor: 1.0,
         })?;
         ctx.create_proj(PjParams::Ellipsoidal3dCs {
             ellipsoidal_cs_3d_type:
                 crate::data_types::iso19111::EllipsoidalCs3dType::LatitudeLongitudeHeight,
-            horizontal_angular_unit_name: crate::data_types::iso19111::UnitName::Degree,
+            horizontal_angular_unit_name: Some("Degree"),
             horizontal_angular_unit_conv_factor: 1.0,
-            vertical_linear_unit_name: crate::data_types::iso19111::UnitName::Degree,
+            vertical_linear_unit_name: Some("Degree"),
             vertical_linear_unit_conv_factor: 1.0,
+        })?;
+        ctx.create_proj(PjParams::GeographicCrs {
+            crs_name: Some("WGS 84"),
+            datum_name: Some("World Geodetic System 1984"),
+            ellps_name: Some("WGS84"),
+            semi_major_metre: 6378137.0,
+            inv_flattening: 298.257223563,
+            prime_meridian_name: Some("Greenwich"),
+            prime_meridian_offset: 1.0,
+            pm_angular_units: Some("Degree"),
+            pm_units_conv: 1.0,
+            ellipsoidal_cs: &ctx.create_ellipsoidal_2d_cs(
+                crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
+                Some("Degree"),
+                1.0,
+            )?,
         })?;
 
         // Extension

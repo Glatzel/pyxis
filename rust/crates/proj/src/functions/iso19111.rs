@@ -14,7 +14,6 @@
 //!<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
 use std::ffi::CString;
-use std::result;
 
 use miette::IntoDiagnostic;
 
@@ -1122,103 +1121,103 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_type>
-    fn _cs_get_type(&self) { unimplemented!() }
+    pub fn _cs_get_type(&self) { unimplemented!() }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_count>
-    fn _cs_get_axis_count(&self) { unimplemented!() }
+    pub fn _cs_get_axis_count(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _cs_get_axis_info(&self) { unimplemented!() }
+    pub fn _cs_get_axis_info(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _get_ellipsoid(&self) { unimplemented!() }
+    pub fn _get_ellipsoid(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _ellipsoid_get_parameters(&self) { unimplemented!() }
+    pub fn _ellipsoid_get_parameters(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _get_celestial_body_name(&self) { unimplemented!() }
+    pub fn _get_celestial_body_name(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _get_prime_meridian(&self) { unimplemented!() }
+    pub fn _get_prime_meridian(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _prime_meridian_get_parameters(&self) { unimplemented!() }
+    pub fn _prime_meridian_get_parameters(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _crs_get_coordoperation(&self) { unimplemented!() }
+    pub fn _crs_get_coordoperation(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_get_method_info(&self) { unimplemented!() }
+    pub fn _coordoperation_get_method_info(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_is_instantiable(&self) { unimplemented!() }
+    pub fn _coordoperation_is_instantiable(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_has_ballpark_transformation(&self) { unimplemented!() }
+    pub fn _coordoperation_has_ballpark_transformation(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_requires_per_coordinate_input_time(&self) { unimplemented!() }
+    pub fn _coordoperation_requires_per_coordinate_input_time(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_get_param_count(&self) { unimplemented!() }
+    pub fn _coordoperation_get_param_count(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_get_param_index(&self) { unimplemented!() }
+    pub fn _coordoperation_get_param_index(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_get_param(&self) { unimplemented!() }
+    pub fn _coordoperation_get_param(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_get_grid_used_count(&self) { unimplemented!() }
+    pub fn _coordoperation_get_grid_used_count(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_get_grid_used(&self) { unimplemented!() }
+    pub fn _coordoperation_get_grid_used(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_get_accuracy(&self) { unimplemented!() }
+    pub fn _coordoperation_get_accuracy(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_get_towgs84_values(&self) { unimplemented!() }
+    pub fn _coordoperation_get_towgs84_values(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordoperation_create_inverse(&self) { unimplemented!() }
+    pub fn _coordoperation_create_inverse(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _concatoperation_get_step_count(&self) { unimplemented!() }
+    pub fn _concatoperation_get_step_count(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _concatoperation_get_step(&self) { unimplemented!() }
+    pub fn _concatoperation_get_step(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordinate_metadata_create(&self) { unimplemented!() }
+    pub fn coordinate_metadata_create(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
-    fn _coordinate_metadata_get_epoch(&self) { unimplemented!() }
+    pub fn coordinate_metadata_get_epoch(&self) { unimplemented!() }
 }
 /// # ISO-19111 Advanced functions
 ///

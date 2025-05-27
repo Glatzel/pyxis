@@ -2316,7 +2316,7 @@ mod test_proj {
         let pj = ctx.create("EPSG:4326")?;
         let new = pj.coordinate_metadata_create(123.4)?;
         let epoch = new.coordinate_metadata_get_epoch();
-        assert_eq!(epoch,123.4);
+        assert_eq!(epoch, 123.4);
         Ok(())
     }
 }

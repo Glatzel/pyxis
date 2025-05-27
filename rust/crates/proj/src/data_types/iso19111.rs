@@ -429,6 +429,7 @@ CoordOperationParam, "",
 {unit_code   :String},
 {unit_category   :UnitCategory}
 );
+#[derive(Debug)]
 pub enum UnitCategory {
     Unknown,
     None,
@@ -462,3 +463,13 @@ impl TryFrom<CString> for UnitCategory {
         })
     }
 }
+create_readonly_struct!(
+CoordOperationGridUsed, "",
+{short_name   : String},
+{full_name   :String},
+{package_name    :String},
+{url    :String},
+{direct_download    :bool},
+{open_license    :bool},
+{available    :bool}
+);

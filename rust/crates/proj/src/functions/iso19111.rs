@@ -18,9 +18,9 @@ use std::ffi::CString;
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
-    ComparisonCriterion, CoordOperationMethodInfo, CoordOperationParam, CoordinateSystemType,
-    EllipsoidParameters, GuessedWktDialect, PrimeMeridianParameters, ProjStringType, ProjType,
-    UnitCategory, WktType,
+    ComparisonCriterion, CoordOperationGridUsed, CoordOperationMethodInfo, CoordOperationParam,
+    CoordinateSystemType, EllipsoidParameters, GuessedWktDialect, PrimeMeridianParameters,
+    ProjStringType, ProjType, UnitCategory, WktType,
 };
 use crate::{Context, OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
 
@@ -1076,8 +1076,12 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_accuracy>
-    pub fn datum_ensemble_get_accuracy(&self) -> f64 {
-        unsafe { proj_sys::proj_datum_ensemble_get_accuracy(self.ctx.ptr, self.ptr) }
+    pub fn datum_ensemble_get_accuracy(&self) -> miette::Result<f64> {
+        let result = unsafe { proj_sys::proj_datum_ensemble_get_accuracy(self.ctx.ptr, self.ptr) };
+        if result < 0.0 {
+            miette::bail!("Error");
+        }
+        Ok(result)
     }
     ///# References
     ///
@@ -1178,7 +1182,7 @@ impl Proj<'_> {
                 &mut inv_flattening,
             )
         };
-        if result != 0 {
+        if result != 1 {
             miette::bail!("Error");
         }
         Ok(EllipsoidParameters::new(
@@ -1224,7 +1228,7 @@ impl Proj<'_> {
                 &mut unit_name.as_ptr(),
             )
         };
-        if result != 0 {
+        if result != 1 {
             miette::bail!("Error");
         }
         Ok(PrimeMeridianParameters::new(
@@ -1263,7 +1267,7 @@ impl Proj<'_> {
                 &mut method_code.as_ptr(),
             )
         };
-        if result != 0 {
+        if result != 1 {
             miette::bail!("Error");
         }
         Ok(CoordOperationMethodInfo::new(
@@ -1348,7 +1352,7 @@ impl Proj<'_> {
                 &mut unit_category.as_ptr(),
             )
         };
-        if result == -1 {
+        if result != 1 {
             miette::bail!("Error");
         }
         Ok(CoordOperationParam::new(
@@ -1367,39 +1371,135 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used_count>
-    pub fn _coordoperation_get_grid_used_count(&self) { unimplemented!() }
+    pub fn coordoperation_get_grid_used_count(&self) -> u16 {
+        unsafe { proj_sys::proj_coordoperation_get_grid_used_count(self.ctx.ptr, self.ptr) as u16 }
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used>
-    pub fn _coordoperation_get_grid_used(&self) { unimplemented!() }
+    pub fn coordoperation_get_grid_used(
+        &self,
+        index: u16,
+    ) -> miette::Result<CoordOperationGridUsed> {
+        let short_name = CString::default();
+        let full_name = CString::default();
+        let package_name = CString::default();
+        let url = CString::default();
+        let mut direct_download = i32::default();
+        let mut open_license = i32::default();
+        let mut available = i32::default();
+
+        let result = unsafe {
+            proj_sys::proj_coordoperation_get_grid_used(
+                self.ctx.ptr,
+                self.ptr,
+                index as i32,
+                &mut short_name.as_ptr(),
+                &mut full_name.as_ptr(),
+                &mut package_name.as_ptr(),
+                &mut url.as_ptr(),
+                &mut direct_download,
+                &mut open_license,
+                &mut available,
+            )
+        };
+        if result != 0 {
+            miette::bail!("Error");
+        }
+        Ok(CoordOperationGridUsed::new(
+            short_name.to_string_lossy().to_string(),
+            full_name.to_string_lossy().to_string(),
+            package_name.to_string_lossy().to_string(),
+            url.to_string_lossy().to_string(),
+            direct_download != 0,
+            open_license != 0,
+            available != 0,
+        ))
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_accuracy>
-    pub fn _coordoperation_get_accuracy(&self) { unimplemented!() }
+    pub fn coordoperation_get_accuracy(&self) -> miette::Result<f64> {
+        let result = unsafe { proj_sys::proj_coordoperation_get_accuracy(self.ctx.ptr, self.ptr) };
+        if result < 0.0 {
+            miette::bail!("Error");
+        }
+        Ok(result)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_towgs84_values>
-    pub fn _coordoperation_get_towgs84_values(&self) { unimplemented!() }
+    pub fn coordoperation_get_towgs84_values(&self) {
+        let mut to_wgs84 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+        unsafe {
+            proj_sys::proj_coordoperation_get_towgs84_values(
+                self.ctx.ptr,
+                self.ptr,
+                to_wgs84.as_mut_ptr(),
+                7,
+                1,
+            )
+        };
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
-    pub fn _coordoperation_create_inverse(&self) { unimplemented!() }
+    pub fn coordoperation_create_inverse(&self) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_coordoperation_create_inverse(self.ctx.ptr, self.ptr) };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step_count>
-    pub fn _concatoperation_get_step_count(&self) { unimplemented!() }
+    pub fn concatoperation_get_step_count(&self) -> miette::Result<u16> {
+        let result =
+            unsafe { proj_sys::proj_concatoperation_get_step_count(self.ctx.ptr, self.ptr) };
+        if result <= 0 {
+            miette::bail!("Error");
+        }
+        Ok(result as u16)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
-    pub fn _concatoperation_get_step(&self) { unimplemented!() }
+    pub fn concatoperation_get_step(&self, index: u16) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_concatoperation_get_step(self.ctx.ptr, self.ptr, index as i32)
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
-    pub fn coordinate_metadata_create(&self) { unimplemented!() }
+    pub fn coordinate_metadata_create(&self, epoch: f64) -> miette::Result<Proj> {
+        let ptr =
+            unsafe { proj_sys::proj_coordinate_metadata_create(self.ctx.ptr, self.ptr, epoch) };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_get_epoch>
-    pub fn coordinate_metadata_get_epoch(&self) { unimplemented!() }
+    pub fn coordinate_metadata_get_epoch(&self) -> f64 {
+        unsafe { proj_sys::proj_coordinate_metadata_get_epoch(self.ctx.ptr, self.ptr) }
+    }
 }
 /// # ISO-19111 Advanced functions
 ///

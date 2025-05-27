@@ -145,7 +145,7 @@ pub enum IntermediateCrsUse {
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORDINATE_SYSTEM_TYPE>
-#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum CoordinateSystemType {

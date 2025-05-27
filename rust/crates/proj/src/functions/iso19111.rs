@@ -18,7 +18,7 @@ use std::ffi::CString;
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
-    ComparisonCriterion, GuessedWktDialect, ProjStringType, ProjType, WktType,
+    ComparisonCriterion, CoordinateSystemType, GuessedWktDialect, ProjStringType, ProjType, WktType,
 };
 use crate::{Context, OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
 
@@ -203,7 +203,7 @@ impl Context {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
     pub fn create_cs(
         &self,
-        coordinate_system_type: crate::data_types::iso19111::CoordinateSystemType,
+        coordinate_system_type: CoordinateSystemType,
         axis: &[crate::data_types::iso19111::AxisDescription],
     ) -> miette::Result<crate::Proj> {
         let axis_count = axis.len();
@@ -1121,7 +1121,16 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_type>
-    pub fn _cs_get_type(&self) { unimplemented!() }
+    pub fn cs_get_type(&self) -> miette::Result<CoordinateSystemType> {
+        let cs_type = CoordinateSystemType::try_from(unsafe {
+            proj_sys::proj_cs_get_type(self.ctx.ptr, self.ptr)
+        })
+        .into_diagnostic()?;
+        if cs_type == CoordinateSystemType::Unknown {
+            miette::bail!("Unknown coordinate system.");
+        }
+        Ok(cs_type)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_count>

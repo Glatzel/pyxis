@@ -21,15 +21,17 @@ pub enum GuessedWktDialect {
 
 /// # References
 /// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CATEGORY>
-#[derive(Debug)]
+#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[repr(u32)]
+
 pub enum Category {
-    Ellipsoid,
-    PrimeMeridian,
-    Datum,
-    Crs,
-    CoordinateOperation,
-    DatumEnsemble,
+    Ellipsoid = proj_sys::PJ_CATEGORY_PJ_CATEGORY_ELLIPSOID,
+    PrimeMeridian = proj_sys::PJ_CATEGORY_PJ_CATEGORY_PRIME_MERIDIAN,
+    Datum = proj_sys::PJ_CATEGORY_PJ_CATEGORY_DATUM,
+    Crs = proj_sys::PJ_CATEGORY_PJ_CATEGORY_CRS,
+    CoordinateOperation = proj_sys::PJ_CATEGORY_PJ_CATEGORY_COORDINATE_OPERATION,
+    DatumEnsemble = proj_sys::PJ_CATEGORY_PJ_CATEGORY_DATUM_ENSEMBLE,
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>

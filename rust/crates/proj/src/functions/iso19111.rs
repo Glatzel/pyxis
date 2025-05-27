@@ -14,13 +14,14 @@
 //!<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
 use std::ffi::CString;
+use std::ptr::null;
 
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
-    ComparisonCriterion, CoordOperationGridUsed, CoordOperationMethodInfo, CoordOperationParam,
-    CoordinateSystemType, EllipsoidParameters, GuessedWktDialect, PrimeMeridianParameters,
-    ProjStringType, ProjType, UnitCategory, WktType,
+    Category, ComparisonCriterion, CoordOperationGridUsed, CoordOperationMethodInfo,
+    CoordOperationParam, CoordinateSystemType, EllipsoidParameters, GuessedWktDialect,
+    PrimeMeridianParameters, ProjStringType, ProjType, UnitCategory, WktType,
 };
 use crate::{Context, OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
 
@@ -65,7 +66,33 @@ impl crate::Context {
     ///# References
     ///
     /// <>
-    fn _create_from_database(&self) { unimplemented!() }
+    pub fn create_from_database(
+        &self,
+        auth_name: &str,
+        code: &str,
+        category: Category,
+        use_projalternative_grid_names: bool,
+    ) -> miette::Result<Proj> {
+        let auth_name = CString::new(auth_name).expect("Error creating CString");
+        let code = CString::new(code).expect("Error creating CString");
+        let ptr = unsafe {
+            proj_sys::proj_create_from_database(
+                self.ptr,
+                auth_name.as_ptr(),
+                code.as_ptr(),
+                category.into(),
+                use_projalternative_grid_names as i32,
+                null(),
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self,
+        })
+    }
     ///# References
     ///
     /// <>
@@ -1241,7 +1268,7 @@ impl Proj<'_> {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
     pub fn crs_get_coordoperation(&self) -> miette::Result<Proj> {
-        let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx.ptr, self.ptr) };
+        let ptr = unsafe { proj_sys::proj_crs_get_coordoperation(self.ctx.ptr, self.ptr) };
         if ptr.is_null() {
             miette::bail!("Error");
         }
@@ -1429,7 +1456,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_towgs84_values>
-    pub fn coordoperation_get_towgs84_values(&self) {
+    pub fn coordoperation_get_towgs84_values(&self) -> [f64; 7] {
         let mut to_wgs84 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
         unsafe {
             proj_sys::proj_coordoperation_get_towgs84_values(
@@ -1440,6 +1467,7 @@ impl Proj<'_> {
                 1,
             )
         };
+        to_wgs84
     }
     ///# References
     ///
@@ -1583,6 +1611,24 @@ mod test_context_basic {
         )?;
         let dialect = ctx.guess_wkt_dialect(&wkt)?;
         assert_eq!(dialect, GuessedWktDialect::Wkt2_2019);
+        Ok(())
+    }
+    #[test]
+    fn test_create_from_database() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        println!(
+            "{}",
+            pj.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
         Ok(())
     }
 }
@@ -1763,7 +1809,7 @@ mod test_context_advanced {
 #[cfg(test)]
 mod test_proj {
     use crate::Area;
-    use crate::data_types::iso19111::{ComparisonCriterion, CoordinateSystemType};
+    use crate::data_types::iso19111::{Category, ComparisonCriterion, CoordinateSystemType};
 
     #[test]
     fn test_get_type() -> miette::Result<()> {
@@ -2090,7 +2136,7 @@ mod test_proj {
     #[test]
     fn test_crs_get_coordoperation() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create("EPSG:4326")?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let coordoperation = pj.crs_get_coordoperation()?;
         println!(
             "{}",
@@ -2108,12 +2154,169 @@ mod test_proj {
     }
     #[test]
     fn test_coordoperation_get_method_info() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let coordoperation = pj.crs_get_coordoperation()?;
+        let info = coordoperation.coordoperation_get_method_info()?;
+        println!("{:?}", info);
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_is_instantiable() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let coordoperation = pj.crs_get_coordoperation()?;
+        let instantiable = coordoperation.coordoperation_is_instantiable();
+        assert!(instantiable);
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_has_ballpark_transformation() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let coordoperation = pj.crs_get_coordoperation()?;
+        let has_ballpark_transformation =
+            coordoperation.coordoperation_has_ballpark_transformation();
+        assert!(!has_ballpark_transformation);
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_requires_per_coordinate_input_time() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let coordoperation = pj.crs_get_coordoperation()?;
+        let requires_per_coordinate_input_time =
+            coordoperation.coordoperation_requires_per_coordinate_input_time();
+        assert!(!requires_per_coordinate_input_time);
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_get_param_count() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let coordoperation = pj.crs_get_coordoperation()?;
+        let count = coordoperation.coordoperation_get_param_count();
+        assert_eq!(count, 5);
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_get_param_index() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let coordoperation = pj.crs_get_coordoperation()?;
+        let index = coordoperation.coordoperation_get_param_index("Longitude of natural origin")?;
+        assert_eq!(index, 1);
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_get_param() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let coordoperation = pj.crs_get_coordoperation()?;
+        let param = coordoperation.coordoperation_get_param(1)?;
+        println!("{:?}", param);
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_get_grid_used() -> miette::Result<()> {
         // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create("EPSG:4258")?;
+        // let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         // let coordoperation = pj.crs_get_coordoperation()?;
-        // let info = coordoperation.coordoperation_get_method_info()?;
-        // println!("{:?}", info);
-        assert!(false);
+        // let param = coordoperation.coordoperation_get_param(1)?;
+        // println!("{:?}", param);
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_get_accuracy() -> miette::Result<()> {
+        // let ctx = crate::new_test_ctx()?;
+        // let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        // let coordoperation = pj.crs_get_coordoperation()?;
+        // let accuracy = coordoperation.coordoperation_get_accuracy()?;
+        // assert_eq!(accuracy, 1.0);
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_get_towgs84_values() -> miette::Result<()> {
+        // let ctx = crate::new_test_ctx()?;
+        // let pj = ctx.create_from_database("EPSG", "4807", Category::Crs, false)?;
+        // let coordoperation = pj.crs_get_coordoperation()?;
+        // let param = coordoperation.coordoperation_get_towgs84_values();
+        // assert_eq!(param, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
+        Ok(())
+    }
+    #[test]
+    fn test_coordoperation_create_inverse() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let coordoperation = pj.crs_get_coordoperation()?;
+        let inversed = coordoperation.coordoperation_create_inverse()?;
+        println!(
+            "{}",
+            inversed.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
+        Ok(())
+    }
+    #[test]
+    fn test_concatoperation_get_step_count() -> miette::Result<()> {
+        // let ctx = crate::new_test_ctx()?;
+        // let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        // let coordoperation = pj.crs_get_coordoperation()?;
+        // let count = coordoperation.concatoperation_get_step_count()?;
+        // assert_eq!(count, 1);
+        Ok(())
+    }
+    #[test]
+    fn test_concatoperation_get_step() -> miette::Result<()> {
+        // let ctx = crate::new_test_ctx()?;
+        // let pj = ctx.create_from_database("EPSG", "28356", Category::con, false)?;
+        // let step = pj.concatoperation_get_step(1)?;
+        // println!(
+        //     "{}",
+        //     step.as_wkt(
+        //         crate::data_types::iso19111::WktType::Wkt2_2019,
+        //         None,
+        //         None,
+        //         None,
+        //         None,
+        //         None,
+        //         None,
+        //     )?
+        // );
+        Ok(())
+    }
+    #[test]
+    fn test_coordinate_metadata_create() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let new = pj.coordinate_metadata_create(123.4)?;
+        let wkt = new.as_wkt(
+            crate::data_types::iso19111::WktType::Wkt2_2019,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )?;
+        println!("{wkt}",);
+        assert!(wkt.contains("123.4"));
+        Ok(())
+    }
+    #[test]
+    fn test_coordinate_metadata_get_epoch() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let new = pj.coordinate_metadata_create(123.4)?;
+        let epoch = new.coordinate_metadata_get_epoch();
+        assert_eq!(epoch,123.4);
         Ok(())
     }
 }

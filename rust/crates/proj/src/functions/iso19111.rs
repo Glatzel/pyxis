@@ -1763,7 +1763,7 @@ mod test_context_advanced {
 #[cfg(test)]
 mod test_proj {
     use crate::Area;
-    use crate::data_types::iso19111::ComparisonCriterion;
+    use crate::data_types::iso19111::{ComparisonCriterion, CoordinateSystemType};
 
     #[test]
     fn test_get_type() -> miette::Result<()> {
@@ -1922,6 +1922,124 @@ mod test_proj {
         assert!(pj.is_crs());
         let datum = pj.crs_get_datum()?;
         assert!(!datum.is_none());
+        Ok(())
+    }
+    #[test]
+    fn test_crs_get_datum_ensemble() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4258")?;
+        assert!(pj.is_crs());
+        let datum = pj.crs_get_datum_ensemble()?;
+        assert!(!datum.is_none());
+        Ok(())
+    }
+    #[test]
+    fn test_crs_get_datum_forced() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;
+        assert!(pj.is_crs());
+        let datum = pj.crs_get_datum_forced()?;
+        assert!(!datum.is_none());
+        Ok(())
+    }
+    #[test]
+    fn test_crs_has_point_motion_operation() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:8255")?;
+        assert!(pj.is_crs());
+        let result = pj.crs_has_point_motion_operation();
+        assert!(result);
+        Ok(())
+    }
+    #[test]
+    fn test_datum_ensemble_get_member_count() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4258")?;
+        let datum = pj.crs_get_datum_ensemble()?.unwrap();
+        let count = datum.datum_ensemble_get_member_count();
+        assert_eq!(count, 12);
+        Ok(())
+    }
+    #[test]
+    fn test_datum_ensemble_get_accuracy() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4258")?;
+        let datum = pj.crs_get_datum_ensemble()?.unwrap();
+        let accuracy = datum.datum_ensemble_get_accuracy()?;
+        assert_eq!(accuracy, 0.1);
+        Ok(())
+    }
+    #[test]
+    fn test_datum_ensemble_get_member() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4258")?;
+        let datum = pj.crs_get_datum_ensemble()?.unwrap();
+        let _ = datum.datum_ensemble_get_member(2)?.unwrap();
+        Ok(())
+    }
+    #[test]
+    fn test_dynamic_datum_get_frame_reference_epoch() -> miette::Result<()> {
+        // let ctx = crate::new_test_ctx()?;
+        // let pj = ctx.create("EPSG:1061")?;
+        // let epoch = pj.dynamic_datum_get_frame_reference_epoch()?;
+        // assert_eq!(epoch, 1.0);
+        assert!(false);
+        Ok(())
+    }
+    #[test]
+    fn test_crs_get_coordinate_system() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let cs = pj.crs_get_coordinate_system()?;
+        println!(
+            "{}",
+            cs.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
+        Ok(())
+    }
+    #[test]
+    fn test_cs_get_type() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let cs = pj.crs_get_coordinate_system()?;
+        let t = cs.cs_get_type()?;
+        assert_eq!(t, CoordinateSystemType::Ellipsoidal);
+        Ok(())
+    }
+    #[test]
+    fn test_cs_get_axis_count() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let cs = pj.crs_get_coordinate_system()?;
+        let count = cs.cs_get_axis_count()?;
+        assert_eq!(count, 2);
+        Ok(())
+    }
+    #[test]
+    fn test_get_ellipsoid() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let ellps = pj.get_ellipsoid()?;
+        println!(
+            "{}",
+            ellps.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
         Ok(())
     }
 }

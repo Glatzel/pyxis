@@ -14,6 +14,7 @@
 //!<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
 use std::ffi::CString;
+use std::result;
 
 use miette::IntoDiagnostic;
 
@@ -195,106 +196,6 @@ impl crate::Context {
     ///
     /// <>
     fn _get_suggested_operation(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _cs_get_type(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _cs_get_axis_count(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _cs_get_axis_info(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _get_ellipsoid(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _ellipsoid_get_parameters(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _get_celestial_body_name(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _get_prime_meridian(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _prime_meridian_get_parameters(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_coordoperation(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_get_method_info(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_is_instantiable(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_has_ballpark_transformation(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_requires_per_coordinate_input_time(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_get_param_count(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_get_param_index(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_get_param(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_get_grid_used_count(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_get_grid_used(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_get_accuracy(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_get_towgs84_values(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordoperation_create_inverse(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _concatoperation_get_step_count(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _concatoperation_get_step(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordinate_metadata_create(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _coordinate_metadata_get_epoch(&self) { unimplemented!() }
 }
 /// # ISO-19111 Advanced functions
 impl Context {
@@ -900,72 +801,6 @@ impl Context {
 impl Proj<'_> {
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
-    pub fn crs_is_derived(&self) -> bool {
-        unsafe { proj_sys::proj_crs_is_derived(self.ctx.ptr, self.ptr) != 0 }
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
-    pub fn crs_get_datum(&self) -> miette::Result<Option<Proj>> {
-        let ptr = unsafe { proj_sys::proj_crs_get_datum(self.ctx.ptr, self.ptr) };
-        check_result!(self);
-        if ptr.is_null() {
-            return Ok(None);
-        }
-        Ok(Some(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        }))
-    }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_geodetic_crs(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_horizontal_datum(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_sub_crs(&self) { unimplemented!() }
-
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_datum_ensemble(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_datum_forced(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_has_point_motion_operation(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _datum_ensemble_get_member_count(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _datum_ensemble_get_accuracy(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _datum_ensemble_get_member(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _dynamic_datum_get_frame_reference_epoch(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_get_coordinate_system(&self) { unimplemented!() }
-
-    ///# References
-    ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
     pub fn get_type(&self) -> miette::Result<ProjType> {
         let result = unsafe { proj_sys::proj_get_type(self.ptr) };
@@ -1137,6 +972,253 @@ impl Proj<'_> {
             ctx: self.ctx,
         })
     }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
+    pub fn crs_is_derived(&self) -> bool {
+        unsafe { proj_sys::proj_crs_is_derived(self.ctx.ptr, self.ptr) != 0 }
+    }
+
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
+    pub fn crs_get_geodetic_crs(&self) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_crs_get_geodetic_crs(self.ctx.ptr, self.ptr) };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
+    pub fn crs_get_horizontal_datum(&self) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_crs_get_horizontal_datum(self.ctx.ptr, self.ptr) };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
+    pub fn crs_get_sub_crs(&self, index: i32) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx.ptr, self.ptr, index) };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
+    pub fn crs_get_datum(&self) -> miette::Result<Option<Proj>> {
+        let ptr = unsafe { proj_sys::proj_crs_get_datum(self.ctx.ptr, self.ptr) };
+        check_result!(self);
+        if ptr.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        }))
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_ensemble>
+    pub fn crs_get_datum_ensemble(&self) -> miette::Result<Option<Proj>> {
+        let ptr = unsafe { proj_sys::proj_crs_get_datum_ensemble(self.ctx.ptr, self.ptr) };
+        check_result!(self);
+        if ptr.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        }))
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_forced>
+    pub fn crs_get_datum_forced(&self) -> miette::Result<Option<Proj>> {
+        let ptr = unsafe { proj_sys::proj_crs_get_datum_forced(self.ctx.ptr, self.ptr) };
+        check_result!(self);
+        if ptr.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        }))
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_has_point_motion_operation>
+    pub fn crs_has_point_motion_operation(&self) -> bool {
+        unsafe { proj_sys::proj_crs_has_point_motion_operation(self.ctx.ptr, self.ptr) != 0 }
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member_count>
+    pub fn datum_ensemble_get_member_count(&self) -> i32 {
+        unsafe { proj_sys::proj_datum_ensemble_get_member_count(self.ctx.ptr, self.ptr) }
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_accuracy>
+    pub fn datum_ensemble_get_accuracy(&self) -> f64 {
+        unsafe { proj_sys::proj_datum_ensemble_get_accuracy(self.ctx.ptr, self.ptr) }
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
+    pub fn datum_ensemble_get_member(&self, member_index: i32) -> miette::Result<Option<Proj>> {
+        let ptr = unsafe {
+            proj_sys::proj_datum_ensemble_get_member(self.ctx.ptr, self.ptr, member_index)
+        };
+        check_result!(self);
+        if ptr.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        }))
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_dynamic_datum_get_frame_reference_epoch>
+    pub fn dynamic_datum_get_frame_reference_epoch(&self) -> miette::Result<f64> {
+        let result = unsafe {
+            proj_sys::proj_dynamic_datum_get_frame_reference_epoch(self.ctx.ptr, self.ptr)
+        };
+        if result == -1.0 {
+            miette::bail!("Error");
+        }
+        Ok(result)
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
+    pub fn crs_get_coordinate_system(&self) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_crs_get_coordinate_system(self.ctx.ptr, self.ptr) };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
+    ///# References
+    ///
+    /// <>
+    fn _cs_get_type(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _cs_get_axis_count(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _cs_get_axis_info(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _get_ellipsoid(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _ellipsoid_get_parameters(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _get_celestial_body_name(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _get_prime_meridian(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _prime_meridian_get_parameters(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _crs_get_coordoperation(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_get_method_info(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_is_instantiable(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_has_ballpark_transformation(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_requires_per_coordinate_input_time(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_get_param_count(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_get_param_index(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_get_param(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_get_grid_used_count(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_get_grid_used(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_get_accuracy(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_get_towgs84_values(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordoperation_create_inverse(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _concatoperation_get_step_count(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _concatoperation_get_step(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordinate_metadata_create(&self) { unimplemented!() }
+    ///# References
+    ///
+    /// <>
+    fn _coordinate_metadata_get_epoch(&self) { unimplemented!() }
 }
 /// # ISO-19111 Advanced functions
 ///

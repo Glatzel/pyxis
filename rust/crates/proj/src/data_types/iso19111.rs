@@ -395,7 +395,7 @@ impl From<AxisDirection> for CString {
     }
 }
 create_readonly_struct!(
-    EllipsoidParameters, 
+    EllipsoidParameters,
     "",
    {semi_major_metre: f64},
    {semi_minor_metre: f64},

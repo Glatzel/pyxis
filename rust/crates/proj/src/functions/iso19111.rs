@@ -18,7 +18,7 @@ use std::ffi::CString;
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
-    ComparisonCriterion, GuessedWktDialect, ProjStringType, ProjType, UnitName, WktType,
+    ComparisonCriterion, GuessedWktDialect, ProjStringType, ProjType, WktType,
 };
 use crate::{Context, OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
 
@@ -392,14 +392,15 @@ impl Context {
     pub fn create_cartesian_2d_cs(
         &self,
         ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType,
-        unit_name: UnitName,
+        unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let unit_name = CString::new(unit_name.unwrap_or("")).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                Into::<CString>::into(unit_name).as_ptr(),
+                unit_name.as_ptr(),
                 unit_conv_factor,
             )
         };
@@ -417,14 +418,15 @@ impl Context {
     pub fn create_ellipsoidal_2d_cs(
         &self,
         ellipsoidal_cs_2d_type: crate::data_types::iso19111::EllipsoidalCs2dType,
-        unit_name: UnitName,
+        unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let unit_name = CString::new(unit_name.unwrap_or("")).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                Into::<CString>::into(unit_name).as_ptr(),
+                unit_name.as_ptr(),
                 unit_conv_factor,
             )
         };
@@ -442,18 +444,22 @@ impl Context {
     pub fn create_ellipsoidal_3d_cs(
         &self,
         ellipsoidal_cs_3d_type: crate::data_types::iso19111::EllipsoidalCs3dType,
-        horizontal_angular_unit_name: UnitName,
+        horizontal_angular_unit_name: Option<&str>,
         horizontal_angular_unit_conv_factor: f64,
-        vertical_linear_unit_name: UnitName,
+        vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let horizontal_angular_unit_name = CString::new(horizontal_angular_unit_name.unwrap_or(""))
+            .expect("Error creating CString");
+        let vertical_linear_unit_name =
+            CString::new(vertical_linear_unit_name.unwrap_or("")).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
                 ellipsoidal_cs_3d_type.into(),
-                Into::<CString>::into(horizontal_angular_unit_name).as_ptr(),
+                horizontal_angular_unit_name.as_ptr(),
                 horizontal_angular_unit_conv_factor,
-                Into::<CString>::into(vertical_linear_unit_name).as_ptr(),
+                vertical_linear_unit_name.as_ptr(),
                 vertical_linear_unit_conv_factor,
             )
         };
@@ -467,12 +473,76 @@ impl Context {
     }
     ///# References
     ///
-    /// <>
-    fn _query_geodetic_crs_from_datum(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
+    fn _query_geodetic_crs_from_datum(
+        &self,
+        crs_auth_name: Option<&str>,
+        datum_auth_name: &str,
+        datum_code: &str,
+        crs_type: Option<&str>,
+    ) {
+        let crs_auth_name =
+            CString::new(crs_auth_name.unwrap_or("")).expect("Error creating CString");
+        let datum_auth_name = CString::new(datum_auth_name).expect("Error creating CString");
+        let datum_code = CString::new(datum_code).expect("Error creating CString");
+        let crs_type = CString::new(crs_type.unwrap_or("")).expect("Error creating CString");
+        let _ = unsafe {
+            proj_sys::proj_query_geodetic_crs_from_datum(
+                self.ptr,
+                crs_auth_name.as_ptr(),
+                datum_auth_name.as_ptr(),
+                datum_code.as_ptr(),
+                crs_type.as_ptr(),
+            )
+        };
+        unimplemented!()
+    }
     ///# References
     ///
-    /// <>
-    fn _create_geographic_crs(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs>
+    pub fn create_geographic_crs(
+        &self,
+        crs_name: Option<&str>,
+        datum_name: Option<&str>,
+        ellps_name: Option<&str>,
+        semi_major_metre: f64,
+        inv_flattening: f64,
+        prime_meridian_name: Option<&str>,
+        prime_meridian_offset: f64,
+        pm_angular_units: Option<&str>,
+        pm_units_conv: f64,
+        ellipsoidal_cs: &Proj,
+    ) -> miette::Result<Proj> {
+        let crs_name = CString::new(crs_name.unwrap_or("")).expect("Error creating CString");
+        let datum_name = CString::new(datum_name.unwrap_or("")).expect("Error creating CString");
+        let ellps_name = CString::new(ellps_name.unwrap_or("")).expect("Error creating CString");
+        let prime_meridian_name =
+            CString::new(prime_meridian_name.unwrap_or("")).expect("Error creating CString");
+        let pm_angular_units =
+            CString::new(pm_angular_units.unwrap_or("")).expect("Error creating CString");
+        let ptr = unsafe {
+            proj_sys::proj_create_geographic_crs(
+                self.ptr,
+                crs_name.as_ptr(),
+                datum_name.as_ptr(),
+                ellps_name.as_ptr(),
+                semi_major_metre,
+                inv_flattening,
+                prime_meridian_name.as_ptr(),
+                prime_meridian_offset,
+                pm_angular_units.as_ptr(),
+                pm_units_conv,
+                ellipsoidal_cs.ptr,
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self,
+        })
+    }
     ///# References
     ///
     /// <>
@@ -1048,39 +1118,51 @@ impl Clone for Proj<'_> {
     }
 }
 ///# References
+///
 /// <>
 fn _proj_string_list_destroy() { unimplemented!() }
 ///# References
+///
 /// <>
 fn _proj_int_list_destroy() { unimplemented!() }
 ///# References
+///
 /// <>
 fn _proj_celestial_body_list_destroy() { unimplemented!() }
 ///# References
+///
 /// <>
 fn _proj_get_crs_list_parameters_create() { unimplemented!() }
 ///# References
+///
 /// <>
 fn _proj_get_crs_list_parameters_destroy() { unimplemented!() }
 ///# References
+///
 /// <>
 fn _proj_crs_info_list_destroy() { unimplemented!() }
 ///# References
+///
 /// <>
 fn _proj_unit_list_destroy() { unimplemented!() }
 ///# References
+///
 /// <>
 fn _proj_insert_object_session_create() { unimplemented!() }
 ///# References
+///
 /// <>
 fn _proj_string_destroy() { unimplemented!() }
 ///# References
+///
 /// <>
 fn _proj_operation_factory_context_destroy() { unimplemented!() }
-///# References
-/// <>
+/// # References
+///
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
 fn _proj_list_get_count() { unimplemented!() }
 ///# References
+///
 /// <>
 fn _proj_list_destroy() { unimplemented!() }
 
@@ -1116,18 +1198,18 @@ mod test_context_advanced {
             crate::data_types::iso19111::CoordinateSystemType::Cartesian,
             &[
                 crate::data_types::iso19111::AxisDescription::new(
-                    crate::data_types::iso19111::AxisName::Longitude,
-                    crate::data_types::iso19111::AxisAbbreviation::Lon,
+                    Some("Longitude"),
+                    Some("lon"),
                     crate::data_types::iso19111::AxisDirection::East,
-                    crate::data_types::iso19111::UnitName::Degree,
+                    Some("Degree"),
                     1.0,
                     crate::data_types::iso19111::UnitType::Angular,
                 ),
                 crate::data_types::iso19111::AxisDescription::new(
-                    crate::data_types::iso19111::AxisName::Latitude,
-                    crate::data_types::iso19111::AxisAbbreviation::Lat,
+                    Some("Latitude"),
+                    Some("lat"),
                     crate::data_types::iso19111::AxisDirection::North,
-                    crate::data_types::iso19111::UnitName::Degree,
+                    Some("Degree"),
                     1.0,
                     crate::data_types::iso19111::UnitType::Angular,
                 ),
@@ -1152,7 +1234,7 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj<'_> = ctx.create_cartesian_2d_cs(
             crate::data_types::iso19111::CartesianCs2dType::EastingNorthing,
-            crate::data_types::iso19111::UnitName::Degree,
+            Some("Degree"),
             1.0,
         )?;
         println!(
@@ -1174,7 +1256,7 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj<'_> = ctx.create_ellipsoidal_2d_cs(
             crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
-            crate::data_types::iso19111::UnitName::Degree,
+            Some("Degree"),
             1.0,
         )?;
         println!(
@@ -1196,9 +1278,9 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj<'_> = ctx.create_ellipsoidal_3d_cs(
             crate::data_types::iso19111::EllipsoidalCs3dType::LatitudeLongitudeHeight,
-            crate::data_types::iso19111::UnitName::Degree,
+            Some("Degree"),
             1.0,
-            crate::data_types::iso19111::UnitName::Degree,
+            Some("Degree"),
             1.0,
         )?;
         println!(
@@ -1213,6 +1295,40 @@ mod test_context_advanced {
                 None,
             )?
         );
+        Ok(())
+    }
+    #[test]
+    fn test_create_geographic_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_geographic_crs(
+            Some("WGS 84"),
+            Some("World Geodetic System 1984"),
+            Some("WGS84"),
+            6378137.0,
+            298.257223563,
+            Some("Greenwich"),
+            1.0,
+            Some("Degree"),
+            1.0,
+            &ctx.create_ellipsoidal_2d_cs(
+                crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
+                Some("Degree"),
+                1.0,
+            )?,
+        )?;
+        println!(
+            "{}",
+            pj.as_wkt(
+                crate::data_types::iso19111::WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?
+        );
+
         Ok(())
     }
 }

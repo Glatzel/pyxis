@@ -272,18 +272,18 @@ pub struct AxisDescription {
 }
 impl AxisDescription {
     pub fn new(
-        name: AxisName,
-        abbreviation: AxisAbbreviation,
+        name: Option<&str>,
+        abbreviation: Option<&str>,
         direction: AxisDirection,
-        unit_name: UnitName,
+        unit_name: Option<&str>,
         unit_conv_factor: f64,
         unit_type: UnitType,
     ) -> Self {
         Self {
-            name: name.into(),
-            abbreviation: abbreviation.into(),
+            name: CString::new(name.unwrap_or("")).expect("Error creating CString"),
+            abbreviation: CString::new(abbreviation.unwrap_or("")).expect("Error creating CString"),
             direction: direction.into(),
-            unit_name: unit_name.into(),
+            unit_name: CString::new(unit_name.unwrap_or("")).expect("Error creating CString"),
             unit_conv_factor: unit_conv_factor,
             unit_type: unit_type,
         }
@@ -301,105 +301,51 @@ create_readonly_struct!(
     {unit_type: UnitType}
 );
 
-//implicit
-#[derive(Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum AxisName {
-    Longitude,
-    Latitude,
-    Easting,
-    Northing,
-    Westing,
-    Southing,
-    EllipsoidalHeight,
+//internal
+/// # References
+///
+/// <https://github.com/OSGeo/PROJ/blob/master/src/iso19111/static.cpp>
+pub enum AxisDirection {
+    North,
+    NorthNorthEast,
+    NorthEast,
+    EastNorthEast,
+    East,
+    EastSouthEast,
+    SouthEast,
+    SouthSouthEast,
+    South,
+    SouthSouthWest,
+    SouthWest,
+    WestSouthWest,
+    West,
+    WestNorthWest,
+    NorthWest,
+    NorthNorthWest,
+    Up,
+    Down,
     GeocentricX,
     GeocentricY,
     GeocentricZ,
-}
-impl From<AxisName> for CString {
-    fn from(value: AxisName) -> Self {
-        CString::new(match value {
-            AxisName::Longitude => "Longitude",
-            AxisName::Latitude => "Latitude",
-            AxisName::Easting => "Easting",
-            AxisName::Northing => "Northing",
-            AxisName::Westing => "Westing",
-            AxisName::Southing => "Southing",
-            AxisName::EllipsoidalHeight => "Ellipsoidal height",
-            AxisName::GeocentricX => "Geocentric X",
-            AxisName::GeocentricY => "Geocentric Y",
-            AxisName::GeocentricZ => "Geocentric Z",
-        })
-        .expect("Error creating CString")
-    }
-}
-pub enum AxisAbbreviation {
-    Lon,
-    Lat,
-    E,
-    N,
-    H,
-    X,
-    Y,
-    Z,
-}
-impl From<AxisAbbreviation> for CString {
-    fn from(value: AxisAbbreviation) -> Self {
-        CString::new(match value {
-            AxisAbbreviation::Lon => "lon",
-            AxisAbbreviation::Lat => "lat",
-            AxisAbbreviation::E => "E",
-            AxisAbbreviation::N => "N",
-            AxisAbbreviation::H => "h",
-            AxisAbbreviation::X => "X",
-            AxisAbbreviation::Y => "Y",
-            AxisAbbreviation::Z => "Z",
-        })
-        .expect("Error creating CString")
-    }
-}
-#[derive()]
-pub enum AxisDirection {
-    North = 0,
-    NorthNorthEast = 1,
-    NorthEast = 2,
-    EastNorthEast = 3,
-    East = 4,
-    EastSouthEast = 5,
-    SouthEast = 6,
-    SouthSouthEast = 7,
-    South = 8,
-    SouthSouthWest = 9,
-    SouthWest = 10,
-    WestSouthWest = 11,
-    West = 12,
-    WestNorthWest = 13,
-    NorthWest = 14,
-    NorthNorthWest = 15,
-    Up = 16,
-    Down = 17,
-    GeocentricX = 18,
-    GeocentricY = 19,
-    GeocentricZ = 20,
-    ColumnPositive = 21,
-    ColumnNegative = 22,
-    RowPositive = 23,
-    RowNegative = 24,
-    DisplayRight = 25,
-    DisplayLeft = 26,
-    DisplayUp = 27,
-    DisplayDown = 28,
-    Forward = 29,
-    Aft = 30,
-    Port = 31,
-    Starboard = 32,
-    Clockwise = 33,
-    CounterClockwise = 34,
-    Towards = 35,
-    AwayFrom = 36,
-    Future = 37,
-    Past = 38,
-    Unspecified = 39,
+    ColumnPositive,
+    ColumnNegative,
+    RowPositive,
+    RowNegative,
+    DisplayRight,
+    DisplayLeft,
+    DisplayUp,
+    DisplayDown,
+    Forward,
+    Aft,
+    Port,
+    Starboard,
+    Clockwise,
+    CounterClockwise,
+    Towards,
+    AwayFrom,
+    Future,
+    Past,
+    Unspecified,
 }
 impl From<AxisDirection> for CString {
     fn from(value: AxisDirection) -> Self {
@@ -444,47 +390,6 @@ impl From<AxisDirection> for CString {
             AxisDirection::Future => "future",
             AxisDirection::Past => "past",
             AxisDirection::Unspecified => "unspecified",
-        })
-        .expect("Error creating CString")
-    }
-}
-pub enum UnitName {
-    None,
-    ScaleUnity,
-    PartsPerMillion,
-    Metre,
-    Foot,
-    UsFoot,
-    Degree,
-    ArcSecond,
-    Grad,
-    Radian,
-    Microradian,
-    Second,
-    Year,
-    MetrePerYear,
-    ArcSecondPerYear,
-    PpmPerYear,
-}
-impl From<UnitName> for CString {
-    fn from(value: UnitName) -> Self {
-        CString::new(match value {
-            UnitName::None => "",
-            UnitName::ScaleUnity => "unity",
-            UnitName::PartsPerMillion => "parts per million",
-            UnitName::Metre => "metre",
-            UnitName::Foot => "foot",
-            UnitName::UsFoot => "US survey foot",
-            UnitName::Degree => "degree",
-            UnitName::ArcSecond => "arc-second",
-            UnitName::Grad => "grad",
-            UnitName::Radian => "radian",
-            UnitName::Microradian => "microradian",
-            UnitName::Second => "second",
-            UnitName::Year => "year",
-            UnitName::MetrePerYear => "metres per year",
-            UnitName::ArcSecondPerYear => "arc-seconds per year",
-            UnitName::PpmPerYear => "parts per million per year",
         })
         .expect("Error creating CString")
     }

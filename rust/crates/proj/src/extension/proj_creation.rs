@@ -1,5 +1,3 @@
-use crate::data_types::iso19111::UnitName;
-
 pub enum PjParams<'a> {
     // Transformation setup
     ///See [`crate::Context::create`]
@@ -45,7 +43,7 @@ pub enum PjParams<'a> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
     Cartesian2dCs {
         ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType,
-        unit_name: UnitName,
+        unit_name: Option<&'a str>,
         unit_conv_factor: f64,
     },
     ///See [`crate::Context::create_ellipsoidal_2d_cs`]
@@ -53,7 +51,7 @@ pub enum PjParams<'a> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
     Ellipsoidal2dCs {
         ellipsoidal_cs_2d_type: crate::data_types::iso19111::EllipsoidalCs2dType,
-        unit_name: UnitName,
+        unit_name: Option<&'a str>,
         unit_conv_factor: f64,
     },
     ///See [`crate::Context::create_ellipsoidal_3d_cs`]
@@ -61,9 +59,9 @@ pub enum PjParams<'a> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
     Ellipsoidal3dCs {
         ellipsoidal_cs_3d_type: crate::data_types::iso19111::EllipsoidalCs3dType,
-        horizontal_angular_unit_name: UnitName,
+        horizontal_angular_unit_name: Option<&'a str>,
         horizontal_angular_unit_conv_factor: f64,
-        vertical_linear_unit_name: UnitName,
+        vertical_linear_unit_name: Option<&'a str>,
         vertical_linear_unit_conv_factor: f64,
     },
     // Extension
@@ -170,18 +168,18 @@ mod test {
             coordinate_system_type: crate::data_types::iso19111::CoordinateSystemType::Cartesian,
             axis: vec![
                 crate::data_types::iso19111::AxisDescription::new(
-                    crate::data_types::iso19111::AxisName::Longitude,
-                    crate::data_types::iso19111::AxisAbbreviation::Lon,
+                    Some("Longitude"),
+                    Some("lon"),
                     crate::data_types::iso19111::AxisDirection::East,
-                    crate::data_types::iso19111::UnitName::Degree,
+                    Some("Degree"),
                     1.0,
                     crate::data_types::iso19111::UnitType::Angular,
                 ),
                 crate::data_types::iso19111::AxisDescription::new(
-                    crate::data_types::iso19111::AxisName::Latitude,
-                    crate::data_types::iso19111::AxisAbbreviation::Lat,
+                    Some("Latitude"),
+                    Some("lat"),
                     crate::data_types::iso19111::AxisDirection::North,
-                    crate::data_types::iso19111::UnitName::Degree,
+                    Some("Degree"),
                     1.0,
                     crate::data_types::iso19111::UnitType::Angular,
                 ),
@@ -189,21 +187,21 @@ mod test {
         })?;
         ctx.create_proj(PjParams::Cartesian2dCs {
             ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType::EastingNorthing,
-            unit_name: crate::data_types::iso19111::UnitName::Degree,
+            unit_name: Some("Degree"),
             unit_conv_factor: 1.0,
         })?;
         ctx.create_proj(PjParams::Ellipsoidal2dCs {
             ellipsoidal_cs_2d_type:
                 crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
-            unit_name: crate::data_types::iso19111::UnitName::Degree,
+            unit_name: Some("Degree"),
             unit_conv_factor: 1.0,
         })?;
         ctx.create_proj(PjParams::Ellipsoidal3dCs {
             ellipsoidal_cs_3d_type:
                 crate::data_types::iso19111::EllipsoidalCs3dType::LatitudeLongitudeHeight,
-            horizontal_angular_unit_name: crate::data_types::iso19111::UnitName::Degree,
+            horizontal_angular_unit_name: Some("Degree"),
             horizontal_angular_unit_conv_factor: 1.0,
-            vertical_linear_unit_name: crate::data_types::iso19111::UnitName::Degree,
+            vertical_linear_unit_name: Some("Degree"),
             vertical_linear_unit_conv_factor: 1.0,
         })?;
 

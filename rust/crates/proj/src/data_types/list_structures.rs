@@ -21,6 +21,7 @@ crate::create_readonly_struct!(
     {name: String},
     {factor: f64}
 );
+
 crate::create_readonly_struct!(
     PrimeMeridians,
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPERATIONS>",

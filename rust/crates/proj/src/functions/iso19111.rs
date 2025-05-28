@@ -2227,18 +2227,18 @@ mod test_proj {
     }
     #[test]
     fn test_coordoperation_get_param() -> miette::Result<()> {
-      // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
-        // let param = pj.coordoperation_get_param(0)?;
-        // println!("{:?}", param);
+        // let ctx = crate::new_test_ctx()?;
+        // let pj = ctx.create_from_database("EPSG", "8048",
+        // Category::CoordinateOperation, false)?; let param =
+        // pj.coordoperation_get_param(0)?; println!("{:?}", param);
         Ok(())
     }
     #[test]
     fn test_coordoperation_get_grid_used() -> miette::Result<()> {
         // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
-        // let param = pj.coordoperation_get_param(0)?;
-        // println!("{:?}", param);
+        // let pj = ctx.create_from_database("EPSG", "8048",
+        // Category::CoordinateOperation, false)?; let param =
+        // pj.coordoperation_get_param(0)?; println!("{:?}", param);
         Ok(())
     }
     #[test]

@@ -2175,7 +2175,10 @@ mod test_proj {
         let coordoperation = pj.crs_get_coordoperation()?;
         let info = coordoperation.coordoperation_get_method_info()?;
         println!("{:?}", info);
-        assert!(false);
+        assert_eq!(
+            format!("{:?}", info),
+            "CoordOperationMethodInfo { method_name: \"Transverse Mercator\", method_auth_name: \"EPSG\", method_code: \"9807\" }"
+        );
         Ok(())
     }
     #[test]
@@ -2262,10 +2265,9 @@ mod test_proj {
     #[test]
     fn test_coordoperation_get_towgs84_values() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_from_database("EPSG", "4807", Category::Crs, false)?;
-        let coordoperation = pj.crs_get_coordoperation()?;
-        let param = coordoperation.coordoperation_get_towgs84_values();
-        assert_eq!(param, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
+        let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
+        let param = pj.coordoperation_get_towgs84_values();
+        assert_eq!(param, [0.06155, -0.01087, -0.04019, 0.03949239999999997, 0.03272209999999997, 0.032897899999999966, -0.009994000000000001]);
         Ok(())
     }
     #[test]

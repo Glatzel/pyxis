@@ -114,6 +114,7 @@ impl crate::Context {
             out_vec.push(c_char_to_string(current_ptr.cast_const()).unwrap());
             offset += 1;
         }
+        string_list_destroy(ptr);
         Ok(out_vec)
     }
     ///# References
@@ -170,7 +171,9 @@ impl crate::Context {
     ///
     /// <>
     fn _grid_get_info_from_database(&self) { unimplemented!() }
-
+    ///# References
+    ///
+    /// <>
     fn _create_from_name(&self) { unimplemented!() }
     ///# References
     ///
@@ -1639,8 +1642,12 @@ impl Clone for Proj<'_> {
 }
 ///# References
 ///
-/// <>
-fn _proj_string_list_destroy() { unimplemented!() }
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_string_list_destroy>
+fn string_list_destroy(ptr: *mut *mut i8) {
+    unsafe {
+        proj_sys::proj_string_list_destroy(ptr);
+    }
+}
 ///# References
 ///
 /// <>

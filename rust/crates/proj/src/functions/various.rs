@@ -86,8 +86,8 @@ impl crate::Proj<'_> {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_input>
     pub fn angular_input(&self, dir: crate::Direction) -> bool {
-        let result = unsafe { proj_sys::proj_angular_input(self.ptr, i32::from(dir)) } != 0;
-        result
+        
+        (unsafe { proj_sys::proj_angular_input(self.ptr, i32::from(dir)) } != 0)
     }
 
     ///Check if an operation returns output in radians or not.
@@ -95,8 +95,8 @@ impl crate::Proj<'_> {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_output>
     pub fn angular_output(&self, dir: crate::Direction) -> bool {
-        let result = unsafe { proj_sys::proj_angular_output(self.ptr, i32::from(dir)) } != 0;
-        result
+        
+        (unsafe { proj_sys::proj_angular_output(self.ptr, i32::from(dir)) } != 0)
     }
 
     ///Check if an operation expects input in degrees or not.
@@ -104,8 +104,8 @@ impl crate::Proj<'_> {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_input>
     pub fn degree_input(&self, dir: crate::Direction) -> bool {
-        let result = unsafe { proj_sys::proj_degree_input(self.ptr, dir.into()) } != 0;
-        result
+        
+        (unsafe { proj_sys::proj_degree_input(self.ptr, dir.into()) } != 0)
     }
 
     ///Check if an operation returns output in degrees or not.
@@ -113,8 +113,8 @@ impl crate::Proj<'_> {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_output>
     pub fn degree_output(&self, dir: crate::Direction) -> bool {
-        let result = unsafe { proj_sys::proj_degree_output(self.ptr, dir.into()) } != 0;
-        result
+        
+        (unsafe { proj_sys::proj_degree_output(self.ptr, dir.into()) } != 0)
     }
 }
 

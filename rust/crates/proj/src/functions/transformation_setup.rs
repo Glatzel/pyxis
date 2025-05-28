@@ -18,7 +18,7 @@ impl crate::Context {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
         let definition = CString::new(definition).into_diagnostic()?;
-        let ptr = unsafe { proj_sys::proj_create(self.ptr(), definition.as_ptr()) };
+        let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.as_ptr()) };
         check_result!(self);
         Proj::from_raw(self, ptr)
     }
@@ -31,7 +31,7 @@ impl crate::Context {
         for s in argv {
             ptrs.push(CString::new(*s).into_diagnostic()?.into_raw());
         }
-        let ptr = unsafe { proj_sys::proj_create_argv(self.ptr(), len as i32, ptrs.as_mut_ptr()) };
+        let ptr = unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, ptrs.as_mut_ptr()) };
         check_result!(self);
         Proj::from_raw(self, ptr)
     }
@@ -48,7 +48,7 @@ impl crate::Context {
         let target_crs = CString::new(target_crs).into_diagnostic()?;
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
-                self.ptr(),
+                self.ptr,
                 source_crs.as_ptr(),
                 target_crs.as_ptr(),
                 area.ptr,
@@ -81,7 +81,7 @@ impl crate::Context {
         let ptrs = options.vec_ptr();
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs_from_pj(
-                self.ptr(),
+                self.ptr,
                 source_crs.ptr,
                 target_crs.ptr,
                 area.ptr,
@@ -94,7 +94,7 @@ impl crate::Context {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
     pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<crate::Proj> {
-        let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr(), obj.ptr) };
+        let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr) };
         Proj::from_raw(self, ptr)
     }
 }

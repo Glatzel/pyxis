@@ -11,7 +11,7 @@ impl crate::Context {
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_level>
     pub fn log_level(&self, level: LogLevel) -> miette::Result<LogLevel> {
-        let level = unsafe { proj_sys::proj_log_level(self.ptr(), level.into()) };
+        let level = unsafe { proj_sys::proj_log_level(self.ptr, level.into()) };
         let level = LogLevel::try_from(level).into_diagnostic()?;
         Ok(level)
     }
@@ -27,7 +27,7 @@ impl crate::Context {
     ) -> miette::Result<&Self> {
         //initialize log
         unsafe {
-            proj_sys::proj_log_func(self.ptr(), app_data, logf);
+            proj_sys::proj_log_func(self.ptr, app_data, logf);
         };
         check_result!(self);
         Ok(self)

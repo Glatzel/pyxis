@@ -34,9 +34,6 @@ pub enum Direction {
 pub struct Context {
     pub(crate) ptr: *mut proj_sys::PJ_CONTEXT,
 }
-impl Context {
-    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ_CONTEXT { self.ptr }
-}
 ///Opaque object describing an area in which a transformation is performed.
 ///
 ///It is used with proj_create_crs_to_crs() to select the best transformation

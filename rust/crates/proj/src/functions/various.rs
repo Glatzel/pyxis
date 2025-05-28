@@ -85,36 +85,36 @@ impl crate::Proj<'_> {
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_input>
-    pub fn angular_input(&self, dir: crate::Direction) -> miette::Result<bool> {
-        let result = unsafe { proj_sys::proj_angular_input(self.ptr, i32::try_from(dir)?) } != 0;
-        Ok(result)
+    pub fn angular_input(&self, dir: crate::Direction) -> bool {
+        let result = unsafe { proj_sys::proj_angular_input(self.ptr, i32::from(dir)) } != 0;
+        result
     }
 
     ///Check if an operation returns output in radians or not.
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_output>
-    pub fn angular_output(&self, dir: crate::Direction) -> miette::Result<bool> {
-        let result = unsafe { proj_sys::proj_angular_output(self.ptr, i32::try_from(dir)?) } != 0;
-        Ok(result)
+    pub fn angular_output(&self, dir: crate::Direction) -> bool {
+        let result = unsafe { proj_sys::proj_angular_output(self.ptr, i32::from(dir)) } != 0;
+        result
     }
 
     ///Check if an operation expects input in degrees or not.
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_input>
-    pub fn degree_input(&self, dir: crate::Direction) -> miette::Result<bool> {
+    pub fn degree_input(&self, dir: crate::Direction) -> bool {
         let result = unsafe { proj_sys::proj_degree_input(self.ptr, dir.into()) } != 0;
-        Ok(result)
+        result
     }
 
     ///Check if an operation returns output in degrees or not.
     ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_output>
-    pub fn degree_output(&self, dir: crate::Direction) -> miette::Result<bool> {
+    pub fn degree_output(&self, dir: crate::Direction) -> bool {
         let result = unsafe { proj_sys::proj_degree_output(self.ptr, dir.into()) } != 0;
-        Ok(result)
+        result
     }
 }
 
@@ -269,10 +269,10 @@ mod test {
     fn test_input_output_angle_format() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
-        assert!(!(pj.angular_input(crate::Direction::Fwd)?));
-        assert!(!(pj.angular_output(crate::Direction::Fwd)?));
-        assert!(pj.degree_input(crate::Direction::Fwd)?);
-        assert!(!(pj.degree_output(crate::Direction::Fwd)?));
+        assert!(!(pj.angular_input(crate::Direction::Fwd)));
+        assert!(!(pj.angular_output(crate::Direction::Fwd)));
+        assert!(pj.degree_input(crate::Direction::Fwd));
+        assert!(!(pj.degree_output(crate::Direction::Fwd)));
         Ok(())
     }
 }

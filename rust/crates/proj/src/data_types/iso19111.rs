@@ -266,15 +266,6 @@ pub enum EllipsoidalCs2dType {
 
 ///# References
 ///
-ialize))]
-#[repr(u32)]
-pub enum EllipsoidalCs2dType {
-    LongitudeLatitude = proj_sys::PJ_ELLIPSOIDAL_CS_2D_TYPE_PJ_ELLPS2D_LONGITUDE_LATITUDE,
-    LatitudeLongitude = proj_sys::PJ_ELLIPSOIDAL_CS_2D_TYPE_PJ_ELLPS2D_LATITUDE_LONGITUDE,
-}
-
-///# References
-/// 
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_3D_TYPE>
 #[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -442,7 +433,7 @@ CoordOperationMethodInfo,
 {method_code :String}
 );
 create_readonly_struct!(
-CoordOperationParam, 
+CoordOperationParam,
 "<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
 {name : String},
 {auth_name  : String},
@@ -481,7 +472,8 @@ impl TryFrom<CString> for UnitCategory {
             "angular" => Self::Angular,
             "angular_per_time" => Self::AngularPerTime,
             "scale" => Self::Scale,
-            "scale_per_time" => Self::ScalePerTime          "time" => Self::Time,
+            "scale_per_time" => Self::ScalePerTime,
+            "time" => Self::Time,
             "parametric" => Self::Parametric,
             "parametric_per_time" => Self::ParametricPerTime,
             _ => miette::bail!("Unknown"),

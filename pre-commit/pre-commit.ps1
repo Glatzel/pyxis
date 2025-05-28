@@ -4,7 +4,7 @@ if ($update) {
     pixi run --manifest-path ./pre-commit/pixi.toml pre-commit autoupdate
 }
 if ($v) {
-    pixi run --manifest-path ./pre-commit/pixi.toml pre-commit-run --color=always --show-diff-on-failure -v --debug
+    pixi run --manifest-path ./pre-commit/pixi.toml pre-commit-run --color=always --show-diff-on-failure -v
 }
 else {
     pixi run --manifest-path ./pre-commit/pixi.toml pre-commit-run --color=always --show-diff-on-failure

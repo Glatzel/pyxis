@@ -130,11 +130,11 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_wkt>
     fn _create_from_wkt(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_database>
     pub fn create_from_database(
         &self,
         auth_name: &str,

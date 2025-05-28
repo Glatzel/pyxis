@@ -64,7 +64,7 @@ impl crate::Context {
         Ok(self)
     }
     /// # References
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_filename>
     fn _grid_cache_set_filename(&self, fullname: &str) -> miette::Result<&Self> {
         unsafe {
             proj_sys::proj_grid_cache_set_filename(
@@ -76,27 +76,27 @@ impl crate::Context {
         Ok(self)
     }
     /// # References
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_max_size>
     fn _grid_cache_set_max_size(&self, max_size_mbyte: u16) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_max_size(self.ptr, max_size_mbyte as i32) };
         check_result!(self);
         Ok(self)
     }
     /// # References
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_ttl>
     fn _grid_cache_set_ttl(&self, ttl_seconds: u16) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_ttl(self.ptr, ttl_seconds as i32) };
         check_result!(self);
         Ok(self)
     }
     /// # References
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_clear>
     fn _grid_cache_clear(&self) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_clear(self.ptr) };
         Ok(self)
     }
     /// # References
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_download_needed>
     fn _is_download_needed(
         &self,
         url_or_filename: &str,
@@ -113,7 +113,7 @@ impl crate::Context {
         Ok(result)
     }
     /// # References
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_download_file>
     fn _download_file(
         &self,
         // url_or_filename: &str,

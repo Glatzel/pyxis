@@ -14,14 +14,15 @@
 //!<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
 use std::ffi::CString;
-use std::ptr::null;
+use std::path::{Path, PathBuf};
+use std::ptr::{self, null};
 
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
     Category, ComparisonCriterion, CoordOperationGridUsed, CoordOperationMethodInfo,
-    CoordOperationParam, CoordinateSystemType, EllipsoidParameters, GuessedWktDialect,
-    PrimeMeridianParameters, ProjStringType, ProjType, UnitCategory, WktType,
+    CoordOperationParam, CoordinateSystemType, DatabaseMetadataKey, EllipsoidParameters,
+    GuessedWktDialect, PrimeMeridianParameters, ProjStringType, ProjType, UnitCategory, WktType,
 };
 use crate::{
     AllowIntermediateCrs, Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, c_char_to_string,
@@ -32,24 +33,90 @@ use crate::{
 impl crate::Context {
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_autoclose_database>
+    #[deprecated]
     fn _set_autoclose_database(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
-    fn _set_database_path(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
+    pub fn set_database_path(
+        &self,
+        db_path: &Path,
+        aux_db_paths: Option<&[PathBuf]>,
+    ) -> miette::Result<&Self> {
+        let db_path = CString::new(db_path.to_string_lossy().to_string()).into_diagnostic()?;
+
+        let aux_db_paths: Option<Vec<CString>> = match aux_db_paths {
+            Some(aux_db_paths) => Some(
+                aux_db_paths
+                    .iter()
+                    .map(|f| {
+                        CString::new(f.to_string_lossy().to_string())
+                            .expect("Error creating CString")
+                    })
+                    .collect(),
+            ),
+            None => None,
+        };
+
+        let aux_db_paths_ptr: Option<Vec<*const i8>> = match aux_db_paths {
+            Some(aux_db_paths) => Some(aux_db_paths.iter().map(|f| f.as_ptr()).collect()),
+            None => None,
+        };
+
+        let result = unsafe {
+            proj_sys::proj_context_set_database_path(
+                self.ptr,
+                db_path.as_ptr(),
+                if let Some(aux_db_paths_ptr) = aux_db_paths_ptr {
+                    aux_db_paths_ptr.as_ptr()
+                } else {
+                    ptr::null()
+                },
+                ptr::null(),
+            )
+        };
+        if result != 1 {
+            miette::bail!("Error");
+        }
+        Ok(self)
+    }
     ///# References
     ///
-    /// <>
-    fn _get_database_path(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_path>
+    pub fn get_database_path(&self) -> PathBuf {
+        PathBuf::from(
+            c_char_to_string(unsafe { proj_sys::proj_context_get_database_path(self.ptr) })
+                .unwrap_or_default(),
+        )
+    }
     ///# References
     ///
-    /// <>
-    fn _get_database_metadata(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
+    pub fn get_database_metadata(&self, key: DatabaseMetadataKey) -> Option<String> {
+        let key = CString::from(key);
+        c_char_to_string(unsafe {
+            proj_sys::proj_context_get_database_metadata(self.ptr, key.as_ptr())
+        })
+    }
     ///# References
     ///
-    /// <>
-    fn _get_database_structure(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
+    pub fn get_database_structure(&self) -> miette::Result<Vec<String>> {
+        let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
+        let mut out_vec = Vec::new();
+        let mut offset = 0;
+        loop {
+            let current_ptr = unsafe { ptr.offset(offset).as_ref().unwrap() };
+            if current_ptr.is_null() {
+                break;
+            }
+            out_vec.push(c_char_to_string(current_ptr.cast_const()).unwrap());
+            offset += 1;
+        }
+        string_list_destroy(ptr);
+        Ok(out_vec)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
@@ -64,11 +131,76 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <>
-    fn _create_from_wkt(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_wkt>
+    pub fn create_from_wkt(
+        &self,
+        wkt: &str,
+        strict: Option<bool>,
+        unset_identifiers_if_incompatible_def: Option<bool>,
+    ) -> miette::Result<Proj> {
+        let mut options = ProjOptions::new(2);
+        options.push_optional_pass(strict, "STRICT");
+        options.push_optional_pass(
+            unset_identifiers_if_incompatible_def,
+            "UNSET_IDENTIFIERS_IF_INCOMPATIBLE_DEF",
+        );
+        let vec_ptr = options.vec_ptr();
+        let mut out_warnings: *mut *mut i8 = std::ptr::null_mut();
+        let mut out_grammar_errors: *mut *mut i8 = std::ptr::null_mut();
+        let ptr = unsafe {
+            proj_sys::proj_create_from_wkt(
+                self.ptr,
+                CString::new(wkt).into_diagnostic()?.as_ptr(),
+                vec_ptr.as_ptr(),
+                &mut out_warnings,
+                &mut out_grammar_errors,
+            )
+        };
+        //warning
+        if !out_warnings.is_null() {
+            let mut warnings = Vec::new();
+            let mut offset = 0;
+
+            loop {
+                let current_ptr = unsafe { out_warnings.offset(offset).as_ref().unwrap() };
+                if current_ptr.is_null() {
+                    break;
+                }
+                warnings.push(c_char_to_string(current_ptr.cast_const()).unwrap());
+                offset += 1;
+            }
+            for w in warnings.iter() {
+                clerk::warn!("{w}");
+            }
+        };
+        //error
+        if !out_grammar_errors.is_null() {
+            let mut errors = Vec::new();
+            let mut offset = 0;
+
+            loop {
+                let current_ptr = unsafe { out_grammar_errors.offset(offset).as_ref().unwrap() };
+                if current_ptr.is_null() {
+                    break;
+                }
+                errors.push(c_char_to_string(current_ptr.cast_const()).unwrap());
+                offset += 1;
+            }
+            for e in errors.iter() {
+                clerk::warn!("{e}");
+            }
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self,
+        })
+    }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_database>
     pub fn create_from_database(
         &self,
         auth_name: &str,
@@ -104,7 +236,9 @@ impl crate::Context {
     ///
     /// <>
     fn _grid_get_info_from_database(&self) { unimplemented!() }
-
+    ///# References
+    ///
+    /// <>
     fn _create_from_name(&self) { unimplemented!() }
     ///# References
     ///
@@ -275,7 +409,8 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let unit_name = CString::new(unit_name.unwrap_or("")).expect("Error creating CString");
+        let unit_name =
+            CString::new(unit_name.unwrap_or_default()).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
                 self.ptr,
@@ -301,7 +436,8 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let unit_name = CString::new(unit_name.unwrap_or("")).expect("Error creating CString");
+        let unit_name =
+            CString::new(unit_name.unwrap_or_default()).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
@@ -329,10 +465,11 @@ impl Context {
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let horizontal_angular_unit_name = CString::new(horizontal_angular_unit_name.unwrap_or(""))
+        let horizontal_angular_unit_name =
+            CString::new(horizontal_angular_unit_name.unwrap_or_default())
+                .expect("Error creating CString");
+        let vertical_linear_unit_name = CString::new(vertical_linear_unit_name.unwrap_or_default())
             .expect("Error creating CString");
-        let vertical_linear_unit_name =
-            CString::new(vertical_linear_unit_name.unwrap_or("")).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
@@ -362,10 +499,10 @@ impl Context {
         crs_type: Option<&str>,
     ) {
         let crs_auth_name =
-            CString::new(crs_auth_name.unwrap_or("")).expect("Error creating CString");
+            CString::new(crs_auth_name.unwrap_or_default()).expect("Error creating CString");
         let datum_auth_name = CString::new(datum_auth_name).expect("Error creating CString");
         let datum_code = CString::new(datum_code).expect("Error creating CString");
-        let crs_type = CString::new(crs_type.unwrap_or("")).expect("Error creating CString");
+        let crs_type = CString::new(crs_type.unwrap_or_default()).expect("Error creating CString");
         let _ = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
@@ -393,13 +530,15 @@ impl Context {
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let crs_name = CString::new(crs_name.unwrap_or("")).expect("Error creating CString");
-        let datum_name = CString::new(datum_name.unwrap_or("")).expect("Error creating CString");
-        let ellps_name = CString::new(ellps_name.unwrap_or("")).expect("Error creating CString");
+        let crs_name = CString::new(crs_name.unwrap_or_default()).expect("Error creating CString");
+        let datum_name =
+            CString::new(datum_name.unwrap_or_default()).expect("Error creating CString");
+        let ellps_name =
+            CString::new(ellps_name.unwrap_or_default()).expect("Error creating CString");
         let prime_meridian_name =
-            CString::new(prime_meridian_name.unwrap_or("")).expect("Error creating CString");
+            CString::new(prime_meridian_name.unwrap_or_default()).expect("Error creating CString");
         let pm_angular_units =
-            CString::new(pm_angular_units.unwrap_or("")).expect("Error creating CString");
+            CString::new(pm_angular_units.unwrap_or_default()).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
@@ -432,7 +571,7 @@ impl Context {
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let crs_name = CString::new(crs_name.unwrap_or("")).expect("Error creating CString");
+        let crs_name = CString::new(crs_name.unwrap_or_default()).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
@@ -1260,7 +1399,7 @@ impl Proj<'_> {
         Ok(PrimeMeridianParameters::new(
             longitude,
             unit_conv_factor,
-            c_char_to_string(unit_name).unwrap_or(String::default()),
+            c_char_to_string(unit_name).unwrap_or_default(),
         ))
     }
     ///# References
@@ -1297,9 +1436,9 @@ impl Proj<'_> {
             miette::bail!("Error");
         }
         Ok(CoordOperationMethodInfo::new(
-            c_char_to_string(method_name).unwrap_or(String::default()),
-            c_char_to_string(method_auth_name).unwrap_or(String::default()),
-            c_char_to_string(method_code).unwrap_or(String::default()),
+            c_char_to_string(method_name).unwrap_or_default(),
+            c_char_to_string(method_auth_name).unwrap_or_default(),
+            c_char_to_string(method_code).unwrap_or_default(),
         ))
     }
     ///# References
@@ -1383,15 +1522,15 @@ impl Proj<'_> {
         }
 
         Ok(CoordOperationParam::new(
-            c_char_to_string(name).unwrap_or(String::default()),
-            c_char_to_string(auth_name).unwrap_or(String::default()),
-            c_char_to_string(code).unwrap_or(String::default()),
+            c_char_to_string(name).unwrap_or_default(),
+            c_char_to_string(auth_name).unwrap_or_default(),
+            c_char_to_string(code).unwrap_or_default(),
             value,
-            c_char_to_string(value_string).unwrap_or(String::default()),
+            c_char_to_string(value_string).unwrap_or_default(),
             unit_conv_factor,
-            c_char_to_string(unit_name).unwrap_or(String::default()),
-            c_char_to_string(unit_auth_name).unwrap_or(String::default()),
-            c_char_to_string(unit_code).unwrap_or(String::default()),
+            c_char_to_string(unit_name).unwrap_or_default(),
+            c_char_to_string(unit_auth_name).unwrap_or_default(),
+            c_char_to_string(unit_code).unwrap_or_default(),
             UnitCategory::try_from(unsafe { CString::from_raw(unit_category.cast_mut()) })?,
         ))
     }
@@ -1434,10 +1573,10 @@ impl Proj<'_> {
             miette::bail!("Error");
         }
         Ok(CoordOperationGridUsed::new(
-            c_char_to_string(short_name).unwrap_or(String::default()),
-            c_char_to_string(full_name).unwrap_or(String::default()),
-            c_char_to_string(package_name).unwrap_or(String::default()),
-            c_char_to_string(url).unwrap_or(String::default()),
+            c_char_to_string(short_name).unwrap_or_default(),
+            c_char_to_string(full_name).unwrap_or_default(),
+            c_char_to_string(package_name).unwrap_or_default(),
+            c_char_to_string(url).unwrap_or_default(),
             direct_download != 0,
             open_license != 0,
             available != 0,
@@ -1568,8 +1707,12 @@ impl Clone for Proj<'_> {
 }
 ///# References
 ///
-/// <>
-fn _proj_string_list_destroy() { unimplemented!() }
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_string_list_destroy>
+fn string_list_destroy(ptr: *mut *mut i8) {
+    unsafe {
+        proj_sys::proj_string_list_destroy(ptr);
+    }
+}
 ///# References
 ///
 /// <>
@@ -1617,7 +1760,98 @@ fn _proj_list_destroy() { unimplemented!() }
 
 #[cfg(test)]
 mod test_context_basic {
+
     use super::*;
+    #[test]
+    fn test_set_database_path() -> miette::Result<()> {
+        let _ = crate::new_test_ctx()?;
+        Ok(())
+    }
+    #[test]
+    fn test_get_database_path() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let db_path = ctx.get_database_path();
+        assert!(db_path.to_string_lossy().to_string().contains(".pixi"));
+        Ok(())
+    }
+    #[test]
+    fn test_get_database_metadata() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::DatabaseLayoutVersionMajor)
+            .unwrap();
+        assert_eq!(data, "1");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::DatabaseLayoutVersionMinor)
+            .unwrap();
+        assert_eq!(data, "5");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::EpsgVersion)
+            .unwrap();
+        assert_eq!(data, "v12.004");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::EpsgDate)
+            .unwrap();
+        assert_eq!(data, "2025-03-02");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::EsriVersion)
+            .unwrap();
+        assert_eq!(data, "ArcGIS Pro 3.4");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::EsriDate)
+            .unwrap();
+        assert_eq!(data, "2024-11-04");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::IgnfSource)
+            .unwrap();
+        assert_eq!(
+            data,
+            "https://raw.githubusercontent.com/rouault/proj-resources/master/IGNF.v3.1.0.xml"
+        );
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::IgnfVersion)
+            .unwrap();
+        assert_eq!(data, "3.1.0");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::IgnfDate)
+            .unwrap();
+        assert_eq!(data, "2019-05-24");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::NkgSource)
+            .unwrap();
+        assert_eq!(
+            data,
+            "https://github.com/NordicGeodesy/NordicTransformations"
+        );
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::NkgVersion)
+            .unwrap();
+        assert_eq!(data, "1.0.w");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::NkgDate)
+            .unwrap();
+        assert_eq!(data, "2025-02-13");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::ProjVersion)
+            .unwrap();
+        assert_eq!(data, "9.6.0");
+        let data = ctx.get_database_metadata(DatabaseMetadataKey::ProjDataVersion);
+        assert!(data.is_none());
+
+        Ok(())
+    }
+    #[test]
+    fn test_get_database_structure() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let structure = ctx.get_database_structure()?;
+        println!("{}", structure.first().unwrap());
+        assert_eq!(
+            structure.first().unwrap(),
+            "CREATE TABLE metadata(\n    key TEXT NOT NULL PRIMARY KEY CHECK (length(key) >= 1),\n    value TEXT NOT NULL\n) WITHOUT ROWID;"
+        );
+        Ok(())
+    }
+
     #[test]
     fn test_guess_wkt_dialect() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
@@ -1633,6 +1867,13 @@ mod test_context_basic {
         )?;
         let dialect = ctx.guess_wkt_dialect(&wkt)?;
         assert_eq!(dialect, GuessedWktDialect::Wkt2_2019);
+        Ok(())
+    }
+    #[test]
+    fn test_create_from_wkt() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        assert!(ctx.create_from_wkt("invalid wkt", None, None).is_err());
+        ctx.create_from_wkt("ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n    LENGTHUNIT[\"metre\",1],\n    ID[\"EPSG\",7030]]", None, None)?;
         Ok(())
     }
     #[test]

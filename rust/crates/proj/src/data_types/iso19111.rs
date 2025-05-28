@@ -4,7 +4,7 @@ use miette::IntoDiagnostic;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 use crate::create_readonly_struct;
-/// # Refer///
+/// # Reference
 /// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GUESSED_WKT_DIALECT>
 #[derive(Debug, IntoPrimitive, TryFromPrimitive, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

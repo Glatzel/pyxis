@@ -23,7 +23,10 @@ use crate::data_types::iso19111::{
     CoordOperationParam, CoordinateSystemType, EllipsoidParameters, GuessedWktDialect,
     PrimeMeridianParameters, ProjStringType, ProjType, UnitCategory, WktType,
 };
-use crate::{Context, OPTION_NO, OPTION_YES, Proj, c_char_to_string, check_result};
+use crate::{
+    AllowIntermediateCrs, Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, c_char_to_string,
+    check_result,
+};
 
 /// # ISO-19111 Base functions
 impl crate::Context {
@@ -534,10 +537,6 @@ impl Context {
     ///
     /// <>
     fn _crs_create_bound_crs(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_create_bound_crs_to_wgs84(&self) { unimplemented!() }
     ///# References
     ///
     /// <>
@@ -1244,7 +1243,7 @@ impl Proj<'_> {
     pub fn prime_meridian_get_parameters(&self) -> miette::Result<PrimeMeridianParameters> {
         let mut longitude = f64::default();
         let mut unit_conv_factor = f64::default();
-        let unit_name = CString::default();
+        let mut unit_name: *const std::ffi::c_char = std::ptr::null();
 
         let result = unsafe {
             proj_sys::proj_prime_meridian_get_parameters(
@@ -1252,7 +1251,7 @@ impl Proj<'_> {
                 self.ptr,
                 &mut longitude,
                 &mut unit_conv_factor,
-                &mut unit_name.as_ptr(),
+                &mut unit_name,
             )
         };
         if result != 1 {
@@ -1261,7 +1260,7 @@ impl Proj<'_> {
         Ok(PrimeMeridianParameters::new(
             longitude,
             unit_conv_factor,
-            unit_name.to_string_lossy().to_string(),
+            c_char_to_string(unit_name).unwrap_or(String::default()),
         ))
     }
     ///# References
@@ -1281,26 +1280,26 @@ impl Proj<'_> {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_method_info>
     pub fn coordoperation_get_method_info(&self) -> miette::Result<CoordOperationMethodInfo> {
-        let method_name = CString::default();
-        let method_auth_name = CString::default();
-        let method_code = CString::default();
+        let mut method_name: *const std::ffi::c_char = std::ptr::null();
+        let mut method_auth_name: *const std::ffi::c_char = std::ptr::null();
+        let mut method_code: *const std::ffi::c_char = std::ptr::null();
 
         let result = unsafe {
             proj_sys::proj_coordoperation_get_method_info(
                 self.ctx.ptr,
                 self.ptr,
-                &mut method_name.as_ptr(),
-                &mut method_auth_name.as_ptr(),
-                &mut method_code.as_ptr(),
+                &mut method_name,
+                &mut method_auth_name,
+                &mut method_code,
             )
         };
         if result != 1 {
             miette::bail!("Error");
         }
         Ok(CoordOperationMethodInfo::new(
-            method_name.to_string_lossy().to_string(),
-            method_auth_name.to_string_lossy().to_string(),
-            method_code.to_string_lossy().to_string(),
+            c_char_to_string(method_name).unwrap_or(String::default()),
+            c_char_to_string(method_auth_name).unwrap_or(String::default()),
+            c_char_to_string(method_code).unwrap_or(String::default()),
         ))
     }
     ///# References
@@ -1352,48 +1351,48 @@ impl Proj<'_> {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param>
     pub fn coordoperation_get_param(&self, index: u16) -> miette::Result<CoordOperationParam> {
-        let name = CString::default();
-        let auth_name = CString::default();
-        let code = CString::default();
+        let mut name: *const std::ffi::c_char = std::ptr::null();
+        let mut auth_name: *const std::ffi::c_char = std::ptr::null();
+        let mut code: *const std::ffi::c_char = std::ptr::null();
         let mut value = f64::default();
-        let value_string = CString::default();
+        let mut value_string: *const std::ffi::c_char = std::ptr::null();
         let mut unit_conv_factor = f64::default();
-        let unit_name = CString::default();
-        let unit_auth_name = CString::default();
-        let unit_code = CString::default();
-        let unit_category = CString::default();
+        let mut unit_name: *const std::ffi::c_char = std::ptr::null();
+        let mut unit_auth_name: *const std::ffi::c_char = std::ptr::null();
+        let mut unit_code: *const std::ffi::c_char = std::ptr::null();
+        let mut unit_category: *const std::ffi::c_char = std::ptr::null();
         let result = unsafe {
             proj_sys::proj_coordoperation_get_param(
                 self.ctx.ptr,
                 self.ptr,
                 index as i32,
-                &mut name.as_ptr(),
-                &mut auth_name.as_ptr(),
-                &mut code.as_ptr(),
+                &mut name,
+                &mut auth_name,
+                &mut code,
                 &mut value,
-                &mut value_string.as_ptr(),
+                &mut value_string,
                 &mut unit_conv_factor,
-                &mut unit_name.as_ptr(),
-                &mut unit_auth_name.as_ptr(),
-                &mut unit_code.as_ptr(),
-                &mut unit_category.as_ptr(),
+                &mut unit_name,
+                &mut unit_auth_name,
+                &mut unit_code,
+                &mut unit_category,
             )
         };
         if result != 1 {
             miette::bail!("Error");
         }
-        println!("param:{}", value_string.to_string_lossy().to_string());
+
         Ok(CoordOperationParam::new(
-            name.to_string_lossy().to_string(),
-            auth_name.to_string_lossy().to_string(),
-            code.to_string_lossy().to_string(),
+            c_char_to_string(name).unwrap_or(String::default()),
+            c_char_to_string(auth_name).unwrap_or(String::default()),
+            c_char_to_string(code).unwrap_or(String::default()),
             value,
-            value_string.to_string_lossy().to_string(),
+            c_char_to_string(value_string).unwrap_or(String::default()),
             unit_conv_factor,
-            unit_name.to_string_lossy().to_string(),
-            unit_auth_name.to_string_lossy().to_string(),
-            unit_code.to_string_lossy().to_string(),
-            UnitCategory::try_from(unit_category)?,
+            c_char_to_string(unit_name).unwrap_or(String::default()),
+            c_char_to_string(unit_auth_name).unwrap_or(String::default()),
+            c_char_to_string(unit_code).unwrap_or(String::default()),
+            UnitCategory::try_from(unsafe { CString::from_raw(unit_category.cast_mut()) })?,
         ))
     }
     ///# References
@@ -1409,10 +1408,10 @@ impl Proj<'_> {
         &self,
         index: u16,
     ) -> miette::Result<CoordOperationGridUsed> {
-        let short_name = CString::default();
-        let full_name = CString::default();
-        let package_name = CString::default();
-        let url = CString::default();
+        let mut short_name: *const std::ffi::c_char = std::ptr::null();
+        let mut full_name: *const std::ffi::c_char = std::ptr::null();
+        let mut package_name: *const std::ffi::c_char = std::ptr::null();
+        let mut url: *const std::ffi::c_char = std::ptr::null();
         let mut direct_download = i32::default();
         let mut open_license = i32::default();
         let mut available = i32::default();
@@ -1422,10 +1421,10 @@ impl Proj<'_> {
                 self.ctx.ptr,
                 self.ptr,
                 index as i32,
-                &mut short_name.as_ptr(),
-                &mut full_name.as_ptr(),
-                &mut package_name.as_ptr(),
-                &mut url.as_ptr(),
+                &mut short_name,
+                &mut full_name,
+                &mut package_name,
+                &mut url,
                 &mut direct_download,
                 &mut open_license,
                 &mut available,
@@ -1435,10 +1434,10 @@ impl Proj<'_> {
             miette::bail!("Error");
         }
         Ok(CoordOperationGridUsed::new(
-            short_name.to_string_lossy().to_string(),
-            full_name.to_string_lossy().to_string(),
-            package_name.to_string_lossy().to_string(),
-            url.to_string_lossy().to_string(),
+            c_char_to_string(short_name).unwrap_or(String::default()),
+            c_char_to_string(full_name).unwrap_or(String::default()),
+            c_char_to_string(package_name).unwrap_or(String::default()),
+            c_char_to_string(url).unwrap_or(String::default()),
             direct_download != 0,
             open_license != 0,
             available != 0,
@@ -1533,7 +1532,29 @@ impl Proj<'_> {
 /// # ISO-19111 Advanced functions
 ///
 /// <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
-impl Proj<'_> {}
+impl Proj<'_> {
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>
+    pub fn crs_create_bound_crs_to_wgs84(
+        &self,
+        allow_intermediate_crs: Option<AllowIntermediateCrs>,
+    ) -> miette::Result<Proj> {
+        let mut options = ProjOptions::new(1);
+        options.push_optional_pass(allow_intermediate_crs, "ALLOW_INTERMEDIATE_CRS");
+        let vec_ptr = options.vec_ptr();
+        let ptr = unsafe {
+            proj_sys::proj_crs_create_bound_crs_to_WGS84(self.ctx.ptr, self.ptr, vec_ptr.as_ptr())
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self.ctx,
+        })
+    }
+}
 impl Clone for Proj<'_> {
     ///# References
     ///
@@ -2123,6 +2144,10 @@ mod test_proj {
         let meridian = pj.get_prime_meridian()?;
         let params = meridian.prime_meridian_get_parameters()?;
         println!("{:?}", params);
+        assert_eq!(
+            format!("{:?}", params),
+            "PrimeMeridianParameters { longitude: 0.0, unit_conv_factor: 0.017453292519943295, unit_name: \"degree\" }"
+        );
         Ok(())
     }
     #[test]
@@ -2202,38 +2227,35 @@ mod test_proj {
     }
     #[test]
     fn test_coordoperation_get_param() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        // let coordoperation = pj.crs_get_coordoperation()?;
-        // let param = coordoperation.coordoperation_get_param(1)?;
+      // let ctx = crate::new_test_ctx()?;
+        // let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
+        // let param = pj.coordoperation_get_param(0)?;
         // println!("{:?}", param);
         Ok(())
     }
     #[test]
     fn test_coordoperation_get_grid_used() -> miette::Result<()> {
         // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        // let coordoperation = pj.crs_get_coordoperation()?;
-        // let param = coordoperation.coordoperation_get_param(1)?;
+        // let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
+        // let param = pj.coordoperation_get_param(0)?;
         // println!("{:?}", param);
         Ok(())
     }
     #[test]
     fn test_coordoperation_get_accuracy() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        // let coordoperation = pj.crs_get_coordoperation()?;
-        // let accuracy = coordoperation.coordoperation_get_accuracy()?;
-        // assert_eq!(accuracy, 1.0);
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
+        let accuracy = pj.coordoperation_get_accuracy()?;
+        assert_eq!(accuracy, 0.01);
         Ok(())
     }
     #[test]
     fn test_coordoperation_get_towgs84_values() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "4807", Category::Crs, false)?;
-        // let coordoperation = pj.crs_get_coordoperation()?;
-        // let param = coordoperation.coordoperation_get_towgs84_values();
-        // assert_eq!(param, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "4807", Category::Crs, false)?;
+        let coordoperation = pj.crs_get_coordoperation()?;
+        let param = coordoperation.coordoperation_get_towgs84_values();
+        assert_eq!(param, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
         Ok(())
     }
     #[test]
@@ -2242,46 +2264,46 @@ mod test_proj {
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let coordoperation = pj.crs_get_coordoperation()?;
         let inversed = coordoperation.coordoperation_create_inverse()?;
-        println!(
-            "{}",
-            inversed.as_wkt(
-                crate::data_types::iso19111::WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-            )?
-        );
+        let wkt = inversed.as_wkt(
+            crate::data_types::iso19111::WktType::Wkt2_2019,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )?;
+        println!("{}", wkt);
+        assert!(wkt.contains("16031"));
         Ok(())
     }
     #[test]
     fn test_concatoperation_get_step_count() -> miette::Result<()> {
         // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        // let coordoperation = pj.crs_get_coordoperation()?;
-        // let count = coordoperation.concatoperation_get_step_count()?;
-        // assert_eq!(count, 1);
+        // let source_crs = ctx.create_from_database("EPSG", "28356", Category::Crs,
+        // false)?; let target_crs = ctx.create_from_database("EPSG", "7856",
+        // Category::Crs, false)?; let coordoperation =
+        // pj.crs_get_coordoperation()?; let count =
+        // coordoperation.concatoperation_get_step_count()?; assert_eq!(count,
+        // 1);
         Ok(())
     }
     #[test]
     fn test_concatoperation_get_step() -> miette::Result<()> {
         // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "28356", Category::con, false)?;
-        // let step = pj.concatoperation_get_step(1)?;
-        // println!(
-        //     "{}",
-        //     step.as_wkt(
-        //         crate::data_types::iso19111::WktType::Wkt2_2019,
-        //         None,
-        //         None,
-        //         None,
-        //         None,
-        //         None,
-        //         None,
-        //     )?
-        // );
+        // let pj = ctx.create_from_database("EPSG", "28356",
+        // Category::CoordinateOperation, false)?; let step =
+        // pj.concatoperation_get_step(1)?; let wkt = step.as_wkt(
+        //     crate::data_types::iso19111::WktType::Wkt2_2019,
+        //     None,
+        //     None,
+        //     None,
+        //     None,
+        //     None,
+        //     None,
+        // )?;
+        // println!("{}", wkt);
+        // assert!(wkt.contains("16031"));
         Ok(())
     }
     #[test]
@@ -2313,4 +2335,26 @@ mod test_proj {
     }
 }
 #[cfg(test)]
-mod test_other {}
+mod test_other {
+    use crate::AllowIntermediateCrs;
+    use crate::data_types::iso19111::Category;
+
+    #[test]
+    fn test_crs_create_bound_crs_to_wgs84() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let bound = pj.crs_create_bound_crs_to_wgs84(Some(AllowIntermediateCrs::Never))?;
+        let wkt = bound.as_wkt(
+            crate::data_types::iso19111::WktType::Wkt2_2019,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )?;
+        println!("{wkt}",);
+        assert!(wkt.contains("32631"));
+        Ok(())
+    }
+}

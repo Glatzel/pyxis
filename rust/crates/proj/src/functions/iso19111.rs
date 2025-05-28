@@ -1979,6 +1979,57 @@ mod test_proj {
         Ok(())
     }
     #[test]
+    fn test_crs_is_derived() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        assert!(pj.is_crs());
+        let derived = pj.crs_is_derived();
+        assert!(!derived);
+        Ok(())
+    }
+    #[test]
+    fn test_crs_get_geodetic_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:3857")?;
+        assert!(pj.is_crs());
+        let geodetic = pj.crs_get_geodetic_crs()?;
+        let wkt = geodetic.as_wkt(
+            crate::data_types::iso19111::WktType::Wkt2_2019,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )?;
+        println!("{}", wkt);
+        assert!(wkt.contains("4326"));
+        Ok(())
+    }
+    #[test]
+    fn test_crs_get_horizontal_datum() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:3857")?;
+        assert!(pj.is_crs());
+        let horizontal = pj.crs_get_horizontal_datum()?;
+        let wkt = horizontal.as_wkt(
+            crate::data_types::iso19111::WktType::Wkt2_2019,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )?;
+        println!("{}", wkt);
+        assert!(wkt.contains("6326"));
+        Ok(())
+    }
+    #[test]
+    fn test_crs_get_sub_crs() -> miette::Result<()> {
+        Ok(())
+    }
+    #[test]
     fn test_crs_get_datum() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;

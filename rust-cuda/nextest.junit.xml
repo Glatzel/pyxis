@@ -1,27 +1,247 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="nextest-run" tests="11" failures="0" errors="0" uuid="cccc1d75-28b3-4860-9c05-5783108159d4" timestamp="2025-05-28T09:38:54.074+08:00" time="1.148">
-    <testsuite name="pyxis-cuda" tests="11" disabled="0" errors="0" failures="0">
-        <testcase name="crypto_cuda::test::test_bd09_to_wgs84_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.076+08:00" time="0.348">
+<testsuites name="nextest-run" tests="11" failures="11" errors="0" uuid="e8524042-5a38-4131-9814-c7d51014ca25" timestamp="2025-05-28T22:21:04.384+08:00" time="0.765">
+    <testsuite name="pyxis-cuda" tests="11" disabled="0" errors="0" failures="11">
+        <testcase name="crypto_cuda::test::test_bd09_to_wgs84_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.386+08:00" time="0.322">
+            <failure message="thread &apos;crypto_cuda::test::test_bd09_to_wgs84_exact_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;crypto_cuda::test::test_bd09_to_wgs84_exact_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test crypto_cuda::test::test_bd09_to_wgs84_exact_cuda ... FAILED
+
+failures:
+
+failures:
+    crypto_cuda::test::test_bd09_to_wgs84_exact_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.16s
+
+</system-out>
+            <system-err>
+thread &apos;crypto_cuda::test::test_bd09_to_wgs84_exact_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
-        <testcase name="crypto_cuda::test::test_bd09_to_wgs84_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.077+08:00" time="0.496">
+        <testcase name="crypto_cuda::test::test_bd09_to_wgs84_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.387+08:00" time="0.460">
+            <failure message="thread &apos;crypto_cuda::test::test_bd09_to_wgs84_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;crypto_cuda::test::test_bd09_to_wgs84_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test crypto_cuda::test::test_bd09_to_wgs84_cuda ... FAILED
+
+failures:
+
+failures:
+    crypto_cuda::test::test_bd09_to_wgs84_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.21s
+
+</system-out>
+            <system-err>
+thread &apos;crypto_cuda::test::test_bd09_to_wgs84_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
-        <testcase name="crypto_cuda::test::test_gcj02_to_bd09_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.078+08:00" time="0.539">
+        <testcase name="crypto_cuda::test::test_gcj02_to_bd09_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.387+08:00" time="0.492">
+            <failure message="thread &apos;crypto_cuda::test::test_gcj02_to_bd09_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;crypto_cuda::test::test_gcj02_to_bd09_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test crypto_cuda::test::test_gcj02_to_bd09_cuda ... FAILED
+
+failures:
+
+failures:
+    crypto_cuda::test::test_gcj02_to_bd09_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.24s
+
+</system-out>
+            <system-err>
+thread &apos;crypto_cuda::test::test_gcj02_to_bd09_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
-        <testcase name="crypto_cuda::test::test_gcj02_to_wgs84_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.079+08:00" time="0.562">
+        <testcase name="crypto_cuda::test::test_gcj02_to_wgs84_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.389+08:00" time="0.524">
+            <failure message="thread &apos;crypto_cuda::test::test_gcj02_to_wgs84_exact_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;crypto_cuda::test::test_gcj02_to_wgs84_exact_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test crypto_cuda::test::test_gcj02_to_wgs84_exact_cuda ... FAILED
+
+failures:
+
+failures:
+    crypto_cuda::test::test_gcj02_to_wgs84_exact_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.29s
+
+</system-out>
+            <system-err>
+thread &apos;crypto_cuda::test::test_gcj02_to_wgs84_exact_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
-        <testcase name="crypto_cuda::test::test_gcj02_to_wgs84_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.079+08:00" time="0.579">
+        <testcase name="crypto_cuda::test::test_wgs84_to_gcj02_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.389+08:00" time="0.523">
+            <failure message="thread &apos;crypto_cuda::test::test_wgs84_to_gcj02_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;crypto_cuda::test::test_wgs84_to_gcj02_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test crypto_cuda::test::test_wgs84_to_gcj02_cuda ... FAILED
+
+failures:
+
+failures:
+    crypto_cuda::test::test_wgs84_to_gcj02_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.31s
+
+</system-out>
+            <system-err>
+thread &apos;crypto_cuda::test::test_wgs84_to_gcj02_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
-        <testcase name="crypto_cuda::test::test_wgs84_to_bd09_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.080+08:00" time="0.599">
+        <testcase name="crypto_cuda::test::test_wgs84_to_bd09_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.390+08:00" time="0.588">
+            <failure message="thread &apos;crypto_cuda::test::test_wgs84_to_bd09_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;crypto_cuda::test::test_wgs84_to_bd09_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test crypto_cuda::test::test_wgs84_to_bd09_cuda ... FAILED
+
+failures:
+
+failures:
+    crypto_cuda::test::test_wgs84_to_bd09_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.32s
+
+</system-out>
+            <system-err>
+thread &apos;crypto_cuda::test::test_wgs84_to_bd09_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
-        <testcase name="crypto_cuda::test::test_bd09_to_gcj02_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.081+08:00" time="0.617">
+        <testcase name="datum_compensate_cuda::test::test_datum_compensate_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.390+08:00" time="0.588">
+            <failure message="thread &apos;datum_compensate_cuda::test::test_datum_compensate_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;datum_compensate_cuda::test::test_datum_compensate_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test datum_compensate_cuda::test::test_datum_compensate_cuda ... FAILED
+
+failures:
+
+failures:
+    datum_compensate_cuda::test::test_datum_compensate_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.35s
+
+</system-out>
+            <system-err>
+thread &apos;datum_compensate_cuda::test::test_datum_compensate_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
-        <testcase name="crypto_cuda::test::test_wgs84_to_gcj02_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.080+08:00" time="0.633">
+        <testcase name="crypto_cuda::test::test_bd09_to_gcj02_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.390+08:00" time="0.588">
+            <failure message="thread &apos;crypto_cuda::test::test_bd09_to_gcj02_exact_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;crypto_cuda::test::test_bd09_to_gcj02_exact_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test crypto_cuda::test::test_bd09_to_gcj02_exact_cuda ... FAILED
+
+failures:
+
+failures:
+    crypto_cuda::test::test_bd09_to_gcj02_exact_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.30s
+
+</system-out>
+            <system-err>
+thread &apos;crypto_cuda::test::test_bd09_to_gcj02_exact_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
-        <testcase name="datum_compensate_cuda::test::test_datum_compensate_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.080+08:00" time="0.648">
+        <testcase name="crypto_cuda::test::test_gcj02_to_wgs84_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.389+08:00" time="0.588">
+            <failure message="thread &apos;crypto_cuda::test::test_gcj02_to_wgs84_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;crypto_cuda::test::test_gcj02_to_wgs84_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test crypto_cuda::test::test_gcj02_to_wgs84_cuda ... FAILED
+
+failures:
+
+failures:
+    crypto_cuda::test::test_gcj02_to_wgs84_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.32s
+
+</system-out>
+            <system-err>
+thread &apos;crypto_cuda::test::test_gcj02_to_wgs84_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
-        <testcase name="crypto_cuda::test::test_bd09_to_gcj02_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.081+08:00" time="0.663">
+        <testcase name="crypto_cuda::test::test_bd09_to_gcj02_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.390+08:00" time="0.620">
+            <failure message="thread &apos;crypto_cuda::test::test_bd09_to_gcj02_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;crypto_cuda::test::test_bd09_to_gcj02_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test crypto_cuda::test::test_bd09_to_gcj02_cuda ... FAILED
+
+failures:
+
+failures:
+    crypto_cuda::test::test_bd09_to_gcj02_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.34s
+
+</system-out>
+            <system-err>
+thread &apos;crypto_cuda::test::test_bd09_to_gcj02_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
-        <testcase name="crypto_cuda::test::test_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.078+08:00" time="1.144">
+        <testcase name="crypto_cuda::test::test_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:21:04.388+08:00" time="0.760">
+            <failure message="thread &apos;crypto_cuda::test::test_exact_cuda&apos; panicked at src\context.rs:109:61" type="test failure with exit code 101">thread &apos;crypto_cuda::test::test_exact_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test crypto_cuda::test::test_exact_cuda ... FAILED
+
+failures:
+
+failures:
+    crypto_cuda::test::test_exact_cuda
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.67s
+
+</system-out>
+            <system-err>
+thread &apos;crypto_cuda::test::test_exact_cuda&apos; panicked at src\context.rs:109:61:
+called `Result::unwrap()` on an `Err` value: UnknownError
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
         </testcase>
     </testsuite>
 </testsuites>

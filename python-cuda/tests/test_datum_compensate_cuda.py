@@ -3,7 +3,6 @@ import pytest
 from pyxis_cuda import DatumCompensateCuda
 
 
-@pytest.mark.cuda
 def test_datum_compensate_cuda():
     x = cp.array([469704.6693] * 2, dtype=cp.float64)
     y = cp.array([2821940.796] * 2, dtype=cp.float64)

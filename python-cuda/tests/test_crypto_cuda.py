@@ -25,7 +25,6 @@ wgs84_array = (
 )
 
 
-@pytest.mark.cuda
 @pytest.mark.parametrize(
     ("src", "dst", "input", "expected"),
     [

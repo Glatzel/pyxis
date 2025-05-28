@@ -2026,9 +2026,7 @@ mod test_proj {
         Ok(())
     }
     #[test]
-    fn test_crs_get_sub_crs() -> miette::Result<()> {
-        Ok(())
-    }
+    fn test_crs_get_sub_crs() -> miette::Result<()> { Ok(()) }
     #[test]
     fn test_crs_get_datum() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;

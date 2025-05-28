@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.22] - 2025-05-28
+
+### Changed
+
+- **(rust)** Proj create_cs by @Glatzel in [#402](https://github.com/Glatzel/pyxis/pull/402)
+- **(rust)** Proj 2d cs by @Glatzel in [#404](https://github.com/Glatzel/pyxis/pull/404)
+- **(rust)** Proj create_geographic_crs by @Glatzel in [#406](https://github.com/Glatzel/pyxis/pull/406)
+- **(rust)** Proj crs by @Glatzel in [#407](https://github.com/Glatzel/pyxis/pull/407)
+- **(rust)** Proj database by @Glatzel in [#411](https://github.com/Glatzel/pyxis/pull/411)
+- Simplify loglevel by @Glatzel in [#412](https://github.com/Glatzel/pyxis/pull/412)
+
+### Documentation
+
+- Move doc to module file by @Glatzel in [#405](https://github.com/Glatzel/pyxis/pull/405)
+
+### Testing
+
+- **(rust)** Add some test by @Glatzel in [#409](https://github.com/Glatzel/pyxis/pull/409)
+
 ## [0.0.21] - 2025-05-16
 
 ### Added
@@ -397,6 +416,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.22]: https://github.com/Glatzel/pyxis/compare/v0.0.21..v0.0.22
 [0.0.21]: https://github.com/Glatzel/pyxis/compare/v0.0.20..v0.0.21
 [0.0.20]: https://github.com/Glatzel/pyxis/compare/v0.0.19..v0.0.20
 [0.0.19]: https://github.com/Glatzel/pyxis/compare/v0.0.18..v0.0.19

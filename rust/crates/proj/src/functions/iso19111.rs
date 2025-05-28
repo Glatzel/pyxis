@@ -132,7 +132,72 @@ impl crate::Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_wkt>
-    fn _create_from_wkt(&self) { unimplemented!() }
+    pub fn create_from_wkt(
+        &self,
+        wkt: &str,
+        strict: Option<bool>,
+        unset_identifiers_if_incompatible_def: Option<bool>,
+    ) -> miette::Result<Proj> {
+        let mut options = ProjOptions::new(2);
+        options.push_optional_pass(strict, "STRICT");
+        options.push_optional_pass(
+            unset_identifiers_if_incompatible_def,
+            "UNSET_IDENTIFIERS_IF_INCOMPATIBLE_DEF",
+        );
+        let vec_ptr = options.vec_ptr();
+        let mut out_warnings: *mut *mut i8 = std::ptr::null_mut();
+        let mut out_grammar_errors: *mut *mut i8 = std::ptr::null_mut();
+        let ptr = unsafe {
+            proj_sys::proj_create_from_wkt(
+                self.ptr,
+                CString::new(wkt).into_diagnostic()?.as_ptr(),
+                vec_ptr.as_ptr(),
+                &mut out_warnings,
+                &mut out_grammar_errors,
+            )
+        };
+        //warning
+        if !out_warnings.is_null() {
+            let mut warnings = Vec::new();
+            let mut offset = 0;
+
+            loop {
+                let current_ptr = unsafe { out_warnings.offset(offset).as_ref().unwrap() };
+                if current_ptr.is_null() {
+                    break;
+                }
+                warnings.push(c_char_to_string(current_ptr.cast_const()).unwrap());
+                offset += 1;
+            }
+            for w in warnings.iter() {
+                clerk::warn!("{w}");
+            }
+        };
+        //error
+        if !out_grammar_errors.is_null() {
+            let mut errors = Vec::new();
+            let mut offset = 0;
+
+            loop {
+                let current_ptr = unsafe { out_grammar_errors.offset(offset).as_ref().unwrap() };
+                if current_ptr.is_null() {
+                    break;
+                }
+                errors.push(c_char_to_string(current_ptr.cast_const()).unwrap());
+                offset += 1;
+            }
+            for e in errors.iter() {
+                clerk::warn!("{e}");
+            }
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        Ok(crate::Proj {
+            ptr: ptr,
+            ctx: self,
+        })
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_database>
@@ -1802,6 +1867,13 @@ mod test_context_basic {
         )?;
         let dialect = ctx.guess_wkt_dialect(&wkt)?;
         assert_eq!(dialect, GuessedWktDialect::Wkt2_2019);
+        Ok(())
+    }
+    #[test]
+    fn test_create_from_wkt() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        assert!(ctx.create_from_wkt("invalid wkt", None, None).is_err());
+        ctx.create_from_wkt("ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n    LENGTHUNIT[\"metre\",1],\n    ID[\"EPSG\",7030]]", None, None)?;
         Ok(())
     }
     #[test]

@@ -17,7 +17,7 @@ input = (array([121.09626928, 121.09626928]), array([30.60860437, 30.60860437]))
         module = pyxis_cuda.CryptoCuda()
 &gt;       module.crypto_exact("double", in_lon, in_lat, src, dst, 1e-17, 100)
 
-tests\test_crypto_cuda.py:42: 
+tests\test_crypto_cuda.py:42:
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 src\pyxis_cuda\_crypto_cuda.py:66: in crypto_exact
     fn = self.module.get_function(f"{crypto_from.lower()}_to_{crypto_to.lower()}_exact_cuda_{dtype}")
@@ -60,7 +60,7 @@ expected = (121.09626927850977, 30.608604331756705)
         module = pyxis_cuda.CryptoCuda()
 &gt;       module.crypto_exact("double", in_lon, in_lat, src, dst, 1e-17, 100)
 
-tests\test_crypto_cuda.py:42: 
+tests\test_crypto_cuda.py:42:
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 src\pyxis_cuda\_crypto_cuda.py:66: in crypto_exact
     fn = self.module.get_function(f"{crypto_from.lower()}_to_{crypto_to.lower()}_exact_cuda_{dtype}")
@@ -102,7 +102,7 @@ input = (array([121.10271725, 121.10271725]), array([30.61484576, 30.61484576]))
         module = pyxis_cuda.CryptoCuda()
 &gt;       module.crypto_exact("double", in_lon, in_lat, src, dst, 1e-17, 100)
 
-tests\test_crypto_cuda.py:42: 
+tests\test_crypto_cuda.py:42:
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 src\pyxis_cuda\_crypto_cuda.py:66: in crypto_exact
     fn = self.module.get_function(f"{crypto_from.lower()}_to_{crypto_to.lower()}_exact_cuda_{dtype}")
@@ -132,7 +132,7 @@ cupy_backends\\cuda\\api\\driver.pyx:63: CUDADriverError</failure></testcase><te
         module = DatumCompensateCuda()
 &gt;       module.datum_compensate_cuda("double", x, y, 400.0, 6378137.0, 500000.0, 0.0)
 
-tests\test_datum_compensate_cuda.py:11: 
+tests\test_datum_compensate_cuda.py:11:
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 src\pyxis_cuda\_datum_compensate_cuda.py:21: in datum_compensate_cuda
     fn = self.module.get_function(f"datum_compensate_cuda_{dtype}")

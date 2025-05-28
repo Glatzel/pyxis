@@ -25,7 +25,6 @@ pub enum GuessedWktDialect {
 #[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
-
 pub enum Category {
     Ellipsoid = proj_sys::PJ_CATEGORY_PJ_CATEGORY_ELLIPSOID,
     PrimeMeridian = proj_sys::PJ_CATEGORY_PJ_CATEGORY_PRIME_MERIDIAN,

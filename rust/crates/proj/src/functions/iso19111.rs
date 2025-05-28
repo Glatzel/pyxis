@@ -26,7 +26,7 @@ use crate::data_types::iso19111::{
 };
 use crate::{
     AllowIntermediateCrs, Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, c_char_to_string,
-    check_result,
+    check_result, vec_c_char_to_string,
 };
 
 /// # ISO-19111 Base functions
@@ -98,16 +98,7 @@ impl crate::Context {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
     pub fn get_database_structure(&self) -> miette::Result<Vec<String>> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
-        let mut out_vec = Vec::new();
-        let mut offset = 0;
-        loop {
-            let current_ptr = unsafe { ptr.offset(offset).as_ref().unwrap() };
-            if current_ptr.is_null() {
-                break;
-            }
-            out_vec.push(c_char_to_string(current_ptr.cast_const()).unwrap());
-            offset += 1;
-        }
+        let out_vec = vec_c_char_to_string(ptr).unwrap();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -151,43 +142,18 @@ impl crate::Context {
             )
         };
         //warning
-        if !out_warnings.is_null() {
-            let mut warnings = Vec::new();
-            let mut offset = 0;
-
-            loop {
-                let current_ptr = unsafe { out_warnings.offset(offset).as_ref().unwrap() };
-                if current_ptr.is_null() {
-                    break;
-                }
-                warnings.push(c_char_to_string(current_ptr.cast_const()).unwrap());
-                offset += 1;
-            }
+        if let Some(warnings) = vec_c_char_to_string(out_warnings) {
             for w in warnings.iter() {
                 clerk::warn!("{w}");
             }
         };
         //error
-        if !out_grammar_errors.is_null() {
-            let mut errors = Vec::new();
-            let mut offset = 0;
-
-            loop {
-                let current_ptr = unsafe { out_grammar_errors.offset(offset).as_ref().unwrap() };
-                if current_ptr.is_null() {
-                    break;
-                }
-                errors.push(c_char_to_string(current_ptr.cast_const()).unwrap());
-                offset += 1;
-            }
+        if let Some(errors) = vec_c_char_to_string(out_grammar_errors) {
             for e in errors.iter() {
                 clerk::warn!("{e}");
             }
         };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self })
+        crate::Proj::from_raw(self, ptr)
     }
     ///# References
     ///
@@ -211,10 +177,7 @@ impl crate::Context {
                 null(),
             )
         };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self })
+        crate::Proj::from_raw(self, ptr)
     }
     ///# References
     ///
@@ -380,10 +343,7 @@ impl Context {
                 axis_vec.as_ptr(),
             )
         };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self })
+        crate::Proj::from_raw(self, ptr)
     }
     ///# References
     ///
@@ -404,10 +364,7 @@ impl Context {
                 unit_conv_factor,
             )
         };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self })
+        crate::Proj::from_raw(self, ptr)
     }
     ///# References
     ///
@@ -428,10 +385,7 @@ impl Context {
                 unit_conv_factor,
             )
         };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self })
+        crate::Proj::from_raw(self, ptr)
     }
     ///# References
     ///
@@ -459,10 +413,7 @@ impl Context {
                 vertical_linear_unit_conv_factor,
             )
         };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self })
+        crate::Proj::from_raw(self, ptr)
     }
     ///# References
     ///
@@ -530,10 +481,7 @@ impl Context {
                 ellipsoidal_cs.ptr,
             )
         };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self })
+        crate::Proj::from_raw(self, ptr)
     }
     ///# References
     ///
@@ -553,10 +501,7 @@ impl Context {
                 ellipsoidal_cs.ptr,
             )
         };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self })
+        crate::Proj::from_raw(self, ptr)
     }
     ///# References
     ///
@@ -1120,30 +1065,21 @@ impl Proj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
     pub fn crs_get_geodetic_crs(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_geodetic_crs(self.ctx.ptr, self.ptr) };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
     pub fn crs_get_horizontal_datum(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_horizontal_datum(self.ctx.ptr, self.ptr) };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
     pub fn crs_get_sub_crs(&self, index: u16) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx.ptr, self.ptr, index as i32) };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
@@ -1154,7 +1090,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
+        Ok(Some(crate::Proj::from_raw(self.ctx, ptr).unwrap()))
     }
     ///# References
     ///
@@ -1165,7 +1101,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
+        Ok(Some(crate::Proj::from_raw(self.ctx, ptr).unwrap()))
     }
     ///# References
     ///
@@ -1176,7 +1112,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
+        Ok(Some(crate::Proj::from_raw(self.ctx, ptr).unwrap()))
     }
     ///# References
     ///
@@ -1211,7 +1147,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
+        Ok(Some(crate::Proj::from_raw(self.ctx, ptr).unwrap()))
     }
     ///# References
     ///
@@ -1230,10 +1166,7 @@ impl Proj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
     pub fn crs_get_coordinate_system(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordinate_system(self.ctx.ptr, self.ptr) };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
@@ -1267,10 +1200,7 @@ impl Proj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
     pub fn get_ellipsoid(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_get_ellipsoid(self.ctx.ptr, self.ptr) };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
@@ -1311,10 +1241,7 @@ impl Proj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
     pub fn get_prime_meridian(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx.ptr, self.ptr) };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
@@ -1347,10 +1274,7 @@ impl Proj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
     pub fn crs_get_coordoperation(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordoperation(self.ctx.ptr, self.ptr) };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
@@ -1550,10 +1474,7 @@ impl Proj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
     pub fn coordoperation_create_inverse(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_coordoperation_create_inverse(self.ctx.ptr, self.ptr) };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
@@ -1573,10 +1494,7 @@ impl Proj<'_> {
         let ptr = unsafe {
             proj_sys::proj_concatoperation_get_step(self.ctx.ptr, self.ptr, index as i32)
         };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
@@ -1584,10 +1502,7 @@ impl Proj<'_> {
     pub fn coordinate_metadata_create(&self, epoch: f64) -> miette::Result<Proj> {
         let ptr =
             unsafe { proj_sys::proj_coordinate_metadata_create(self.ctx.ptr, self.ptr, epoch) };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
@@ -1613,10 +1528,7 @@ impl Proj<'_> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_crs_to_WGS84(self.ctx.ptr, self.ptr, vec_ptr.as_ptr())
         };
-        if ptr.is_null() {
-            miette::bail!("Error");
-        }
-        Ok(crate::Proj { ptr, ctx: self.ctx })
+        crate::Proj::from_raw(self.ctx, ptr)
     }
 }
 impl Clone for Proj<'_> {

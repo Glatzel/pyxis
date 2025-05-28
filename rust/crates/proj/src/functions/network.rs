@@ -124,7 +124,7 @@ impl crate::Context {
         unimplemented!()
         // let result = unsafe {
         //     proj_sys::proj_download_file(
-        //         self.ctx,
+        //         self.ctx(),
         //         CString::new(url_or_filename).into_diagnostic()?.as_ptr(),
         //         ignore_ttl_setting as i32,
         //         progress_cbk,

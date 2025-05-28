@@ -5,6 +5,7 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 use crate::create_readonly_struct;
 /// # References
+///
 /// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GUESSED_WKT_DIALECT>
 #[derive(Debug, IntoPrimitive, TryFromPrimitive, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -20,6 +21,7 @@ pub enum GuessedWktDialect {
 }
 
 /// # References
+///
 /// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CATEGORY>
 #[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -34,6 +36,7 @@ pub enum Category {
     DatumEnsemble = proj_sys::PJ_CATEGORY_PJ_CATEGORY_DATUM_ENSEMBLE,
 }
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
@@ -71,6 +74,7 @@ pub enum ProjType {
     CoordinateMetadata = proj_sys::PJ_TYPE_PJ_TYPE_COORDINATE_METADATA,
 }
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COMPARISON_CRITERION>
 #[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -82,6 +86,7 @@ pub enum ComparisonCriterion {
         proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS,
 }
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_WKT_TYPE>
 #[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -100,6 +105,7 @@ pub enum WktType {
 }
 
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_EXTENT_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -110,6 +116,7 @@ pub enum CrsExtentUse {
     Smallest,
 }
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_GRID_AVAILABILITY_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -119,9 +126,10 @@ pub enum GridAvailabilityUse {
     Ignored,
     KnownAvailable,
 }
-///# References
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_STRING_TYPE>
 
+///# References
+///
+///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_STRING_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[repr(u32)]
@@ -130,6 +138,7 @@ pub enum ProjStringType {
     Proj4 = proj_sys::PJ_PROJ_STRING_TYPE_PJ_PROJ_4,
 }
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_SPATIAL_CRITERION>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -138,6 +147,7 @@ pub enum SpatialCriterion {
     PartialIntersection,
 }
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_INTERMEDIATE_CRS_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -147,6 +157,7 @@ pub enum IntermediateCrsUse {
     Never,
 }
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORDINATE_SYSTEM_TYPE>
 #[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -215,6 +226,7 @@ create_readonly_struct!(
     {name:String}
 );
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UNIT_TYPE>
 #[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -227,6 +239,7 @@ pub enum UnitType {
     Parametric = proj_sys::PJ_UNIT_TYPE_PJ_UT_PARAMETRIC,
 }
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CARTESIAN_CS_2D_TYPE>
 #[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -253,6 +266,7 @@ pub enum EllipsoidalCs2dType {
 }
 
 ///# References
+///
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_3D_TYPE>
 #[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -287,8 +301,8 @@ impl AxisDescription {
             abbreviation: CString::new(abbreviation.unwrap_or("")).expect("Error creating CString"),
             direction: direction.into(),
             unit_name: CString::new(unit_name.unwrap_or("")).expect("Error creating CString"),
-            unit_conv_factor: unit_conv_factor,
-            unit_type: unit_type,
+            unit_conv_factor,
+            unit_type,
         }
     }
 }

@@ -46,23 +46,17 @@ impl crate::Context {
     ) -> miette::Result<&Self> {
         let db_path = CString::new(db_path.to_string_lossy().to_string()).into_diagnostic()?;
 
-        let aux_db_paths: Option<Vec<CString>> = match aux_db_paths {
-            Some(aux_db_paths) => Some(
-                aux_db_paths
-                    .iter()
-                    .map(|f| {
-                        CString::new(f.to_string_lossy().to_string())
-                            .expect("Error creating CString")
-                    })
-                    .collect(),
-            ),
-            None => None,
-        };
+        let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
+            aux_db_paths
+                .iter()
+                .map(|f| {
+                    CString::new(f.to_string_lossy().to_string()).expect("Error creating CString")
+                })
+                .collect()
+        });
 
-        let aux_db_paths_ptr: Option<Vec<*const i8>> = match aux_db_paths {
-            Some(aux_db_paths) => Some(aux_db_paths.iter().map(|f| f.as_ptr()).collect()),
-            None => None,
-        };
+        let aux_db_paths_ptr: Option<Vec<*const i8>> =
+            aux_db_paths.map(|aux_db_paths| aux_db_paths.iter().map(|f| f.as_ptr()).collect());
 
         let result = unsafe {
             proj_sys::proj_context_set_database_path(
@@ -193,10 +187,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self,
-        })
+        Ok(crate::Proj { ptr, ctx: self })
     }
     ///# References
     ///
@@ -223,10 +214,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self,
-        })
+        Ok(crate::Proj { ptr, ctx: self })
     }
     ///# References
     ///
@@ -395,10 +383,7 @@ impl Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self,
-        })
+        Ok(crate::Proj { ptr, ctx: self })
     }
     ///# References
     ///
@@ -422,10 +407,7 @@ impl Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self,
-        })
+        Ok(crate::Proj { ptr, ctx: self })
     }
     ///# References
     ///
@@ -449,10 +431,7 @@ impl Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self,
-        })
+        Ok(crate::Proj { ptr, ctx: self })
     }
     ///# References
     ///
@@ -483,10 +462,7 @@ impl Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self,
-        })
+        Ok(crate::Proj { ptr, ctx: self })
     }
     ///# References
     ///
@@ -557,10 +533,7 @@ impl Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self,
-        })
+        Ok(crate::Proj { ptr, ctx: self })
     }
     ///# References
     ///
@@ -583,10 +556,7 @@ impl Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self,
-        })
+        Ok(crate::Proj { ptr, ctx: self })
     }
     ///# References
     ///
@@ -1153,10 +1123,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
     ///# References
     ///
@@ -1166,10 +1133,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
     ///# References
     ///
@@ -1179,10 +1143,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
     ///# References
     ///
@@ -1193,10 +1154,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        }))
+        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
     }
     ///# References
     ///
@@ -1207,10 +1165,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        }))
+        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
     }
     ///# References
     ///
@@ -1221,10 +1176,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        }))
+        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
     }
     ///# References
     ///
@@ -1259,10 +1211,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        }))
+        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
     }
     ///# References
     ///
@@ -1284,10 +1233,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
     ///# References
     ///
@@ -1324,10 +1270,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
     ///# References
     ///
@@ -1371,10 +1314,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
     ///# References
     ///
@@ -1410,10 +1350,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
     ///# References
     ///
@@ -1616,10 +1553,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
     ///# References
     ///
@@ -1642,10 +1576,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
     ///# References
     ///
@@ -1656,10 +1587,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
     ///# References
     ///
@@ -1688,10 +1616,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        Ok(crate::Proj {
-            ptr: ptr,
-            ctx: self.ctx,
-        })
+        Ok(crate::Proj { ptr, ctx: self.ctx })
     }
 }
 impl Clone for Proj<'_> {
@@ -2274,7 +2199,7 @@ mod test_proj {
         let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;
         assert!(pj.is_crs());
         let datum = pj.crs_get_datum()?;
-        assert!(!datum.is_none());
+        assert!(datum.is_some());
         Ok(())
     }
     #[test]
@@ -2283,7 +2208,7 @@ mod test_proj {
         let pj = ctx.create("EPSG:4258")?;
         assert!(pj.is_crs());
         let datum = pj.crs_get_datum_ensemble()?;
-        assert!(!datum.is_none());
+        assert!(datum.is_some());
         Ok(())
     }
     #[test]
@@ -2292,7 +2217,7 @@ mod test_proj {
         let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;
         assert!(pj.is_crs());
         let datum = pj.crs_get_datum_forced()?;
-        assert!(!datum.is_none());
+        assert!(datum.is_some());
         Ok(())
     }
     #[test]

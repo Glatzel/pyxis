@@ -421,25 +421,29 @@ impl From<AxisDirection> for CString {
 }
 create_readonly_struct!(
     EllipsoidParameters,
-    "",
+    "fds",
    {semi_major_metre: f64},
-   {semi_minor_metre: f64  {is_semi_minor_computed :bool},
+   {semi_minor_metre: f64},
+    {is_semi_minor_computed :bool},
    {inv_flattening :f64}
 );
 create_readonly_struct!(
     PrimeMeridianParameters,
-    "",{longitude: f64},
+    "fdsa",
+{longitude: f64},
    {unit_conv_factor : f64},
    {unit_name :String}
 );
 create_readonly_struct!(
-CoordOperationMethodInfo, "",
+CoordOperationMethodInfo,
+ "fdsaf",
 {method_name: String},
 {method_auth_name : String},
 {method_code :String}
 );
 create_readonly_struct!(
-CoordOperationParam, "",
+CoordOperationParam, 
+"fsda",
 {name : String},
 {auth_name  : String},
 {code  :String},
@@ -485,7 +489,8 @@ impl TryFrom<CString> for UnitCategory {
     }
 }
 create_readonly_struct!(
-CoordOperationGridUsed, "",
+CoordOperationGridUsed,
+ "fads",
 {short_name   : String},
 {full_name   :String},
 {package_name    :String},

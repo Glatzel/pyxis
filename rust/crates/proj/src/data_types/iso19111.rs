@@ -481,7 +481,7 @@ impl TryFrom<CString> for UnitCategory {
 }
 create_readonly_struct!(
 CoordOperationGridUsed,
- "https://github.com/OSGeo/PROJ/blob/master/src/proj.h ",
+ "<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
 {short_name   : String},
 {full_name   :String},
 {package_name    :String},

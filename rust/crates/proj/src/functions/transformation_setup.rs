@@ -7,7 +7,6 @@
 //!<https://proj.org/en/stable/development/reference/functions.html#c-api-for-iso-19111-functionality>
 
 use std::ffi::CString;
-use std::ptr;
 
 use miette::IntoDiagnostic;
 

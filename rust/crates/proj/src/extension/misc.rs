@@ -6,7 +6,7 @@ impl crate::Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Proj pointer is null.");
         }
-        Ok(crate::Proj { ctx: ctx, ptr: ptr })
+        Ok(crate::Proj { ctx, ptr })
     }
     pub fn assert_crs(&self) -> miette::Result<&Self> {
         if !self.is_crs() {

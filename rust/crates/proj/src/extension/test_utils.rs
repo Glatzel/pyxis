@@ -14,6 +14,7 @@ pub(crate) fn new_test_ctx() -> miette::Result<crate::Context> {
         .init();
     let ctx = crate::Context::default();
     ctx.set_log_level(LogLevel::Trace)?;
+    ctx.set_enable_network(true)?;
     // PROJ_DATA
     let workspace_root = env::var("CARGO_WORKSPACE_DIR").unwrap();
     let default_proj_data = if cfg!(target_os = "windows") {

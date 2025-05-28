@@ -13,8 +13,6 @@ use miette::IntoDiagnostic;
 use crate::check_result;
 /// # Transformation setup
 impl crate::Context {
-    /// See [`Self::create_proj`], [`crate::PjParams::Definition`]
-    ///
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
@@ -26,8 +24,7 @@ impl crate::Context {
         check_result!(self);
         Ok(pj)
     }
-    /// See [`Self::create_proj`], [`crate::PjParams::Argv`]
-    ///
+
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Proj> {
@@ -43,8 +40,7 @@ impl crate::Context {
         check_result!(self);
         Ok(pj)
     }
-    /// See [`Self::create_proj`], [`crate::PjParams::CrsToCrs`]
-    ///
+
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     pub fn create_crs_to_crs(
@@ -69,8 +65,7 @@ impl crate::Context {
         check_result!(self);
         Ok(pj)
     }
-    /// See [`Self::create_proj`], [`crate::PjParams::CrsToCrsFromPj`]
-    ///
+
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub fn create_crs_to_crs_from_pj(

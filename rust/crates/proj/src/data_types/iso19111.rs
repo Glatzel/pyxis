@@ -1,5 +1,6 @@
 use std::ffi::CString;
 
+use miette::IntoDiagnostic;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 use crate::create_readonly_struct;
@@ -20,20 +21,22 @@ pub enum GuessedWktDialect {
 
 /// # References
 /// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CATEGORY>
-#[derive(Debug)]
+#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[repr(u32)]
+
 pub enum Category {
-    Ellipsoid,
-    PrimeMeridian,
-    Datum,
-    Crs,
-    CoordinateOperation,
-    DatumEnsemble,
+    Ellipsoid = proj_sys::PJ_CATEGORY_PJ_CATEGORY_ELLIPSOID,
+    PrimeMeridian = proj_sys::PJ_CATEGORY_PJ_CATEGORY_PRIME_MERIDIAN,
+    Datum = proj_sys::PJ_CATEGORY_PJ_CATEGORY_DATUM,
+    Crs = proj_sys::PJ_CATEGORY_PJ_CATEGORY_CRS,
+    CoordinateOperation = proj_sys::PJ_CATEGORY_PJ_CATEGORY_COORDINATE_OPERATION,
+    DatumEnsemble = proj_sys::PJ_CATEGORY_PJ_CATEGORY_DATUM_ENSEMBLE,
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u32)]
 pub enum ProjType {
     Unknown = proj_sys::PJ_TYPE_PJ_TYPE_UNKNOWN,
@@ -145,7 +148,7 @@ pub enum IntermediateCrsUse {
 }
 ///# References
 ///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORDINATE_SYSTEM_TYPE>
-#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum CoordinateSystemType {
@@ -394,3 +397,81 @@ impl From<AxisDirection> for CString {
         .expect("Error creating CString")
     }
 }
+create_readonly_struct!(
+    EllipsoidParameters,
+    "",
+   {semi_major_metre: f64},
+   {semi_minor_metre: f64},
+   {is_semi_minor_computed :bool},
+   {inv_flattening :f64}
+);
+create_readonly_struct!(
+    PrimeMeridianParameters,
+    "",
+   {longitude: f64},
+   {unit_conv_factor : f64},
+   {unit_name :String}
+);
+create_readonly_struct!(
+CoordOperationMethodInfo, "",
+{method_name: String},
+{method_auth_name : String},
+{method_code :String}
+);
+create_readonly_struct!(
+CoordOperationParam, "",
+{name : String},
+{auth_name  : String},
+{code  :String},
+{value   :f64},
+{value_string   :String},
+{unit_conv_factor   :f64},
+{unit_name   :String},
+{unit_auth_name   :String},
+{unit_code   :String},
+{unit_category   :UnitCategory}
+);
+#[derive(Debug)]
+pub enum UnitCategory {
+    Unknown,
+    None,
+    Linear,
+    LinearPerTime,
+    Angular,
+    AngularPerTime,
+    Scale,
+    ScalePerTime,
+    Time,
+    Parametric,
+    ParametricPerTime,
+}
+impl TryFrom<CString> for UnitCategory {
+    type Error = miette::Report;
+
+    fn try_from(value: CString) -> Result<Self, Self::Error> {
+        Ok(match value.to_str().into_diagnostic()? {
+            "unknown" => Self::Unknown,
+            "none" => Self::None,
+            "linear" => Self::Linear,
+            "linear_per_time" => Self::LinearPerTime,
+            "angular" => Self::Angular,
+            "angular_per_time" => Self::AngularPerTime,
+            "scale" => Self::Scale,
+            "scale_per_time" => Self::ScalePerTime,
+            "time" => Self::Time,
+            "parametric" => Self::Parametric,
+            "parametric_per_time" => Self::ParametricPerTime,
+            _ => miette::bail!("Unknown"),
+        })
+    }
+}
+create_readonly_struct!(
+CoordOperationGridUsed, "",
+{short_name   : String},
+{full_name   :String},
+{package_name    :String},
+{url    :String},
+{direct_download    :bool},
+{open_license    :bool},
+{available    :bool}
+);

@@ -1,7 +1,6 @@
 use std::ptr::null_mut;
 
 use float_cmp::assert_approx_eq;
-use proj::PjParams::CrsToCrs;
 use proj::{Area, IPjCoord};
 #[derive(Clone)]
 struct MyCoord {
@@ -22,11 +21,7 @@ fn main() -> miette::Result<()> {
 }
 fn convert_scalar() -> miette::Result<()> {
     let ctx = proj::Context::default();
-    let pj = ctx.create_proj(CrsToCrs {
-        source_crs: "EPSG:4326",
-        target_crs: "EPSG:4496",
-        area: &Area::default(),
-    })?;
+    let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &Area::default())?;
 
     let pj = ctx.normalize_for_visualization(&pj)?;
     let coord = MyCoord { a: 120.0, b: 30.0 };
@@ -37,11 +32,7 @@ fn convert_scalar() -> miette::Result<()> {
 }
 fn convert_array() -> miette::Result<()> {
     let ctx = proj::Context::default();
-    let pj = ctx.create_proj(CrsToCrs {
-        source_crs: "EPSG:4326",
-        target_crs: "EPSG:4496",
-        area: &Area::default(),
-    })?;
+    let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &Area::default())?;
 
     let pj = ctx.normalize_for_visualization(&pj)?;
     let mut coord = [MyCoord { a: 120.0, b: 30.0 }, MyCoord { a: 50.0, b: -80.0 }];

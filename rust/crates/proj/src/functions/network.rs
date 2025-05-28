@@ -11,7 +11,7 @@ impl crate::Context {
     fn _set_network_callbacks(&self) { unimplemented!() }
     /// # References
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_enable_network>
-    fn _set_enable_network(&self, enabled: bool) -> miette::Result<&Self> {
+    pub fn set_enable_network(&self, enabled: bool) -> miette::Result<&Self> {
         let result =
             unsafe { proj_sys::proj_context_set_enable_network(self.ptr, enabled as i32) } != 0;
         if enabled ^ result {

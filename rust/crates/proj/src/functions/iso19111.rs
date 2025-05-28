@@ -2267,7 +2267,18 @@ mod test_proj {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
         let param = pj.coordoperation_get_towgs84_values();
-        assert_eq!(param, [0.06155, -0.01087, -0.04019, 0.03949239999999997, 0.03272209999999997, 0.032897899999999966, -0.009994000000000001]);
+        assert_eq!(
+            param,
+            [
+                0.06155,
+                -0.01087,
+                -0.04019,
+                0.03949239999999997,
+                0.03272209999999997,
+                0.032897899999999966,
+                -0.009994000000000001
+            ]
+        );
         Ok(())
     }
     #[test]

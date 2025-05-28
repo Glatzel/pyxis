@@ -2042,10 +2042,10 @@ mod test_proj {
     }
     #[test]
     fn test_dynamic_datum_get_frame_reference_epoch() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create("EPSG:1061")?;
-        // let epoch = pj.dynamic_datum_get_frame_reference_epoch()?;
-        // assert_eq!(epoch, 1.0);
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "1061", Category::Datum, false)?;
+        let epoch = pj.dynamic_datum_get_frame_reference_epoch()?;
+        assert_eq!(epoch, 2005.0);
         Ok(())
     }
     #[test]

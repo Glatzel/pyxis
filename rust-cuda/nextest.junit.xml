@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="nextest-run" tests="11" failures="0" errors="0" uuid="cccc1d75-28b3-4860-9c05-5783108159d4" timestamp="2025-05-28T09:38:54.074+08:00" time="1.148">
+<testsuites name="nextest-run" tests="11" failures="0" errors="0" uuid="d43f6c68-9498-49f1-8ace-977f8d4af5f5" timestamp="2025-05-28T22:25:22.141+08:00" time="1.187">
     <testsuite name="pyxis-cuda" tests="11" disabled="0" errors="0" failures="0">
-        <testcase name="crypto_cuda::test::test_bd09_to_wgs84_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.076+08:00" time="0.348">
+        <testcase name="crypto_cuda::test::test_bd09_to_wgs84_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.143+08:00" time="0.365">
         </testcase>
-        <testcase name="crypto_cuda::test::test_bd09_to_wgs84_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.077+08:00" time="0.496">
+        <testcase name="crypto_cuda::test::test_bd09_to_wgs84_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.143+08:00" time="0.507">
         </testcase>
-        <testcase name="crypto_cuda::test::test_gcj02_to_bd09_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.078+08:00" time="0.539">
+        <testcase name="crypto_cuda::test::test_gcj02_to_bd09_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.144+08:00" time="0.571">
         </testcase>
-        <testcase name="crypto_cuda::test::test_gcj02_to_wgs84_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.079+08:00" time="0.562">
+        <testcase name="crypto_cuda::test::test_gcj02_to_wgs84_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.145+08:00" time="0.594">
         </testcase>
-        <testcase name="crypto_cuda::test::test_gcj02_to_wgs84_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.079+08:00" time="0.579">
+        <testcase name="crypto_cuda::test::test_wgs84_to_gcj02_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.146+08:00" time="0.619">
         </testcase>
-        <testcase name="crypto_cuda::test::test_wgs84_to_bd09_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.080+08:00" time="0.599">
+        <testcase name="crypto_cuda::test::test_gcj02_to_wgs84_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.146+08:00" time="0.652">
         </testcase>
-        <testcase name="crypto_cuda::test::test_bd09_to_gcj02_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.081+08:00" time="0.617">
+        <testcase name="datum_compensate_cuda::test::test_datum_compensate_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.147+08:00" time="0.693">
         </testcase>
-        <testcase name="crypto_cuda::test::test_wgs84_to_gcj02_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.080+08:00" time="0.633">
+        <testcase name="crypto_cuda::test::test_wgs84_to_bd09_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.147+08:00" time="0.694">
         </testcase>
-        <testcase name="datum_compensate_cuda::test::test_datum_compensate_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.080+08:00" time="0.648">
+        <testcase name="crypto_cuda::test::test_bd09_to_gcj02_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.147+08:00" time="0.726">
         </testcase>
-        <testcase name="crypto_cuda::test::test_bd09_to_gcj02_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.081+08:00" time="0.663">
+        <testcase name="crypto_cuda::test::test_bd09_to_gcj02_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.147+08:00" time="0.729">
         </testcase>
-        <testcase name="crypto_cuda::test::test_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T09:38:54.078+08:00" time="1.144">
+        <testcase name="crypto_cuda::test::test_exact_cuda" classname="pyxis-cuda" timestamp="2025-05-28T22:25:22.145+08:00" time="1.182">
         </testcase>
     </testsuite>
 </testsuites>

@@ -421,29 +421,29 @@ impl From<AxisDirection> for CString {
 }
 create_readonly_struct!(
     EllipsoidParameters,
-    "fds",
+    "<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
    {semi_major_metre: f64},
    {semi_minor_metre: f64},
-    {is_semi_minor_computed :bool},
+   {is_semi_minor_computed :bool},
    {inv_flattening :f64}
 );
 create_readonly_struct!(
     PrimeMeridianParameters,
-    "fdsa",
+    "<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
 {longitude: f64},
    {unit_conv_factor : f64},
    {unit_name :String}
 );
 create_readonly_struct!(
 CoordOperationMethodInfo,
- "fdsaf",
+ "<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
 {method_name: String},
 {method_auth_name : String},
 {method_code :String}
 );
 create_readonly_struct!(
 CoordOperationParam, 
-"fsda",
+"<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
 {name : String},
 {auth_name  : String},
 {code  :String},
@@ -490,7 +490,7 @@ impl TryFrom<CString> for UnitCategory {
 }
 create_readonly_struct!(
 CoordOperationGridUsed,
- "fads",
+ "https://github.com/OSGeo/PROJ/blob/master/src/proj.h ",
 {short_name   : String},
 {full_name   :String},
 {package_name    :String},

@@ -1,8 +1,8 @@
 impl crate::Proj<'_> {
-    pub(crate) fn from_raw<'a>(
-        ctx: &'a crate::Context,
+    pub(crate) fn from_raw(
+        ctx: &crate::Context,
         ptr: *mut proj_sys::PJ,
-    ) -> miette::Result<crate::Proj<'a>> {
+    ) -> miette::Result<crate::Proj<'_>> {
         if ptr.is_null() {
             miette::bail!("Proj pointer is null.");
         }

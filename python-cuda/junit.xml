@@ -1,1 +1,158 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="4" time="0.929" timestamp="2025-05-28T09:39:18.754414+08:00" hostname="DESKTOP-DKDUEHD"><testcase classname="tests.test_crypto_cuda" name="test_exact[GCJ02-WGS84-input0-expected0]" file="tests\test_crypto_cuda.py" line="27" time="0.111" /><testcase classname="tests.test_crypto_cuda" name="test_exact[BD09-GCJ02-input1-expected1]" file="tests\test_crypto_cuda.py" line="27" time="0.002" /><testcase classname="tests.test_crypto_cuda" name="test_exact[BD09-WGS84-input2-expected2]" file="tests\test_crypto_cuda.py" line="27" time="0.002" /><testcase classname="tests.test_datum_compensate_cuda" name="test_datum_compensate_cuda" file="tests\test_datum_compensate_cuda.py" line="5" time="0.002" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="2.211" timestamp="2025-05-28T22:15:19.360539+08:00" hostname="DESKTOP-DKDUEHD"><testcase classname="tests.test_crypto_cuda" name="test_exact[GCJ02-WGS84-input0-expected0]" file="tests\test_crypto_cuda.py" line="27" time="0.168"><failure message="cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_UNSUPPORTED_PTX_VERSION: the provided PTX was compiled with an unsupported toolchain.">src = &lt;COORD_CRYPTO_SPACE.GCJ02: 'GCJ02'&gt;, dst = &lt;COORD_CRYPTO_SPACE.WGS84: 'WGS84'&gt;
+input = (array([121.09626928, 121.09626928]), array([30.60860437, 30.60860437])), expected = (121.0917077, 30.6107779)
+
+    @pytest.mark.cuda
+    @pytest.mark.parametrize(
+        ("src", "dst", "input", "expected"),
+        [
+            (COORD_CRYPTO_SPACE.GCJ02, COORD_CRYPTO_SPACE.WGS84, gcj02_array, wgs84),
+            (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.GCJ02, bd09_array, gcj02),
+            (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.WGS84, bd09_array, wgs84),
+        ],
+    )
+    def test_exact(src, dst, input, expected):
+        in_lon = cp.asarray(deepcopy(input[0]), cp.float64)
+        in_lat = cp.asarray(deepcopy(input[1]), cp.float64)
+        print(cp.asnumpy(in_lon))
+        module = pyxis_cuda.CryptoCuda()
+&gt;       module.crypto_exact("double", in_lon, in_lat, src, dst, 1e-17, 100)
+
+tests\test_crypto_cuda.py:42:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\pyxis_cuda\_crypto_cuda.py:66: in crypto_exact
+    fn = self.module.get_function(f"{crypto_from.lower()}_to_{crypto_to.lower()}_exact_cuda_{dtype}")
+cupy\\_core\\raw.pyx:487: in cupy._core.raw.RawModule.get_function
+    ???
+cupy\\_core\\raw.pyx:100: in cupy._core.raw.RawKernel.kernel.__get__
+    ???
+cupy\\_core\\raw.pyx:117: in cupy._core.raw.RawKernel._kernel
+    ???
+cupy\\_util.pyx:64: in cupy._util.memoize.decorator.ret
+    ???
+cupy\\_core\\raw.pyx:546: in cupy._core.raw._get_raw_module
+    ???
+cupy\\cuda\\function.pyx:261: in cupy.cuda.function.Module.load_file
+    ???
+cupy_backends\\cuda\\api\\driver.pyx:216: in cupy_backends.cuda.api.driver.moduleLoad
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+&gt;   ???
+E   cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_UNSUPPORTED_PTX_VERSION: the provided PTX was compiled with an unsupported toolchain.
+
+cupy_backends\\cuda\\api\\driver.pyx:63: CUDADriverError</failure></testcase><testcase classname="tests.test_crypto_cuda" name="test_exact[BD09-GCJ02-input1-expected1]" file="tests\test_crypto_cuda.py" line="27" time="0.013"><failure message="cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_UNSUPPORTED_PTX_VERSION: the provided PTX was compiled with an unsupported toolchain.">src = &lt;COORD_CRYPTO_SPACE.BD09: 'BD09'&gt;, dst = &lt;COORD_CRYPTO_SPACE.GCJ02: 'GCJ02'&gt;
+input = (array([121.10271725, 121.10271725]), array([30.61484576, 30.61484576]))
+expected = (121.09626927850977, 30.608604331756705)
+
+    @pytest.mark.cuda
+    @pytest.mark.parametrize(
+        ("src", "dst", "input", "expected"),
+        [
+            (COORD_CRYPTO_SPACE.GCJ02, COORD_CRYPTO_SPACE.WGS84, gcj02_array, wgs84),
+            (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.GCJ02, bd09_array, gcj02),
+            (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.WGS84, bd09_array, wgs84),
+        ],
+    )
+    def test_exact(src, dst, input, expected):
+        in_lon = cp.asarray(deepcopy(input[0]), cp.float64)
+        in_lat = cp.asarray(deepcopy(input[1]), cp.float64)
+        print(cp.asnumpy(in_lon))
+        module = pyxis_cuda.CryptoCuda()
+&gt;       module.crypto_exact("double", in_lon, in_lat, src, dst, 1e-17, 100)
+
+tests\test_crypto_cuda.py:42:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\pyxis_cuda\_crypto_cuda.py:66: in crypto_exact
+    fn = self.module.get_function(f"{crypto_from.lower()}_to_{crypto_to.lower()}_exact_cuda_{dtype}")
+cupy\\_core\\raw.pyx:487: in cupy._core.raw.RawModule.get_function
+    ???
+cupy\\_core\\raw.pyx:100: in cupy._core.raw.RawKernel.kernel.__get__
+    ???
+cupy\\_core\\raw.pyx:117: in cupy._core.raw.RawKernel._kernel
+    ???
+cupy\\_util.pyx:64: in cupy._util.memoize.decorator.ret
+    ???
+cupy\\_core\\raw.pyx:546: in cupy._core.raw._get_raw_module
+    ???
+cupy\\cuda\\function.pyx:261: in cupy.cuda.function.Module.load_file
+    ???
+cupy_backends\\cuda\\api\\driver.pyx:216: in cupy_backends.cuda.api.driver.moduleLoad
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+&gt;   ???
+E   cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_UNSUPPORTED_PTX_VERSION: the provided PTX was compiled with an unsupported toolchain.
+
+cupy_backends\\cuda\\api\\driver.pyx:63: CUDADriverError</failure></testcase><testcase classname="tests.test_crypto_cuda" name="test_exact[BD09-WGS84-input2-expected2]" file="tests\test_crypto_cuda.py" line="27" time="0.013"><failure message="cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_UNSUPPORTED_PTX_VERSION: the provided PTX was compiled with an unsupported toolchain.">src = &lt;COORD_CRYPTO_SPACE.BD09: 'BD09'&gt;, dst = &lt;COORD_CRYPTO_SPACE.WGS84: 'WGS84'&gt;
+input = (array([121.10271725, 121.10271725]), array([30.61484576, 30.61484576])), expected = (121.0917077, 30.6107779)
+
+    @pytest.mark.cuda
+    @pytest.mark.parametrize(
+        ("src", "dst", "input", "expected"),
+        [
+            (COORD_CRYPTO_SPACE.GCJ02, COORD_CRYPTO_SPACE.WGS84, gcj02_array, wgs84),
+            (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.GCJ02, bd09_array, gcj02),
+            (COORD_CRYPTO_SPACE.BD09, COORD_CRYPTO_SPACE.WGS84, bd09_array, wgs84),
+        ],
+    )
+    def test_exact(src, dst, input, expected):
+        in_lon = cp.asarray(deepcopy(input[0]), cp.float64)
+        in_lat = cp.asarray(deepcopy(input[1]), cp.float64)
+        print(cp.asnumpy(in_lon))
+        module = pyxis_cuda.CryptoCuda()
+&gt;       module.crypto_exact("double", in_lon, in_lat, src, dst, 1e-17, 100)
+
+tests\test_crypto_cuda.py:42:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\pyxis_cuda\_crypto_cuda.py:66: in crypto_exact
+    fn = self.module.get_function(f"{crypto_from.lower()}_to_{crypto_to.lower()}_exact_cuda_{dtype}")
+cupy\\_core\\raw.pyx:487: in cupy._core.raw.RawModule.get_function
+    ???
+cupy\\_core\\raw.pyx:100: in cupy._core.raw.RawKernel.kernel.__get__
+    ???
+cupy\\_core\\raw.pyx:117: in cupy._core.raw.RawKernel._kernel
+    ???
+cupy\\_util.pyx:64: in cupy._util.memoize.decorator.ret
+    ???
+cupy\\_core\\raw.pyx:546: in cupy._core.raw._get_raw_module
+    ???
+cupy\\cuda\\function.pyx:261: in cupy.cuda.function.Module.load_file
+    ???
+cupy_backends\\cuda\\api\\driver.pyx:216: in cupy_backends.cuda.api.driver.moduleLoad
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+&gt;   ???
+E   cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_UNSUPPORTED_PTX_VERSION: the provided PTX was compiled with an unsupported toolchain.
+
+cupy_backends\\cuda\\api\\driver.pyx:63: CUDADriverError</failure></testcase><testcase classname="tests.test_datum_compensate_cuda" name="test_datum_compensate_cuda" file="tests\test_datum_compensate_cuda.py" line="5" time="0.008"><failure message="cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_UNSUPPORTED_PTX_VERSION: the provided PTX was compiled with an unsupported toolchain.">@pytest.mark.cuda
+    def test_datum_compensate_cuda():
+        x = cp.array([469704.6693] * 2, dtype=cp.float64)
+        y = cp.array([2821940.796] * 2, dtype=cp.float64)
+        module = DatumCompensateCuda()
+&gt;       module.datum_compensate_cuda("double", x, y, 400.0, 6378137.0, 500000.0, 0.0)
+
+tests\test_datum_compensate_cuda.py:11:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\pyxis_cuda\_datum_compensate_cuda.py:21: in datum_compensate_cuda
+    fn = self.module.get_function(f"datum_compensate_cuda_{dtype}")
+cupy\\_core\\raw.pyx:487: in cupy._core.raw.RawModule.get_function
+    ???
+cupy\\_core\\raw.pyx:100: in cupy._core.raw.RawKernel.kernel.__get__
+    ???
+cupy\\_core\\raw.pyx:117: in cupy._core.raw.RawKernel._kernel
+    ???
+cupy\\_util.pyx:64: in cupy._util.memoize.decorator.ret
+    ???
+cupy\\_core\\raw.pyx:546: in cupy._core.raw._get_raw_module
+    ???
+cupy\\cuda\\function.pyx:261: in cupy.cuda.function.Module.load_file
+    ???
+cupy_backends\\cuda\\api\\driver.pyx:216: in cupy_backends.cuda.api.driver.moduleLoad
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+&gt;   ???
+E   cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_UNSUPPORTED_PTX_VERSION: the provided PTX was compiled with an unsupported toolchain.
+
+cupy_backends\\cuda\\api\\driver.pyx:63: CUDADriverError</failure></testcase></testsuite></testsuites>

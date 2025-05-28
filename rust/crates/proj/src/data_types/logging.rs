@@ -9,6 +9,3 @@ pub enum LogLevel {
     Trace = 3,
     Tell = 4,
 }
-impl Default for LogLevel {
-    fn default() -> Self { Self::Error }
-}

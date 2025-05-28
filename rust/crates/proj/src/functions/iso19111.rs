@@ -1430,7 +1430,7 @@ impl Proj<'_> {
                 &mut available,
             )
         };
-        if result != 0 {
+        if result != 1 {
             miette::bail!("Error");
         }
         Ok(CoordOperationGridUsed::new(
@@ -2228,17 +2228,27 @@ mod test_proj {
     #[test]
     fn test_coordoperation_get_param() -> miette::Result<()> {
         // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "8048",
+        // let pj = ctx.create_from_database("EPSG", "1037",
         // Category::CoordinateOperation, false)?; let param =
-        // pj.coordoperation_get_param(0)?; println!("{:?}", param);
+        // pj.coordoperation_get_param(1)?; println!("{:?}", param);
         Ok(())
     }
     #[test]
+    fn test_coordoperation_get_grid_used_count() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "1312", Category::CoordinateOperation, true)?;
+        let count = pj.coordoperation_get_grid_used_count();
+        assert_eq!(count, 1);
+        Ok(())
+    }
+
+    #[test]
     fn test_coordoperation_get_grid_used() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "8048",
-        // Category::CoordinateOperation, false)?; let param =
-        // pj.coordoperation_get_param(0)?; println!("{:?}", param);
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "1312", Category::CoordinateOperation, true)?;
+        let grid = pj.coordoperation_get_grid_used(0)?;
+        println!("{:?}", grid);
+        assert!(format!("{:?}", grid).contains("ca_nrc_ntv1_can.tif"));
         Ok(())
     }
     #[test]
@@ -2280,12 +2290,12 @@ mod test_proj {
     #[test]
     fn test_concatoperation_get_step_count() -> miette::Result<()> {
         // let ctx = crate::new_test_ctx()?;
-        // let source_crs = ctx.create_from_database("EPSG", "28356", Category::Crs,
-        // false)?; let target_crs = ctx.create_from_database("EPSG", "7856",
-        // Category::Crs, false)?; let coordoperation =
-        // pj.crs_get_coordoperation()?; let count =
-        // coordoperation.concatoperation_get_step_count()?; assert_eq!(count,
-        // 1);
+        // let pj = ctx.create("EPSG:4326")?;
+        // let bound =
+        // pj.crs_create_bound_crs_to_wgs84(Some(AllowIntermediateCrs::Never))?;
+        // let op = bound.crs_get_coordoperation()?;
+        // let count = op.concatoperation_get_step_count()?;
+        // assert_eq!(count, 1);
         Ok(())
     }
     #[test]

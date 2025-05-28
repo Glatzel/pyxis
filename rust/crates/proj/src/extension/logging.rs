@@ -26,7 +26,7 @@ impl crate::Context {
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
     ) -> miette::Result<&Self> {
         unsafe {
-            proj_sys::proj_log_func(self.ctx, app_data, logf);
+            proj_sys::proj_log_func(self.ctx(), app_data, logf);
         };
         check_result!(self);
         Ok(self)
@@ -38,7 +38,7 @@ impl crate::Context {
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
     ) -> miette::Result<&Self> {
         unsafe {
-            proj_sys::proj_log_func(self.ptr, app_data, logf);
+            proj_sys::proj_log_func(self.ptr(), app_data, logf);
         };
         check_result!(self);
         Ok(self)

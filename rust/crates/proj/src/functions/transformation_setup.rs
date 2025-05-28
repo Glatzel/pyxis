@@ -10,19 +10,16 @@ use std::ffi::CString;
 
 use miette::IntoDiagnostic;
 
-use crate::check_result;
+use crate::{Proj, check_result};
 /// # Transformation setup
 impl crate::Context {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
         let definition = CString::new(definition).into_diagnostic()?;
-        let pj = crate::Proj {
-            ptr: unsafe { proj_sys::proj_create(self.ptr, definition.as_ptr()) },
-            ctx: self,
-        };
+        let ptr = unsafe { proj_sys::proj_create(self.ptr(), definition.as_ptr()) };
         check_result!(self);
-        Ok(pj)
+        Proj::from_raw(self, ptr)
     }
 
     /// # References
@@ -33,12 +30,9 @@ impl crate::Context {
         for s in argv {
             ptrs.push(CString::new(*s).into_diagnostic()?.into_raw());
         }
-        let pj = crate::Proj {
-            ptr: unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, ptrs.as_mut_ptr()) },
-            ctx: self,
-        };
+        let ptr = unsafe { proj_sys::proj_create_argv(self.ptr(), len as i32, ptrs.as_mut_ptr()) };
         check_result!(self);
-        Ok(pj)
+        Proj::from_raw(self, ptr)
     }
 
     /// # References
@@ -51,19 +45,16 @@ impl crate::Context {
     ) -> miette::Result<crate::Proj> {
         let source_crs = CString::new(source_crs).into_diagnostic()?;
         let target_crs = CString::new(target_crs).into_diagnostic()?;
-        let pj = crate::Proj {
-            ptr: unsafe {
-                proj_sys::proj_create_crs_to_crs(
-                    self.ptr,
-                    source_crs.as_ptr(),
-                    target_crs.as_ptr(),
-                    area.ptr,
-                )
-            },
-            ctx: self,
+        let ptr = unsafe {
+            proj_sys::proj_create_crs_to_crs(
+                self.ptr(),
+                source_crs.as_ptr(),
+                target_crs.as_ptr(),
+                area.ptr,
+            )
         };
         check_result!(self);
-        Ok(pj)
+        Proj::from_raw(self, ptr)
     }
 
     /// # References
@@ -87,27 +78,23 @@ impl crate::Context {
             .push_optional_pass(only_best, "ONLY_BEST")
             .push_optional_pass(force_over, "FORCE_OVER");
         let ptrs = options.vec_ptr();
-
-        let pj = crate::Proj {
-            ptr: unsafe {
-                proj_sys::proj_create_crs_to_crs_from_pj(
-                    self.ptr,
-                    source_crs.ptr,
-                    target_crs.ptr,
-                    area.ptr,
-                    ptrs.as_ptr(),
-                )
-            },
-            ctx: self,
+        let ptr = unsafe {
+            proj_sys::proj_create_crs_to_crs_from_pj(
+                self.ptr(),
+                source_crs.ptr,
+                target_crs.ptr,
+                area.ptr,
+                ptrs.as_ptr(),
+            )
         };
         check_result!(self);
-        Ok(pj)
+        Proj::from_raw(self, ptr)
     }
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
     pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<crate::Proj> {
         Ok(crate::Proj {
-            ptr: unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr) },
+            ptr: unsafe { proj_sys::proj_normalize_for_visualization(self.ptr(), obj.ptr) },
             ctx: self,
         })
     }

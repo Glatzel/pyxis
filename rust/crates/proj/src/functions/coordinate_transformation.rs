@@ -21,13 +21,14 @@ impl crate::Proj<'_> {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     #[cfg(any(feature = "unrecommended", test))]
-    pub fn get_last_used_operation(&self) -> Option<Self> {
+    pub fn get_last_used_operation<'a>(&'a self) -> Option<crate::Proj<'a>> {
+        use crate::Proj;
+
         let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr) };
         if ptr.is_null() {
             return None;
         }
-        let pj = Self { ptr, ctx: self.ctx };
-        Some(pj)
+        Some(Proj::from_raw(self.ctx, ptr).unwrap())
     }
 
     /// # Safety

@@ -7,6 +7,7 @@
 //!<https://proj.org/en/stable/development/reference/functions.html#c-api-for-iso-19111-functionality>
 
 use std::ffi::CString;
+use std::ptr;
 
 use miette::IntoDiagnostic;
 
@@ -93,10 +94,8 @@ impl crate::Context {
     /// # References
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
     pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<crate::Proj> {
-        Ok(crate::Proj {
-            ptr: unsafe { proj_sys::proj_normalize_for_visualization(self.ptr(), obj.ptr) },
-            ctx: self,
-        })
+        let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr(), obj.ptr) };
+        Proj::from_raw(self, ptr)
     }
 }
 

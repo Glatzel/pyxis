@@ -1090,7 +1090,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
+        Ok(Some(crate::Proj::from_raw(self.ctx, ptr).unwrap()))
     }
     ///# References
     ///
@@ -1101,7 +1101,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
+        Ok(Some(crate::Proj::from_raw(self.ctx, ptr).unwrap()))
     }
     ///# References
     ///
@@ -1112,7 +1112,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
+        Ok(Some(crate::Proj::from_raw(self.ctx, ptr).unwrap()))
     }
     ///# References
     ///
@@ -1147,7 +1147,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj { ptr, ctx: self.ctx }))
+        Ok(Some(crate::Proj::from_raw(self.ctx, ptr).unwrap()))
     }
     ///# References
     ///

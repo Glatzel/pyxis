@@ -10,23 +10,6 @@ pub struct Proj<'a> {
     pub(crate) ptr: *mut proj_sys::PJ,
     pub(crate) ctx: &'a crate::Context,
 }
-impl Proj<'_> {
-    pub(crate) fn from_raw<'a>(
-        ctx: &'a Context,
-        ptr: *mut proj_sys::PJ,
-    ) -> miette::Result<Proj<'a>> {
-        if ptr.is_null() {
-            miette::bail!("Proj pointer is null.");
-        }
-        Ok(Proj { ctx: ctx, ptr: ptr })
-    }
-    pub fn assert_crs(&self) -> miette::Result<&Self> {
-        if !self.is_crs() {
-            miette::bail!("Proj object is not CRS.");
-        }
-        Ok(self)
-    }
-}
 
 /// Enumeration that is used to convey in which direction a given transformation
 /// should be performed. Used in transformation function call as described in

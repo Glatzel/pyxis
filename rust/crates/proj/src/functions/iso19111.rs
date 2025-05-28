@@ -21,8 +21,8 @@ use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::{
     Category, ComparisonCriterion, CoordOperationGridUsed, CoordOperationMethodInfo,
-    CoordOperationParam, CoordinateSystemType, EllipsoidParameters, GuessedWktDialect,
-    PrimeMeridianParameters, ProjStringType, ProjType, UnitCategory, WktType,
+    CoordOperationParam, CoordinateSystemType, DatabaseMetadataKey, EllipsoidParameters,
+    GuessedWktDialect, PrimeMeridianParameters, ProjStringType, ProjType, UnitCategory, WktType,
 };
 use crate::{
     AllowIntermediateCrs, Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, c_char_to_string,
@@ -92,12 +92,30 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <>
-    fn _get_database_metadata(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
+    pub fn get_database_metadata(&self, key: DatabaseMetadataKey) -> Option<String> {
+        let key = CString::from(key);
+        c_char_to_string(unsafe {
+            proj_sys::proj_context_get_database_metadata(self.ptr, key.as_ptr())
+        })
+    }
     ///# References
     ///
-    /// <>
-    fn _get_database_structure(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
+    pub fn get_database_structure(&self) -> miette::Result<Vec<String>> {
+        let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
+        let mut out_vec = Vec::new();
+        let mut offset = 0;
+        loop {
+            let current_ptr = unsafe { ptr.offset(offset).as_ref().unwrap() };
+            if current_ptr.is_null() {
+                break;
+            }
+            out_vec.push(c_char_to_string(current_ptr.cast_const()).unwrap());
+            offset += 1;
+        }
+        Ok(out_vec)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
@@ -1684,6 +1702,84 @@ mod test_context_basic {
         assert!(db_path.to_string_lossy().to_string().contains(".pixi"));
         Ok(())
     }
+    #[test]
+    fn test_get_database_metadata() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::DatabaseLayoutVersionMajor)
+            .unwrap();
+        assert_eq!(data, "1");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::DatabaseLayoutVersionMinor)
+            .unwrap();
+        assert_eq!(data, "5");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::EpsgVersion)
+            .unwrap();
+        assert_eq!(data, "v12.004");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::EpsgDate)
+            .unwrap();
+        assert_eq!(data, "2025-03-02");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::EsriVersion)
+            .unwrap();
+        assert_eq!(data, "ArcGIS Pro 3.4");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::EsriDate)
+            .unwrap();
+        assert_eq!(data, "2024-11-04");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::IgnfSource)
+            .unwrap();
+        assert_eq!(
+            data,
+            "https://raw.githubusercontent.com/rouault/proj-resources/master/IGNF.v3.1.0.xml"
+        );
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::IgnfVersion)
+            .unwrap();
+        assert_eq!(data, "3.1.0");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::IgnfDate)
+            .unwrap();
+        assert_eq!(data, "2019-05-24");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::NkgSource)
+            .unwrap();
+        assert_eq!(
+            data,
+            "https://github.com/NordicGeodesy/NordicTransformations"
+        );
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::NkgVersion)
+            .unwrap();
+        assert_eq!(data, "1.0.w");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::NkgDate)
+            .unwrap();
+        assert_eq!(data, "2025-02-13");
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::ProjVersion)
+            .unwrap();
+        assert_eq!(data, "9.6.0");
+        let data = ctx.get_database_metadata(DatabaseMetadataKey::ProjDataVersion);
+        assert!(data.is_none());
+
+        Ok(())
+    }
+    #[test]
+    fn test_get_database_structure() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let structure = ctx.get_database_structure()?;
+        println!("{}", structure.first().unwrap());
+        assert_eq!(
+            structure.first().unwrap(),
+            "CREATE TABLE metadata(\n    key TEXT NOT NULL PRIMARY KEY CHECK (length(key) >= 1),\n    value TEXT NOT NULL\n) WITHOUT ROWID;"
+        );
+        Ok(())
+    }
+
     #[test]
     fn test_guess_wkt_dialect() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;

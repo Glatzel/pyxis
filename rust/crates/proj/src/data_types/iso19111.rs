@@ -475,3 +475,40 @@ CoordOperationGridUsed, "",
 {open_license    :bool},
 {available    :bool}
 );
+pub enum DatabaseMetadataKey {
+    DatabaseLayoutVersionMajor,
+    DatabaseLayoutVersionMinor,
+    EpsgVersion,
+    EpsgDate,
+    EsriVersion,
+    EsriDate,
+    IgnfSource,
+    IgnfVersion,
+    IgnfDate,
+    NkgSource,
+    NkgVersion,
+    NkgDate,
+    ProjVersion,
+    ProjDataVersion,
+}
+impl From<DatabaseMetadataKey> for CString {
+    fn from(value: DatabaseMetadataKey) -> Self {
+        CString::new(match value {
+            DatabaseMetadataKey::DatabaseLayoutVersionMajor => "DATABASE.LAYOUT.VERSION.MAJOR",
+            DatabaseMetadataKey::DatabaseLayoutVersionMinor => "DATABASE.LAYOUT.VERSION.MINOR",
+            DatabaseMetadataKey::EpsgVersion => "EPSG.VERSION",
+            DatabaseMetadataKey::EpsgDate => "EPSG.DATE",
+            DatabaseMetadataKey::EsriVersion => "ESRI.VERSION",
+            DatabaseMetadataKey::EsriDate => "ESRI.DATE",
+            DatabaseMetadataKey::IgnfSource => "IGNF.SOURCE",
+            DatabaseMetadataKey::IgnfVersion => "IGNF.VERSION",
+            DatabaseMetadataKey::IgnfDate => "IGNF.DATE",
+            DatabaseMetadataKey::NkgSource => "NKG.SOURCE",
+            DatabaseMetadataKey::NkgVersion => "NKG.VERSION",
+            DatabaseMetadataKey::NkgDate => "NKG.DATE",
+            DatabaseMetadataKey::ProjVersion => "PROJ.VERSION",
+            DatabaseMetadataKey::ProjDataVersion => "PROJ_DATA.VERSION ",
+        })
+        .expect("Error creating CString")
+    }
+}

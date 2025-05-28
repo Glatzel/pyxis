@@ -1,5 +1,4 @@
 use std::env;
-use std::path::PathBuf;
 
 use miette::IntoDiagnostic;
 use tracing::level_filters::LevelFilter;
@@ -22,25 +21,20 @@ pub(crate) fn new_test_ctx() -> miette::Result<crate::Context> {
             "{workspace_root}/.pixi/envs/default/proj/x64-windows-static/share/proj"
         ))
         .into_diagnostic()?
-        .to_string_lossy()
-        .to_string()
     } else if cfg!(target_os = "linux") {
         dunce::canonicalize(format!(
             "{workspace_root}/.pixi/envs/default/proj/x64-linux-release/share/proj"
         ))
         .into_diagnostic()?
-        .to_string_lossy()
-        .to_string()
     } else if cfg!(target_os = "macos") {
         dunce::canonicalize(format!(
             "{workspace_root}/.pixi/envs/default/proj/arm64-osx-release/share/proj"
         ))
         .into_diagnostic()?
-        .to_string_lossy()
-        .to_string()
     } else {
         panic!("Unsupported OS")
     };
-    ctx.set_search_paths(&[&PathBuf::from(default_proj_data)])?;
+    ctx.set_database_path(&default_proj_data.join("proj.db"), None)?;
+    ctx.set_search_paths(&[&default_proj_data])?;
     Ok(ctx)
 }

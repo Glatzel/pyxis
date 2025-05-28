@@ -14,7 +14,8 @@
 //!<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
 use std::ffi::CString;
-use std::ptr::null;
+use std::path::{Path, PathBuf};
+use std::ptr::{self, null};
 
 use miette::IntoDiagnostic;
 
@@ -32,16 +33,63 @@ use crate::{
 impl crate::Context {
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_autoclose_database>
+    #[deprecated]
     fn _set_autoclose_database(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
-    fn _set_database_path(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
+    pub fn set_database_path(
+        &self,
+        db_path: &Path,
+        aux_db_paths: Option<&[PathBuf]>,
+    ) -> miette::Result<&Self> {
+        let db_path = CString::new(db_path.to_string_lossy().to_string()).into_diagnostic()?;
+
+        let aux_db_paths: Option<Vec<CString>> = match aux_db_paths {
+            Some(aux_db_paths) => Some(
+                aux_db_paths
+                    .iter()
+                    .map(|f| {
+                        CString::new(f.to_string_lossy().to_string())
+                            .expect("Error creating CString")
+                    })
+                    .collect(),
+            ),
+            None => None,
+        };
+
+        let aux_db_paths_ptr: Option<Vec<*const i8>> = match aux_db_paths {
+            Some(aux_db_paths) => Some(aux_db_paths.iter().map(|f| f.as_ptr()).collect()),
+            None => None,
+        };
+
+        let result = unsafe {
+            proj_sys::proj_context_set_database_path(
+                self.ptr,
+                db_path.as_ptr(),
+                if let Some(aux_db_paths_ptr) = aux_db_paths_ptr {
+                    aux_db_paths_ptr.as_ptr()
+                } else {
+                    ptr::null()
+                },
+                ptr::null(),
+            )
+        };
+        if result != 1 {
+            miette::bail!("Error");
+        }
+        Ok(self)
+    }
     ///# References
     ///
-    /// <>
-    fn _get_database_path(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_path>
+    pub fn get_database_path(&self) -> PathBuf {
+        PathBuf::from(
+            c_char_to_string(unsafe { proj_sys::proj_context_get_database_path(self.ptr) })
+                .unwrap_or_default(),
+        )
+    }
     ///# References
     ///
     /// <>
@@ -275,7 +323,8 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let unit_name = CString::new(unit_name.unwrap_or("")).expect("Error creating CString");
+        let unit_name =
+            CString::new(unit_name.unwrap_or_default()).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
                 self.ptr,
@@ -301,7 +350,8 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let unit_name = CString::new(unit_name.unwrap_or("")).expect("Error creating CString");
+        let unit_name =
+            CString::new(unit_name.unwrap_or_default()).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
@@ -329,10 +379,11 @@ impl Context {
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let horizontal_angular_unit_name = CString::new(horizontal_angular_unit_name.unwrap_or(""))
+        let horizontal_angular_unit_name =
+            CString::new(horizontal_angular_unit_name.unwrap_or_default())
+                .expect("Error creating CString");
+        let vertical_linear_unit_name = CString::new(vertical_linear_unit_name.unwrap_or_default())
             .expect("Error creating CString");
-        let vertical_linear_unit_name =
-            CString::new(vertical_linear_unit_name.unwrap_or("")).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
@@ -362,10 +413,10 @@ impl Context {
         crs_type: Option<&str>,
     ) {
         let crs_auth_name =
-            CString::new(crs_auth_name.unwrap_or("")).expect("Error creating CString");
+            CString::new(crs_auth_name.unwrap_or_default()).expect("Error creating CString");
         let datum_auth_name = CString::new(datum_auth_name).expect("Error creating CString");
         let datum_code = CString::new(datum_code).expect("Error creating CString");
-        let crs_type = CString::new(crs_type.unwrap_or("")).expect("Error creating CString");
+        let crs_type = CString::new(crs_type.unwrap_or_default()).expect("Error creating CString");
         let _ = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
@@ -393,13 +444,15 @@ impl Context {
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let crs_name = CString::new(crs_name.unwrap_or("")).expect("Error creating CString");
-        let datum_name = CString::new(datum_name.unwrap_or("")).expect("Error creating CString");
-        let ellps_name = CString::new(ellps_name.unwrap_or("")).expect("Error creating CString");
+        let crs_name = CString::new(crs_name.unwrap_or_default()).expect("Error creating CString");
+        let datum_name =
+            CString::new(datum_name.unwrap_or_default()).expect("Error creating CString");
+        let ellps_name =
+            CString::new(ellps_name.unwrap_or_default()).expect("Error creating CString");
         let prime_meridian_name =
-            CString::new(prime_meridian_name.unwrap_or("")).expect("Error creating CString");
+            CString::new(prime_meridian_name.unwrap_or_default()).expect("Error creating CString");
         let pm_angular_units =
-            CString::new(pm_angular_units.unwrap_or("")).expect("Error creating CString");
+            CString::new(pm_angular_units.unwrap_or_default()).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
@@ -432,7 +485,7 @@ impl Context {
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let crs_name = CString::new(crs_name.unwrap_or("")).expect("Error creating CString");
+        let crs_name = CString::new(crs_name.unwrap_or_default()).expect("Error creating CString");
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
@@ -1260,7 +1313,7 @@ impl Proj<'_> {
         Ok(PrimeMeridianParameters::new(
             longitude,
             unit_conv_factor,
-            c_char_to_string(unit_name).unwrap_or(String::default()),
+            c_char_to_string(unit_name).unwrap_or_default(),
         ))
     }
     ///# References
@@ -1297,9 +1350,9 @@ impl Proj<'_> {
             miette::bail!("Error");
         }
         Ok(CoordOperationMethodInfo::new(
-            c_char_to_string(method_name).unwrap_or(String::default()),
-            c_char_to_string(method_auth_name).unwrap_or(String::default()),
-            c_char_to_string(method_code).unwrap_or(String::default()),
+            c_char_to_string(method_name).unwrap_or_default(),
+            c_char_to_string(method_auth_name).unwrap_or_default(),
+            c_char_to_string(method_code).unwrap_or_default(),
         ))
     }
     ///# References
@@ -1383,15 +1436,15 @@ impl Proj<'_> {
         }
 
         Ok(CoordOperationParam::new(
-            c_char_to_string(name).unwrap_or(String::default()),
-            c_char_to_string(auth_name).unwrap_or(String::default()),
-            c_char_to_string(code).unwrap_or(String::default()),
+            c_char_to_string(name).unwrap_or_default(),
+            c_char_to_string(auth_name).unwrap_or_default(),
+            c_char_to_string(code).unwrap_or_default(),
             value,
-            c_char_to_string(value_string).unwrap_or(String::default()),
+            c_char_to_string(value_string).unwrap_or_default(),
             unit_conv_factor,
-            c_char_to_string(unit_name).unwrap_or(String::default()),
-            c_char_to_string(unit_auth_name).unwrap_or(String::default()),
-            c_char_to_string(unit_code).unwrap_or(String::default()),
+            c_char_to_string(unit_name).unwrap_or_default(),
+            c_char_to_string(unit_auth_name).unwrap_or_default(),
+            c_char_to_string(unit_code).unwrap_or_default(),
             UnitCategory::try_from(unsafe { CString::from_raw(unit_category.cast_mut()) })?,
         ))
     }
@@ -1434,10 +1487,10 @@ impl Proj<'_> {
             miette::bail!("Error");
         }
         Ok(CoordOperationGridUsed::new(
-            c_char_to_string(short_name).unwrap_or(String::default()),
-            c_char_to_string(full_name).unwrap_or(String::default()),
-            c_char_to_string(package_name).unwrap_or(String::default()),
-            c_char_to_string(url).unwrap_or(String::default()),
+            c_char_to_string(short_name).unwrap_or_default(),
+            c_char_to_string(full_name).unwrap_or_default(),
+            c_char_to_string(package_name).unwrap_or_default(),
+            c_char_to_string(url).unwrap_or_default(),
             direct_download != 0,
             open_license != 0,
             available != 0,
@@ -1617,7 +1670,20 @@ fn _proj_list_destroy() { unimplemented!() }
 
 #[cfg(test)]
 mod test_context_basic {
+
     use super::*;
+    #[test]
+    fn test_set_database_path() -> miette::Result<()> {
+        let _ = crate::new_test_ctx()?;
+        Ok(())
+    }
+    #[test]
+    fn test_get_database_path() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let db_path = ctx.get_database_path();
+        assert!(db_path.to_string_lossy().to_string().contains(".pixi"));
+        Ok(())
+    }
     #[test]
     fn test_guess_wkt_dialect() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;

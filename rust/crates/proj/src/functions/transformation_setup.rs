@@ -123,6 +123,8 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         assert!(!pj.ptr.is_null());
+        let pj1 = pj.clone();
+        assert!(!pj1.ptr.is_null());
         Ok(())
     }
 

@@ -43,7 +43,7 @@ mod test {
     #[test]
     fn test_clone() -> miette::Result<()> {
         let ctx1 = crate::new_test_ctx()?;
-        let ctx2= ctx1.clone();
+        let ctx2 = ctx1.clone();
         assert!(!ctx2.ptr.is_null());
         Ok(())
     }

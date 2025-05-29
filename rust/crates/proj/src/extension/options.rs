@@ -9,28 +9,13 @@
 //!   CStrings.
 
 use std::ffi::CString;
-use std::fmt::Display;
 use std::ptr::null;
 
 /// String constant representing the PROJ option value for `true`.
 pub(crate) const OPTION_YES: &str = "YES";
 /// String constant representing the PROJ option value for `false`.
 pub(crate) const OPTION_NO: &str = "NO";
-pub enum AllowIntermediateCrs {
-    Always,
-    IfNoDirectTransformation,
-    Never,
-}
-impl Display for AllowIntermediateCrs {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let text = match self {
-            AllowIntermediateCrs::Always => "ALWAYS",
-            AllowIntermediateCrs::IfNoDirectTransformation => "IF_NO_DIRECT_TRANSFORMATION",
-            AllowIntermediateCrs::Never => "NEVER",
-        };
-        write!(f, "{}", text)
-    }
-}
+
 /// Trait for converting a value to a PROJ-compatible option string.
 pub(crate) trait ToProjOptionString {
     /// Converts the value to a string suitable for use as a PROJ option value.
@@ -63,7 +48,7 @@ macro_rules! impl_to_option_string {
 impl_to_option_string!(f64);
 impl_to_option_string!(usize);
 impl_to_option_string!(&str);
-impl_to_option_string!(AllowIntermediateCrs);
+impl_to_option_string!(crate::data_types::iso19111::AllowIntermediateCrs);
 
 /// Struct for building and managing a list of PROJ options as C-compatible
 /// strings.

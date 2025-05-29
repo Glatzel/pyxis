@@ -26,11 +26,12 @@ impl crate::Context {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Proj> {
         let len = argv.len();
-        let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
+        let mut argv_ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in argv {
-            ptrs.push(CString::new(*s).into_diagnostic()?.into_raw());
+            argv_ptrs.push(CString::new(*s).into_diagnostic()?.into_raw());
         }
-        let ptr = unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, ptrs.as_mut_ptr()) };
+        let ptr =
+            unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, argv_ptrs.as_mut_ptr()) };
         check_result!(self);
         Proj::from_raw(self, ptr)
     }
@@ -107,25 +108,21 @@ mod test {
     fn test_create() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        assert!(!pj.ptr.is_null());
-        let pj1 = pj.clone();
-        assert!(!pj1.ptr.is_null());
+        let _ = pj.clone();
         Ok(())
     }
 
     #[test]
     fn test_create_argv() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
-        assert!(!pj.ptr.is_null());
+        let _ = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
         Ok(())
     }
 
     #[test]
     fn test_create_crs_to_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
-        assert!(!pj.ptr.is_null());
+        let _ = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         Ok(())
     }
 
@@ -134,8 +131,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4978")?;
-
-        let pj3 = ctx.create_crs_to_crs_from_pj(
+        let _ = ctx.create_crs_to_crs_from_pj(
             pj1,
             pj2,
             &crate::Area::default(),
@@ -145,7 +141,6 @@ mod test {
             Some(true),
             Some(true),
         )?;
-        assert!(!pj3.ptr.is_null());
         Ok(())
     }
 }

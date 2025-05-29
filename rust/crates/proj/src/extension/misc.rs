@@ -15,3 +15,19 @@ impl crate::Proj<'_> {
         Ok(self)
     }
 }
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_assert_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        {
+            let pj = ctx.create("EPSG:4326")?;
+            assert!(pj.assert_crs().is_ok());
+        }
+        {
+            let pj = ctx.create("+proj=utm +zone=32 +datum=WGS84")?;
+            assert!(pj.assert_crs().is_err());
+        }
+        Ok(())
+    }
+}

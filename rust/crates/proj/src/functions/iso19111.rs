@@ -1862,7 +1862,7 @@ mod test_context_advanced {
     }
 }
 #[cfg(test)]
-mod test_proj {
+mod test_proj_basic {
     use super::*;
 
     #[test]
@@ -2382,7 +2382,7 @@ mod test_proj {
     }
 }
 #[cfg(test)]
-mod test_other {
+mod test_proj_advanced {
     use super::*;
     #[test]
     fn test_crs_create_bound_crs_to_wgs84() -> miette::Result<()> {

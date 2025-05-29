@@ -34,6 +34,7 @@ macro_rules! create_readonly_struct {
 
         impl $name {
             // Constructor function to initialize the struct
+            #[allow(dead_code)]
             pub fn new($($field: $type),*) -> Self {
                 $name {
                     $( $field ),*

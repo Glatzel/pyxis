@@ -1,11 +1,11 @@
 crate::create_readonly_struct!(
-    Operations,
+    _Operations,
     "Description a PROJ operation"
     "# References"
     "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPERATIONS>",
-    {id: String,"Operation keyword."},
+    {_id: String,"Operation keyword."},
     // PJ *(*proj)(PJ *);
-    {descr: String,"Description of operation."}
+    {_descr: String,"Description of operation."}
 );
 crate::create_readonly_struct!(
     Ellps,

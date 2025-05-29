@@ -114,15 +114,21 @@ pub enum ComparisonCriterion {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum WktType {
+    ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42acbbf33e2fa1d0e7754df8c2ab40bf7a2>
     Wkt2_2015 = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015,
+    ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42a8a4e61323a3ab9204ff3ac3cd8b23c39>
     Wkt2_2015Simplified = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015_SIMPLIFIED,
+    ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42ac634e196cf84127855e2ff4569674d0d>
     Wkt2_2019 = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019,
     //Deprecated alias for PJ_WKT2_2019
     // Wkt2_2018=proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018,
+    ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42a1a237b13d56f5b895c4e3abf9749783e>
     Wkt2_2019Simplified = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019_SIMPLIFIED,
     //Deprecated alias for PJ_WKT2_2019
     // Wkt2_2018Simplified=proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018_SIMPLIFIED,
+    ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42a85c43e48faba72b30e6501b41536afe5>
     Wkt1Gdal = proj_sys::PJ_WKT_TYPE_PJ_WKT1_GDAL,
+    ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42a8da08577d1e0b736b2259c71c40f0e38>
     Wkt1Esri = proj_sys::PJ_WKT_TYPE_PJ_WKT1_ESRI,
 }
 /// Specify how source and target CRS extent should be used to restrict

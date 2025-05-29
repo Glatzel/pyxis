@@ -133,7 +133,7 @@ fn _todeg() { unimplemented!() }
 pub fn dmstor() -> f64 { unimplemented!() }
 
 #[deprecated(note = "Use `rtodms2()` instead.")]
-pub fn rtodms(_r: f64, _pos: char, _neg: char) -> String { unimplemented!() }
+fn _rtodms(_r: f64, _pos: char, _neg: char) -> String { unimplemented!() }
 ///Convert radians to string representation of degrees, minutes and seconds.
 ///
 /// # References

@@ -1,3 +1,7 @@
+//! This section describes the numerous data types in use in PROJ.
+//!
+//! # References
+//!<https://proj.org/en/stable/development/reference/datatypes.html>
 pub mod coordinates;
 pub mod derivatives;
 mod errors;

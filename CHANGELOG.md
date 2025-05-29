@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.23] - 2025-05-29
+
+### Documentation
+
+- **(rust)** Add some proj doc by @Glatzel in [#420](https://github.com/Glatzel/pyxis/pull/420)
+- **(rust)** Add iso19111 type doc by @Glatzel in [#421](https://github.com/Glatzel/pyxis/pull/421)
+
+### Refactor
+
+- Proj from_raw by @Glatzel in [#417](https://github.com/Glatzel/pyxis/pull/417)
+- Rename some objects by @Glatzel in [#422](https://github.com/Glatzel/pyxis/pull/422)
+
 ## [0.0.22] - 2025-05-28
 
 ### Changed
@@ -416,6 +428,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.23]: https://github.com/Glatzel/pyxis/compare/v0.0.22..v0.0.23
 [0.0.22]: https://github.com/Glatzel/pyxis/compare/v0.0.21..v0.0.22
 [0.0.21]: https://github.com/Glatzel/pyxis/compare/v0.0.20..v0.0.21
 [0.0.20]: https://github.com/Glatzel/pyxis/compare/v0.0.19..v0.0.20

@@ -26,11 +26,11 @@ impl crate::Context {
     ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Proj> {
         let len = argv.len();
-        let mut ptrs: Vec<*mut i8> = Vec::with_capacity(len);
+        let mut argv_ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in argv {
-            ptrs.push(CString::new(*s).into_diagnostic()?.into_raw());
+            argv_ptrs.push(CString::new(*s).into_diagnostic()?.into_raw());
         }
-        let ptr = unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, ptrs.as_mut_ptr()) };
+        let ptr = unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, argv_ptrs.as_mut_ptr()) };
         check_result!(self);
         Proj::from_raw(self, ptr)
     }

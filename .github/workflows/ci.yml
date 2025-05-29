@@ -55,16 +55,18 @@ jobs:
               - ./python/**
               - ./.github/workflows/ci-python.yml
             python_cuda:
-              - ./python-cuda/**
-              - ./cuda/**
               - ./.github/workflows/ci-python-cuda.yml
+              - ./cuda/**
+              - ./python-cuda/**
+              - ./rust/crates/pyxis/**
             rust:
               - ./rust/**
               - ./.github/workflows/ci-rust.yml
             rust_cuda:
-              - ./rust-cuda/**
-              - ./cuda/**
               - ./.github/workflows/ci-rust-cuda.yml
+              - ./cuda/**
+              - ./rust-cuda/**
+              - ./rust/crates/pyxis/**
 
   cpp:
     needs: changed
@@ -127,7 +129,7 @@ jobs:
 
   rust-cuda-check-test:
     needs: changed
-    if: ${{github.event_name == 'pull_request'&& ( needs.changed.outputs.changed-rust-cuda != 'false' || needs.changed.outputs.changed-rust != 'false')}}
+    if: ${{github.event_name == 'pull_request'&&  needs.changed.outputs.changed-rust-cuda != 'false'}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -1,8 +1,5 @@
-use std::ffi::c_void;
-
 use miette::IntoDiagnostic;
 
-use crate::check_result;
 use crate::data_types::LogLevel;
 /// # Logging
 impl crate::Context {
@@ -15,21 +12,10 @@ impl crate::Context {
         let level = LogLevel::try_from(level).into_diagnostic()?;
         Ok(level)
     }
-    /// See [`Self::set_log_func`]
+    /// See [`Self::set_log_fn`]
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_func>
     #[deprecated(since = "0.0.21", note = "Use `Self::set_log_level` instead.")]
-    fn _log_func(
-        &self,
-        app_data: *mut c_void,
-        logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
-    ) -> miette::Result<&Self> {
-        //initialize log
-        unsafe {
-            proj_sys::proj_log_func(self.ptr, app_data, logf);
-        };
-        check_result!(self);
-        Ok(self)
-    }
+    fn _log_func(&self) -> miette::Result<&Self> { unimplemented!() }
 }

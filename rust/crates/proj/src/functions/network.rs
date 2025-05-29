@@ -44,7 +44,7 @@ impl crate::Context {
     fn _get_url_endpoint(&self) -> miette::Result<String> {
         let result = unsafe { proj_sys::proj_context_get_url_endpoint(self.ptr) };
         check_result!(self);
-        Ok(crate::c_char_to_string(result).unwrap_or_default())
+        Ok(crate::cstr_to_string(result).unwrap_or_default())
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_user_writable_directory>
@@ -53,7 +53,7 @@ impl crate::Context {
             unsafe { proj_sys::proj_context_get_user_writable_directory(self.ptr, create as i32) };
         check_result!(self);
         Ok(PathBuf::from(
-            crate::c_char_to_string(result).unwrap_or_default(),
+            crate::cstr_to_string(result).unwrap_or_default(),
         ))
     }
     /// # References

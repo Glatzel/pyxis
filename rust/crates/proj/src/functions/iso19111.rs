@@ -21,8 +21,8 @@ use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
 use crate::{
-    Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, c_char_to_string, check_result,
-    vec_c_char_to_string,
+    Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, cstr_to_string,
+    vec_cstr_to_string,
 };
 
 /// # ISO-19111 Base functions
@@ -76,7 +76,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_path>
     pub fn get_database_path(&self) -> PathBuf {
         PathBuf::from(
-            c_char_to_string(unsafe { proj_sys::proj_context_get_database_path(self.ptr) })
+            cstr_to_string(unsafe { proj_sys::proj_context_get_database_path(self.ptr) })
                 .unwrap_or_default(),
         )
     }
@@ -85,7 +85,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
     pub fn get_database_metadata(&self, key: DatabaseMetadataKey) -> Option<String> {
         let key = CString::from(key);
-        c_char_to_string(unsafe {
+        cstr_to_string(unsafe {
             proj_sys::proj_context_get_database_metadata(self.ptr, key.as_ptr())
         })
     }
@@ -94,7 +94,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
     pub fn get_database_structure(&self) -> miette::Result<Vec<String>> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
-        let out_vec = vec_c_char_to_string(ptr).unwrap();
+        let out_vec = vec_cstr_to_string(ptr).unwrap();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -138,13 +138,13 @@ impl crate::Context {
             )
         };
         //warning
-        if let Some(warnings) = vec_c_char_to_string(out_warnings) {
+        if let Some(warnings) = vec_cstr_to_string(out_warnings) {
             for w in warnings.iter() {
                 clerk::warn!("{w}");
             }
         };
         //error
-        if let Some(errors) = vec_c_char_to_string(out_grammar_errors) {
+        if let Some(errors) = vec_cstr_to_string(out_grammar_errors) {
             for e in errors.iter() {
                 clerk::warn!("{e}");
             }
@@ -901,25 +901,25 @@ impl Proj<'_> {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_name>
     pub fn get_name(&self) -> String {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_name(self.ptr) }).unwrap_or_default()
+        crate::cstr_to_string(unsafe { proj_sys::proj_get_name(self.ptr) }).unwrap_or_default()
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
     pub fn get_id_auth_name(&self, index: u16) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.ptr, index as i32) })
+        crate::cstr_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.ptr, index as i32) })
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
     pub fn get_id_code(&self, index: u16) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.ptr, index as i32) })
+        crate::cstr_to_string(unsafe { proj_sys::proj_get_id_code(self.ptr, index as i32) })
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_remarks>
     pub fn get_remarks(&self) -> String {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_remarks(self.ptr) }).unwrap_or_default()
+        crate::cstr_to_string(unsafe { proj_sys::proj_get_remarks(self.ptr) }).unwrap_or_default()
     }
     ///# References
     ///
@@ -935,13 +935,13 @@ impl Proj<'_> {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope>
     pub fn get_scope(&self) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope(self.ptr) })
+        crate::cstr_to_string(unsafe { proj_sys::proj_get_scope(self.ptr) })
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
     pub fn get_scope_ex(&self, domain_idx: u16) -> Option<String> {
-        crate::c_char_to_string(unsafe { proj_sys::proj_get_scope_ex(self.ptr, domain_idx as i32) })
+        crate::cstr_to_string(unsafe { proj_sys::proj_get_scope_ex(self.ptr, domain_idx as i32) })
     }
     ///# References
     ///
@@ -969,7 +969,7 @@ impl Proj<'_> {
             )
             .push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", OPTION_YES);
         let ptrs = options.vec_ptr();
-        let result = c_char_to_string(unsafe {
+        let result = cstr_to_string(unsafe {
             proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr, wkt_type.into(), ptrs.as_ptr())
         });
         check_result!(self);
@@ -993,7 +993,7 @@ impl Proj<'_> {
             .push_optional(max_line_length, "MAX_LINE_LENGTH", "80");
 
         let ptrs = options.vec_ptr();
-        let result = c_char_to_string(unsafe {
+        let result = cstr_to_string(unsafe {
             proj_sys::proj_as_proj_string(self.ctx.ptr, self.ptr, string_type.into(), ptrs.as_ptr())
         });
         check_result!(self);
@@ -1016,7 +1016,7 @@ impl Proj<'_> {
             .push_optional(schema, "SCHEMA", "");
 
         let ptrs = options.vec_ptr();
-        let result = c_char_to_string(unsafe {
+        let result = cstr_to_string(unsafe {
             proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr, ptrs.as_ptr())
         });
         check_result!(self);
@@ -1217,13 +1217,13 @@ impl Proj<'_> {
             miette::bail!("Error");
         }
         Ok(AxisInfo::new(
-            c_char_to_string(name).unwrap(),
-            c_char_to_string(abbrev).unwrap(),
-            c_char_to_string(direction).unwrap().as_str().try_into()?,
+            cstr_to_string(name).unwrap(),
+            cstr_to_string(abbrev).unwrap(),
+            cstr_to_string(direction).unwrap().as_str().try_into()?,
             unit_conv_factor,
-            c_char_to_string(unit_name).unwrap(),
-            c_char_to_string(unit_auth_name).unwrap(),
-            c_char_to_string(unit_code).unwrap(),
+            cstr_to_string(unit_name).unwrap(),
+            cstr_to_string(unit_auth_name).unwrap(),
+            cstr_to_string(unit_code).unwrap(),
         ))
     }
     ///# References
@@ -1265,7 +1265,7 @@ impl Proj<'_> {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_name>
     pub fn get_celestial_body_name(&self) -> Option<String> {
-        c_char_to_string(unsafe { proj_sys::proj_get_celestial_body_name(self.ctx.ptr, self.ptr) })
+        cstr_to_string(unsafe { proj_sys::proj_get_celestial_body_name(self.ctx.ptr, self.ptr) })
     }
     ///# References
     ///
@@ -1297,7 +1297,7 @@ impl Proj<'_> {
         Ok(PrimeMeridianParameters::new(
             longitude,
             unit_conv_factor,
-            c_char_to_string(unit_name).unwrap_or_default(),
+            cstr_to_string(unit_name).unwrap_or_default(),
         ))
     }
     ///# References
@@ -1328,9 +1328,9 @@ impl Proj<'_> {
             miette::bail!("Error");
         }
         Ok(CoordOperationMethodInfo::new(
-            c_char_to_string(method_name).unwrap_or_default(),
-            c_char_to_string(method_auth_name).unwrap_or_default(),
-            c_char_to_string(method_code).unwrap_or_default(),
+            cstr_to_string(method_name).unwrap_or_default(),
+            cstr_to_string(method_auth_name).unwrap_or_default(),
+            cstr_to_string(method_code).unwrap_or_default(),
         ))
     }
     ///# References
@@ -1414,15 +1414,15 @@ impl Proj<'_> {
         }
 
         Ok(CoordOperationParam::new(
-            c_char_to_string(name).unwrap_or_default(),
-            c_char_to_string(auth_name).unwrap_or_default(),
-            c_char_to_string(code).unwrap_or_default(),
+            cstr_to_string(name).unwrap_or_default(),
+            cstr_to_string(auth_name).unwrap_or_default(),
+            cstr_to_string(code).unwrap_or_default(),
             value,
-            c_char_to_string(value_string).unwrap_or_default(),
+            cstr_to_string(value_string).unwrap_or_default(),
             unit_conv_factor,
-            c_char_to_string(unit_name).unwrap_or_default(),
-            c_char_to_string(unit_auth_name).unwrap_or_default(),
-            c_char_to_string(unit_code).unwrap_or_default(),
+            cstr_to_string(unit_name).unwrap_or_default(),
+            cstr_to_string(unit_auth_name).unwrap_or_default(),
+            cstr_to_string(unit_code).unwrap_or_default(),
             UnitCategory::try_from(unsafe { CString::from_raw(unit_category.cast_mut()) })?,
         ))
     }
@@ -1465,10 +1465,10 @@ impl Proj<'_> {
             miette::bail!("Error");
         }
         Ok(CoordOperationGridUsed::new(
-            c_char_to_string(short_name).unwrap_or_default(),
-            c_char_to_string(full_name).unwrap_or_default(),
-            c_char_to_string(package_name).unwrap_or_default(),
-            c_char_to_string(url).unwrap_or_default(),
+            cstr_to_string(short_name).unwrap_or_default(),
+            cstr_to_string(full_name).unwrap_or_default(),
+            cstr_to_string(package_name).unwrap_or_default(),
+            cstr_to_string(url).unwrap_or_default(),
             direct_download != 0,
             open_license != 0,
             available != 0,

@@ -1,4 +1,4 @@
-crate::create_readonly_struct!(
+crate::readonly_struct!(
     Info,
     "Struct holding information about the current instance of [`crate::Proj`]. Struct is populated by [`crate::functions::info()`]."
     "# References"
@@ -11,7 +11,7 @@ crate::create_readonly_struct!(
     {searchpath: String,"Search path for PROJ. List of directories separated by semicolons (Windows) or colons (non-Windows), e.g. `C:\\Users\\doctorwho;C:\\OSGeo4W64\\share\\proj.` Grids and init files are looked for in directories in the search path."}
 );
 
-crate::create_readonly_struct!(
+crate::readonly_struct!(
     ProjInfo,
      "Struct holding information about a [`crate::Proj`] object. Populated by [`crate::Proj::info()`]. The PJ_PROJ_INFO object provides a view into the internals of a [`crate::Proj`], so once the `Proj` is destroyed or otherwise becomes invalid, so does the [`ProjInfo`]."
      "# References"
@@ -23,7 +23,7 @@ crate::create_readonly_struct!(
     {accuracy: f64,"Expected accuracy of the transformation. -1 if unknown."}
 );
 
-crate::create_readonly_struct!(
+crate::readonly_struct!(
     GridInfo,
     "Struct holding information about a specific grid in the search path of PROJ. Populated with the function [`crate::functions::grid_info()`]."
     "# References"
@@ -39,7 +39,7 @@ crate::create_readonly_struct!(
     {cs_lat: f64,"Cell size in the latitudinal direction. In radians."}
 );
 
-crate::create_readonly_struct!(
+crate::readonly_struct!(
     InitInfo,
     "Struct holding information about a specific init file in the search path of PROJ. Populated with the function [`crate::functions::init_info()`]."
      "# References"

@@ -1,4 +1,4 @@
-crate::create_readonly_struct!(
+crate::readonly_struct!(
     _Operations,
     "Description a PROJ operation"
     "# References"
@@ -7,7 +7,7 @@ crate::create_readonly_struct!(
     // PJ *(*proj)(PJ *);
     {_descr: String,"Description of operation."}
 );
-crate::create_readonly_struct!(
+crate::readonly_struct!(
     Ellps,
     "Description of ellipsoids defined in PROJ"
     "# References"
@@ -17,7 +17,7 @@ crate::create_readonly_struct!(
     {ell: String,"Elliptical parameter, e.g. `rf=298.257` or `b=6356772.2`."},
     {name: String,"Name of the ellipsoid"}
 );
-crate::create_readonly_struct!(
+crate::readonly_struct!(
     Units,
     "Distance units defined in PROJ."
     "# References"
@@ -28,7 +28,7 @@ crate::create_readonly_struct!(
     {factor: f64,"Conversion factor that converts the unit to meters."}
 );
 
-crate::create_readonly_struct!(
+crate::readonly_struct!(
     PrimeMeridians,
     "Hard-coded prime meridians defined in PROJ. Note that the structure is no longer updated, and some values may conflict with other sources."
     "# References"

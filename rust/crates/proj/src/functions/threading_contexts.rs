@@ -7,7 +7,7 @@ impl Default for crate::Context {
     fn default() -> Self {
         let ctx = Self::new();
         ctx.set_log_level(LogLevel::None).unwrap();
-        ctx.set_log_func(null_mut::<c_void>(), Some(crate::proj_clerk))
+        ctx.set_log_fn(null_mut::<c_void>(), Some(crate::proj_clerk))
             .unwrap();
         ctx
     }
@@ -37,4 +37,14 @@ impl Drop for crate::Context {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
     fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(self.ptr) }; }
+}
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_clone() -> miette::Result<()> {
+        let ctx1 = crate::new_test_ctx()?;
+        let ctx2 = ctx1.clone();
+        assert!(!ctx2.ptr.is_null());
+        Ok(())
+    }
 }

@@ -38,22 +38,21 @@ pub(crate) enum ProjError {
     CoordTransfm = proj_sys::PROJ_ERR_COORD_TRANSFM,
     ///Invalid input coordinate. e.g. a latitude > 90°.
     CoordTransfmInvalidCoord = proj_sys::PROJ_ERR_COORD_TRANSFM_INVALID_COORD,
-    ///
-    CoordTransfmOutsideProjectionDomain =
-        proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_PROJECTION_DOMAIN,
     ///Coordinate is outside of the projection domain. e.g. approximate
     /// mercator with |longitude - lon_0| > 90°, or iterative convergence method
     /// failed.
-    CoordTransfmNoOperation = proj_sys::PROJ_ERR_COORD_TRANSFM_NO_OPERATION,
+    CoordTransfmOutsideProjectionDomain =
+        proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_PROJECTION_DOMAIN,
     ///No operation found, e.g. if no match the required accuracy, or if
     /// ballpark transformations were asked to not be used and they would be
     /// only such candidate.
-    CoordTransfmOutsideGrid = proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_GRID,
+    CoordTransfmNoOperation = proj_sys::PROJ_ERR_COORD_TRANSFM_NO_OPERATION,
     ///Point to transform falls outside grid/subgrid/TIN.
+    CoordTransfmOutsideGrid = proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_GRID,
+    ///Point to transform falls in a grid cell that evaluates to nodata.
     CoordTransfmGridAtNodata = proj_sys::PROJ_ERR_COORD_TRANSFM_GRID_AT_NODATA,
     ///Point to transform falls in a grid cell that evaluates to nodata.
     CoordTransfmNoConvergence = proj_sys::PROJ_ERR_COORD_TRANSFM_NO_CONVERGENCE,
-    ///
     CoordTransfmMissingTime = proj_sys::PROJ_ERR_COORD_TRANSFM_MISSING_TIME,
 
     //Errors in class PROJ_ERR_OTHER

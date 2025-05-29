@@ -142,7 +142,7 @@ pub fn rtodms2(r: f64, pos: char, neg: char) -> miette::Result<String> {
     let dms = CString::new("xxxdxxmxx.xxs ").into_diagnostic()?;
     let ptr =
         unsafe { proj_sys::proj_rtodms2(dms.as_ptr().cast_mut(), 14, r, pos as i32, neg as i32) };
-    Ok(crate::c_char_to_string(ptr).expect("rtodms2 failed."))
+    Ok(crate::cstr_to_string(ptr).expect("rtodms2 failed."))
 }
 
 #[cfg(test)]

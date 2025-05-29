@@ -38,3 +38,13 @@ impl Drop for crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
     fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(self.ptr) }; }
 }
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_clone() -> miette::Result<()> {
+        let ctx1 = crate::new_test_ctx()?;
+        let ctx2= ctx1.clone();
+        assert!(!ctx2.ptr.is_null());
+        Ok(())
+    }
+}

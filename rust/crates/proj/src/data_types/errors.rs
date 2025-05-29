@@ -10,7 +10,7 @@ use num_enum::{FromPrimitive, IntoPrimitive};
 ///
 /// # References
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#error-codes>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#error-codes>
 #[derive(Debug, Clone, FromPrimitive, IntoPrimitive)]
 #[repr(u32)]
 pub(crate) enum ProjError {

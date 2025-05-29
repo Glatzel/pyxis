@@ -3,14 +3,14 @@
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LP>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LP>
 pub type Lp = proj_sys::PJ_LP;
 
 ///2-dimensional cartesian coordinate.
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XY>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XY>
 pub type Xy = proj_sys::PJ_XY;
 
 ///2-dimensional generic coordinate. Usually used when contents can be either a
@@ -18,7 +18,7 @@ pub type Xy = proj_sys::PJ_XY;
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UV>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UV>
 pub type Uv = proj_sys::PJ_UV;
 
 // 3D
@@ -27,7 +27,7 @@ pub type Uv = proj_sys::PJ_UV;
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LPZ>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LPZ>
 pub type Lpz = proj_sys::PJ_LPZ;
 
 ///Cartesian coordinate in 3 dimensions. Extension of
@@ -35,14 +35,14 @@ pub type Lpz = proj_sys::PJ_LPZ;
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XYZ>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XYZ>
 pub type Xyz = proj_sys::PJ_XYZ;
 
 ///3-dimensional extension of  [`crate::data_types::Uv`].
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UVW>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UVW>
 pub type Uvw = proj_sys::PJ_UVW;
 
 // Spatiotemporal
@@ -50,20 +50,20 @@ pub type Uvw = proj_sys::PJ_UVW;
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LPZT>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LPZT>
 pub type Lpzt = proj_sys::PJ_LPZT;
 
 ///Spatiotemporal version of  [`crate::data_types::Uvw`].
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XYZT>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XYZT>
 pub type Xyzt = proj_sys::PJ_XYZT;
 ///Geodetic coordinate, latitude and longitude. Usually in radians.
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UVWT>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UVWT>
 pub type Uvwt = proj_sys::PJ_UVWT;
 
 // Ancillary
@@ -71,19 +71,19 @@ pub type Uvwt = proj_sys::PJ_UVWT;
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPK>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPK>
 pub type Opk = proj_sys::PJ_OPK;
 ///East, north and up components.
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ENU>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ENU>
 pub type Enu = proj_sys::PJ_ENU;
 ///Geodesic length, forward and reverse azimuths.
 ///
 /// #references
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GEOD>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GEOD>
 pub type Geod = proj_sys::PJ_GEOD;
 
 // Complex

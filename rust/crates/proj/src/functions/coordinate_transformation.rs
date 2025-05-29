@@ -7,7 +7,7 @@ impl crate::Proj<'_> {
     /// See [`Self::convert`], [`Self::project`]
     ///
     /// # References
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn trans(
         &self,
@@ -19,7 +19,7 @@ impl crate::Proj<'_> {
         Ok(out_coord)
     }
     /// # References
-    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
+    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn get_last_used_operation(&self) -> Option<crate::Proj<'_>> {
         use crate::Proj;
@@ -34,7 +34,7 @@ impl crate::Proj<'_> {
     /// # Safety
     /// If x,y is not null pointer.
     /// # References
-    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
+    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
     pub unsafe fn trans_generic(
         &self,
         direction: crate::Direction,
@@ -79,7 +79,7 @@ impl crate::Proj<'_> {
     /// /// See [`Self::convert_array`], [`Self::project_array`]
     ///
     ///  # References
-    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
+    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn trans_array(
         &self,
@@ -102,7 +102,7 @@ impl crate::Proj<'_> {
 
 impl crate::Context {
     /// # References
-    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
+    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
     pub fn trans_bounds(
         &self,
         p: &crate::Proj,
@@ -140,7 +140,7 @@ impl crate::Context {
     }
 
     /// # References
-    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
+    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
     pub fn trans_bounds_3d(
         &self,
         p: &crate::Proj,

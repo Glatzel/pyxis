@@ -1,7 +1,7 @@
 //! Proj functions
 //!
 //! # References
-//!<https://proj.org/en/stable/development/reference/functions.html>
+//! * <https://proj.org/en/stable/development/reference/functions.html>
 mod area_of_interest;
 #[cfg(feature = "unrecommended")]
 mod cleanup;

@@ -7,23 +7,29 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 use crate::create_readonly_struct;
 /// # Reference
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GUESSED_WKT_DIALECT>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GUESSED_WKT_DIALECT>
+/// * <https://proj.org/en/stable/development/reference/cpp/cpp_general.html#general_doc_1WKT2_2019>
 #[derive(Debug, IntoPrimitive, TryFromPrimitive, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum GuessedWktDialect {
+    ///<https://proj.org/en/stable/development/reference/cpp/cpp_general.html#general_doc_1WKT2_2019>
     Wkt2_2019 = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2019,
     // Deprecated alias for PJ_GUESSED_WKT2_2019
     // Wkt2_2018 = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2018,
+    ///<https://proj.org/en/stable/development/reference/cpp/cpp_general.html#general_doc_1WKT2_2015>
     Wkt2_2015 = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2015,
+    ///<https://proj.org/en/stable/development/reference/cpp/cpp_general.html#general_doc_1WKT1>
     Wkt1Gdal = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT1_GDAL,
+    ///ESRI variant of WKT1
     Wkt1Esri = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT1_ESRI,
+    ///Not WKT / unrecognized
     NotWkt = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_NOT_WKT,
 }
 
 /// # References
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CATEGORY>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CATEGORY>
 #[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
@@ -37,7 +43,7 @@ pub enum Category {
 }
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u32)]
@@ -75,7 +81,7 @@ pub enum ProjType {
 }
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COMPARISON_CRITERION>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COMPARISON_CRITERION>
 #[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
@@ -87,7 +93,7 @@ pub enum ComparisonCriterion {
 }
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_WKT_TYPE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_WKT_TYPE>
 #[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
@@ -106,7 +112,7 @@ pub enum WktType {
 
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_EXTENT_USE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_EXTENT_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum CrsExtentUse {
@@ -117,7 +123,7 @@ pub enum CrsExtentUse {
 }
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_GRID_AVAILABILITY_USE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_GRID_AVAILABILITY_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum GridAvailabilityUse {
@@ -129,7 +135,7 @@ pub enum GridAvailabilityUse {
 
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_STRING_TYPE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_STRING_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[repr(u32)]
@@ -139,7 +145,7 @@ pub enum ProjStringType {
 }
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_SPATIAL_CRITERION>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_SPATIAL_CRITERION>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum SpatialCriterion {
@@ -148,7 +154,7 @@ pub enum SpatialCriterion {
 }
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_INTERMEDIATE_CRS_USE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_INTERMEDIATE_CRS_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum IntermediateCrsUse {
@@ -158,7 +164,7 @@ pub enum IntermediateCrsUse {
 }
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORDINATE_SYSTEM_TYPE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORDINATE_SYSTEM_TYPE>
 #[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
@@ -176,7 +182,7 @@ pub enum CoordinateSystemType {
 }
 create_readonly_struct!(
     CrsInfo,
-    "<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_INFO>",
+    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_INFO>",
     {auth_name:String},
     {code:String},
     {name:String},
@@ -194,7 +200,7 @@ create_readonly_struct!(
 
 create_readonly_struct!(
     CrsListParameters,
-    "<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_LIST_PARAMETERS>",
+    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_LIST_PARAMETERS>",
     {types:Vec<ProjType>},
     {types_count:usize},
     {crs_area_of_use_contains_bbox:bool},
@@ -209,7 +215,7 @@ create_readonly_struct!(
 
 create_readonly_struct!(
     UnitInfo ,
-    "<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_UNIT_INFO>",
+    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_UNIT_INFO>",
     {auth_name: String},
     {code: String},
     {name: String},
@@ -221,13 +227,13 @@ create_readonly_struct!(
 
 create_readonly_struct!(
     CelestialBodyInfo,
-    "<https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CELESTIAL_BODY_INFO>",
+    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CELESTIAL_BODY_INFO>",
     {auth_name:String},
     {name:String}
 );
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UNIT_TYPE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UNIT_TYPE>
 #[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
@@ -240,7 +246,7 @@ pub enum UnitType {
 }
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CARTESIAN_CS_2D_TYPE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CARTESIAN_CS_2D_TYPE>
 #[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
@@ -256,7 +262,7 @@ pub enum CartesianCs2dType {
 
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_2D_TYPE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_2D_TYPE>
 #[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
@@ -267,7 +273,7 @@ pub enum EllipsoidalCs2dType {
 
 ///# References
 ///
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_3D_TYPE>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_3D_TYPE>
 #[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
@@ -278,7 +284,7 @@ pub enum EllipsoidalCs3dType {
 
 ///# References
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AXIS_DESCRIPTION>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AXIS_DESCRIPTION>
 pub struct AxisDescription {
     pub(crate) name: CString,
     pub(crate) abbreviation: CString,
@@ -308,7 +314,7 @@ impl AxisDescription {
 }
 create_readonly_struct!(
     ParamDescription ,
-    "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PARAM_DESCRIPTION>",
+    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PARAM_DESCRIPTION>",
     {name: String},
     {auth_name: String},
     {code: String},
@@ -321,7 +327,7 @@ create_readonly_struct!(
 //internal
 /// # References
 ///
-/// <https://github.com/OSGeo/PROJ/blob/master/src/iso19111/static.cpp>
+/// * <https://github.com/OSGeo/PROJ/blob/master/src/iso19111/static.cpp>
 #[derive(Debug, PartialEq)]
 pub enum AxisDirection {
     North,
@@ -463,7 +469,7 @@ impl TryFrom<&str> for AxisDirection {
 }
 create_readonly_struct!(
     AxisInfo,
-    "<https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>",
+    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>",
    {name: String},
    {abbrev: String},
    {direction :AxisDirection},
@@ -474,7 +480,7 @@ create_readonly_struct!(
 );
 create_readonly_struct!(
     EllipsoidParameters,
-    "<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
+    "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
    {semi_major_metre: f64},
    {semi_minor_metre: f64},
    {is_semi_minor_computed :bool},
@@ -482,21 +488,21 @@ create_readonly_struct!(
 );
 create_readonly_struct!(
     PrimeMeridianParameters,
-    "<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
+    "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
 {longitude: f64},
    {unit_conv_factor : f64},
    {unit_name :String}
 );
 create_readonly_struct!(
 CoordOperationMethodInfo,
- "<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
+ "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
 {method_name: String},
 {method_auth_name : String},
 {method_code :String}
 );
 create_readonly_struct!(
 CoordOperationParam,
-"<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
+"* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
 {name : String},
 {auth_name  : String},
 {code  :String},
@@ -544,7 +550,7 @@ impl TryFrom<CString> for UnitCategory {
 }
 create_readonly_struct!(
 CoordOperationGridUsed,
- "<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
+ "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
 {short_name   : String},
 {full_name   :String},
 {package_name    :String},
@@ -557,7 +563,7 @@ CoordOperationGridUsed,
 ///
 ///# References
 ///
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
 pub enum DatabaseMetadataKey {
     DatabaseLayoutVersionMajor,
     DatabaseLayoutVersionMinor,
@@ -599,7 +605,7 @@ impl From<DatabaseMetadataKey> for CString {
 ///
 ///# References
 ///
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>
 pub enum AllowIntermediateCrs {
     Always,
     IfNoDirectTransformation,

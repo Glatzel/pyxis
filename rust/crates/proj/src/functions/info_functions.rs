@@ -5,7 +5,7 @@ use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
 /// Get information about the current instance of the PROJ library.
 ///
 /// References
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_info>
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_info>
 pub fn info() -> Info {
     let src = unsafe { proj_sys::proj_info() };
     Info::new(
@@ -22,7 +22,7 @@ impl crate::Proj<'_> {
     /// Get information about a specific grid.
     ///
     /// References
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_pj_info>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_pj_info>
     pub fn info(&self) -> ProjInfo {
         let src = unsafe { proj_sys::proj_pj_info(self.ptr) };
         ProjInfo::new(
@@ -38,7 +38,7 @@ impl crate::Proj<'_> {
 /// Get information about a specific grid.
 ///
 /// References
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
 pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
     let gridname_cstr = std::ffi::CString::new(grid).into_diagnostic()?;
     let src = unsafe { proj_sys::proj_grid_info(gridname_cstr.as_ptr()) };
@@ -60,7 +60,7 @@ pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
 /// Get information about a specific init file.
 ///
 /// References
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
 pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
     let initname_cstr = std::ffi::CString::new(initname).into_diagnostic()?;
     let src = unsafe { proj_sys::proj_init_info(initname_cstr.as_ptr()) };

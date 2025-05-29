@@ -5,7 +5,7 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 ///
 /// # References
 ///
-/// <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LOG_LEVEL>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LOG_LEVEL>
 #[derive(Debug, TryFromPrimitive, IntoPrimitive)]
 #[repr(u32)]
 pub enum LogLevel {

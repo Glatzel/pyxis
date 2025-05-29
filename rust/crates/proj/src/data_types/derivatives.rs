@@ -2,7 +2,7 @@ crate::create_readonly_struct!(
     Factors,
     "Various cartographic properties, such as scale factors, angular distortion and meridian convergence. Calculated with [`crate::Proj::factors()`]."
     "# References"
-    "- <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_FACTORS>",
+    "- * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_FACTORS>",
     {meridional_scale: f64,r"Meridional scale at coordinate $`(\lambda, \phi)`$."},
     {parallel_scale: f64,r"Parallel scale at coordinate $`(\lambda, \phi)`$."},
     {areal_scale: f64,r"Areal scale factor at coordinate $`(\lambda, \phi)`$."},

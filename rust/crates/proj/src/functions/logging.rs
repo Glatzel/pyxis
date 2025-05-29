@@ -9,7 +9,7 @@ impl crate::Context {
     /// See [`Self::set_log_level`]
     ///
     /// # References
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_level>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_level>
     pub fn log_level(&self, level: LogLevel) -> miette::Result<LogLevel> {
         let level = unsafe { proj_sys::proj_log_level(self.ptr, level.into()) };
         let level = LogLevel::try_from(level).into_diagnostic()?;
@@ -18,7 +18,7 @@ impl crate::Context {
     /// See [`Self::set_log_func`]
     ///
     /// # References
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_func>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_func>
     #[deprecated(since = "0.0.21", note = "Use `Self::set_log_level` instead.")]
     fn _log_func(
         &self,

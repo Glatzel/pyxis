@@ -2,7 +2,7 @@ crate::create_readonly_struct!(
     Info,
     "Struct holding information about the current instance of [`crate::Proj`]. Struct is populated by [`crate::functions::info()`]."
     "# References"
-    "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_INFO>",
+    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_INFO>",
     {major: i32,"Release info. Version number and release date, e.g. `Rel. 4.9.3, 15 August 2016`."},
     {minor: i32,"Text representation of the full version number, e.g. `4.9.3`."},
     {patch: i32,"Major version number."},
@@ -15,7 +15,7 @@ crate::create_readonly_struct!(
     ProjInfo,
      "Struct holding information about a [`crate::Proj`] object. Populated by [`crate::Proj::info()`]. The PJ_PROJ_INFO object provides a view into the internals of a [`crate::Proj`], so once the `Proj` is destroyed or otherwise becomes invalid, so does the [`ProjInfo`]."
      "# References"
-    "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_INFO>",
+    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_INFO>",
     {id: String,"Short ID of the operation the [`crate::Proj`] object is based on, that is, what comes after the `+proj=` in a proj-string, e.g. `merc`."},
     {description: String,"Long describes of the operation the [`crate::Proj`] object is based on, e.g. `Mercator Cyl, Sph&Ell lat_ts=`."},
     {definition: String,"The proj-string that was used to create the [`crate::Proj`] object with, e.g. `+proj=merc +lat_0=24 +lon_0=53 +ellps=WGS84`."},
@@ -27,7 +27,7 @@ crate::create_readonly_struct!(
     GridInfo,
     "Struct holding information about a specific grid in the search path of PROJ. Populated with the function [`crate::functions::grid_info()`]."
     "# References"
-    "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GRID_INFO>",
+    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GRID_INFO>",
     {gridname: String,"Name of grid, e.g. `BETA2007.gsb`."},
     {filename: String,r"Full path of grid file, e.g. `C:\OSGeo4W64\share\proj\BETA2007.gsb`"},
     {format: String,"File format of grid file, e.g. `ntv2`"},
@@ -43,7 +43,7 @@ crate::create_readonly_struct!(
     InitInfo,
     "Struct holding information about a specific init file in the search path of PROJ. Populated with the function [`crate::functions::init_info()`]."
      "# References"
-    "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_INIT_INFO>",
+    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_INIT_INFO>",
     {name: String,"Name of init file, e.g. `epsg`."},
     {filename: String,r"Full path of init file, e.g. `C:\OSGeo4W64\\share\proj\epsg`"},
     {version: String,"Version number of init file, e.g. `9.0.0`"},

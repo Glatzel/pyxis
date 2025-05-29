@@ -1,4 +1,5 @@
 use std::env;
+use std::sync::LazyLock;
 
 use miette::IntoDiagnostic;
 use tracing::level_filters::LevelFilter;
@@ -6,11 +7,15 @@ use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 
 use crate::data_types::LogLevel;
-
-pub(crate) fn new_test_ctx() -> miette::Result<crate::Context> {
+static INIT_LOGGING: LazyLock<bool> = LazyLock::new(|| {
     tracing_subscriber::registry()
         .with(clerk::terminal_layer(LevelFilter::TRACE, true))
         .init();
+    true
+});
+pub(crate) fn new_test_ctx() -> miette::Result<crate::Context> {
+    let log = &*INIT_LOGGING;
+    assert!(log);
     let ctx = crate::Context::default();
     ctx.set_log_level(LogLevel::Trace)?;
     ctx.set_enable_network(true)?;

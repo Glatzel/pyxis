@@ -19,14 +19,10 @@ use std::ptr::{self, null};
 
 use miette::IntoDiagnostic;
 
-use crate::data_types::iso19111::{
-    Category, ComparisonCriterion, CoordOperationGridUsed, CoordOperationMethodInfo,
-    CoordOperationParam, CoordinateSystemType, DatabaseMetadataKey, EllipsoidParameters,
-    GuessedWktDialect, PrimeMeridianParameters, ProjStringType, ProjType, UnitCategory, WktType,
-};
+use crate::data_types::iso19111::*;
 use crate::{
-    AllowIntermediateCrs, Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, c_char_to_string,
-    check_result, vec_c_char_to_string,
+    Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, c_char_to_string, check_result,
+    vec_c_char_to_string,
 };
 
 /// # ISO-19111 Base functions
@@ -321,7 +317,7 @@ impl Context {
     pub fn create_cs(
         &self,
         coordinate_system_type: CoordinateSystemType,
-        axis: &[crate::data_types::iso19111::AxisDescription],
+        axis: &[AxisDescription],
     ) -> miette::Result<crate::Proj> {
         let axis_count = axis.len();
         let mut axis_vec: Vec<proj_sys::PJ_AXIS_DESCRIPTION> = Vec::with_capacity(axis_count);
@@ -350,7 +346,7 @@ impl Context {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
     pub fn create_cartesian_2d_cs(
         &self,
-        ellipsoidal_cs_2d_type: crate::data_types::iso19111::CartesianCs2dType,
+        ellipsoidal_cs_2d_type: CartesianCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
@@ -371,7 +367,7 @@ impl Context {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
     pub fn create_ellipsoidal_2d_cs(
         &self,
-        ellipsoidal_cs_2d_type: crate::data_types::iso19111::EllipsoidalCs2dType,
+        ellipsoidal_cs_2d_type: EllipsoidalCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
@@ -392,7 +388,7 @@ impl Context {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
     pub fn create_ellipsoidal_3d_cs(
         &self,
-        ellipsoidal_cs_3d_type: crate::data_types::iso19111::EllipsoidalCs3dType,
+        ellipsoidal_cs_3d_type: EllipsoidalCs3dType,
         horizontal_angular_unit_name: Option<&str>,
         horizontal_angular_unit_conv_factor: f64,
         vertical_linear_unit_name: Option<&str>,
@@ -1597,7 +1593,6 @@ fn _proj_list_destroy() { unimplemented!() }
 
 #[cfg(test)]
 mod test_context_basic {
-
     use super::*;
     #[test]
     fn test_set_database_path() -> miette::Result<()> {
@@ -1693,15 +1688,7 @@ mod test_context_basic {
     fn test_guess_wkt_dialect() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let wkt = pj.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         let dialect = ctx.guess_wkt_dialect(&wkt)?;
         assert_eq!(dialect, GuessedWktDialect::Wkt2_2019);
         Ok(())
@@ -1717,15 +1704,7 @@ mod test_context_basic {
     fn test_create_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let wkt = pj.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("32631"));
         Ok(())
@@ -1733,41 +1712,32 @@ mod test_context_basic {
 }
 #[cfg(test)]
 mod test_context_advanced {
-    use crate::Proj;
-
+    use super::*;
     #[test]
     fn test_create_cs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj<'_> = ctx.create_cs(
-            crate::data_types::iso19111::CoordinateSystemType::Cartesian,
+            CoordinateSystemType::Cartesian,
             &[
-                crate::data_types::iso19111::AxisDescription::new(
+                AxisDescription::new(
                     Some("Longitude"),
                     Some("lon"),
-                    crate::data_types::iso19111::AxisDirection::East,
+                    AxisDirection::East,
                     Some("Degree"),
                     1.0,
-                    crate::data_types::iso19111::UnitType::Angular,
+                    UnitType::Angular,
                 ),
-                crate::data_types::iso19111::AxisDescription::new(
+                AxisDescription::new(
                     Some("Latitude"),
                     Some("lat"),
-                    crate::data_types::iso19111::AxisDirection::North,
+                    AxisDirection::North,
                     Some("Degree"),
                     1.0,
-                    crate::data_types::iso19111::UnitType::Angular,
+                    UnitType::Angular,
                 ),
             ],
         )?;
-        let wkt = pj.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("9122"));
         Ok(())
@@ -1775,20 +1745,9 @@ mod test_context_advanced {
     #[test]
     fn test_create_cartesian_2d_cs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> = ctx.create_cartesian_2d_cs(
-            crate::data_types::iso19111::CartesianCs2dType::EastingNorthing,
-            Some("Degree"),
-            1.0,
-        )?;
-        let wkt = pj.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let pj: Proj<'_> =
+            ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, Some("Degree"), 1.0)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("LENGTHUNIT"));
         Ok(())
@@ -1797,19 +1756,11 @@ mod test_context_advanced {
     fn test_create_ellipsoidal_2d_cs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj<'_> = ctx.create_ellipsoidal_2d_cs(
-            crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
+            EllipsoidalCs2dType::LatitudeLongitude,
             Some("Degree"),
             1.0,
         )?;
-        let wkt = pj.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("9122"));
         Ok(())
@@ -1818,21 +1769,13 @@ mod test_context_advanced {
     fn test_create_ellipsoidal_3d_cs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj<'_> = ctx.create_ellipsoidal_3d_cs(
-            crate::data_types::iso19111::EllipsoidalCs3dType::LatitudeLongitudeHeight,
+            EllipsoidalCs3dType::LatitudeLongitudeHeight,
             Some("Degree"),
             1.0,
             Some("Degree"),
             1.0,
         )?;
-        let wkt = pj.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("LENGTHUNIT"));
         Ok(())
@@ -1851,20 +1794,12 @@ mod test_context_advanced {
             Some("Degree"),
             1.0,
             &ctx.create_ellipsoidal_2d_cs(
-                crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
+                EllipsoidalCs2dType::LatitudeLongitude,
                 Some("Degree"),
                 1.0,
             )?,
         )?;
-        let wkt = pj.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("9122"));
 
@@ -1879,20 +1814,12 @@ mod test_context_advanced {
                 .crs_get_datum()?
                 .unwrap(),
             &ctx.create_ellipsoidal_2d_cs(
-                crate::data_types::iso19111::EllipsoidalCs2dType::LatitudeLongitude,
+                EllipsoidalCs2dType::LatitudeLongitude,
                 Some("Degree"),
                 1.0,
             )?,
         )?;
-        let wkt = pj.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("9122"));
 
@@ -1901,10 +1828,7 @@ mod test_context_advanced {
 }
 #[cfg(test)]
 mod test_proj {
-    use crate::Area;
-    use crate::data_types::iso19111::{
-        Category, ComparisonCriterion, CoordinateSystemType, ProjType,
-    };
+    use super::*;
 
     #[test]
     fn test_get_type() -> miette::Result<()> {
@@ -2004,15 +1928,7 @@ mod test_proj {
     pub fn test_as_wkt() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let wkt = pj.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
         assert!(wkt.contains("WGS 84"));
         Ok(())
@@ -2021,12 +1937,7 @@ mod test_proj {
     pub fn test_as_proj_string() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let proj_string = pj.as_proj_string(
-            crate::data_types::iso19111::ProjStringType::Proj4,
-            None,
-            None,
-            None,
-        )?;
+        let proj_string = pj.as_proj_string(ProjStringType::Proj4, None, None, None)?;
         println!("{proj_string}");
         assert_eq!(proj_string, "+proj=longlat +datum=WGS84 +no_defs +type=crs");
         Ok(())
@@ -2043,7 +1954,7 @@ mod test_proj {
     #[test]
     pub fn test_get_source_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &Area::default())?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let target = pj.get_source_crs().unwrap();
         assert_eq!(target.get_name(), "WGS 84");
         Ok(())
@@ -2051,7 +1962,7 @@ mod test_proj {
     #[test]
     pub fn test_get_target_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &Area::default())?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let target = pj.get_target_crs().unwrap();
         assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");
         Ok(())
@@ -2071,15 +1982,7 @@ mod test_proj {
         let pj = ctx.create("EPSG:3857")?;
         assert!(pj.is_crs());
         let geodetic = pj.crs_get_geodetic_crs()?;
-        let wkt = geodetic.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = geodetic.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("4326"));
         Ok(())
@@ -2090,15 +1993,7 @@ mod test_proj {
         let pj = ctx.create("EPSG:3857")?;
         assert!(pj.is_crs());
         let horizontal = pj.crs_get_horizontal_datum()?;
-        let wkt = horizontal.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = horizontal.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("6326"));
         Ok(())
@@ -2180,15 +2075,7 @@ mod test_proj {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
-        let wkt = cs.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = cs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("9122"));
         Ok(())
@@ -2216,15 +2103,7 @@ mod test_proj {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let ellps = pj.get_ellipsoid()?;
-        let wkt = ellps.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = ellps.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("7030"));
         Ok(())
@@ -2251,15 +2130,7 @@ mod test_proj {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let meridian = pj.get_prime_meridian()?;
-        let wkt = meridian.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = meridian.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("8901"));
         Ok(())
@@ -2282,15 +2153,7 @@ mod test_proj {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let coordoperation = pj.crs_get_coordoperation()?;
-        let wkt = coordoperation.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = coordoperation.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("16031"));
         Ok(())
@@ -2414,15 +2277,7 @@ mod test_proj {
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let coordoperation = pj.crs_get_coordoperation()?;
         let inversed = coordoperation.coordoperation_create_inverse()?;
-        let wkt = inversed.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = inversed.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("16031"));
         Ok(())
@@ -2444,7 +2299,7 @@ mod test_proj {
         // let pj = ctx.create_from_database("EPSG", "28356",
         // Category::CoordinateOperation, false)?; let step =
         // pj.concatoperation_get_step(1)?; let wkt = step.as_wkt(
-        //     crate::data_types::iso19111::WktType::Wkt2_2019,
+        //     WktType::Wkt2_2019,
         //     None,
         //     None,
         //     None,
@@ -2461,15 +2316,7 @@ mod test_proj {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let new = pj.coordinate_metadata_create(123.4)?;
-        let wkt = new.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = new.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}",);
         assert!(wkt.contains("123.4"));
         Ok(())
@@ -2486,23 +2333,13 @@ mod test_proj {
 }
 #[cfg(test)]
 mod test_other {
-    use crate::AllowIntermediateCrs;
-    use crate::data_types::iso19111::Category;
-
+    use super::*;
     #[test]
     fn test_crs_create_bound_crs_to_wgs84() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let bound = pj.crs_create_bound_crs_to_wgs84(Some(AllowIntermediateCrs::Never))?;
-        let wkt = bound.as_wkt(
-            crate::data_types::iso19111::WktType::Wkt2_2019,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )?;
+        let wkt = bound.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}",);
         assert!(wkt.contains("32631"));
         Ok(())

@@ -1,4 +1,5 @@
 use std::ffi::CString;
+use std::fmt::Display;
 
 use miette::IntoDiagnostic;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -490,6 +491,11 @@ CoordOperationGridUsed,
 {open_license    :bool},
 {available    :bool}
 );
+/// See [`crate::Context::get_database_metadata`]
+///
+///# References
+///
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
 pub enum DatabaseMetadataKey {
     DatabaseLayoutVersionMajor,
     DatabaseLayoutVersionMinor,
@@ -525,5 +531,25 @@ impl From<DatabaseMetadataKey> for CString {
             DatabaseMetadataKey::ProjDataVersion => "PROJ_DATA.VERSION ",
         })
         .expect("Error creating CString")
+    }
+}
+/// See [`crate::Proj::crs_create_bound_crs_to_wgs84`]
+/// 
+///# References
+///
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>
+pub enum AllowIntermediateCrs {
+    Always,
+    IfNoDirectTransformation,
+    Never,
+}
+impl Display for AllowIntermediateCrs {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let text = match self {
+            AllowIntermediateCrs::Always => "ALWAYS",
+            AllowIntermediateCrs::IfNoDirectTransformation => "IF_NO_DIRECT_TRANSFORMATION",
+            AllowIntermediateCrs::Never => "NEVER",
+        };
+        write!(f, "{}", text)
     }
 }

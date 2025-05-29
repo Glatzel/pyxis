@@ -5,7 +5,7 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 /// pointers to this object and the contents is hidden behind the public API.
 ///
 /// # References
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ>
 pub struct Proj<'a> {
     pub(crate) ptr: *mut proj_sys::PJ,
     pub(crate) ctx: &'a crate::Context,
@@ -16,7 +16,7 @@ pub struct Proj<'a> {
 /// the section on transformation functions.
 ///
 /// # References
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_DIRECTION>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_DIRECTION>
 #[derive(Debug, TryFromPrimitive, IntoPrimitive)]
 #[repr(i32)]
 pub enum Direction {
@@ -30,7 +30,7 @@ pub enum Direction {
 /// operations within a context should be performed in the same thread.
 ///
 /// # References
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CONTEXT>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CONTEXT>
 pub struct Context {
     pub(crate) ptr: *mut proj_sys::PJ_CONTEXT,
 }
@@ -40,7 +40,7 @@ pub struct Context {
 /// between the two input coordinate reference systems.
 ///
 /// # References
-///<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AREA>
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AREA>
 pub struct Area {
     pub(crate) ptr: *mut proj_sys::PJ_AREA,
 }

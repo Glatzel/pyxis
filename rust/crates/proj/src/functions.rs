@@ -1,19 +1,27 @@
+//! Proj functions
+//!
+//! # References
+//! * <https://proj.org/en/stable/development/reference/functions.html>
 mod area_of_interest;
 #[cfg(feature = "unrecommended")]
 mod cleanup;
 mod coordinate_transformation;
 mod custom_io;
-pub mod distances;
+mod distances;
 mod error_reporting;
-pub mod info_functions;
-
+mod info_functions;
 mod iso19111;
-pub mod lists;
+mod lists;
 mod logging;
 mod network;
 mod threading_contexts;
 mod transformation_setup;
-pub mod various;
+mod various;
+
 // pub use iso19111::*;
 #[cfg(feature = "unrecommended")]
 pub use cleanup::*;
+pub use distances::*;
+pub use info_functions::*;
+pub use lists::*;
+pub use various::*;

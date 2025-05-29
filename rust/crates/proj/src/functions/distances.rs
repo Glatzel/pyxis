@@ -2,7 +2,7 @@ use crate::{ToCoord, check_result};
 ///# Distances
 impl crate::Proj<'_> {
     /// # References
-    ///<https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
     pub fn lp_dist(&self, a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
         let dist = unsafe { proj_sys::proj_lp_dist(self.ptr, a.to_coord()?, b.to_coord()?) };
         check_result!(self);
@@ -15,7 +15,7 @@ impl crate::Proj<'_> {
         Ok(dist)
     }
     /// # References
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_lpz_dist>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_lpz_dist>
     pub fn lpz_dist(
         &self,
         a: impl crate::IPjCoord,
@@ -32,7 +32,7 @@ impl crate::Proj<'_> {
         Ok(dist)
     }
     /// # References
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
     pub fn geod(
         &self,
         a: impl crate::IPjCoord,
@@ -53,14 +53,14 @@ impl crate::Proj<'_> {
 /// Calculate 2-dimensional euclidean between two projected coordinates.
 ///
 /// # References
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
 pub fn xy_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
     Ok(unsafe { proj_sys::proj_xy_dist(a.to_coord()?, b.to_coord()?) })
 }
 /// Calculate 3-dimensional euclidean between two projected coordinates.
 ///
 /// # References
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_xyz_dist>
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xyz_dist>
 pub fn xyz_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
     Ok(unsafe { proj_sys::proj_xyz_dist(a.to_coord()?, b.to_coord()?) })
 }

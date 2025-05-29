@@ -24,8 +24,8 @@ pub(crate) fn vec_c_char_to_string(ptr: *mut *mut i8) -> Option<Vec<String>> {
     Some(vec_str)
 }
 macro_rules! create_readonly_struct {
-    ($name:ident, $struct_doc:expr, $({$field:ident: $type:ty $(, $field_doc:expr)?}),*) => {
-        #[doc=$struct_doc]
+    ($name:ident, $($struct_doc:expr)+, $({$field:ident: $type:ty $(, $field_doc:expr)?}),*) => {
+        $(#[doc=$struct_doc])+
         #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
         #[derive(Debug)]
         pub struct $name {
@@ -34,6 +34,7 @@ macro_rules! create_readonly_struct {
 
         impl $name {
             // Constructor function to initialize the struct
+            #[allow(dead_code)]
             pub fn new($($field: $type),*) -> Self {
                 $name {
                     $( $field ),*
@@ -42,6 +43,7 @@ macro_rules! create_readonly_struct {
 
             // Getter methods for each field
             $(
+                $(#[doc=$field_doc])?
                 pub fn $field(&self) -> &$type {
                     &self.$field
                 }

@@ -15,7 +15,7 @@ impl Default for crate::Context {
 
 impl crate::Context {
     /// # References
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
     pub fn new() -> Self {
         Self {
             ptr: unsafe { proj_sys::proj_context_create() },
@@ -25,7 +25,7 @@ impl crate::Context {
 
 impl Clone for crate::Context {
     /// # References
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone>
     fn clone(&self) -> Self {
         Self {
             ptr: unsafe { proj_sys::proj_context_clone(self.ptr) },
@@ -35,6 +35,6 @@ impl Clone for crate::Context {
 
 impl Drop for crate::Context {
     /// # References
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
     fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(self.ptr) }; }
 }

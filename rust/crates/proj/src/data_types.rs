@@ -1,11 +1,15 @@
+//! This section describes the numerous data types in use in PROJ.
+//!
+//! # References
+//! * <https://proj.org/en/stable/development/reference/datatypes.html>
 pub mod coordinates;
-pub mod derivatives;
+mod derivatives;
 mod errors;
-pub mod infos;
+mod infos;
 pub mod iso19111;
-pub mod list_structures;
-pub mod logging;
-pub mod transformation;
+mod list_structures;
+mod logging;
+mod transformation;
 
 pub(crate) use coordinates::*;
 pub use derivatives::Factors;

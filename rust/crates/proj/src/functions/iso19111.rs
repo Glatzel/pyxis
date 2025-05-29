@@ -11,7 +11,7 @@
 //!
 //! # References
 //!
-//!<https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
+//! * <https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
 use std::ffi::CString;
 use std::path::{Path, PathBuf};
@@ -29,12 +29,12 @@ use crate::{
 impl crate::Context {
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_autoclose_database>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_autoclose_database>
     #[deprecated]
     fn _set_autoclose_database(&self) { unimplemented!() }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
     pub fn set_database_path(
         &self,
         db_path: &Path,
@@ -73,7 +73,7 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_path>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_path>
     pub fn get_database_path(&self) -> PathBuf {
         PathBuf::from(
             c_char_to_string(unsafe { proj_sys::proj_context_get_database_path(self.ptr) })
@@ -82,7 +82,7 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
     pub fn get_database_metadata(&self, key: DatabaseMetadataKey) -> Option<String> {
         let key = CString::from(key);
         c_char_to_string(unsafe {
@@ -91,7 +91,7 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
     pub fn get_database_structure(&self) -> miette::Result<Vec<String>> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
         let out_vec = vec_c_char_to_string(ptr).unwrap();
@@ -100,7 +100,7 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
     pub fn guess_wkt_dialect(&self, wkt: &str) -> miette::Result<GuessedWktDialect> {
         GuessedWktDialect::try_from(unsafe {
             proj_sys::proj_context_guess_wkt_dialect(
@@ -112,7 +112,7 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_wkt>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_wkt>
     pub fn create_from_wkt(
         &self,
         wkt: &str,
@@ -153,7 +153,7 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_database>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_database>
     pub fn create_from_database(
         &self,
         auth_name: &str,
@@ -313,7 +313,7 @@ impl crate::Context {
 impl Context {
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
     pub fn create_cs(
         &self,
         coordinate_system_type: CoordinateSystemType,
@@ -343,7 +343,7 @@ impl Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
     pub fn create_cartesian_2d_cs(
         &self,
         ellipsoidal_cs_2d_type: CartesianCs2dType,
@@ -364,7 +364,7 @@ impl Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
     pub fn create_ellipsoidal_2d_cs(
         &self,
         ellipsoidal_cs_2d_type: EllipsoidalCs2dType,
@@ -385,7 +385,7 @@ impl Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
     pub fn create_ellipsoidal_3d_cs(
         &self,
         ellipsoidal_cs_3d_type: EllipsoidalCs3dType,
@@ -413,7 +413,7 @@ impl Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
     fn _query_geodetic_crs_from_datum(
         &self,
         crs_auth_name: Option<&str>,
@@ -439,7 +439,7 @@ impl Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs>
     pub fn create_geographic_crs(
         &self,
         crs_name: Option<&str>,
@@ -481,7 +481,7 @@ impl Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs_from_datum>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs_from_datum>
     pub fn create_geographic_crs_from_datum(
         &self,
         crs_name: Option<&str>,
@@ -878,52 +878,52 @@ impl Context {
 impl Proj<'_> {
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
     pub fn get_type(&self) -> miette::Result<ProjType> {
         let result = unsafe { proj_sys::proj_get_type(self.ptr) };
         ProjType::try_from(result).into_diagnostic()
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_deprecated>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_deprecated>
     pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.ptr) != 0 } }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
     pub fn is_equivalent_to(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
         unsafe { proj_sys::proj_is_equivalent_to(self.ptr, other.ptr, criterion.into()) != 0 }
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_crs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_crs>
     pub fn is_crs(&self) -> bool { unsafe { proj_sys::proj_is_crs(self.ptr) != 0 } }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_name>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_name>
     pub fn get_name(&self) -> String {
         crate::c_char_to_string(unsafe { proj_sys::proj_get_name(self.ptr) }).unwrap_or_default()
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
     pub fn get_id_auth_name(&self, index: u16) -> Option<String> {
         crate::c_char_to_string(unsafe { proj_sys::proj_get_id_auth_name(self.ptr, index as i32) })
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
     pub fn get_id_code(&self, index: u16) -> Option<String> {
         crate::c_char_to_string(unsafe { proj_sys::proj_get_id_code(self.ptr, index as i32) })
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_remarks>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_remarks>
     pub fn get_remarks(&self) -> String {
         crate::c_char_to_string(unsafe { proj_sys::proj_get_remarks(self.ptr) }).unwrap_or_default()
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
     pub fn get_domain_count(&self) -> miette::Result<u32> {
         let count = unsafe { proj_sys::proj_get_domain_count(self.ptr) };
         if count == 0 {
@@ -933,19 +933,19 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope>
     pub fn get_scope(&self) -> Option<String> {
         crate::c_char_to_string(unsafe { proj_sys::proj_get_scope(self.ptr) })
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
     pub fn get_scope_ex(&self, domain_idx: u16) -> Option<String> {
         crate::c_char_to_string(unsafe { proj_sys::proj_get_scope_ex(self.ptr, domain_idx as i32) })
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_wkt>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_wkt>
     pub fn as_wkt(
         &self,
         wkt_type: WktType,
@@ -978,7 +978,7 @@ impl Proj<'_> {
 
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_proj_string>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_proj_string>
     pub fn as_proj_string(
         &self,
         string_type: ProjStringType,
@@ -1002,7 +1002,7 @@ impl Proj<'_> {
 
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_projjson>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_projjson>
     pub fn as_projjson(
         &self,
         multiline: Option<bool>,
@@ -1024,7 +1024,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
     pub fn get_source_crs(&self) -> Option<Proj<'_>> {
         let out_ptr = unsafe { proj_sys::proj_get_source_crs(self.ctx.ptr, self.ptr) };
         if out_ptr.is_null() {
@@ -1038,7 +1038,7 @@ impl Proj<'_> {
 
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
     pub fn get_target_crs(&self) -> Option<Proj<'_>> {
         let out_ptr = unsafe { proj_sys::proj_get_target_crs(self.ctx.ptr, self.ptr) };
         if out_ptr.is_null() {
@@ -1051,35 +1051,35 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
     pub fn crs_is_derived(&self) -> bool {
         unsafe { proj_sys::proj_crs_is_derived(self.ctx.ptr, self.ptr) != 0 }
     }
 
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
     pub fn crs_get_geodetic_crs(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_geodetic_crs(self.ctx.ptr, self.ptr) };
         crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
     pub fn crs_get_horizontal_datum(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_horizontal_datum(self.ctx.ptr, self.ptr) };
         crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
     pub fn crs_get_sub_crs(&self, index: u16) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx.ptr, self.ptr, index as i32) };
         crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
     pub fn crs_get_datum(&self) -> miette::Result<Option<Proj>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum(self.ctx.ptr, self.ptr) };
         check_result!(self);
@@ -1090,7 +1090,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_ensemble>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_ensemble>
     pub fn crs_get_datum_ensemble(&self) -> miette::Result<Option<Proj>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_ensemble(self.ctx.ptr, self.ptr) };
         check_result!(self);
@@ -1101,7 +1101,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_forced>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_forced>
     pub fn crs_get_datum_forced(&self) -> miette::Result<Option<Proj>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_forced(self.ctx.ptr, self.ptr) };
         check_result!(self);
@@ -1112,19 +1112,19 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_has_point_motion_operation>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_has_point_motion_operation>
     pub fn crs_has_point_motion_operation(&self) -> bool {
         unsafe { proj_sys::proj_crs_has_point_motion_operation(self.ctx.ptr, self.ptr) != 0 }
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member_count>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member_count>
     pub fn datum_ensemble_get_member_count(&self) -> u16 {
         unsafe { proj_sys::proj_datum_ensemble_get_member_count(self.ctx.ptr, self.ptr) as u16 }
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_accuracy>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_accuracy>
     pub fn datum_ensemble_get_accuracy(&self) -> miette::Result<f64> {
         let result = unsafe { proj_sys::proj_datum_ensemble_get_accuracy(self.ctx.ptr, self.ptr) };
         if result < 0.0 {
@@ -1134,7 +1134,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
     pub fn datum_ensemble_get_member(&self, member_index: u16) -> miette::Result<Option<Proj>> {
         let ptr = unsafe {
             proj_sys::proj_datum_ensemble_get_member(self.ctx.ptr, self.ptr, member_index as i32)
@@ -1147,7 +1147,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_dynamic_datum_get_frame_reference_epoch>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dynamic_datum_get_frame_reference_epoch>
     pub fn dynamic_datum_get_frame_reference_epoch(&self) -> miette::Result<f64> {
         let result = unsafe {
             proj_sys::proj_dynamic_datum_get_frame_reference_epoch(self.ctx.ptr, self.ptr)
@@ -1159,14 +1159,14 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
     pub fn crs_get_coordinate_system(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordinate_system(self.ctx.ptr, self.ptr) };
         crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_type>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_type>
     pub fn cs_get_type(&self) -> miette::Result<CoordinateSystemType> {
         let cs_type = CoordinateSystemType::try_from(unsafe {
             proj_sys::proj_cs_get_type(self.ctx.ptr, self.ptr)
@@ -1179,7 +1179,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_count>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_count>
     pub fn cs_get_axis_count(&self) -> miette::Result<u16> {
         let count = unsafe { proj_sys::proj_cs_get_axis_count(self.ctx.ptr, self.ptr) };
         if count == -1 {
@@ -1189,7 +1189,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>
     pub fn cs_get_axis_info(&self, index: u16) -> miette::Result<AxisInfo> {
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut abbrev: *const std::ffi::c_char = std::ptr::null();
@@ -1228,14 +1228,14 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
     pub fn get_ellipsoid(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_get_ellipsoid(self.ctx.ptr, self.ptr) };
         crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_ellipsoid_get_parameters>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_ellipsoid_get_parameters>
     pub fn ellipsoid_get_parameters(&self) -> miette::Result<EllipsoidParameters> {
         let mut semi_major_metre = f64::default();
         let mut semi_minor_metre = f64::default();
@@ -1263,20 +1263,20 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_name>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_name>
     pub fn get_celestial_body_name(&self) -> Option<String> {
         c_char_to_string(unsafe { proj_sys::proj_get_celestial_body_name(self.ctx.ptr, self.ptr) })
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
     pub fn get_prime_meridian(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx.ptr, self.ptr) };
         crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_prime_meridian_get_parameters>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_prime_meridian_get_parameters>
     pub fn prime_meridian_get_parameters(&self) -> miette::Result<PrimeMeridianParameters> {
         let mut longitude = f64::default();
         let mut unit_conv_factor = f64::default();
@@ -1302,14 +1302,14 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
     pub fn crs_get_coordoperation(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordoperation(self.ctx.ptr, self.ptr) };
         crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_method_info>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_method_info>
     pub fn coordoperation_get_method_info(&self) -> miette::Result<CoordOperationMethodInfo> {
         let mut method_name: *const std::ffi::c_char = std::ptr::null();
         let mut method_auth_name: *const std::ffi::c_char = std::ptr::null();
@@ -1335,13 +1335,13 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_is_instantiable>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_is_instantiable>
     pub fn coordoperation_is_instantiable(&self) -> bool {
         unsafe { proj_sys::proj_coordoperation_is_instantiable(self.ctx.ptr, self.ptr) != 0 }
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_has_ballpark_transformation>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_has_ballpark_transformation>
     pub fn coordoperation_has_ballpark_transformation(&self) -> bool {
         unsafe {
             proj_sys::proj_coordoperation_has_ballpark_transformation(self.ctx.ptr, self.ptr) != 0
@@ -1349,7 +1349,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_requires_per_coordinate_input_time>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_requires_per_coordinate_input_time>
     pub fn coordoperation_requires_per_coordinate_input_time(&self) -> bool {
         unsafe {
             proj_sys::proj_coordoperation_requires_per_coordinate_input_time(self.ctx.ptr, self.ptr)
@@ -1358,13 +1358,13 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_count>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_count>
     pub fn coordoperation_get_param_count(&self) -> u16 {
         unsafe { proj_sys::proj_coordoperation_get_param_count(self.ctx.ptr, self.ptr) as u16 }
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_index>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_index>
     pub fn coordoperation_get_param_index(&self, name: &str) -> miette::Result<u16> {
         let result = unsafe {
             proj_sys::proj_coordoperation_get_param_index(
@@ -1380,7 +1380,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param>
     pub fn coordoperation_get_param(&self, index: u16) -> miette::Result<CoordOperationParam> {
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut auth_name: *const std::ffi::c_char = std::ptr::null();
@@ -1428,13 +1428,13 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used_count>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used_count>
     pub fn coordoperation_get_grid_used_count(&self) -> u16 {
         unsafe { proj_sys::proj_coordoperation_get_grid_used_count(self.ctx.ptr, self.ptr) as u16 }
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used>
     pub fn coordoperation_get_grid_used(
         &self,
         index: u16,
@@ -1476,7 +1476,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_accuracy>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_accuracy>
     pub fn coordoperation_get_accuracy(&self) -> miette::Result<f64> {
         let result = unsafe { proj_sys::proj_coordoperation_get_accuracy(self.ctx.ptr, self.ptr) };
         if result < 0.0 {
@@ -1486,7 +1486,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_towgs84_values>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_towgs84_values>
     pub fn coordoperation_get_towgs84_values(&self) -> [f64; 7] {
         let mut to_wgs84 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
         unsafe {
@@ -1502,14 +1502,14 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
     pub fn coordoperation_create_inverse(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_coordoperation_create_inverse(self.ctx.ptr, self.ptr) };
         crate::Proj::from_raw(self.ctx, ptr)
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step_count>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step_count>
     pub fn concatoperation_get_step_count(&self) -> miette::Result<u16> {
         let result =
             unsafe { proj_sys::proj_concatoperation_get_step_count(self.ctx.ptr, self.ptr) };
@@ -1520,7 +1520,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
     pub fn concatoperation_get_step(&self, index: u16) -> miette::Result<Proj> {
         let ptr = unsafe {
             proj_sys::proj_concatoperation_get_step(self.ctx.ptr, self.ptr, index as i32)
@@ -1529,7 +1529,7 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
     pub fn coordinate_metadata_create(&self, epoch: f64) -> miette::Result<Proj> {
         let ptr =
             unsafe { proj_sys::proj_coordinate_metadata_create(self.ctx.ptr, self.ptr, epoch) };
@@ -1537,18 +1537,18 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_get_epoch>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_get_epoch>
     pub fn coordinate_metadata_get_epoch(&self) -> f64 {
         unsafe { proj_sys::proj_coordinate_metadata_get_epoch(self.ctx.ptr, self.ptr) }
     }
 }
 /// # ISO-19111 Advanced functions
 ///
-/// <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
+/// * <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
 impl Proj<'_> {
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>
     pub fn crs_create_bound_crs_to_wgs84(
         &self,
         allow_intermediate_crs: Option<AllowIntermediateCrs>,
@@ -1565,7 +1565,7 @@ impl Proj<'_> {
 impl Clone for Proj<'_> {
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_clone>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_clone>
     fn clone(&self) -> Self {
         Self {
             ptr: unsafe { proj_sys::proj_clone(self.ctx.ptr, self.ptr) },
@@ -1575,7 +1575,7 @@ impl Clone for Proj<'_> {
 }
 ///# References
 ///
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_string_list_destroy>
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_string_list_destroy>
 fn string_list_destroy(ptr: *mut *mut i8) {
     unsafe {
         proj_sys::proj_string_list_destroy(ptr);
@@ -1619,7 +1619,7 @@ fn _proj_string_destroy() { unimplemented!() }
 fn _proj_operation_factory_context_destroy() { unimplemented!() }
 /// # References
 ///
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
 fn _proj_list_get_count() { unimplemented!() }
 ///# References
 ///

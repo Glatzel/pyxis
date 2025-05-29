@@ -1,14 +1,14 @@
 use miette::IntoDiagnostic;
 
-use crate::data_types::{PjGridInfo, PjInfo, PjInitInfo, PjProjInfo};
+use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
 
 /// Get information about the current instance of the PROJ library.
 ///
 /// References
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_info>
-pub fn info() -> PjInfo {
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_info>
+pub fn info() -> Info {
     let src = unsafe { proj_sys::proj_info() };
-    PjInfo::new(
+    Info::new(
         src.major,
         src.minor,
         src.patch,
@@ -22,10 +22,10 @@ impl crate::Proj<'_> {
     /// Get information about a specific grid.
     ///
     /// References
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_pj_info>
-    pub fn info(&self) -> PjProjInfo {
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_pj_info>
+    pub fn info(&self) -> ProjInfo {
         let src = unsafe { proj_sys::proj_pj_info(self.ptr) };
-        PjProjInfo::new(
+        ProjInfo::new(
             crate::c_char_to_string(src.id).unwrap_or_default(),
             crate::c_char_to_string(src.description).unwrap_or_default(),
             crate::c_char_to_string(src.definition).unwrap_or_default(),
@@ -38,14 +38,14 @@ impl crate::Proj<'_> {
 /// Get information about a specific grid.
 ///
 /// References
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
-pub fn grid_info(grid: &str) -> miette::Result<PjGridInfo> {
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
+pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
     let gridname_cstr = std::ffi::CString::new(grid).into_diagnostic()?;
     let src = unsafe { proj_sys::proj_grid_info(gridname_cstr.as_ptr()) };
     if crate::c_char_to_string(src.format.as_ptr()).unwrap_or_default() == "missing" {
         miette::bail!("Invalid grid: {}", grid)
     }
-    Ok(PjGridInfo::new(
+    Ok(GridInfo::new(
         crate::c_char_to_string(src.gridname.as_ptr()).unwrap_or_default(),
         crate::c_char_to_string(src.filename.as_ptr()).unwrap_or_default(),
         crate::c_char_to_string(src.format.as_ptr()).unwrap_or_default(),
@@ -60,11 +60,11 @@ pub fn grid_info(grid: &str) -> miette::Result<PjGridInfo> {
 /// Get information about a specific init file.
 ///
 /// References
-/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
-pub fn init_info(initname: &str) -> miette::Result<PjInitInfo> {
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
+pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
     let initname_cstr = std::ffi::CString::new(initname).into_diagnostic()?;
     let src = unsafe { proj_sys::proj_init_info(initname_cstr.as_ptr()) };
-    let info = PjInitInfo::new(
+    let info = InitInfo::new(
         crate::c_char_to_string(src.name.as_ptr()).unwrap_or_default(),
         crate::c_char_to_string(src.filename.as_ptr()).unwrap_or_default(),
         crate::c_char_to_string(src.version.as_ptr()).unwrap_or_default(),
@@ -74,7 +74,7 @@ pub fn init_info(initname: &str) -> miette::Result<PjInitInfo> {
     if info.version() == "" {
         miette::bail!(format!("Invalid proj init file or name: {}", initname))
     }
-    Ok(PjInitInfo::new(
+    Ok(InitInfo::new(
         crate::c_char_to_string(src.name.as_ptr()).unwrap_or_default(),
         crate::c_char_to_string(src.filename.as_ptr()).unwrap_or_default(),
         crate::c_char_to_string(src.version.as_ptr()).unwrap_or_default(),

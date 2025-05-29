@@ -228,56 +228,72 @@ pub enum CoordinateSystemType {
     Temporalmeasure = proj_sys::PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALMEASURE,
 }
 create_readonly_struct!(
-    CrsInfo,
+CrsInfo,
+    "Structure given overall description of a CRS."
+    "This structure may grow over time, and should not be directly allocated by client code."
+    "# References"
     "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_INFO>",
-    {auth_name:String},
-    {code:String},
-    {name:String},
-    {pj_type:ProjType},
-    {deprecated:bool},
-    {bbox_valid:bool},
-    {west_lon_degree:f64},
-    {south_lat_degree:f64},
-    {east_lon_degree:f64},
-    {north_lat_degree:f64},
-    {area_name:String},
-    {projection_method_name:String},
-    {celestial_body_name:String}
+    {auth_name:String,"Authority name."},
+    {code:String,"Object code."},
+    {name:String,"Object name."},
+    {pj_type:ProjType,"Object type."},
+    {deprecated:bool,"Whether the object is deprecated"},
+    {bbox_valid:bool,"Whereas the west_lon_degree, south_lat_degree, east_lon_degree and north_lat_degree fields are valid."},
+    {west_lon_degree:f64,"Western-most longitude of the area of use, in degrees."},
+    {south_lat_degree:f64,"Southern-most latitude of the area of use, in degrees."},
+    {east_lon_degree:f64,"Eastern-most longitude of the area of use, in degrees."},
+    {north_lat_degree:f64,"Northern-most latitude of the area of use, in degrees."},
+    {area_name:String,"Name of the area of use."},
+    {projection_method_name:String,"Name of the projection method for a projected CRS. Might be NULL even for projected CRS in some cases."},
+    {celestial_body_name:String,"Name of the celestial body of the CRS (e.g. `Earth`)."}
 );
 
 create_readonly_struct!(
-    CrsListParameters,
+CrsListParameters,
+    "Structure describing optional parameters for proj_get_crs_list();."
+    "This structure may grow over time, and should not be directly allocated by client code."
+    "# References"
     "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_LIST_PARAMETERS>",
-    {types:Vec<ProjType>},
-    {types_count:usize},
-    {crs_area_of_use_contains_bbox:bool},
-    {bbox_valid:bool},
-    {west_lon_degree:f64},
-    {south_lat_degree:f64},
-    {east_lon_degree:f64},
-    {north_lat_degree:f64},
-    {allow_deprecated:bool},
-    {celestial_body_name:Option<String>}
+    {types:Vec<ProjType>,"Array of allowed object types. Should be NULL if all types are allowed"},
+    {types_count:usize,"Size of types. Should be 0 if all types are allowed"},
+    {crs_area_of_use_contains_bbox:bool,"Size of types. Should be 0 if all types are allowed"},
+    {bbox_valid:bool,"If TRUE and bbox_valid == TRUE, then only CRS whose area of use entirely contains the specified bounding box will be returned.
+     If FALSE and bbox_valid == TRUE, then only CRS whose area of use intersects the specified bounding box will be returned."},
+    {west_lon_degree:f64,"Western-most longitude of the area of use, in degrees."},
+    {south_lat_degree:f64,"Southern-most latitude of the area of use, in degrees."},
+    {east_lon_degree:f64,"Eastern-most longitude of the area of use, in degrees."},
+    {north_lat_degree:f64,"Northern-most latitude of the area of use, in degrees."},
+    {allow_deprecated:bool,"Whether deprecated objects are allowed. Default to FALSE."},
+    {celestial_body_name:Option<String>,"Celestial body of the CRS (e.g.` Earth`). The default value, NULL, means no restriction"}
 );
 
 create_readonly_struct!(
-    UnitInfo ,
+UnitInfo ,
+    "Structure given description of a unit."
+    "This structure may grow over time, and should not be directly allocated by client code."
+    "# References"
     "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_UNIT_INFO>",
-    {auth_name: String},
-    {code: String},
-    {name: String},
-    {category: String},
-    {conv_factor: f64},
-    {proj_short_name: String},
-    {deprecated: bool}
+    {auth_name: String,"Authority name."},
+    {code: String,"Object code."},
+    {name: String,"Object name. For example `metre`, `US survey foot`, etc."},
+    {category: String,"Category of the unit: one of `linear`, `linear_per_time`, `angular`, `angular_per_time`, `scale`, `scale_per_time` or `time"},
+    {conv_factor: f64,"Conversion factor to apply to transform from that unit to the corresponding SI unit (metre for `linear`, radian for `angular`, etc.).
+    It might be 0 in some cases to indicate no known conversion factor."},
+    {proj_short_name: String,"PROJ short name, like `m`, `ft`, `us-ft`, etc... Might be NULL"},
+    {deprecated: bool,"Whether the object is deprecated"}
 );
 
 create_readonly_struct!(
     CelestialBodyInfo,
+    "Structure given description of a celestial body."
+    "This structure may grow over time, and should not be directly allocated by client code."
+    "# References"
     "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CELESTIAL_BODY_INFO>",
-    {auth_name:String},
-    {name:String}
+    {auth_name:String,"Authority name."},
+    {name:String,"Object name. For example `Earth`"}
 );
+///Type of unit of measure.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UNIT_TYPE>
@@ -285,12 +301,19 @@ create_readonly_struct!(
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum UnitType {
+    ///Angular unit of measure
     Angular = proj_sys::PJ_UNIT_TYPE_PJ_UT_ANGULAR,
+    ///Linear unit of measure
     Linear = proj_sys::PJ_UNIT_TYPE_PJ_UT_LINEAR,
+    ///Scale unit of measure
     Scale = proj_sys::PJ_UNIT_TYPE_PJ_UT_SCALE,
+    ///Time unit of measure
     Time = proj_sys::PJ_UNIT_TYPE_PJ_UT_TIME,
+    ///Parametric unit of measure
     Parametric = proj_sys::PJ_UNIT_TYPE_PJ_UT_PARAMETRIC,
 }
+///Type of Cartesian 2D coordinate system.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CARTESIAN_CS_2D_TYPE>
@@ -298,15 +321,21 @@ pub enum UnitType {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum CartesianCs2dType {
+    ///Easting-Norting
     EastingNorthing = proj_sys::PJ_CARTESIAN_CS_2D_TYPE_PJ_CART2D_EASTING_NORTHING,
+    ///Northing-Easting
     NorthingEasting = proj_sys::PJ_CARTESIAN_CS_2D_TYPE_PJ_CART2D_NORTHING_EASTING,
+    ///North Pole Easting/SOUTH-Norting/SOUTH
     NorthPoleEastingSouthNorthingSouth =
         proj_sys::PJ_CARTESIAN_CS_2D_TYPE_PJ_CART2D_NORTH_POLE_EASTING_SOUTH_NORTHING_SOUTH,
+    ///South Pole Easting/NORTH-Norting/NORTH
     SouthPoleEastingNorthNorthingNorth =
         proj_sys::PJ_CARTESIAN_CS_2D_TYPE_PJ_CART2D_SOUTH_POLE_EASTING_NORTH_NORTHING_NORTH,
+    ///Westing-southing
     WestingSouthing = proj_sys::PJ_CARTESIAN_CS_2D_TYPE_PJ_CART2D_WESTING_SOUTHING,
 }
-
+///Type of Ellipsoidal 2D coordinate system.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_2D_TYPE>
@@ -314,10 +343,13 @@ pub enum CartesianCs2dType {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum EllipsoidalCs2dType {
+    ///Longitude-Latitude
     LongitudeLatitude = proj_sys::PJ_ELLIPSOIDAL_CS_2D_TYPE_PJ_ELLPS2D_LONGITUDE_LATITUDE,
+    ///Latitude-Longitude
     LatitudeLongitude = proj_sys::PJ_ELLIPSOIDAL_CS_2D_TYPE_PJ_ELLPS2D_LATITUDE_LONGITUDE,
 }
-
+///Type of Ellipsoidal 3D coordinate system.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_3D_TYPE>
@@ -325,10 +357,13 @@ pub enum EllipsoidalCs2dType {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum EllipsoidalCs3dType {
+    ///Longitude-Latitude-Height(up)
     LongitudeLatitudeHeight,
+    ///Latitude-Longitude-Height(up)
     LatitudeLongitudeHeight,
 }
-
+///Axis description.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AXIS_DESCRIPTION>
@@ -361,6 +396,8 @@ impl AxisDescription {
 }
 create_readonly_struct!(
     ParamDescription ,
+    "Description of a parameter value for a Conversion."
+    "# References"
     "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PARAM_DESCRIPTION>",
     {name: String},
     {auth_name: String},
@@ -516,17 +553,19 @@ impl TryFrom<&str> for AxisDirection {
 }
 create_readonly_struct!(
     AxisInfo,
+    "# References"
     "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>",
-   {name: String},
-   {abbrev: String},
-   {direction :AxisDirection},
-   {unit_conv_factor :f64},
-   {unit_name:String},
-   {unit_auth_name:String},
-   {unit_code:String}
+    {name: String},
+    {abbrev: String},
+    {direction :AxisDirection},
+    {unit_conv_factor :f64},
+    {unit_name:String},
+    {unit_auth_name:String},
+    {unit_code:String}
 );
 create_readonly_struct!(
     EllipsoidParameters,
+    "# References"
     "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
    {semi_major_metre: f64},
    {semi_minor_metre: f64},
@@ -535,31 +574,34 @@ create_readonly_struct!(
 );
 create_readonly_struct!(
     PrimeMeridianParameters,
+    "# References"
     "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
-{longitude: f64},
-   {unit_conv_factor : f64},
-   {unit_name :String}
+    {longitude: f64},
+    {unit_conv_factor : f64},
+    {unit_name :String}
 );
 create_readonly_struct!(
-CoordOperationMethodInfo,
- "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
-{method_name: String},
-{method_auth_name : String},
-{method_code :String}
+    CoordOperationMethodInfo,
+    "# References"
+     "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
+    {method_name: String},
+    {method_auth_name : String},
+    {method_code :String}
 );
 create_readonly_struct!(
-CoordOperationParam,
-"* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
-{name : String},
-{auth_name  : String},
-{code  :String},
-{value   :f64},
-{value_string   :String},
-{unit_conv_factor   :f64},
-{unit_name   :String},
-{unit_auth_name   :String},
-{unit_code   :String},
-{unit_category   :UnitCategory}
+    CoordOperationParam,
+    "# References"
+    "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
+    {name : String},
+    {auth_name  : String},
+    {code  :String},
+    {value   :f64},
+    {value_string   :String},
+    {unit_conv_factor   :f64},
+    {unit_name   :String},
+    {unit_auth_name   :String},
+    {unit_code   :String},
+    {unit_category   :UnitCategory}
 );
 #[derive(Debug)]
 pub enum UnitCategory {
@@ -596,15 +638,16 @@ impl TryFrom<CString> for UnitCategory {
     }
 }
 create_readonly_struct!(
-CoordOperationGridUsed,
- "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
-{short_name   : String},
-{full_name   :String},
-{package_name    :String},
-{url    :String},
-{direct_download    :bool},
-{open_license    :bool},
-{available    :bool}
+    CoordOperationGridUsed,
+    "# References"
+    "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
+    {short_name   : String},
+    {full_name   :String},
+    {package_name    :String},
+    {url    :String},
+    {direct_download    :bool},
+    {open_license    :bool},
+    {available    :bool}
 );
 /// See [`crate::Context::get_database_metadata`]
 ///

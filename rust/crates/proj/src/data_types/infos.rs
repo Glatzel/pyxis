@@ -19,30 +19,34 @@ crate::create_readonly_struct!(
     {id: String,"Short ID of the operation the [`crate::Proj`] object is based on, that is, what comes after the `+proj=` in a proj-string, e.g. `merc`."},
     {description: String,"Long describes of the operation the [`crate::Proj`] object is based on, e.g. `Mercator Cyl, Sph&Ell lat_ts=`."},
     {definition: String,"The proj-string that was used to create the [`crate::Proj`] object with, e.g. `+proj=merc +lat_0=24 +lon_0=53 +ellps=WGS84`."},
-    {has_inverse: bool},
-    {accuracy: f64}
+    {has_inverse: bool,"`true` if an inverse mapping of the defined operation exists, otherwise `false`."},
+    {accuracy: f64,"Expected accuracy of the transformation. -1 if unknown."}
 );
 
 crate::create_readonly_struct!(
     GridInfo,
+    "Struct holding information about a specific grid in the search path of PROJ. Populated with the function [`crate::functions::grid_info()`]."
+    "# References"
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GRID_INFO>",
-    {gridname: String},
-    {filename: String},
-    {format: String},
-    {lowerleft: crate::data_types::Lp},
-    {upperright: crate::data_types::Lp},
-    {n_lon: i32},
-    {n_lat: i32},
-    {cs_lon: f64},
-    {cs_lat: f64}
+    {gridname: String,"Name of grid, e.g. `BETA2007.gsb`."},
+    {filename: String,r"Full path of grid file, e.g. `C:\OSGeo4W64\share\proj\BETA2007.gsb`"},
+    {format: String,"File format of grid file, e.g. `ntv2`"},
+    {lowerleft: crate::data_types::Lp,"Geodetic coordinate of lower left corner of grid."},
+    {upperright: crate::data_types::Lp,"Geodetic coordinate of upper right corner of grid."},
+    {n_lon: i32,"Number of grid cells in the longitudinal direction."},
+    {n_lat: i32,"Number of grid cells in the latitudinal direction."},
+    {cs_lon: f64,"Cell size in the longitudinal direction. In radians."},
+    {cs_lat: f64,"Cell size in the latitudinal direction. In radians."}
 );
 
 crate::create_readonly_struct!(
     InitInfo,
+    "Struct holding information about a specific init file in the search path of PROJ. Populated with the function [`crate::functions::init_info()`]."
+     "# References"
     "<https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_INIT_INFO>",
-    {name: String},
-    {filename: String},
-    {version: String},
-    {origin: String},
-    {lastupdate: String}
+    {name: String,"Name of init file, e.g. `epsg`."},
+    {filename: String,r"Full path of init file, e.g. `C:\OSGeo4W64\\share\proj\epsg`"},
+    {version: String,"Version number of init file, e.g. `9.0.0`"},
+    {origin: String,"Originating entity of the init file, e.g. `EPSG`"},
+    {lastupdate: String,"Date of last update of the init file."}
 );

@@ -4,7 +4,7 @@ use crate::check_result;
 use crate::data_types::LogLevel;
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
-    let _message = crate::c_char_to_string(info).unwrap_or_default();
+    let _message = crate::cstr_to_string(info).unwrap_or_default();
 
     match level {
         1 => clerk::error!("{}", _message),
@@ -20,7 +20,7 @@ impl crate::Context {
         Ok(self)
     }
     #[cfg(feature = "unrecommended")]
-    pub fn set_log_func(
+    pub fn set_log_fn(
         &self,
         app_data: *mut c_void,
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
@@ -32,7 +32,7 @@ impl crate::Context {
         Ok(self)
     }
     #[cfg(not(feature = "unrecommended"))]
-    pub(crate) fn set_log_func(
+    pub(crate) fn set_log_fn(
         &self,
         app_data: *mut c_void,
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,

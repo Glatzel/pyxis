@@ -1,4 +1,4 @@
-crate::create_readonly_struct!(
+crate::readonly_struct!(
     Factors,
     "Various cartographic properties, such as scale factors, angular distortion and meridian convergence. Calculated with [`crate::Proj::factors()`]."
     "# References"

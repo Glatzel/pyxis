@@ -35,7 +35,7 @@ impl crate::Proj<'_> {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     pub(crate) fn errno_string(&self, err: &ProjError) -> String {
-        crate::c_char_to_string(unsafe { proj_sys::proj_errno_string(i32::from(err)) })
+        crate::cstr_to_string(unsafe { proj_sys::proj_errno_string(i32::from(err)) })
             .unwrap_or("Unknown error.".to_string())
     }
 }
@@ -55,7 +55,7 @@ impl crate::Context {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     pub(crate) fn errno_string(&self, err: &ProjError) -> String {
-        crate::c_char_to_string(unsafe {
+        crate::cstr_to_string(unsafe {
             proj_sys::proj_context_errno_string(self.ptr, i32::from(err))
         })
         .unwrap_or("Unknown error.".to_string())

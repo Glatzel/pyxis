@@ -4,7 +4,7 @@ use std::fmt::Display;
 use miette::IntoDiagnostic;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
-use crate::create_readonly_struct;
+use crate::readonly_struct;
 ///Guessed WKT "dialect".
 ///
 /// # Reference
@@ -233,7 +233,7 @@ pub enum CoordinateSystemType {
     Temporalcount = proj_sys::PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALCOUNT,
     Temporalmeasure = proj_sys::PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALMEASURE,
 }
-create_readonly_struct!(
+readonly_struct!(
 CrsInfo,
     "Structure given overall description of a CRS."
     "This structure may grow over time, and should not be directly allocated by client code."
@@ -254,7 +254,7 @@ CrsInfo,
     {celestial_body_name:String,"Name of the celestial body of the CRS (e.g. `Earth`)."}
 );
 
-create_readonly_struct!(
+readonly_struct!(
 CrsListParameters,
     "Structure describing optional parameters for proj_get_crs_list();."
     "This structure may grow over time, and should not be directly allocated by client code."
@@ -273,7 +273,7 @@ CrsListParameters,
     {celestial_body_name:Option<String>,"Celestial body of the CRS (e.g.` Earth`). The default value, NULL, means no restriction"}
 );
 
-create_readonly_struct!(
+readonly_struct!(
 UnitInfo ,
     "Structure given description of a unit."
     "This structure may grow over time, and should not be directly allocated by client code."
@@ -289,7 +289,7 @@ UnitInfo ,
     {deprecated: bool,"Whether the object is deprecated"}
 );
 
-create_readonly_struct!(
+readonly_struct!(
     CelestialBodyInfo,
     "Structure given description of a celestial body."
     "This structure may grow over time, and should not be directly allocated by client code."
@@ -400,7 +400,7 @@ impl AxisDescription {
         }
     }
 }
-create_readonly_struct!(
+readonly_struct!(
     ParamDescription ,
     "Description of a parameter value for a Conversion."
     "# References"
@@ -557,7 +557,7 @@ impl TryFrom<&str> for AxisDirection {
         })
     }
 }
-create_readonly_struct!(
+readonly_struct!(
     AxisInfo,
     "# References"
     "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>",
@@ -569,7 +569,7 @@ create_readonly_struct!(
     {unit_auth_name:String},
     {unit_code:String}
 );
-create_readonly_struct!(
+readonly_struct!(
     EllipsoidParameters,
     "# References"
     "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
@@ -578,7 +578,7 @@ create_readonly_struct!(
    {is_semi_minor_computed :bool},
    {inv_flattening :f64}
 );
-create_readonly_struct!(
+readonly_struct!(
     PrimeMeridianParameters,
     "# References"
     "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
@@ -586,7 +586,7 @@ create_readonly_struct!(
     {unit_conv_factor : f64},
     {unit_name :String}
 );
-create_readonly_struct!(
+readonly_struct!(
     CoordOperationMethodInfo,
     "# References"
      "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
@@ -594,7 +594,7 @@ create_readonly_struct!(
     {method_auth_name : String},
     {method_code :String}
 );
-create_readonly_struct!(
+readonly_struct!(
     CoordOperationParam,
     "# References"
     "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
@@ -643,7 +643,7 @@ impl TryFrom<CString> for UnitCategory {
         })
     }
 }
-create_readonly_struct!(
+readonly_struct!(
     CoordOperationGridUsed,
     "# References"
     "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",

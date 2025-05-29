@@ -17,10 +17,10 @@ pub fn list_ellps() -> Vec<crate::data_types::Ellps> {
         } else {
             let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
             out_vec.push(crate::data_types::Ellps::new(
-                crate::c_char_to_string(src.id).unwrap_or_default(),
-                crate::c_char_to_string(src.major).unwrap_or_default(),
-                crate::c_char_to_string(src.ell).unwrap_or_default(),
-                crate::c_char_to_string(src.name).unwrap_or_default(),
+                crate::cstr_to_string(src.id).unwrap_or_default(),
+                crate::cstr_to_string(src.major).unwrap_or_default(),
+                crate::cstr_to_string(src.ell).unwrap_or_default(),
+                crate::cstr_to_string(src.name).unwrap_or_default(),
             ));
             offset += 1;
         }
@@ -44,9 +44,9 @@ pub fn list_units() -> Vec<crate::data_types::Units> {
         } else {
             let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
             out_vec.push(crate::data_types::Units::new(
-                crate::c_char_to_string(src.id).unwrap_or_default(),
-                crate::c_char_to_string(src.to_meter).unwrap_or_default(),
-                crate::c_char_to_string(src.name).unwrap_or_default(),
+                crate::cstr_to_string(src.id).unwrap_or_default(),
+                crate::cstr_to_string(src.to_meter).unwrap_or_default(),
+                crate::cstr_to_string(src.name).unwrap_or_default(),
                 src.factor,
             ));
             offset += 1;
@@ -72,8 +72,8 @@ pub fn list_prime_meridians() -> Vec<crate::data_types::PrimeMeridians> {
         } else {
             let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
             out_vec.push(crate::data_types::PrimeMeridians::new(
-                crate::c_char_to_string(src.id).unwrap_or_default(),
-                crate::c_char_to_string(src.defn).unwrap_or_default(),
+                crate::cstr_to_string(src.id).unwrap_or_default(),
+                crate::cstr_to_string(src.defn).unwrap_or_default(),
             ));
             offset += 1;
         }

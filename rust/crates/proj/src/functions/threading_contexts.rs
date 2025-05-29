@@ -7,7 +7,7 @@ impl Default for crate::Context {
     fn default() -> Self {
         let ctx = Self::new();
         ctx.set_log_level(LogLevel::None).unwrap();
-        ctx.set_log_func(null_mut::<c_void>(), Some(crate::proj_clerk))
+        ctx.set_log_fn(null_mut::<c_void>(), Some(crate::proj_clerk))
             .unwrap();
         ctx
     }

@@ -2,7 +2,7 @@
 //!
 //! # References
 //!<https://proj.org/en/stable/development/reference/datatypes.html>
-pub mod coordinates;
+mod coordinates;
 pub mod derivatives;
 mod errors;
 pub mod infos;
@@ -11,7 +11,7 @@ pub mod list_structures;
 pub mod logging;
 pub mod transformation;
 
-pub(crate) use coordinates::*;
+pub use coordinates::*;
 pub use derivatives::Factors;
 pub(crate) use errors::*;
 pub(crate) use infos::*;

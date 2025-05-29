@@ -2152,8 +2152,8 @@ mod test_proj {
     fn test_crs_get_coordoperation() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let coordoperation = pj.crs_get_coordoperation()?;
-        let wkt = coordoperation.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        let op = pj.crs_get_coordoperation()?;
+        let wkt = op.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("16031"));
         Ok(())
@@ -2162,8 +2162,8 @@ mod test_proj {
     fn test_coordoperation_get_method_info() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let coordoperation = pj.crs_get_coordoperation()?;
-        let info = coordoperation.coordoperation_get_method_info()?;
+        let op = pj.crs_get_coordoperation()?;
+        let info = op.coordoperation_get_method_info()?;
         println!("{:?}", info);
         assert_eq!(
             format!("{:?}", info),
@@ -2175,8 +2175,8 @@ mod test_proj {
     fn test_coordoperation_is_instantiable() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let coordoperation = pj.crs_get_coordoperation()?;
-        let instantiable = coordoperation.coordoperation_is_instantiable();
+        let op = pj.crs_get_coordoperation()?;
+        let instantiable = op.coordoperation_is_instantiable();
         assert!(instantiable);
         Ok(())
     }
@@ -2184,9 +2184,8 @@ mod test_proj {
     fn test_coordoperation_has_ballpark_transformation() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let coordoperation = pj.crs_get_coordoperation()?;
-        let has_ballpark_transformation =
-            coordoperation.coordoperation_has_ballpark_transformation();
+        let op = pj.crs_get_coordoperation()?;
+        let has_ballpark_transformation = op.coordoperation_has_ballpark_transformation();
         assert!(!has_ballpark_transformation);
         Ok(())
     }
@@ -2194,9 +2193,9 @@ mod test_proj {
     fn test_coordoperation_requires_per_coordinate_input_time() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let coordoperation = pj.crs_get_coordoperation()?;
+        let op = pj.crs_get_coordoperation()?;
         let requires_per_coordinate_input_time =
-            coordoperation.coordoperation_requires_per_coordinate_input_time();
+            op.coordoperation_requires_per_coordinate_input_time();
         assert!(!requires_per_coordinate_input_time);
         Ok(())
     }
@@ -2204,8 +2203,8 @@ mod test_proj {
     fn test_coordoperation_get_param_count() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let coordoperation = pj.crs_get_coordoperation()?;
-        let count = coordoperation.coordoperation_get_param_count();
+        let op = pj.crs_get_coordoperation()?;
+        let count = op.coordoperation_get_param_count();
         assert_eq!(count, 5);
         Ok(())
     }
@@ -2213,8 +2212,8 @@ mod test_proj {
     fn test_coordoperation_get_param_index() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let coordoperation = pj.crs_get_coordoperation()?;
-        let index = coordoperation.coordoperation_get_param_index("Longitude of natural origin")?;
+        let op = pj.crs_get_coordoperation()?;
+        let index = op.coordoperation_get_param_index("Longitude of natural origin")?;
         assert_eq!(index, 1);
         Ok(())
     }
@@ -2275,8 +2274,8 @@ mod test_proj {
     fn test_coordoperation_create_inverse() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let coordoperation = pj.crs_get_coordoperation()?;
-        let inversed = coordoperation.coordoperation_create_inverse()?;
+        let op = pj.crs_get_coordoperation()?;
+        let inversed = op.coordoperation_create_inverse()?;
         let wkt = inversed.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("16031"));

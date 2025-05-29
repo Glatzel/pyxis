@@ -14,7 +14,7 @@ pub type Lp = proj_sys::PJ_LP;
 pub type Xy = proj_sys::PJ_XY;
 
 ///2-dimensional generic coordinate. Usually used when contents can be either a
-/// [`crate::data_types::Xy`] or [`crate::data_types::L`].
+/// [`crate::data_types::Xy`] or [`crate::data_types::Lp`].
 ///
 /// #references
 ///

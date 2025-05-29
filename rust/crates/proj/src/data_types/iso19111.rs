@@ -5,10 +5,11 @@ use miette::IntoDiagnostic;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 use crate::create_readonly_struct;
+///Guessed WKT "dialect".
+///
 /// # Reference
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GUESSED_WKT_DIALECT>
-/// * <https://proj.org/en/stable/development/reference/cpp/cpp_general.html#general_doc_1WKT2_2019>
 #[derive(Debug, IntoPrimitive, TryFromPrimitive, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
@@ -26,7 +27,8 @@ pub enum GuessedWktDialect {
     ///Not WKT / unrecognized
     NotWkt = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_NOT_WKT,
 }
-
+///Object category.
+///
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CATEGORY>
@@ -41,6 +43,8 @@ pub enum Category {
     CoordinateOperation = proj_sys::PJ_CATEGORY_PJ_CATEGORY_COORDINATE_OPERATION,
     DatumEnsemble = proj_sys::PJ_CATEGORY_PJ_CATEGORY_DATUM_ENSEMBLE,
 }
+///Object type.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>
@@ -79,6 +83,8 @@ pub enum ProjType {
     DerivedProjectedCrs = proj_sys::PJ_TYPE_PJ_TYPE_DERIVED_PROJECTED_CRS,
     CoordinateMetadata = proj_sys::PJ_TYPE_PJ_TYPE_COORDINATE_METADATA,
 }
+///Comparison criterion.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COMPARISON_CRITERION>
@@ -86,8 +92,18 @@ pub enum ProjType {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum ComparisonCriterion {
+    ///All properties are identical.
     Strict = proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_STRICT,
+    ///The objects are equivalent for the purpose of coordinate operations.
+    /// They can differ by the name of their objects, identifiers, other
+    /// metadata. Parameters may be expressed in different units, provided that
+    /// the value is (with some tolerance) the same once expressed in a common
+    /// unit.
     Equivalent = proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT,
+    ///Same as EQUIVALENT, relaxed with an exception that the axis order of the
+    /// base CRS of a DerivedCRS/ProjectedCRS or the axis order of a
+    /// GeographicCRS is ignored. Only to be used with
+    /// DerivedCRS/ProjectedCRS/GeographicCRS
     EquivalentExceptAxisOrderGeogcrs =
         proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS,
 }
@@ -109,30 +125,47 @@ pub enum WktType {
     Wkt1Gdal = proj_sys::PJ_WKT_TYPE_PJ_WKT1_GDAL,
     Wkt1Esri = proj_sys::PJ_WKT_TYPE_PJ_WKT1_ESRI,
 }
-
-///# References
+/// Specify how source and target CRS extent should be used to restrict
+/// candidate operations (only taken into account if no explicit area of
+/// interest is specified. # References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_EXTENT_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum CrsExtentUse {
+    ///Ignore CRS extent
     None,
+    ///Test coordinate operation extent against both CRS extent.
     Both,
+    ///Test coordinate operation extent against the intersection of both CRS
+    /// extent.
     Intersection,
+    ///Test coordinate operation against the smallest of both CRS extent.
     Smallest,
 }
+///Describe how grid availability is used.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_GRID_AVAILABILITY_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum GridAvailabilityUse {
+    ///Grid availability is only used for sorting results. Operations where
+    /// some grids are missing will be sorted last.
     UsedForSorting,
+    ///Completely discard an operation if a required grid is missing.
     DiscardOperationIfMissingGrid,
+    ///Ignore grid availability at all. Results will be presented as if all
+    /// grids were available.
     Ignored,
+    ///Results will be presented as if grids known to PROJ (that is registered
+    /// in the grid_alternatives table of its database) were available. Used
+    /// typically when networking is enabled.
     KnownAvailable,
 }
-
+///PROJ string version.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_STRING_TYPE>
@@ -140,28 +173,42 @@ pub enum GridAvailabilityUse {
 #[derive(Debug, IntoPrimitive, TryFromPrimitive)]
 #[repr(u32)]
 pub enum ProjStringType {
+    ///cf [osgeo::proj::io::PROJStringFormatter::Convention::PROJ_5](https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1PROJStringFormatter_1a797997db6984aa2bad279abb0010ff13a475fc81228e34a4715d2d28f4d7f2851)
     Proj5 = proj_sys::PJ_PROJ_STRING_TYPE_PJ_PROJ_5,
+    ///cf [osgeo::proj::io::PROJStringFormatter::Convention::PROJ_4](https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1PROJStringFormatter_1a797997db6984aa2bad279abb0010ff13ae3bec874928ae377030a07a550bdc7eb)
     Proj4 = proj_sys::PJ_PROJ_STRING_TYPE_PJ_PROJ_4,
 }
+///Spatial criterion to restrict candidate operations.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_SPATIAL_CRITERION>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum SpatialCriterion {
+    ///The area of validity of transforms should strictly contain the are of
+    /// interest.
     StrictContainment,
+    ///The area of validity of transforms should at least intersect the area of
+    /// interest.
     PartialIntersection,
 }
+///Describe if and how intermediate CRS should be used
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_INTERMEDIATE_CRS_USE>
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum IntermediateCrsUse {
+    ///Always search for intermediate CRS.
     Always,
+    ///Only attempt looking for intermediate CRS if there is no direct
+    /// transformation available.
     IfNoDirectTransformation,
     Never,
 }
+///Type of coordinate system.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORDINATE_SYSTEM_TYPE>
@@ -324,7 +371,7 @@ create_readonly_struct!(
     {unit_type: UnitType}
 );
 
-//internal
+// region:internal
 /// # References
 ///
 /// * <https://github.com/OSGeo/PROJ/blob/master/src/iso19111/static.cpp>

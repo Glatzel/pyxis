@@ -20,8 +20,11 @@ pub struct Proj<'a> {
 #[derive(Debug, TryFromPrimitive, IntoPrimitive)]
 #[repr(i32)]
 pub enum Direction {
+    ///Perform transformation in the forward direction.
     Fwd = proj_sys::PJ_DIRECTION_PJ_FWD,
+    ///Identity. Do nothing.
     Ident = proj_sys::PJ_DIRECTION_PJ_IDENT,
+    ///Perform transformation in the inverse direction.
     Inv = proj_sys::PJ_DIRECTION_PJ_INV,
 }
 

@@ -321,6 +321,7 @@ create_readonly_struct!(
 /// # References
 ///
 /// <https://github.com/OSGeo/PROJ/blob/master/src/iso19111/static.cpp>
+#[derive(Debug, PartialEq)]
 pub enum AxisDirection {
     North,
     NorthNorthEast,
@@ -410,6 +411,66 @@ impl From<AxisDirection> for CString {
         .expect("Error creating CString")
     }
 }
+impl TryFrom<&str> for AxisDirection {
+    type Error = miette::Report;
+
+    fn try_from(value: &str) -> miette::Result<AxisDirection> {
+        Ok(match value {
+            "north" => AxisDirection::North,
+            "northNorthEast" => AxisDirection::NorthNorthEast,
+            "northEast" => AxisDirection::NorthEast,
+            "eastNorthEast" => AxisDirection::EastNorthEast,
+            "east" => AxisDirection::East,
+            "eastSouthEast" => AxisDirection::EastSouthEast,
+            "southEast" => AxisDirection::SouthEast,
+            "southSouthEast" => AxisDirection::SouthSouthEast,
+            "south" => AxisDirection::South,
+            "southSouthWest" => AxisDirection::SouthSouthWest,
+            "southWest" => AxisDirection::SouthWest,
+            "westSouthWest" => AxisDirection::WestSouthWest,
+            "west" => AxisDirection::West,
+            "westNorthWest" => AxisDirection::WestNorthWest,
+            "northWest" => AxisDirection::NorthWest,
+            "northNorthWest" => AxisDirection::NorthNorthWest,
+            "up" => AxisDirection::Up,
+            "down" => AxisDirection::Down,
+            "geocentricX" => AxisDirection::GeocentricX,
+            "geocentricY" => AxisDirection::GeocentricY,
+            "geocentricZ" => AxisDirection::GeocentricZ,
+            "columnPositive" => AxisDirection::ColumnPositive,
+            "columnNegative" => AxisDirection::ColumnNegative,
+            "rowPositive" => AxisDirection::RowPositive,
+            "rowNegative" => AxisDirection::RowNegative,
+            "displayRight" => AxisDirection::DisplayRight,
+            "displayLeft" => AxisDirection::DisplayLeft,
+            "displayUp" => AxisDirection::DisplayUp,
+            "displayDown" => AxisDirection::DisplayDown,
+            "forward" => AxisDirection::Forward,
+            "aft" => AxisDirection::Aft,
+            "port" => AxisDirection::Port,
+            "starboard" => AxisDirection::Starboard,
+            "clockwise" => AxisDirection::Clockwise,
+            "counterClockwise" => AxisDirection::CounterClockwise,
+            "towards" => AxisDirection::Towards,
+            "awayFrom" => AxisDirection::AwayFrom,
+            "future" => AxisDirection::Future,
+            "past" => AxisDirection::Past,
+            "unspecified" => AxisDirection::Unspecified,
+            other => miette::bail!("Unknown axis direction: {}", other),
+        })
+    }
+}
+create_readonly_struct!(
+    AxisInfo,
+    "<https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>",
+   {name: String},
+   {abbrev: String},
+   {direction :AxisDirection},
+   {unit_conv_factor :f64},
+   {unit_name:String},
+   {unit_auth_name:String},
+   {unit_code:String}
+);
 create_readonly_struct!(
     EllipsoidParameters,
     "<https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
@@ -534,7 +595,7 @@ impl From<DatabaseMetadataKey> for CString {
     }
 }
 /// See [`crate::Proj::crs_create_bound_crs_to_wgs84`]
-/// 
+///
 ///# References
 ///
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>

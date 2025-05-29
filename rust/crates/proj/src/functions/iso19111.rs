@@ -1189,8 +1189,43 @@ impl Proj<'_> {
     }
     ///# References
     ///
-    /// <>
-    fn _cs_get_axis_info(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>
+    pub fn cs_get_axis_info(&self, index: u16) -> miette::Result<AxisInfo> {
+        let mut name: *const std::ffi::c_char = std::ptr::null();
+        let mut abbrev: *const std::ffi::c_char = std::ptr::null();
+        let mut direction: *const std::ffi::c_char = std::ptr::null();
+
+        let mut unit_conv_factor = f64::default();
+        let mut unit_name: *const std::ffi::c_char = std::ptr::null();
+        let mut unit_auth_name: *const std::ffi::c_char = std::ptr::null();
+        let mut unit_code: *const std::ffi::c_char = std::ptr::null();
+        let result = unsafe {
+            proj_sys::proj_cs_get_axis_info(
+                self.ctx.ptr,
+                self.ptr,
+                index as i32,
+                &mut name,
+                &mut abbrev,
+                &mut direction,
+                &mut unit_conv_factor,
+                &mut unit_name,
+                &mut unit_auth_name,
+                &mut unit_code,
+            )
+        };
+        if result != 1 {
+            miette::bail!("Error");
+        }
+        Ok(AxisInfo::new(
+            c_char_to_string(name).unwrap(),
+            c_char_to_string(abbrev).unwrap(),
+            c_char_to_string(direction).unwrap().as_str().try_into()?,
+            unit_conv_factor,
+            c_char_to_string(unit_name).unwrap(),
+            c_char_to_string(unit_auth_name).unwrap(),
+            c_char_to_string(unit_code).unwrap(),
+        ))
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
@@ -2096,6 +2131,22 @@ mod test_proj {
         let cs = pj.crs_get_coordinate_system()?;
         let count = cs.cs_get_axis_count()?;
         assert_eq!(count, 2);
+        Ok(())
+    }
+    #[test]
+    fn test_cs_get_axis_info() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let cs = pj.crs_get_coordinate_system()?;
+        let info = cs.cs_get_axis_info(1)?;
+        println!("{:?}", info);
+        assert_eq!(info.name(), "Geodetic longitude");
+        assert_eq!(info.abbrev(), "Lon");
+        assert_eq!(info.direction(), &AxisDirection::East);
+        assert_eq!(info.unit_conv_factor(), &0.017453292519943295);
+        assert_eq!(info.unit_name(), "degree");
+        assert_eq!(info.unit_auth_name(), "EPSG");
+        assert_eq!(info.unit_code(), "9122");
         Ok(())
     }
     #[test]

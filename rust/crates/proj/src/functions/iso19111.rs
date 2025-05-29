@@ -11,7 +11,7 @@
 //!
 //! # References
 //!
-//!* <https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
+//! * <https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
 use std::ffi::CString;
 use std::path::{Path, PathBuf};

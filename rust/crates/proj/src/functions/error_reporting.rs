@@ -5,26 +5,26 @@ impl crate::Proj<'_> {
     /// See [`crate::check_result`]
     ///
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno>
     pub(crate) fn errno(&self) -> ProjError {
         ProjError::from(unsafe { proj_sys::proj_errno(self.ptr) })
     }
 
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_set>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_set>
     pub(crate) fn _errno_set(&self, err: &ProjError) -> &Self {
         unsafe { proj_sys::proj_errno_set(self.ptr, i32::from(err)) };
         self
     }
 
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_reset>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_reset>
     pub(crate) fn _errno_reset(&self) -> ProjError {
         ProjError::from(unsafe { proj_sys::proj_errno_reset(self.ptr) })
     }
 
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_restore>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_restore>
     pub(crate) fn _errno_restore(&self, err: &ProjError) -> &Self {
         unsafe { proj_sys::proj_errno_restore(self.ptr, i32::from(err)) };
         self
@@ -33,7 +33,7 @@ impl crate::Proj<'_> {
     /// See [`crate::check_result`]
     ///
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     pub(crate) fn errno_string(&self, err: &ProjError) -> String {
         crate::c_char_to_string(unsafe { proj_sys::proj_errno_string(i32::from(err)) })
             .unwrap_or("Unknown error.".to_string())
@@ -45,7 +45,7 @@ impl crate::Context {
     /// See [`crate::check_result`]
     ///
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno>
     pub(crate) fn errno(&self) -> ProjError {
         ProjError::from(unsafe { proj_sys::proj_context_errno(self.ptr) })
     }
@@ -53,7 +53,7 @@ impl crate::Context {
     /// See [`crate::check_result`]
     /// ///
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     pub(crate) fn errno_string(&self, err: &ProjError) -> String {
         crate::c_char_to_string(unsafe {
             proj_sys::proj_context_errno_string(self.ptr, i32::from(err))

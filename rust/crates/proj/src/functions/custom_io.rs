@@ -18,7 +18,7 @@ impl crate::Context {
     /// the PROJ user writable directory.
     ///
     ///# References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
     pub fn set_sqlite3_vfs_name(&self, name: &str) -> miette::Result<&Self> {
         let name = std::ffi::CString::new(name).into_diagnostic()?;
         unsafe {
@@ -40,7 +40,7 @@ impl crate::Context {
     ///Starting with PROJ 7.0, the path(s) should be encoded in UTF-8.
     ///
     ///# References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_search_paths>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_search_paths>
     pub fn set_search_paths(&self, paths: &[&Path]) -> miette::Result<&Self> {
         clerk::debug!("search_paths:{:?}", paths);
         let len = paths.len();
@@ -67,7 +67,7 @@ impl crate::Context {
     ///The path should be encoded in UTF-8.
     ///
     ///# References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
     pub fn set_ca_bundle_path(&self, path: &Path) -> miette::Result<&Self> {
         let path = std::ffi::CString::new(path.to_str().unwrap()).into_diagnostic()?;
         unsafe {

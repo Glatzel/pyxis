@@ -4,7 +4,7 @@
 //!
 //! # References
 //!
-//!* <https://proj.org/en/stable/development/reference/functions.html#c-api-for-iso-19111-functionality>
+//! * <https://proj.org/en/stable/development/reference/functions.html#c-api-for-iso-19111-functionality>
 
 use std::ffi::CString;
 
@@ -14,7 +14,7 @@ use crate::{Proj, check_result};
 /// # Transformation setup
 impl crate::Context {
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
         let definition = CString::new(definition).into_diagnostic()?;
         let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.as_ptr()) };
@@ -23,7 +23,7 @@ impl crate::Context {
     }
 
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Proj> {
         let len = argv.len();
         let mut argv_ptrs: Vec<*mut i8> = Vec::with_capacity(len);
@@ -37,7 +37,7 @@ impl crate::Context {
     }
 
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     pub fn create_crs_to_crs(
         &self,
         source_crs: &str,
@@ -59,7 +59,7 @@ impl crate::Context {
     }
 
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub fn create_crs_to_crs_from_pj(
         &self,
         source_crs: crate::Proj,
@@ -92,7 +92,7 @@ impl crate::Context {
         Proj::from_raw(self, ptr)
     }
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
     pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<crate::Proj> {
         let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr) };
         Proj::from_raw(self, ptr)

@@ -4,14 +4,14 @@ impl Default for crate::Area {
 ///# Area of interest
 impl crate::Area {
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>
     pub fn new() -> Self {
         Self {
             ptr: unsafe { proj_sys::proj_area_create() },
         }
     }
     /// # References
-    ///* <https://proj.org/en/stable/development/reference/functions.html#c.proj_area_set_bbox>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_area_set_bbox>
     pub fn set_bbox(
         &self,
         west_lon_degree: f64,

@@ -108,21 +108,21 @@ mod test {
     fn test_create() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let pj1 = pj.clone();
+        let _ = pj.clone();
         Ok(())
     }
 
     #[test]
     fn test_create_argv() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
+        let _ = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
         Ok(())
     }
 
     #[test]
     fn test_create_crs_to_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
+        let _ = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         Ok(())
     }
 

@@ -1,8 +1,12 @@
+if (Test-Path $PSScriptRoot/setup.ps1) {
+    &$PSScriptRoot/setup.ps1
+}
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
 git submodule update --init --recursive
-pixi install
-
+if (Test-Path $PSScriptRoot/.pixi.toml) {
+    pixi install
+}
 Write-Output "::group::nextest"
 cargo +nightly llvm-cov nextest --no-report --all --branch --no-fail-fast
 $code = $LASTEXITCODE

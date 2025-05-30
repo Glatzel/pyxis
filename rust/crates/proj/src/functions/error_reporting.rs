@@ -2,7 +2,9 @@ use crate::data_types::ProjError;
 
 ///# Error reporting
 impl crate::Proj<'_> {
-    /// See [`crate::check_result`]
+    /// # See Also
+    ///
+    /// *[`crate::check_result`]
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno>
@@ -30,7 +32,9 @@ impl crate::Proj<'_> {
         self
     }
 
-    /// See [`crate::check_result`]
+    /// # See Also
+    ///
+    /// * [`crate::check_result`]
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
@@ -42,7 +46,9 @@ impl crate::Proj<'_> {
 
 ///# Error reporting
 impl crate::Context {
-    /// See [`crate::check_result`]
+    /// # See Also
+    ///
+    /// * [`crate::check_result`]
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno>
@@ -50,7 +56,9 @@ impl crate::Context {
         ProjError::from(unsafe { proj_sys::proj_context_errno(self.ptr) })
     }
 
-    /// See [`crate::check_result`]
+    /// # See Also
+    ///
+    /// * [`crate::check_result`]
     /// ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>

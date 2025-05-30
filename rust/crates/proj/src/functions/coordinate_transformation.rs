@@ -4,7 +4,10 @@ impl crate::Proj<'_> {
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
     ///
-    /// See [`Self::convert`], [`Self::project`]
+    /// # See Also
+    ///
+    /// *[`Self::convert`]
+    /// *[`Self::project`]
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
@@ -76,7 +79,7 @@ impl crate::Proj<'_> {
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
     ///
-    /// /// See [`Self::convert_array`], [`Self::project_array`]
+    /// See [`Self::convert_array`], [`Self::project_array`]
     ///
     ///  # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>

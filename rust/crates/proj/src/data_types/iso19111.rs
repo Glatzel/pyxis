@@ -655,7 +655,9 @@ readonly_struct!(
     {open_license    :bool},
     {available    :bool}
 );
-/// See [`crate::Context::get_database_metadata`]
+/// # See Also
+/// 
+/// *[`crate::Context::get_database_metadata`]
 ///
 ///# References
 ///
@@ -697,7 +699,9 @@ impl From<DatabaseMetadataKey> for CString {
         .expect("Error creating CString")
     }
 }
-/// See [`crate::Proj::crs_create_bound_crs_to_wgs84`]
+/// # See Also
+/// 
+/// *[`crate::Proj::crs_create_bound_crs_to_wgs84`]
 ///
 ///# References
 ///

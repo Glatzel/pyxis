@@ -25,14 +25,20 @@ impl crate::Context {
         app_data: *mut c_void,
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
     ) -> miette::Result<&Self> {
-        unsafe {
-            proj_sys::proj_log_func(self.ptr, app_data, logf);
-        };
-        check_result!(self);
-        Ok(self)
+        self._set_log_fn(app_data, logf)
     }
+
     #[cfg(not(feature = "unrecommended"))]
     pub(crate) fn set_log_fn(
+        &self,
+        app_data: *mut c_void,
+        logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
+    ) -> miette::Result<&Self> {
+        self._set_log_fn(app_data, logf)
+    }
+
+    // Shared implementation
+    fn _set_log_fn(
         &self,
         app_data: *mut c_void,
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,

@@ -1762,8 +1762,8 @@ impl Clone for Proj<'_> {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_clone>
     fn clone(&self) -> Self {
         let ptr = unsafe { proj_sys::proj_clone(self.ctx.ptr, self.ptr()) };
-        let proj = Proj::new(self.ctx, ptr).unwrap();
-        proj
+        
+        Proj::new(self.ctx, ptr).unwrap()
     }
 }
 ///# References

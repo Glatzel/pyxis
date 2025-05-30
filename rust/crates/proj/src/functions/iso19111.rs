@@ -19,7 +19,6 @@ use std::path::{Path, PathBuf};
 use std::ptr::{self, null};
 
 use miette::IntoDiagnostic;
-use tracing::Instrument;
 
 use crate::data_types::iso19111::*;
 use crate::{

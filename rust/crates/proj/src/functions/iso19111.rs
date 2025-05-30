@@ -177,60 +177,43 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>
     fn _uom_get_info_from_database(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_get_info_from_database>
     fn _grid_get_info_from_database(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
     fn _create_from_name(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
     fn _get_non_deprecated(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
-    fn _is_equivalent_to_with_ctx(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _get_area_of_use(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _get_area_of_use_ex(&self) { unimplemented!() }
-
-    ///# References
-    ///
-    /// <>
-    fn _identify(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_geoid_models_from_database>
     fn _get_geoid_models_from_database(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_authorities_from_database>
     fn _get_authorities_from_database(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
     fn _get_codes_from_database(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
     fn _get_celestial_body_list_from_database(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
     fn _get_crs_info_list_from_database(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_units_from_database>
     fn _get_units_from_database(&self) { unimplemented!() }
     ///# References
     ///
@@ -895,6 +878,19 @@ impl Proj<'_> {
     }
     ///# References
     ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to_with_ctx>
+    pub fn is_equivalent_to_with_ctx(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
+        unsafe {
+            proj_sys::proj_is_equivalent_to_with_ctx(
+                self.ctx.ptr,
+                self.ptr(),
+                other.ptr(),
+                criterion.into(),
+            ) != 0
+        }
+    }
+    ///# References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_crs>
     pub fn is_crs(&self) -> bool { unsafe { proj_sys::proj_is_crs(self.ptr()) != 0 } }
     ///# References
@@ -942,6 +938,83 @@ impl Proj<'_> {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
     pub fn get_scope_ex(&self, domain_idx: u16) -> Option<String> {
         crate::cstr_to_string(unsafe { proj_sys::proj_get_scope_ex(self.ptr(), domain_idx as i32) })
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>
+    pub fn get_area_of_use(&self) -> miette::Result<Option<AreaOfUse>> {
+        let mut area_name: *const std::ffi::c_char = std::ptr::null();
+        let mut west_lon_degree = f64::default();
+        let mut south_lat_degree = f64::default();
+        let mut east_lon_degree = f64::default();
+        let mut north_lat_degree = f64::default();
+        let result = unsafe {
+            proj_sys::proj_get_area_of_use(
+                self.ctx.ptr,
+                self.ptr(),
+                &mut west_lon_degree,
+                &mut south_lat_degree,
+                &mut east_lon_degree,
+                &mut north_lat_degree,
+                &mut area_name,
+            )
+        };
+        if west_lon_degree == -1000.0
+            || south_lat_degree == -1000.0
+            || east_lon_degree == -1000.0
+            || north_lat_degree == -1000.0
+        {
+            return Ok(None);
+        }
+        if result != 1 {
+            miette::bail!("Error");
+        }
+        Ok(Some(AreaOfUse::new(
+            cstr_to_string(area_name).unwrap(),
+            west_lon_degree,
+            south_lat_degree,
+            east_lon_degree,
+            north_lat_degree,
+        )))
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use_ex>
+    pub fn get_area_of_use_ex(&self, domain_idx: u16) -> miette::Result<Option<AreaOfUse>> {
+        let mut area_name: *const std::ffi::c_char = std::ptr::null();
+        let mut west_lon_degree = f64::default();
+        let mut south_lat_degree = f64::default();
+        let mut east_lon_degree = f64::default();
+        let mut north_lat_degree = f64::default();
+        let result = unsafe {
+            proj_sys::proj_get_area_of_use_ex(
+                self.ctx.ptr,
+                self.ptr(),
+                domain_idx as i32,
+                &mut west_lon_degree,
+                &mut south_lat_degree,
+                &mut east_lon_degree,
+                &mut north_lat_degree,
+                &mut area_name,
+            )
+        };
+        if west_lon_degree == -1000.0
+            || south_lat_degree == -1000.0
+            || east_lon_degree == -1000.0
+            || north_lat_degree == -1000.0
+        {
+            return Ok(None);
+        }
+        if result != 1 {
+            miette::bail!("Error");
+        }
+        Ok(Some(AreaOfUse::new(
+            cstr_to_string(area_name).unwrap(),
+            west_lon_degree,
+            south_lat_degree,
+            east_lon_degree,
+            north_lat_degree,
+        )))
     }
     ///# References
     ///
@@ -1048,6 +1121,10 @@ impl Proj<'_> {
         }
         Some(Self::new(self.ctx, out_ptr).unwrap())
     }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
+    fn _identify(&self) { unimplemented!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
@@ -1891,6 +1968,15 @@ mod test_proj_basic {
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4496")?;
         let equivalent = pj1.is_equivalent_to(&pj2, ComparisonCriterion::Equivalent);
+        assert!(!equivalent);
+        Ok(())
+    }
+    #[test]
+    fn test_is_equivalent_to_with_ctx() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj1 = ctx.create("EPSG:4326")?;
+        let pj2 = ctx.create("EPSG:4496")?;
+        let equivalent = pj1.is_equivalent_to_with_ctx(&pj2, ComparisonCriterion::Equivalent);
         assert!(!equivalent);
         Ok(())
     }

@@ -717,3 +717,14 @@ impl Display for AllowIntermediateCrs {
         write!(f, "{}", text)
     }
 }
+readonly_struct!(
+    AreaOfUse,
+    "# References"
+    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>"
+    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_ex>",
+    {area_name:String,"a string to receive the name of the area of use."},
+    {west_lon_degree:f64,"a double to receive the west latitude (in degrees)."},
+    {south_lat_degree:f64,"a double to receive the south latitude (in degrees)."},
+    {east_lon_degree:f64,"a double to receive the east latitude (in degrees)."},
+    {north_lat_degree:f64,"a double to receive the north latitude (in degrees)."}
+);

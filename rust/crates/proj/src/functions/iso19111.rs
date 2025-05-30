@@ -1771,12 +1771,9 @@ impl Clone for Proj<'_> {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_string_list_destroy>
 fn string_list_destroy(ptr: *mut *mut i8) {
-    if !ptr.is_null() {
-        unsafe {
-            proj_sys::proj_string_list_destroy(ptr);
-        }
+    unsafe {
+        proj_sys::proj_string_list_destroy(ptr);
     }
-    assert!(ptr.is_null());
 }
 ///# References
 ///

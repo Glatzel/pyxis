@@ -17,7 +17,6 @@ use core::f64;
 use std::ffi::CString;
 use std::path::{Path, PathBuf};
 use std::ptr::{self, null};
-use std::result;
 
 use miette::IntoDiagnostic;
 

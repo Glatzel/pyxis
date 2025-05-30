@@ -212,7 +212,7 @@ impl crate::Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_get_info_from_database>
-    pub fn _grid_get_info_from_database(&self, grid_name: &str) -> miette::Result<GridInfoDB> {
+    pub fn grid_get_info_from_database(&self, grid_name: &str) -> miette::Result<GridInfoDB> {
         let mut full_name: *const std::ffi::c_char = std::ptr::null();
         let mut package_name: *const std::ffi::c_char = std::ptr::null();
         let mut url: *const std::ffi::c_char = std::ptr::null();
@@ -256,15 +256,66 @@ impl crate::Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_geoid_models_from_database>
-    fn _get_geoid_models_from_database(&self) { unimplemented!() }
+    pub fn get_geoid_models_from_database(
+        &self,
+        auth_name: &str,
+        code: &str,
+    ) -> miette::Result<Vec<String>> {
+        let ptr = unsafe {
+            proj_sys::proj_get_geoid_models_from_database(
+                self.ptr,
+                CString::new(auth_name)
+                    .expect("Error creating CString")
+                    .as_ptr(),
+                CString::new(code).expect("Error creating CString").as_ptr(),
+                ptr::null(),
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        let out_vec = vec_cstr_to_string(ptr).unwrap();
+        string_list_destroy(ptr);
+        Ok(out_vec)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_authorities_from_database>
-    fn _get_authorities_from_database(&self) { unimplemented!() }
+    pub fn get_authorities_from_database(&self) -> miette::Result<Vec<String>> {
+        let ptr = unsafe { proj_sys::proj_get_authorities_from_database(self.ptr) };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        let out_vec = vec_cstr_to_string(ptr).unwrap();
+        string_list_destroy(ptr);
+        Ok(out_vec)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
-    fn _get_codes_from_database(&self) { unimplemented!() }
+    pub fn get_codes_from_database(
+        &self,
+        auth_name: &str,
+        proj_type: ProjType,
+        allow_deprecated: bool,
+    ) -> miette::Result<Vec<String>> {
+        let ptr = unsafe {
+            proj_sys::proj_get_codes_from_database(
+                self.ptr,
+                CString::new(auth_name)
+                    .expect("Error creating CString")
+                    .as_ptr(),
+                proj_type.into(),
+                allow_deprecated as i32,
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        let out_vec = vec_cstr_to_string(ptr).unwrap();
+        string_list_destroy(ptr);
+        Ok(out_vec)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>

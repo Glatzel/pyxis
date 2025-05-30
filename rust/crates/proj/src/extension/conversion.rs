@@ -1,10 +1,10 @@
 use crate::Direction::{Fwd, Inv};
-use crate::IPjCoord;
+use crate::ICoord;
 
 impl crate::Proj<'_> {
     pub fn project<T>(&self, inv: bool, coord: &T) -> miette::Result<T>
     where
-        T: IPjCoord,
+        T: ICoord,
     {
         let direction = if inv { Inv } else { Fwd };
         let mut coord = coord.clone();
@@ -36,7 +36,7 @@ impl crate::Proj<'_> {
     }
     pub fn convert<T>(&self, coord: &T) -> miette::Result<T>
     where
-        T: IPjCoord,
+        T: ICoord,
     {
         let mut coord = coord.clone();
         let x = coord.x();
@@ -70,7 +70,7 @@ impl crate::Proj<'_> {
 impl crate::Proj<'_> {
     pub fn project_array<T>(&self, inv: bool, coord: &mut [T]) -> miette::Result<&Self>
     where
-        T: IPjCoord,
+        T: ICoord,
     {
         let direction = if inv { Inv } else { Fwd };
         let length = coord.len();
@@ -109,7 +109,7 @@ impl crate::Proj<'_> {
     }
     pub fn convert_array<T>(&self, coord: &mut [T]) -> miette::Result<&Self>
     where
-        T: IPjCoord,
+        T: ICoord,
     {
         let length = coord.len();
         let size = size_of::<T>();

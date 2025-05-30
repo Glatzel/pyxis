@@ -12,7 +12,7 @@
 * **Extended utilities**
 * **Customizable coordinate type**
 
-## 🎯 Goals
+## Goals
 
 This crate aims to:
 

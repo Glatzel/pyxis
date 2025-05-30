@@ -3,7 +3,7 @@ use crate::{ToCoord, check_result};
 impl crate::Proj<'_> {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
-    pub fn lp_dist(&self, a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
+    pub fn lp_dist(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> miette::Result<f64> {
         let dist = unsafe { proj_sys::proj_lp_dist(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         if dist.is_nan() {
@@ -16,11 +16,7 @@ impl crate::Proj<'_> {
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_lpz_dist>
-    pub fn lpz_dist(
-        &self,
-        a: impl crate::IPjCoord,
-        b: impl crate::IPjCoord,
-    ) -> miette::Result<f64> {
+    pub fn lpz_dist(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> miette::Result<f64> {
         let dist = unsafe { proj_sys::proj_lpz_dist(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         if dist.is_nan() {
@@ -33,11 +29,7 @@ impl crate::Proj<'_> {
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
-    pub fn geod(
-        &self,
-        a: impl crate::IPjCoord,
-        b: impl crate::IPjCoord,
-    ) -> miette::Result<(f64, f64)> {
+    pub fn geod(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> miette::Result<(f64, f64)> {
         let dist = unsafe { proj_sys::proj_geod(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };
@@ -54,14 +46,14 @@ impl crate::Proj<'_> {
 ///
 /// # References
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
-pub fn xy_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
+pub fn xy_dist(a: impl crate::ICoord, b: impl crate::ICoord) -> miette::Result<f64> {
     Ok(unsafe { proj_sys::proj_xy_dist(a.to_coord()?, b.to_coord()?) })
 }
 /// Calculate 3-dimensional euclidean between two projected coordinates.
 ///
 /// # References
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xyz_dist>
-pub fn xyz_dist(a: impl crate::IPjCoord, b: impl crate::IPjCoord) -> miette::Result<f64> {
+pub fn xyz_dist(a: impl crate::ICoord, b: impl crate::ICoord) -> miette::Result<f64> {
     Ok(unsafe { proj_sys::proj_xyz_dist(a.to_coord()?, b.to_coord()?) })
 }
 #[cfg(test)]

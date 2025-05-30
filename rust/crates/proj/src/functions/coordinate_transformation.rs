@@ -6,8 +6,8 @@ impl crate::Proj<'_> {
     ///
     /// # See Also
     ///
-    /// *[`Self::convert`]
-    /// *[`Self::project`]
+    /// * [`Self::convert`]
+    /// * [`Self::project`]
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>

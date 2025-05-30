@@ -1,4 +1,4 @@
 [target.x86_64-pc-windows-msvc]
 linker = "rust-lld"
 [target.'cfg(windows)'.env]
-CARGO_WORKSPACE_DIR = { value = ".pixi/envs/default/Library", relative = true }
+CUDA_PATH = { value = ".pixi/envs/default/Library", relative = true }

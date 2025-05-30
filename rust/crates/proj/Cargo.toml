@@ -18,6 +18,7 @@ dunce = { workspace = true }
 float-cmp = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
+strum = { workspace = true }
 
 [features]
 log = ["clerk/log"]

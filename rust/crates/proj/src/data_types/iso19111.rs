@@ -49,7 +49,8 @@ pub enum Category {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, Clone, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[cfg_attr(test, derive(strum::EnumIter))]
 #[repr(u32)]
 pub enum ProjType {
     Unknown = proj_sys::PJ_TYPE_PJ_TYPE_UNKNOWN,

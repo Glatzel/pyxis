@@ -656,7 +656,7 @@ readonly_struct!(
     {available    :bool}
 );
 /// # See Also
-/// 
+///
 /// *[`crate::Context::get_database_metadata`]
 ///
 ///# References
@@ -700,7 +700,7 @@ impl From<DatabaseMetadataKey> for CString {
     }
 }
 /// # See Also
-/// 
+///
 /// *[`crate::Proj::crs_create_bound_crs_to_wgs84`]
 ///
 ///# References

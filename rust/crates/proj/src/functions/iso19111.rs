@@ -1899,8 +1899,10 @@ mod test_context_basic {
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)
             .unwrap();
         assert_eq!(data, "9.6.0");
-        let data = ctx.get_database_metadata(DatabaseMetadataKey::ProjDataVersion);
-        assert!(data.is_none());
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::ProjDataVersion)
+            .unwrap();
+        assert_eq!(data, "1.21");
 
         Ok(())
     }

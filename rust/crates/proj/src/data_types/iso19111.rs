@@ -418,6 +418,7 @@ readonly_struct!(
 /// # References
 ///
 /// * <https://github.com/OSGeo/PROJ/blob/master/src/iso19111/static.cpp>
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq)]
 pub enum AxisDirection {
     North,
@@ -610,6 +611,7 @@ readonly_struct!(
     {unit_category   :UnitCategory}
 );
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UnitCategory {
     Unknown,
     None,
@@ -655,11 +657,14 @@ readonly_struct!(
     {open_license    :bool},
     {available    :bool}
 );
-/// See [`crate::Context::get_database_metadata`]
+/// # See Also
+///
+/// *[`crate::Context::get_database_metadata`]
 ///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum DatabaseMetadataKey {
     DatabaseLayoutVersionMajor,
     DatabaseLayoutVersionMinor,
@@ -697,11 +702,14 @@ impl From<DatabaseMetadataKey> for CString {
         .expect("Error creating CString")
     }
 }
-/// See [`crate::Proj::crs_create_bound_crs_to_wgs84`]
+/// # See Also
+///
+/// *[`crate::Proj::crs_create_bound_crs_to_wgs84`]
 ///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum AllowIntermediateCrs {
     Always,
     IfNoDirectTransformation,
@@ -717,3 +725,67 @@ impl Display for AllowIntermediateCrs {
         write!(f, "{}", text)
     }
 }
+readonly_struct!(
+    AreaOfUse,
+    "# References"
+    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>"
+    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_ex>",
+    {area_name:String,"a string to receive the name of the area of use."},
+    {west_lon_degree:f64,"a double to receive the west latitude (in degrees)."},
+    {south_lat_degree:f64,"a double to receive the south latitude (in degrees)."},
+    {east_lon_degree:f64,"a double to receive the east latitude (in degrees)."},
+    {north_lat_degree:f64,"a double to receive the north latitude (in degrees)."}
+);
+#[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub enum UomCategory {
+    Unknown,
+    None,
+    Linear,
+    LinearPerTime,
+    Angular,
+    AngularPerTime,
+    Scale,
+    ScalePerTime,
+    Time,
+    Parametric,
+    ParametricPerTime,
+}
+impl TryFrom<CString> for UomCategory {
+    type Error = miette::Report;
+    fn try_from(value: CString) -> miette::Result<Self> {
+        Ok(match value.to_str().into_diagnostic()? {
+            "unknown" => UomCategory::Unknown,
+            "none" => UomCategory::None,
+            "linear" => UomCategory::Linear,
+            "linear_per_time" => UomCategory::LinearPerTime,
+            "angular" => UomCategory::Angular,
+            "angular_per_time" => UomCategory::AngularPerTime,
+            "scale" => UomCategory::Scale,
+            "scale_per_time" => UomCategory::ScalePerTime,
+            "time" => UomCategory::Time,
+            "parametric" => UomCategory::Parametric,
+            "parametric_per_time" => UomCategory::ParametricPerTime,
+            _ => miette::bail!("Unknown"),
+        })
+    }
+}
+readonly_struct!(
+    UomInfo,
+    "# References"
+    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>",
+    {name :String},
+    {conv_factor:f64,"a value to store the conversion factor of the prime meridian longitude unit to radian."},
+    {category:UomCategory}
+);
+readonly_struct!(
+    GridInfoDB,
+    "# References"
+    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>",
+    {full_name :String,"a string value to store the grid full filename."},
+    {package_name:String,"a string value to store the package name where the grid might be found."},
+    {url:String,"a string value to store the grid URL or the package URL where the grid might be found."},
+    {direct_download:bool,"a boolean value to store whether *out_url can be downloaded directly."},
+    {open_license:bool,"a boolean value to store whether the grid is released with an open license."},
+    {available:bool,"a boolean value to store whether the grid is available at runtime."}
+);

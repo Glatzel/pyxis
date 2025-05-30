@@ -4,7 +4,10 @@ impl crate::Proj<'_> {
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
     ///
-    /// See [`Self::convert`], [`Self::project`]
+    /// # See Also
+    ///
+    /// *[`Self::convert`]
+    /// *[`Self::project`]
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
@@ -14,7 +17,7 @@ impl crate::Proj<'_> {
         direction: crate::Direction,
         coord: crate::data_types::Coord,
     ) -> miette::Result<crate::data_types::Coord> {
-        let out_coord = unsafe { proj_sys::proj_trans(self.ptr, i32::from(direction), coord) };
+        let out_coord = unsafe { proj_sys::proj_trans(self.ptr(), i32::from(direction), coord) };
         check_result!(self);
         Ok(out_coord)
     }
@@ -24,11 +27,11 @@ impl crate::Proj<'_> {
     pub fn get_last_used_operation(&self) -> Option<crate::Proj<'_>> {
         use crate::Proj;
 
-        let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr) };
+        let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr()) };
         if ptr.is_null() {
             return None;
         }
-        Some(Proj::from_raw(self.ctx, ptr).unwrap())
+        Some(Proj::new(self.ctx, ptr).unwrap())
     }
 
     /// # Safety
@@ -53,7 +56,7 @@ impl crate::Proj<'_> {
     ) -> miette::Result<usize> {
         let result = unsafe {
             proj_sys::proj_trans_generic(
-                self.ptr,
+                self.ptr(),
                 i32::from(direction),
                 x,
                 sx,
@@ -76,7 +79,7 @@ impl crate::Proj<'_> {
     /// <div class="warning">Available on <b>crate feature</b>
     /// <code>unrecommended</code> only.</div>
     ///
-    /// /// See [`Self::convert_array`], [`Self::project_array`]
+    /// See [`Self::convert_array`], [`Self::project_array`]
     ///
     ///  # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
@@ -88,7 +91,7 @@ impl crate::Proj<'_> {
     ) -> miette::Result<&Self> {
         let code = unsafe {
             proj_sys::proj_trans_array(
-                self.ptr,
+                self.ptr(),
                 i32::from(direction),
                 coord.len(),
                 coord.as_mut_ptr(),
@@ -120,7 +123,7 @@ impl crate::Context {
         let code = unsafe {
             proj_sys::proj_trans_bounds(
                 self.ptr,
-                p.ptr,
+                p.ptr(),
                 i32::from(direction),
                 xmin,
                 ymin,
@@ -162,7 +165,7 @@ impl crate::Context {
         let code = unsafe {
             proj_sys::proj_trans_bounds_3D(
                 self.ptr,
-                p.ptr,
+                p.ptr(),
                 i32::from(direction),
                 xmin,
                 ymin,

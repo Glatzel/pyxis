@@ -2000,7 +2000,7 @@ mod test_context_basic {
             } else {
                 let result = codes?;
                 println!("{:?}:{}", t, result.len());
-                assert!(result.len() > 0);
+                assert!(!result.is_empty());
             }
         }
         Ok(())

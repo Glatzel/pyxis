@@ -1616,7 +1616,7 @@ impl Proj<'_> {
             cstr_to_string(unit_name).unwrap_or_default(),
             cstr_to_string(unit_auth_name).unwrap_or_default(),
             cstr_to_string(unit_code).unwrap_or_default(),
-            UnitCategory::try_from(cstr_to_string(unit_category).unwrap())?,
+            UnitCategory::from_str(&cstr_to_string(unit_category).unwrap()).into_diagnostic()?,
         ))
     }
     ///# References

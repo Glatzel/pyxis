@@ -13,9 +13,11 @@
 //!
 //! * <https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
+use core::f64;
 use std::ffi::CString;
 use std::path::{Path, PathBuf};
 use std::ptr::{self, null};
+use std::result;
 
 use miette::IntoDiagnostic;
 
@@ -178,11 +180,71 @@ impl crate::Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>
-    fn _uom_get_info_from_database(&self) { unimplemented!() }
+    pub fn uom_get_info_from_database(
+        &self,
+        auth_name: &str,
+        code: &str,
+    ) -> miette::Result<UomInfo> {
+        let mut name: *const std::ffi::c_char = std::ptr::null();
+        let mut conv_factor: f64 = f64::NAN;
+        let mut category: *const std::ffi::c_char = std::ptr::null();
+        let result = unsafe {
+            proj_sys::proj_uom_get_info_from_database(
+                self.ptr,
+                CString::new(auth_name)
+                    .expect("Error creating CString")
+                    .as_ptr(),
+                CString::new(code).expect("Error creating CString").as_ptr(),
+                &mut name,
+                &mut conv_factor,
+                &mut category,
+            )
+        };
+        if result != 1 {
+            miette::bail!("Error");
+        }
+        Ok(UomInfo::new(
+            cstr_to_string(name).unwrap(),
+            conv_factor,
+            UomCategory::try_from(unsafe { CString::from_raw(category.cast_mut()) })?,
+        ))
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_get_info_from_database>
-    fn _grid_get_info_from_database(&self) { unimplemented!() }
+    pub fn _grid_get_info_from_database(&self, grid_name: &str) -> miette::Result<GridInfoDB> {
+        let mut full_name: *const std::ffi::c_char = std::ptr::null();
+        let mut package_name: *const std::ffi::c_char = std::ptr::null();
+        let mut url: *const std::ffi::c_char = std::ptr::null();
+        let mut direct_download: i32 = i32::default();
+        let mut open_license: i32 = i32::default();
+        let mut available: i32 = i32::default();
+        let result = unsafe {
+            proj_sys::proj_grid_get_info_from_database(
+                self.ptr,
+                CString::new(grid_name)
+                    .expect("Error creating CString")
+                    .as_ptr(),
+                &mut full_name,
+                &mut package_name,
+                &mut url,
+                &mut direct_download,
+                &mut open_license,
+                &mut available,
+            )
+        };
+        if result != 1 {
+            miette::bail!("Error");
+        }
+        Ok(GridInfoDB::new(
+            cstr_to_string(full_name).unwrap(),
+            cstr_to_string(package_name).unwrap(),
+            cstr_to_string(url).unwrap(),
+            direct_download != 0,
+            open_license != 0,
+            available != 0,
+        ))
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
@@ -944,10 +1006,10 @@ impl Proj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>
     pub fn get_area_of_use(&self) -> miette::Result<Option<AreaOfUse>> {
         let mut area_name: *const std::ffi::c_char = std::ptr::null();
-        let mut west_lon_degree = f64::default();
-        let mut south_lat_degree = f64::default();
-        let mut east_lon_degree = f64::default();
-        let mut north_lat_degree = f64::default();
+        let mut west_lon_degree = f64::NAN;
+        let mut south_lat_degree = f64::NAN;
+        let mut east_lon_degree = f64::NAN;
+        let mut north_lat_degree = f64::NAN;
         let result = unsafe {
             proj_sys::proj_get_area_of_use(
                 self.ctx.ptr,
@@ -982,10 +1044,10 @@ impl Proj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use_ex>
     pub fn get_area_of_use_ex(&self, domain_idx: u16) -> miette::Result<Option<AreaOfUse>> {
         let mut area_name: *const std::ffi::c_char = std::ptr::null();
-        let mut west_lon_degree = f64::default();
-        let mut south_lat_degree = f64::default();
-        let mut east_lon_degree = f64::default();
-        let mut north_lat_degree = f64::default();
+        let mut west_lon_degree = f64::NAN;
+        let mut south_lat_degree = f64::NAN;
+        let mut east_lon_degree = f64::NAN;
+        let mut north_lat_degree = f64::NAN;
         let result = unsafe {
             proj_sys::proj_get_area_of_use_ex(
                 self.ctx.ptr,
@@ -1272,7 +1334,7 @@ impl Proj<'_> {
         let mut abbrev: *const std::ffi::c_char = std::ptr::null();
         let mut direction: *const std::ffi::c_char = std::ptr::null();
 
-        let mut unit_conv_factor = f64::default();
+        let mut unit_conv_factor = f64::NAN;
         let mut unit_name: *const std::ffi::c_char = std::ptr::null();
         let mut unit_auth_name: *const std::ffi::c_char = std::ptr::null();
         let mut unit_code: *const std::ffi::c_char = std::ptr::null();
@@ -1314,10 +1376,10 @@ impl Proj<'_> {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_ellipsoid_get_parameters>
     pub fn ellipsoid_get_parameters(&self) -> miette::Result<EllipsoidParameters> {
-        let mut semi_major_metre = f64::default();
-        let mut semi_minor_metre = f64::default();
+        let mut semi_major_metre = f64::NAN;
+        let mut semi_minor_metre = f64::NAN;
         let mut is_semi_minor_computed = i32::default();
-        let mut inv_flattening = f64::default();
+        let mut inv_flattening = f64::NAN;
         let result = unsafe {
             proj_sys::proj_ellipsoid_get_parameters(
                 self.ctx.ptr,
@@ -1355,8 +1417,8 @@ impl Proj<'_> {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_prime_meridian_get_parameters>
     pub fn prime_meridian_get_parameters(&self) -> miette::Result<PrimeMeridianParameters> {
-        let mut longitude = f64::default();
-        let mut unit_conv_factor = f64::default();
+        let mut longitude = f64::NAN;
+        let mut unit_conv_factor = f64::NAN;
         let mut unit_name: *const std::ffi::c_char = std::ptr::null();
 
         let result = unsafe {
@@ -1464,9 +1526,9 @@ impl Proj<'_> {
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut auth_name: *const std::ffi::c_char = std::ptr::null();
         let mut code: *const std::ffi::c_char = std::ptr::null();
-        let mut value = f64::default();
+        let mut value = f64::NAN;
         let mut value_string: *const std::ffi::c_char = std::ptr::null();
-        let mut unit_conv_factor = f64::default();
+        let mut unit_conv_factor = f64::NAN;
         let mut unit_name: *const std::ffi::c_char = std::ptr::null();
         let mut unit_auth_name: *const std::ffi::c_char = std::ptr::null();
         let mut unit_code: *const std::ffi::c_char = std::ptr::null();

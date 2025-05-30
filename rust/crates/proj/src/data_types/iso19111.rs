@@ -728,3 +728,54 @@ readonly_struct!(
     {east_lon_degree:f64,"a double to receive the east latitude (in degrees)."},
     {north_lat_degree:f64,"a double to receive the north latitude (in degrees)."}
 );
+pub enum UomCategory {
+    Unknown,
+    None,
+    Linear,
+    LinearPerTime,
+    Angular,
+    AngularPerTime,
+    Scale,
+    ScalePerTime,
+    Time,
+    Parametric,
+    ParametricPerTime,
+}
+impl TryFrom<CString> for UomCategory {
+    type Error = miette::Report;
+    fn try_from(value: CString) -> miette::Result<Self> {
+        Ok(match value.to_str().into_diagnostic()? {
+            "unknown" => UomCategory::Unknown,
+            "none" => UomCategory::None,
+            "linear" => UomCategory::Linear,
+            "linear_per_time" => UomCategory::LinearPerTime,
+            "angular" => UomCategory::Angular,
+            "angular_per_time" => UomCategory::AngularPerTime,
+            "scale" => UomCategory::Scale,
+            "scale_per_time" => UomCategory::ScalePerTime,
+            "time" => UomCategory::Time,
+            "parametric" => UomCategory::Parametric,
+            "parametric_per_time" => UomCategory::ParametricPerTime,
+            _ => miette::bail!("Unknown"),
+        })
+    }
+}
+readonly_struct!(
+    UomInfo,
+    "# References"
+    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>",
+    {name :String},
+    {conv_factor:f64,"a value to store the conversion factor of the prime meridian longitude unit to radian."},
+    {category:UomCategory}
+);
+readonly_struct!(
+    GridInfoDB,
+    "# References"
+    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>",
+    {full_name :String,"a string value to store the grid full filename."},
+    {package_name:String,"a string value to store the package name where the grid might be found."},
+    {url:String,"a string value to store the grid URL or the package URL where the grid might be found."},
+    {direct_download:bool,"a boolean value to store whether *out_url can be downloaded directly."},
+    {open_license:bool,"a boolean value to store whether the grid is released with an open license."},
+    {available:bool,"a boolean value to store whether the grid is available at runtime."}
+);

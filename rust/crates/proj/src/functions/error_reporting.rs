@@ -59,7 +59,7 @@ impl crate::Context {
     /// # See Also
     ///
     /// * [`crate::check_result`]
-    /// ///
+    ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     pub(crate) fn errno_string(&self, err: &ProjError) -> String {

@@ -1,3 +1,4 @@
+Set-Location $PSScriptRoot
 pixi install
 
 if ($IsWindows) {

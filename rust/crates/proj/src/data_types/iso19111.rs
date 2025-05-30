@@ -732,6 +732,7 @@ readonly_struct!(
     {east_lon_degree:f64,"a double to receive the east latitude (in degrees)."},
     {north_lat_degree:f64,"a double to receive the north latitude (in degrees)."}
 );
+#[derive(Debug)]
 pub enum UomCategory {
     Unknown,
     None,

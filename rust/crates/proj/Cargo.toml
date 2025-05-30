@@ -16,6 +16,7 @@ assert_cmd = { workspace = true }
 clerk = { workspace = true, features = ["log"] }
 dunce = { workspace = true }
 float-cmp = { workspace = true }
+strum = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 

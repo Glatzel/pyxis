@@ -184,16 +184,16 @@ impl crate::Context {
         auth_name: &str,
         code: &str,
     ) -> miette::Result<UomInfo> {
+        let auth_name = CString::new(auth_name).expect("Error creating CString");
+        let code = CString::new(code).expect("Error creating CString");
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut conv_factor: f64 = f64::NAN;
         let mut category: *const std::ffi::c_char = std::ptr::null();
         let result = unsafe {
             proj_sys::proj_uom_get_info_from_database(
                 self.ptr,
-                CString::new(auth_name)
-                    .expect("Error creating CString")
-                    .as_ptr(),
-                CString::new(code).expect("Error creating CString").as_ptr(),
+                auth_name.as_ptr(),
+                code.as_ptr(),
                 &mut name,
                 &mut conv_factor,
                 &mut category,
@@ -202,10 +202,11 @@ impl crate::Context {
         if result != 1 {
             miette::bail!("Error");
         }
+
         Ok(UomInfo::new(
             cstr_to_string(name).unwrap(),
             conv_factor,
-            UomCategory::try_from(unsafe { CString::from_raw(category.cast_mut()) })?,
+            UomCategory::try_from(cstr_to_string(category).unwrap())?,
         ))
     }
     ///# References
@@ -291,7 +292,7 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_codes_from_database>
     pub fn get_codes_from_database(
         &self,
         auth_name: &str,
@@ -311,7 +312,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        let out_vec = vec_cstr_to_string(ptr).unwrap();
+        let out_vec = vec_cstr_to_string(ptr).unwrap_or_default();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -1614,7 +1615,7 @@ impl Proj<'_> {
             cstr_to_string(unit_name).unwrap_or_default(),
             cstr_to_string(unit_auth_name).unwrap_or_default(),
             cstr_to_string(unit_code).unwrap_or_default(),
-            UnitCategory::try_from(unsafe { CString::from_raw(unit_category.cast_mut()) })?,
+            UnitCategory::try_from(cstr_to_string(unit_category).unwrap())?,
         ))
     }
     ///# References
@@ -1821,6 +1822,8 @@ fn _proj_list_destroy() { unimplemented!() }
 
 #[cfg(test)]
 mod test_context_basic {
+    use strum::IntoEnumIterator;
+
     use super::*;
     #[test]
     fn test_set_database_path() -> miette::Result<()> {
@@ -1935,6 +1938,74 @@ mod test_context_basic {
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("32631"));
+        Ok(())
+    }
+    #[test]
+    fn test_uom_get_info_from_database() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let info = ctx.uom_get_info_from_database("EPSG", "9102")?;
+        println!("{:?}", info);
+        assert_eq!(info.name(), "degree");
+        assert_eq!(info.conv_factor(), &0.017453292519943295);
+        assert_eq!(info.category(), &UomCategory::Angular);
+        Ok(())
+    }
+    #[test]
+    fn test_grid_get_info_from_database() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let info = ctx.grid_get_info_from_database("au_icsm_GDA94_GDA2020_conformal.tif")?;
+        println!("{:?}", info);
+        assert_eq!(
+            info.full_name(),
+            "https://cdn.proj.org/au_icsm_GDA94_GDA2020_conformal.tif"
+        );
+        assert_eq!(
+            info.url(),
+            "https://cdn.proj.org/au_icsm_GDA94_GDA2020_conformal.tif"
+        );
+        assert!(info.direct_download());
+        assert!(info.open_license());
+        assert!(info.available());
+        Ok(())
+    }
+    #[test]
+    fn test_get_geoid_models_from_database() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let models = ctx.get_geoid_models_from_database("EPSG", "5703")?;
+        assert_eq!(
+            models,
+            vec![
+                "GEOID03", "GEOID06", "GEOID09", "GEOID12A", "GEOID12B", "GEOID18", "GEOID99",
+                "GGM10"
+            ]
+        );
+        Ok(())
+    }
+    #[test]
+    fn test_get_authorities_from_database() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let authorities = ctx.get_authorities_from_database()?;
+        assert_eq!(
+            authorities,
+            vec![
+                "EPSG", "ESRI", "IAU_2015", "IGNF", "NKG", "NRCAN", "OGC", "PROJ"
+            ]
+        );
+        Ok(())
+    }
+    #[test]
+    fn test_get_codes_from_database() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        for t in ProjType::iter() {
+            let codes = ctx.get_codes_from_database("EPSG", t.clone(), true);
+            if codes.is_err() {
+                println!("{:?}", t);
+            } else {
+                let result = codes?;
+                println!("{:?}:{}", t, result.len());
+                assert!(!result.is_empty());
+            }
+        }
         Ok(())
     }
 }
@@ -2159,6 +2230,32 @@ mod test_proj_basic {
         let scope = pj.get_scope_ex(0).expect("No scope");
         println!("{scope}");
         assert_eq!(scope, "Horizontal component of 3D system.");
+        Ok(())
+    }
+    #[test]
+    fn test_get_area_of_use() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let area = pj.get_area_of_use()?.unwrap();
+
+        assert_eq!(area.area_name(), "World.");
+        assert_eq!(area.east_lon_degree(), &180.0);
+        assert_eq!(area.west_lon_degree(), &-180.0);
+        assert_eq!(area.north_lat_degree(), &90.0);
+        assert_eq!(area.south_lat_degree(), &-90.0);
+        Ok(())
+    }
+    #[test]
+    fn test_get_area_of_use_ex() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "6316", Category::Crs, false)?;
+        let area = pj.get_area_of_use_ex(1)?.unwrap();
+
+        assert_eq!(area.area_name(), "North Macedonia.");
+        assert_eq!(area.east_lon_degree(), &23.04);
+        assert_eq!(area.west_lon_degree(), &20.45);
+        assert_eq!(area.north_lat_degree(), &42.36);
+        assert_eq!(area.south_lat_degree(), &40.85);
         Ok(())
     }
     #[test]
@@ -2472,10 +2569,13 @@ mod test_proj_basic {
     }
     #[test]
     fn test_coordoperation_get_param() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "1037",
-        // Category::CoordinateOperation, false)?; let param =
-        // pj.coordoperation_get_param(1)?; println!("{:?}", param);
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let op = pj.crs_get_coordoperation()?;
+        let param = op.coordoperation_get_param(1)?;
+        assert_eq!(param.name(), "Longitude of natural origin");
+        assert_eq!(param.code(), "8802");
+
         Ok(())
     }
     #[test]

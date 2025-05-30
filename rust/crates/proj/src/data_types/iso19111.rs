@@ -1,7 +1,6 @@
 use std::ffi::CString;
 use std::fmt::Display;
 
-use miette::IntoDiagnostic;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 use crate::readonly_struct;
@@ -49,7 +48,8 @@ pub enum Category {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, Clone, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[cfg_attr(test, derive(strum::EnumIter))]
 #[repr(u32)]
 pub enum ProjType {
     Unknown = proj_sys::PJ_TYPE_PJ_TYPE_UNKNOWN,
@@ -625,11 +625,11 @@ pub enum UnitCategory {
     Parametric,
     ParametricPerTime,
 }
-impl TryFrom<CString> for UnitCategory {
+impl TryFrom<String> for UnitCategory {
     type Error = miette::Report;
 
-    fn try_from(value: CString) -> Result<Self, Self::Error> {
-        Ok(match value.to_str().into_diagnostic()? {
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        Ok(match value.as_str() {
             "unknown" => Self::Unknown,
             "none" => Self::None,
             "linear" => Self::Linear,
@@ -736,7 +736,7 @@ readonly_struct!(
     {east_lon_degree:f64,"a double to receive the east latitude (in degrees)."},
     {north_lat_degree:f64,"a double to receive the north latitude (in degrees)."}
 );
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UomCategory {
     Unknown,
@@ -751,10 +751,10 @@ pub enum UomCategory {
     Parametric,
     ParametricPerTime,
 }
-impl TryFrom<CString> for UomCategory {
+impl TryFrom<String> for UomCategory {
     type Error = miette::Report;
-    fn try_from(value: CString) -> miette::Result<Self> {
-        Ok(match value.to_str().into_diagnostic()? {
+    fn try_from(value: String) -> miette::Result<Self> {
+        Ok(match value.as_str() {
             "unknown" => UomCategory::Unknown,
             "none" => UomCategory::None,
             "linear" => UomCategory::Linear,

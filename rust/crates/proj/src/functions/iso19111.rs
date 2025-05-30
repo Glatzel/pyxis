@@ -202,10 +202,11 @@ impl crate::Context {
         if result != 1 {
             miette::bail!("Error");
         }
+
         Ok(UomInfo::new(
             cstr_to_string(name).unwrap(),
             conv_factor,
-            UomCategory::try_from(unsafe { CString::from_raw(category.cast_mut()) })?,
+            UomCategory::try_from(cstr_to_string(category).unwrap())?,
         ))
     }
     ///# References
@@ -1614,7 +1615,7 @@ impl Proj<'_> {
             cstr_to_string(unit_name).unwrap_or_default(),
             cstr_to_string(unit_auth_name).unwrap_or_default(),
             cstr_to_string(unit_code).unwrap_or_default(),
-            UnitCategory::try_from(unsafe { CString::from_raw(unit_category.cast_mut()) })?,
+            UnitCategory::try_from(cstr_to_string(unit_category).unwrap())?,
         ))
     }
     ///# References
@@ -1942,9 +1943,11 @@ mod test_context_basic {
     #[test]
     fn test_uom_get_info_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let info = ctx.uom_get_info_from_database("EPSG", "9001")?;
+        let info = ctx.uom_get_info_from_database("EPSG", "9102")?;
         println!("{:?}", info);
-        assert_eq!(format!("{:?}", info), "");
+        assert_eq!(info.name(), "degree");
+        assert_eq!(info.conv_factor(), &0.017453292519943295);
+        assert_eq!(info.category(), &UomCategory::Angular);
         Ok(())
     }
     #[test]
@@ -2566,10 +2569,13 @@ mod test_proj_basic {
     }
     #[test]
     fn test_coordoperation_get_param() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "1037",
-        // Category::CoordinateOperation, false)?; let param =
-        // pj.coordoperation_get_param(1)?; println!("{:?}", param);
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let op = pj.crs_get_coordoperation()?;
+        let param = op.coordoperation_get_param(1)?;
+        assert_eq!(param.name(), "Longitude of natural origin");
+        assert_eq!(param.code(), "8802");
+
         Ok(())
     }
     #[test]

@@ -19,7 +19,7 @@ impl crate::Context {
         let definition = CString::new(definition).into_diagnostic()?;
         let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.as_ptr()) };
         check_result!(self);
-        Proj::from_raw(self, ptr)
+        Proj::new(self, ptr)
     }
 
     /// # References
@@ -33,7 +33,7 @@ impl crate::Context {
         let ptr =
             unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, argv_ptrs.as_mut_ptr()) };
         check_result!(self);
-        Proj::from_raw(self, ptr)
+        Proj::new(self, ptr)
     }
 
     /// # References
@@ -55,7 +55,7 @@ impl crate::Context {
             )
         };
         check_result!(self);
-        Proj::from_raw(self, ptr)
+        Proj::new(self, ptr)
     }
 
     /// # References
@@ -82,25 +82,25 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs_from_pj(
                 self.ptr,
-                source_crs.ptr,
-                target_crs.ptr,
+                source_crs.ptr(),
+                target_crs.ptr(),
                 area.ptr,
                 ptrs.as_ptr(),
             )
         };
         check_result!(self);
-        Proj::from_raw(self, ptr)
+        Proj::new(self, ptr)
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
     pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<crate::Proj> {
-        let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr) };
-        Proj::from_raw(self, ptr)
+        let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr()) };
+        Proj::new(self, ptr)
     }
 }
 
 impl Drop for crate::Proj<'_> {
-    fn drop(&mut self) { unsafe { proj_sys::proj_destroy(self.ptr) }; }
+    fn drop(&mut self) { unsafe { proj_sys::proj_destroy(self.ptr()) }; }
 }
 #[cfg(test)]
 mod test {

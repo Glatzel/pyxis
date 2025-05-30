@@ -24,7 +24,7 @@ impl crate::Proj<'_> {
     /// References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_pj_info>
     pub fn info(&self) -> ProjInfo {
-        let src = unsafe { proj_sys::proj_pj_info(self.ptr) };
+        let src = unsafe { proj_sys::proj_pj_info(self.ptr()) };
         ProjInfo::new(
             crate::cstr_to_string(src.id).unwrap_or_default(),
             crate::cstr_to_string(src.description).unwrap_or_default(),

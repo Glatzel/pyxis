@@ -1,7 +1,6 @@
 use std::ffi::c_void;
 
-use crate::check_result;
-use crate::LogLevel;
+use crate::{LogLevel, check_result};
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
     let _message = crate::cstr_to_string(info).unwrap_or_default();

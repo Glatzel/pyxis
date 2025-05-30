@@ -418,6 +418,7 @@ readonly_struct!(
 /// # References
 ///
 /// * <https://github.com/OSGeo/PROJ/blob/master/src/iso19111/static.cpp>
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq)]
 pub enum AxisDirection {
     North,
@@ -610,6 +611,7 @@ readonly_struct!(
     {unit_category   :UnitCategory}
 );
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UnitCategory {
     Unknown,
     None,
@@ -662,6 +664,7 @@ readonly_struct!(
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum DatabaseMetadataKey {
     DatabaseLayoutVersionMajor,
     DatabaseLayoutVersionMinor,
@@ -706,6 +709,7 @@ impl From<DatabaseMetadataKey> for CString {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum AllowIntermediateCrs {
     Always,
     IfNoDirectTransformation,
@@ -733,6 +737,7 @@ readonly_struct!(
     {north_lat_degree:f64,"a double to receive the north latitude (in degrees)."}
 );
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UomCategory {
     Unknown,
     None,

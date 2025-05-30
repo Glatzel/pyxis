@@ -26,7 +26,7 @@ pub(crate) fn vec_cstr_to_string(ptr: *mut *mut i8) -> Option<Vec<String>> {
 macro_rules! readonly_struct {
     ($name:ident, $($struct_doc:expr)+, $({$field:ident: $type:ty $(, $field_doc:expr)?}),*) => {
         $(#[doc=$struct_doc])+
-        #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+        #[cfg_attr(feature = "serde", derive(serde::Serialize))]
         #[derive(Debug)]
         pub struct $name {
             $( $field: $type ),*

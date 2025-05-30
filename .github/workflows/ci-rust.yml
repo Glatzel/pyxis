@@ -32,7 +32,9 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: cargo-test
-        run: ${{env.RUST_ROOT}}/scripts/cargo-test.ps1
+        run: |
+          git submodule update --init --recursive
+          ${{env.RUST_ROOT}}/scripts/cargo-test.ps1
         shell: pwsh
 
       - name: Upload results to Codecov
@@ -57,9 +59,7 @@ jobs:
         with:
           run-install: false
       - name: cargo-doc
-        run: |
-          git submodule update --init --recursive
-          ${{env.RUST_ROOT}}/scripts/cargo-doc.ps1
+        run: ${{env.RUST_ROOT}}/scripts/cargo-doc.ps1
         shell: pwsh
 
   cargo-bench:

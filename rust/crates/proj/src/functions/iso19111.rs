@@ -17,6 +17,7 @@ use core::f64;
 use std::ffi::CString;
 use std::path::{Path, PathBuf};
 use std::ptr::{self, null};
+use std::str::FromStr;
 
 use miette::IntoDiagnostic;
 
@@ -85,7 +86,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
     pub fn get_database_metadata(&self, key: DatabaseMetadataKey) -> Option<String> {
-        let key = CString::from(key);
+        let key = CString::new(key.as_ref()).expect("Error creating CString");
         cstr_to_string(unsafe {
             proj_sys::proj_context_get_database_metadata(self.ptr, key.as_ptr())
         })
@@ -206,7 +207,7 @@ impl crate::Context {
         Ok(UomInfo::new(
             cstr_to_string(name).unwrap(),
             conv_factor,
-            UomCategory::try_from(cstr_to_string(category).unwrap())?,
+            UomCategory::from_str(&cstr_to_string(category).unwrap()).into_diagnostic()?,
         ))
     }
     ///# References
@@ -1409,7 +1410,7 @@ impl Proj<'_> {
         Ok(AxisInfo::new(
             cstr_to_string(name).unwrap(),
             cstr_to_string(abbrev).unwrap(),
-            cstr_to_string(direction).unwrap().as_str().try_into()?,
+            AxisDirection::from_str(&cstr_to_string(direction).unwrap()).into_diagnostic()?,
             unit_conv_factor,
             cstr_to_string(unit_name).unwrap(),
             cstr_to_string(unit_auth_name).unwrap(),
@@ -1898,8 +1899,10 @@ mod test_context_basic {
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)
             .unwrap();
         assert_eq!(data, "9.6.0");
-        let data = ctx.get_database_metadata(DatabaseMetadataKey::ProjDataVersion);
-        assert!(data.is_none());
+        let data = ctx
+            .get_database_metadata(DatabaseMetadataKey::ProjDataVersion)
+            .unwrap();
+        assert_eq!(data, "1.21");
 
         Ok(())
     }
@@ -2011,34 +2014,37 @@ mod test_context_basic {
 }
 #[cfg(test)]
 mod test_context_advanced {
+    use strum::IntoEnumIterator;
+
     use super::*;
     #[test]
     fn test_create_cs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> = ctx.create_cs(
-            CoordinateSystemType::Cartesian,
-            &[
-                AxisDescription::new(
-                    Some("Longitude"),
-                    Some("lon"),
-                    AxisDirection::East,
-                    Some("Degree"),
-                    1.0,
-                    UnitType::Angular,
-                ),
-                AxisDescription::new(
-                    Some("Latitude"),
-                    Some("lat"),
-                    AxisDirection::North,
-                    Some("Degree"),
-                    1.0,
-                    UnitType::Angular,
-                ),
-            ],
-        )?;
-        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
-        assert!(wkt.contains("9122"));
+        for a in AxisDirection::iter() {
+            let pj: Proj<'_> = ctx.create_cs(
+                CoordinateSystemType::Cartesian,
+                &[
+                    AxisDescription::new(
+                        Some("Longitude"),
+                        Some("lon"),
+                        a,
+                        Some("Degree"),
+                        1.0,
+                        UnitType::Angular,
+                    ),
+                    AxisDescription::new(
+                        Some("Latitude"),
+                        Some("lat"),
+                        AxisDirection::North,
+                        Some("Degree"),
+                        1.0,
+                        UnitType::Angular,
+                    ),
+                ],
+            )?;
+            let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            assert!(wkt.contains("9122"));
+        }
         Ok(())
     }
     #[test]
@@ -2685,15 +2691,20 @@ mod test_proj_basic {
 }
 #[cfg(test)]
 mod test_proj_advanced {
+    use strum::IntoEnumIterator;
+
     use super::*;
     #[test]
     fn test_crs_create_bound_crs_to_wgs84() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let bound = pj.crs_create_bound_crs_to_wgs84(Some(AllowIntermediateCrs::Never))?;
-        let wkt = bound.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{wkt}",);
-        assert!(wkt.contains("32631"));
+        for a in AllowIntermediateCrs::iter() {
+            let bound = pj.crs_create_bound_crs_to_wgs84(Some(a))?;
+            let wkt = bound.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            println!("{wkt}",);
+            assert!(wkt.contains("32631"));
+        }
+
         Ok(())
     }
 }

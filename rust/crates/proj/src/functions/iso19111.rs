@@ -19,6 +19,7 @@ use std::path::{Path, PathBuf};
 use std::ptr::{self, null};
 
 use miette::IntoDiagnostic;
+use tracing::Instrument;
 
 use crate::data_types::iso19111::*;
 use crate::{
@@ -1771,9 +1772,12 @@ impl Clone for Proj<'_> {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_string_list_destroy>
 fn string_list_destroy(ptr: *mut *mut i8) {
-    unsafe {
-        proj_sys::proj_string_list_destroy(ptr);
+    if !ptr.is_null() {
+        unsafe {
+            proj_sys::proj_string_list_destroy(ptr);
+        }
     }
+    assert!(ptr.is_null());
 }
 ///# References
 ///

@@ -59,3 +59,16 @@ pub struct Context {
 pub struct Area {
     pub(crate) ptr: *mut proj_sys::PJ_AREA,
 }
+
+#[cfg(test)]
+mod test {
+    use super::Proj;
+
+    #[test]
+    fn test_proj_new() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = Proj::new(&ctx, std::ptr::null_mut());
+        assert!(pj.is_err());
+        Ok(())
+    }
+}

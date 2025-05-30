@@ -556,40 +556,31 @@ readonly_struct!(
     {unit_code   :String},
     {unit_category   :UnitCategory}
 );
-#[derive(Debug)]
+#[derive(Debug, EnumString)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UnitCategory {
+    #[strum(serialize = "unknown")]
     Unknown,
+    #[strum(serialize = "none")]
     None,
+    #[strum(serialize = "linear")]
     Linear,
+    #[strum(serialize = "linear_per_time")]
     LinearPerTime,
+    #[strum(serialize = "angular")]
     Angular,
+    #[strum(serialize = "angular_per_time")]
     AngularPerTime,
+    #[strum(serialize = "scale")]
     Scale,
+    #[strum(serialize = "scale_per_time")]
     ScalePerTime,
+    #[strum(serialize = "time")]
     Time,
+    #[strum(serialize = "parametric")]
     Parametric,
+    #[strum(serialize = "parametric_per_time")]
     ParametricPerTime,
-}
-impl TryFrom<String> for UnitCategory {
-    type Error = miette::Report;
-
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        Ok(match value.as_str() {
-            "unknown" => Self::Unknown,
-            "none" => Self::None,
-            "linear" => Self::Linear,
-            "linear_per_time" => Self::LinearPerTime,
-            "angular" => Self::Angular,
-            "angular_per_time" => Self::AngularPerTime,
-            "scale" => Self::Scale,
-            "scale_per_time" => Self::ScalePerTime,
-            "time" => Self::Time,
-            "parametric" => Self::Parametric,
-            "parametric_per_time" => Self::ParametricPerTime,
-            _ => miette::bail!("Unknown"),
-        })
-    }
 }
 readonly_struct!(
     CoordOperationGridUsed,

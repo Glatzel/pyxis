@@ -1,7 +1,5 @@
-$ErrorActionPreference = "Stop"
-$PSNativeCommandUseErrorActionPreference = $true
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
-cargo +stable clippy --fix --all
-cargo +stable clippy -- -Dwarnings
+&$PSScriptRoot/setup.ps1
+cargo +stable clippy --fix --all -- -D warnings
 Set-Location $ROOT

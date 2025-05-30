@@ -8,17 +8,17 @@ macro_rules! check_result {
                 clerk::debug!("Proj Process succeeded.");
             }
             ecode => {
-                let report = $self.errno_string(&ecode);
+                let report = $self.errno_string(ecode.clone());
                 clerk::error!(
                     "Proj Process Failed. Exist code: {}<{}>. {}",
                     code_str,
-                    i32::from(&ecode),
+                    i32::from(ecode.clone()),
                     report
                 );
                 miette::bail!(
                     "Proj Process Failed. Exist code: {}<{}>. {}",
                     code_str,
-                    i32::from(&ecode),
+                    i32::from(ecode),
                     report
                 )
             }
@@ -32,17 +32,17 @@ macro_rules! check_result {
                 clerk::debug!("Proj Process succeeded.");
             }
             ecode => {
-                let report = $self.errno_string(&ecode);
+                let report = $self.errno_string(ecode.clone());
                 clerk::error!(
                     "Proj Process Failed. Exist code: {}<{}>. {}",
                     code_str,
-                    i32::from(&ecode),
+                    i32::from(ecode.clone()),
                     report
                 );
                 miette::bail!(
                     "Proj Process Failed. Exist code: {}<{}>. {}",
                     code_str,
-                    i32::from(&ecode),
+                    i32::from(ecode),
                     report
                 )
             }

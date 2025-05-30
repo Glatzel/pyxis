@@ -14,8 +14,8 @@ impl crate::Proj<'_> {
 
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_set>
-    pub(crate) fn _errno_set(&self, err: &ProjError) -> &Self {
-        unsafe { proj_sys::proj_errno_set(self.ptr(), i32::from(err)) };
+    pub(crate) fn _errno_set(&self, err: ProjError) -> &Self {
+        unsafe { proj_sys::proj_errno_set(self.ptr(), err.into()) };
         self
     }
 
@@ -27,8 +27,8 @@ impl crate::Proj<'_> {
 
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_restore>
-    pub(crate) fn _errno_restore(&self, err: &ProjError) -> &Self {
-        unsafe { proj_sys::proj_errno_restore(self.ptr(), i32::from(err)) };
+    pub(crate) fn _errno_restore(&self, err: ProjError) -> &Self {
+        unsafe { proj_sys::proj_errno_restore(self.ptr(), err.into()) };
         self
     }
 
@@ -38,8 +38,8 @@ impl crate::Proj<'_> {
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
-    pub(crate) fn errno_string(&self, err: &ProjError) -> String {
-        crate::cstr_to_string(unsafe { proj_sys::proj_errno_string(i32::from(err)) })
+    pub(crate) fn errno_string(&self, err: ProjError) -> String {
+        crate::cstr_to_string(unsafe { proj_sys::proj_errno_string(err.into()) })
             .unwrap_or("Unknown error.".to_string())
     }
 }
@@ -62,10 +62,8 @@ impl crate::Context {
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
-    pub(crate) fn errno_string(&self, err: &ProjError) -> String {
-        crate::cstr_to_string(unsafe {
-            proj_sys::proj_context_errno_string(self.ptr, i32::from(err))
-        })
-        .unwrap_or("Unknown error.".to_string())
+    pub(crate) fn errno_string(&self, err: ProjError) -> String {
+        crate::cstr_to_string(unsafe { proj_sys::proj_context_errno_string(self.ptr, err.into()) })
+            .unwrap_or("Unknown error.".to_string())
     }
 }

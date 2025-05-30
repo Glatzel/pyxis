@@ -7,10 +7,22 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 /// # References
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ>
 pub struct Proj<'a> {
-    pub(crate) ptr: *mut proj_sys::PJ,
+    ptr: *mut proj_sys::PJ,
     pub(crate) ctx: &'a crate::Context,
 }
-
+impl Proj<'_> {
+    /// Create a `Proj` object from pointer, panic if pointer is null.
+    pub(crate) fn new(
+        ctx: &crate::Context,
+        ptr: *mut proj_sys::PJ,
+    ) -> miette::Result<crate::Proj<'_>> {
+        if ptr.is_null() {
+            miette::bail!("Proj pointer is null.");
+        }
+        Ok(crate::Proj { ctx, ptr })
+    }
+    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ { self.ptr }
+}
 /// Enumeration that is used to convey in which direction a given transformation
 /// should be performed. Used in transformation function call as described in
 /// the section on transformation functions.

@@ -3,7 +3,9 @@ use miette::IntoDiagnostic;
 use crate::data_types::LogLevel;
 /// # Logging
 impl crate::Context {
-    /// See [`Self::set_log_level`]
+    /// # See Also
+    ///
+    /// * [`Self::set_log_level`]
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_level>
@@ -12,7 +14,9 @@ impl crate::Context {
         let level = LogLevel::try_from(level).into_diagnostic()?;
         Ok(level)
     }
-    /// See [`Self::set_log_fn`]
+    /// # See Also
+    ///
+    /// * [`Self::set_log_fn`]
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_log_func>

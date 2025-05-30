@@ -22,7 +22,7 @@ impl crate::Proj<'_> {
         n: i32,
         coord: &mut proj_sys::PJ_COORD,
     ) -> miette::Result<f64> {
-        let distance = unsafe { proj_sys::proj_roundtrip(self.ptr, dir.into(), n, coord) };
+        let distance = unsafe { proj_sys::proj_roundtrip(self.ptr(), dir.into(), n, coord) };
         check_result!(self);
         Ok(distance)
     }
@@ -55,7 +55,7 @@ impl crate::Proj<'_> {
     ) -> miette::Result<crate::data_types::Factors> {
         use crate::data_types::Factors;
 
-        let factor = unsafe { proj_sys::proj_factors(self.ptr, coord) };
+        let factor = unsafe { proj_sys::proj_factors(self.ptr(), coord) };
         match self.errno() {
             crate::data_types::ProjError::Success => (),
             crate::data_types::ProjError::CoordTransfmOutsideProjectionDomain => (),
@@ -86,7 +86,7 @@ impl crate::Proj<'_> {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_input>
     pub fn angular_input(&self, dir: crate::Direction) -> bool {
-        (unsafe { proj_sys::proj_angular_input(self.ptr, i32::from(dir)) } != 0)
+        (unsafe { proj_sys::proj_angular_input(self.ptr(), i32::from(dir)) } != 0)
     }
 
     ///Check if an operation returns output in radians or not.
@@ -94,7 +94,7 @@ impl crate::Proj<'_> {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_output>
     pub fn angular_output(&self, dir: crate::Direction) -> bool {
-        (unsafe { proj_sys::proj_angular_output(self.ptr, i32::from(dir)) } != 0)
+        (unsafe { proj_sys::proj_angular_output(self.ptr(), i32::from(dir)) } != 0)
     }
 
     ///Check if an operation expects input in degrees or not.
@@ -102,7 +102,7 @@ impl crate::Proj<'_> {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_input>
     pub fn degree_input(&self, dir: crate::Direction) -> bool {
-        (unsafe { proj_sys::proj_degree_input(self.ptr, dir.into()) } != 0)
+        (unsafe { proj_sys::proj_degree_input(self.ptr(), dir.into()) } != 0)
     }
 
     ///Check if an operation returns output in degrees or not.
@@ -110,7 +110,7 @@ impl crate::Proj<'_> {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_output>
     pub fn degree_output(&self, dir: crate::Direction) -> bool {
-        (unsafe { proj_sys::proj_degree_output(self.ptr, dir.into()) } != 0)
+        (unsafe { proj_sys::proj_degree_output(self.ptr(), dir.into()) } != 0)
     }
 }
 

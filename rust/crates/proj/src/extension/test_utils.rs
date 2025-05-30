@@ -6,7 +6,7 @@ use tracing::level_filters::LevelFilter;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 
-use crate::data_types::LogLevel;
+use crate::LogLevel;
 static INIT_LOGGING: LazyLock<bool> = LazyLock::new(|| {
     tracing_subscriber::registry()
         .with(clerk::terminal_layer(LevelFilter::TRACE, true))

@@ -1,6 +1,6 @@
 use miette::IntoDiagnostic;
 
-use crate::data_types::LogLevel;
+use crate::LogLevel;
 /// # Logging
 impl crate::Context {
     /// # See Also

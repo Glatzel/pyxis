@@ -1,7 +1,7 @@
 use std::ffi::c_void;
 use std::ptr::null_mut;
 
-use crate::data_types::LogLevel;
+use crate::LogLevel;
 
 impl Default for crate::Context {
     fn default() -> Self {

@@ -25,13 +25,13 @@ const NULL_PTR: *mut f64 = null_mut();
 /// ```
 /// use std::ptr::null_mut;
 ///
-/// use proj::IPjCoord;
+/// use proj::ICoord;
 /// #[derive(Clone)]
 /// struct MyCoord {
 ///     x: f64,
 ///     y: f64,
 /// }
-/// impl IPjCoord for MyCoord {
+/// impl ICoord for MyCoord {
 ///     fn x(&mut self) -> *mut f64 { &mut self.x }
 ///     fn y(&mut self) -> *mut f64 { &mut self.y }
 ///     fn z(&mut self) -> *mut f64 { null_mut() }
@@ -46,14 +46,14 @@ const NULL_PTR: *mut f64 = null_mut();
 /// ```
 /// use std::ptr::null_mut;
 ///
-/// use proj::IPjCoord;
+/// use proj::ICoord;
 /// #[derive(Clone)]
 /// struct MyCoord {
 ///     x: f64,
 ///     y: f64,
 ///     z: f64,
 /// }
-/// impl IPjCoord for MyCoord {
+/// impl ICoord for MyCoord {
 ///     fn x(&mut self) -> *mut f64 { &mut self.x }
 ///     fn y(&mut self) -> *mut f64 { &mut self.y }
 ///     fn z(&mut self) -> *mut f64 { &mut self.z }
@@ -66,7 +66,7 @@ const NULL_PTR: *mut f64 = null_mut();
 /// <summary>4D Coordinate</summary>
 ///
 /// ```rust
-/// use proj::IPjCoord;
+/// use proj::ICoord;
 /// #[derive(Clone)]
 /// struct MyCoord {
 ///     x: f64,
@@ -74,7 +74,7 @@ const NULL_PTR: *mut f64 = null_mut();
 ///     z: f64,
 ///     t: f64,
 /// }
-/// impl IPjCoord for MyCoord {
+/// impl ICoord for MyCoord {
 ///     fn x(&mut self) -> *mut f64 { &mut self.x }
 ///     fn y(&mut self) -> *mut f64 { &mut self.y }
 ///     fn z(&mut self) -> *mut f64 { &mut self.z }
@@ -82,7 +82,7 @@ const NULL_PTR: *mut f64 = null_mut();
 /// }
 /// ```
 /// </details>
-pub trait IPjCoord: Clone {
+pub trait ICoord: Clone {
     fn x(&mut self) -> *mut f64;
     fn y(&mut self) -> *mut f64;
     fn z(&mut self) -> *mut f64;
@@ -97,7 +97,7 @@ pub(crate) trait ToCoord {
 
 impl<T> ToCoord for T
 where
-    T: IPjCoord,
+    T: ICoord,
 {
     fn to_coord(&self) -> miette::Result<proj_sys::PJ_COORD> {
         let mut src = self.clone();
@@ -138,37 +138,37 @@ where
         Ok(coord)
     }
 }
-impl IPjCoord for (f64, f64) {
+impl ICoord for (f64, f64) {
     fn x(&mut self) -> *mut f64 { &mut self.0 }
     fn y(&mut self) -> *mut f64 { &mut self.1 }
     fn z(&mut self) -> *mut f64 { NULL_PTR }
     fn t(&mut self) -> *mut f64 { NULL_PTR }
 }
-impl IPjCoord for [f64; 2] {
+impl ICoord for [f64; 2] {
     fn x(&mut self) -> *mut f64 { &mut self[0] }
     fn y(&mut self) -> *mut f64 { &mut self[1] }
     fn z(&mut self) -> *mut f64 { NULL_PTR }
     fn t(&mut self) -> *mut f64 { NULL_PTR }
 }
-impl IPjCoord for (f64, f64, f64) {
+impl ICoord for (f64, f64, f64) {
     fn x(&mut self) -> *mut f64 { &mut self.0 }
     fn y(&mut self) -> *mut f64 { &mut self.1 }
     fn z(&mut self) -> *mut f64 { &mut self.2 }
     fn t(&mut self) -> *mut f64 { NULL_PTR }
 }
-impl IPjCoord for [f64; 3] {
+impl ICoord for [f64; 3] {
     fn x(&mut self) -> *mut f64 { &mut self[0] }
     fn y(&mut self) -> *mut f64 { &mut self[1] }
     fn z(&mut self) -> *mut f64 { &mut self[2] }
     fn t(&mut self) -> *mut f64 { NULL_PTR }
 }
-impl IPjCoord for (f64, f64, f64, f64) {
+impl ICoord for (f64, f64, f64, f64) {
     fn x(&mut self) -> *mut f64 { &mut self.0 }
     fn y(&mut self) -> *mut f64 { &mut self.1 }
     fn z(&mut self) -> *mut f64 { &mut self.2 }
     fn t(&mut self) -> *mut f64 { &mut self.3 }
 }
-impl IPjCoord for [f64; 4] {
+impl ICoord for [f64; 4] {
     fn x(&mut self) -> *mut f64 { &mut self[0] }
     fn y(&mut self) -> *mut f64 { &mut self[1] }
     fn z(&mut self) -> *mut f64 { &mut self[2] }

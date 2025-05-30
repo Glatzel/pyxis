@@ -1,13 +1,13 @@
 use std::ptr::null_mut;
 
 use float_cmp::assert_approx_eq;
-use proj::{Area, IPjCoord};
+use proj::{Area, ICoord};
 #[derive(Clone)]
 struct MyCoord {
     a: f64,
     b: f64,
 }
-impl IPjCoord for MyCoord {
+impl ICoord for MyCoord {
     fn x(&mut self) -> *mut f64 { &mut self.a }
     fn y(&mut self) -> *mut f64 { &mut self.b }
     fn z(&mut self) -> *mut f64 { null_mut::<f64>() }

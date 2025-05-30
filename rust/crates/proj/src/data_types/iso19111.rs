@@ -2,6 +2,7 @@ use std::ffi::CString;
 use std::fmt::Display;
 
 use num_enum::{IntoPrimitive, TryFromPrimitive};
+use strum::{AsRefStr, EnumString};
 
 use crate::readonly_struct;
 ///Guessed WKT "dialect".
@@ -393,7 +394,7 @@ impl AxisDescription {
         Self {
             name: CString::new(name.unwrap_or("")).expect("Error creating CString"),
             abbreviation: CString::new(abbreviation.unwrap_or("")).expect("Error creating CString"),
-            direction: direction.into(),
+            direction: CString::new(direction.as_ref()).expect("Error creating CString"),
             unit_name: CString::new(unit_name.unwrap_or("")).expect("Error creating CString"),
             unit_conv_factor,
             unit_type,
@@ -419,144 +420,89 @@ readonly_struct!(
 ///
 /// * <https://github.com/OSGeo/PROJ/blob/master/src/iso19111/static.cpp>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, PartialEq)]
+#[cfg_attr(test, derive(strum::EnumIter))]
+#[derive(Debug, PartialEq, EnumString, strum::AsRefStr)]
 pub enum AxisDirection {
+    #[strum(serialize = "north")]
     North,
+    #[strum(serialize = "northNorthEast")]
     NorthNorthEast,
+    #[strum(serialize = "northEast")]
     NorthEast,
+    #[strum(serialize = "eastNorthEast")]
     EastNorthEast,
+    #[strum(serialize = "east")]
     East,
+    #[strum(serialize = "eastSouthEast")]
     EastSouthEast,
+    #[strum(serialize = "southEast")]
     SouthEast,
+    #[strum(serialize = "southSouthEast")]
     SouthSouthEast,
+    #[strum(serialize = "south")]
     South,
+    #[strum(serialize = "southSouthWest")]
     SouthSouthWest,
+    #[strum(serialize = "southWest")]
     SouthWest,
+    #[strum(serialize = "westSouthWest")]
     WestSouthWest,
+    #[strum(serialize = "west")]
     West,
+    #[strum(serialize = "westNorthWest")]
     WestNorthWest,
+    #[strum(serialize = "northWest")]
     NorthWest,
+    #[strum(serialize = "northNorthWest")]
     NorthNorthWest,
+    #[strum(serialize = "up")]
     Up,
+    #[strum(serialize = "down")]
     Down,
+    #[strum(serialize = "geocentricX")]
     GeocentricX,
+    #[strum(serialize = "geocentricY")]
     GeocentricY,
+    #[strum(serialize = "geocentricZ")]
     GeocentricZ,
+    #[strum(serialize = "columnPositive")]
     ColumnPositive,
+    #[strum(serialize = "columnNegative")]
     ColumnNegative,
+    #[strum(serialize = "rowPositive")]
     RowPositive,
+    #[strum(serialize = "rowNegative")]
     RowNegative,
+    #[strum(serialize = "displayRight")]
     DisplayRight,
+    #[strum(serialize = "displayLeft")]
     DisplayLeft,
+    #[strum(serialize = "displayUp")]
     DisplayUp,
+    #[strum(serialize = "displayDown")]
     DisplayDown,
+    #[strum(serialize = "forward")]
     Forward,
+    #[strum(serialize = "aft")]
     Aft,
+    #[strum(serialize = "port")]
     Port,
+    #[strum(serialize = "starboard")]
     Starboard,
+    #[strum(serialize = "clockwise")]
     Clockwise,
+    #[strum(serialize = "counterClockwise")]
     CounterClockwise,
+    #[strum(serialize = "towards")]
     Towards,
+    #[strum(serialize = "awayFrom")]
     AwayFrom,
+    #[strum(serialize = "future")]
     Future,
+    #[strum(serialize = "past")]
     Past,
+    #[strum(serialize = "unspecified")]
     Unspecified,
-}
-impl From<AxisDirection> for CString {
-    fn from(value: AxisDirection) -> Self {
-        CString::new(match value {
-            AxisDirection::North => "north",
-            AxisDirection::NorthNorthEast => "northNorthEast",
-            AxisDirection::NorthEast => "northEast",
-            AxisDirection::EastNorthEast => "eastNorthEast",
-            AxisDirection::East => "east",
-            AxisDirection::EastSouthEast => "eastSouthEast",
-            AxisDirection::SouthEast => "southEast",
-            AxisDirection::SouthSouthEast => "southSouthEast",
-            AxisDirection::South => "south",
-            AxisDirection::SouthSouthWest => "southSouthWest",
-            AxisDirection::SouthWest => "southWest",
-            AxisDirection::WestSouthWest => "westSouthWest",
-            AxisDirection::West => "west",
-            AxisDirection::WestNorthWest => "westNorthWest",
-            AxisDirection::NorthWest => "northWest",
-            AxisDirection::NorthNorthWest => "northNorthWest",
-            AxisDirection::Up => "up",
-            AxisDirection::Down => "down",
-            AxisDirection::GeocentricX => "geocentricX",
-            AxisDirection::GeocentricY => "geocentricY",
-            AxisDirection::GeocentricZ => "geocentricZ",
-            AxisDirection::ColumnPositive => "columnPositive",
-            AxisDirection::ColumnNegative => "columnNegative",
-            AxisDirection::RowPositive => "rowPositive",
-            AxisDirection::RowNegative => "rowNegative",
-            AxisDirection::DisplayRight => "displayRight",
-            AxisDirection::DisplayLeft => "displayLeft",
-            AxisDirection::DisplayUp => "displayUp",
-            AxisDirection::DisplayDown => "displayDown",
-            AxisDirection::Forward => "forward",
-            AxisDirection::Aft => "aft",
-            AxisDirection::Port => "port",
-            AxisDirection::Starboard => "starboard",
-            AxisDirection::Clockwise => "clockwise",
-            AxisDirection::CounterClockwise => "counterClockwise",
-            AxisDirection::Towards => "towards",
-            AxisDirection::AwayFrom => "awayFrom",
-            AxisDirection::Future => "future",
-            AxisDirection::Past => "past",
-            AxisDirection::Unspecified => "unspecified",
-        })
-        .expect("Error creating CString")
-    }
-}
-impl TryFrom<&str> for AxisDirection {
-    type Error = miette::Report;
-
-    fn try_from(value: &str) -> miette::Result<AxisDirection> {
-        Ok(match value {
-            "north" => AxisDirection::North,
-            "northNorthEast" => AxisDirection::NorthNorthEast,
-            "northEast" => AxisDirection::NorthEast,
-            "eastNorthEast" => AxisDirection::EastNorthEast,
-            "east" => AxisDirection::East,
-            "eastSouthEast" => AxisDirection::EastSouthEast,
-            "southEast" => AxisDirection::SouthEast,
-            "southSouthEast" => AxisDirection::SouthSouthEast,
-            "south" => AxisDirection::South,
-            "southSouthWest" => AxisDirection::SouthSouthWest,
-            "southWest" => AxisDirection::SouthWest,
-            "westSouthWest" => AxisDirection::WestSouthWest,
-            "west" => AxisDirection::West,
-            "westNorthWest" => AxisDirection::WestNorthWest,
-            "northWest" => AxisDirection::NorthWest,
-            "northNorthWest" => AxisDirection::NorthNorthWest,
-            "up" => AxisDirection::Up,
-            "down" => AxisDirection::Down,
-            "geocentricX" => AxisDirection::GeocentricX,
-            "geocentricY" => AxisDirection::GeocentricY,
-            "geocentricZ" => AxisDirection::GeocentricZ,
-            "columnPositive" => AxisDirection::ColumnPositive,
-            "columnNegative" => AxisDirection::ColumnNegative,
-            "rowPositive" => AxisDirection::RowPositive,
-            "rowNegative" => AxisDirection::RowNegative,
-            "displayRight" => AxisDirection::DisplayRight,
-            "displayLeft" => AxisDirection::DisplayLeft,
-            "displayUp" => AxisDirection::DisplayUp,
-            "displayDown" => AxisDirection::DisplayDown,
-            "forward" => AxisDirection::Forward,
-            "aft" => AxisDirection::Aft,
-            "port" => AxisDirection::Port,
-            "starboard" => AxisDirection::Starboard,
-            "clockwise" => AxisDirection::Clockwise,
-            "counterClockwise" => AxisDirection::CounterClockwise,
-            "towards" => AxisDirection::Towards,
-            "awayFrom" => AxisDirection::AwayFrom,
-            "future" => AxisDirection::Future,
-            "past" => AxisDirection::Past,
-            "unspecified" => AxisDirection::Unspecified,
-            other => miette::bail!("Unknown axis direction: {}", other),
-        })
-    }
 }
 readonly_struct!(
     AxisInfo,
@@ -665,42 +611,36 @@ readonly_struct!(
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, AsRefStr)]
 pub enum DatabaseMetadataKey {
+    #[strum(serialize = "DATABASE.LAYOUT.VERSION.MAJOR")]
     DatabaseLayoutVersionMajor,
+    #[strum(serialize = "DATABASE.LAYOUT.VERSION.MINOR")]
     DatabaseLayoutVersionMinor,
+    #[strum(serialize = "EPSG.VERSION")]
     EpsgVersion,
+    #[strum(serialize = "EPSG.DATE")]
     EpsgDate,
+    #[strum(serialize = "ESRI.VERSION")]
     EsriVersion,
+    #[strum(serialize = "ESRI.DATE")]
     EsriDate,
+    #[strum(serialize = "IGNF.SOURCE")]
     IgnfSource,
+    #[strum(serialize = "IGNF.VERSION")]
     IgnfVersion,
+    #[strum(serialize = "IGNF.DATE")]
     IgnfDate,
+    #[strum(serialize = "NKG.SOURCE")]
     NkgSource,
+    #[strum(serialize = "NKG.VERSION")]
     NkgVersion,
+    #[strum(serialize = "NKG.DATE")]
     NkgDate,
+    #[strum(serialize = "PROJ.VERSION")]
     ProjVersion,
+    #[strum(serialize = "PROJ_DATA.VERSION")]
     ProjDataVersion,
-}
-impl From<DatabaseMetadataKey> for CString {
-    fn from(value: DatabaseMetadataKey) -> Self {
-        CString::new(match value {
-            DatabaseMetadataKey::DatabaseLayoutVersionMajor => "DATABASE.LAYOUT.VERSION.MAJOR",
-            DatabaseMetadataKey::DatabaseLayoutVersionMinor => "DATABASE.LAYOUT.VERSION.MINOR",
-            DatabaseMetadataKey::EpsgVersion => "EPSG.VERSION",
-            DatabaseMetadataKey::EpsgDate => "EPSG.DATE",
-            DatabaseMetadataKey::EsriVersion => "ESRI.VERSION",
-            DatabaseMetadataKey::EsriDate => "ESRI.DATE",
-            DatabaseMetadataKey::IgnfSource => "IGNF.SOURCE",
-            DatabaseMetadataKey::IgnfVersion => "IGNF.VERSION",
-            DatabaseMetadataKey::IgnfDate => "IGNF.DATE",
-            DatabaseMetadataKey::NkgSource => "NKG.SOURCE",
-            DatabaseMetadataKey::NkgVersion => "NKG.VERSION",
-            DatabaseMetadataKey::NkgDate => "NKG.DATE",
-            DatabaseMetadataKey::ProjVersion => "PROJ.VERSION",
-            DatabaseMetadataKey::ProjDataVersion => "PROJ_DATA.VERSION ",
-        })
-        .expect("Error creating CString")
-    }
 }
 /// # See Also
 ///
@@ -710,6 +650,8 @@ impl From<DatabaseMetadataKey> for CString {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(test, derive(strum::EnumIter))]
+#[derive(Debug)]
 pub enum AllowIntermediateCrs {
     Always,
     IfNoDirectTransformation,
@@ -736,39 +678,31 @@ readonly_struct!(
     {east_lon_degree:f64,"a double to receive the east latitude (in degrees)."},
     {north_lat_degree:f64,"a double to receive the north latitude (in degrees)."}
 );
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, EnumString)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UomCategory {
+    #[strum(serialize = "unknown")]
     Unknown,
+    #[strum(serialize = "none")]
     None,
+    #[strum(serialize = "linear")]
     Linear,
+    #[strum(serialize = "linear_per_time")]
     LinearPerTime,
+    #[strum(serialize = "angular")]
     Angular,
+    #[strum(serialize = "angular_per_time")]
     AngularPerTime,
+    #[strum(serialize = "scale")]
     Scale,
+    #[strum(serialize = "scale_per_time")]
     ScalePerTime,
+    #[strum(serialize = "time")]
     Time,
+    #[strum(serialize = "parametric")]
     Parametric,
+    #[strum(serialize = "parametric_per_time")]
     ParametricPerTime,
-}
-impl TryFrom<String> for UomCategory {
-    type Error = miette::Report;
-    fn try_from(value: String) -> miette::Result<Self> {
-        Ok(match value.as_str() {
-            "unknown" => UomCategory::Unknown,
-            "none" => UomCategory::None,
-            "linear" => UomCategory::Linear,
-            "linear_per_time" => UomCategory::LinearPerTime,
-            "angular" => UomCategory::Angular,
-            "angular_per_time" => UomCategory::AngularPerTime,
-            "scale" => UomCategory::Scale,
-            "scale_per_time" => UomCategory::ScalePerTime,
-            "time" => UomCategory::Time,
-            "parametric" => UomCategory::Parametric,
-            "parametric_per_time" => UomCategory::ParametricPerTime,
-            _ => miette::bail!("Unknown"),
-        })
-    }
 }
 readonly_struct!(
     UomInfo,

@@ -41,7 +41,7 @@ impl crate::Context {
         db_path: &Path,
         aux_db_paths: Option<&[PathBuf]>,
     ) -> miette::Result<&Self> {
-        let db_path = CString::new(db_path.to_string_lossy().to_string()).into_diagnostic()?;
+        let db_path = db_path.to_str().unwrap().to_cstring()?;
 
         let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
             aux_db_paths
@@ -126,7 +126,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_create_from_wkt(
                 self.ptr,
-                CString::new(wkt).into_diagnostic()?.as_ptr(),
+                wkt.to_cstring()?.as_ptr(),
                 vec_ptr.as_ptr(),
                 &mut out_warnings,
                 &mut out_grammar_errors,
@@ -216,9 +216,7 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_grid_get_info_from_database(
                 self.ptr,
-                CString::new(grid_name)
-                    .expect("Error creating CString")
-                    .as_ptr(),
+                grid_name.to_cstring()?.as_ptr(),
                 &mut full_name,
                 &mut package_name,
                 &mut url,
@@ -261,15 +259,11 @@ impl crate::Context {
             proj_sys::proj_create_from_name(
                 self.ptr,
                 if let Some(auth_name) = auth_name {
-                    CString::new(auth_name)
-                        .expect("Error creating CString")
-                        .as_ptr()
+                    auth_name.to_cstring()?.as_ptr()
                 } else {
                     ptr::null()
                 },
-                CString::new(searched_name)
-                    .expect("Error creating CString")
-                    .as_ptr(),
+                searched_name.to_cstring()?.as_ptr(),
                 if let Some(types) = types {
                     types.as_ptr()
                 } else {
@@ -295,9 +289,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_geoid_models_from_database(
                 self.ptr,
-                CString::new(auth_name)
-                    .expect("Error creating CString")
-                    .as_ptr(),
+                auth_name.to_cstring()?.as_ptr(),
                 code.to_cstring()?.as_ptr(),
                 ptr::null(),
             )
@@ -333,9 +325,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_codes_from_database(
                 self.ptr,
-                CString::new(auth_name)
-                    .expect("Error creating CString")
-                    .as_ptr(),
+                auth_name.to_cstring()?.as_ptr(),
                 proj_type.into(),
                 allow_deprecated as i32,
             )
@@ -350,17 +340,15 @@ impl crate::Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
-    pub fn get_celestial_body_list_from_database(&self, auth_name: &str) {
-        let mut out_result_count = i32::default();
-        let _result = unsafe {
-            proj_sys::proj_get_celestial_body_list_from_database(
-                self.ptr,
-                CString::new(auth_name)
-                    .expect("Error creating CString")
-                    .as_ptr(),
-                &mut out_result_count,
-            )
-        };
+    pub fn get_celestial_body_list_from_database(&self, _auth_name: &str) {
+        // let mut out_result_count = i32::default();
+        // let _result = unsafe {
+        //     proj_sys::proj_get_celestial_body_list_from_database(
+        //         self.ptr,
+        //         auth_name.to_cstring()?.as_ptr(),
+        //         &mut out_result_count,
+        //     )
+        // };
     }
     ///# References
     ///
@@ -537,11 +525,11 @@ impl Context {
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let horizontal_angular_unit_name =
-            CString::new(horizontal_angular_unit_name.unwrap_or_default())
-                .expect("Error creating CString");
-        let vertical_linear_unit_name = CString::new(vertical_linear_unit_name.unwrap_or_default())
-            .expect("Error creating CString");
+        let horizontal_angular_unit_name = horizontal_angular_unit_name
+            .unwrap_or_default()
+            .to_cstring()?;
+        let vertical_linear_unit_name =
+            vertical_linear_unit_name.unwrap_or_default().to_cstring()?;
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
@@ -1297,9 +1285,7 @@ impl Proj<'_> {
             proj_sys::proj_identify(
                 self.ctx.ptr,
                 self.ptr(),
-                CString::new(auth_name)
-                    .expect("Error creating CString")
-                    .as_ptr(),
+                auth_name.to_cstring()?.as_ptr(),
                 ptr::null(),
                 &mut confidence.as_mut_ptr(),
             )

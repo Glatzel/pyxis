@@ -1,7 +1,7 @@
 use miette::IntoDiagnostic;
 
-use crate::CstrToString;
 use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
+use crate::{CstrToString, ToCString};
 
 /// Get information about the current instance of the PROJ library.
 ///
@@ -41,7 +41,7 @@ impl crate::Proj<'_> {
 /// References
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
 pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
-    let gridname_cstr = std::ffi::CString::new(grid).into_diagnostic()?;
+    let gridname_cstr = grid.to_cstring()?;
     let src = unsafe { proj_sys::proj_grid_info(gridname_cstr.as_ptr()) };
     if src.format.as_ptr().to_string().unwrap_or_default() == "missing" {
         miette::bail!("Invalid grid: {}", grid)
@@ -63,7 +63,7 @@ pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
 /// References
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
 pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
-    let initname_cstr = std::ffi::CString::new(initname).into_diagnostic()?;
+    let initname_cstr = initname.to_cstring()?;
     let src = unsafe { proj_sys::proj_init_info(initname_cstr.as_ptr()) };
     let info = InitInfo::new(
         src.name.as_ptr().to_string().unwrap_or_default(),

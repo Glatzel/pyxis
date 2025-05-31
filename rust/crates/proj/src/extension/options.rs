@@ -11,6 +11,8 @@
 use std::ffi::CString;
 use std::ptr::null;
 
+use super::ToCString;
+
 /// String constant representing the PROJ option value for `true`.
 pub(crate) const OPTION_YES: &str = "YES";
 /// String constant representing the PROJ option value for `false`.
@@ -73,8 +75,9 @@ impl ProjOptions {
     /// * `name` - The name of the option.
     pub fn _push<T: ToProjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
         self.options.push(
-            CString::new(format!("{name}={}", opt.to_option_string()))
-                .expect("Error creating CString"),
+            format!("{name}={}", opt.to_option_string())
+                .to_cstring()
+                .unwrap(),
         );
         self
     }
@@ -95,15 +98,14 @@ impl ProjOptions {
         match opt {
             Some(opt) => {
                 self.options.push(
-                    CString::new(format!("{name}={}", opt.to_option_string()))
-                        .expect("Error creating CString"),
+                    format!("{name}={}", opt.to_option_string())
+                        .to_cstring()
+                        .unwrap(),
                 );
             }
             None => {
-                self.options.push(
-                    CString::new(format!("{name}={default_value}"))
-                        .expect("Error creating CString"),
-                );
+                self.options
+                    .push(format!("{name}={default_value}").to_cstring().unwrap());
             }
         }
         self
@@ -122,8 +124,9 @@ impl ProjOptions {
     ) -> &mut Self {
         if let Some(opt) = opt {
             self.options.push(
-                CString::new(format!("{name}={}", opt.to_option_string()))
-                    .expect("Error creating CString"),
+                format!("{name}={}", opt.to_option_string())
+                    .to_cstring()
+                    .unwrap(),
             );
         }
         self

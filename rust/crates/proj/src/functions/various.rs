@@ -162,7 +162,7 @@ fn _rtodms() { unimplemented!("Use other function to instead.") }
 /// # References
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms2>
 pub fn rtodms2(r: f64, pos: char, neg: char) -> miette::Result<String> {
-    let dms = CString::new("xxxdxxmxx.xxs ").into_diagnostic()?;
+    let dms = "xxxdxxmxx.xxs ".to_cstring()?;
     let ptr =
         unsafe { proj_sys::proj_rtodms2(dms.as_ptr().cast_mut(), 14, r, pos as i32, neg as i32) };
     Ok(ptr.cast_const().to_string().unwrap())

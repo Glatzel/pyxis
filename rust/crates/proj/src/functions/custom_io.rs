@@ -1,8 +1,6 @@
 use std::ffi::CString;
 use std::path::Path;
 
-use miette::IntoDiagnostic;
-
 use crate::{ToCString, check_result};
 
 ///Setting custom I/O functions

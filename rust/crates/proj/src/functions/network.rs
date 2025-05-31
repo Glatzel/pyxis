@@ -1,7 +1,4 @@
-use std::ffi::CString;
 use std::path::PathBuf;
-
-use miette::IntoDiagnostic;
 
 use crate::{CstrToString, ToCString, check_result};
 

@@ -1,7 +1,4 @@
 use std::char;
-use std::ffi::CString;
-
-use miette::IntoDiagnostic;
 
 #[cfg(any(feature = "unrecommended", test))]
 use crate::check_result;

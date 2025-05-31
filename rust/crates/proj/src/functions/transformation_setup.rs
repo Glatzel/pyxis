@@ -6,10 +6,6 @@
 //!
 //! * <https://proj.org/en/stable/development/reference/functions.html#c-api-for-iso-19111-functionality>
 
-use std::ffi::CString;
-
-use miette::IntoDiagnostic;
-
 use crate::{Proj, ToCString, check_result};
 /// # Transformation setup
 impl crate::Context {

@@ -2231,7 +2231,7 @@ mod test_context_basic {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_celestial_body_list_from_database("ESRI")?;
         println!("{:?}", list.first().unwrap());
-        assert!(list.len() > 0);
+        assert!(!list.is_empty());
         Ok(())
     }
     #[test]
@@ -2239,7 +2239,7 @@ mod test_context_basic {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_crs_info_list_from_database("EPSG", None)?;
         println!("{:?}", list.first().unwrap());
-        assert!(list.len() > 0);
+        assert!(!list.is_empty());
         Ok(())
     }
     #[test]
@@ -2247,7 +2247,7 @@ mod test_context_basic {
         let ctx = crate::new_test_ctx()?;
         let units = ctx.get_celestial_body_list_from_database("ESRI")?;
         println!("{:?}", units.first().unwrap());
-        assert!(units.len() > 0);
+        assert!(!units.is_empty());
         Ok(())
     }
 }

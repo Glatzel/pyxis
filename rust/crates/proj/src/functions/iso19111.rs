@@ -1884,7 +1884,7 @@ fn _proj_operation_factory_context_destroy() { unimplemented!() }
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
-fn _proj_list_get_count() { unimplemented!() }
+fn _proj_list_get_count() { unimplemented!("Use other function to instead.") }
 ///# See Also
 ///
 /// * [`crate::extension::pj_obj_list_to_vec`]
@@ -1892,7 +1892,7 @@ fn _proj_list_get_count() { unimplemented!() }
 ///# References
 ///
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_destroy>
-fn _proj_list_destroy() { unimplemented!() }
+fn _proj_list_destroy() { unimplemented!("Use other function to instead.") }
 
 #[cfg(test)]
 mod test_context_basic {

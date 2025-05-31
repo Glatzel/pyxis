@@ -123,17 +123,34 @@ impl crate::Proj<'_> {
 pub fn coord(x: f64, y: f64, z: f64, t: f64) -> proj_sys::PJ_COORD {
     unsafe { proj_sys::proj_coord(x, y, z, t) }
 }
-
-#[deprecated(note = "Use `f64::to_radians()` instead")]
-fn _torad() { unimplemented!() }
-
-#[deprecated(note = "Use `f64::to_degrees()` instead")]
-fn _todeg() { unimplemented!() }
+///# See Also
+///
+/// * [`std::f64::to_radians`]
+///
+///# References
+///
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_torad>
+fn _torad() { unimplemented!("Use other function to instead.") }
+///# See Also
+///
+/// * [`std::f64::to_degrees`]
+///
+///# References
+///
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_todeg>
+fn _todeg() { unimplemented!("Use other function to instead.")}
 
 pub fn dmstor() -> f64 { unimplemented!() }
+///# See Also
+///
+/// * [`rtodms2`]
+///
+///# References
+///
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms>
+#[deprecated]
+fn _rtodms() { unimplemented!("Use other function to instead.") }
 
-#[deprecated(note = "Use `rtodms2()` instead.")]
-fn _rtodms(_r: f64, _pos: char, _neg: char) -> String { unimplemented!() }
 ///Convert radians to string representation of degrees, minutes and seconds.
 ///
 /// # References

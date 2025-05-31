@@ -2046,7 +2046,7 @@ mod test_context_basic {
                 None
             )?
         );
-        assert!(pj_list.len() > 0);
+        assert!(!pj_list.is_empty());
         Ok(())
     }
     #[test]
@@ -2180,7 +2180,7 @@ mod test_context_advanced {
                 None
             )?
         );
-        assert!(pj_list.len() > 0);
+        assert!(!pj_list.is_empty());
         Ok(())
     }
     #[test]
@@ -2266,7 +2266,7 @@ mod test_proj_basic {
                 None
             )?
         );
-        assert!(pj_list.len() > 0);
+        assert!(!pj_list.is_empty());
         Ok(())
     }
     #[test]
@@ -2442,7 +2442,7 @@ mod test_proj_basic {
                 None
             )?
         );
-        assert!(pj_list.len() > 0);
+        assert!(!pj_list.is_empty());
         Ok(())
     }
     #[test]

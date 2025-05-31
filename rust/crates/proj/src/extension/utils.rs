@@ -1,4 +1,3 @@
-use miette::IntoDiagnostic;
 pub(crate) fn pj_obj_list_to_vec(
     ctx: &Context,
     result: *const proj_sys::PJ_OBJ_LIST,

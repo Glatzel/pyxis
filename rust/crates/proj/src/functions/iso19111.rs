@@ -23,8 +23,8 @@ use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
 use crate::{
-    Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, cstr_to_string,
-    pj_obj_list_to_vec, vec_cstr_to_string,
+    Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, cstr_list_to_vec,
+    cstr_to_string, pj_obj_list_to_vec,
 };
 
 /// # ISO-19111 Base functions
@@ -96,7 +96,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
     pub fn get_database_structure(&self) -> miette::Result<Vec<String>> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
-        let out_vec = vec_cstr_to_string(ptr).unwrap();
+        let out_vec = cstr_list_to_vec(ptr).unwrap();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -140,13 +140,13 @@ impl crate::Context {
             )
         };
         //warning
-        if let Some(warnings) = vec_cstr_to_string(out_warnings) {
+        if let Some(warnings) = cstr_list_to_vec(out_warnings) {
             for w in warnings.iter() {
                 clerk::warn!("{w}");
             }
         };
         //error
-        if let Some(errors) = vec_cstr_to_string(out_grammar_errors) {
+        if let Some(errors) = cstr_list_to_vec(out_grammar_errors) {
             for e in errors.iter() {
                 clerk::warn!("{e}");
             }
@@ -312,7 +312,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        let out_vec = vec_cstr_to_string(ptr).unwrap();
+        let out_vec = cstr_list_to_vec(ptr).unwrap();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -324,7 +324,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        let out_vec = vec_cstr_to_string(ptr).unwrap();
+        let out_vec = cstr_list_to_vec(ptr).unwrap();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -350,7 +350,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        let out_vec = vec_cstr_to_string(ptr).unwrap_or_default();
+        let out_vec = cstr_list_to_vec(ptr).unwrap_or_default();
         string_list_destroy(ptr);
         Ok(out_vec)
     }

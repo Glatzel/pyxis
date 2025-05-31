@@ -6,7 +6,7 @@ pub(crate) fn cstr_to_string(ptr: *const c_char) -> Option<String> {
     }
     Some(unsafe { CStr::from_ptr(ptr) }.to_string_lossy().to_string())
 }
-pub(crate) fn vec_cstr_to_string(ptr: *mut *mut i8) -> Option<Vec<String>> {
+pub(crate) fn cstr_list_to_vec(ptr: *mut *mut i8) -> Option<Vec<String>> {
     if ptr.is_null() {
         return None;
     }

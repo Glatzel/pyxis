@@ -14,6 +14,7 @@
 //! * <https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
 use core::f64;
+use std::any::Any;
 use std::ffi::CString;
 use std::path::{Path, PathBuf};
 use std::ptr::{self, null};
@@ -338,24 +339,147 @@ impl crate::Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
-    fn _get_celestial_body_list_from_database(&self, _auth_name: &str) {
-        // let mut out_result_count = i32::default();
-        // let _result = unsafe {
-        //     proj_sys::proj_get_celestial_body_list_from_database(
-        //         self.ptr,
-        //         auth_name.to_cstring()?.as_ptr(),
-        //         &mut out_result_count,
-        //     )
-        // };
+    pub fn get_celestial_body_list_from_database(
+        &self,
+        auth_name: &str,
+    ) -> miette::Result<Vec<CelestialBodyInfo>> {
+        let mut out_result_count = i32::default();
+        let ptr = unsafe {
+            proj_sys::proj_get_celestial_body_list_from_database(
+                self.ptr,
+                auth_name.to_cstring()?.as_ptr(),
+                &mut out_result_count,
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        let mut out_vec = Vec::new();
+        for offset in 0..out_result_count {
+            let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
+            let info_ref = unsafe { current_ptr.as_ref().unwrap() };
+            out_vec.push(CelestialBodyInfo::new(
+                info_ref.auth_name.cast_const().to_string().unwrap(),
+                info_ref.name.cast_const().to_string().unwrap(),
+            ));
+        }
+        unsafe { proj_sys::proj_celestial_body_list_destroy(ptr) };
+        Ok(out_vec)
     }
     ///# References
     ///
     /// https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
-    fn _get_crs_info_list_from_database(&self) { todo!() }
+    pub fn get_crs_info_list_from_database(
+        &self,
+        auth_name: &str,
+        params: CrsListParameters,
+    ) -> miette::Result<Vec<CrsInfo>> {
+        let mut out_result_count = i32::default();
+        let types: Vec<u32> = params
+            .types()
+            .to_owned()
+            .iter()
+            .map(|f| u32::from(f.clone()))
+            .collect();
+        let celestial_body_name: CString = params
+            .celestial_body_name()
+            .to_owned()
+            .unwrap_or_default()
+            .to_cstring()?;
+        let params = proj_sys::PROJ_CRS_LIST_PARAMETERS {
+            types: types.as_ptr(),
+            typesCount: params.types().len(),
+            crs_area_of_use_contains_bbox: *params.west_lon_degree() as i32,
+            bbox_valid: *params.bbox_valid() as i32,
+            west_lon_degree: *params.west_lon_degree(),
+            south_lat_degree: *params.south_lat_degree(),
+            east_lon_degree: *params.east_lon_degree(),
+            north_lat_degree: *params.north_lat_degree(),
+            allow_deprecated: *params.allow_deprecated() as i32,
+            celestial_body_name: celestial_body_name.as_ptr(),
+        };
+        let ptr = unsafe {
+            proj_sys::proj_get_crs_info_list_from_database(
+                self.ptr,
+                auth_name.to_cstring()?.as_ptr(),
+                &params,
+                &mut out_result_count,
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        let mut out_vec = Vec::new();
+        for offset in 0..out_result_count {
+            let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
+            let info_ref = unsafe { current_ptr.as_ref().unwrap() };
+            out_vec.push(CrsInfo::new(
+                info_ref.auth_name.cast_const().to_string().unwrap(),
+                info_ref.code.cast_const().to_string().unwrap(),
+                info_ref.name.cast_const().to_string().unwrap(),
+                ProjType::try_from(info_ref.type_).into_diagnostic()?,
+                info_ref.deprecated != 0,
+                info_ref.bbox_valid != 0,
+                info_ref.west_lon_degree,
+                info_ref.south_lat_degree,
+                info_ref.east_lon_degree,
+                info_ref.north_lat_degree,
+                info_ref.area_name.cast_const().to_string().unwrap(),
+                info_ref
+                    .projection_method_name
+                    .cast_const()
+                    .to_string()
+                    .unwrap(),
+                info_ref
+                    .celestial_body_name
+                    .cast_const()
+                    .to_string()
+                    .unwrap(),
+            ));
+        }
+        unsafe { proj_sys::proj_crs_info_list_destroy(ptr) };
+        Ok(out_vec)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_units_from_database>
-    fn _get_units_from_database(&self) { todo!() }
+    pub fn get_units_from_database(
+        &self,
+        auth_name: &str,
+        category: UnitCategory,
+        allow_deprecated: bool,
+    ) -> miette::Result<Vec<UnitInfo>> {
+        let mut out_result_count = i32::default();
+        let ptr = unsafe {
+            proj_sys::proj_get_units_from_database(
+                self.ptr,
+                auth_name.to_cstring()?.as_ptr(),
+                category.as_ref().to_cstring().unwrap().as_ptr(),
+                allow_deprecated as i32,
+                &mut out_result_count,
+            )
+        };
+        if ptr.is_null() {
+            miette::bail!("Error");
+        }
+        let mut out_vec = Vec::new();
+        for offset in 0..out_result_count {
+            let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
+            let info_ref = unsafe { current_ptr.as_ref().unwrap() };
+            out_vec.push(UnitInfo::new(
+                info_ref.auth_name.cast_const().to_string().unwrap(),
+                info_ref.code.cast_const().to_string().unwrap(),
+                info_ref.name.cast_const().to_string().unwrap(),
+                UnitCategory::from_str(&info_ref.category.cast_const().to_string().unwrap())
+                    .into_diagnostic()?,
+                info_ref.conv_factor,
+                info_ref.code.cast_const().to_string().unwrap(),
+                info_ref.deprecated != 0,
+            ));
+        }
+        unsafe { proj_sys::proj_unit_list_destroy(ptr) };
+        Ok(out_vec)
+    }
     ///# References
     ///
     /// <>
@@ -1831,38 +1955,42 @@ fn string_list_destroy(ptr: *mut *mut i8) {
 ///
 /// <>
 fn _proj_int_list_destroy() { todo!() }
+///# See Also
+///
+/// * [`crate::Context::get_celestial_body_list_from_database`]
+///
+///# References
+///
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
+fn _celestial_body_list_destroy() { unimplemented!("Use other function to instead.") }
 ///# References
 ///
 /// <>
-fn _proj_celestial_body_list_destroy() { todo!() }
+fn _get_crs_list_parameters_create() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_get_crs_list_parameters_create() { todo!() }
+fn _get_crs_list_parameters_destroy() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_get_crs_list_parameters_destroy() { todo!() }
+fn _crs_info_list_destroy() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_crs_info_list_destroy() { todo!() }
+fn _unit_list_destroy() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_unit_list_destroy() { todo!() }
+fn _insert_object_session_create() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_insert_object_session_create() { todo!() }
+fn _string_destroy() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_string_destroy() { todo!() }
-///# References
-///
-/// <>
-fn _proj_operation_factory_context_destroy() { todo!() }
+fn _operation_factory_context_destroy() { todo!() }
 ///# See Also
 ///
 /// * [`crate::extension::pj_obj_list_to_vec`]

@@ -1,5 +1,3 @@
-use miette::IntoDiagnostic;
-
 use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
 use crate::{CstrToString, ToCString};
 
@@ -43,13 +41,13 @@ impl crate::Proj<'_> {
 pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
     let gridname_cstr = grid.to_cstring()?;
     let src = unsafe { proj_sys::proj_grid_info(gridname_cstr.as_ptr()) };
-    if src.format.as_ptr().to_string().unwrap_or_default() == "missing" {
+    if src.format.to_string().unwrap_or_default() == "missing" {
         miette::bail!("Invalid grid: {}", grid)
     }
     Ok(GridInfo::new(
-        src.gridname.as_ptr().to_string().unwrap_or_default(),
-        src.filename.as_ptr().to_string().unwrap_or_default(),
-        src.format.as_ptr().to_string().unwrap_or_default(),
+        src.gridname.to_string().unwrap_or_default(),
+        src.filename.to_string().unwrap_or_default(),
+        src.format.to_string().unwrap_or_default(),
         src.lowerleft,
         src.upperright,
         src.n_lon,
@@ -66,26 +64,28 @@ pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
     let initname_cstr = initname.to_cstring()?;
     let src = unsafe { proj_sys::proj_init_info(initname_cstr.as_ptr()) };
     let info = InitInfo::new(
-        src.name.as_ptr().to_string().unwrap_or_default(),
-        src.filename.as_ptr().to_string().unwrap_or_default(),
-        src.version.as_ptr().to_string().unwrap_or_default(),
-        src.origin.as_ptr().to_string().unwrap_or_default(),
-        src.lastupdate.as_ptr().to_string().unwrap_or_default(),
+        src.name.to_string().unwrap_or_default(),
+        src.filename.to_string().unwrap_or_default(),
+        src.version.to_string().unwrap_or_default(),
+        src.origin.to_string().unwrap_or_default(),
+        src.lastupdate.to_string().unwrap_or_default(),
     );
     if info.version() == "" {
         miette::bail!(format!("Invalid proj init file or name: {}", initname))
     }
     Ok(InitInfo::new(
-        src.name.as_ptr().to_string().unwrap_or_default(),
-        src.filename.as_ptr().to_string().unwrap_or_default(),
-        src.version.as_ptr().to_string().unwrap_or_default(),
-        src.origin.as_ptr().to_string().unwrap_or_default(),
-        src.lastupdate.as_ptr().to_string().unwrap_or_default(),
+        src.name.to_string().unwrap_or_default(),
+        src.filename.to_string().unwrap_or_default(),
+        src.version.to_string().unwrap_or_default(),
+        src.origin.to_string().unwrap_or_default(),
+        src.lastupdate.to_string().unwrap_or_default(),
     ))
 }
 #[cfg(test)]
 mod test {
     use std::path::PathBuf;
+
+    use miette::IntoDiagnostic;
 
     use super::*;
     #[test]

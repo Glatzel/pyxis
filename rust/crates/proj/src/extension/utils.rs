@@ -14,6 +14,15 @@ impl CstrToString for *const i8 {
         )
     }
 }
+impl CstrToString for [i8] {
+    fn to_string(&self) -> Option<String> {
+        Some(
+            unsafe { CStr::from_ptr(self.as_ptr()) }
+                .to_string_lossy()
+                .to_string(),
+        )
+    }
+}
 
 pub(crate) trait CstrListToVecString {
     fn to_vec_string(&self) -> Option<Vec<String>>;

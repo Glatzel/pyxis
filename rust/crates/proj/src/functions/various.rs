@@ -1,8 +1,9 @@
 use std::char;
 
+use envoy::{CstrToString, ToCString};
+
 #[cfg(any(feature = "unrecommended", test))]
 use crate::check_result;
-use crate::{CstrToString, ToCString};
 
 /// # Various
 impl crate::Proj<'_> {

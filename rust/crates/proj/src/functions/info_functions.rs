@@ -1,5 +1,6 @@
+use envoy::{CstrToString, ToCString};
+
 use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
-use crate::{CstrToString, ToCString};
 
 /// Get information about the current instance of the PROJ library.
 ///

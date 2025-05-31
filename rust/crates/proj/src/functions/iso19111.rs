@@ -19,13 +19,11 @@ use std::path::{Path, PathBuf};
 use std::ptr::{self, null};
 use std::str::FromStr;
 
+use envoy::{CstrListToVecString, CstrToString, ToCString};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
-use crate::{
-    Context, CstrListToVecString, CstrToString, OPTION_NO, OPTION_YES, Proj, ProjOptions,
-    ToCString, check_result, pj_obj_list_to_vec,
-};
+use crate::{Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, pj_obj_list_to_vec};
 /// # ISO-19111 Base functions
 impl crate::Context {
     ///# References
@@ -2048,7 +2046,7 @@ mod test_context_basic {
                 None
             )?
         );
-        assert!(pj_list.len() > 0);
+        assert!(!pj_list.is_empty());
         Ok(())
     }
     #[test]
@@ -2182,7 +2180,7 @@ mod test_context_advanced {
                 None
             )?
         );
-        assert!(pj_list.len() > 0);
+        assert!(!pj_list.is_empty());
         Ok(())
     }
     #[test]
@@ -2268,7 +2266,7 @@ mod test_proj_basic {
                 None
             )?
         );
-        assert!(pj_list.len() > 0);
+        assert!(!pj_list.is_empty());
         Ok(())
     }
     #[test]
@@ -2444,7 +2442,7 @@ mod test_proj_basic {
                 None
             )?
         );
-        assert!(pj_list.len() > 0);
+        assert!(!pj_list.is_empty());
         Ok(())
     }
     #[test]

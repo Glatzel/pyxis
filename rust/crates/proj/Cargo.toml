@@ -5,12 +5,12 @@ version.workspace = true
 
 [dependencies]
 clerk = { workspace = true }
+envoy = { workspace = true }
 miette = { workspace = true }
 num_enum = { workspace = true }
 proj-sys = { workspace = true }
 serde = { workspace = true, optional = true }
 strum = { workspace = true }
-
 [dev-dependencies]
 assert_cmd = { workspace = true }
 clerk = { workspace = true, features = ["log"] }

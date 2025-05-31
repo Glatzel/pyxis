@@ -1,7 +1,9 @@
 use std::ffi::CString;
 use std::path::Path;
 
-use crate::{ToCString, check_result};
+use envoy::ToCString;
+
+use crate::check_result;
 
 ///Setting custom I/O functions
 impl crate::Context {

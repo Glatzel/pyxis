@@ -140,7 +140,7 @@ fn _torad() { unimplemented!("Use other function to instead.") }
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_todeg>
 fn _todeg() { unimplemented!("Use other function to instead.") }
 
-pub fn dmstor() -> f64 { todo!()}
+pub fn dmstor() -> f64 { todo!() }
 ///# See Also
 ///
 /// * [`rtodms2`]

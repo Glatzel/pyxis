@@ -1955,10 +1955,14 @@ fn string_list_destroy(ptr: *mut *mut i8) {
         proj_sys::proj_string_list_destroy(ptr);
     }
 }
+///# See Also
+///
+/// * [`crate::Proj::identify`]
+///
 ///# References
 ///
-/// <>
-fn _proj_int_list_destroy() { todo!() }
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_int_list_destroy>
+fn _proj_int_list_destroy() { unimplemented!("Use other function to instead.") }
 ///# See Also
 ///
 /// * [`crate::Context::get_celestial_body_list_from_database`]
@@ -1967,22 +1971,38 @@ fn _proj_int_list_destroy() { todo!() }
 ///
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
 fn _celestial_body_list_destroy() { unimplemented!("Use other function to instead.") }
+///# See Also
+///
+/// * [`crate::Context::get_crs_info_list_from_database`]
+///
 ///# References
 ///
-/// <>
-fn _get_crs_list_parameters_create() { todo!() }
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_list_parameters_create>
+fn _get_crs_list_parameters_create() { unimplemented!("Use other function to instead.") }
+///# See Also
+///
+/// * [`crate::Context::get_crs_info_list_from_database`]
+///
 ///# References
 ///
-/// <>
-fn _get_crs_list_parameters_destroy() { todo!() }
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_list_parameters_destroy>
+fn _get_crs_list_parameters_destroy() { unimplemented!("Use other function to instead.") }
+///# See Also
+///
+/// * [`crate::Context::get_crs_info_list_from_database`]
+///
 ///# References
 ///
-/// <>
-fn _crs_info_list_destroy() { todo!() }
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_info_list_destroy>
+fn _crs_info_list_destroy() { unimplemented!("Use other function to instead.") }
+///# See Also
+///
+/// * [`crate::Context::get_units_from_database`]
+///
 ///# References
 ///
-/// <>
-fn _unit_list_destroy() { todo!() }
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_unit_list_destroy>
+fn _unit_list_destroy() { unimplemented!("Use other function to instead.") }
 ///# References
 ///
 /// <>

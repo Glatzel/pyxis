@@ -35,6 +35,9 @@ pub(crate) fn pj_obj_list_to_vec(
     for i in 0..count {
         proj_list.push(ctx.list_get(result, i)?);
     }
+    unsafe {
+        proj_sys::proj_list_destroy(result.cast_mut());
+    }
     Ok(proj_list)
 }
 macro_rules! readonly_struct {

@@ -1885,14 +1885,14 @@ fn _proj_operation_factory_context_destroy() { unimplemented!() }
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
 fn _proj_list_get_count() { unimplemented!() }
+///# See Also
+///
+/// * [`crate::extension::pj_obj_list_to_vec`]
+///
 ///# References
 ///
 /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_destroy>
-fn proj_list_destroy(result: *mut proj_sys::PJ_OBJ_LIST) {
-    unsafe {
-        proj_sys::proj_list_destroy(result);
-    }
-}
+fn _proj_list_destroy() { unimplemented!() }
 
 #[cfg(test)]
 mod test_context_basic {

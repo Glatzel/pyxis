@@ -1,7 +1,6 @@
 mod conversion;
 mod error_handling;
 mod logging;
-mod misc;
 mod options;
 #[cfg(test)]
 mod test_utils;

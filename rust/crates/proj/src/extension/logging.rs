@@ -1,5 +1,7 @@
 use std::ffi::c_void;
 
+use miette::IntoDiagnostic;
+
 use crate::{LogLevel, check_result};
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
@@ -15,7 +17,8 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
 
 impl crate::Context {
     pub fn set_log_level(&self, level: LogLevel) -> miette::Result<&Self> {
-        self.log_level(level)?;
+        let level = unsafe { proj_sys::proj_log_level(self.ptr, level.into()) };
+        let _ = LogLevel::try_from(level).into_diagnostic()?;
         Ok(self)
     }
     #[cfg(feature = "unrecommended")]

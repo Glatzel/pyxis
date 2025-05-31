@@ -8,7 +8,7 @@ use crate::check_result;
 impl crate::Context {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_network_callbacks>
-    fn _set_network_callbacks(&self) { unimplemented!() }
+    fn _set_network_callbacks(&self) { todo!() }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_enable_network>
     pub fn set_enable_network(&self, enabled: bool) -> miette::Result<&Self> {

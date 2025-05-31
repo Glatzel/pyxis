@@ -23,8 +23,8 @@ use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
 use crate::{
-    Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, cstr_to_string,
-    vec_cstr_to_string,
+    Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, cstr_list_to_vec,
+    cstr_to_string, pj_obj_list_to_vec,
 };
 
 /// # ISO-19111 Base functions
@@ -33,7 +33,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_autoclose_database>
     #[deprecated]
-    fn _set_autoclose_database(&self) { unimplemented!() }
+    fn _set_autoclose_database(&self) { unimplemented!("Deprecated") }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
@@ -96,7 +96,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
     pub fn get_database_structure(&self) -> miette::Result<Vec<String>> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
-        let out_vec = vec_cstr_to_string(ptr).unwrap();
+        let out_vec = cstr_list_to_vec(ptr).unwrap();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -140,13 +140,13 @@ impl crate::Context {
             )
         };
         //warning
-        if let Some(warnings) = vec_cstr_to_string(out_warnings) {
+        if let Some(warnings) = cstr_list_to_vec(out_warnings) {
             for w in warnings.iter() {
                 clerk::warn!("{w}");
             }
         };
         //error
-        if let Some(errors) = vec_cstr_to_string(out_grammar_errors) {
+        if let Some(errors) = cstr_list_to_vec(out_grammar_errors) {
             for e in errors.iter() {
                 clerk::warn!("{e}");
             }
@@ -249,11 +249,48 @@ impl crate::Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
-    fn _create_from_name(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
-    fn _get_non_deprecated(&self) { unimplemented!() }
+    pub fn create_from_name(
+        &self,
+        auth_name: Option<&str>,
+        searched_name: &str,
+        types: Option<&[ProjType]>,
+        approximate_match: bool,
+        limit_result_count: usize,
+    ) -> miette::Result<Vec<Proj>> {
+        let (types, count) = if let Some(types) = types {
+            let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
+            let count = types.len();
+            (Some(types), count)
+        } else {
+            (None, 0)
+        };
+        let result = unsafe {
+            proj_sys::proj_create_from_name(
+                self.ptr,
+                if let Some(auth_name) = auth_name {
+                    CString::new(auth_name)
+                        .expect("Error creating CString")
+                        .as_ptr()
+                } else {
+                    ptr::null()
+                },
+                CString::new(searched_name)
+                    .expect("Error creating CString")
+                    .as_ptr(),
+                if let Some(types) = types {
+                    types.as_ptr()
+                } else {
+                    ptr::null()
+                },
+                count,
+                approximate_match as i32,
+                limit_result_count,
+                ptr::null(),
+            )
+        };
+        pj_obj_list_to_vec(self, result)
+    }
+
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_geoid_models_from_database>
@@ -275,7 +312,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        let out_vec = vec_cstr_to_string(ptr).unwrap();
+        let out_vec = cstr_list_to_vec(ptr).unwrap();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -287,7 +324,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        let out_vec = vec_cstr_to_string(ptr).unwrap();
+        let out_vec = cstr_list_to_vec(ptr).unwrap();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -313,98 +350,105 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        let out_vec = vec_cstr_to_string(ptr).unwrap_or_default();
+        let out_vec = cstr_list_to_vec(ptr).unwrap_or_default();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
-    fn _get_celestial_body_list_from_database(&self) { unimplemented!() }
+    fn _get_celestial_body_list_from_database(&self) { todo!() }
     ///# References
     ///
     /// https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
-    fn _get_crs_info_list_from_database(&self) { unimplemented!() }
+    fn _get_crs_info_list_from_database(&self) { todo!() }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_units_from_database>
-    fn _get_units_from_database(&self) { unimplemented!() }
+    fn _get_units_from_database(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _insert_object_session_create(&self) { unimplemented!() }
+    fn _insert_object_session_create(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _insert_object_session_destroy(&self) { unimplemented!() }
+    fn _insert_object_session_destroy(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _get_insert_statements(&self) { unimplemented!() }
+    fn _get_insert_statements(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _suggests_code_for(&self) { unimplemented!() }
+    fn _suggests_code_for(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_operation_factory_context(&self) { unimplemented!() }
+    fn _create_operation_factory_context(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_desired_accuracy(&self) { unimplemented!() }
+    fn _operation_factory_context_set_desired_accuracy(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_area_of_interest(&self) { unimplemented!() }
+    fn _operation_factory_context_set_area_of_interest(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_area_of_interest_name(&self) { unimplemented!() }
+    fn _operation_factory_context_set_area_of_interest_name(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_crs_extent_use(&self) { unimplemented!() }
+    fn _operation_factory_context_set_crs_extent_use(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_spatial_criterion(&self) { unimplemented!() }
+    fn _operation_factory_context_set_spatial_criterion(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_grid_availability_use(&self) { unimplemented!() }
+    fn _operation_factory_context_set_grid_availability_use(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_use_proj_alternative_grid_names(&self) { unimplemented!() }
+    fn _operation_factory_context_set_use_proj_alternative_grid_names(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_allow_use_intermediate_crs(&self) { unimplemented!() }
+    fn _operation_factory_context_set_allow_use_intermediate_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_allowed_intermediate_crs(&self) { unimplemented!() }
+    fn _operation_factory_context_set_allowed_intermediate_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_discard_superseded(&self) { unimplemented!() }
+    fn _operation_factory_context_set_discard_superseded(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _operation_factory_context_set_allow_ballpark_transformations(&self) { unimplemented!() }
+    fn _operation_factory_context_set_allow_ballpark_transformations(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_operations(&self) { unimplemented!() }
+    fn _create_operations(&self) { todo!() }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
+    pub(crate) fn list_get(
+        &self,
+        result: *const proj_sys::PJ_OBJ_LIST,
+        index: i32,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_list_get(self.ptr, result, index) };
+        Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// <>
-    fn _list_get(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <>
-    fn _get_suggested_operation(&self) { unimplemented!() }
+    fn _get_suggested_operation(&self) { todo!() }
 }
 /// # ISO-19111 Advanced functions
 impl Context {
@@ -511,19 +555,19 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
-    fn _query_geodetic_crs_from_datum(
+    pub fn query_geodetic_crs_from_datum(
         &self,
         crs_auth_name: Option<&str>,
         datum_auth_name: &str,
         datum_code: &str,
         crs_type: Option<&str>,
-    ) {
+    ) -> miette::Result<Vec<Proj>> {
         let crs_auth_name =
             CString::new(crs_auth_name.unwrap_or_default()).expect("Error creating CString");
         let datum_auth_name = CString::new(datum_auth_name).expect("Error creating CString");
         let datum_code = CString::new(datum_code).expect("Error creating CString");
         let crs_type = CString::new(crs_type.unwrap_or_default()).expect("Error creating CString");
-        let _ = unsafe {
+        let result = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
                 crs_auth_name.as_ptr(),
@@ -532,7 +576,7 @@ impl Context {
                 crs_type.as_ptr(),
             )
         };
-        unimplemented!()
+        pj_obj_list_to_vec(self, result)
     }
     ///# References
     ///
@@ -599,239 +643,239 @@ impl Context {
     ///# References
     ///
     /// <>
-    fn _create_geocentric_crs(&self) { unimplemented!() }
+    fn _create_geocentric_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_geocentric_crs_from_datum(&self) { unimplemented!() }
+    fn _create_geocentric_crs_from_datum(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_derived_geographic_crs(&self) { unimplemented!() }
+    fn _create_derived_geographic_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _is_derived_crs(&self) { unimplemented!() }
+    fn _is_derived_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _alter_name(&self) { unimplemented!() }
+    fn _alter_name(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _alter_id(&self) { unimplemented!() }
+    fn _alter_id(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _crs_alter_geodetic_crs(&self) { unimplemented!() }
+    fn _crs_alter_geodetic_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _crs_alter_cs_angular_unit(&self) { unimplemented!() }
+    fn _crs_alter_cs_angular_unit(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _crs_alter_cs_linear_unit(&self) { unimplemented!() }
+    fn _crs_alter_cs_linear_unit(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _crs_alter_parameters_linear_unit(&self) { unimplemented!() }
+    fn _crs_alter_parameters_linear_unit(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _crs_promote_to_3d(&self) { unimplemented!() }
+    fn _crs_promote_to_3d(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _crs_create_projected_3d_crs_from_2d(&self) { unimplemented!() }
+    fn _crs_create_projected_3d_crs_from_2d(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _crs_demote_to_2d(&self) { unimplemented!() }
+    fn _crs_demote_to_2d(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_engineering_crs(&self) { unimplemented!() }
+    fn _create_engineering_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_vertical_crs(&self) { unimplemented!() }
+    fn _create_vertical_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_vertical_crs_ex(&self) { unimplemented!() }
+    fn _create_vertical_crs_ex(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_compound_crs(&self) { unimplemented!() }
+    fn _create_compound_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion(&self) { unimplemented!() }
+    fn _create_conversion(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_transformation(&self) { unimplemented!() }
+    fn _create_transformation(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _convert_conversion_to_other_method(&self) { unimplemented!() }
+    fn _convert_conversion_to_other_method(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_projected_crs(&self) { unimplemented!() }
+    fn _create_projected_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _crs_create_bound_crs(&self) { unimplemented!() }
+    fn _crs_create_bound_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _crs_create_bound_vertical_crs(&self) { unimplemented!() }
+    fn _crs_create_bound_vertical_crs(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_utm(&self) { unimplemented!() }
+    fn _create_conversion_utm(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_transverse_mercator(&self) { unimplemented!() }
+    fn _create_conversion_transverse_mercator(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_gauss_schreiber_transverse_mercator(&self) { unimplemented!() }
+    fn _create_conversion_gauss_schreiber_transverse_mercator(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_transverse_mercator_south_oriented(&self) { unimplemented!() }
+    fn _create_conversion_transverse_mercator_south_oriented(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_two_point_equidistant(&self) { unimplemented!() }
+    fn _create_conversion_two_point_equidistant(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_tunisia_mapping_grid(&self) { unimplemented!() }
+    fn _create_conversion_tunisia_mapping_grid(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_tunisia_mining_grid(&self) { unimplemented!() }
+    fn _create_conversion_tunisia_mining_grid(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_albers_equal_area(&self) { unimplemented!() }
+    fn _create_conversion_albers_equal_area(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_lambert_conic_conformal_1sp(&self) { unimplemented!() }
+    fn _create_conversion_lambert_conic_conformal_1sp(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_lambert_conic_conformal_1sp_variant_b(&self) { unimplemented!() }
+    fn _create_conversion_lambert_conic_conformal_1sp_variant_b(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_lambert_conic_conformal_2sp(&self) { unimplemented!() }
+    fn _create_conversion_lambert_conic_conformal_2sp(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_lambert_conic_conformal_2sp_michigan(&self) { unimplemented!() }
+    fn _create_conversion_lambert_conic_conformal_2sp_michigan(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_lambert_conic_conformal_2sp_belgium(&self) { unimplemented!() }
+    fn _create_conversion_lambert_conic_conformal_2sp_belgium(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_azimuthal_equidistant(&self) { unimplemented!() }
+    fn _create_conversion_azimuthal_equidistant(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_guam_projection(&self) { unimplemented!() }
+    fn _create_conversion_guam_projection(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_bonne(&self) { unimplemented!() }
+    fn _create_conversion_bonne(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_lambert_cylindrical_equal_area_spherical(&self) { unimplemented!() }
+    fn _create_conversion_lambert_cylindrical_equal_area_spherical(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_lambert_cylindrical_equal_area(&self) { unimplemented!() }
+    fn _create_conversion_lambert_cylindrical_equal_area(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_cassini_soldner(&self) { unimplemented!() }
+    fn _create_conversion_cassini_soldner(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_equidistant_conic(&self) { unimplemented!() }
+    fn _create_conversion_equidistant_conic(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_eckert_i(&self) { unimplemented!() }
+    fn _create_conversion_eckert_i(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_eckert_ii(&self) { unimplemented!() }
+    fn _create_conversion_eckert_ii(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_eckert_iii(&self) { unimplemented!() }
+    fn _create_conversion_eckert_iii(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_eckert_iv(&self) { unimplemented!() }
+    fn _create_conversion_eckert_iv(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_eckert_v(&self) { unimplemented!() }
+    fn _create_conversion_eckert_v(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_eckert_vi(&self) { unimplemented!() }
+    fn _create_conversion_eckert_vi(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_equidistant_cylindrical(&self) { unimplemented!() }
+    fn _create_conversion_equidistant_cylindrical(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_equidistant_cylindrical_spherical(&self) { unimplemented!() }
+    fn _create_conversion_equidistant_cylindrical_spherical(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_gall(&self) { unimplemented!() }
+    fn _create_conversion_gall(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_goode_homolosine(&self) { unimplemented!() }
+    fn _create_conversion_goode_homolosine(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_interrupted_goode_homolosine(&self) { unimplemented!() }
+    fn _create_conversion_interrupted_goode_homolosine(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_geostationary_satellite_sweep_x(&self) { unimplemented!() }
+    fn _create_conversion_geostationary_satellite_sweep_x(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_geostationary_satellite_sweep_y(&self) { unimplemented!() }
+    fn _create_conversion_geostationary_satellite_sweep_y(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_gnomonic(&self) { unimplemented!() }
+    fn _create_conversion_gnomonic(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_hotine_oblique_mercator_variant_a(&self) { unimplemented!() }
+    fn _create_conversion_hotine_oblique_mercator_variant_a(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_hotine_oblique_mercator_variant_b(&self) { unimplemented!() }
+    fn _create_conversion_hotine_oblique_mercator_variant_b(&self) { todo!() }
     ///# References
     ///
     /// <>
@@ -841,135 +885,135 @@ impl Context {
     ///# References
     ///
     /// <>
-    fn _create_conversion_laborde_oblique_mercator(&self) { unimplemented!() }
+    fn _create_conversion_laborde_oblique_mercator(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_international_map_world_polyconic(&self) { unimplemented!() }
+    fn _create_conversion_international_map_world_polyconic(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_krovak_north_oriented(&self) { unimplemented!() }
+    fn _create_conversion_krovak_north_oriented(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_krovak(&self) { unimplemented!() }
+    fn _create_conversion_krovak(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_lambert_azimuthal_equal_area(&self) { unimplemented!() }
+    fn _create_conversion_lambert_azimuthal_equal_area(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_miller_cylindrical(&self) { unimplemented!() }
+    fn _create_conversion_miller_cylindrical(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_mercator_variant_a(&self) { unimplemented!() }
+    fn _create_conversion_mercator_variant_a(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_mercator_variant_b(&self) { unimplemented!() }
+    fn _create_conversion_mercator_variant_b(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_popular_visualisation_pseudo_mercator(&self) { unimplemented!() }
+    fn _create_conversion_popular_visualisation_pseudo_mercator(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_mollweide(&self) { unimplemented!() }
+    fn _create_conversion_mollweide(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_new_zealand_mapping_grid(&self) { unimplemented!() }
+    fn _create_conversion_new_zealand_mapping_grid(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_oblique_stereographic(&self) { unimplemented!() }
+    fn _create_conversion_oblique_stereographic(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_orthographic(&self) { unimplemented!() }
+    fn _create_conversion_orthographic(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_local_orthographic(&self) { unimplemented!() }
+    fn _create_conversion_local_orthographic(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_american_polyconic(&self) { unimplemented!() }
+    fn _create_conversion_american_polyconic(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_polar_stereographic_variant_a(&self) { unimplemented!() }
+    fn _create_conversion_polar_stereographic_variant_a(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_polar_stereographic_variant_b(&self) { unimplemented!() }
+    fn _create_conversion_polar_stereographic_variant_b(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_robinson(&self) { unimplemented!() }
+    fn _create_conversion_robinson(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_sinusoidal(&self) { unimplemented!() }
+    fn _create_conversion_sinusoidal(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_stereographic(&self) { unimplemented!() }
+    fn _create_conversion_stereographic(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_wagner_i(&self) { unimplemented!() }
+    fn _create_conversion_wagner_i(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_wagner_ii(&self) { unimplemented!() }
+    fn _create_conversion_wagner_ii(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_wagner_iii(&self) { unimplemented!() }
+    fn _create_conversion_wagner_iii(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_wagner_iv(&self) { unimplemented!() }
+    fn _create_conversion_wagner_iv(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_wagner_v(&self) { unimplemented!() }
+    fn _create_conversion_wagner_v(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_wagner_vi(&self) { unimplemented!() }
+    fn _create_conversion_wagner_vi(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_wagner_vii(&self) { unimplemented!() }
+    fn _create_conversion_wagner_vii(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_quadrilateralized_spherical_cube(&self) { unimplemented!() }
+    fn _create_conversion_quadrilateralized_spherical_cube(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_spherical_cross_track_height(&self) { unimplemented!() }
+    fn _create_conversion_spherical_cross_track_height(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_equal_earth(&self) { unimplemented!() }
+    fn _create_conversion_equal_earth(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_vertical_perspective(&self) { unimplemented!() }
+    fn _create_conversion_vertical_perspective(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_pole_rotation_grib_convention(&self) { unimplemented!() }
+    fn _create_conversion_pole_rotation_grib_convention(&self) { todo!() }
     ///# References
     ///
     /// <>
-    fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { unimplemented!() }
+    fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { todo!() }
 }
 /// # ISO-19111 Base functions
 impl Proj<'_> {
@@ -984,6 +1028,13 @@ impl Proj<'_> {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_deprecated>
     pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.ptr()) != 0 } }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
+    pub fn get_non_deprecated(&self) -> miette::Result<Vec<Proj>> {
+        let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
+        pj_obj_list_to_vec(self.ctx, result)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
@@ -1238,7 +1289,21 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
-    fn _identify(&self) { unimplemented!() }
+    pub fn identify(&self, auth_name: &str) -> miette::Result<Vec<Proj>> {
+        let mut confidence: Vec<i32> = Vec::new();
+        let result = unsafe {
+            proj_sys::proj_identify(
+                self.ctx.ptr,
+                self.ptr(),
+                CString::new(auth_name)
+                    .expect("Error creating CString")
+                    .as_ptr(),
+                ptr::null(),
+                &mut confidence.as_mut_ptr(),
+            )
+        };
+        pj_obj_list_to_vec(self.ctx, result)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
@@ -1779,47 +1844,55 @@ fn string_list_destroy(ptr: *mut *mut i8) {
 ///# References
 ///
 /// <>
-fn _proj_int_list_destroy() { unimplemented!() }
+fn _proj_int_list_destroy() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_celestial_body_list_destroy() { unimplemented!() }
+fn _proj_celestial_body_list_destroy() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_get_crs_list_parameters_create() { unimplemented!() }
+fn _proj_get_crs_list_parameters_create() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_get_crs_list_parameters_destroy() { unimplemented!() }
+fn _proj_get_crs_list_parameters_destroy() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_crs_info_list_destroy() { unimplemented!() }
+fn _proj_crs_info_list_destroy() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_unit_list_destroy() { unimplemented!() }
+fn _proj_unit_list_destroy() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_insert_object_session_create() { unimplemented!() }
+fn _proj_insert_object_session_create() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_string_destroy() { unimplemented!() }
+fn _proj_string_destroy() { todo!() }
 ///# References
 ///
 /// <>
-fn _proj_operation_factory_context_destroy() { unimplemented!() }
+fn _proj_operation_factory_context_destroy() { todo!() }
+///# See Also
+///
+/// * [`crate::extension::pj_obj_list_to_vec`]
+///
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
-fn _proj_list_get_count() { unimplemented!() }
+fn _proj_list_get_count() { unimplemented!("Use other function to instead.") }
+///# See Also
+///
+/// * [`crate::extension::pj_obj_list_to_vec`]
+///
 ///# References
 ///
-/// <>
-fn _proj_list_destroy() { unimplemented!() }
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_destroy>
+fn _proj_list_destroy() { unimplemented!("Use other function to instead.") }
 
 #[cfg(test)]
 mod test_context_basic {

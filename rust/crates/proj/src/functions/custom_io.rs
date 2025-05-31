@@ -7,7 +7,7 @@ use crate::check_result;
 
 ///Setting custom I/O functions
 impl crate::Context {
-    fn _set_fileapi(&self) { todo!()}
+    fn _set_fileapi(&self) { todo!() }
 
     ///Set the name of a custom SQLite3 VFS.
     ///
@@ -28,7 +28,7 @@ impl crate::Context {
         Ok(self)
     }
 
-    fn _set_file_finder(&self) { todo!()}
+    fn _set_file_finder(&self) { todo!() }
     ///Sets search paths.
     ///
     ///Those search paths will be used whenever PROJ must open one of its

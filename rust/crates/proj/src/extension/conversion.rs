@@ -350,7 +350,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
-
+        let pj = ctx.normalize_for_visualization(&pj)?;
         pj.convert_array(coord.as_mut_slice())?;
         println!("{:?}", coord);
         assert_approx_eq!(f64, coord[0][0], 19955590.73888901);

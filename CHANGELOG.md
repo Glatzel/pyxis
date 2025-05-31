@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.24] - 2025-05-31
+
+### Changed
+
+- **(rust)** Impl some iso19111 functions by @Glatzel in [#425](https://github.com/Glatzel/pyxis/pull/425)
+- **(rust)** Proj pj_obj_list by @Glatzel in [#440](https://github.com/Glatzel/pyxis/pull/440)
+- **(rust)** Use envoy in proj by @Glatzel in [#445](https://github.com/Glatzel/pyxis/pull/445)
+- **(rust)** Iso19111 by @Glatzel in [#447](https://github.com/Glatzel/pyxis/pull/447)
+
+### Refactor
+
+- **(rust)** Simplify string enum by @Glatzel in [#436](https://github.com/Glatzel/pyxis/pull/436)
+- Simplify some string enum by @Glatzel in [#437](https://github.com/Glatzel/pyxis/pull/437)
+- Ffi string by @Glatzel in [#444](https://github.com/Glatzel/pyxis/pull/444)
+- **(rust)** Simplify *mut i8 to string by @Glatzel in [#449](https://github.com/Glatzel/pyxis/pull/449)
+
+### Testing
+
+- **(rust)** Add some test for iso19111 by @Glatzel in [#435](https://github.com/Glatzel/pyxis/pull/435)
+- **(rust)** Proj iso19111 pj_obj_list by @Glatzel in [#442](https://github.com/Glatzel/pyxis/pull/442)
+- **(rust)** Proj 4d by @Glatzel in [#443](https://github.com/Glatzel/pyxis/pull/443)
+- **(rust)** Iso19111 by @Glatzel in [#448](https://github.com/Glatzel/pyxis/pull/448)
+
 ## [0.0.23] - 2025-05-29
 
 ### Documentation
@@ -428,6 +451,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+[0.0.24]: https://github.com/Glatzel/pyxis/compare/v0.0.23..v0.0.24
 [0.0.23]: https://github.com/Glatzel/pyxis/compare/v0.0.22..v0.0.23
 [0.0.22]: https://github.com/Glatzel/pyxis/compare/v0.0.21..v0.0.22
 [0.0.21]: https://github.com/Glatzel/pyxis/compare/v0.0.20..v0.0.21

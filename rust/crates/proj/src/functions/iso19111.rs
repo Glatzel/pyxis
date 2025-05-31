@@ -340,7 +340,7 @@ impl crate::Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
-    pub fn get_celestial_body_list_from_database(&self, _auth_name: &str) {
+    fn _get_celestial_body_list_from_database(&self, _auth_name: &str) {
         // let mut out_result_count = i32::default();
         // let _result = unsafe {
         //     proj_sys::proj_get_celestial_body_list_from_database(

@@ -195,6 +195,32 @@ mod test {
         Ok(())
     }
     #[test]
+    fn test_project_4d() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
+        // array
+        {
+            let coord = [3879000.0, 1160000.0, 5000000.0, 2024.0];
+            let coord = pj.project(false, &coord)?;
+            println!("{:?}", coord);
+            assert_approx_eq!(f64, coord[0], 1935504.4269929447);
+            assert_approx_eq!(f64, coord[1], -5521772.777432425);
+            assert_approx_eq!(f64, coord[2], 5296676.095833973);
+            assert_approx_eq!(f64, coord[3], 2024.0);
+        }
+        // tuple
+        {
+            let coord = (3879000.0, 1160000.0, 5000000.0, 2024.0);
+            let coord = pj.project(false, &coord)?;
+            println!("{:?}", coord);
+            assert_approx_eq!(f64, coord.0, 1935504.4269929447);
+            assert_approx_eq!(f64, coord.1, -5521772.777432425);
+            assert_approx_eq!(f64, coord.2, 5296676.095833973);
+            assert_approx_eq!(f64, coord.3, 2024.0);
+        }
+        Ok(())
+    }
+    #[test]
     fn test_convert_2d() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
@@ -203,6 +229,7 @@ mod test {
             let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = [120.0, 30.0];
             let coord = pj.convert(&coord)?;
+            println!("{:?}", coord);
             assert_approx_eq!(f64, coord[0], 19955590.73888901);
             assert_approx_eq!(f64, coord[1], 3416780.562127255);
         }
@@ -211,6 +238,7 @@ mod test {
             let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = (120.0, 30.0);
             let coord = pj.convert(&coord)?;
+            println!("{:?}", coord);
             assert_approx_eq!(f64, coord.0, 19955590.73888901);
             assert_approx_eq!(f64, coord.1, 3416780.562127255);
         }
@@ -225,6 +253,7 @@ mod test {
         {
             let coord = [120.0, 30.0, 10.0];
             let coord = pj.convert(&coord)?;
+            println!("{:?}", coord);
             assert_approx_eq!(f64, coord[0], -2764132.649773435);
             assert_approx_eq!(f64, coord[1], 4787618.188267582);
             assert_approx_eq!(f64, coord[2], 3170378.735383637);
@@ -233,9 +262,36 @@ mod test {
         {
             let coord = (120.0, 30.0, 10.0);
             let coord = pj.convert(&coord)?;
+            println!("{:?}", coord);
             assert_approx_eq!(f64, coord.0, -2764132.649773435);
             assert_approx_eq!(f64, coord.1, 4787618.188267582);
             assert_approx_eq!(f64, coord.2, 3170378.735383637);
+        }
+        Ok(())
+    }
+    #[test]
+    fn test_convert_4d() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
+        // array
+        {
+            let coord = [3879000.0, 1160000.0, 5000000.0, 2024.0];
+            let coord = pj.convert(&coord)?;
+            println!("{:?}", coord);
+            assert_approx_eq!(f64, coord[0], 1935504.4269929447);
+            assert_approx_eq!(f64, coord[1], -5521772.777432425);
+            assert_approx_eq!(f64, coord[2], 5296676.095833973);
+            assert_approx_eq!(f64, coord[3], 2024.0);
+        }
+        // tuple
+        {
+            let coord = (3879000.0, 1160000.0, 5000000.0, 2024.0);
+            let coord = pj.convert(&coord)?;
+            println!("{:?}", coord);
+            assert_approx_eq!(f64, coord.0, 1935504.4269929447);
+            assert_approx_eq!(f64, coord.1, -5521772.777432425);
+            assert_approx_eq!(f64, coord.2, 5296676.095833973);
+            assert_approx_eq!(f64, coord.3, 2024.0);
         }
         Ok(())
     }
@@ -247,6 +303,7 @@ mod test {
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
 
         pj.project_array(false, coord.as_mut_slice())?;
+        println!("{:?}", coord);
         assert_approx_eq!(f64, coord[0][0], 19955590.73888901);
         assert_approx_eq!(f64, coord[0][1], 3416780.562127255);
         assert_approx_eq!(f64, coord[1][0], 17583572.872089125);
@@ -261,6 +318,7 @@ mod test {
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
 
         pj.project_array(false, coord.as_mut_slice())?;
+        println!("{:?}", coord);
         assert_approx_eq!(f64, coord[0][0], -2764132.649773435);
         assert_approx_eq!(f64, coord[0][1], 4787618.188267582);
         assert_approx_eq!(f64, coord[0][2], 3170378.735383637);
@@ -271,13 +329,30 @@ mod test {
         Ok(())
     }
     #[test]
+    fn test_project_array_4d() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
+        let mut coord = [
+            [3879000.0, 1160000.0, 5000000.0, 2024.0],
+            [3879000.0, 1160000.0, 5000000.0, 2024.0],
+        ];
+
+        pj.project_array(false, coord.as_mut_slice())?;
+        println!("{:?}", coord);
+        assert_approx_eq!(f64, coord[0][0], 1935504.4269929447);
+        assert_approx_eq!(f64, coord[0][1], -5521772.777432425);
+        assert_approx_eq!(f64, coord[0][2], 5296676.095833973);
+
+        Ok(())
+    }
+    #[test]
     fn test_convert_array_2d() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
-        let pj = ctx.normalize_for_visualization(&pj)?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
 
         pj.convert_array(coord.as_mut_slice())?;
+        println!("{:?}", coord);
         assert_approx_eq!(f64, coord[0][0], 19955590.73888901);
         assert_approx_eq!(f64, coord[0][1], 3416780.562127255);
         assert_approx_eq!(f64, coord[1][0], 17583572.872089125);
@@ -292,12 +367,30 @@ mod test {
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
 
         pj.convert_array(coord.as_mut_slice())?;
+        println!("{:?}", coord);
         assert_approx_eq!(f64, coord[0][0], -2764132.649773435);
         assert_approx_eq!(f64, coord[0][1], 4787618.188267582);
         assert_approx_eq!(f64, coord[0][2], 3170378.735383637);
         assert_approx_eq!(f64, coord[1][0], 714243.0112756203);
         assert_approx_eq!(f64, coord[1][1], 851201.6746730272);
         assert_approx_eq!(f64, coord[1][2], -6259542.96102869);
+        Ok(())
+    }
+    #[test]
+    fn test_convert_array_4d() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
+        let mut coord = [
+            [3879000.0, 1160000.0, 5000000.0, 2024.0],
+            [3879000.0, 1160000.0, 5000000.0, 2024.0],
+        ];
+
+        pj.convert_array(coord.as_mut_slice())?;
+        println!("{:?}", coord);
+        assert_approx_eq!(f64, coord[0][0], 1935504.4269929447);
+        assert_approx_eq!(f64, coord[0][1], -5521772.777432425);
+        assert_approx_eq!(f64, coord[0][2], 5296676.095833973);
+
         Ok(())
     }
 }

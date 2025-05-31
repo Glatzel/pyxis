@@ -14,7 +14,6 @@
 //! * <https://proj.org/en/stable/development/reference/functions.html#transformation-setup>
 
 use core::f64;
-use std::any::Any;
 use std::ffi::CString;
 use std::path::{Path, PathBuf};
 use std::ptr::{self, null};

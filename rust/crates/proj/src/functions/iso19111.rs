@@ -2245,7 +2245,7 @@ mod test_context_basic {
     #[test]
     fn test_get_units_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let units = ctx.get_celestial_body_list_from_database("ESRI")?;
+        let units = ctx.get_units_from_database("EPSG", UnitCategory::Linear, true)?;
         println!("{:?}", units.first().unwrap());
         assert!(!units.is_empty());
         Ok(())

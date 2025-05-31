@@ -24,7 +24,7 @@ use miette::IntoDiagnostic;
 use crate::data_types::iso19111::*;
 use crate::{
     Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, cstr_to_string,
-    vec_cstr_to_string,
+    pj_obj_list_to_vec, vec_cstr_to_string,
 };
 
 /// # ISO-19111 Base functions
@@ -249,11 +249,48 @@ impl crate::Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
-    fn _create_from_name(&self) { unimplemented!() }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
-    fn _get_non_deprecated(&self) { unimplemented!() }
+    pub fn create_from_name(
+        &self,
+        auth_name: Option<&str>,
+        searched_name: &str,
+        types: Option<&[ProjType]>,
+        approximate_match: bool,
+        limit_result_count: usize,
+    ) -> miette::Result<Vec<Proj>> {
+        let (types, count) = if let Some(types) = types {
+            let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
+            let count = types.len();
+            (Some(types), count)
+        } else {
+            (None, 0)
+        };
+        let result = unsafe {
+            proj_sys::proj_create_from_name(
+                self.ptr,
+                if let Some(auth_name) = auth_name {
+                    CString::new(auth_name)
+                        .expect("Error creating CString")
+                        .as_ptr()
+                } else {
+                    ptr::null()
+                },
+                CString::new(searched_name)
+                    .expect("Error creating CString")
+                    .as_ptr(),
+                if let Some(types) = types {
+                    types.as_ptr()
+                } else {
+                    ptr::null()
+                },
+                count,
+                approximate_match as i32,
+                limit_result_count,
+                ptr::null(),
+            )
+        };
+        pj_obj_list_to_vec(self, result)
+    }
+
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_geoid_models_from_database>
@@ -399,8 +436,15 @@ impl crate::Context {
     fn _create_operations(&self) { unimplemented!() }
     ///# References
     ///
-    /// <>
-    fn _list_get(&self) { unimplemented!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
+    pub(crate) fn list_get(
+        &self,
+        result: *const proj_sys::PJ_OBJ_LIST,
+        index: i32,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_list_get(self.ptr, result, index) };
+        Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// <>
@@ -511,19 +555,19 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
-    fn _query_geodetic_crs_from_datum(
+    pub fn query_geodetic_crs_from_datum(
         &self,
         crs_auth_name: Option<&str>,
         datum_auth_name: &str,
         datum_code: &str,
         crs_type: Option<&str>,
-    ) {
+    ) -> miette::Result<Vec<Proj>> {
         let crs_auth_name =
             CString::new(crs_auth_name.unwrap_or_default()).expect("Error creating CString");
         let datum_auth_name = CString::new(datum_auth_name).expect("Error creating CString");
         let datum_code = CString::new(datum_code).expect("Error creating CString");
         let crs_type = CString::new(crs_type.unwrap_or_default()).expect("Error creating CString");
-        let _ = unsafe {
+        let result = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
                 crs_auth_name.as_ptr(),
@@ -532,7 +576,7 @@ impl Context {
                 crs_type.as_ptr(),
             )
         };
-        unimplemented!()
+        pj_obj_list_to_vec(self, result)
     }
     ///# References
     ///
@@ -986,6 +1030,13 @@ impl Proj<'_> {
     pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.ptr()) != 0 } }
     ///# References
     ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
+    pub fn get_non_deprecated(&self) -> miette::Result<Vec<Proj>> {
+        let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
+        pj_obj_list_to_vec(self.ctx, result)
+    }
+    ///# References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
     pub fn is_equivalent_to(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
         unsafe { proj_sys::proj_is_equivalent_to(self.ptr(), other.ptr(), criterion.into()) != 0 }
@@ -1238,7 +1289,21 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
-    fn _identify(&self) { unimplemented!() }
+    pub fn identify(&self, auth_name: &str) -> miette::Result<Vec<Proj>> {
+        let mut confidence: Vec<i32> = Vec::new();
+        let result = unsafe {
+            proj_sys::proj_identify(
+                self.ctx.ptr,
+                self.ptr(),
+                CString::new(auth_name)
+                    .expect("Error creating CString")
+                    .as_ptr(),
+                ptr::null(),
+                &mut confidence.as_mut_ptr(),
+            )
+        };
+        pj_obj_list_to_vec(self.ctx, result)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
@@ -1812,14 +1877,22 @@ fn _proj_string_destroy() { unimplemented!() }
 ///
 /// <>
 fn _proj_operation_factory_context_destroy() { unimplemented!() }
+///# See Also
+///
+/// * [`crate::extension::pj_obj_list_to_vec`]
+///
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
 fn _proj_list_get_count() { unimplemented!() }
 ///# References
 ///
-/// <>
-fn _proj_list_destroy() { unimplemented!() }
+/// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_destroy>
+fn proj_list_destroy(result: *mut proj_sys::PJ_OBJ_LIST) {
+    unsafe {
+        proj_sys::proj_list_destroy(result);
+    }
+}
 
 #[cfg(test)]
 mod test_context_basic {

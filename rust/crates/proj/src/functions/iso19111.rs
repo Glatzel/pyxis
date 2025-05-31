@@ -350,7 +350,7 @@ impl crate::Context {
                 &mut out_result_count,
             )
         };
-        if ptr.is_null() {
+        if out_result_count < 1 {
             miette::bail!("Error");
         }
         let mut out_vec = Vec::new();
@@ -371,41 +371,51 @@ impl crate::Context {
     pub fn get_crs_info_list_from_database(
         &self,
         auth_name: &str,
-        params: CrsListParameters,
+        params: Option<CrsListParameters>,
     ) -> miette::Result<Vec<CrsInfo>> {
         let mut out_result_count = i32::default();
-        let types: Vec<u32> = params
-            .types()
-            .to_owned()
-            .iter()
-            .map(|f| u32::from(f.clone()))
-            .collect();
-        let celestial_body_name: CString = params
-            .celestial_body_name()
-            .to_owned()
-            .unwrap_or_default()
-            .to_cstring()?;
-        let params = proj_sys::PROJ_CRS_LIST_PARAMETERS {
-            types: types.as_ptr(),
-            typesCount: params.types().len(),
-            crs_area_of_use_contains_bbox: *params.west_lon_degree() as i32,
-            bbox_valid: *params.bbox_valid() as i32,
-            west_lon_degree: *params.west_lon_degree(),
-            south_lat_degree: *params.south_lat_degree(),
-            east_lon_degree: *params.east_lon_degree(),
-            north_lat_degree: *params.north_lat_degree(),
-            allow_deprecated: *params.allow_deprecated() as i32,
-            celestial_body_name: celestial_body_name.as_ptr(),
+
+        let params = if let Some(params) = params {
+            let types: Vec<u32> = params
+                .types()
+                .to_owned()
+                .iter()
+                .map(|f| u32::from(f.clone()))
+                .collect();
+            let celestial_body_name: CString = params
+                .celestial_body_name()
+                .to_owned()
+                .unwrap_or_default()
+                .to_cstring()?;
+            Some(proj_sys::PROJ_CRS_LIST_PARAMETERS {
+                types: types.as_ptr(),
+                typesCount: params.types().len(),
+                crs_area_of_use_contains_bbox: *params.west_lon_degree() as i32,
+                bbox_valid: *params.bbox_valid() as i32,
+                west_lon_degree: *params.west_lon_degree(),
+                south_lat_degree: *params.south_lat_degree(),
+                east_lon_degree: *params.east_lon_degree(),
+                north_lat_degree: *params.north_lat_degree(),
+                allow_deprecated: *params.allow_deprecated() as i32,
+                celestial_body_name: celestial_body_name.as_ptr(),
+            })
+        } else {
+            None
         };
+
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr,
                 auth_name.to_cstring()?.as_ptr(),
-                &params,
+                if let Some(params) = params {
+                    &params
+                } else {
+                    proj_sys::proj_get_crs_list_parameters_create()
+                },
                 &mut out_result_count,
             )
         };
-        if ptr.is_null() {
+        if out_result_count < 1 {
             miette::bail!("Error");
         }
         let mut out_vec = Vec::new();
@@ -428,12 +438,12 @@ impl crate::Context {
                     .projection_method_name
                     .cast_const()
                     .to_string()
-                    .unwrap(),
+                    .unwrap_or_default(),
                 info_ref
                     .celestial_body_name
                     .cast_const()
                     .to_string()
-                    .unwrap(),
+                    .unwrap_or_default(),
             ));
         }
         unsafe { proj_sys::proj_crs_info_list_destroy(ptr) };
@@ -458,7 +468,7 @@ impl crate::Context {
                 &mut out_result_count,
             )
         };
-        if ptr.is_null() {
+        if out_result_count < 1 {
             miette::bail!("Error");
         }
         let mut out_vec = Vec::new();
@@ -2214,6 +2224,30 @@ mod test_context_basic {
                 assert!(!result.is_empty());
             }
         }
+        Ok(())
+    }
+    #[test]
+    fn test_get_celestial_body_list_from_database() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let list = ctx.get_celestial_body_list_from_database("ESRI")?;
+        println!("{:?}", list.first().unwrap());
+        assert!(list.len() > 0);
+        Ok(())
+    }
+    #[test]
+    fn test_get_crs_info_list_from_database() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let list = ctx.get_crs_info_list_from_database("EPSG", None)?;
+        println!("{:?}", list.first().unwrap());
+        assert!(list.len() > 0);
+        Ok(())
+    }
+    #[test]
+    fn test_get_units_from_database() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let units = ctx.get_celestial_body_list_from_database("ESRI")?;
+        println!("{:?}", units.first().unwrap());
+        assert!(units.len() > 0);
         Ok(())
     }
 }

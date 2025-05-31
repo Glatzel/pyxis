@@ -273,6 +273,7 @@ CrsListParameters,
     {allow_deprecated:bool,"Whether deprecated objects are allowed. Default to FALSE."},
     {celestial_body_name:Option<String>,"Celestial body of the CRS (e.g.` Earth`). The default value, NULL, means no restriction"}
 );
+
 readonly_struct!(
 UnitInfo ,
     "Structure given description of a unit."

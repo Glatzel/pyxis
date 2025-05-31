@@ -11,7 +11,7 @@
 use std::ffi::CString;
 use std::ptr::null;
 
-use super::ToCString;
+use envoy::ToCString;
 
 /// String constant representing the PROJ option value for `true`.
 pub(crate) const OPTION_YES: &str = "YES";

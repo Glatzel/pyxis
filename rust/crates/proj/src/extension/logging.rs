@@ -2,7 +2,7 @@ use std::ffi::c_void;
 
 use miette::IntoDiagnostic;
 
-use super::CstrToString;
+use envoy::CstrToString;
 use crate::{LogLevel, check_result};
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {

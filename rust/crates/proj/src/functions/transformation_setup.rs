@@ -6,7 +6,9 @@
 //!
 //! * <https://proj.org/en/stable/development/reference/functions.html#c-api-for-iso-19111-functionality>
 
-use crate::{Proj, ToCString, check_result};
+use envoy::ToCString;
+
+use crate::{Proj, check_result};
 /// # Transformation setup
 impl crate::Context {
     /// # References

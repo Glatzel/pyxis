@@ -2,7 +2,7 @@ use std::char;
 
 #[cfg(any(feature = "unrecommended", test))]
 use crate::check_result;
-use crate::{CstrToString, ToCString};
+use envoy::{CstrToString, ToCString};
 
 /// # Various
 impl crate::Proj<'_> {

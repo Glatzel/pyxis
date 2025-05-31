@@ -4,7 +4,7 @@ name = "pyxis-cuda"
 version = "0.0.23"
 
 [dependencies]
-clerk = { git = "https://github.com/Glatzel/clerk", tag = "v0.0.10" }
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.12" }
 cust = "0.3"
 pyxis = { path = "./../rust/crates/pyxis/" }
 

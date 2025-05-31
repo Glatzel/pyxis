@@ -1,10 +1,11 @@
 use std::ffi::CString;
 use std::fmt::Display;
 
+use envoy::ToCString;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{AsRefStr, EnumString};
 
-use crate::{ToCString, readonly_struct};
+use crate::readonly_struct;
 ///Guessed WKT "dialect".
 ///
 /// # Reference

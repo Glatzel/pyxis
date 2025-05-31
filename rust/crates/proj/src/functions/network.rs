@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use envoy::{CstrToString, ToCString};
+use envoy::{PtrToString, ToCString};
 
 use crate::check_result;
 impl crate::Context {

@@ -1,6 +1,6 @@
 use std::char;
 
-use envoy::{CstrToString, ToCString};
+use envoy::{PtrToString, ToCString};
 
 #[cfg(any(feature = "unrecommended", test))]
 use crate::check_result;
@@ -163,7 +163,7 @@ pub fn rtodms2(r: f64, pos: char, neg: char) -> miette::Result<String> {
     let dms = "xxxdxxmxx.xxs ".to_cstring()?;
     let ptr =
         unsafe { proj_sys::proj_rtodms2(dms.as_ptr().cast_mut(), 14, r, pos as i32, neg as i32) };
-    Ok(ptr.cast_const().to_string().unwrap())
+    Ok(ptr.to_string().unwrap())
 }
 
 #[cfg(test)]

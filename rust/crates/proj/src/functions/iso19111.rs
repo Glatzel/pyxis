@@ -19,7 +19,7 @@ use std::path::{Path, PathBuf};
 use std::ptr::{self, null};
 use std::str::FromStr;
 
-use envoy::{CstrListToVecString, CstrToString, ToCString};
+use envoy::{PtrListToVecString, PtrToString, ToCString};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
@@ -358,8 +358,8 @@ impl crate::Context {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
             let info_ref = unsafe { current_ptr.as_ref().unwrap() };
             out_vec.push(CelestialBodyInfo::new(
-                info_ref.auth_name.cast_const().to_string().unwrap(),
-                info_ref.name.cast_const().to_string().unwrap(),
+                info_ref.auth_name.to_string().unwrap(),
+                info_ref.name.to_string().unwrap(),
             ));
         }
         unsafe { proj_sys::proj_celestial_body_list_destroy(ptr) };
@@ -423,9 +423,9 @@ impl crate::Context {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
             let info_ref = unsafe { current_ptr.as_ref().unwrap() };
             out_vec.push(CrsInfo::new(
-                info_ref.auth_name.cast_const().to_string().unwrap(),
-                info_ref.code.cast_const().to_string().unwrap(),
-                info_ref.name.cast_const().to_string().unwrap(),
+                info_ref.auth_name.to_string().unwrap(),
+                info_ref.code.to_string().unwrap(),
+                info_ref.name.to_string().unwrap(),
                 ProjType::try_from(info_ref.type_).into_diagnostic()?,
                 info_ref.deprecated != 0,
                 info_ref.bbox_valid != 0,
@@ -433,17 +433,12 @@ impl crate::Context {
                 info_ref.south_lat_degree,
                 info_ref.east_lon_degree,
                 info_ref.north_lat_degree,
-                info_ref.area_name.cast_const().to_string().unwrap(),
+                info_ref.area_name.to_string().unwrap(),
                 info_ref
                     .projection_method_name
-                    .cast_const()
                     .to_string()
                     .unwrap_or_default(),
-                info_ref
-                    .celestial_body_name
-                    .cast_const()
-                    .to_string()
-                    .unwrap_or_default(),
+                info_ref.celestial_body_name.to_string().unwrap_or_default(),
             ));
         }
         unsafe { proj_sys::proj_crs_info_list_destroy(ptr) };
@@ -476,13 +471,13 @@ impl crate::Context {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
             let info_ref = unsafe { current_ptr.as_ref().unwrap() };
             out_vec.push(UnitInfo::new(
-                info_ref.auth_name.cast_const().to_string().unwrap(),
-                info_ref.code.cast_const().to_string().unwrap(),
-                info_ref.name.cast_const().to_string().unwrap(),
-                UnitCategory::from_str(&info_ref.category.cast_const().to_string().unwrap())
+                info_ref.auth_name.to_string().unwrap(),
+                info_ref.code.to_string().unwrap(),
+                info_ref.name.to_string().unwrap(),
+                UnitCategory::from_str(&info_ref.category.to_string().unwrap())
                     .into_diagnostic()?,
                 info_ref.conv_factor,
-                info_ref.code.cast_const().to_string().unwrap(),
+                info_ref.code.to_string().unwrap(),
                 info_ref.deprecated != 0,
             ));
         }

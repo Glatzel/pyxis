@@ -1,4 +1,4 @@
-use envoy::{CstrToString, ToCString};
+use envoy::{PtrToString, ToCString};
 
 use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
 

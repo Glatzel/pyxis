@@ -367,7 +367,7 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
     pub fn get_crs_info_list_from_database(
         &self,
         auth_name: &str,

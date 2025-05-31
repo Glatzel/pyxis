@@ -4,7 +4,7 @@ use std::fmt::Display;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{AsRefStr, EnumString};
 
-use crate::readonly_struct;
+use crate::{ToCString, readonly_struct};
 ///Guessed WKT "dialect".
 ///
 /// # Reference
@@ -390,15 +390,15 @@ impl AxisDescription {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
         unit_type: UnitType,
-    ) -> Self {
-        Self {
-            name: CString::new(name.unwrap_or("")).expect("Error creating CString"),
-            abbreviation: CString::new(abbreviation.unwrap_or("")).expect("Error creating CString"),
-            direction: CString::new(direction.as_ref()).expect("Error creating CString"),
-            unit_name: CString::new(unit_name.unwrap_or("")).expect("Error creating CString"),
+    ) -> miette::Result<Self> {
+        Ok(Self {
+            name: name.unwrap_or("").to_cstring()?,
+            abbreviation: abbreviation.unwrap_or("").to_cstring()?,
+            direction: direction.as_ref().to_cstring()?,
+            unit_name: unit_name.unwrap_or("").to_cstring()?,
             unit_conv_factor,
             unit_type,
-        }
+        })
     }
 }
 readonly_struct!(

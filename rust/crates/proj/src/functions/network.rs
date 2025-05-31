@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use miette::IntoDiagnostic;
 
-use crate::check_result;
+use crate::{CstrToString, check_result};
 
 impl crate::Context {
     /// # References
@@ -44,7 +44,7 @@ impl crate::Context {
     fn _get_url_endpoint(&self) -> miette::Result<String> {
         let result = unsafe { proj_sys::proj_context_get_url_endpoint(self.ptr) };
         check_result!(self);
-        Ok(crate::cstr_to_string(result).unwrap_or_default())
+        Ok(result.to_string().unwrap_or_default())
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_user_writable_directory>
@@ -52,9 +52,7 @@ impl crate::Context {
         let result =
             unsafe { proj_sys::proj_context_get_user_writable_directory(self.ptr, create as i32) };
         check_result!(self);
-        Ok(PathBuf::from(
-            crate::cstr_to_string(result).unwrap_or_default(),
-        ))
+        Ok(PathBuf::from(result.to_string().unwrap_or_default()))
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_enable>

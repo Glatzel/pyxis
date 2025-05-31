@@ -1,5 +1,5 @@
+use crate::CstrToString;
 use crate::data_types::ProjError;
-
 ///# Error reporting
 impl crate::Proj<'_> {
     /// # See Also
@@ -39,7 +39,8 @@ impl crate::Proj<'_> {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     pub(crate) fn errno_string(&self, err: ProjError) -> String {
-        crate::cstr_to_string(unsafe { proj_sys::proj_errno_string(err.into()) })
+        unsafe { proj_sys::proj_errno_string(err.into()) }
+            .to_string()
             .unwrap_or("Unknown error.".to_string())
     }
 }
@@ -63,7 +64,8 @@ impl crate::Context {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     pub(crate) fn errno_string(&self, err: ProjError) -> String {
-        crate::cstr_to_string(unsafe { proj_sys::proj_context_errno_string(self.ptr, err.into()) })
+        unsafe { proj_sys::proj_context_errno_string(self.ptr, err.into()) }
+            .to_string()
             .unwrap_or("Unknown error.".to_string())
     }
 }

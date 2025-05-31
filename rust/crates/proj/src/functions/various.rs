@@ -5,6 +5,7 @@ use miette::IntoDiagnostic;
 
 #[cfg(any(feature = "unrecommended", test))]
 use crate::check_result;
+use crate::{CstrToString, ToCString};
 
 /// # Various
 impl crate::Proj<'_> {
@@ -142,14 +143,9 @@ fn _todeg() { unimplemented!("Use other function to instead.") }
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
-pub fn dmstor(is: &str) -> f64 {
-    let rs = CString::new("xxxdxxmxx.xxs ").expect("Error creating CString");
-    unsafe {
-        proj_sys::proj_dmstor(
-            CString::new(is).expect("Error creating CString").as_ptr(),
-            &mut rs.as_ptr().cast_mut(),
-        )
-    }
+pub fn dmstor(is: &str) -> miette::Result<f64> {
+    let rs = "xxxdxxmxx.xxs ".to_cstring()?;
+    Ok(unsafe { proj_sys::proj_dmstor(is.to_cstring()?.as_ptr(), &mut rs.as_ptr().cast_mut()) })
 }
 ///# See Also
 ///
@@ -169,7 +165,7 @@ pub fn rtodms2(r: f64, pos: char, neg: char) -> miette::Result<String> {
     let dms = CString::new("xxxdxxmxx.xxs ").into_diagnostic()?;
     let ptr =
         unsafe { proj_sys::proj_rtodms2(dms.as_ptr().cast_mut(), 14, r, pos as i32, neg as i32) };
-    Ok(crate::cstr_to_string(ptr).expect("rtodms2 failed."))
+    Ok(ptr.cast_const().to_string().unwrap())
 }
 
 #[cfg(test)]
@@ -285,7 +281,7 @@ mod test {
     fn test_dmstor() -> miette::Result<()> {
         assert_approx_eq!(
             f64,
-            super::dmstor("30d7'24.444\"E"),
+            super::dmstor("30d7'24.444\"E")?,
             30.123456789f64.to_radians(),
             epsilon = 1e-6
         );

@@ -2045,6 +2045,25 @@ mod test_context_basic {
         Ok(())
     }
     #[test]
+    fn test_create_from_name() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj_list = ctx.create_from_name(None, "WGS 84", None, false, 0)?;
+        println!(
+            "{}",
+            pj_list.first().unwrap().as_wkt(
+                WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None
+            )?
+        );
+        assert!(pj_list.len() > 0);
+        Ok(())
+    }
+    #[test]
     fn test_get_geoid_models_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let models = ctx.get_geoid_models_from_database("EPSG", "5703")?;
@@ -2146,7 +2165,7 @@ mod test_context_advanced {
     #[test]
     fn test_create_ellipsoidal_3d_cs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> = ctx.create_ellipsoidal_3d_cs(
+        let pj = ctx.create_ellipsoidal_3d_cs(
             EllipsoidalCs3dType::LatitudeLongitudeHeight,
             Some("Degree"),
             1.0,
@@ -2156,6 +2175,26 @@ mod test_context_advanced {
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("LENGTHUNIT"));
+        Ok(())
+    }
+    #[test]
+    fn test_query_geodetic_crs_from_datum() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj_list =
+            ctx.query_geodetic_crs_from_datum(Some("EPSG"), "EPSG", "6326", Some("geographic 2D"))?;
+        println!(
+            "{}",
+            pj_list.first().unwrap().as_wkt(
+                WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None
+            )?
+        );
+        assert!(pj_list.len() > 0);
         Ok(())
     }
     #[test]
@@ -2222,6 +2261,26 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let deprecated = pj.is_deprecated();
         assert!(!deprecated);
+        Ok(())
+    }
+    #[test]
+    fn test_get_non_deprecated() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4226")?;
+        let pj_list = pj.get_non_deprecated()?;
+        println!(
+            "{}",
+            pj_list.first().unwrap().as_wkt(
+                WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None
+            )?
+        );
+        assert!(pj_list.len() > 0);
         Ok(())
     }
     #[test]
@@ -2378,6 +2437,26 @@ mod test_proj_basic {
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let target = pj.get_target_crs().unwrap();
         assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");
+        Ok(())
+    }
+    #[test]
+    fn test_identify() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let pj_list = pj.identify("EPSG")?;
+        println!(
+            "{}",
+            pj_list.first().unwrap().as_wkt(
+                WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None
+            )?
+        );
+        assert!(pj_list.len() > 0);
         Ok(())
     }
     #[test]

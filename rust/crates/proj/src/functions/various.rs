@@ -139,8 +139,18 @@ fn _torad() { unimplemented!("Use other function to instead.") }
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_todeg>
 fn _todeg() { unimplemented!("Use other function to instead.") }
-
-pub fn dmstor() -> f64 { todo!()}
+///# References
+///
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
+pub fn dmstor(is: &str) -> f64 {
+    let rs = CString::new("xxxdxxmxx.xxs ").expect("Error creating CString");
+    unsafe {
+        proj_sys::proj_dmstor(
+            CString::new(is).expect("Error creating CString").as_ptr(),
+            &mut rs.as_ptr().cast_mut(),
+        )
+    }
+}
 ///# See Also
 ///
 /// * [`rtodms2`]
@@ -271,7 +281,16 @@ mod test {
         super::coord(1.0, 2.0, 3.0, 4.0);
         Ok(())
     }
-
+    #[test]
+    fn test_dmstor() -> miette::Result<()> {
+        assert_approx_eq!(
+            f64,
+            super::dmstor("30d7'24.444\"E"),
+            30.123456789f64.to_radians(),
+            epsilon = 1e-6
+        );
+        Ok(())
+    }
     #[test]
     fn test_rtodms2() -> miette::Result<()> {
         let dms = super::rtodms2(30.123456789f64.to_radians(), 'E', 'W')?;

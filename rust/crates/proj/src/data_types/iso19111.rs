@@ -263,7 +263,6 @@ CrsListParameters,
     "# References"
     "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_LIST_PARAMETERS>",
     {types:Vec<ProjType>,"Array of allowed object types. Should be NULL if all types are allowed"},
-    {types_count:usize,"Size of types. Should be 0 if all types are allowed"},
     {crs_area_of_use_contains_bbox:bool,"Size of types. Should be 0 if all types are allowed"},
     {bbox_valid:bool,"If TRUE and bbox_valid == TRUE, then only CRS whose area of use entirely contains the specified bounding box will be returned.
      If FALSE and bbox_valid == TRUE, then only CRS whose area of use intersects the specified bounding box will be returned."},
@@ -284,7 +283,7 @@ UnitInfo ,
     {auth_name: String,"Authority name."},
     {code: String,"Object code."},
     {name: String,"Object name. For example `metre`, `US survey foot`, etc."},
-    {category: String,"Category of the unit: one of `linear`, `linear_per_time`, `angular`, `angular_per_time`, `scale`, `scale_per_time` or `time"},
+    {category: UnitCategory,"Category of the unit: one of `linear`, `linear_per_time`, `angular`, `angular_per_time`, `scale`, `scale_per_time` or `time"},
     {conv_factor: f64,"Conversion factor to apply to transform from that unit to the corresponding SI unit (metre for `linear`, radian for `angular`, etc.).
     It might be 0 in some cases to indicate no known conversion factor."},
     {proj_short_name: String,"PROJ short name, like `m`, `ft`, `us-ft`, etc... Might be NULL"},
@@ -557,7 +556,7 @@ readonly_struct!(
     {unit_code   :String},
     {unit_category   :UnitCategory}
 );
-#[derive(Debug, EnumString)]
+#[derive(Debug, EnumString, AsRefStr)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UnitCategory {
     #[strum(serialize = "unknown")]

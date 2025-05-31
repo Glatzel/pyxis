@@ -6,17 +6,13 @@
 //!
 //! * <https://proj.org/en/stable/development/reference/functions.html#c-api-for-iso-19111-functionality>
 
-use std::ffi::CString;
-
-use miette::IntoDiagnostic;
-
-use crate::{Proj, check_result};
+use crate::{Proj, ToCString, check_result};
 /// # Transformation setup
 impl crate::Context {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
-        let definition = CString::new(definition).into_diagnostic()?;
+        let definition = definition.to_cstring()?;
         let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.as_ptr()) };
         check_result!(self);
         Proj::new(self, ptr)
@@ -28,7 +24,7 @@ impl crate::Context {
         let len = argv.len();
         let mut argv_ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in argv {
-            argv_ptrs.push(CString::new(*s).into_diagnostic()?.into_raw());
+            argv_ptrs.push((*s).to_cstring()?.into_raw());
         }
         let ptr =
             unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, argv_ptrs.as_mut_ptr()) };
@@ -44,8 +40,8 @@ impl crate::Context {
         target_crs: &str,
         area: &crate::Area,
     ) -> miette::Result<crate::Proj> {
-        let source_crs = CString::new(source_crs).into_diagnostic()?;
-        let target_crs = CString::new(target_crs).into_diagnostic()?;
+        let source_crs = source_crs.to_cstring()?;
+        let target_crs = target_crs.to_cstring()?;
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
                 self.ptr,

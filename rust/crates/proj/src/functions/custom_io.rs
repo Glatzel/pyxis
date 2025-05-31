@@ -1,9 +1,7 @@
 use std::ffi::CString;
 use std::path::Path;
 
-use miette::IntoDiagnostic;
-
-use crate::check_result;
+use crate::{ToCString, check_result};
 
 ///Setting custom I/O functions
 impl crate::Context {
@@ -20,7 +18,7 @@ impl crate::Context {
     ///# References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
     pub fn set_sqlite3_vfs_name(&self, name: &str) -> miette::Result<&Self> {
-        let name = std::ffi::CString::new(name).into_diagnostic()?;
+        let name = name.to_cstring()?;
         unsafe {
             proj_sys::proj_context_set_sqlite3_vfs_name(self.ptr, name.as_ptr());
         };
@@ -46,7 +44,7 @@ impl crate::Context {
         let len = paths.len();
         let paths: Vec<CString> = paths
             .iter()
-            .map(|p| std::ffi::CString::new(p.to_str().unwrap()).unwrap())
+            .map(|p| p.to_str().unwrap().to_cstring().unwrap())
             .collect();
         let paths_ptr: Vec<*const i8> = paths.iter().map(|p| p.as_ptr()).collect();
         unsafe {
@@ -69,7 +67,7 @@ impl crate::Context {
     ///# References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
     pub fn set_ca_bundle_path(&self, path: &Path) -> miette::Result<&Self> {
-        let path = std::ffi::CString::new(path.to_str().unwrap()).into_diagnostic()?;
+        let path = path.to_str().unwrap().to_cstring()?;
         unsafe {
             proj_sys::proj_context_set_ca_bundle_path(self.ptr, path.as_ptr());
         };

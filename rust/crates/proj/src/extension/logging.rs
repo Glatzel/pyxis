@@ -1,6 +1,6 @@
 use std::ffi::c_void;
 
-use envoy::CstrToString;
+use envoy::PtrToString;
 use miette::IntoDiagnostic;
 
 use crate::{LogLevel, check_result};

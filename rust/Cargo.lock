@@ -415,8 +415,8 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
 name = "envoy"
-version = "0.0.12"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.12#257f9d492c9f323e95442ffb7b2b9008120279c2"
+version = "0.0.13"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.13#9027fad8a23cdbe54c4a7f2a05c1f78d3489fd81"
 dependencies = [
  "miette",
 ]
@@ -865,7 +865,7 @@ dependencies = [
 
 [[package]]
 name = "proj"
-version = "0.0.23"
+version = "0.0.24"
 dependencies = [
  "assert_cmd",
  "clerk",
@@ -894,7 +894,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.23"
+version = "0.0.24"
 dependencies = [
  "clerk",
  "codspeed-criterion-compat",
@@ -907,7 +907,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cli"
-version = "0.0.23"
+version = "0.0.24"
 dependencies = [
  "assert_cmd",
  "bpaf",

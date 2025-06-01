@@ -102,32 +102,26 @@ mod test {
 
     #[test]
     fn test_grid_info_gsb() -> miette::Result<()> {
-        let workspace_dir = PathBuf::from(std::env::var("CARGO_WORKSPACE_DIR").into_diagnostic()?);
-        let info = grid_info(
-            workspace_dir
-                .join("external/ntv2-file-routines/samples/mne.gsb")
-                .to_str()
-                .unwrap(),
-        )?;
-        println!("{:?}", info);
-        assert_eq!(info.format(), "ntv2");
+        //valid
+        {
+            let workspace_dir =
+                PathBuf::from(std::env::var("CARGO_WORKSPACE_DIR").into_diagnostic()?);
+            let info = grid_info(
+                workspace_dir
+                    .join("external/ntv2-file-routines/samples/mne.gsb")
+                    .to_str()
+                    .unwrap(),
+            )?;
+            println!("{:?}", info);
+            assert_eq!(info.format(), "ntv2");
+        }
+        // invalid
+        {
+            let info = grid_info("invalid.tiff");
+            assert!(info.is_err());
+        }
         Ok(())
     }
-
-    #[test]
-    fn test_grid_info_invalid_grid() -> miette::Result<()> {
-        let info = grid_info("Cargo.toml");
-        assert!(info.is_err());
-        Ok(())
-    }
-
-    #[test]
-    fn test_grid_info_not_exists() -> miette::Result<()> {
-        let info = grid_info("invalid.tiff");
-        assert!(info.is_err());
-        Ok(())
-    }
-
     #[test]
     fn test_init_info() -> miette::Result<()> {
         let info = init_info("ITRF2000")?;

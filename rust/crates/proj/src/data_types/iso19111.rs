@@ -374,6 +374,8 @@ pub enum EllipsoidalCs3dType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AXIS_DESCRIPTION>
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone)]
 pub struct AxisDescription {
     pub(crate) name: CString,
     pub(crate) abbreviation: CString,

@@ -29,6 +29,7 @@ impl Proj<'_> {
 ///
 /// # References
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_DIRECTION>
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, TryFromPrimitive, IntoPrimitive)]
 #[repr(i32)]
 pub enum Direction {

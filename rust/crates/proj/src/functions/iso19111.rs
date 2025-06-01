@@ -433,7 +433,7 @@ impl crate::Context {
                 info_ref.south_lat_degree,
                 info_ref.east_lon_degree,
                 info_ref.north_lat_degree,
-                info_ref.area_name.to_string().unwrap_or_default(),
+                info_ref.area_name.to_string()..unwrap(),
                 info_ref
                     .projection_method_name
                     .to_string()
@@ -2433,10 +2433,10 @@ mod test_context_basic {
     }
     #[test]
     fn test_get_crs_info_list_from_database() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let list = ctx.get_crs_info_list_from_database("EPSG", None)?;
-        // println!("{:?}", list.first().unwrap());
-        // assert!(!list.is_empty());
+        let ctx = crate::new_test_ctx()?;
+        let list = ctx.get_crs_info_list_from_database("EPSG", None)?;
+        println!("{:?}", list.first().unwrap());
+        assert!(!list.is_empty());
         Ok(())
     }
     #[test]

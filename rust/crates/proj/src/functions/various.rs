@@ -1,6 +1,6 @@
 use std::char;
 
-use envoy::{PtrToString, ToCString};
+use envoy::{CStrToString, ToCStr, ToCString};
 
 #[cfg(any(feature = "unrecommended", test))]
 use crate::check_result;
@@ -143,7 +143,7 @@ fn _todeg() { unimplemented!("Use other function to instead.") }
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
 pub fn dmstor(is: &str) -> miette::Result<f64> {
     let rs = "xxxdxxmxx.xxs ".to_cstring()?;
-    Ok(unsafe { proj_sys::proj_dmstor(is.to_cstring()?.as_ptr(), &mut rs.as_ptr().cast_mut()) })
+    Ok(unsafe { proj_sys::proj_dmstor(is.to_cstr()?, &mut rs.as_ptr().cast_mut()) })
 }
 ///# See Also
 ///

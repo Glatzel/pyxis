@@ -1,7 +1,6 @@
-use std::ffi::CString;
 use std::path::Path;
 
-use envoy::ToCString;
+use envoy::ToCStr;
 
 use crate::check_result;
 
@@ -20,9 +19,8 @@ impl crate::Context {
     ///# References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
     pub fn set_sqlite3_vfs_name(&self, name: &str) -> miette::Result<&Self> {
-        let name = name.to_cstring()?;
         unsafe {
-            proj_sys::proj_context_set_sqlite3_vfs_name(self.ptr, name.as_ptr());
+            proj_sys::proj_context_set_sqlite3_vfs_name(self.ptr, name.to_cstr()?);
         };
         check_result!(self);
         Ok(self)
@@ -44,11 +42,10 @@ impl crate::Context {
     pub fn set_search_paths(&self, paths: &[&Path]) -> miette::Result<&Self> {
         clerk::debug!("search_paths:{:?}", paths);
         let len = paths.len();
-        let paths: Vec<CString> = paths
+        let paths_ptr: Vec<*const i8> = paths
             .iter()
-            .map(|p| p.to_str().unwrap().to_cstring().unwrap())
+            .map(|p| p.to_str().to_cstr().unwrap())
             .collect();
-        let paths_ptr: Vec<*const i8> = paths.iter().map(|p| p.as_ptr()).collect();
         unsafe {
             proj_sys::proj_context_set_search_paths(self.ptr, len as i32, paths_ptr.as_ptr());
         };
@@ -69,9 +66,8 @@ impl crate::Context {
     ///# References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
     pub fn set_ca_bundle_path(&self, path: &Path) -> miette::Result<&Self> {
-        let path = path.to_str().unwrap().to_cstring()?;
         unsafe {
-            proj_sys::proj_context_set_ca_bundle_path(self.ptr, path.as_ptr());
+            proj_sys::proj_context_set_ca_bundle_path(self.ptr, path.to_str().to_cstr()?);
         };
         check_result!(self);
         Ok(self)

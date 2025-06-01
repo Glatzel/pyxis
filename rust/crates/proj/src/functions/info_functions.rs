@@ -41,13 +41,16 @@ impl crate::Proj<'_> {
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
 pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
     let src = unsafe { proj_sys::proj_grid_info(grid.to_cstr()) };
-    if src.format.to_string().unwrap_or_default() == "missing" {
+    if src.gridname.to_string().unwrap().as_str() == ""
+        && src.filename.to_string().unwrap().as_str() == ""
+        && src.format.to_string().unwrap_or_default() == "missing"
+    {
         miette::bail!("Invalid grid: {}", grid)
     }
     Ok(GridInfo::new(
-        src.gridname.to_string().unwrap_or_default(),
-        src.filename.to_string().unwrap_or_default(),
-        src.format.to_string().unwrap_or_default(),
+        src.gridname.to_string().unwrap(),
+        src.filename.to_string().unwrap(),
+        src.format.to_string().unwrap(),
         src.lowerleft,
         src.upperright,
         src.n_lon,
@@ -101,7 +104,7 @@ mod test {
     }
 
     #[test]
-    fn test_grid_info_gsb() -> miette::Result<()> {
+    fn test_grid_info() -> miette::Result<()> {
         //valid
         {
             let workspace_dir =

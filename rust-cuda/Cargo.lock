@@ -177,6 +177,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "clerk"
+version = "0.0.13"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.13#9027fad8a23cdbe54c4a7f2a05c1f78d3489fd81"
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -577,7 +582,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.24"
 dependencies = [
- "clerk",
+ "clerk 0.0.13",
  "num-traits",
 ]
 
@@ -585,7 +590,7 @@ dependencies = [
 name = "pyxis-cuda"
 version = "0.0.24"
 dependencies = [
- "clerk",
+ "clerk 0.0.12",
  "criterion",
  "cust",
  "dunce",

@@ -433,7 +433,7 @@ impl crate::Context {
                 info_ref.south_lat_degree,
                 info_ref.east_lon_degree,
                 info_ref.north_lat_degree,
-                info_ref.area_name.to_string()..unwrap(),
+                info_ref.area_name.to_string().unwrap(),
                 info_ref
                     .projection_method_name
                     .to_string()

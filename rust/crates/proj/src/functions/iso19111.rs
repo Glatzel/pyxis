@@ -384,11 +384,7 @@ impl crate::Context {
                 .iter()
                 .map(|f| u32::from(f.clone()))
                 .collect();
-            let celestial_body_name: CString = params
-                .celestial_body_name()
-                .to_owned()
-                .unwrap_or_default()
-                .to_cstring()?;
+            let celestial_body_name = params.celestial_body_name().to_owned().to_cstr()?;
             Some(proj_sys::PROJ_CRS_LIST_PARAMETERS {
                 types: types.as_ptr(),
                 typesCount: params.types().len(),
@@ -399,7 +395,7 @@ impl crate::Context {
                 east_lon_degree: *params.east_lon_degree(),
                 north_lat_degree: *params.north_lat_degree(),
                 allow_deprecated: *params.allow_deprecated() as i32,
-                celestial_body_name: celestial_body_name.as_ptr(),
+                celestial_body_name: celestial_body_name,
             })
         } else {
             None
@@ -612,12 +608,11 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let unit_name = unit_name.unwrap_or_default().to_cstring()?;
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.as_ptr(),
+                unit_name.to_cstr()?,
                 unit_conv_factor,
             )
         };
@@ -632,12 +627,11 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let unit_name = unit_name.unwrap_or_default().to_cstring()?;
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.as_ptr(),
+                unit_name.to_cstr()?,
                 unit_conv_factor,
             )
         };
@@ -654,18 +648,13 @@ impl Context {
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let horizontal_angular_unit_name = horizontal_angular_unit_name
-            .unwrap_or_default()
-            .to_cstring()?;
-        let vertical_linear_unit_name =
-            vertical_linear_unit_name.unwrap_or_default().to_cstring()?;
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
                 ellipsoidal_cs_3d_type.into(),
-                horizontal_angular_unit_name.as_ptr(),
+                horizontal_angular_unit_name.to_cstr()?,
                 horizontal_angular_unit_conv_factor,
-                vertical_linear_unit_name.as_ptr(),
+                vertical_linear_unit_name.to_cstr()?,
                 vertical_linear_unit_conv_factor,
             )
         };
@@ -681,17 +670,13 @@ impl Context {
         datum_code: &str,
         crs_type: Option<&str>,
     ) -> miette::Result<Vec<Proj>> {
-        let crs_auth_name = crs_auth_name.unwrap_or_default().to_cstring()?;
-        let datum_auth_name = datum_auth_name.to_cstring()?;
-        let datum_code = datum_code.to_cstring()?;
-        let crs_type = crs_type.unwrap_or_default().to_cstring()?;
         let result = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
-                crs_auth_name.as_ptr(),
-                datum_auth_name.as_ptr(),
-                datum_code.as_ptr(),
-                crs_type.as_ptr(),
+                crs_auth_name.to_cstr()?,
+                datum_auth_name.to_cstr()?,
+                datum_code.to_cstr()?,
+                crs_type.to_cstr()?,
             )
         };
         pj_obj_list_to_vec(self, result)
@@ -712,22 +697,17 @@ impl Context {
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let crs_name = crs_name.unwrap_or_default().to_cstring()?;
-        let datum_name = datum_name.unwrap_or_default().to_cstring()?;
-        let ellps_name = ellps_name.unwrap_or_default().to_cstring()?;
-        let prime_meridian_name = prime_meridian_name.unwrap_or_default().to_cstring()?;
-        let pm_angular_units = pm_angular_units.unwrap_or_default().to_cstring()?;
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
-                crs_name.as_ptr(),
-                datum_name.as_ptr(),
-                ellps_name.as_ptr(),
+                crs_name.to_cstr()?,
+                datum_name.to_cstr()?,
+                ellps_name.to_cstr()?,
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.as_ptr(),
+                prime_meridian_name.to_cstr()?,
                 prime_meridian_offset,
-                pm_angular_units.as_ptr(),
+                pm_angular_units.to_cstr()?,
                 pm_units_conv,
                 ellipsoidal_cs.ptr(),
             )
@@ -778,10 +758,7 @@ impl Context {
                 ellps_name.unwrap_or_default().to_cstr()?,
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name
-                    .unwrap_or_default()
-                    .to_cstring()?
-                    .as_ptr(),
+                prime_meridian_name.to_cstr()?,
                 prime_meridian_offset,
                 angular_units.unwrap_or_default().to_cstr()?,
                 angular_units_conv,

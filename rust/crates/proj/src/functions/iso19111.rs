@@ -232,23 +232,17 @@ impl crate::Context {
         approximate_match: bool,
         limit_result_count: usize,
     ) -> miette::Result<Vec<Proj>> {
-        let (types, count) = if let Some(types) = types {
+        let (types, count) = types.map_or((None, 0), |types| {
             let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
             let count = types.len();
             (Some(types), count)
-        } else {
-            (None, 0)
-        };
+        });
         let result = unsafe {
             proj_sys::proj_create_from_name(
                 self.ptr,
                 auth_name.to_cstr(),
                 searched_name.to_cstr(),
-                if let Some(types) = types {
-                    types.as_ptr()
-                } else {
-                    ptr::null()
-                },
+                types.map_or(ptr::null(), |types| types.as_ptr()),
                 count,
                 approximate_match as i32,
                 limit_result_count,

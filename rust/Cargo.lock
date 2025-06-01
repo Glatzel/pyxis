@@ -415,8 +415,8 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
 name = "envoy"
-version = "0.0.14"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.14#db290b66788544c8df7474de46e02c3178787d38"
+version = "0.0.15"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.15#b166d666f61df376e811702d6c2b5b373ac4e46b"
 
 [[package]]
 name = "equivalent"

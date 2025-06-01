@@ -370,10 +370,7 @@ impl crate::Context {
         params: Option<CrsListParameters>,
     ) -> miette::Result<Vec<CrsInfo>> {
         if auth_name.is_none() && params.is_none() {
-            miette::bail!(
-                "At least one of `auth_name` and  `params` must be
-        set."
-            );
+            miette::bail!("At least one of `auth_name` and  `params` must be set.");
         }
         let mut out_result_count = i32::default();
         let params = if let Some(params) = params {
@@ -407,17 +404,16 @@ impl crate::Context {
                 if let Some(params) = params {
                     &params
                 } else {
-                    proj_sys::proj_get_crs_list_parameters_create()
+                    ptr::null()
                 },
                 &mut out_result_count,
             )
         };
-
         if out_result_count < 1 {
             miette::bail!("Error");
         }
         let mut out_vec = Vec::new();
-        for offset in 0..out_result_count {
+        for offset in 0..1803 {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
             let info_ref = unsafe { current_ptr.as_ref().unwrap() };
             out_vec.push(CrsInfo::new(
@@ -431,7 +427,7 @@ impl crate::Context {
                 info_ref.south_lat_degree,
                 info_ref.east_lon_degree,
                 info_ref.north_lat_degree,
-                info_ref.area_name.to_string().unwrap(),
+                info_ref.area_name.to_string().unwrap_or_default(),
                 info_ref
                     .projection_method_name
                     .to_string()

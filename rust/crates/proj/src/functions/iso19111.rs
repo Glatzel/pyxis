@@ -364,78 +364,83 @@ impl crate::Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
-    fn _get_crs_info_list_from_database(
+    pub fn get_crs_info_list_from_database(
         &self,
-        _auth_name: Option<&str>,
-        _params: Option<CrsListParameters>,
+        auth_name: Option<&str>,
+        params: Option<CrsListParameters>,
     ) -> miette::Result<Vec<CrsInfo>> {
-        todo!();
-        // if auth_name.is_none() && params.is_none() {
-        //     miette::bail!("At least one of `auth_name` and  `params` must be
-        // set."); }
-        // let mut out_result_count = i32::default();
-        // let params = if let Some(params) = params {
-        //     let types: Vec<u32> = params
-        //         .types()
-        //         .to_owned()
-        //         .iter()
-        //         .map(|f| u32::from(f.clone()))
-        //         .collect();
-        //     let celestial_body_name =
-        // params.celestial_body_name().to_owned().to_cstr();
-        //     Some(proj_sys::PROJ_CRS_LIST_PARAMETERS {
-        //         types: types.as_ptr(),
-        //         typesCount: params.types().len(),
-        //         crs_area_of_use_contains_bbox: *params.west_lon_degree() as
-        // i32,         bbox_valid: *params.bbox_valid() as i32,
-        //         west_lon_degree: *params.west_lon_degree(),
-        //         south_lat_degree: *params.south_lat_degree(),
-        //         east_lon_degree: *params.east_lon_degree(),
-        //         north_lat_degree: *params.north_lat_degree(),
-        //         allow_deprecated: *params.allow_deprecated() as i32,
-        //         celestial_body_name: celestial_body_name,
-        //     })
-        // } else {
-        //     None
-        // };
+        if auth_name.is_none() && params.is_none() {
+            miette::bail!(
+                "At least one of `auth_name` and  `params` must be
+        set."
+            );
+        }
+        let mut out_result_count = i32::default();
+        let params = if let Some(params) = params {
+            let types: Vec<u32> = params
+                .types()
+                .to_owned()
+                .iter()
+                .map(|f| u32::from(f.clone()))
+                .collect();
+            let celestial_body_name = params.celestial_body_name().to_owned().to_cstr();
+            Some(proj_sys::PROJ_CRS_LIST_PARAMETERS {
+                types: types.as_ptr(),
+                typesCount: params.types().len(),
+                crs_area_of_use_contains_bbox: *params.west_lon_degree() as i32,
+                bbox_valid: *params.bbox_valid() as i32,
+                west_lon_degree: *params.west_lon_degree(),
+                south_lat_degree: *params.south_lat_degree(),
+                east_lon_degree: *params.east_lon_degree(),
+                north_lat_degree: *params.north_lat_degree(),
+                allow_deprecated: *params.allow_deprecated() as i32,
+                celestial_body_name: celestial_body_name,
+            })
+        } else {
+            None
+        };
 
-        // let ptr = unsafe {
-        //     proj_sys::proj_get_crs_info_list_from_database(
-        //         self.ptr,
-        //         auth_name.to_cstr(),
-        //         ptr::null(),
-        //         &mut out_result_count,
-        //     )
-        // };
+        let ptr = unsafe {
+            proj_sys::proj_get_crs_info_list_from_database(
+                self.ptr,
+                auth_name.to_cstr(),
+                if let Some(params) = params {
+                    &params
+                } else {
+                    proj_sys::proj_get_crs_list_parameters_create()
+                },
+                &mut out_result_count,
+            )
+        };
 
-        // if out_result_count < 1 {
-        //     miette::bail!("Error");
-        // }
-        // let mut out_vec = Vec::new();
-        // for offset in 0..out_result_count {
-        //     let current_ptr = unsafe { ptr.offset(offset as
-        // isize).as_ref().unwrap() };     let info_ref = unsafe {
-        // current_ptr.as_ref().unwrap() };     out_vec.
-        // push(CrsInfo::new(         info_ref.auth_name.to_string().
-        // unwrap(),         info_ref.code.to_string().unwrap(),
-        //         info_ref.name.to_string().unwrap(),
-        //         ProjType::try_from(info_ref.type_).into_diagnostic()?,
-        //         info_ref.deprecated != 0,
-        //         info_ref.bbox_valid != 0,
-        //         info_ref.west_lon_degree,
-        //         info_ref.south_lat_degree,
-        //         info_ref.east_lon_degree,
-        //         info_ref.north_lat_degree,
-        //         info_ref.area_name.to_string().unwrap(),
-        //         info_ref
-        //             .projection_method_name
-        //             .to_string()
-        //             .unwrap_or_default(),
-        //         info_ref.celestial_body_name.to_string().unwrap_or_default(),
-        //     ));
-        // }
-        // unsafe { proj_sys::proj_crs_info_list_destroy(ptr) };
-        // Ok(out_vec)
+        if out_result_count < 1 {
+            miette::bail!("Error");
+        }
+        let mut out_vec = Vec::new();
+        for offset in 0..out_result_count {
+            let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
+            let info_ref = unsafe { current_ptr.as_ref().unwrap() };
+            out_vec.push(CrsInfo::new(
+                info_ref.auth_name.to_string().unwrap(),
+                info_ref.code.to_string().unwrap(),
+                info_ref.name.to_string().unwrap(),
+                ProjType::try_from(info_ref.type_).into_diagnostic()?,
+                info_ref.deprecated != 0,
+                info_ref.bbox_valid != 0,
+                info_ref.west_lon_degree,
+                info_ref.south_lat_degree,
+                info_ref.east_lon_degree,
+                info_ref.north_lat_degree,
+                info_ref.area_name.to_string().unwrap(),
+                info_ref
+                    .projection_method_name
+                    .to_string()
+                    .unwrap_or_default(),
+                info_ref.celestial_body_name.to_string().unwrap_or_default(),
+            ));
+        }
+        unsafe { proj_sys::proj_crs_info_list_destroy(ptr) };
+        Ok(out_vec)
     }
     ///# References
     ///
@@ -2409,10 +2414,10 @@ mod test_context_basic {
     }
     #[test]
     fn test_get_crs_info_list_from_database() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let list = ctx.get_crs_info_list_from_database(Some("EPSG"), None)?;
-        // println!("{:?}", list.first().unwrap());
-        // assert!(!list.is_empty());
+        let ctx = crate::new_test_ctx()?;
+        let list = ctx.get_crs_info_list_from_database(Some("EPSG"), None)?;
+        println!("{:?}", list.first().unwrap());
+        assert!(!list.is_empty());
         Ok(())
     }
     #[test]

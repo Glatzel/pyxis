@@ -740,11 +740,10 @@ impl Context {
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let crs_name = crs_name.unwrap_or_default().to_cstring()?;
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
-                crs_name.as_ptr(),
+                crs_name.unwrap_or_default().to_cstring()?.as_ptr(),
                 datum_or_datum_ensemble.ptr(),
                 ellipsoidal_cs.ptr(),
             )
@@ -753,48 +752,84 @@ impl Context {
     }
     ///# References
     ///
-    /// <>
-    fn _create_geocentric_crs(&self) { todo!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geocentric_crs>
+    pub fn create_geocentric_crs(
+        &self,
+        crs_name: Option<&str>,
+        datum_name: Option<&str>,
+        ellps_name: Option<&str>,
+        semi_major_metre: f64,
+        inv_flattening: f64,
+        prime_meridian_name: Option<&str>,
+        prime_meridian_offset: f64,
+        angular_units: Option<&str>,
+        angular_units_conv: f64,
+        linear_units: Option<&str>,
+        linear_units_conv: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_geocentric_crs(
+                self.ptr,
+                crs_name.unwrap_or_default().to_cstring()?.as_ptr(),
+                datum_name.unwrap_or_default().to_cstring()?.as_ptr(),
+                ellps_name.unwrap_or_default().to_cstring()?.as_ptr(),
+                semi_major_metre,
+                inv_flattening,
+                prime_meridian_name
+                    .unwrap_or_default()
+                    .to_cstring()?
+                    .as_ptr(),
+                prime_meridian_offset,
+                angular_units.unwrap_or_default().to_cstring()?.as_ptr(),
+                angular_units_conv,
+                linear_units.unwrap_or_default().to_cstring()?.as_ptr(),
+                linear_units_conv,
+            )
+        };
+        Proj::new(self, ptr)
+    }
     ///# References
     ///
-    /// <>
-    fn _create_geocentric_crs_from_datum(&self) { todo!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geocentric_crs_from_datum>
+    pub fn create_geocentric_crs_from_datum(
+        &self,
+        crs_name: Option<&str>,
+        datum_or_datum_ensemble: &Proj,
+        linear_units: Option<&str>,
+        linear_units_conv: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_geocentric_crs_from_datum(
+                self.ptr,
+                crs_name.unwrap_or_default().to_cstring()?.as_ptr(),
+                datum_or_datum_ensemble.ptr(),
+                linear_units.unwrap_or_default().to_cstring()?.as_ptr(),
+                linear_units_conv,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
-    /// <>
-    fn _create_derived_geographic_crs(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _is_derived_crs(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _alter_name(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _alter_id(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_alter_geodetic_crs(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_alter_cs_angular_unit(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_alter_cs_linear_unit(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_alter_parameters_linear_unit(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _crs_promote_to_3d(&self) { todo!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_derived_geographic_crs>
+    pub fn create_derived_geographic_crs(
+        &self,
+        crs_name: Option<&str>,
+        base_geographic_crs: &Proj,
+        conversion: &Proj,
+        ellipsoidal_cs: &Proj,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_derived_geographic_crs(
+                self.ptr,
+                crs_name.unwrap_or_default().to_cstring()?.as_ptr(),
+                base_geographic_crs.ptr(),
+                conversion.ptr(),
+                ellipsoidal_cs.ptr(),
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// <>
@@ -1921,6 +1956,127 @@ impl Proj<'_> {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
 impl Proj<'_> {
+    ///# See Also
+    ///
+    /// * [`Self::crs_is_derived`]
+    ///
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_derived_crs>
+    fn _is_derived_crs(&self) { unimplemented!("Use other function to instead.") }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_name>
+    pub fn alter_name(&self, name: &str) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_alter_name(self.ctx.ptr, self.ptr(), name.to_cstring()?.as_ptr())
+        };
+        Proj::new(self.ctx, ptr)
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_id>
+    pub fn alter_id(&self, auth_name: &str, code: &str) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_alter_id(
+                self.ctx.ptr,
+                self.ptr(),
+                auth_name.to_cstring()?.as_ptr(),
+                code.to_cstring()?.as_ptr(),
+            )
+        };
+        Proj::new(self.ctx, ptr)
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_alter_geodetic_crs>
+    pub fn crs_alter_geodetic_crs(&self, new_geod_crs: &Proj) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_crs_alter_geodetic_crs(self.ctx.ptr, self.ptr(), new_geod_crs.ptr())
+        };
+        Proj::new(self.ctx, ptr)
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_alter_cs_angular_unit>
+    pub fn crs_alter_cs_angular_unit(
+        &self,
+        angular_unit: Option<&str>,
+        angular_units_convs: f64,
+        unit_auth_name: Option<&str>,
+        unit_code: Option<&str>,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_crs_alter_cs_angular_unit(
+                self.ctx.ptr,
+                self.ptr(),
+                angular_unit.unwrap_or_default().to_cstring()?.as_ptr(),
+                angular_units_convs,
+                unit_auth_name.unwrap_or_default().to_cstring()?.as_ptr(),
+                unit_code.unwrap_or_default().to_cstring()?.as_ptr(),
+            )
+        };
+        Proj::new(self.ctx, ptr)
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_alter_cs_linear_unit>
+    pub fn crs_alter_cs_linear_unit(
+        &self,
+        linear_units: Option<&str>,
+        linear_units_conv: f64,
+        unit_auth_name: Option<&str>,
+        unit_code: Option<&str>,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_crs_alter_cs_linear_unit(
+                self.ctx.ptr,
+                self.ptr(),
+                linear_units.unwrap_or_default().to_cstring()?.as_ptr(),
+                linear_units_conv,
+                unit_auth_name.unwrap_or_default().to_cstring()?.as_ptr(),
+                unit_code.unwrap_or_default().to_cstring()?.as_ptr(),
+            )
+        };
+        Proj::new(self.ctx, ptr)
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_alter_parameters_linear_unit>
+    pub fn crs_alter_parameters_linear_unit(
+        &self,
+        linear_units: Option<&str>,
+        linear_units_conv: f64,
+        unit_auth_name: Option<&str>,
+        unit_code: Option<&str>,
+        convert_to_new_unit: bool,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_crs_alter_parameters_linear_unit(
+                self.ctx.ptr,
+                self.ptr(),
+                linear_units.unwrap_or_default().to_cstring()?.as_ptr(),
+                linear_units_conv,
+                unit_auth_name.unwrap_or_default().to_cstring()?.as_ptr(),
+                unit_code.unwrap_or_default().to_cstring()?.as_ptr(),
+                convert_to_new_unit as i32,
+            )
+        };
+        Proj::new(self.ctx, ptr)
+    }
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
+    pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_crs_promote_to_3D(
+                self.ctx.ptr,
+                crs_3d_name.unwrap_or_default().to_cstring()?.as_ptr(),
+                self.ptr(),
+            )
+        };
+        Proj::new(self.ctx, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>

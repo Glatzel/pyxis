@@ -370,9 +370,12 @@ impl crate::Context {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
     pub fn get_crs_info_list_from_database(
         &self,
-        auth_name: &str,
+        auth_name: Option<&str>,
         params: Option<CrsListParameters>,
     ) -> miette::Result<Vec<CrsInfo>> {
+        if auth_name.is_none() && params.is_none() {
+            miette::bail!("At least one of `auth_name` and  `params` must be set.");
+        }
         let mut out_result_count = i32::default();
         let params = if let Some(params) = params {
             let types: Vec<u32> = params
@@ -409,7 +412,7 @@ impl crate::Context {
                 if let Some(params) = params {
                     &params
                 } else {
-                    proj_sys::proj_get_crs_list_parameters_create()
+                    ptr::null()
                 },
                 &mut out_result_count,
             )
@@ -457,7 +460,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_units_from_database(
                 self.ptr,
-                auth_name.to_cstr()?,
+                auth_name.to_cstring()?.as_ptr(),
                 category.as_ref().to_cstring().unwrap().as_ptr(),
                 allow_deprecated as i32,
                 &mut out_result_count,
@@ -2091,7 +2094,9 @@ impl Proj<'_> {
         new_method_name: Option<&str>,
     ) -> miette::Result<Proj> {
         if new_method_epsg_code.is_none() && new_method_name.is_none() {
-            miette::bail!("one of `new_method_epsg_code` and  `new_method_name` must be set.")
+            miette::bail!(
+                "At least one of `new_method_epsg_code` and  `new_method_name` must be set."
+            )
         }
         let ptr = unsafe {
             proj_sys::proj_convert_conversion_to_other_method(
@@ -2434,7 +2439,7 @@ mod test_context_basic {
     #[test]
     fn test_get_crs_info_list_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let list = ctx.get_crs_info_list_from_database("EPSG", None)?;
+        let list = ctx.get_crs_info_list_from_database(Some("EPSG"), None)?;
         println!("{:?}", list.first().unwrap());
         assert!(!list.is_empty());
         Ok(())

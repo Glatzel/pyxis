@@ -125,13 +125,13 @@ impl crate::Context {
             )
         };
         //warning
-        out_warnings
-            .to_vec_string()
-            .map(|warnings| warnings.iter().for_each(|w| clerk::warn!("{w}")));
+        if let Some(warnings) = out_warnings.to_vec_string() {
+            warnings.iter().for_each(|w| clerk::warn!("{w}"))
+        }
         //error
-        out_grammar_errors
-            .to_vec_string()
-            .map(|warnings| warnings.iter().for_each(|w| clerk::error!("{w}")));
+        if let Some(warnings) = out_grammar_errors.to_vec_string() {
+            warnings.iter().for_each(|w| clerk::error!("{w}"))
+        }
         crate::Proj::new(self, ptr)
     }
     ///# References

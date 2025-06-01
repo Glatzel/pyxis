@@ -373,6 +373,7 @@ impl crate::Context {
         _auth_name: Option<&str>,
         _params: Option<CrsListParameters>,
     ) -> miette::Result<Vec<CrsInfo>> {
+<<<<<<< HEAD
         todo!();
         // if auth_name.is_none() && params.is_none() {
         //     miette::bail!("At least one of `auth_name` and  `params` must be
@@ -402,6 +403,35 @@ impl crate::Context {
         // } else {
         //     None
         // };
+=======
+        if auth_name.is_none() && params.is_none() {
+            miette::bail!("At least one of `auth_name` and  `params` must be set.");
+        }
+        let mut out_result_count = i32::default();
+        let params = if let Some(params) = params {
+            let types: Vec<u32> = params
+                .types()
+                .to_owned()
+                .iter()
+                .map(|f| u32::from(f.clone()))
+                .collect();
+            let celestial_body_name = params.celestial_body_name().to_owned().to_cstr()?;
+            Some(proj_sys::PROJ_CRS_LIST_PARAMETERS {
+                types: types.as_ptr(),
+                typesCount: params.types().len(),
+                crs_area_of_use_contains_bbox: *params.west_lon_degree() as i32,
+                bbox_valid: *params.bbox_valid() as i32,
+                west_lon_degree: *params.west_lon_degree(),
+                south_lat_degree: *params.south_lat_degree(),
+                east_lon_degree: *params.east_lon_degree(),
+                north_lat_degree: *params.north_lat_degree(),
+                allow_deprecated: *params.allow_deprecated() as i32,
+                celestial_body_name,
+            })
+        } else {
+            None
+        };
+>>>>>>> c24ee54ccbd205f5f26240bb427997cf00d3b144
 
         // let ptr = unsafe {
         //     proj_sys::proj_get_crs_info_list_from_database(

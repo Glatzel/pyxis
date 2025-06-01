@@ -394,7 +394,7 @@ impl crate::Context {
                 east_lon_degree: *params.east_lon_degree(),
                 north_lat_degree: *params.north_lat_degree(),
                 allow_deprecated: *params.allow_deprecated() as i32,
-                celestial_body_name: celestial_body_name,
+                celestial_body_name,
             })
         } else {
             None

@@ -42,10 +42,7 @@ impl crate::Context {
     pub fn set_search_paths(&self, paths: &[&Path]) -> miette::Result<&Self> {
         clerk::debug!("search_paths:{:?}", paths);
         let len = paths.len();
-        let paths_ptr: Vec<*const i8> = paths
-            .iter()
-            .map(|p| p.to_str().to_cstr())
-            .collect();
+        let paths_ptr: Vec<*const i8> = paths.iter().map(|p| p.to_str().to_cstr()).collect();
         unsafe {
             proj_sys::proj_context_set_search_paths(self.ptr, len as i32, paths_ptr.as_ptr());
         };

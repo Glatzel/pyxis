@@ -958,7 +958,7 @@ impl Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_utm>
     /// * <https://proj.org/en/stable/development/reference/cpp/operation.html#_CPPv4N5osgeo4proj9operation10Conversion9createUTMERKN4util11PropertyMapEib>
     pub fn create_conversion_utm(&self, zone: u8, north: bool) -> miette::Result<Proj> {
-        if zone < 1 || zone > 60 {
+        if !(1..=60).contains(&zone) {
             miette::bail!("UTM zone number should between 1 and 60.");
         }
         let ptr =

@@ -2091,7 +2091,24 @@ impl Proj<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_convert_conversion_to_other_method>
-    fn _convert_conversion_to_other_method(&self) { todo!() }
+    pub fn convert_conversion_to_other_method(
+        &self,
+        new_method_epsg_code: Option<u16>,
+        new_method_name: Option<&str>,
+    ) -> miette::Result<Proj> {
+        if new_method_epsg_code.is_none() && new_method_name.is_none() {
+            miette::bail!("one of `new_method_epsg_code` and  `new_method_name` must be set.")
+        }
+        let ptr = unsafe {
+            proj_sys::proj_convert_conversion_to_other_method(
+                self.ctx.ptr,
+                self.ptr(),
+                new_method_epsg_code.unwrap_or_default() as i32,
+                new_method_name.unwrap_or_default().to_cstring()?.as_ptr(),
+            )
+        };
+        Proj::new(self.ctx, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs_to_WGS84>

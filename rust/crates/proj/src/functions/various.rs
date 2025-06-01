@@ -1,6 +1,6 @@
 use std::char;
 
-use envoy::{CStrToString, ToCStr, ToCString};
+use envoy::{CStrToString, ToCStr};
 
 #[cfg(any(feature = "unrecommended", test))]
 use crate::check_result;
@@ -142,8 +142,8 @@ fn _todeg() { unimplemented!("Use other function to instead.") }
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
 pub fn dmstor(is: &str) -> miette::Result<f64> {
-    let rs = "xxxdxxmxx.xxs ".to_cstring()?;
-    Ok(unsafe { proj_sys::proj_dmstor(is.to_cstr()?, &mut rs.as_ptr().cast_mut()) })
+    let rs = "xxxdxxmxx.xxs ".to_cstring();
+    Ok(unsafe { proj_sys::proj_dmstor(is.to_cstr(), &mut rs.as_ptr().cast_mut()) })
 }
 ///# See Also
 ///
@@ -160,7 +160,7 @@ fn _rtodms() { unimplemented!("Use other function to instead.") }
 /// # References
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms2>
 pub fn rtodms2(r: f64, pos: char, neg: char) -> miette::Result<String> {
-    let dms = "xxxdxxmxx.xxs ".to_cstring()?;
+    let dms = "xxxdxxmxx.xxs ".to_cstring();
     let ptr =
         unsafe { proj_sys::proj_rtodms2(dms.as_ptr().cast_mut(), 14, r, pos as i32, neg as i32) };
     Ok(ptr.to_string().unwrap())

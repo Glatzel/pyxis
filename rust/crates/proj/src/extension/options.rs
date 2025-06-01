@@ -11,7 +11,7 @@
 use std::ffi::CString;
 use std::ptr::null;
 
-use envoy::ToCString;
+use envoy::ToCStr;
 
 /// String constant representing the PROJ option value for `true`.
 pub(crate) const OPTION_YES: &str = "YES";
@@ -74,11 +74,8 @@ impl ProjOptions {
     /// * `opt` - The value to convert and push.
     /// * `name` - The name of the option.
     pub fn _push<T: ToProjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
-        self.options.push(
-            format!("{name}={}", opt.to_option_string())
-                .to_cstring()
-                .unwrap(),
-        );
+        self.options
+            .push(format!("{name}={}", opt.to_option_string()).to_cstring());
         self
     }
 
@@ -97,15 +94,12 @@ impl ProjOptions {
     ) -> &mut Self {
         match opt {
             Some(opt) => {
-                self.options.push(
-                    format!("{name}={}", opt.to_option_string())
-                        .to_cstring()
-                        .unwrap(),
-                );
+                self.options
+                    .push(format!("{name}={}", opt.to_option_string()).to_cstring());
             }
             None => {
                 self.options
-                    .push(format!("{name}={default_value}").to_cstring().unwrap());
+                    .push(format!("{name}={default_value}").to_cstring());
             }
         }
         self
@@ -123,11 +117,8 @@ impl ProjOptions {
         name: &str,
     ) -> &mut Self {
         if let Some(opt) = opt {
-            self.options.push(
-                format!("{name}={}", opt.to_option_string())
-                    .to_cstring()
-                    .unwrap(),
-            );
+            self.options
+                .push(format!("{name}={}", opt.to_option_string()).to_cstring());
         }
         self
     }

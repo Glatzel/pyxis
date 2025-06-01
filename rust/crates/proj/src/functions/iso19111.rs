@@ -19,7 +19,7 @@ use std::path::{Path, PathBuf};
 use std::ptr::{self, null};
 use std::str::FromStr;
 
-use envoy::{CStrListToVecString, CStrToString, ToCStr, ToCString};
+use envoy::{CStrListToVecString, CStrToString, ToCStr};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
@@ -39,12 +39,12 @@ impl crate::Context {
         db_path: &Path,
         aux_db_paths: Option<&[PathBuf]>,
     ) -> miette::Result<&Self> {
-        let db_path = db_path.to_str().unwrap().to_cstring()?;
+        let db_path = db_path.to_str().unwrap().to_cstring();
 
         let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
             aux_db_paths
                 .iter()
-                .map(|f| f.to_str().unwrap().to_cstring().unwrap())
+                .map(|f| f.to_str().unwrap().to_cstring())
                 .collect()
         });
 
@@ -82,7 +82,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
     pub fn get_database_metadata(&self, key: DatabaseMetadataKey) -> Option<String> {
-        let key = key.as_ref().to_cstring().unwrap();
+        let key = key.as_ref().to_cstring();
         unsafe { proj_sys::proj_context_get_database_metadata(self.ptr, key.as_ptr()) }.to_string()
     }
     ///# References
@@ -99,7 +99,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
     pub fn guess_wkt_dialect(&self, wkt: &str) -> miette::Result<GuessedWktDialect> {
         GuessedWktDialect::try_from(unsafe {
-            proj_sys::proj_context_guess_wkt_dialect(self.ptr, wkt.to_cstr()?)
+            proj_sys::proj_context_guess_wkt_dialect(self.ptr, wkt.to_cstr())
         })
         .into_diagnostic()
     }
@@ -124,7 +124,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_create_from_wkt(
                 self.ptr,
-                wkt.to_cstr()?,
+                wkt.to_cstr(),
                 vec_ptr.as_ptr(),
                 &mut out_warnings,
                 &mut out_grammar_errors,
@@ -154,13 +154,11 @@ impl crate::Context {
         category: Category,
         use_projalternative_grid_names: bool,
     ) -> miette::Result<Proj> {
-        let auth_name = auth_name.to_cstring()?;
-        let code = code.to_cstring()?;
         let ptr = unsafe {
             proj_sys::proj_create_from_database(
                 self.ptr,
-                auth_name.as_ptr(),
-                code.as_ptr(),
+                auth_name.to_cstr(),
+                code.to_cstr(),
                 category.into(),
                 use_projalternative_grid_names as i32,
                 null(),
@@ -176,16 +174,14 @@ impl crate::Context {
         auth_name: &str,
         code: &str,
     ) -> miette::Result<UomInfo> {
-        let auth_name = auth_name.to_cstring()?;
-        let code = code.to_cstring()?;
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut conv_factor: f64 = f64::NAN;
         let mut category: *const std::ffi::c_char = std::ptr::null();
         let result = unsafe {
             proj_sys::proj_uom_get_info_from_database(
                 self.ptr,
-                auth_name.as_ptr(),
-                code.as_ptr(),
+                auth_name.to_cstr(),
+                code.to_cstr(),
                 &mut name,
                 &mut conv_factor,
                 &mut category,
@@ -214,7 +210,7 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_grid_get_info_from_database(
                 self.ptr,
-                grid_name.to_cstr()?,
+                grid_name.to_cstr(),
                 &mut full_name,
                 &mut package_name,
                 &mut url,
@@ -257,11 +253,11 @@ impl crate::Context {
             proj_sys::proj_create_from_name(
                 self.ptr,
                 if let Some(auth_name) = auth_name {
-                    auth_name.to_cstr()?
+                    auth_name.to_cstr()
                 } else {
                     ptr::null()
                 },
-                searched_name.to_cstr()?,
+                searched_name.to_cstr(),
                 if let Some(types) = types {
                     types.as_ptr()
                 } else {
@@ -287,8 +283,8 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_geoid_models_from_database(
                 self.ptr,
-                auth_name.to_cstr()?,
-                code.to_cstr()?,
+                auth_name.to_cstr(),
+                code.to_cstr(),
                 ptr::null(),
             )
         };
@@ -323,7 +319,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_codes_from_database(
                 self.ptr,
-                auth_name.to_cstr()?,
+                auth_name.to_cstr(),
                 proj_type.into(),
                 allow_deprecated as i32,
             )
@@ -346,7 +342,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_celestial_body_list_from_database(
                 self.ptr,
-                auth_name.to_cstr()?,
+                auth_name.to_cstr(),
                 &mut out_result_count,
             )
         };
@@ -386,7 +382,7 @@ impl crate::Context {
         //         .map(|f| u32::from(f.clone()))
         //         .collect();
         //     let celestial_body_name =
-        // params.celestial_body_name().to_owned().to_cstr()?;
+        // params.celestial_body_name().to_owned().to_cstr();
         //     Some(proj_sys::PROJ_CRS_LIST_PARAMETERS {
         //         types: types.as_ptr(),
         //         typesCount: params.types().len(),
@@ -406,7 +402,7 @@ impl crate::Context {
         // let ptr = unsafe {
         //     proj_sys::proj_get_crs_info_list_from_database(
         //         self.ptr,
-        //         auth_name.to_cstr()?,
+        //         auth_name.to_cstr(),
         //         ptr::null(),
         //         &mut out_result_count,
         //     )
@@ -454,8 +450,8 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_units_from_database(
                 self.ptr,
-                auth_name.to_cstring()?.as_ptr(),
-                category.as_ref().to_cstring().unwrap().as_ptr(),
+                auth_name.to_cstr(),
+                category.as_ref().to_cstr(),
                 allow_deprecated as i32,
                 &mut out_result_count,
             )
@@ -610,7 +606,7 @@ impl Context {
             proj_sys::proj_create_cartesian_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.to_cstr()?,
+                unit_name.to_cstr(),
                 unit_conv_factor,
             )
         };
@@ -629,7 +625,7 @@ impl Context {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.to_cstr()?,
+                unit_name.to_cstr(),
                 unit_conv_factor,
             )
         };
@@ -650,9 +646,9 @@ impl Context {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
                 ellipsoidal_cs_3d_type.into(),
-                horizontal_angular_unit_name.to_cstr()?,
+                horizontal_angular_unit_name.to_cstr(),
                 horizontal_angular_unit_conv_factor,
-                vertical_linear_unit_name.to_cstr()?,
+                vertical_linear_unit_name.to_cstr(),
                 vertical_linear_unit_conv_factor,
             )
         };
@@ -671,10 +667,10 @@ impl Context {
         let result = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
-                crs_auth_name.to_cstr()?,
-                datum_auth_name.to_cstr()?,
-                datum_code.to_cstr()?,
-                crs_type.to_cstr()?,
+                crs_auth_name.to_cstr(),
+                datum_auth_name.to_cstr(),
+                datum_code.to_cstr(),
+                crs_type.to_cstr(),
             )
         };
         pj_obj_list_to_vec(self, result)
@@ -698,14 +694,14 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
-                crs_name.to_cstr()?,
-                datum_name.to_cstr()?,
-                ellps_name.to_cstr()?,
+                crs_name.to_cstr(),
+                datum_name.to_cstr(),
+                ellps_name.to_cstr(),
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.to_cstr()?,
+                prime_meridian_name.to_cstr(),
                 prime_meridian_offset,
-                pm_angular_units.to_cstr()?,
+                pm_angular_units.to_cstr(),
                 pm_units_conv,
                 ellipsoidal_cs.ptr(),
             )
@@ -724,7 +720,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
-                crs_name.unwrap_or_default().to_cstr()?,
+                crs_name.unwrap_or_default().to_cstr(),
                 datum_or_datum_ensemble.ptr(),
                 ellipsoidal_cs.ptr(),
             )
@@ -751,16 +747,16 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
                 self.ptr,
-                crs_name.unwrap_or_default().to_cstr()?,
-                datum_name.unwrap_or_default().to_cstr()?,
-                ellps_name.unwrap_or_default().to_cstr()?,
+                crs_name.unwrap_or_default().to_cstr(),
+                datum_name.unwrap_or_default().to_cstr(),
+                ellps_name.unwrap_or_default().to_cstr(),
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.to_cstr()?,
+                prime_meridian_name.to_cstr(),
                 prime_meridian_offset,
-                angular_units.unwrap_or_default().to_cstr()?,
+                angular_units.unwrap_or_default().to_cstr(),
                 angular_units_conv,
-                linear_units.unwrap_or_default().to_cstr()?,
+                linear_units.unwrap_or_default().to_cstr(),
                 linear_units_conv,
             )
         };
@@ -779,9 +775,9 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
                 self.ptr,
-                crs_name.unwrap_or_default().to_cstr()?,
+                crs_name.unwrap_or_default().to_cstr(),
                 datum_or_datum_ensemble.ptr(),
-                linear_units.unwrap_or_default().to_cstr()?,
+                linear_units.unwrap_or_default().to_cstr(),
                 linear_units_conv,
             )
         };
@@ -800,7 +796,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
                 self.ptr,
-                crs_name.unwrap_or_default().to_cstr()?,
+                crs_name.unwrap_or_default().to_cstr(),
                 base_geographic_crs.ptr(),
                 conversion.ptr(),
                 ellipsoidal_cs.ptr(),
@@ -1422,7 +1418,7 @@ impl Proj<'_> {
             proj_sys::proj_identify(
                 self.ctx.ptr,
                 self.ptr(),
-                auth_name.to_cstr()?,
+                auth_name.to_cstr(),
                 ptr::null(),
                 &mut confidence.as_mut_ptr(),
             )
@@ -1750,7 +1746,7 @@ impl Proj<'_> {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_index>
     pub fn coordoperation_get_param_index(&self, name: &str) -> miette::Result<u16> {
         let result = unsafe {
-            proj_sys::proj_coordoperation_get_param_index(self.ctx.ptr, self.ptr(), name.to_cstr()?)
+            proj_sys::proj_coordoperation_get_param_index(self.ctx.ptr, self.ptr(), name.to_cstr())
         };
         if result == -1 {
             miette::bail!("Error");
@@ -1940,7 +1936,7 @@ impl Proj<'_> {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_name>
     pub fn alter_name(&self, name: &str) -> miette::Result<Proj> {
-        let ptr = unsafe { proj_sys::proj_alter_name(self.ctx.ptr, self.ptr(), name.to_cstr()?) };
+        let ptr = unsafe { proj_sys::proj_alter_name(self.ctx.ptr, self.ptr(), name.to_cstr()) };
         Proj::new(self.ctx, ptr)
     }
     ///# References
@@ -1951,8 +1947,8 @@ impl Proj<'_> {
             proj_sys::proj_alter_id(
                 self.ctx.ptr,
                 self.ptr(),
-                auth_name.to_cstr()?,
-                code.to_cstr()?,
+                auth_name.to_cstr(),
+                code.to_cstr(),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -1980,10 +1976,10 @@ impl Proj<'_> {
             proj_sys::proj_crs_alter_cs_angular_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                angular_unit.unwrap_or_default().to_cstr()?,
+                angular_unit.unwrap_or_default().to_cstr(),
                 angular_units_convs,
-                unit_auth_name.unwrap_or_default().to_cstr()?,
-                unit_code.unwrap_or_default().to_cstr()?,
+                unit_auth_name.unwrap_or_default().to_cstr(),
+                unit_code.unwrap_or_default().to_cstr(),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -2002,10 +1998,10 @@ impl Proj<'_> {
             proj_sys::proj_crs_alter_cs_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.unwrap_or_default().to_cstr()?,
+                linear_units.unwrap_or_default().to_cstr(),
                 linear_units_conv,
-                unit_auth_name.unwrap_or_default().to_cstr()?,
-                unit_code.unwrap_or_default().to_cstr()?,
+                unit_auth_name.unwrap_or_default().to_cstr(),
+                unit_code.unwrap_or_default().to_cstr(),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -2025,10 +2021,10 @@ impl Proj<'_> {
             proj_sys::proj_crs_alter_parameters_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.unwrap_or_default().to_cstr()?,
+                linear_units.unwrap_or_default().to_cstr(),
                 linear_units_conv,
-                unit_auth_name.unwrap_or_default().to_cstr()?,
-                unit_code.unwrap_or_default().to_cstr()?,
+                unit_auth_name.unwrap_or_default().to_cstr(),
+                unit_code.unwrap_or_default().to_cstr(),
                 convert_to_new_unit as i32,
             )
         };
@@ -2041,7 +2037,7 @@ impl Proj<'_> {
         let ptr = unsafe {
             proj_sys::proj_crs_promote_to_3D(
                 self.ctx.ptr,
-                crs_3d_name.unwrap_or_default().to_cstr()?,
+                crs_3d_name.unwrap_or_default().to_cstr(),
                 self.ptr(),
             )
         };
@@ -2054,7 +2050,7 @@ impl Proj<'_> {
         let ptr = unsafe {
             proj_sys::proj_crs_demote_to_2D(
                 self.ctx.ptr,
-                crs_2d_name.unwrap_or_default().to_cstr()?,
+                crs_2d_name.unwrap_or_default().to_cstr(),
                 self.ptr(),
             )
         };
@@ -2078,7 +2074,7 @@ impl Proj<'_> {
                 self.ctx.ptr,
                 self.ptr(),
                 new_method_epsg_code.unwrap_or_default() as i32,
-                new_method_name.unwrap_or_default().to_cstr()?,
+                new_method_name.unwrap_or_default().to_cstr(),
             )
         };
         Proj::new(self.ctx, ptr)

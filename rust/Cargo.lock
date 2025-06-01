@@ -416,10 +416,6 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 [[package]]
 name = "envoy"
 version = "0.0.13"
-source = "git+https://github.com/Glatzel/toolbox?branch=ffi#a983bdac790dcdf5ab6558cb051a53bbce6c70eb"
-dependencies = [
- "miette",
-]
 
 [[package]]
 name = "equivalent"

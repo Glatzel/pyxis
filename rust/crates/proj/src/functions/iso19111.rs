@@ -39,12 +39,10 @@ impl crate::Context {
         db_path: &Path,
         aux_db_paths: Option<&[PathBuf]>,
     ) -> miette::Result<&Self> {
-        let db_path = db_path.to_str().unwrap().to_cstring();
-
         let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
             aux_db_paths
                 .iter()
-                .map(|f| f.to_str().unwrap().to_cstring())
+                .map(|f| f.to_str().to_cstring())
                 .collect()
         });
 
@@ -54,12 +52,8 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_context_set_database_path(
                 self.ptr,
-                db_path.as_ptr(),
-                if let Some(aux_db_paths_ptr) = aux_db_paths_ptr {
-                    aux_db_paths_ptr.as_ptr()
-                } else {
-                    ptr::null()
-                },
+                db_path.to_str().to_cstr(),
+                aux_db_paths_ptr.map_or(ptr::null(), |ptr| ptr.as_ptr()),
                 ptr::null(),
             )
         };
@@ -131,17 +125,13 @@ impl crate::Context {
             )
         };
         //warning
-        if let Some(warnings) = out_warnings.to_vec_string() {
-            for w in warnings.iter() {
-                clerk::warn!("{w}");
-            }
-        };
+        out_warnings
+            .to_vec_string()
+            .map(|warnings| warnings.iter().for_each(|w| clerk::warn!("{w}")));
         //error
-        if let Some(errors) = out_grammar_errors.to_vec_string() {
-            for e in errors.iter() {
-                clerk::warn!("{e}");
-            }
-        };
+        out_grammar_errors
+            .to_vec_string()
+            .map(|warnings| warnings.iter().for_each(|w| clerk::error!("{w}")));
         crate::Proj::new(self, ptr)
     }
     ///# References
@@ -252,11 +242,7 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_create_from_name(
                 self.ptr,
-                if let Some(auth_name) = auth_name {
-                    auth_name.to_cstr()
-                } else {
-                    ptr::null()
-                },
+                auth_name.to_cstr(),
                 searched_name.to_cstr(),
                 if let Some(types) = types {
                     types.as_ptr()
@@ -401,11 +387,7 @@ impl crate::Context {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr,
                 auth_name.to_cstr(),
-                if let Some(params) = params {
-                    &params
-                } else {
-                    ptr::null()
-                },
+                params.map_or(ptr::null(), |p| &p),
                 &mut out_result_count,
             )
         };
@@ -721,7 +703,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
-                crs_name.unwrap_or_default().to_cstr(),
+                crs_name.to_cstr(),
                 datum_or_datum_ensemble.ptr(),
                 ellipsoidal_cs.ptr(),
             )
@@ -748,16 +730,16 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
                 self.ptr,
-                crs_name.unwrap_or_default().to_cstr(),
-                datum_name.unwrap_or_default().to_cstr(),
-                ellps_name.unwrap_or_default().to_cstr(),
+                crs_name.to_cstr(),
+                datum_name.to_cstr(),
+                ellps_name.to_cstr(),
                 semi_major_metre,
                 inv_flattening,
                 prime_meridian_name.to_cstr(),
                 prime_meridian_offset,
-                angular_units.unwrap_or_default().to_cstr(),
+                angular_units.to_cstr(),
                 angular_units_conv,
-                linear_units.unwrap_or_default().to_cstr(),
+                linear_units.to_cstr(),
                 linear_units_conv,
             )
         };
@@ -776,9 +758,9 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
                 self.ptr,
-                crs_name.unwrap_or_default().to_cstr(),
+                crs_name.to_cstr(),
                 datum_or_datum_ensemble.ptr(),
-                linear_units.unwrap_or_default().to_cstr(),
+                linear_units.to_cstr(),
                 linear_units_conv,
             )
         };
@@ -797,7 +779,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
                 self.ptr,
-                crs_name.unwrap_or_default().to_cstr(),
+                crs_name.to_cstr(),
                 base_geographic_crs.ptr(),
                 conversion.ptr(),
                 ellipsoidal_cs.ptr(),
@@ -808,24 +790,107 @@ impl Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_projected_3D_crs_from_2D>
-    fn _crs_create_projected_3d_crs_from_2d(&self) { todo!() }
-
+    pub fn crs_create_projected_3d_crs_from_2d(
+        &self,
+        crs_name: Option<&str>,
+        projected_2d_crs: &Proj,
+        geog_3d_crs: Option<Proj>,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_crs_create_projected_3D_crs_from_2D(
+                self.ptr,
+                crs_name.to_cstr(),
+                projected_2d_crs.ptr(),
+                geog_3d_crs.map_or(ptr::null(), |crs| crs.ptr()),
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
-    fn _create_engineering_crs(&self) { todo!() }
+    pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> miette::Result<Proj> {
+        let ptr = unsafe { proj_sys::proj_create_engineering_crs(self.ptr, crs_name.to_cstr()) };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_vertical_crs>
-    fn _create_vertical_crs(&self) { todo!() }
+    pub fn create_vertical_crs(
+        &self,
+        crs_name: Option<&str>,
+        datum_name: Option<&str>,
+        linear_units: Option<&str>,
+        linear_units_conv: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_vertical_crs(
+                self.ptr,
+                crs_name.to_cstr(),
+                datum_name.to_cstr(),
+                linear_units.to_cstr(),
+                linear_units_conv,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_vertical_crs_ex>
-    fn _create_vertical_crs_ex(&self) { todo!() }
+    pub fn create_vertical_crs_ex(
+        &self,
+        crs_name: Option<&str>,
+        datum_name: Option<&str>,
+        datum_auth_name: Option<&str>,
+        datum_code: Option<&str>,
+        linear_units: Option<&str>,
+        linear_units_conv: f64,
+        geoid_model_name: Option<&str>,
+        geoid_model_auth_name: Option<&str>,
+        geoid_model_code: Option<&str>,
+        geoid_geog_crs: Option<&Proj>,
+        accuracy: Option<f64>,
+    ) -> miette::Result<Proj> {
+        let mut option = ProjOptions::new(1);
+        option.push_optional_pass(accuracy, "ACCURACY");
+
+        let ptr = unsafe {
+            proj_sys::proj_create_vertical_crs_ex(
+                self.ptr,
+                crs_name.to_cstr(),
+                datum_name.to_cstr(),
+                datum_auth_name.to_cstr(),
+                datum_code.to_cstr(),
+                linear_units.to_cstr(),
+                linear_units_conv,
+                geoid_model_name.to_cstr(),
+                geoid_model_auth_name.to_cstr(),
+                geoid_model_code.to_cstr(),
+                geoid_geog_crs.map_or(ptr::null(), |crs| crs.ptr()),
+                option.vec_ptr().as_mut_ptr(),
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_compound_crs>
-    fn _create_compound_crs(&self) { todo!() }
+    pub fn create_compound_crs(
+        &self,
+        crs_name: Option<&str>,
+        horiz_crs: &Proj,
+        vert_crs: &Proj,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_compound_crs(
+                self.ptr,
+                crs_name.to_cstr(),
+                horiz_crs.ptr(),
+                vert_crs.ptr(),
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion>
@@ -1977,10 +2042,10 @@ impl Proj<'_> {
             proj_sys::proj_crs_alter_cs_angular_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                angular_unit.unwrap_or_default().to_cstr(),
+                angular_unit.to_cstr(),
                 angular_units_convs,
-                unit_auth_name.unwrap_or_default().to_cstr(),
-                unit_code.unwrap_or_default().to_cstr(),
+                unit_auth_name.to_cstr(),
+                unit_code.to_cstr(),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -1999,10 +2064,10 @@ impl Proj<'_> {
             proj_sys::proj_crs_alter_cs_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.unwrap_or_default().to_cstr(),
+                linear_units.to_cstr(),
                 linear_units_conv,
-                unit_auth_name.unwrap_or_default().to_cstr(),
-                unit_code.unwrap_or_default().to_cstr(),
+                unit_auth_name.to_cstr(),
+                unit_code.to_cstr(),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -2022,10 +2087,10 @@ impl Proj<'_> {
             proj_sys::proj_crs_alter_parameters_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.unwrap_or_default().to_cstr(),
+                linear_units.to_cstr(),
                 linear_units_conv,
-                unit_auth_name.unwrap_or_default().to_cstr(),
-                unit_code.unwrap_or_default().to_cstr(),
+                unit_auth_name.to_cstr(),
+                unit_code.to_cstr(),
                 convert_to_new_unit as i32,
             )
         };
@@ -2036,11 +2101,7 @@ impl Proj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
     pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj> {
         let ptr = unsafe {
-            proj_sys::proj_crs_promote_to_3D(
-                self.ctx.ptr,
-                crs_3d_name.unwrap_or_default().to_cstr(),
-                self.ptr(),
-            )
+            proj_sys::proj_crs_promote_to_3D(self.ctx.ptr, crs_3d_name.to_cstr(), self.ptr())
         };
         Proj::new(self.ctx, ptr)
     }
@@ -2049,11 +2110,7 @@ impl Proj<'_> {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_demote_to_2D>
     pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> miette::Result<Proj> {
         let ptr = unsafe {
-            proj_sys::proj_crs_demote_to_2D(
-                self.ctx.ptr,
-                crs_2d_name.unwrap_or_default().to_cstr(),
-                self.ptr(),
-            )
+            proj_sys::proj_crs_demote_to_2D(self.ctx.ptr, crs_2d_name.to_cstr(), self.ptr())
         };
         Proj::new(self.ctx, ptr)
     }
@@ -2075,7 +2132,7 @@ impl Proj<'_> {
                 self.ctx.ptr,
                 self.ptr(),
                 new_method_epsg_code.unwrap_or_default() as i32,
-                new_method_name.unwrap_or_default().to_cstr(),
+                new_method_name.to_cstr(),
             )
         };
         Proj::new(self.ctx, ptr)

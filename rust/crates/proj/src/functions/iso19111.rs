@@ -1493,55 +1493,359 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_i>
-    pub fn create_conversion_wagner_i(&self) { todo!() }
+    pub fn create_conversion_wagner_i(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_wagner_i(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_ii>
-    pub fn create_conversion_wagner_ii(&self) { todo!() }
+    pub fn create_conversion_wagner_ii(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_wagner_ii(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_iii>
-    pub fn create_conversion_wagner_iii(&self) { todo!() }
+    pub fn create_conversion_wagner_iii(
+        &self,
+        latitude_true_scale: f64,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_wagner_iii(
+                self.ptr,
+                latitude_true_scale,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_iv>
-    pub fn create_conversion_wagner_iv(&self) { todo!() }
+    pub fn create_conversion_wagner_iv(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_wagner_iv(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_v>
-    pub fn create_conversion_wagner_v(&self) { todo!() }
+    pub fn create_conversion_wagner_v(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_wagner_v(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_vi>
-    pub fn create_conversion_wagner_vi(&self) { todo!() }
+    pub fn create_conversion_wagner_vi(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_wagner_vi(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_vii>
-    pub fn create_conversion_wagner_vii(&self) { todo!() }
+    pub fn create_conversion_wagner_vii(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_wagner_vii(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_quadrilateralized_spherical_cube>
-    pub fn create_conversion_quadrilateralized_spherical_cube(&self) { todo!() }
+    pub fn create_conversion_quadrilateralized_spherical_cube(
+        &self,
+        center_lat: f64,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_quadrilateralized_spherical_cube(
+                self.ptr,
+                center_lat,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_spherical_cross_track_height>
-    pub fn create_conversion_spherical_cross_track_height(&self) { todo!() }
+    pub fn create_conversion_spherical_cross_track_height(
+        &self,
+        peg_point_lat: f64,
+        peg_point_long: f64,
+        peg_point_heading: f64,
+        peg_point_height: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_spherical_cross_track_height(
+                self.ptr,
+                peg_point_lat,
+                peg_point_long,
+                peg_point_heading,
+                peg_point_height,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equal_earth>
-    pub fn create_conversion_equal_earth(&self) { todo!() }
+    pub fn create_conversion_equal_earth(
+        &self,
+
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_equal_earth(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_vertical_perspective>
-    pub fn create_conversion_vertical_perspective(&self) { todo!() }
+    pub fn create_conversion_vertical_perspective(
+        &self,
+        topo_origin_lat: f64,
+        topo_origin_long: f64,
+        topo_origin_height: f64,
+        view_point_height: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_vertical_perspective(
+                self.ptr,
+                topo_origin_lat,
+                topo_origin_long,
+                topo_origin_height,
+                view_point_height,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_grib_convention>
-    pub fn create_conversion_pole_rotation_grib_convention(&self) { todo!() }
+    pub fn create_conversion_pole_rotation_grib_convention(
+        &self,
+        south_pole_lat_in_unrotated_crs: f64,
+        south_pole_long_in_unrotated_crs: f64,
+        axis_rotation: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_pole_rotation_grib_convention(
+                self.ptr,
+                south_pole_lat_in_unrotated_crs,
+                south_pole_long_in_unrotated_crs,
+                axis_rotation,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_netcdf_cf_convention>
-    fn _create_conversion_pole_rotation_netcdf_cf_convention(&self) { todo!() }
+    fn _create_conversion_pole_rotation_netcdf_cf_convention(
+        &self,
+        grid_north_pole_latitude: f64,
+        grid_north_pole_longitude: f64,
+        north_pole_grid_longitude: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_pole_rotation_netcdf_cf_convention(
+                self.ptr,
+                grid_north_pole_latitude,
+                grid_north_pole_longitude,
+                north_pole_grid_longitude,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
 }
 /// # ISO-19111 Base functions
 impl Proj<'_> {

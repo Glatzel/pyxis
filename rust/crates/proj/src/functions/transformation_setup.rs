@@ -6,7 +6,7 @@
 //!
 //! * <https://proj.org/en/stable/development/reference/functions.html#c-api-for-iso-19111-functionality>
 
-use envoy::ToCString;
+use envoy::ToCStr;
 
 use crate::{Proj, check_result};
 /// # Transformation setup
@@ -14,8 +14,7 @@ impl crate::Context {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
-        let definition = definition.to_cstring()?;
-        let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.as_ptr()) };
+        let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstr()) };
         check_result!(self);
         Proj::new(self, ptr)
     }
@@ -26,7 +25,7 @@ impl crate::Context {
         let len = argv.len();
         let mut argv_ptrs: Vec<*mut i8> = Vec::with_capacity(len);
         for s in argv {
-            argv_ptrs.push((*s).to_cstring()?.into_raw());
+            argv_ptrs.push((*s).to_cstring().into_raw());
         }
         let ptr =
             unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, argv_ptrs.as_mut_ptr()) };
@@ -42,13 +41,11 @@ impl crate::Context {
         target_crs: &str,
         area: &crate::Area,
     ) -> miette::Result<crate::Proj> {
-        let source_crs = source_crs.to_cstring()?;
-        let target_crs = target_crs.to_cstring()?;
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
                 self.ptr,
-                source_crs.as_ptr(),
-                target_crs.as_ptr(),
+                source_crs.to_cstr(),
+                target_crs.to_cstr(),
                 area.ptr,
             )
         };

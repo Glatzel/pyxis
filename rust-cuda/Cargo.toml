@@ -11,7 +11,7 @@ pyxis = { path = "./../rust/crates/pyxis/" }
 [dev-dependencies]
 criterion = "0.6.0"
 float-cmp = "0.10.0"
-rand = "0.9.0"
+rand = "0.9.1"
 
 [build-dependencies]
 dunce = "1.0.5"

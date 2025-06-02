@@ -1,4 +1,4 @@
-use envoy::{PtrToString, ToCString};
+use envoy::{CStrToString, ToCStr};
 
 use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
 
@@ -40,15 +40,17 @@ impl crate::Proj<'_> {
 /// References
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
 pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
-    let gridname_cstr = grid.to_cstring()?;
-    let src = unsafe { proj_sys::proj_grid_info(gridname_cstr.as_ptr()) };
-    if src.format.to_string().unwrap_or_default() == "missing" {
+    let src = unsafe { proj_sys::proj_grid_info(grid.to_cstr()) };
+    if src.gridname.to_string().unwrap().as_str() == ""
+        && src.filename.to_string().unwrap().as_str() == ""
+        && src.format.to_string().unwrap_or_default() == "missing"
+    {
         miette::bail!("Invalid grid: {}", grid)
     }
     Ok(GridInfo::new(
-        src.gridname.to_string().unwrap_or_default(),
-        src.filename.to_string().unwrap_or_default(),
-        src.format.to_string().unwrap_or_default(),
+        src.gridname.to_string().unwrap(),
+        src.filename.to_string().unwrap(),
+        src.format.to_string().unwrap(),
         src.lowerleft,
         src.upperright,
         src.n_lon,
@@ -62,8 +64,7 @@ pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
 /// References
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
 pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
-    let initname_cstr = initname.to_cstring()?;
-    let src = unsafe { proj_sys::proj_init_info(initname_cstr.as_ptr()) };
+    let src = unsafe { proj_sys::proj_init_info(initname.to_cstr()) };
     let info = InitInfo::new(
         src.name.to_string().unwrap_or_default(),
         src.filename.to_string().unwrap_or_default(),
@@ -103,33 +104,27 @@ mod test {
     }
 
     #[test]
-    fn test_grid_info_gsb() -> miette::Result<()> {
-        let workspace_dir = PathBuf::from(std::env::var("CARGO_WORKSPACE_DIR").into_diagnostic()?);
-        let info = grid_info(
-            workspace_dir
-                .join("external/ntv2-file-routines/samples/mne.gsb")
-                .to_str()
-                .unwrap(),
-        )?;
-        println!("{:?}", info);
-        assert_eq!(info.format(), "ntv2");
+    fn test_grid_info() -> miette::Result<()> {
+        //valid
+        {
+            let workspace_dir =
+                PathBuf::from(std::env::var("CARGO_WORKSPACE_DIR").into_diagnostic()?);
+            let info = grid_info(
+                workspace_dir
+                    .join("external/ntv2-file-routines/samples/mne.gsb")
+                    .to_str()
+                    .unwrap(),
+            )?;
+            println!("{:?}", info);
+            assert_eq!(info.format(), "ntv2");
+        }
+        // invalid
+        {
+            let info = grid_info("invalid.tiff");
+            assert!(info.is_err());
+        }
         Ok(())
     }
-
-    #[test]
-    fn test_grid_info_invalid_grid() -> miette::Result<()> {
-        let info = grid_info("Cargo.toml");
-        assert!(info.is_err());
-        Ok(())
-    }
-
-    #[test]
-    fn test_grid_info_not_exists() -> miette::Result<()> {
-        let info = grid_info("invalid.tiff");
-        assert!(info.is_err());
-        Ok(())
-    }
-
     #[test]
     fn test_init_info() -> miette::Result<()> {
         let info = init_info("ITRF2000")?;

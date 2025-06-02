@@ -1,7 +1,7 @@
 use std::ffi::CString;
 use std::fmt::Display;
 
-use envoy::ToCString;
+use envoy::ToCStr;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{AsRefStr, EnumString};
 
@@ -374,6 +374,8 @@ pub enum EllipsoidalCs3dType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AXIS_DESCRIPTION>
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone)]
 pub struct AxisDescription {
     pub(crate) name: CString,
     pub(crate) abbreviation: CString,
@@ -392,10 +394,10 @@ impl AxisDescription {
         unit_type: UnitType,
     ) -> miette::Result<Self> {
         Ok(Self {
-            name: name.unwrap_or("").to_cstring()?,
-            abbreviation: abbreviation.unwrap_or("").to_cstring()?,
-            direction: direction.as_ref().to_cstring()?,
-            unit_name: unit_name.unwrap_or("").to_cstring()?,
+            name: name.unwrap_or("").to_cstring(),
+            abbreviation: abbreviation.unwrap_or("").to_cstring(),
+            direction: direction.as_ref().to_cstring(),
+            unit_name: unit_name.unwrap_or("").to_cstring(),
             unit_conv_factor,
             unit_type,
         })

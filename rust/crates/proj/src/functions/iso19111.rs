@@ -1144,6 +1144,130 @@ impl Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_two_point_equidistant>
     pub fn create_conversion_two_point_equidistant(
         &self,
+        latitude_first_point: f64,
+        longitude_first_point: f64,
+        latitude_second_point: f64,
+        longitude_secon_point: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_two_point_equidistant(
+                self.ptr,
+                latitude_first_point,
+                longitude_first_point,
+                latitude_second_point,
+                longitude_secon_point,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mapping_grid>
+    pub fn create_conversion_tunisia_mapping_grid(
+        &self,
+        center_lat: f64,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_tunisia_mapping_grid(
+                self.ptr,
+                center_lat,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mining_grid>
+    pub fn create_conversion_tunisia_mining_grid(
+        &self,
+        center_lat: f64,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_tunisia_mining_grid(
+                self.ptr,
+                center_lat,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_albers_equal_area>
+    pub fn create_conversion_albers_equal_area(
+        &self,
+        latitude_false_origin: f64,
+        longitude_false_origin: f64,
+        latitude_first_parallel: f64,
+        latitude_second_parallel: f64,
+        easting_false_origin: f64,
+        northing_false_origin: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_albers_equal_area(
+                self.ptr,
+                latitude_false_origin,
+                longitude_false_origin,
+                latitude_first_parallel,
+                latitude_second_parallel,
+                easting_false_origin,
+                northing_false_origin,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp>
+    pub fn create_conversion_lambert_conic_conformal_1sp(
+        &self,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -1155,7 +1279,7 @@ impl Context {
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
         let ptr = unsafe {
-            proj_sys::proj_create_conversion_transverse_mercator_south_oriented(
+            proj_sys::proj_create_conversion_lambert_conic_conformal_1sp(
                 self.ptr,
                 center_lat,
                 center_long,
@@ -1170,22 +1294,6 @@ impl Context {
         };
         crate::Proj::new(self, ptr)
     }
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mapping_grid>
-    pub fn create_conversion_tunisia_mapping_grid(&self) { todo!() }
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mining_grid>
-    pub fn create_conversion_tunisia_mining_grid(&self) { todo!() }
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_albers_equal_area>
-    pub fn create_conversion_albers_equal_area(&self) { todo!() }
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp>
-    pub fn create_conversion_lambert_conic_conformal_1sp(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp_variant_b>

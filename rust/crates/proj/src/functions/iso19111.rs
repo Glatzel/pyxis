@@ -2026,32 +2026,244 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_variant_a>
-    pub fn create_conversion_hotine_oblique_mercator_variant_a(&self) { todo!() }
+    pub fn create_conversion_hotine_oblique_mercator_variant_a(
+        &self,
+        latitude_projection_centre: f64,
+        longitude_projection_centre: f64,
+        azimuth_initial_line: f64,
+        angle_from_rectified_to_skrew_grid: f64,
+        scale: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_a(
+                self.ptr,
+                latitude_projection_centre,
+                longitude_projection_centre,
+                azimuth_initial_line,
+                angle_from_rectified_to_skrew_grid,
+                scale,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_variant_b>
-    pub fn create_conversion_hotine_oblique_mercator_variant_b(&self) { todo!() }
+    pub fn create_conversion_hotine_oblique_mercator_variant_b(
+        &self,
+        latitude_projection_centre: f64,
+        longitude_projection_centre: f64,
+        azimuth_initial_line: f64,
+        angle_from_rectified_to_skrew_grid: f64,
+        scale: f64,
+        easting_projection_centre: f64,
+        northing_projection_centre: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_b(
+                self.ptr,
+                latitude_projection_centre,
+                longitude_projection_centre,
+                azimuth_initial_line,
+                angle_from_rectified_to_skrew_grid,
+                scale,
+                easting_projection_centre,
+                northing_projection_centre,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin>
-    pub fn create_conversion_hotine_oblique_mercator_two_point_natural_origin(&self) { todo!() }
+    pub fn create_conversion_hotine_oblique_mercator_two_point_natural_origin(
+        &self,
+        latitude_projection_centre: f64,
+        latitude_point1: f64,
+        longitude_point1: f64,
+        latitude_point2: f64,
+        longitude_point2: f64,
+        scale: f64,
+        easting_projection_centre: f64,
+        northing_projection_centre: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin(
+                self.ptr,
+                latitude_projection_centre,
+                latitude_point1,
+                longitude_point1,
+                latitude_point2,
+                longitude_point2,
+                scale,
+                easting_projection_centre,
+                northing_projection_centre,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_laborde_oblique_mercator>
-    pub fn create_conversion_laborde_oblique_mercator(&self) { todo!() }
+    pub fn create_conversion_laborde_oblique_mercator(
+        &self,
+        latitude_projection_centre: f64,
+        longitude_projection_centre: f64,
+        azimuth_initial_line: f64,
+        scale: f64,
+        easting_projection_centre: f64,
+        northing_projection_centre: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_laborde_oblique_mercator(
+                self.ptr,
+                latitude_projection_centre,
+                longitude_projection_centre,
+                azimuth_initial_line,
+                scale,
+                easting_projection_centre,
+                northing_projection_centre,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_international_map_world_polyconic>
-    pub fn create_conversion_international_map_world_polyconic(&self) { todo!() }
+    pub fn create_conversion_international_map_world_polyconic(
+        &self,
+        center_long: f64,
+        latitude_first_parallel: f64,
+        latitude_second_parallel: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_international_map_world_polyconic(
+                self.ptr,
+                center_long,
+                latitude_first_parallel,
+                latitude_second_parallel,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_krovak_north_oriented>
-    pub fn create_conversion_krovak_north_oriented(&self) { todo!() }
+    pub fn create_conversion_krovak_north_oriented(
+        &self,
+        latitude_projection_centre: f64,
+        longitude_of_origin: f64,
+        colatitude_cone_axis: f64,
+        latitude_pseudo_standard_parallel: f64,
+        scale_factor_pseudo_standard_parallel: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_krovak_north_oriented(
+                self.ptr,
+                latitude_projection_centre,
+                longitude_of_origin,
+                colatitude_cone_axis,
+                latitude_pseudo_standard_parallel,
+                scale_factor_pseudo_standard_parallel,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_krovak>
-    pub fn create_conversion_krovak(&self) { todo!() }
-    ///# References
+    pub fn create_conversion_krovak(
+        &self,
+        latitude_projection_centre: f64,
+        longitude_of_origin: f64,
+        colatitude_cone_axis: f64,
+        latitude_pseudo_standard_parallel: f64,
+        scale_factor_pseudo_standard_parallel: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_krovak(
+                self.ptr,
+                latitude_projection_centre,
+                longitude_of_origin,
+                colatitude_cone_axis,
+                latitude_pseudo_standard_parallel,
+                scale_factor_pseudo_standard_parallel,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_azimuthal_equal_area>
     pub fn create_conversion_lambert_azimuthal_equal_area(&self) { todo!() }

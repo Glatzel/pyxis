@@ -788,7 +788,7 @@ impl Context {
         &self,
         crs_name: Option<&str>,
         projected_2d_crs: &Proj,
-        geog_3d_crs: Option<Proj>,
+        geog_3d_crs: Option<&Proj>,
     ) -> miette::Result<Proj> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_projected_3D_crs_from_2D(
@@ -4512,7 +4512,6 @@ mod test_context_advanced {
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("9122"));
-
         Ok(())
     }
     #[test]
@@ -4532,7 +4531,167 @@ mod test_context_advanced {
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("9122"));
+        Ok(())
+    }
+    #[test]
+    fn test_create_create_geocentric_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_geocentric_crs(
+            Some("WGS 84"),
+            Some("World Geodetic System 1984"),
+            Some("WGS 84"),
+            6378137.0,
+            298.257223563,
+            Some("Greenwich"),
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("9122"));
+        Ok(())
+    }
+    #[test]
+    fn test_create_geocentric_crs_from_datum() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj1: Proj<'_> = ctx.create_geocentric_crs(
+            Some("WGS 84"),
+            Some("World Geodetic System 1984"),
+            Some("WGS 84"),
+            6378137.0,
+            298.257223563,
+            Some("Greenwich"),
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let pj2: Proj<'_> = ctx.create_geocentric_crs_from_datum(
+            Some("WGS 84"),
+            &pj1.crs_get_datum()?.unwrap(),
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj2.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("9122"));
+        Ok(())
+    }
+    #[test]
+    fn test_create_derived_geographic_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let crs_4326 = ctx.create("EPSG:4326")?;
+        let cs = crs_4326.crs_get_coordinate_system()?;
+        let pj: Proj<'_> =
+            ctx.create_derived_geographic_crs(Some("my rotated CRS"), &crs_4326, &crs_4326, &cs)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("9122"));
+        Ok(())
+    }
+    #[test]
+    fn test_crs_create_projected_3d_crs_from_2d() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let proj_crs = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let geog_3d_crs = ctx.create_from_database("EPSG", "4979", Category::Crs, false)?;
+        let pj: Proj<'_> =
+            ctx.crs_create_projected_3d_crs_from_2d(None, &proj_crs, Some(&geog_3d_crs))?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("WGS 84 / UTM zone 31N"));
+        Ok(())
+    }
+    #[test]
+    fn test_create_engineering_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
 
+        let pj: Proj<'_> = ctx.create_engineering_crs(Some("name"))?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("Unknown engineering datum"));
+        Ok(())
+    }
+    #[test]
+    fn test_create_vertical_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> =
+            ctx.create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("myVertDatum"));
+        Ok(())
+    }
+    #[test]
+    fn test_create_vertical_crs_ex() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_vertical_crs_ex(
+            Some("myVertCRS (ftUS)"),
+            Some("myVertDatum"),
+            None,
+            None,
+            Some("US survey foot"),
+            0.304800609601219,
+            Some("PROJ @foo.gtx"),
+            None,
+            None,
+            None,
+            None,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("myVertCRS (ftUS)"));
+        Ok(())
+    }
+    #[test]
+    fn test_create_compound_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let horiz_crs = ctx.create_from_database("EPSG", "6340", Category::Crs, false)?;
+        let vert_crs: Proj<'_> = ctx.create_vertical_crs_ex(
+            Some("myVertCRS (ftUS)"),
+            Some("myVertDatum"),
+            None,
+            None,
+            Some("US survey foot"),
+            0.304800609601219,
+            Some("PROJ @foo.gtx"),
+            None,
+            None,
+            None,
+            None,
+        )?;
+        let pj: Proj<'_> = ctx.create_compound_crs(Some("Compound"), &horiz_crs, &vert_crs)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("Compound"));
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_conversion(
+            Some("conv"),
+            Some("conv auth"),
+            Some("conv code"),
+            Some("method"),
+            Some("method auth"),
+            Some("method code"),
+            &[ParamDescription::new(
+                Some("param name".to_string()),
+                None,
+                None,
+                0.99,
+                None,
+                1.0,
+                UnitType::Scale,
+            )],
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("conv"));
         Ok(())
     }
 }
@@ -5099,17 +5258,10 @@ mod test_proj_basic {
     #[test]
     fn test_concatoperation_get_step() -> miette::Result<()> {
         // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "28356",
+        // let pj = ctx.create_from_database("EPSG", "8048",
         // Category::CoordinateOperation, false)?; let step =
-        // pj.concatoperation_get_step(1)?; let wkt = step.as_wkt(
-        //     WktType::Wkt2_2019,
-        //     None,
-        //     None,
-        //     None,
-        //     None,
-        //     None,
-        //     None,
-        // )?;
+        // pj.concatoperation_get_step(1)?; let wkt = step.
+        // as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         // println!("{}", wkt);
         // assert!(wkt.contains("16031"));
         Ok(())

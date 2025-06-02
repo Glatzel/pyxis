@@ -888,11 +888,93 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion>
-    fn _create_conversion(&self) { todo!() }
+    pub fn create_conversion(
+        &self,
+        name: Option<&str>,
+        auth_name: Option<&str>,
+        code: Option<&str>,
+        method_name: Option<&str>,
+        method_auth_name: Option<&str>,
+        method_code: Option<&str>,
+        params: &[ParamDescription],
+    ) -> miette::Result<Proj> {
+        let count = params.len();
+        let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
+            .iter()
+            .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
+                name: p.name().to_cstr(),
+                auth_name: p.auth_name().to_cstr(),
+                code: p.code().to_cstr(),
+                value: *p.value(),
+                unit_name: p.unit_name().to_cstr(),
+                unit_conv_factor: *p.unit_conv_factor(),
+                unit_type: u32::from(*p.unit_type()),
+            })
+            .collect();
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion(
+                self.ptr,
+                name.to_cstr(),
+                auth_name.to_cstr(),
+                code.to_cstr(),
+                method_name.to_cstr(),
+                method_auth_name.to_cstr(),
+                method_code.to_cstr(),
+                count as i32,
+                params.as_ptr(),
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_transformation>
-    fn _create_transformation(&self) { todo!() }
+    pub fn create_transformation(
+        &self,
+        name: Option<&str>,
+        auth_name: Option<&str>,
+        code: Option<&str>,
+        source_crs: Option<&Proj>,
+        target_crs: Option<&Proj>,
+        interpolation_crs: Option<&Proj>,
+        method_name: Option<&str>,
+        method_auth_name: Option<&str>,
+        method_code: Option<&str>,
+        params: &[ParamDescription],
+        accuracy: f64,
+    ) -> miette::Result<Proj> {
+        let count = params.len();
+        let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
+            .iter()
+            .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
+                name: p.name().to_cstr(),
+                auth_name: p.auth_name().to_cstr(),
+                code: p.code().to_cstr(),
+                value: *p.value(),
+                unit_name: p.unit_name().to_cstr(),
+                unit_conv_factor: *p.unit_conv_factor(),
+                unit_type: u32::from(*p.unit_type()),
+            })
+            .collect();
+        let ptr = unsafe {
+            proj_sys::proj_create_transformation(
+                self.ptr,
+                name.to_cstr(),
+                auth_name.to_cstr(),
+                code.to_cstr(),
+                source_crs.map_or(ptr::null(), |crs| crs.ptr()),
+                target_crs.map_or(ptr::null(), |crs| crs.ptr()),
+                interpolation_crs.map_or(ptr::null(), |crs| crs.ptr()),
+                method_name.to_cstr(),
+                method_auth_name.to_cstr(),
+                method_code.to_cstr(),
+                count as i32,
+                params.as_ptr(),
+                accuracy,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
 
     ///# References
     ///
@@ -968,279 +1050,279 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_transverse_mercator>
-    fn _create_conversion_transverse_mercator(&self) { todo!() }
+    pub fn create_conversion_transverse_mercator(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gauss_schreiber_transverse_mercator>
-    fn _create_conversion_gauss_schreiber_transverse_mercator(&self) { todo!() }
+    pub fn create_conversion_gauss_schreiber_transverse_mercator(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_transverse_mercator_south_oriented>
-    fn _create_conversion_transverse_mercator_south_oriented(&self) { todo!() }
+    pub fn create_conversion_transverse_mercator_south_oriented(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_two_point_equidistant>
-    fn _create_conversion_two_point_equidistant(&self) { todo!() }
+    pub fn create_conversion_two_point_equidistant(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mapping_grid>
-    fn _create_conversion_tunisia_mapping_grid(&self) { todo!() }
+    pub fn create_conversion_tunisia_mapping_grid(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mining_grid>
-    fn _create_conversion_tunisia_mining_grid(&self) { todo!() }
+    pub fn create_conversion_tunisia_mining_grid(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_albers_equal_area>
-    fn _create_conversion_albers_equal_area(&self) { todo!() }
+    pub fn create_conversion_albers_equal_area(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp>
-    fn _create_conversion_lambert_conic_conformal_1sp(&self) { todo!() }
+    pub fn create_conversion_lambert_conic_conformal_1sp(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp_variant_b>
-    fn _create_conversion_lambert_conic_conformal_1sp_variant_b(&self) { todo!() }
+    pub fn create_conversion_lambert_conic_conformal_1sp_variant_b(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp>
-    fn _create_conversion_lambert_conic_conformal_2sp(&self) { todo!() }
+    pub fn create_conversion_lambert_conic_conformal_2sp(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_michigan>
-    fn _create_conversion_lambert_conic_conformal_2sp_michigan(&self) { todo!() }
+    pub fn create_conversion_lambert_conic_conformal_2sp_michigan(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_belgium>
-    fn _create_conversion_lambert_conic_conformal_2sp_belgium(&self) { todo!() }
+    pub fn create_conversion_lambert_conic_conformal_2sp_belgium(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_azimuthal_equidistant>
-    fn _create_conversion_azimuthal_equidistant(&self) { todo!() }
+    pub fn create_conversion_azimuthal_equidistant(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_guam_projection>
-    fn _create_conversion_guam_projection(&self) { todo!() }
+    pub fn create_conversion_guam_projection(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_bonne>
-    fn _create_conversion_bonne(&self) { todo!() }
+    pub fn create_conversion_bonne(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area_spherical>
-    fn _create_conversion_lambert_cylindrical_equal_area_spherical(&self) { todo!() }
+    pub fn create_conversion_lambert_cylindrical_equal_area_spherical(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area>
-    fn _create_conversion_lambert_cylindrical_equal_area(&self) { todo!() }
+    pub fn create_conversion_lambert_cylindrical_equal_area(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_cassini_soldner>
-    fn _create_conversion_cassini_soldner(&self) { todo!() }
+    pub fn create_conversion_cassini_soldner(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_conic>
-    fn _create_conversion_equidistant_conic(&self) { todo!() }
+    pub fn create_conversion_equidistant_conic(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_i>
-    fn _create_conversion_eckert_i(&self) { todo!() }
+    pub fn create_conversion_eckert_i(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_ii>
-    fn _create_conversion_eckert_ii(&self) { todo!() }
+    pub fn create_conversion_eckert_ii(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_iii>
-    fn _create_conversion_eckert_iii(&self) { todo!() }
+    pub fn create_conversion_eckert_iii(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_iv>
-    fn _create_conversion_eckert_iv(&self) { todo!() }
+    pub fn create_conversion_eckert_iv(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_v>
-    fn _create_conversion_eckert_v(&self) { todo!() }
+    pub fn create_conversion_eckert_v(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_vi>
-    fn _create_conversion_eckert_vi(&self) { todo!() }
+    pub fn create_conversion_eckert_vi(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_cylindrical>
-    fn _create_conversion_equidistant_cylindrical(&self) { todo!() }
+    pub fn create_conversion_equidistant_cylindrical(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_cylindrical_spherical>
-    fn _create_conversion_equidistant_cylindrical_spherical(&self) { todo!() }
+    pub fn create_conversion_equidistant_cylindrical_spherical(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gall>
-    fn _create_conversion_gall(&self) { todo!() }
+    pub fn create_conversion_gall(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_goode_homolosine>
-    fn _create_conversion_goode_homolosine(&self) { todo!() }
+    pub fn create_conversion_goode_homolosine(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_interrupted_goode_homolosine>
-    fn _create_conversion_interrupted_goode_homolosine(&self) { todo!() }
+    pub fn create_conversion_interrupted_goode_homolosine(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_geostationary_satellite_sweep_x>
-    fn _create_conversion_geostationary_satellite_sweep_x(&self) { todo!() }
+    pub fn create_conversion_geostationary_satellite_sweep_x(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_geostationary_satellite_sweep_y>
-    fn _create_conversion_geostationary_satellite_sweep_y(&self) { todo!() }
+    pub fn create_conversion_geostationary_satellite_sweep_y(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gnomonic>
-    fn _create_conversion_gnomonic(&self) { todo!() }
+    pub fn create_conversion_gnomonic(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_variant_a>
-    fn _create_conversion_hotine_oblique_mercator_variant_a(&self) { todo!() }
+    pub fn create_conversion_hotine_oblique_mercator_variant_a(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_variant_b>
-    fn _create_conversion_hotine_oblique_mercator_variant_b(&self) { todo!() }
+    pub fn create_conversion_hotine_oblique_mercator_variant_b(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin>
-    fn _create_conversion_hotine_oblique_mercator_two_point_natural_origin(&self) { todo!() }
+    pub fn create_conversion_hotine_oblique_mercator_two_point_natural_origin(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_laborde_oblique_mercator>
-    fn _create_conversion_laborde_oblique_mercator(&self) { todo!() }
+    pub fn create_conversion_laborde_oblique_mercator(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_international_map_world_polyconic>
-    fn _create_conversion_international_map_world_polyconic(&self) { todo!() }
+    pub fn create_conversion_international_map_world_polyconic(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_krovak_north_oriented>
-    fn _create_conversion_krovak_north_oriented(&self) { todo!() }
+    pub fn create_conversion_krovak_north_oriented(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_krovak>
-    fn _create_conversion_krovak(&self) { todo!() }
+    pub fn create_conversion_krovak(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_azimuthal_equal_area>
-    fn _create_conversion_lambert_azimuthal_equal_area(&self) { todo!() }
+    pub fn create_conversion_lambert_azimuthal_equal_area(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_miller_cylindrical>
-    fn _create_conversion_miller_cylindrical(&self) { todo!() }
+    pub fn create_conversion_miller_cylindrical(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mercator_variant_a>
-    fn _create_conversion_mercator_variant_a(&self) { todo!() }
+    pub fn create_conversion_mercator_variant_a(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mercator_variant_b>
-    fn _create_conversion_mercator_variant_b(&self) { todo!() }
+    pub fn create_conversion_mercator_variant_b(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_popular_visualisation_pseudo_mercator>
-    fn _create_conversion_popular_visualisation_pseudo_mercator(&self) { todo!() }
+    pub fn create_conversion_popular_visualisation_pseudo_mercator(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mollweide>
-    fn _create_conversion_mollweide(&self) { todo!() }
+    pub fn create_conversion_mollweide(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_new_zealand_mapping_grid>
-    fn _create_conversion_new_zealand_mapping_grid(&self) { todo!() }
+    pub fn create_conversion_new_zealand_mapping_grid(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_oblique_stereographic>
-    fn _create_conversion_oblique_stereographic(&self) { todo!() }
+    pub fn create_conversion_oblique_stereographic(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_orthographic>
-    fn _create_conversion_orthographic(&self) { todo!() }
+    pub fn create_conversion_orthographic(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_local_orthographic>
-    fn _create_conversion_local_orthographic(&self) { todo!() }
+    pub fn create_conversion_local_orthographic(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_american_polyconic>
-    fn _create_conversion_american_polyconic(&self) { todo!() }
+    pub fn create_conversion_american_polyconic(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_polar_stereographic_variant_a>
-    fn _create_conversion_polar_stereographic_variant_a(&self) { todo!() }
+    pub fn create_conversion_polar_stereographic_variant_a(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_polar_stereographic_variant_b>
-    fn _create_conversion_polar_stereographic_variant_b(&self) { todo!() }
+    pub fn create_conversion_polar_stereographic_variant_b(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_robinson>
-    fn _create_conversion_robinson(&self) { todo!() }
+    pub fn create_conversion_robinson(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_sinusoidal>
-    fn _create_conversion_sinusoidal(&self) { todo!() }
+    pub fn create_conversion_sinusoidal(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_stereographic>
-    fn _create_conversion_stereographic(&self) { todo!() }
+    pub fn create_conversion_stereographic(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_van_der_grinten>
-    fn _create_conversion_van_der_grinten(&self) { todo!() }
+    pub fn create_conversion_van_der_grinten(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_i>
-    fn _create_conversion_wagner_i(&self) { todo!() }
+    pub fn create_conversion_wagner_i(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_ii>
-    fn _create_conversion_wagner_ii(&self) { todo!() }
+    pub fn create_conversion_wagner_ii(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_iii>
-    fn _create_conversion_wagner_iii(&self) { todo!() }
+    pub fn create_conversion_wagner_iii(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_iv>
-    fn _create_conversion_wagner_iv(&self) { todo!() }
+    pub fn create_conversion_wagner_iv(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_v>
-    fn _create_conversion_wagner_v(&self) { todo!() }
+    pub fn create_conversion_wagner_v(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_vi>
-    fn _create_conversion_wagner_vi(&self) { todo!() }
+    pub fn create_conversion_wagner_vi(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_vii>
-    fn _create_conversion_wagner_vii(&self) { todo!() }
+    pub fn create_conversion_wagner_vii(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_quadrilateralized_spherical_cube>
-    fn _create_conversion_quadrilateralized_spherical_cube(&self) { todo!() }
+    pub fn create_conversion_quadrilateralized_spherical_cube(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_spherical_cross_track_height>
-    fn _create_conversion_spherical_cross_track_height(&self) { todo!() }
+    pub fn create_conversion_spherical_cross_track_height(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equal_earth>
-    fn _create_conversion_equal_earth(&self) { todo!() }
+    pub fn create_conversion_equal_earth(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_vertical_perspective>
-    fn _create_conversion_vertical_perspective(&self) { todo!() }
+    pub fn create_conversion_vertical_perspective(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_grib_convention>
-    fn _create_conversion_pole_rotation_grib_convention(&self) { todo!() }
+    pub fn create_conversion_pole_rotation_grib_convention(&self) { todo!() }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_netcdf_cf_convention>

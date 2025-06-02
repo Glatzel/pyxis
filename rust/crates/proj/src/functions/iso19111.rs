@@ -1297,19 +1297,137 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp_variant_b>
-    pub fn create_conversion_lambert_conic_conformal_1sp_variant_b(&self) { todo!() }
+    pub fn create_conversion_lambert_conic_conformal_1sp_variant_b(
+        &self,
+        latitude_nat_origin: f64,
+        scale: f64,
+        latitude_false_origin: f64,
+        longitude_false_origin: f64,
+        easting_false_origin: f64,
+        northing_false_origin: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_lambert_conic_conformal_1sp_variant_b(
+                self.ptr,
+                latitude_nat_origin,
+                scale,
+                latitude_false_origin,
+                longitude_false_origin,
+                easting_false_origin,
+                northing_false_origin,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp>
-    pub fn create_conversion_lambert_conic_conformal_2sp(&self) { todo!() }
+    pub fn create_conversion_lambert_conic_conformal_2sp(
+        &self,
+        latitude_false_origin: f64,
+        longitude_false_origin: f64,
+        latitude_first_parallel: f64,
+        latitude_second_parallel: f64,
+        easting_false_origin: f64,
+        northing_false_origin: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_lambert_conic_conformal_2sp(
+                self.ptr,
+                latitude_false_origin,
+                longitude_false_origin,
+                latitude_first_parallel,
+                latitude_second_parallel,
+                easting_false_origin,
+                northing_false_origin,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_michigan>
-    pub fn create_conversion_lambert_conic_conformal_2sp_michigan(&self) { todo!() }
+    pub fn create_conversion_lambert_conic_conformal_2sp_michigan(
+        &self,
+        latitude_false_origin: f64,
+        longitude_false_origin: f64,
+        latitude_first_parallel: f64,
+        latitude_second_parallel: f64,
+        easting_false_origin: f64,
+        northing_false_origin: f64,
+        ellipsoid_scaling_factor: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_michigan(
+                self.ptr,
+                latitude_false_origin,
+                longitude_false_origin,
+                latitude_first_parallel,
+                latitude_second_parallel,
+                easting_false_origin,
+                northing_false_origin,
+                ellipsoid_scaling_factor,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_belgium>
-    pub fn create_conversion_lambert_conic_conformal_2sp_belgium(&self) { todo!() }
+    pub fn create_conversion_lambert_conic_conformal_2sp_belgium(
+        &self,
+        latitude_false_origin: f64,
+        longitude_false_origin: f64,
+        latitude_first_parallel: f64,
+        latitude_second_parallel: f64,
+        easting_false_origin: f64,
+        northing_false_origin: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_belgium(
+                self.ptr,
+                latitude_false_origin,
+                longitude_false_origin,
+                latitude_first_parallel,
+                latitude_second_parallel,
+                easting_false_origin,
+                northing_false_origin,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_azimuthal_equidistant>

@@ -1431,55 +1431,372 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_azimuthal_equidistant>
-    pub fn create_conversion_azimuthal_equidistant(&self) { todo!() }
+    pub fn create_conversion_azimuthal_equidistant(
+        &self,
+        latitude_nat_origin: f64,
+        longitude_nat_origin: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_azimuthal_equidistant(
+                self.ptr,
+                latitude_nat_origin,
+                longitude_nat_origin,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_guam_projection>
-    pub fn create_conversion_guam_projection(&self) { todo!() }
+    pub fn create_conversion_guam_projection(
+        &self,
+        latitude_nat_origin: f64,
+        longitude_nat_origin: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_guam_projection(
+                self.ptr,
+                latitude_nat_origin,
+                longitude_nat_origin,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_bonne>
-    pub fn create_conversion_bonne(&self) { todo!() }
+    pub fn create_conversion_bonne(
+        &self,
+        latitude_nat_origin: f64,
+        longitude_nat_origin: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_bonne(
+                self.ptr,
+                latitude_nat_origin,
+                longitude_nat_origin,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area_spherical>
-    pub fn create_conversion_lambert_cylindrical_equal_area_spherical(&self) { todo!() }
+    pub fn create_conversion_lambert_cylindrical_equal_area_spherical(
+        &self,
+        latitude_first_parallel: f64,
+        longitude_nat_origin: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_lambert_cylindrical_equal_area_spherical(
+                self.ptr,
+                latitude_first_parallel,
+                longitude_nat_origin,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area>
-    pub fn create_conversion_lambert_cylindrical_equal_area(&self) { todo!() }
+    pub fn create_conversion_lambert_cylindrical_equal_area(
+        &self,
+        latitude_first_parallel: f64,
+        longitude_nat_origin: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_lambert_cylindrical_equal_area(
+                self.ptr,
+                latitude_first_parallel,
+                longitude_nat_origin,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_cassini_soldner>
-    pub fn create_conversion_cassini_soldner(&self) { todo!() }
+    pub fn create_conversion_cassini_soldner(
+        &self,
+        latitude_first_parallel: f64,
+        longitude_nat_origin: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_cassini_soldner(
+                self.ptr,
+                latitude_first_parallel,
+                longitude_nat_origin,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_conic>
-    pub fn create_conversion_equidistant_conic(&self) { todo!() }
+    pub fn create_conversion_equidistant_conic(
+        &self,
+        center_lat: f64,
+        center_long: f64,
+        latitude_first_parallel: f64,
+        latitude_second_parallel: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_equidistant_conic(
+                self.ptr,
+                center_lat,
+                center_long,
+                latitude_first_parallel,
+                latitude_second_parallel,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_i>
-    pub fn create_conversion_eckert_i(&self) { todo!() }
+    pub fn create_conversion_eckert_i(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_eckert_i(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_ii>
-    pub fn create_conversion_eckert_ii(&self) { todo!() }
+    pub fn create_conversion_eckert_ii(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_eckert_ii(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_iii>
-    pub fn create_conversion_eckert_iii(&self) { todo!() }
+    pub fn create_conversion_eckert_iii(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_eckert_iii(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_iv>
-    pub fn create_conversion_eckert_iv(&self) { todo!() }
+    pub fn create_conversion_eckert_iv(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_eckert_iv(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_v>
-    pub fn create_conversion_eckert_v(&self) { todo!() }
+    pub fn create_conversion_eckert_v(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_eckert_v(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_vi>
-    pub fn create_conversion_eckert_vi(&self) { todo!() }
+    pub fn create_conversion_eckert_vi(
+        &self,
+        center_long: f64,
+        false_easting: f64,
+        false_northing: f64,
+        ang_unit_name: Option<&str>,
+        ang_unit_conv_factor: f64,
+        linear_unit_name: Option<&str>,
+        linear_unit_conv_factor: f64,
+    ) -> miette::Result<Proj> {
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_eckert_vi(
+                self.ptr,
+                center_long,
+                false_easting,
+                false_northing,
+                ang_unit_name.to_cstr(),
+                ang_unit_conv_factor,
+                linear_unit_name.to_cstr(),
+                linear_unit_conv_factor,
+            )
+        };
+        crate::Proj::new(self, ptr)
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_cylindrical>

@@ -4585,12 +4585,19 @@ mod test_context_advanced {
     fn test_create_derived_geographic_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let crs_4326 = ctx.create("EPSG:4326")?;
+        let conversion = ctx.create_conversion_pole_rotation_grib_convention(
+            2.0,
+            3.0,
+            4.0,
+            Some("Degree"),
+            0.0174532925199433,
+        )?;
         let cs = crs_4326.crs_get_coordinate_system()?;
         let pj: Proj<'_> =
-            ctx.create_derived_geographic_crs(Some("my rotated CRS"), &crs_4326, &crs_4326, &cs)?;
+            ctx.create_derived_geographic_crs(Some("my rotated CRS"), &crs_4326, &conversion, &cs)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("9122"));
+        assert!(wkt.contains("my rotated CRS"));
         Ok(())
     }
     #[test]

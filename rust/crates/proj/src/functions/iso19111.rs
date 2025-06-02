@@ -2264,6 +2264,7 @@ impl Context {
         };
         crate::Proj::new(self, ptr)
     }
+    ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_azimuthal_equal_area>
     pub fn create_conversion_lambert_azimuthal_equal_area(&self) { todo!() }

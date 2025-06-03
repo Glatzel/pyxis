@@ -5472,9 +5472,9 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_international_map_world_polyconic(
             1.0,
-            1.0,
-            1.0,
-            1.0,
+            2.0,
+            4.0,
+            5.0,
             1.0,
             Some("Degree"),
             0.0174532925199433,

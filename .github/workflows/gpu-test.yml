@@ -1,0 +1,26 @@
+name: gpu-test
+
+on:
+  workflow_dispatch:
+
+permissions: read-all
+
+
+jobs:
+  test:
+    runs-on: [self-hosted]
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: ./rust-cuda/scripts/update-test-report.ps1
+        shell: pwsh
+
+      - run: |
+          ./python-cuda/scripts/build-cuda.ps1
+          ./python-cuda/scripts/pytest.ps1
+        shell: pwsh
+
+      - run: |
+          git add .
+          git commit -m "chore: update test reports" || echo "No changes to commit"
+          git push

@@ -20,14 +20,14 @@ impl crate::Context {
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_is_network_enabled>
-    fn _is_network_enabled(&self) -> miette::Result<bool> {
+    pub fn is_network_enabled(&self) -> miette::Result<bool> {
         let result = unsafe { proj_sys::proj_context_is_network_enabled(self.ptr) } != 0;
         check_result!(self);
         Ok(result)
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_url_endpoint>
-    fn _set_url_endpoint(&self, url: &str) -> miette::Result<&Self> {
+    pub fn set_url_endpoint(&self, url: &str) -> miette::Result<&Self> {
         unsafe {
             proj_sys::proj_context_set_url_endpoint(self.ptr, url.to_cstr());
         };
@@ -36,14 +36,14 @@ impl crate::Context {
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_url_endpoint>
-    fn _get_url_endpoint(&self) -> miette::Result<String> {
+    pub fn get_url_endpoint(&self) -> miette::Result<String> {
         let result = unsafe { proj_sys::proj_context_get_url_endpoint(self.ptr) };
         check_result!(self);
         Ok(result.to_string().unwrap_or_default())
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_user_writable_directory>
-    fn _get_user_writable_directory(&self, create: bool) -> miette::Result<PathBuf> {
+    pub fn get_user_writable_directory(&self, create: bool) -> miette::Result<PathBuf> {
         let result =
             unsafe { proj_sys::proj_context_get_user_writable_directory(self.ptr, create as i32) };
         check_result!(self);
@@ -51,41 +51,41 @@ impl crate::Context {
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_enable>
-    fn _grid_cache_set_enable(&self, enabled: bool) -> miette::Result<&Self> {
+    pub fn grid_cache_set_enable(&self, enabled: bool) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_enable(self.ptr, enabled as i32) };
         check_result!(self);
         Ok(self)
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_filename>
-    fn _grid_cache_set_filename(&self, fullname: &str) -> miette::Result<&Self> {
+    pub fn grid_cache_set_filename(&self, fullname: &str) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_filename(self.ptr, fullname.to_cstr()) };
         check_result!(self);
         Ok(self)
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_max_size>
-    fn _grid_cache_set_max_size(&self, max_size_mbyte: u16) -> miette::Result<&Self> {
+    pub fn grid_cache_set_max_size(&self, max_size_mbyte: u16) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_max_size(self.ptr, max_size_mbyte as i32) };
         check_result!(self);
         Ok(self)
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_ttl>
-    fn _grid_cache_set_ttl(&self, ttl_seconds: u16) -> miette::Result<&Self> {
+    pub fn grid_cache_set_ttl(&self, ttl_seconds: u16) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_ttl(self.ptr, ttl_seconds as i32) };
         check_result!(self);
         Ok(self)
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_clear>
-    fn _grid_cache_clear(&self) -> miette::Result<&Self> {
+    pub fn grid_cache_clear(&self) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_clear(self.ptr) };
         Ok(self)
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_download_needed>
-    fn _is_download_needed(
+    pub fn is_download_needed(
         &self,
         url_or_filename: &str,
         ignore_ttl_setting: bool,
@@ -102,27 +102,24 @@ impl crate::Context {
     }
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_download_file>
-    fn _download_file(
+    pub fn download_file(
         &self,
-        // url_or_filename: &str,
-        // ignore_ttl_setting: bool,
-        // progress_cbk: Option<unsafe extern "C" fn(arg1: Context, pct: f64, user_data: &mut T)>,
-        // user_data: Option<T>,
+        url_or_filename: &str,
+        ignore_ttl_setting: bool,
     ) -> miette::Result<bool> {
-        unimplemented!()
-        // let result = unsafe {
-        //     proj_sys::proj_download_file(
-        //         self.ctx(),
-        //         CString::new(url_or_filename).into_diagnostic()?.as_ptr(),
-        //         ignore_ttl_setting as i32,
-        //         progress_cbk,
-        //         user_data,
-        //     )
-        // } != 0;
-        // if !result {
-        //     miette::bail!("Download failed.")
-        // }
-        // check_result!(self);
-        // Ok(result)
+        let result = unsafe {
+            proj_sys::proj_download_file(
+                self.ptr,
+                url_or_filename.to_cstr(),
+                ignore_ttl_setting as i32,
+                None,
+                std::ptr::null_mut(),
+            )
+        } != 0;
+        if !result {
+            miette::bail!("Download failed.")
+        }
+        check_result!(self);
+        Ok(result)
     }
 }

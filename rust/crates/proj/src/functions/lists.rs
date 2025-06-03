@@ -1,5 +1,39 @@
 use envoy::CStrToString;
-fn _list_operations() -> Vec<crate::data_types::_Operations> { todo!() }
+
+///Get a pointer to an array of ellipsoids defined in PROJ. The last entry
+/// of the returned array is a NULL-entry. The array is statically
+/// allocated and does not need to be freed after use.
+///
+/// # References
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_ellps>
+pub fn list_operations() -> Vec<crate::data_types::Operations> {
+    let ptr = unsafe { proj_sys::proj_list_operations() };
+    let mut out_vec = Vec::new();
+    let mut offset = 0;
+    assert!(!ptr.is_null());
+    loop {
+        let current_ptr = unsafe { ptr.offset(offset).as_ref().unwrap() };
+        if current_ptr.id.is_null() {
+            break;
+        } else {
+            out_vec.push(crate::data_types::Operations::new(
+                current_ptr.id.to_string().unwrap_or_default(),
+                unsafe {
+                    current_ptr
+                        .descr
+                        .offset(0)
+                        .as_ref()
+                        .unwrap()
+                        .to_string()
+                        .unwrap()
+                },
+            ));
+            offset += 1;
+        }
+    }
+    out_vec
+}
+
 ///Get a pointer to an array of ellipsoids defined in PROJ. The last entry of
 /// the returned array is a NULL-entry. The array is statically allocated and
 /// does not need to be freed after use.
@@ -16,12 +50,11 @@ pub fn list_ellps() -> Vec<crate::data_types::Ellps> {
         if current_ptr.id.is_null() {
             break;
         } else {
-            let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
             out_vec.push(crate::data_types::Ellps::new(
-                src.id.to_string().unwrap_or_default(),
-                src.major.to_string().unwrap_or_default(),
-                src.ell.to_string().unwrap_or_default(),
-                src.name.to_string().unwrap_or_default(),
+                current_ptr.id.to_string().unwrap_or_default(),
+                current_ptr.major.to_string().unwrap_or_default(),
+                current_ptr.ell.to_string().unwrap_or_default(),
+                current_ptr.name.to_string().unwrap_or_default(),
             ));
             offset += 1;
         }
@@ -43,12 +76,11 @@ pub fn list_units() -> Vec<crate::data_types::Units> {
         if current_ptr.id.is_null() {
             break;
         } else {
-            let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
             out_vec.push(crate::data_types::Units::new(
-                src.id.to_string().unwrap_or_default(),
-                src.to_meter.to_string().unwrap_or_default(),
-                src.name.to_string().unwrap_or_default(),
-                src.factor,
+                current_ptr.id.to_string().unwrap_or_default(),
+                current_ptr.to_meter.to_string().unwrap_or_default(),
+                current_ptr.name.to_string().unwrap_or_default(),
+                current_ptr.factor,
             ));
             offset += 1;
         }
@@ -71,10 +103,9 @@ pub fn list_prime_meridians() -> Vec<crate::data_types::PrimeMeridians> {
         if current_ptr.id.is_null() {
             break;
         } else {
-            let src = unsafe { ptr.offset(offset).as_ref().unwrap() };
             out_vec.push(crate::data_types::PrimeMeridians::new(
-                src.id.to_string().unwrap_or_default(),
-                src.defn.to_string().unwrap_or_default(),
+                current_ptr.id.to_string().unwrap_or_default(),
+                current_ptr.defn.to_string().unwrap_or_default(),
             ));
             offset += 1;
         }
@@ -86,7 +117,15 @@ pub fn list_prime_meridians() -> Vec<crate::data_types::PrimeMeridians> {
 #[cfg(test)]
 mod test {
     use super::*;
-    // region:Lists
+    #[test]
+    fn test_list_operations() {
+        let ops = list_operations();
+
+        for i in &ops {
+            println!("{}: {}\n", i.id(), i.descr());
+        }
+        assert!(!ops.is_empty());
+    }
     #[test]
     fn test_list_ellps() {
         let ellps = list_ellps();

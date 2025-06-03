@@ -4803,9 +4803,10 @@ mod test_context_advanced {
     fn test_crs_create_bound_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let crs = ctx.create_from_database("EPSG", "4807", Category::Crs, false)?;
-        let base_crs = crs.get_source_crs().unwrap();
-        let hub_crs = crs.get_target_crs().unwrap();
-        let transf = crs.crs_get_coordoperation()?;
+        let res = crs.crs_create_bound_crs_to_wgs84(None)?;
+        let base_crs = res.get_source_crs().unwrap();
+        let hub_crs = res.get_target_crs().unwrap();
+        let transf = res.crs_get_coordoperation()?;
         let bound_crs = ctx.crs_create_bound_crs(&base_crs, &hub_crs, &transf)?;
         let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);

@@ -4,4 +4,4 @@ platforms = ["win-64", "linux-64", "osx-arm64"]
 
 [dependencies]
 pkg-config = "==0.29.2"
-proj = { version = "==9.6.0" }
+proj = { version = "==9.6.0", channel = "https://repo.prefix.dev/glatzel" }

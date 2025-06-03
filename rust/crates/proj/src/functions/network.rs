@@ -123,3 +123,50 @@ impl crate::Context {
         Ok(result)
     }
 }
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_is_network_enabled() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        assert!(ctx.is_network_enabled()?);
+        Ok(())
+    }
+    #[test]
+    fn test_set_url_endpoint() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        ctx.set_url_endpoint("https://cdn.proj.org")?;
+        Ok(())
+    }
+    #[test]
+    fn test_get_url_endpoint() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let endpoint = ctx.get_url_endpoint()?;
+        assert_eq!(endpoint, "https://cdn.proj.org");
+        Ok(())
+    }
+    #[test]
+    fn test_get_user_writable_directory() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let dir = ctx.get_user_writable_directory(false)?;
+        assert!(dir.to_str().unwrap().contains("proj"));
+        Ok(())
+    }
+    #[test]
+    fn test_grid_cache_set_enable() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        ctx.grid_cache_set_enable(false)?;
+        Ok(())
+    }
+    #[test]
+    fn test_grid_cache_set_max_size() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        ctx.grid_cache_set_max_size(1)?;
+        Ok(())
+    }
+    #[test]
+    fn test_grid_cache_set_ttl() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        ctx.grid_cache_set_ttl(1)?;
+        Ok(())
+    }
+}

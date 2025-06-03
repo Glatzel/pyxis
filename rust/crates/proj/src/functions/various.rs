@@ -12,16 +12,25 @@ impl crate::Proj<'_> {
     /// reverse direction. Returns the euclidean distance of the starting point
     /// coo and the resulting coordinate after n iterations back and forth.
     ///
-    /// # References
+    /// # Parameters
+    ///
+    /// * direction: Starting direction of transformation
+    /// * n: Number of roundtrip transformations
+    ///
+    /// # Returns
+    ///
+    /// double Distance between original coordinate and the resulting coordinate
+    /// after n transformation iterations. # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_roundtrip>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn roundtrip(
         &self,
-        dir: crate::Direction,
+        direction: crate::Direction,
         n: i32,
         coord: &mut proj_sys::PJ_COORD,
     ) -> miette::Result<f64> {
-        let distance = unsafe { proj_sys::proj_roundtrip(self.ptr(), dir.into(), n, coord) };
+        let distance = unsafe { proj_sys::proj_roundtrip(self.ptr(), direction.into(), n, coord) };
         check_result!(self);
         Ok(distance)
     }
@@ -46,6 +55,7 @@ impl crate::Proj<'_> {
     /// CRS).
     ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_factors>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn factors(
@@ -83,6 +93,7 @@ impl crate::Proj<'_> {
     ///Check if an operation expects input in radians or not.
     ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_input>
     pub fn angular_input(&self, dir: crate::Direction) -> bool {
         (unsafe { proj_sys::proj_angular_input(self.ptr(), i32::from(dir)) } != 0)
@@ -99,6 +110,7 @@ impl crate::Proj<'_> {
     ///Check if an operation expects input in degrees or not.
     ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_input>
     pub fn degree_input(&self, dir: crate::Direction) -> bool {
         (unsafe { proj_sys::proj_degree_input(self.ptr(), dir.into()) } != 0)
@@ -107,6 +119,7 @@ impl crate::Proj<'_> {
     ///Check if an operation returns output in degrees or not.
     ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_output>
     pub fn degree_output(&self, dir: crate::Direction) -> bool {
         (unsafe { proj_sys::proj_degree_output(self.ptr(), dir.into()) } != 0)
@@ -117,6 +130,7 @@ impl crate::Proj<'_> {
 /// otherwise convoluted assignment.
 ///
 ///# References
+///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coord>
 #[cfg(any(feature = "unrecommended", test))]
 pub fn coord(x: f64, y: f64, z: f64, t: f64) -> proj_sys::PJ_COORD {
@@ -158,6 +172,7 @@ fn _rtodms() { unimplemented!("Use other function to instead.") }
 ///Convert radians to string representation of degrees, minutes and seconds.
 ///
 /// # References
+///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms2>
 pub fn rtodms2(r: f64, pos: char, neg: char) -> miette::Result<String> {
     let dms = "xxxdxxmxx.xxs ".to_cstring();

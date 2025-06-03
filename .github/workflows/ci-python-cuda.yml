@@ -41,6 +41,7 @@ jobs:
       - run: |
           ${{env.PYTHON_CUDA_ROOT}}/scripts/build-cuda.ps1
           ${{env.PYTHON_CUDA_ROOT}}/scripts/pytest.ps1
+        shell: pwsh
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5

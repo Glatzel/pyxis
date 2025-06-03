@@ -16,6 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: ${{env.RUST_CUDA_ROOT}}/scripts/cargo-test.ps1
+        shell: pwsh
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5

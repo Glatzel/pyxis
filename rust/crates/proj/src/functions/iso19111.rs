@@ -4701,6 +4701,104 @@ mod test_context_advanced {
         assert!(wkt.contains("conv"));
         Ok(())
     }
+    #[test]
+    fn test_create_transformation() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let geog_cs =
+            ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
+        let source_crs = ctx.create_geographic_crs(
+            Some("Source CRS"),
+            Some("World Geodetic System 1984"),
+            Some("WGS 84"),
+            6378137.0,
+            298.257223563,
+            Some("Greenwich"),
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            &geog_cs,
+        )?;
+        let target_crs = ctx.create_geographic_crs(
+            Some("WGS 84"),
+            Some("World Geodetic System 1984"),
+            Some("WGS 84"),
+            6378137.0,
+            298.257223563,
+            Some("Greenwich"),
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            &geog_cs,
+        )?;
+        let pj = ctx.create_transformation(
+            Some("transf"),
+            Some("transf auth"),
+            Some("conv code"),
+            Some(&source_crs),
+            Some(&target_crs),
+            Some(&target_crs),
+            Some("method"),
+            Some("method auth"),
+            Some("method code"),
+            &[ParamDescription::new(
+                Some("param name".to_string()),
+                None,
+                None,
+                0.99,
+                None,
+                1.0,
+                UnitType::Scale,
+            )],
+            0.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("transf"));
+        Ok(())
+    }
+    #[test]
+    fn test_projected_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let conv = ctx.create_conversion(
+            Some("conv"),
+            Some("conv auth"),
+            Some("conv code"),
+            Some("method"),
+            Some("method auth"),
+            Some("method code"),
+            &[ParamDescription::new(
+                Some("param name".to_string()),
+                None,
+                None,
+                0.99,
+                None,
+                1.0,
+                UnitType::Scale,
+            )],
+        )?;
+        let geog_cs =
+            ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
+
+        let geog_crs = ctx.create_geographic_crs(
+            Some("WGS 84"),
+            Some("World Geodetic System 1984"),
+            Some("WGS 84"),
+            6378137.0,
+            298.257223563,
+            Some("Greenwich"),
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            &geog_cs,
+        )?;
+        let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+        let pj: Proj<'_> = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
+
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("my CRS"));
+        Ok(())
+    }
 }
 #[cfg(test)]
 mod test_proj_basic {

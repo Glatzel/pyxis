@@ -4181,18 +4181,7 @@ fn _crs_info_list_destroy() { unimplemented!("Use other function to instead.") }
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_unit_list_destroy>
 fn _unit_list_destroy() { unimplemented!("Use other function to instead.") }
-///# References
-///
-/// <>
-fn _insert_object_session_create() { todo!() }
-///# References
-///
-/// <>
-fn _string_destroy() { todo!() }
-///# References
-///
-/// <>
-fn _operation_factory_context_destroy() { todo!() }
+
 ///# See Also
 ///
 /// * [`crate::extension::pj_obj_list_to_vec`]

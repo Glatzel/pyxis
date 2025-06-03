@@ -8,7 +8,7 @@ pip = "==25.1.1"
 python = "3.11.*"
 rattler-build = "==0.42.1"
 
-[feature.local-test.dependencies]
+[feature.test.dependencies]
 cupy = "==13.4.1"
 nomkl = "==1.0"
 pytest = "==8.3.5"
@@ -16,4 +16,4 @@ pytest-benchmark = "==5.1.0"
 pytest-cov = "==6.1.1"
 
 [environments]
-local-test = ["local-test"]
+test = ["test"]

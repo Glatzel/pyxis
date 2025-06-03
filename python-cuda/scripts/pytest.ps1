@@ -5,7 +5,7 @@ Set-Location $PSScriptRoot/..
 $python_root = Resolve-Path $PSScriptRoot/../src
 $pyxis = Resolve-Path $ROOT/python
 $env:PYTHONPATH = "$python_root;$pyxis;$env:PYTHONPATH"
-
+Write-Output $env:PYTHONPATH
 # run test
 pixi run -e local-test pytest `
     ./tests `

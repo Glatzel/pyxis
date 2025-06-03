@@ -105,7 +105,7 @@ impl crate::Context {
     pub fn download_file(
         &self,
         url_or_filename: &str,
-        ignore_ttl_setting: bool
+        ignore_ttl_setting: bool,
     ) -> miette::Result<bool> {
         let result = unsafe {
             proj_sys::proj_download_file(

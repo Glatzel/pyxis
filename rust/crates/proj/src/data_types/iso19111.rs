@@ -716,3 +716,11 @@ readonly_struct!(
     {open_license:bool,"a boolean value to store whether the grid is released with an open license."},
     {available:bool,"a boolean value to store whether the grid is available at runtime."}
 );
+pub struct InsertObjectSession<'a> {
+    pub(crate) ctx: &'a crate::Context,
+    pub(crate) ptr: *mut proj_sys::PJ_INSERT_SESSION,
+}
+
+pub struct OperationFactoryContext {
+    pub(crate) ptr: *mut proj_sys::PJ_CONTEXT,
+}

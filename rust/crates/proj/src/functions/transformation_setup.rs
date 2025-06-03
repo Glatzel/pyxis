@@ -27,7 +27,7 @@ impl crate::Context {
     /// * a OGC URN combining references for concatenated operations (e.g.
     /// "urn:ogc:def:coordinateOperation,coordinateOperation:EPSG::3895,
     /// coordinateOperation:EPSG::1618")
-    /// * a PROJJSON string. The jsonschema is at https://proj.org/schemas/v0.4/projjson.schema.json
+    /// * a PROJJSON string. The jsonschema is at <https://proj.org/schemas/v0.4/projjson.schema.json>
     ///   (added in 6.2)
     /// * a compound CRS made from two object names separated with " + ". e.g.
     /// "WGS 84 + EGM96 height" (added in 7.1)
@@ -219,9 +219,9 @@ impl crate::Context {
     /// * a coordinate operation, that has been created with
     ///   proj_create_crs_to_crs(). If the axis order of its source or target
     ///   CRS is northing,easting, then an axis swap operation will be inserted.
-    /// * a CRS. The axis order of geographic CRS will be longitude, latitude
-    ///   [,height], and the one of projected CRS will be easting, northing [,
-    ///   height]
+    /// * a CRS. The axis order of geographic CRS will be `longitude, latitude
+    ///   [,height]`, and the one of projected CRS will be `easting, northing [,
+    ///   height]``
     ///
     /// # References
     ///

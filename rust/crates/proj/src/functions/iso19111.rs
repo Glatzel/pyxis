@@ -4960,6 +4960,24 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
+    fn test_create_conversion_lambert_conic_conformal_1sp() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_lambert_conic_conformal_1sp(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
     fn test_create_conversion_lambert_conic_conformal_1sp_variant_b() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_1sp_variant_b(
@@ -5563,6 +5581,23 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_mercator_variant_a(
             1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_mercator_variant_b() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_mercator_variant_b(
             1.0,
             1.0,
             1.0,

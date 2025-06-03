@@ -4799,6 +4799,39 @@ mod test_context_advanced {
         assert!(wkt.contains("my CRS"));
         Ok(())
     }
+    #[test]
+    fn test_crs_create_bound_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let crs = ctx.create_from_database("EPSG", "4807", Category::Crs, false)?;
+        let base_crs = crs.get_source_crs().unwrap();
+        let hub_crs = crs.get_target_crs().unwrap();
+        let transf = crs.crs_get_coordoperation()?;
+        let bound_crs = ctx.crs_create_bound_crs(&base_crs, &hub_crs, &transf)?;
+        let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_crs_create_bound_vertical_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let crs = ctx.create("EPSG:4979")?;
+        let vert_crs =
+            ctx.create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
+
+        let bound_crs = ctx.crs_create_bound_vertical_crs(&vert_crs, &crs, "foo.gtx")?;
+        let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_utm() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_utm(31, true)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("UTM zone 31N"));
+        Ok(())
+    }
 }
 #[cfg(test)]
 mod test_proj_basic {

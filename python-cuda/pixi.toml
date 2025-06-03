@@ -15,5 +15,8 @@ pytest = "==8.3.5"
 pytest-benchmark = "==5.1.0"
 pytest-cov = "==6.1.1"
 
+[feature.test.target.linux-64.dependencies]
+cuda-runtime = "==12.8.1"
+
 [environments]
 test = ["test"]

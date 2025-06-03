@@ -5507,6 +5507,23 @@ mod test_proj_advanced {
         Ok(())
     }
     #[test]
+    fn test_crs_alter_parameters_linear_unit() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let pj_alterd = pj.crs_alter_parameters_linear_unit(
+            Some("my unit"),
+            2.0,
+            Some("my auth"),
+            Some("my code"),
+            false,
+        )?;
+        let wkt = pj_alterd.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        assert!(wkt.contains("my unit"));
+
+        Ok(())
+    }
+    #[test]
     fn test_crs_promote_to_3d() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
@@ -5559,10 +5576,19 @@ mod test_proj_advanced {
             let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
             let pj: Proj<'_> = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
             let conv_in_proj = pj.crs_get_coordoperation()?;
-            let new_conv = conv_in_proj.convert_conversion_to_other_method(Some(9805), None)?;
-            let wkt = new_conv.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-            println!("{wkt}");
-            assert!(wkt.contains("9805"));
+            //by code
+            {
+                let new_conv = conv_in_proj.convert_conversion_to_other_method(Some(9805), None)?;
+                let wkt =
+                    new_conv.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+                println!("{wkt}");
+                assert!(wkt.contains("9805"));
+            }
+            //both none
+            {
+                let new_conv = conv_in_proj.convert_conversion_to_other_method(None, None);
+                assert!(new_conv.is_err());
+            }
         }
         Ok(())
     }

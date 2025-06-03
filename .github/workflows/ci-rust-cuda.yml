@@ -10,13 +10,9 @@ env:
   RUST_CUDA_ROOT: ./rust-cuda
 
 jobs:
-  cargo-test:
-    if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted]
+  upload-test:
+    runs-on: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v4
-      - run: ${{env.RUST_CUDA_ROOT}}/scripts/cargo-test.ps1
-        shell: pwsh
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5
@@ -25,7 +21,6 @@ jobs:
         uses: codecov/test-results-action@v1
         with:
           fail_ci_if_error: true
-
   build-rust-cuda:
     strategy:
       fail-fast: false

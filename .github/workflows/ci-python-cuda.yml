@@ -33,14 +33,14 @@ jobs:
         run: ${{env.PYTHON_CUDA_ROOT}}/rattler/ci-pyxis-cuda-py.ps1
         shell: pwsh
 
-  upload-cov:
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [ubuntu-latest]
-    runs-on: ${{matrix.machine}}
+  pytest:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted]
     steps:
       - uses: actions/checkout@v4
+      - run: |
+          ${{env.PYTHON_CUDA_ROOT}}/scripts/build-cuda.ps1
+          ${{env.PYTHON_CUDA_ROOT}}/scripts/pytest.ps1
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5

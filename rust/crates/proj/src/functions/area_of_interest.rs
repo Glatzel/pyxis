@@ -46,8 +46,17 @@ impl crate::Area {
         east_lon_degree: f64,
         north_lat_degree: f64,
     ) -> miette::Result<&Self> {
-        if west_lon_degree > 90.0 || west_lon_degree < -90.0 {
-            miette::bail!("");
+        if !(-180.0..=180.0).contains(&west_lon_degree) {
+            miette::bail!("`west_lon_degree` should in [-180,180] range.");
+        }
+        if !(-90.0..=90.0).contains(&south_lat_degree) {
+            miette::bail!("`south_lat_degree ` should in [-90,90] range.");
+        }
+        if !(-180.0..=180.0).contains(&east_lon_degree) {
+            miette::bail!("`east_lon_degree` should in [-180,180] range.");
+        }
+        if !(-90.0..=90.0).contains(&north_lat_degree) {
+            miette::bail!("`north_lat_degree ` should in [-90,90] range.");
         }
         unsafe {
             proj_sys::proj_area_set_bbox(
@@ -63,6 +72,11 @@ impl crate::Area {
 }
 
 impl Drop for crate::Area {
+    ///Deallocate a PJ_AREA object.
+    ///
+    /// # References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_area_destroy>
     fn drop(&mut self) { unsafe { proj_sys::proj_area_destroy(self.ptr) }; }
 }
 #[cfg(test)]
@@ -72,8 +86,19 @@ mod test {
 
     #[test]
     fn test_set_bbox() -> miette::Result<()> {
-        let area = Area::new();
-        area.set_bbox(1.0, 2.0, 3.0, 4.0)?;
+        //valid range
+        {
+            let area = Area::new();
+            area.set_bbox(1.0, 2.0, 3.0, 4.0)?;
+        }
+        //invalid range
+        {
+            let area = Area::new();
+            assert!(area.set_bbox(240.0, 2.0, 3.0, 4.0).is_err());
+            assert!(area.set_bbox(0.0, 240.0, 3.0, 4.0).is_err());
+            assert!(area.set_bbox(0.0, 1.0, 240.0, 4.0).is_err());
+            assert!(area.set_bbox(0.0, 1.0, 24.0, 240.0).is_err());
+        }
         Ok(())
     }
 }

@@ -4,10 +4,15 @@ Set-Location $PSScriptRoot/..
 # only run cuda test in local machine
 $python_root = Resolve-Path $PSScriptRoot/../src
 $pyxis = Resolve-Path $ROOT/python
-$env:PYTHONPATH = "$python_root;$pyxis;$env:PYTHONPATH"
-
+if ($IsWindows) {
+    $env:PYTHONPATH = "$python_root;$pyxis;$env:PYTHONPATH"
+}
+if ($IsLinux) {
+    $env:PYTHONPATH = "$python_root" + ":" + "$pyxis" + ":" + "$env:PYTHONPATH"
+}
+Write-Output $env:PYTHONPATH
 # run test
-pixi run -e local-test pytest `
+pixi run -e test pytest `
     ./tests `
     -v `
     --durations=10 `

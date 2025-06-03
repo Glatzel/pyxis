@@ -10,14 +10,9 @@ env:
   RUST_CUDA_ROOT: ./rust-cuda
 
 jobs:
-  upload-cov:
-    strategy:
-      fail-fast: false
-      matrix:
-        machine: [ubuntu-latest]
-    runs-on: ${{matrix.machine}}
+  upload-test:
+    runs-on: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v4
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5
@@ -26,7 +21,6 @@ jobs:
         uses: codecov/test-results-action@v1
         with:
           fail_ci_if_error: true
-
   build-rust-cuda:
     strategy:
       fail-fast: false

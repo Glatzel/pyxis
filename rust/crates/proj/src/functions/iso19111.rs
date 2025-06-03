@@ -5048,7 +5048,30 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_sub_crs() -> miette::Result<()> { Ok(()) }
+    fn test_crs_get_sub_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let horiz_crs = ctx.create_from_database("EPSG", "6340", Category::Crs, false)?;
+        let vert_crs: Proj<'_> = ctx.create_vertical_crs_ex(
+            Some("myVertCRS (ftUS)"),
+            Some("myVertDatum"),
+            None,
+            None,
+            Some("US survey foot"),
+            0.304800609601219,
+            Some("PROJ @foo.gtx"),
+            None,
+            None,
+            None,
+            None,
+        )?;
+        let compound: Proj<'_> =
+            ctx.create_compound_crs(Some("Compound"), &horiz_crs, &vert_crs)?;
+        let pj = compound.crs_get_sub_crs(0)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("NAD83"));
+        Ok(())
+    }
     #[test]
     fn test_crs_get_datum() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
@@ -5397,13 +5420,161 @@ mod test_proj_advanced {
 
     use super::*;
     #[test]
+    fn test_alter_name() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_geographic_crs(
+            Some("WGS 84"),
+            Some("World Geodetic System 1984"),
+            Some("WGS84"),
+            6378137.0,
+            298.257223563,
+            Some("Greenwich"),
+            1.0,
+            Some("Degree"),
+            1.0,
+            &ctx.create_ellipsoidal_2d_cs(
+                EllipsoidalCs2dType::LatitudeLongitude,
+                Some("Degree"),
+                1.0,
+            )?,
+        )?;
+        let pj = pj.alter_name("new name")?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}",);
+        assert!(wkt.contains("new name"));
+        Ok(())
+    }
+    #[test]
+    fn test_alter_id() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj: Proj<'_> = ctx.create_geographic_crs(
+            Some("WGS 84"),
+            Some("World Geodetic System 1984"),
+            Some("WGS84"),
+            6378137.0,
+            298.257223563,
+            Some("Greenwich"),
+            1.0,
+            Some("Degree"),
+            1.0,
+            &ctx.create_ellipsoidal_2d_cs(
+                EllipsoidalCs2dType::LatitudeLongitude,
+                Some("Degree"),
+                1.0,
+            )?,
+        )?;
+        let pj = pj.alter_id("new_auth", "new_code")?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}",);
+        assert!(wkt.contains("new_auth"));
+        Ok(())
+    }
+    #[test]
+    fn test_crs_alter_geodetic_crs() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let new_geod_crs = ctx.create("+proj=latlong +type=crs")?;
+        let pj_alterd = pj.crs_alter_geodetic_crs(&new_geod_crs)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        let wkt_alterd =
+            pj_alterd.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}",);
+        println!("{wkt_alterd}",);
+        assert_ne!(wkt.to_string(), wkt_alterd.to_string());
+        Ok(())
+    }
+    #[test]
+    fn test_crs_alter_cs_angular_unit() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let pj_alterd =
+            pj.crs_alter_cs_angular_unit(Some("my unit"), 2.0, Some("my auth"), Some("my code"))?;
+        let wkt = pj_alterd.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        assert!(wkt.contains("my unit"));
+        Ok(())
+    }
+    #[test]
+    fn test_crs_alter_cs_linear_unit() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let pj_alterd =
+            pj.crs_alter_cs_linear_unit(Some("my unit"), 2.0, Some("my auth"), Some("my code"))?;
+        let wkt = pj_alterd.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        assert!(wkt.contains("my unit"));
+
+        Ok(())
+    }
+    #[test]
+    fn test_crs_promote_to_3d() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let pj_3d = pj.crs_promote_to_3d(None)?;
+        let wkt = pj_3d.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        assert!(wkt.contains("CS[ellipsoidal,3]"));
+        Ok(())
+    }
+    #[test]
+    fn test_crs_demote_to_2d() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4979")?;
+        let pj_2d = pj.crs_demote_to_2d(None)?;
+        let wkt = pj_2d.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        assert!(wkt.contains("CS[ellipsoidal,2]"));
+        Ok(())
+    }
+    #[test]
+    fn test_convert_conversion_to_other_method() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        {
+            let conv = ctx.create_conversion_mercator_variant_a(
+                0.0,
+                1.0,
+                0.99,
+                2.0,
+                3.0,
+                Some("Degree"),
+                0.0174532925199433,
+                Some("Metre"),
+                1.0,
+            )?;
+            let geog_cs =
+                ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
+
+            let geog_crs = ctx.create_geographic_crs(
+                Some("WGS 84"),
+                Some("World Geodetic System 1984"),
+                Some("WGS 84"),
+                6378137.0,
+                298.257223563,
+                Some("Greenwich"),
+                0.0,
+                Some("Degree"),
+                0.0174532925199433,
+                &geog_cs,
+            )?;
+            let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+            let pj: Proj<'_> = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
+            let conv_in_proj = pj.crs_get_coordoperation()?;
+            let new_conv = conv_in_proj.convert_conversion_to_other_method(Some(9805), None)?;
+            let wkt = new_conv.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            println!("{wkt}");
+            assert!(wkt.contains("9805"));
+        }
+        Ok(())
+    }
+
+    #[test]
     fn test_crs_create_bound_crs_to_wgs84() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         for a in AllowIntermediateCrs::iter() {
             let bound = pj.crs_create_bound_crs_to_wgs84(Some(a))?;
             let wkt = bound.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-            println!("{wkt}",);
+            println!("{wkt}");
             assert!(wkt.contains("32631"));
         }
 

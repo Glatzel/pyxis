@@ -34,13 +34,12 @@ jobs:
         shell: pwsh
 
   upload-test:
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Upload results to Codecov
-        if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5
       - name: Upload test results to Codecov
-        if: ${{ !cancelled()}}
         uses: codecov/test-results-action@v1
         with:
           fail_ci_if_error: true

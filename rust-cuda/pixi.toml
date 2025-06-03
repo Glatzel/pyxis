@@ -6,8 +6,5 @@ platforms = ["win-64", "linux-64"]
 cuda-cudart = "==12.8.90"
 cuda-nvcc = "==12.8.93"
 
-[target.linux-64.dependencies]
-cuda-runtime = "==12.8.1"
-
 [tasks]
 nvcc = "$CONDA_PREFIX/Library/bin/nvcc"

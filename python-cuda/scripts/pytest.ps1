@@ -12,7 +12,7 @@ if ($IsLinux) {
 }
 Write-Output $env:PYTHONPATH
 # run test
-pixi run -e local-test pytest `
+pixi run -e test pytest `
     ./tests `
     -v `
     --durations=10 `

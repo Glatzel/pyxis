@@ -3093,7 +3093,7 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_netcdf_cf_convention>
-    fn _create_conversion_pole_rotation_netcdf_cf_convention(
+    pub fn create_conversion_pole_rotation_netcdf_cf_convention(
         &self,
         grid_north_pole_latitude: f64,
         grid_north_pole_longitude: f64,
@@ -4831,6 +4831,1181 @@ mod test_context_advanced {
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("UTM zone 31N"));
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_transverse_mercator() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_transverse_mercator(
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_gauss_schreiber_transverse_mercator() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_gauss_schreiber_transverse_mercator(
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_transverse_mercator_south_oriented() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_transverse_mercator_south_oriented(
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_two_point_equidistant() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_two_point_equidistant(
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_tunisia_mapping_grid() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_tunisia_mapping_grid(
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_tunisia_mining_grid() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_tunisia_mining_grid(
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_albers_equal_area() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_albers_equal_area(
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_lambert_conic_conformal_1sp_variant_b() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_lambert_conic_conformal_1sp_variant_b(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_lambert_conic_conformal_2sp() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_lambert_conic_conformal_2sp(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_lambert_conic_conformal_2sp_michigan() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_lambert_conic_conformal_2sp_michigan(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_lambert_conic_conformal_2sp_belgium() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_lambert_conic_conformal_2sp_belgium(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_azimuthal_equidistant() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_azimuthal_equidistant(
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_guam_projection() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_guam_projection(
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_createconversion_bonne() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_bonne(
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_lambert_cylindrical_equal_area_spherical() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_lambert_cylindrical_equal_area_spherical(
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_lambert_cylindrical_equal_area() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_lambert_cylindrical_equal_area(
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_cassini_soldner() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_cassini_soldner(
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_equidistant_conic() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_equidistant_conic(
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_eckert_i() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_eckert_i(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_eckert_ii() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_eckert_ii(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_eckert_iii() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_eckert_iii(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_eckert_iv() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_eckert_iv(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_eckert_v() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_eckert_v(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_eckert_vi() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_eckert_vi(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_equidistant_cylindrical() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_equidistant_cylindrical(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_equidistant_cylindrical_spherical() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_equidistant_cylindrical_spherical(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_gall() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_gall(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_goode_homolosine() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_goode_homolosine(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_interrupted_goode_homolosine() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_interrupted_goode_homolosine(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_geostationary_satellite_sweep_x() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_geostationary_satellite_sweep_x(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_geostationary_satellite_sweep_y() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_geostationary_satellite_sweep_y(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_gnomonic() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_gnomonic(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_hotine_oblique_mercator_variant_a() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_hotine_oblique_mercator_variant_a(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_hotine_oblique_mercator_variant_b() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_hotine_oblique_mercator_variant_b(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_hotine_oblique_mercator_two_point_natural_origin()
+    -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_hotine_oblique_mercator_two_point_natural_origin(
+            1.0,
+            1.0,
+            1.0,
+            2.0,
+            3.0,
+            1.0,
+            4.0,
+            6.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_laborde_oblique_mercator() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_laborde_oblique_mercator(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_international_map_world_polyconic() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_international_map_world_polyconic(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_krovak_north_oriented() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_krovak_north_oriented(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_krovak() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_krovak(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_lambert_azimuthal_equal_area() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_lambert_azimuthal_equal_area(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_miller_cylindrical() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_miller_cylindrical(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_mercator_variant_a() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_mercator_variant_a(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_popular_visualisation_pseudo_mercator() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_popular_visualisation_pseudo_mercator(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_mollweide() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_mollweide(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_new_zealand_mapping_grid() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_new_zealand_mapping_grid(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_oblique_stereographic() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_oblique_stereographic(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_orthographic() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_orthographic(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_local_orthographic() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_local_orthographic(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_american_polyconic() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_american_polyconic(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_polar_stereographic_variant_a() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_polar_stereographic_variant_a(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_polar_stereographic_variant_b() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_polar_stereographic_variant_b(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_robinson() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_robinson(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_sinusoidal() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_sinusoidal(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_stereographic() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_stereographic(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_van_der_grinten() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_van_der_grinten(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_wagner_i() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_wagner_i(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_wagner_ii() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_wagner_ii(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_wagner_iii() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_wagner_iii(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_wagner_iv() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_wagner_iv(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_wagner_v() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_wagner_v(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_wagner_vi() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_wagner_vi(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_wagner_vii() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_wagner_vii(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_quadrilateralized_spherical_cube() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_quadrilateralized_spherical_cube(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_spherical_cross_track_height() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_spherical_cross_track_height(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+
+    #[test]
+    fn test_create_conversion_equal_earth() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_equal_earth(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_vertical_perspective() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_vertical_perspective(
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_pole_rotation_grib_convention() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_pole_rotation_grib_convention(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_conversion_pole_rotation_netcdf_cf_convention() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create_conversion_pole_rotation_netcdf_cf_convention(
+            1.0,
+            1.0,
+            1.0,
+            Some("Degree"),
+            0.0174532925199433,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
         Ok(())
     }
 }

@@ -73,7 +73,7 @@ mod test {
     #[test]
     fn test_set_bbox() -> miette::Result<()> {
         let area = Area::new();
-        area.set_bbox(1.0, 2.0, 3.0, 4.0);
+        area.set_bbox(1.0, 2.0, 3.0, 4.0)?;
         Ok(())
     }
 }

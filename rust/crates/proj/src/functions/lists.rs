@@ -9,16 +9,24 @@ use envoy::{CStrListToVecString, CStrToString};
 pub fn list_operations() -> Vec<crate::data_types::Operations> {
     let ptr = unsafe { proj_sys::proj_list_operations() };
     let mut out_vec = Vec::new();
-
     let mut offset = 0;
+    assert!(!ptr.is_null());
     loop {
         let current_ptr = unsafe { ptr.offset(offset).as_ref().unwrap() };
         if current_ptr.id.is_null() {
             break;
         } else {
             out_vec.push(crate::data_types::Operations::new(
-                current_ptr.id.to_string().unwrap(),
-                current_ptr.descr.to_vec_string().unwrap().join("\n"),
+                current_ptr.id.to_string().unwrap_or_default(),
+                unsafe {
+                    current_ptr
+                        .descr
+                        .offset(0)
+                        .as_ref()
+                        .unwrap()
+                        .to_string()
+                        .unwrap()
+                },
             ));
             offset += 1;
         }
@@ -114,7 +122,7 @@ mod test {
         let ops = list_operations();
 
         for i in &ops {
-            println!("{:?}", i);
+            println!("{}: {}\n", i.id(), i.descr());
         }
         assert!(!ops.is_empty());
     }

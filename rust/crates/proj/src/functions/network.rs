@@ -109,11 +109,11 @@ impl crate::Context {
     ) -> miette::Result<bool> {
         let result = unsafe {
             proj_sys::proj_download_file(
-                self.ctx(),
-                CString::new(url_or_filename).into_diagnostic()?.as_ptr(),
+                self.ptr,
+                url_or_filename.to_cstr(),
                 ignore_ttl_setting as i32,
-                std::ptr::null(),
-                std::ptr::null(),
+                None,
+                std::ptr::null_mut(),
             )
         } != 0;
         if !result {

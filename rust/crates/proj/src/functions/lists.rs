@@ -1,4 +1,4 @@
-use envoy::{CStrListToVecString, CStrToString};
+use envoy::CStrToString;
 
 ///Get a pointer to an array of ellipsoids defined in PROJ. The last entry
 /// of the returned array is a NULL-entry. The array is statically

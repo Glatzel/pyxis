@@ -28,4 +28,3 @@ jobs:
           git add .
           git commit -m "chore: update test reports" || echo "No changes to commit"
           git push
-

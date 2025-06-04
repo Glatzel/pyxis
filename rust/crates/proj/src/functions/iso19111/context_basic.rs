@@ -502,7 +502,7 @@ mod test {
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::EpsgVersion)
             .unwrap();
-        assert_eq!(data, "v12.004");
+        assert_eq!(data, "v12.012");
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::EpsgDate)
             .unwrap();

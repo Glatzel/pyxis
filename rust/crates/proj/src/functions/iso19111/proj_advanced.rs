@@ -1,11 +1,7 @@
-use std::ffi::CString;
-use std::path::{Path, PathBuf};
-
-use envoy::{CStrListToVecString, CStrToString, ToCStr};
-use miette::IntoDiagnostic;
+use envoy::ToCStr;
 
 use crate::data_types::iso19111::*;
-use crate::{Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, pj_obj_list_to_vec};
+use crate::{Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>

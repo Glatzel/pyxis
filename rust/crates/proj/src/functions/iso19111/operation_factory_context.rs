@@ -1,14 +1,5 @@
-use std::ffi::CString;
-use std::path::{Path, PathBuf};
-use std::ptr;
-use std::str::FromStr;
-
-use envoy::{CStrListToVecString, CStrToString, ToCStr};
-use miette::IntoDiagnostic;
-
-use super::string_list_destroy;
+use crate::Context;
 use crate::data_types::iso19111::*;
-use crate::{Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, pj_obj_list_to_vec};
 impl Context {
     ///# References
     ///

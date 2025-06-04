@@ -26,7 +26,7 @@ impl Drop for InsertObjectSession<'_> {
     }
 }
 impl InsertObjectSession<'_> {
-    pub fn from_context<'a>(ctx: &'a Context) -> InsertObjectSession<'a> {
+    pub fn from_context(ctx: &Context) -> InsertObjectSession<'_> {
         ctx.insert_object_session_create()
     }
     ///# References

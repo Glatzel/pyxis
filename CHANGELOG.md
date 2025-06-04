@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.25] - 2025-06-04
+
+### Added
+
+- Add cuda runner by @Glatzel in [#457](https://github.com/Glatzel/pyxis/pull/457)
+
+### Changed
+
+- **(rust)** Proj iso19111 advanced functions by @Glatzel in [#452](https://github.com/Glatzel/pyxis/pull/452)
+- **(rust)** Proj network by @Glatzel in [#466](https://github.com/Glatzel/pyxis/pull/466)
+
+### Refactor
+
+- **(rust)** Change iso19111 structure by @Glatzel in [#468](https://github.com/Glatzel/pyxis/pull/468)
+
+### Testing
+
+- **(rust)** Add iso19111 advanced functions test by @Glatzel in [#455](https://github.com/Glatzel/pyxis/pull/455)
+- **(rust)** Add iso19111 advanced functions test by @Glatzel in [#459](https://github.com/Glatzel/pyxis/pull/459)
+
 ## [0.0.24] - 2025-05-31
 
 ### Changed
@@ -451,6 +471,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove changelog ci by @Glatzel in [#14](https://github.com/Glatzel/pyxis/pull/14)
 
+## [0.0.1] - 2025-02-05
+
+[0.0.25]: https://github.com/Glatzel/pyxis/compare/v0.0.24..v0.0.25
 [0.0.24]: https://github.com/Glatzel/pyxis/compare/v0.0.23..v0.0.24
 [0.0.23]: https://github.com/Glatzel/pyxis/compare/v0.0.22..v0.0.23
 [0.0.22]: https://github.com/Glatzel/pyxis/compare/v0.0.21..v0.0.22

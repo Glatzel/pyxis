@@ -441,60 +441,19 @@ impl crate::Context {
     }
     ///# References
     ///
-    /// <>
-    fn _suggests_code_for(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _create_operation_factory_context(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_desired_accuracy(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_area_of_interest(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_area_of_interest_name(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_crs_extent_use(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_spatial_criterion(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_grid_availability_use(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_use_proj_alternative_grid_names(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_allow_use_intermediate_crs(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_allowed_intermediate_crs(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_discard_superseded(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _operation_factory_context_set_allow_ballpark_transformations(&self) { todo!() }
-    ///# References
-    ///
-    /// <>
-    fn _create_operations(&self) { todo!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_suggests_code_for>
+    pub fn suggests_code_for(&self, object: &Proj, authority: &str, numeric_code: bool) -> String {
+        let result = unsafe {
+            proj_sys::proj_suggests_code_for(
+                self.ptr,
+                object.ptr(),
+                authority.to_cstr(),
+                numeric_code as i32,
+                ptr::null(),
+            )
+        };
+        result.to_string().expect("Error")
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
@@ -735,6 +694,28 @@ mod test {
         let list = ctx.get_crs_info_list_from_database(Some("EPSG"), None)?;
         println!("{:?}", list.first().unwrap());
         assert!(!list.is_empty());
+        Ok(())
+    }
+    #[test]
+    fn test_suggests_code_for() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let wkt = "GEOGCRS[\"myGDA2020\",
+                       DATUM[\"GDA2020\",
+                           ELLIPSOID[\"GRS_1980\",6378137,298.257222101,
+                               LENGTHUNIT[\"metre\",1]]],
+                       PRIMEM[\"Greenwich\",0,
+                           ANGLEUNIT[\"Degree\",0.0174532925199433]],
+                       CS[ellipsoidal,2],
+                           AXIS[\"geodetic latitude (Lat)\",north,
+                               ORDER[1],
+                               ANGLEUNIT[\"degree\",0.0174532925199433]],
+                           AXIS[\"geodetic longitude (Lon)\",east,
+                               ORDER[2],
+                               ANGLEUNIT[\"degree\",0.0174532925199433]]]";
+        println!("{wkt}");
+        let crs = ctx.create_from_wkt(wkt, None, None)?;
+        let code = ctx.suggests_code_for(&crs, "HOBU", true);
+        assert_eq!(code, "1");
         Ok(())
     }
     #[test]

@@ -15,6 +15,7 @@
 mod context_advanced;
 mod context_basic;
 mod insert_object_session;
+mod operation_factory_context;
 mod proj_advanced;
 mod proj_basic;
 

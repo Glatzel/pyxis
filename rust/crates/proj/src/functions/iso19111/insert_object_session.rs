@@ -59,7 +59,7 @@ impl InsertObjectSession<'_> {
                 ptr::null(),
             )
         };
-        let result = ptr.to_vec_string().expect("Error");
+        let result = ptr.to_vec_string();
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
         }

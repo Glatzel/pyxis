@@ -2504,7 +2504,7 @@ unsafe extern "C" {
         latitude_first_point: f64,
         longitude_first_point: f64,
         latitude_second_point: f64,
-        longitude_secon_point: f64,
+        longitude_second_point: f64,
         false_easting: f64,
         false_northing: f64,
         ang_unit_name: *const libc::c_char,

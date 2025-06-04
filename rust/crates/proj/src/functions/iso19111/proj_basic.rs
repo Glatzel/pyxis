@@ -1377,24 +1377,34 @@ mod test_proj_basic {
     }
     #[test]
     fn test_concatoperation_get_step_count() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create("EPSG:4326")?;
-        // let bound =
-        // pj.crs_create_bound_crs_to_wgs84(Some(AllowIntermediateCrs::Never))?;
-        // let op = bound.crs_get_coordoperation()?;
-        // let count = op.concatoperation_get_step_count()?;
-        // assert_eq!(count, 1);
+        let ctx = crate::new_test_ctx()?;
+        let factory = ctx.create_operation_factory_context(None);
+        let source_crs = ctx.create_from_database("EPSG", "28356", Category::Crs, false)?;
+        let target_crs = ctx.create_from_database("EPSG", "7856", Category::Crs, false)?;
+        let ops = factory
+            .set_spatial_criterion(SpatialCriterion::PartialIntersection)
+            .set_grid_availability_use(GridAvailabilityUse::Ignored)
+            .create_operations(&source_crs, &target_crs)?;
+        let op = ops.first().unwrap();
+        let count = op.concatoperation_get_step_count()?;
+        assert_eq!(count, 3);
         Ok(())
     }
     #[test]
     fn test_concatoperation_get_step() -> miette::Result<()> {
-        // let ctx = crate::new_test_ctx()?;
-        // let pj = ctx.create_from_database("EPSG", "8048",
-        // Category::CoordinateOperation, false)?; let step =
-        // pj.concatoperation_get_step(1)?; let wkt = step.
-        // as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        // println!("{}", wkt);
-        // assert!(wkt.contains("16031"));
+        let ctx = crate::new_test_ctx()?;
+        let factory = ctx.create_operation_factory_context(None);
+        let source_crs = ctx.create_from_database("EPSG", "28356", Category::Crs, false)?;
+        let target_crs = ctx.create_from_database("EPSG", "7856", Category::Crs, false)?;
+        let ops = factory
+            .set_spatial_criterion(SpatialCriterion::PartialIntersection)
+            .set_grid_availability_use(GridAvailabilityUse::Ignored)
+            .create_operations(&source_crs, &target_crs)?;
+        let op = ops.first().unwrap();
+        let step = op.concatoperation_get_step(1)?;
+        let wkt = step.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("GDA94 to GDA2020"));
         Ok(())
     }
     #[test]

@@ -76,7 +76,7 @@ impl OperationFactoryContext<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_crs_extent_use>
-    pub fn context_set_crs_extent_use(&self, extent_use: CrsExtentUse) -> &Self {
+    pub fn set_crs_extent_use(&self, extent_use: CrsExtentUse) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_crs_extent_use(
                 self.ctx.ptr,
@@ -208,5 +208,34 @@ impl Drop for OperationFactoryContext<'_> {
         unsafe {
             proj_sys::proj_operation_factory_context_destroy(self.ptr);
         }
+    }
+}
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn test_create_operations() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let factory = OperationFactoryContext::from_context(&ctx, None);
+        let source_crs = ctx.create_from_database(
+            "EPSG",
+            "4267",
+            crate::data_types::iso19111::Category::Crs,
+            false,
+        )?;
+        let target_crs = ctx.create_from_database("EPSG", "4269", Category::Crs, false)?;
+        factory
+            .set_desired_accuracy(1.0)
+            .set_area_of_interest(-60.0, 90.0, 60.0, 90.0)
+            .set_area_of_interest_name("area_name")
+            .set_crs_extent_use(CrsExtentUse::Both)
+            .set_spatial_criterion(SpatialCriterion::PartialIntersection)
+            .set_use_proj_alternative_grid_names(false)
+            .set_allow_use_intermediate_crs(IntermediateCrsUse::Always)
+            .set_allowed_intermediate_crs(&["EPSG", "4258"])
+            .set_discard_superseded(false)
+            .set_allow_ballpark_transformations(false)
+            .create_operations(&source_crs, &target_crs)?;
+        Ok(())
     }
 }

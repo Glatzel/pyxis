@@ -87,8 +87,8 @@ impl crate::Context {
     ///   target CRS, output values will be emitted according to the official
     ///   definition of this CRS.
     /// * a PROJ string, like "+proj=longlat +datum=WGS84". When using that
-    /// syntax, the axis order and unit for geographic CRS will be longitude,
-    /// latitude, and the unit degrees.
+    ///   syntax, the axis order and unit for geographic CRS will be longitude,
+    ///   latitude, and the unit degrees.
     /// * the name of a CRS as found in the PROJ database, e.g "WGS84", "NAD27",
     ///   etc.
     /// * more generally any string accepted by proj_create() representing a CRS

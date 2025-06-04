@@ -34,8 +34,26 @@ impl OperationFactoryContext<'_> {
     }
     ///# References
     ///
-    /// <>
-    pub fn operation_factory_context_set_area_of_interest(&self) -> &Self { todo!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_area_of_interest>
+    pub fn operation_factory_context_set_area_of_interest(
+        &self,
+        west_lon_degree: f64,
+        south_lat_degree: f64,
+        east_lon_degree: f64,
+        north_lat_degree: f64,
+    ) -> &Self {
+        unsafe {
+            proj_sys::proj_operation_factory_context_set_area_of_interest(
+                self.ctx.ptr,
+                self.ptr,
+                west_lon_degree,
+                south_lat_degree,
+                east_lon_degree,
+                north_lat_degree,
+            );
+        }
+        self
+    }
     ///# References
     ///
     /// <>

@@ -225,7 +225,6 @@ mod test {
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
             .set_use_proj_alternative_grid_names(false)
             .set_allow_use_intermediate_crs(IntermediateCrsUse::Never)
-            
             .set_discard_superseded(false)
             .set_allow_ballpark_transformations(false);
 

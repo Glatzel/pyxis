@@ -502,19 +502,19 @@ mod test {
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::EpsgVersion)
             .unwrap();
-        assert_eq!(data, "v12.004");
+        assert_eq!(data, "v12.012");
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::EpsgDate)
             .unwrap();
-        assert_eq!(data, "2025-03-02");
+        assert_eq!(data, "2025-05-21");
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::EsriVersion)
             .unwrap();
-        assert_eq!(data, "ArcGIS Pro 3.4");
+        assert_eq!(data, "ArcGIS Pro 3.5");
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::EsriDate)
             .unwrap();
-        assert_eq!(data, "2024-11-04");
+        assert_eq!(data, "2025-05-11");
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::IgnfSource)
             .unwrap();
@@ -548,11 +548,11 @@ mod test {
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)
             .unwrap();
-        assert_eq!(data, "9.6.0");
+        assert_eq!(data, "9.6.1");
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjDataVersion)
             .unwrap();
-        assert_eq!(data, "1.21");
+        assert_eq!(data, "1.22");
 
         Ok(())
     }

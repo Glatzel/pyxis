@@ -37,15 +37,12 @@ impl InsertObjectSession<'_> {
         numeric_codes: bool,
         allowed_authorities: Option<&[&str]>,
     ) -> miette::Result<Vec<String>> {
-        let allowed_authorities = match allowed_authorities {
-            Some(allowed_authorities) => Some(
-                allowed_authorities
-                    .iter()
-                    .map(|s| s.to_cstr())
-                    .collect::<Vec<*const i8>>(),
-            ),
-            None => None,
-        };
+        let allowed_authorities = allowed_authorities.map(|allowed_authorities| {
+            allowed_authorities
+                .iter()
+                .map(|s| s.to_cstr())
+                .collect::<Vec<*const i8>>()
+        });
 
         let ptr = unsafe {
             proj_sys::proj_get_insert_statements(

@@ -8,7 +8,7 @@ use miette::IntoDiagnostic;
 
 use super::string_list_destroy;
 use crate::data_types::iso19111::*;
-use crate::{Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, pj_obj_list_to_vec};
+use crate::{Proj, ProjOptions, pj_obj_list_to_vec};
 /// # ISO-19111 Base functions
 impl crate::Context {
     ///# References

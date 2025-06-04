@@ -1,13 +1,11 @@
-use std::ffi::CString;
-use std::path::{Path, PathBuf};
 use std::ptr;
 use std::str::FromStr;
 
-use envoy::{CStrListToVecString, CStrToString, ToCStr};
+use envoy::{CStrToString, ToCStr};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
-use crate::{Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, pj_obj_list_to_vec};
+use crate::{OPTION_NO, OPTION_YES, Proj, check_result, pj_obj_list_to_vec};
 /// # ISO-19111 Base functions
 impl Proj<'_> {
     ///# References

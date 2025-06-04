@@ -28,7 +28,7 @@ impl crate::Context {
     ///   coordinateOperation:EPSG::1618`)
     /// * a PROJJSON string. The jsonschema is at <https://proj.org/schemas/v0.4/projjson.schema.json>
     /// * a compound CRS made from two object names separated with " + ". e.g.
-    ///"WGS 84 + EGM96 height" (added in 7.1)
+    ///   "WGS 84 + EGM96 height" (added in 7.1)
     ///
     /// If a proj-string contains a +type=crs option, then it is interpreted as
     /// a CRS definition. In particular geographic CRS are assumed to have axis

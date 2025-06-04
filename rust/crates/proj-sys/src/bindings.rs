@@ -2,7 +2,7 @@
 
 pub const PROJ_VERSION_MAJOR: u32 = 9;
 pub const PROJ_VERSION_MINOR: u32 = 6;
-pub const PROJ_VERSION_PATCH: u32 = 0;
+pub const PROJ_VERSION_PATCH: u32 = 1;
 pub const PJ_DEFAULT_CTX: u32 = 0;
 pub const PROJ_ERR_INVALID_OP: u32 = 1024;
 pub const PROJ_ERR_INVALID_OP_WRONG_SYNTAX: u32 = 1025;
@@ -2504,7 +2504,7 @@ unsafe extern "C" {
         latitude_first_point: f64,
         longitude_first_point: f64,
         latitude_second_point: f64,
-        longitude_second_point: f64,
+        longitude_secon_point: f64,
         false_easting: f64,
         false_northing: f64,
         ang_unit_name: *const libc::c_char,

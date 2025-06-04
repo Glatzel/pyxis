@@ -12,7 +12,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/libgcc-ng-15.1.0-h69a702a_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/libgomp-15.1.0-h767d61c_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/pkg-config-0.29.2-h4bc722e_1009.conda
-      - conda: https://repo.prefix.dev/glatzel/linux-64/proj-9.6.0-hb0f4dca_1.conda
+      - conda: https://repo.prefix.dev/glatzel/linux-64/proj-9.6.1-hb0f4dca_0.conda
       osx-arm64:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/bzip2-1.0.8-h99b78c6_7.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/libffi-3.4.6-h1da3d7d_1.conda
@@ -22,7 +22,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/libzlib-1.3.1-h8359307_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/pcre2-10.45-ha881caa_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/pkg-config-0.29.2-hde07d2e_1009.conda
-      - conda: https://repo.prefix.dev/glatzel/osx-arm64/proj-9.6.0-h60d57d3_1.conda
+      - conda: https://repo.prefix.dev/glatzel/osx-arm64/proj-9.6.1-h60d57d3_0.conda
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/win-64/bzip2-1.0.8-h2466b09_7.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/libffi-3.4.6-h537db12_1.conda
@@ -32,7 +32,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/libzlib-1.3.1-h2466b09_2.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/pcre2-10.45-h99c9b8b_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/pkg-config-0.29.2-h88c491f_1009.conda
-      - conda: https://repo.prefix.dev/glatzel/win-64/proj-9.6.0-h9490d1a_1.conda
+      - conda: https://repo.prefix.dev/glatzel/win-64/proj-9.6.1-h9490d1a_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/ucrt-10.0.22621.0-h57928b3_1.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/vc-14.3-h2b53caa_26.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/vc14_runtime-14.42.34438-hfd919c2_26.conda
@@ -275,18 +275,18 @@ packages:
   license_family: GPL
   size: 36118
   timestamp: 1720806338740
-- conda: https://repo.prefix.dev/glatzel/linux-64/proj-9.6.0-hb0f4dca_1.conda
-  sha256: d243f879483804f442556a457345f0378199b96d9aff12ffda6000c2d05936d2
-  size: 77842953
-  timestamp: 1746589241173
-- conda: https://repo.prefix.dev/glatzel/osx-arm64/proj-9.6.0-h60d57d3_1.conda
-  sha256: 9c40e6d922387b5d73bb73b5030ec4990320de24ec29d1443f75e0f4a552f364
-  size: 46668342
-  timestamp: 1746589047910
-- conda: https://repo.prefix.dev/glatzel/win-64/proj-9.6.0-h9490d1a_1.conda
-  sha256: eec1f4900e94f03744e6703fe890002dd577426ca6282fccdc829dc4e75bdce2
-  size: 69172277
-  timestamp: 1746589297016
+- conda: https://repo.prefix.dev/glatzel/linux-64/proj-9.6.1-hb0f4dca_0.conda
+  sha256: 54296e796362ff827a2f8e6d4f3943910e0706892fcf19da1ad862911fd9cf90
+  size: 77880079
+  timestamp: 1749015583796
+- conda: https://repo.prefix.dev/glatzel/osx-arm64/proj-9.6.1-h60d57d3_0.conda
+  sha256: 9e4838a3c1e0470136099a2548b0b0f22bb2481d7b46fa62a98250b26d093b47
+  size: 46721464
+  timestamp: 1749015462632
+- conda: https://repo.prefix.dev/glatzel/win-64/proj-9.6.1-h9490d1a_0.conda
+  sha256: b571d4479df0737c9892041e6327473ac4ac03d10b8f7a1ac0f95298a8e4aa45
+  size: 69287137
+  timestamp: 1749015556635
 - conda: https://conda.anaconda.org/conda-forge/win-64/ucrt-10.0.22621.0-h57928b3_1.conda
   sha256: db8dead3dd30fb1a032737554ce91e2819b43496a0db09927edf01c32b577450
   md5: 6797b005cd0f439c4c5c9ac565783700

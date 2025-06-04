@@ -214,16 +214,9 @@ impl Drop for OperationFactoryContext<'_> {
 mod test {
     use super::*;
     #[test]
-    fn test_create_operations() -> miette::Result<()> {
+    fn test_settings() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let factory = OperationFactoryContext::from_context(&ctx, None);
-        let source_crs = ctx.create_from_database(
-            "EPSG",
-            "4267",
-            crate::data_types::iso19111::Category::Crs,
-            false,
-        )?;
-        let target_crs = ctx.create_from_database("EPSG", "4269", Category::Crs, false)?;
         factory
             .set_desired_accuracy(1.0)
             .set_area_of_interest(-60.0, 90.0, 60.0, 90.0)
@@ -234,8 +227,23 @@ mod test {
             .set_allow_use_intermediate_crs(IntermediateCrsUse::Always)
             .set_allowed_intermediate_crs(&["EPSG", "4258"])
             .set_discard_superseded(false)
-            .set_allow_ballpark_transformations(false)
-            .create_operations(&source_crs, &target_crs)?;
+            .set_allow_ballpark_transformations(false);
+
+        Ok(())
+    }
+    #[test]
+    fn test_create_operations() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let factory = OperationFactoryContext::from_context(&ctx, None);
+        let source_crs = ctx.create_from_database(
+            "EPSG",
+            "4267",
+            crate::data_types::iso19111::Category::Crs,
+            false,
+        )?;
+        let target_crs = ctx.create_from_database("EPSG", "4269", Category::Crs, false)?;
+        let ops = factory.create_operations(&source_crs, &target_crs)?;
+        assert_eq!(ops.len(), 1);
         Ok(())
     }
 }

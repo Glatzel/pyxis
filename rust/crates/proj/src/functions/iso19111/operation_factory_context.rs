@@ -1,4 +1,4 @@
-use envoy::ToCStr;
+use envoy::{ToCStr, ToCStrList};
 
 use crate::data_types::iso19111::*;
 use crate::{Context, Proj, pj_obj_list_to_vec};
@@ -145,10 +145,7 @@ impl OperationFactoryContext<'_> {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allowed_intermediate_crs>
     pub fn set_allowed_intermediate_crs(&self, list_of_auth_name_codes: &[&str]) -> &Self {
-        let list_of_auth_name_codes = list_of_auth_name_codes
-            .iter()
-            .map(|s| s.to_cstr())
-            .collect::<Vec<*const i8>>();
+        let list_of_auth_name_codes = list_of_auth_name_codes.to_cstr_list();
         unsafe {
             proj_sys::proj_operation_factory_context_set_allowed_intermediate_crs(
                 self.ctx.ptr,

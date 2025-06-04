@@ -69,7 +69,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
     pub fn get_database_structure(&self) -> miette::Result<Vec<String>> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
-        let out_vec = ptr.to_vec_string().unwrap();
+        let out_vec = ptr.to_vec_string();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -109,14 +109,16 @@ impl crate::Context {
                 &mut out_grammar_errors,
             )
         };
-        //warning
-        if let Some(warnings) = out_warnings.to_vec_string() {
-            warnings.iter().for_each(|w| clerk::warn!("{w}"))
-        }
-        //error
-        if let Some(warnings) = out_grammar_errors.to_vec_string() {
-            warnings.iter().for_each(|w| clerk::error!("{w}"))
-        }
+        out_warnings
+            .to_vec_string()
+            .iter()
+            .for_each(|w| clerk::warn!("{w}"));
+
+        out_grammar_errors
+            .to_vec_string()
+            .iter()
+            .for_each(|w| clerk::error!("{w}"));
+
         crate::Proj::new(self, ptr)
     }
     ///# References
@@ -256,7 +258,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        let out_vec = ptr.to_vec_string().unwrap();
+        let out_vec = ptr.to_vec_string();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -268,7 +270,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        let out_vec = ptr.to_vec_string().unwrap();
+        let out_vec = ptr.to_vec_string();
         string_list_destroy(ptr);
         Ok(out_vec)
     }
@@ -292,7 +294,7 @@ impl crate::Context {
         if ptr.is_null() {
             miette::bail!("Error");
         }
-        let out_vec = ptr.to_vec_string().unwrap_or_default();
+        let out_vec = ptr.to_vec_string();
         string_list_destroy(ptr);
         Ok(out_vec)
     }

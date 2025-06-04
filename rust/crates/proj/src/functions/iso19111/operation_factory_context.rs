@@ -224,8 +224,8 @@ mod test {
             .set_crs_extent_use(CrsExtentUse::Both)
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
             .set_use_proj_alternative_grid_names(false)
-            .set_allow_use_intermediate_crs(IntermediateCrsUse::Always)
-            .set_allowed_intermediate_crs(&["EPSG", "4258"])
+            .set_allow_use_intermediate_crs(IntermediateCrsUse::Never)
+            
             .set_discard_superseded(false)
             .set_allow_ballpark_transformations(false);
 

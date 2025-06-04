@@ -16,7 +16,7 @@ impl crate::Context {
     /// * a proj-string
     /// * a WKT string
     /// * an object code (like "EPSG:4326", "urn:ogc:def:crs:EPSG::4326"
-    /// * "urn:ogc:def:coordinateOperation:EPSG::1671")
+    ///   "urn:ogc:def:coordinateOperation:EPSG::1671")
     /// * an Object name. e.g "WGS 84", "WGS 84 / UTM zone 31N". In that case as
     ///   uniqueness is not guaranteed, heuristics are applied to determine the
     ///   appropriate best match.

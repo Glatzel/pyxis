@@ -138,39 +138,41 @@ pub enum WktType {
 /// interest is specified. # References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_EXTENT_USE>
-#[derive(Debug)]
+#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[repr(u32)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum CrsExtentUse {
     ///Ignore CRS extent
-    None,
+    None = proj_sys::PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_NONE,
     ///Test coordinate operation extent against both CRS extent.
-    Both,
+    Both = proj_sys::PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_BOTH,
     ///Test coordinate operation extent against the intersection of both CRS
     /// extent.
-    Intersection,
+    Intersection = proj_sys::PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_INTERSECTION,
     ///Test coordinate operation against the smallest of both CRS extent.
-    Smallest,
+    Smallest = proj_sys::PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_SMALLEST,
 }
 ///Describe how grid availability is used.
 ///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_GRID_AVAILABILITY_USE>
-#[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[repr(u32)]
 pub enum GridAvailabilityUse {
     ///Grid availability is only used for sorting results. Operations where
     /// some grids are missing will be sorted last.
-    UsedForSorting,
+    UsedForSorting = proj_sys::PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_USED_FOR_SORTING,
     ///Completely discard an operation if a required grid is missing.
-    DiscardOperationIfMissingGrid,
+    DiscardOperationIfMissingGrid = proj_sys::PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_DISCARD_OPERATION_IF_MISSING_GRID,
     ///Ignore grid availability at all. Results will be presented as if all
     /// grids were available.
-    Ignored,
+    Ignored = proj_sys::PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_IGNORED,
     ///Results will be presented as if grids known to PROJ (that is registered
     /// in the grid_alternatives table of its database) were available. Used
     /// typically when networking is enabled.
-    KnownAvailable,
+    KnownAvailable = proj_sys::PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_KNOWN_AVAILABLE,
 }
 ///PROJ string version.
 ///
@@ -191,29 +193,33 @@ pub enum ProjStringType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_SPATIAL_CRITERION>
-#[derive(Debug)]
+#[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[repr(u32)]
 pub enum SpatialCriterion {
     ///The area of validity of transforms should strictly contain the are of
     /// interest.
-    StrictContainment,
+    StrictContainment = proj_sys::PROJ_SPATIAL_CRITERION_PROJ_SPATIAL_CRITERION_STRICT_CONTAINMENT,
     ///The area of validity of transforms should at least intersect the area of
     /// interest.
-    PartialIntersection,
+    PartialIntersection =
+        proj_sys::PROJ_SPATIAL_CRITERION_PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION,
 }
 ///Describe if and how intermediate CRS should be used
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_INTERMEDIATE_CRS_USE>
-#[derive(Debug)]
+#[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[repr(u32)]
 pub enum IntermediateCrsUse {
     ///Always search for intermediate CRS.
-    Always,
+    Always = proj_sys::PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_ALWAYS,
     ///Only attempt looking for intermediate CRS if there is no direct
     /// transformation available.
-    IfNoDirectTransformation,
-    Never,
+    IfNoDirectTransformation =
+        proj_sys::PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_IF_NO_DIRECT_TRANSFORMATION,
+    Never = proj_sys::PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_NEVER,
 }
 ///Type of coordinate system.
 ///

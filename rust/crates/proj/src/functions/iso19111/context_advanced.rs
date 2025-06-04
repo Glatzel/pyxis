@@ -107,7 +107,7 @@ impl Context {
         datum_code: &str,
         crs_type: Option<&str>,
     ) -> miette::Result<Vec<Proj>> {
-        let result = unsafe {
+        let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
                 crs_auth_name.to_cstr(),
@@ -116,7 +116,7 @@ impl Context {
                 crs_type.to_cstr(),
             )
         };
-        pj_obj_list_to_vec(self, result)
+        pj_obj_list_to_vec(self, ptr)
     }
     ///# References
     ///

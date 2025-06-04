@@ -1,7 +1,7 @@
 use envoy::ToCStr;
 
-use crate::Context;
 use crate::data_types::iso19111::*;
+use crate::{Context, Proj, pj_obj_list_to_vec};
 impl Context {
     ///# References
     ///
@@ -19,10 +19,16 @@ impl Context {
     }
 }
 impl OperationFactoryContext<'_> {
+    pub fn from_context<'a>(
+        ctx: &'a Context,
+        authority: Option<&str>,
+    ) -> OperationFactoryContext<'a> {
+        ctx.create_operation_factory_context(authority)
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_desired_accuracy>
-    pub fn operation_factory_context_set_desired_accuracy(&self, accuracy: f64) -> &Self {
+    pub fn set_desired_accuracy(&self, accuracy: f64) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_desired_accuracy(
                 self.ctx.ptr,
@@ -35,7 +41,7 @@ impl OperationFactoryContext<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_area_of_interest>
-    pub fn operation_factory_context_set_area_of_interest(
+    pub fn set_area_of_interest(
         &self,
         west_lon_degree: f64,
         south_lat_degree: f64,
@@ -57,7 +63,7 @@ impl OperationFactoryContext<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_area_of_interest_name>
-    pub fn operation_factory_context_set_area_of_interest_name(&self, area_name: &str) -> &Self {
+    pub fn set_area_of_interest_name(&self, area_name: &str) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_area_of_interest_name(
                 self.ctx.ptr,
@@ -70,39 +76,132 @@ impl OperationFactoryContext<'_> {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_crs_extent_use>
-    pub fn operation_factory_context_set_crs_extent_use(&self) -> &Self { todo!() }
+    pub fn context_set_crs_extent_use(&self, extent_use: CrsExtentUse) -> &Self {
+        unsafe {
+            proj_sys::proj_operation_factory_context_set_crs_extent_use(
+                self.ctx.ptr,
+                self.ptr,
+                u32::from(extent_use),
+            );
+        }
+        self
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_spatial_criterion>
-    pub fn operation_factory_context_set_spatial_criterion(&self) -> &Self { todo!() }
+    pub fn set_spatial_criterion(&self, criterion: SpatialCriterion) -> &Self {
+        unsafe {
+            proj_sys::proj_operation_factory_context_set_spatial_criterion(
+                self.ctx.ptr,
+                self.ptr,
+                u32::from(criterion),
+            );
+        }
+        self
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_grid_availability_use>
-    pub fn operation_factory_context_set_grid_availability_use(&self) -> &Self { todo!() }
+    pub fn set_grid_availability_use(&self, grid_availability_use: GridAvailabilityUse) -> &Self {
+        unsafe {
+            proj_sys::proj_operation_factory_context_set_grid_availability_use(
+                self.ctx.ptr,
+                self.ptr,
+                u32::from(grid_availability_use),
+            );
+        }
+        self
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_use_proj_alternative_grid_names>
-    pub fn operation_factory_context_set_use_proj_alternative_grid_names(&self) -> &Self { todo!() }
+    pub fn set_use_proj_alternative_grid_names(&self, use_projnames: bool) -> &Self {
+        unsafe {
+            proj_sys::proj_operation_factory_context_set_use_proj_alternative_grid_names(
+                self.ctx.ptr,
+                self.ptr,
+                use_projnames as i32,
+            );
+        }
+        self
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allow_use_intermediate_crs>
-    pub fn operation_factory_context_set_allow_use_intermediate_crs(&self) -> &Self { todo!() }
+    pub fn set_allow_use_intermediate_crs(
+        &self,
+        proj_intermediate_crs_use: IntermediateCrsUse,
+    ) -> &Self {
+        unsafe {
+            proj_sys::proj_operation_factory_context_set_allow_use_intermediate_crs(
+                self.ctx.ptr,
+                self.ptr,
+                u32::from(proj_intermediate_crs_use),
+            );
+        }
+        self
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allowed_intermediate_crs>
-    pub fn operation_factory_context_set_allowed_intermediate_crs(&self) -> &Self { todo!() }
+    pub fn set_allowed_intermediate_crs(&self, list_of_auth_name_codes: &[&str]) -> &Self {
+        let list_of_auth_name_codes = list_of_auth_name_codes
+            .iter()
+            .map(|s| s.to_cstr())
+            .collect::<Vec<*const i8>>();
+        unsafe {
+            proj_sys::proj_operation_factory_context_set_allowed_intermediate_crs(
+                self.ctx.ptr,
+                self.ptr,
+                list_of_auth_name_codes.as_ptr(),
+            );
+        }
+        self
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_discard_superseded>
-    pub fn operation_factory_context_set_discard_superseded(&self) -> &Self { todo!() }
+    pub fn set_discard_superseded(&self, discard: bool) -> &Self {
+        unsafe {
+            proj_sys::proj_operation_factory_context_set_discard_superseded(
+                self.ctx.ptr,
+                self.ptr,
+                discard as i32,
+            );
+        }
+        self
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allow_ballpark_transformations>
-    pub fn operation_factory_context_set_allow_ballpark_transformations(&self) -> &Self { todo!() }
+    pub fn set_allow_ballpark_transformations(&self, allow: bool) -> &Self {
+        unsafe {
+            proj_sys::proj_operation_factory_context_set_allow_ballpark_transformations(
+                self.ctx.ptr,
+                self.ptr,
+                allow as i32,
+            );
+        }
+        self
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_operations>
-    pub fn create_operations(&self) -> &Self { todo!() }
+    pub fn create_operations(
+        &self,
+        source_crs: &Proj,
+        target_crs: &Proj,
+    ) -> miette::Result<Vec<Proj>> {
+        let ptr = unsafe {
+            proj_sys::proj_create_operations(
+                self.ctx.ptr,
+                source_crs.ptr(),
+                target_crs.ptr(),
+                self.ptr,
+            )
+        };
+        pj_obj_list_to_vec(self.ctx, ptr)
+    }
 }
 impl Drop for OperationFactoryContext<'_> {
     fn drop(&mut self) {

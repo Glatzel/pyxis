@@ -26,6 +26,9 @@ impl Drop for InsertObjectSession<'_> {
     }
 }
 impl InsertObjectSession<'_> {
+    pub fn from_context<'a>(ctx: &'a Context) -> InsertObjectSession<'a> {
+        ctx.insert_object_session_create()
+    }
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_insert_statements>
@@ -65,6 +68,8 @@ impl InsertObjectSession<'_> {
 }
 #[cfg(test)]
 mod test {
+    use crate::data_types::iso19111::InsertObjectSession;
+
     #[test]
     fn test_get_insert_statements() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
@@ -83,7 +88,7 @@ mod test {
                                ANGLEUNIT[\"degree\",0.0174532925199433]]]";
         println!("{wkt}");
         let crs = ctx.create_from_wkt(wkt, None, None)?;
-        let session = ctx.insert_object_session_create();
+        let session = InsertObjectSession::from_context(&ctx);
         let statements = session.get_insert_statements(&crs, "HOBU", "XXXX", false, None)?;
         for i in statements.iter() {
             println!("{i}");

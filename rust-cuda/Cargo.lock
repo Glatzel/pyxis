@@ -580,7 +580,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.24"
+version = "0.0.25"
 dependencies = [
  "clerk 0.0.13",
  "num-traits",
@@ -588,7 +588,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cuda"
-version = "0.0.24"
+version = "0.0.25"
 dependencies = [
  "clerk 0.0.12",
  "criterion",

@@ -1,8 +1,13 @@
 use crate::check_result;
 // region:Coordinate transformation
 impl crate::Proj<'_> {
-    /// <div class="warning">Available on <b>crate feature</b>
-    /// <code>unrecommended</code> only.</div>
+    ///Transform a single PJ_COORD coordinate.
+    ///
+    ///If the input coordinate contains any NaNs you are guaranteed to get a
+    /// coordinate with all NaNs as a result.
+    ///
+    ///  <div class="warning">Available
+    /// on <b>crate feature</b> <code>unrecommended</code> only.</div>
     ///
     /// # See Also
     ///
@@ -21,7 +26,13 @@ impl crate::Proj<'_> {
         check_result!(self);
         Ok(out_coord)
     }
-    /// # References
+    ///Return the operation used during the last invocation of
+    /// [`Self::trans()`]. This is especially useful when P has been created
+    /// with [`crate::Context::create_crs_to_crs()`] and has several alternative
+    /// operations.
+    ///
+    ///  # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn get_last_used_operation(&self) -> Option<crate::Proj<'_>> {
@@ -33,10 +44,41 @@ impl crate::Proj<'_> {
         }
         Some(Proj::new(self.ctx, ptr).unwrap())
     }
-
+    ///Transform a series of coordinates
+    ///
+    /// # Parameters
+    ///
+    /// * direction: Transformation direction.
+    /// * x: Array of x-coordinates
+    /// * sx: Step length, in bytes, between consecutive elements of the
+    ///   corresponding array
+    /// * nx: Number of elements in the corresponding array
+    /// * y: Array of y-coordinates
+    /// * sy: Step length, in bytes, between consecutive elements of the
+    ///   corresponding array
+    /// * ny: Number of elements in the corresponding array
+    /// * z: Array of z-coordinates
+    /// * sz: Step length, in bytes, between consecutive elements of the
+    ///   corresponding array
+    /// * nz: Number of elements in the corresponding array
+    /// * t: Array of t-coordinates
+    /// * st: Step length, in bytes, between consecutive elements of the
+    ///   corresponding array
+    /// * nt: Number of elements in the corresponding array
+    ///
     /// # Safety
+    ///
     /// If x,y is not null pointer.
+    ///
+    /// # See Also
+    ///
+    /// * [`Self::project`]
+    /// * [`Self::convert`]
+    /// * [`Self::project_array`]
+    /// * [`Self::project_array`]
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
     pub unsafe fn trans_generic(
         &self,

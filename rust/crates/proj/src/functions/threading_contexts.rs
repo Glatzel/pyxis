@@ -14,7 +14,10 @@ impl Default for crate::Context {
 }
 
 impl crate::Context {
+    ///Create a new threading-context.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
     pub fn new() -> Self {
         Self {
@@ -24,7 +27,10 @@ impl crate::Context {
 }
 
 impl Clone for crate::Context {
+    ///Create a new threading-context based on an existing context.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone>
     fn clone(&self) -> Self {
         Self {
@@ -34,7 +40,10 @@ impl Clone for crate::Context {
 }
 
 impl Drop for crate::Context {
+    ///Deallocate a threading-context.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
     fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(self.ptr) }; }
 }

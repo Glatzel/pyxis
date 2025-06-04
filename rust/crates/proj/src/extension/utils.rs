@@ -6,6 +6,7 @@ pub(crate) fn pj_obj_list_to_vec(
         miette::bail!("Error");
     }
     let count = unsafe { proj_sys::proj_list_get_count(result) };
+    clerk::debug!("pj_obj_list count: {count}");
     let mut proj_list = Vec::with_capacity(count as usize);
     for i in 0..count {
         proj_list.push(ctx.list_get(result, i)?);

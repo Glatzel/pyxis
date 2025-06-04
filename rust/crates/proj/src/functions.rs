@@ -1,6 +1,7 @@
 //! Proj functions
 //!
 //! # References
+//!
 //! * <https://proj.org/en/stable/development/reference/functions.html>
 mod area_of_interest;
 #[cfg(feature = "unrecommended")]
@@ -18,7 +19,6 @@ mod threading_contexts;
 mod transformation_setup;
 mod various;
 
-// pub use iso19111::*;
 #[cfg(feature = "unrecommended")]
 pub use cleanup::*;
 pub use distances::*;

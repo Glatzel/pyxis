@@ -1,329 +1,229 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "https://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage branch-rate="0.4" branches-covered="8" branches-valid="20" complexity="0" line-rate="0.9172320217096337" lines-covered="676" lines-valid="737" timestamp="1748954442" version="2.0.3">
+<coverage branch-rate="0.4" branches-covered="8" branches-valid="20" complexity="0" line-rate="0.9172320217096337" lines-covered="676" lines-valid="737" timestamp="1749000927" version="2.0.3">
     <sources>
-        <source>/home/runner/actions-runner/_work/pyxis/pyxis/rust-cuda</source>
+        <source>D:\project\pyxis\rust-cuda</source>
     </sources>
     <packages>
-        <package line-rate="0.8992805755395683" branch-rate="0" name=".home.runner.actions-runner._work.pyxis.pyxis.rust.crates.pyxis.src" complexity="0">
+        <package line-rate="0.9214046822742475" branch-rate="0.4" name="src" complexity="0">
             <classes>
-                <class branch-rate="0" complexity="0" filename="/home/runner/actions-runner/_work/pyxis/pyxis/rust/crates/pyxis/src/crypto.rs" line-rate="1" name=".home.runner.actions-runner._work.pyxis.pyxis.rust.crates.pyxis.src.crypto.rs">
+                <class branch-rate="0" complexity="0" filename="src\datum_compensate_cuda.rs" line-rate="0.926829268292683" name="src.datum_compensate_cuda.rs">
                     <methods>
-                        <method name="pyxis::crypto::bd09_to_gcj02::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::datum_compensate_cuda::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="2" number="153" branch="false"/>
+                                <line hits="1" number="14" branch="false"/>
                             </lines>
                         </method>
-                        <method name="pyxis::crypto::bd09_to_wgs84::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                        <method name="pyxis_cuda::datum_compensate_cuda::test::test_datum_compensate_cuda" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="1" number="221" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::crypto::gcj02_to_bd09::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="20" number="252" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::crypto::wgs84_to_bd09::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="20" number="321" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::crypto::gcj02_to_wgs84::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="2" number="190" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::crypto::wgs84_to_gcj02::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="40" number="289" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::crypto::haversine_distance::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="60" number="425" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::crypto::delta::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="42" number="113" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::crypto::transform::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="42" number="76" branch="false"/>
+                                <line hits="1" number="57" branch="false"/>
                             </lines>
                         </method>
                     </methods>
                     <lines>
-                        <line branch="false" hits="42" number="76"/>
-                        <line branch="false" hits="42" number="77"/>
-                        <line branch="false" hits="42" number="78"/>
-                        <line branch="false" hits="42" number="80"/>
-                        <line branch="false" hits="42" number="81"/>
-                        <line branch="false" hits="42" number="82"/>
-                        <line branch="false" hits="42" number="83"/>
-                        <line branch="false" hits="42" number="84"/>
-                        <line branch="false" hits="42" number="86"/>
-                        <line branch="false" hits="42" number="87"/>
-                        <line branch="false" hits="42" number="89"/>
-                        <line branch="false" hits="42" number="90"/>
-                        <line branch="false" hits="42" number="91"/>
-                        <line branch="false" hits="42" number="92"/>
-                        <line branch="false" hits="42" number="93"/>
-                        <line branch="false" hits="42" number="94"/>
-                        <line branch="false" hits="42" number="95"/>
-                        <line branch="false" hits="42" number="96"/>
-                        <line branch="false" hits="42" number="98"/>
-                        <line branch="false" hits="42" number="99"/>
-                        <line branch="false" hits="42" number="101"/>
-                        <line branch="false" hits="42" number="102"/>
-                        <line branch="false" hits="42" number="103"/>
-                        <line branch="false" hits="42" number="104"/>
-                        <line branch="false" hits="42" number="105"/>
-                        <line branch="false" hits="42" number="106"/>
-                        <line branch="false" hits="42" number="107"/>
-                        <line branch="false" hits="42" number="108"/>
-                        <line branch="false" hits="42" number="110"/>
-                        <line branch="false" hits="42" number="111"/>
-                        <line branch="false" hits="42" number="113"/>
-                        <line branch="false" hits="42" number="114"/>
-                        <line branch="false" hits="42" number="115"/>
-                        <line branch="false" hits="42" number="117"/>
-                        <line branch="false" hits="42" number="118"/>
-                        <line branch="false" hits="42" number="119"/>
-                        <line branch="false" hits="42" number="120"/>
-                        <line branch="false" hits="42" number="121"/>
-                        <line branch="false" hits="42" number="123"/>
-                        <line branch="false" hits="42" number="124"/>
-                        <line branch="false" hits="42" number="125"/>
-                        <line branch="false" hits="42" number="126"/>
-                        <line branch="false" hits="42" number="127"/>
-                        <line branch="false" hits="42" number="128"/>
-                        <line branch="false" hits="2" number="153"/>
-                        <line branch="false" hits="2" number="154"/>
-                        <line branch="false" hits="2" number="155"/>
-                        <line branch="false" hits="2" number="157"/>
-                        <line branch="false" hits="2" number="158"/>
-                        <line branch="false" hits="2" number="159"/>
-                        <line branch="false" hits="2" number="160"/>
-                        <line branch="false" hits="2" number="161"/>
-                        <line branch="false" hits="2" number="162"/>
-                        <line branch="false" hits="2" number="163"/>
-                        <line branch="false" hits="2" number="164"/>
-                        <line branch="false" hits="2" number="165"/>
-                        <line branch="false" hits="2" number="190"/>
-                        <line branch="false" hits="2" number="191"/>
-                        <line branch="false" hits="2" number="192"/>
-                        <line branch="false" hits="2" number="194"/>
-                        <line branch="false" hits="2" number="195"/>
-                        <line branch="false" hits="2" number="196"/>
-                        <line branch="false" hits="1" number="221"/>
-                        <line branch="false" hits="1" number="222"/>
-                        <line branch="false" hits="1" number="223"/>
-                        <line branch="false" hits="1" number="225"/>
-                        <line branch="false" hits="1" number="226"/>
-                        <line branch="false" hits="1" number="227"/>
-                        <line branch="false" hits="20" number="252"/>
-                        <line branch="false" hits="20" number="253"/>
-                        <line branch="false" hits="20" number="254"/>
-                        <line branch="false" hits="20" number="256"/>
-                        <line branch="false" hits="20" number="257"/>
-                        <line branch="false" hits="20" number="258"/>
-                        <line branch="false" hits="20" number="259"/>
-                        <line branch="false" hits="20" number="260"/>
-                        <line branch="false" hits="20" number="261"/>
-                        <line branch="false" hits="20" number="262"/>
-                        <line branch="false" hits="20" number="263"/>
-                        <line branch="false" hits="40" number="289"/>
-                        <line branch="false" hits="40" number="290"/>
-                        <line branch="false" hits="40" number="291"/>
-                        <line branch="false" hits="40" number="293"/>
-                        <line branch="false" hits="40" number="294"/>
-                        <line branch="false" hits="40" number="295"/>
-                        <line branch="false" hits="20" number="321"/>
-                        <line branch="false" hits="20" number="322"/>
-                        <line branch="false" hits="20" number="323"/>
-                        <line branch="false" hits="20" number="325"/>
-                        <line branch="false" hits="20" number="326"/>
-                        <line branch="false" hits="20" number="327"/>
-                        <line branch="false" hits="60" number="425"/>
-                        <line branch="false" hits="60" number="426"/>
-                        <line branch="false" hits="60" number="427"/>
-                        <line branch="false" hits="60" number="429"/>
-                        <line branch="false" hits="60" number="430"/>
-                        <line branch="false" hits="60" number="431"/>
-                        <line branch="false" hits="60" number="432"/>
-                        <line branch="false" hits="60" number="434"/>
-                        <line branch="false" hits="60" number="435"/>
-                        <line branch="false" hits="60" number="437"/>
-                        <line branch="false" hits="60" number="438"/>
-                        <line branch="false" hits="60" number="439"/>
-                        <line branch="false" hits="60" number="441"/>
-                        <line branch="false" hits="60" number="442"/>
+                        <line branch="false" hits="1" number="14"/>
+                        <line branch="false" hits="1" number="15"/>
+                        <line branch="false" hits="1" number="16"/>
+                        <line branch="false" hits="1" number="17"/>
+                        <line branch="false" hits="1" number="18"/>
+                        <line branch="false" hits="1" number="19"/>
+                        <line branch="false" hits="1" number="20"/>
+                        <line branch="false" hits="1" number="21"/>
+                        <line branch="false" hits="1" number="22"/>
+                        <line branch="false" hits="1" number="23"/>
+                        <line branch="false" hits="1" number="24"/>
+                        <line branch="false" hits="1" number="25"/>
+                        <line branch="false" hits="1" number="27"/>
+                        <line branch="false" hits="1" number="28"/>
+                        <line branch="false" hits="1" number="29"/>
+                        <line branch="false" hits="1" number="31"/>
+                        <line branch="false" hits="1" number="32"/>
+                        <line branch="false" hits="1" number="35"/>
+                        <line branch="false" hits="1" number="36"/>
+                        <line branch="false" hits="1" number="37"/>
+                        <line branch="false" hits="1" number="38"/>
+                        <line branch="false" hits="0" number="39"/>
+                        <line branch="false" hits="0" number="40"/>
+                        <line branch="false" hits="0" number="41"/>
+                        <line branch="false" hits="1" number="42"/>
+                        <line branch="false" hits="1" number="43"/>
+                        <line branch="false" hits="1" number="46"/>
+                        <line branch="false" hits="1" number="48"/>
+                        <line branch="false" hits="1" number="49"/>
+                        <line branch="false" hits="1" number="57"/>
+                        <line branch="false" hits="1" number="58"/>
+                        <line branch="false" hits="1" number="59"/>
+                        <line branch="false" hits="1" number="60"/>
+                        <line branch="false" hits="1" number="61"/>
+                        <line branch="false" hits="1" number="62"/>
+                        <line branch="false" hits="1" number="63"/>
+                        <line branch="false" hits="1" number="64"/>
+                        <line branch="false" hits="1" number="65"/>
+                        <line branch="false" hits="1" number="67"/>
+                        <line branch="false" hits="1" number="68"/>
+                        <line branch="false" hits="1" number="69"/>
                     </lines>
                 </class>
-                <class branch-rate="0" complexity="0" filename="/home/runner/actions-runner/_work/pyxis/pyxis/rust/crates/pyxis/src/ellipsoid.rs" line-rate="1" name=".home.runner.actions-runner._work.pyxis.pyxis.rust.crates.pyxis.src.ellipsoid.rs">
+                <class branch-rate="0.3888888888888889" complexity="0" filename="src\context.rs" line-rate="0.6213592233009708" name="src.context.rs">
                     <methods>
-                        <method name="&lt;pyxis::ellipsoid::Ellipsoid&lt;f64&gt;&gt;::eccentricity2" signature="" complexity="0" line-rate="1" branch-rate="1">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::get_function::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="42" number="175" branch="false"/>
+                                <line hits="13" number="153" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;pyxis::ellipsoid::Ellipsoid&lt;f64&gt;&gt;::semi_major_axis" signature="" complexity="0" line-rate="1" branch-rate="1">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::new" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="102" number="166" branch="false"/>
+                                <line hits="11" number="29" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;pyxis::ellipsoid::Ellipsoid&lt;f64&gt;&gt;::from_semi_major_and_invf" signature="" complexity="0" line-rate="1" branch-rate="1">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::get_grid_block" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="4" number="81" branch="false"/>
+                                <line hits="13" number="138" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;pyxis::ellipsoid::Ellipsoid&lt;f32&gt;&gt;::from_semi_major_and_invf" signature="" complexity="0" line-rate="0" branch-rate="0">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::set_block_size" signature="" complexity="0" line-rate="0" branch-rate="0">
                             <lines>
-                                <line hits="0" number="81" branch="false"/>
+                                <line hits="0" number="128" branch="false"/>
                             </lines>
                         </method>
-                    </methods>
-                    <lines>
-                        <line branch="false" hits="4" number="81"/>
-                        <line branch="false" hits="4" number="82"/>
-                        <line branch="false" hits="4" number="83"/>
-                        <line branch="false" hits="4" number="84"/>
-                        <line branch="false" hits="4" number="85"/>
-                        <line branch="false" hits="4" number="87"/>
-                        <line branch="false" hits="4" number="88"/>
-                        <line branch="false" hits="4" number="89"/>
-                        <line branch="false" hits="4" number="90"/>
-                        <line branch="false" hits="4" number="91"/>
-                        <line branch="false" hits="4" number="92"/>
-                        <line branch="false" hits="4" number="93"/>
-                        <line branch="false" hits="4" number="94"/>
-                        <line branch="false" hits="4" number="95"/>
-                        <line branch="false" hits="102" number="166"/>
-                        <line branch="false" hits="42" number="175"/>
-                    </lines>
-                </class>
-                <class branch-rate="0" complexity="0" filename="/home/runner/actions-runner/_work/pyxis/pyxis/rust/crates/pyxis/src/types.rs" line-rate="0.2222222222222222" name=".home.runner.actions-runner._work.pyxis.pyxis.rust.crates.pyxis.src.types.rs">
-                    <methods>
-                        <method name="pyxis::types::GRS1980_F32::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::device_buffer_from_slice" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="0" number="37" branch="false"/>
+                                <line hits="26" number="166" branch="false"/>
                             </lines>
                         </method>
-                        <method name="pyxis::types::GRS1980_F64::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::add_module" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="0" number="53" branch="false"/>
+                                <line hits="11" number="77" branch="false"/>
                             </lines>
                         </method>
-                        <method name="pyxis::types::IAG1975_F32::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::get_module" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="0" number="39" branch="false"/>
+                                <line hits="13" number="59" branch="false"/>
                             </lines>
                         </method>
-                        <method name="pyxis::types::IAG1975_F64::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
-                            <lines>
-                                <line hits="0" number="55" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::types::KRASOVSKY1940_F32::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
-                            <lines>
-                                <line hits="0" number="41" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::types::KRASOVSKY1940_F64::{closure#0}" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="3" number="57" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::types::WGS84_F32::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
-                            <lines>
-                                <line hits="0" number="43" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="pyxis::types::WGS84_F64::{closure#0}" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="1" number="59" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;f32 as pyxis::types::ConstEllipsoid&lt;f32&gt;&gt;::krasovsky1940" signature="" complexity="0" line-rate="0" branch-rate="0">
-                            <lines>
-                                <line hits="0" number="48" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;f32 as pyxis::types::ConstEllipsoid&lt;f32&gt;&gt;::wgs84" signature="" complexity="0" line-rate="0" branch-rate="0">
-                            <lines>
-                                <line hits="0" number="49" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;f32 as pyxis::types::ConstEllipsoid&lt;f32&gt;&gt;::grs1980" signature="" complexity="0" line-rate="0" branch-rate="0">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::set_size_limit" signature="" complexity="0" line-rate="0" branch-rate="0">
                             <lines>
                                 <line hits="0" number="47" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;f32 as pyxis::types::ConstEllipsoid&lt;f32&gt;&gt;::iag1975" signature="" complexity="0" line-rate="0" branch-rate="0">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::set_count_limit" signature="" complexity="0" line-rate="0" branch-rate="0">
                             <lines>
-                                <line hits="0" number="46" branch="false"/>
+                                <line hits="0" number="53" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;f32 as pyxis::types::ConstEllipsoid&lt;f32&gt;&gt;::cgcs2000" signature="" complexity="0" line-rate="0" branch-rate="0">
+                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::remove_last_module" signature="" complexity="0" line-rate="0" branch-rate="0">
                             <lines>
-                                <line hits="0" number="45" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;f64 as pyxis::types::ConstEllipsoid&lt;f64&gt;&gt;::krasovsky1940" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="84" number="64" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;f64 as pyxis::types::ConstEllipsoid&lt;f64&gt;&gt;::wgs84" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="60" number="65" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;f64 as pyxis::types::ConstEllipsoid&lt;f64&gt;&gt;::grs1980" signature="" complexity="0" line-rate="0" branch-rate="0">
-                            <lines>
-                                <line hits="0" number="63" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;f64 as pyxis::types::ConstEllipsoid&lt;f64&gt;&gt;::iag1975" signature="" complexity="0" line-rate="0" branch-rate="0">
-                            <lines>
-                                <line hits="0" number="62" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;f64 as pyxis::types::ConstEllipsoid&lt;f64&gt;&gt;::cgcs2000" signature="" complexity="0" line-rate="0" branch-rate="0">
-                            <lines>
-                                <line hits="0" number="61" branch="false"/>
+                                <line hits="0" number="115" branch="false"/>
                             </lines>
                         </method>
                     </methods>
                     <lines>
-                        <line branch="false" hits="0" number="37"/>
-                        <line branch="false" hits="0" number="39"/>
-                        <line branch="false" hits="0" number="41"/>
-                        <line branch="false" hits="0" number="43"/>
-                        <line branch="false" hits="0" number="45"/>
-                        <line branch="false" hits="0" number="46"/>
+                        <line branch="false" hits="11" number="29"/>
+                        <line branch="false" hits="11" number="30"/>
+                        <line branch="false" hits="11" number="31"/>
+                        <line branch="false" hits="11" number="32"/>
+                        <line branch="false" hits="11" number="33"/>
+                        <line branch="false" hits="11" number="34"/>
+                        <line branch="false" hits="11" number="35"/>
+                        <line branch="false" hits="11" number="36"/>
+                        <line branch="false" hits="11" number="37"/>
+                        <line branch="false" hits="11" number="38"/>
+                        <line branch="false" hits="11" number="39"/>
+                        <line branch="false" hits="11" number="40"/>
+                        <line branch="false" hits="11" number="41"/>
+                        <line branch="false" hits="11" number="42"/>
                         <line branch="false" hits="0" number="47"/>
                         <line branch="false" hits="0" number="48"/>
                         <line branch="false" hits="0" number="49"/>
+                        <line branch="false" hits="0" number="50"/>
+                        <line branch="false" hits="0" number="51"/>
                         <line branch="false" hits="0" number="53"/>
+                        <line branch="false" hits="0" number="54"/>
                         <line branch="false" hits="0" number="55"/>
-                        <line branch="false" hits="3" number="57"/>
-                        <line branch="false" hits="1" number="59"/>
-                        <line branch="false" hits="0" number="61"/>
-                        <line branch="false" hits="0" number="62"/>
-                        <line branch="false" hits="0" number="63"/>
-                        <line branch="false" hits="84" number="64"/>
-                        <line branch="false" hits="60" number="65"/>
+                        <line branch="false" hits="0" number="56"/>
+                        <line branch="false" hits="0" number="57"/>
+                        <line branch="false" hits="13" number="59"/>
+                        <line branch="false" hits="13" number="61"/>
+                        <line branch="true" hits="13" number="62" condition-coverage="100% (2/2)"/>
+                        <line branch="false" hits="11" number="63"/>
+                        <line branch="false" hits="11" number="64"/>
+                        <line branch="false" hits="2" number="65"/>
+                        <line branch="false" hits="13" number="68"/>
+                        <line branch="false" hits="13" number="69"/>
+                        <line branch="false" hits="13" number="70"/>
+                        <line branch="false" hits="13" number="71"/>
+                        <line branch="false" hits="13" number="72"/>
+                        <line branch="false" hits="13" number="73"/>
+                        <line branch="false" hits="13" number="74"/>
+                        <line branch="false" hits="13" number="75"/>
+                        <line branch="false" hits="13" number="76"/>
+                        <line branch="false" hits="11" number="77"/>
+                        <line branch="false" hits="11" number="79"/>
+                        <line branch="false" hits="0" number="80"/>
+                        <line branch="false" hits="0" number="82"/>
+                        <line branch="false" hits="0" number="83"/>
+                        <line branch="false" hits="0" number="84"/>
+                        <line branch="false" hits="0" number="85"/>
+                        <line branch="true" hits="11" number="87" condition-coverage="50% (1/2)"/>
+                        <line branch="true" hits="0" number="88" condition-coverage="0% (0/2)"/>
+                        <line branch="false" hits="0" number="90"/>
+                        <line branch="false" hits="0" number="91"/>
+                        <line branch="false" hits="11" number="92"/>
+                        <line branch="true" hits="11" number="94" condition-coverage="50% (1/2)"/>
+                        <line branch="true" hits="11" number="95" condition-coverage="50% (1/2)"/>
+                        <line branch="false" hits="0" number="97"/>
+                        <line branch="false" hits="0" number="98"/>
+                        <line branch="false" hits="0" number="100"/>
+                        <line branch="false" hits="0" number="102"/>
+                        <line branch="false" hits="11" number="105"/>
+                        <line branch="false" hits="11" number="106"/>
+                        <line branch="false" hits="11" number="107"/>
+                        <line branch="false" hits="11" number="108"/>
+                        <line branch="false" hits="11" number="109"/>
+                        <line branch="false" hits="11" number="110"/>
+                        <line branch="false" hits="11" number="111"/>
+                        <line branch="false" hits="11" number="112"/>
+                        <line branch="false" hits="11" number="113"/>
+                        <line branch="false" hits="11" number="114"/>
+                        <line branch="false" hits="0" number="115"/>
+                        <line branch="true" hits="0" number="116" condition-coverage="0% (0/2)"/>
+                        <line branch="true" hits="0" number="117" condition-coverage="0% (0/2)"/>
+                        <line branch="false" hits="0" number="118"/>
+                        <line branch="false" hits="0" number="119"/>
+                        <line branch="false" hits="0" number="120"/>
+                        <line branch="false" hits="0" number="121"/>
+                        <line branch="false" hits="0" number="122"/>
+                        <line branch="false" hits="0" number="123"/>
+                        <line branch="false" hits="0" number="128"/>
+                        <line branch="false" hits="0" number="129"/>
+                        <line branch="false" hits="0" number="130"/>
+                        <line branch="false" hits="0" number="131"/>
+                        <line branch="false" hits="0" number="132"/>
+                        <line branch="false" hits="13" number="138"/>
+                        <line branch="false" hits="13" number="139"/>
+                        <line branch="false" hits="13" number="140"/>
+                        <line branch="false" hits="13" number="141"/>
+                        <line branch="false" hits="13" number="142"/>
+                        <line branch="false" hits="0" number="143"/>
+                        <line branch="false" hits="0" number="145"/>
+                        <line branch="false" hits="13" number="148"/>
+                        <line branch="false" hits="13" number="149"/>
+                        <line branch="false" hits="13" number="153"/>
+                        <line branch="false" hits="13" number="154"/>
+                        <line branch="false" hits="13" number="155"/>
+                        <line branch="false" hits="13" number="156"/>
+                        <line branch="false" hits="13" number="157"/>
+                        <line branch="false" hits="13" number="160"/>
+                        <line branch="true" hits="13" number="161" condition-coverage="50% (1/2)"/>
+                        <line branch="true" hits="13" number="162" condition-coverage="50% (1/2)"/>
+                        <line branch="false" hits="0" number="163"/>
+                        <line branch="false" hits="13" number="165"/>
+                        <line branch="false" hits="26" number="166"/>
+                        <line branch="false" hits="26" number="167"/>
+                        <line branch="false" hits="26" number="168"/>
                     </lines>
                 </class>
-            </classes>
-        </package>
-        <package line-rate="0.9214046822742475" branch-rate="0.4" name="src" complexity="0">
-            <classes>
-                <class branch-rate="0.5" complexity="0" filename="src/crypto_cuda.rs" line-rate="0.9889867841409692" name="src.crypto_cuda.rs">
+                <class branch-rate="0.5" complexity="0" filename="src\crypto_cuda.rs" line-rate="0.9889867841409692" name="src.crypto_cuda.rs">
                     <methods>
                         <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::crypto_exact_cuda::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
@@ -913,220 +813,320 @@
                         <line branch="false" hits="1" number="544"/>
                     </lines>
                 </class>
-                <class branch-rate="0" complexity="0" filename="src/datum_compensate_cuda.rs" line-rate="0.926829268292683" name="src.datum_compensate_cuda.rs">
+            </classes>
+        </package>
+        <package line-rate="0.8992805755395683" branch-rate="0" name="D:.project.pyxis.rust.crates.pyxis.src" complexity="0">
+            <classes>
+                <class branch-rate="0" complexity="0" filename="D:\project\pyxis\rust\crates\pyxis\src\crypto.rs" line-rate="1" name="D:.project.pyxis.rust.crates.pyxis.src.crypto.rs">
                     <methods>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::datum_compensate_cuda::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                        <method name="pyxis::crypto::bd09_to_gcj02::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="1" number="14" branch="false"/>
+                                <line hits="2" number="153" branch="false"/>
                             </lines>
                         </method>
-                        <method name="pyxis_cuda::datum_compensate_cuda::test::test_datum_compensate_cuda" signature="" complexity="0" line-rate="1" branch-rate="1">
+                        <method name="pyxis::crypto::bd09_to_wgs84::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="1" number="57" branch="false"/>
+                                <line hits="1" number="221" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::crypto::gcj02_to_bd09::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="20" number="252" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::crypto::wgs84_to_bd09::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="20" number="321" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::crypto::gcj02_to_wgs84::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="2" number="190" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::crypto::wgs84_to_gcj02::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="40" number="289" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::crypto::haversine_distance::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="60" number="425" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::crypto::delta::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="42" number="113" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::crypto::transform::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="42" number="76" branch="false"/>
                             </lines>
                         </method>
                     </methods>
                     <lines>
-                        <line branch="false" hits="1" number="14"/>
-                        <line branch="false" hits="1" number="15"/>
-                        <line branch="false" hits="1" number="16"/>
-                        <line branch="false" hits="1" number="17"/>
-                        <line branch="false" hits="1" number="18"/>
-                        <line branch="false" hits="1" number="19"/>
-                        <line branch="false" hits="1" number="20"/>
-                        <line branch="false" hits="1" number="21"/>
-                        <line branch="false" hits="1" number="22"/>
-                        <line branch="false" hits="1" number="23"/>
-                        <line branch="false" hits="1" number="24"/>
-                        <line branch="false" hits="1" number="25"/>
-                        <line branch="false" hits="1" number="27"/>
-                        <line branch="false" hits="1" number="28"/>
-                        <line branch="false" hits="1" number="29"/>
-                        <line branch="false" hits="1" number="31"/>
-                        <line branch="false" hits="1" number="32"/>
-                        <line branch="false" hits="1" number="35"/>
-                        <line branch="false" hits="1" number="36"/>
-                        <line branch="false" hits="1" number="37"/>
-                        <line branch="false" hits="1" number="38"/>
-                        <line branch="false" hits="0" number="39"/>
-                        <line branch="false" hits="0" number="40"/>
-                        <line branch="false" hits="0" number="41"/>
-                        <line branch="false" hits="1" number="42"/>
-                        <line branch="false" hits="1" number="43"/>
-                        <line branch="false" hits="1" number="46"/>
-                        <line branch="false" hits="1" number="48"/>
-                        <line branch="false" hits="1" number="49"/>
-                        <line branch="false" hits="1" number="57"/>
-                        <line branch="false" hits="1" number="58"/>
-                        <line branch="false" hits="1" number="59"/>
-                        <line branch="false" hits="1" number="60"/>
-                        <line branch="false" hits="1" number="61"/>
-                        <line branch="false" hits="1" number="62"/>
-                        <line branch="false" hits="1" number="63"/>
-                        <line branch="false" hits="1" number="64"/>
-                        <line branch="false" hits="1" number="65"/>
-                        <line branch="false" hits="1" number="67"/>
-                        <line branch="false" hits="1" number="68"/>
-                        <line branch="false" hits="1" number="69"/>
+                        <line branch="false" hits="42" number="76"/>
+                        <line branch="false" hits="42" number="77"/>
+                        <line branch="false" hits="42" number="78"/>
+                        <line branch="false" hits="42" number="80"/>
+                        <line branch="false" hits="42" number="81"/>
+                        <line branch="false" hits="42" number="82"/>
+                        <line branch="false" hits="42" number="83"/>
+                        <line branch="false" hits="42" number="84"/>
+                        <line branch="false" hits="42" number="86"/>
+                        <line branch="false" hits="42" number="87"/>
+                        <line branch="false" hits="42" number="89"/>
+                        <line branch="false" hits="42" number="90"/>
+                        <line branch="false" hits="42" number="91"/>
+                        <line branch="false" hits="42" number="92"/>
+                        <line branch="false" hits="42" number="93"/>
+                        <line branch="false" hits="42" number="94"/>
+                        <line branch="false" hits="42" number="95"/>
+                        <line branch="false" hits="42" number="96"/>
+                        <line branch="false" hits="42" number="98"/>
+                        <line branch="false" hits="42" number="99"/>
+                        <line branch="false" hits="42" number="101"/>
+                        <line branch="false" hits="42" number="102"/>
+                        <line branch="false" hits="42" number="103"/>
+                        <line branch="false" hits="42" number="104"/>
+                        <line branch="false" hits="42" number="105"/>
+                        <line branch="false" hits="42" number="106"/>
+                        <line branch="false" hits="42" number="107"/>
+                        <line branch="false" hits="42" number="108"/>
+                        <line branch="false" hits="42" number="110"/>
+                        <line branch="false" hits="42" number="111"/>
+                        <line branch="false" hits="42" number="113"/>
+                        <line branch="false" hits="42" number="114"/>
+                        <line branch="false" hits="42" number="115"/>
+                        <line branch="false" hits="42" number="117"/>
+                        <line branch="false" hits="42" number="118"/>
+                        <line branch="false" hits="42" number="119"/>
+                        <line branch="false" hits="42" number="120"/>
+                        <line branch="false" hits="42" number="121"/>
+                        <line branch="false" hits="42" number="123"/>
+                        <line branch="false" hits="42" number="124"/>
+                        <line branch="false" hits="42" number="125"/>
+                        <line branch="false" hits="42" number="126"/>
+                        <line branch="false" hits="42" number="127"/>
+                        <line branch="false" hits="42" number="128"/>
+                        <line branch="false" hits="2" number="153"/>
+                        <line branch="false" hits="2" number="154"/>
+                        <line branch="false" hits="2" number="155"/>
+                        <line branch="false" hits="2" number="157"/>
+                        <line branch="false" hits="2" number="158"/>
+                        <line branch="false" hits="2" number="159"/>
+                        <line branch="false" hits="2" number="160"/>
+                        <line branch="false" hits="2" number="161"/>
+                        <line branch="false" hits="2" number="162"/>
+                        <line branch="false" hits="2" number="163"/>
+                        <line branch="false" hits="2" number="164"/>
+                        <line branch="false" hits="2" number="165"/>
+                        <line branch="false" hits="2" number="190"/>
+                        <line branch="false" hits="2" number="191"/>
+                        <line branch="false" hits="2" number="192"/>
+                        <line branch="false" hits="2" number="194"/>
+                        <line branch="false" hits="2" number="195"/>
+                        <line branch="false" hits="2" number="196"/>
+                        <line branch="false" hits="1" number="221"/>
+                        <line branch="false" hits="1" number="222"/>
+                        <line branch="false" hits="1" number="223"/>
+                        <line branch="false" hits="1" number="225"/>
+                        <line branch="false" hits="1" number="226"/>
+                        <line branch="false" hits="1" number="227"/>
+                        <line branch="false" hits="20" number="252"/>
+                        <line branch="false" hits="20" number="253"/>
+                        <line branch="false" hits="20" number="254"/>
+                        <line branch="false" hits="20" number="256"/>
+                        <line branch="false" hits="20" number="257"/>
+                        <line branch="false" hits="20" number="258"/>
+                        <line branch="false" hits="20" number="259"/>
+                        <line branch="false" hits="20" number="260"/>
+                        <line branch="false" hits="20" number="261"/>
+                        <line branch="false" hits="20" number="262"/>
+                        <line branch="false" hits="20" number="263"/>
+                        <line branch="false" hits="40" number="289"/>
+                        <line branch="false" hits="40" number="290"/>
+                        <line branch="false" hits="40" number="291"/>
+                        <line branch="false" hits="40" number="293"/>
+                        <line branch="false" hits="40" number="294"/>
+                        <line branch="false" hits="40" number="295"/>
+                        <line branch="false" hits="20" number="321"/>
+                        <line branch="false" hits="20" number="322"/>
+                        <line branch="false" hits="20" number="323"/>
+                        <line branch="false" hits="20" number="325"/>
+                        <line branch="false" hits="20" number="326"/>
+                        <line branch="false" hits="20" number="327"/>
+                        <line branch="false" hits="60" number="425"/>
+                        <line branch="false" hits="60" number="426"/>
+                        <line branch="false" hits="60" number="427"/>
+                        <line branch="false" hits="60" number="429"/>
+                        <line branch="false" hits="60" number="430"/>
+                        <line branch="false" hits="60" number="431"/>
+                        <line branch="false" hits="60" number="432"/>
+                        <line branch="false" hits="60" number="434"/>
+                        <line branch="false" hits="60" number="435"/>
+                        <line branch="false" hits="60" number="437"/>
+                        <line branch="false" hits="60" number="438"/>
+                        <line branch="false" hits="60" number="439"/>
+                        <line branch="false" hits="60" number="441"/>
+                        <line branch="false" hits="60" number="442"/>
                     </lines>
                 </class>
-                <class branch-rate="0.3888888888888889" complexity="0" filename="src/context.rs" line-rate="0.6213592233009708" name="src.context.rs">
+                <class branch-rate="0" complexity="0" filename="D:\project\pyxis\rust\crates\pyxis\src\ellipsoid.rs" line-rate="1" name="D:.project.pyxis.rust.crates.pyxis.src.ellipsoid.rs">
                     <methods>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::get_function::&lt;f64&gt;" signature="" complexity="0" line-rate="1" branch-rate="1">
+                        <method name="&lt;pyxis::ellipsoid::Ellipsoid&lt;f64&gt;&gt;::eccentricity2" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="13" number="153" branch="false"/>
+                                <line hits="42" number="175" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::new" signature="" complexity="0" line-rate="1" branch-rate="1">
+                        <method name="&lt;pyxis::ellipsoid::Ellipsoid&lt;f64&gt;&gt;::semi_major_axis" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="11" number="29" branch="false"/>
+                                <line hits="102" number="166" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::get_grid_block" signature="" complexity="0" line-rate="1" branch-rate="1">
+                        <method name="&lt;pyxis::ellipsoid::Ellipsoid&lt;f64&gt;&gt;::from_semi_major_and_invf" signature="" complexity="0" line-rate="1" branch-rate="1">
                             <lines>
-                                <line hits="13" number="138" branch="false"/>
+                                <line hits="4" number="81" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::set_block_size" signature="" complexity="0" line-rate="0" branch-rate="0">
+                        <method name="&lt;pyxis::ellipsoid::Ellipsoid&lt;f32&gt;&gt;::from_semi_major_and_invf" signature="" complexity="0" line-rate="0" branch-rate="0">
                             <lines>
-                                <line hits="0" number="128" branch="false"/>
+                                <line hits="0" number="81" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::device_buffer_from_slice" signature="" complexity="0" line-rate="1" branch-rate="1">
+                    </methods>
+                    <lines>
+                        <line branch="false" hits="4" number="81"/>
+                        <line branch="false" hits="4" number="82"/>
+                        <line branch="false" hits="4" number="83"/>
+                        <line branch="false" hits="4" number="84"/>
+                        <line branch="false" hits="4" number="85"/>
+                        <line branch="false" hits="4" number="87"/>
+                        <line branch="false" hits="4" number="88"/>
+                        <line branch="false" hits="4" number="89"/>
+                        <line branch="false" hits="4" number="90"/>
+                        <line branch="false" hits="4" number="91"/>
+                        <line branch="false" hits="4" number="92"/>
+                        <line branch="false" hits="4" number="93"/>
+                        <line branch="false" hits="4" number="94"/>
+                        <line branch="false" hits="4" number="95"/>
+                        <line branch="false" hits="102" number="166"/>
+                        <line branch="false" hits="42" number="175"/>
+                    </lines>
+                </class>
+                <class branch-rate="0" complexity="0" filename="D:\project\pyxis\rust\crates\pyxis\src\types.rs" line-rate="0.2222222222222222" name="D:.project.pyxis.rust.crates.pyxis.src.types.rs">
+                    <methods>
+                        <method name="pyxis::types::GRS1980_F32::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
                             <lines>
-                                <line hits="26" number="166" branch="false"/>
+                                <line hits="0" number="37" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::add_module" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="11" number="77" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::get_module" signature="" complexity="0" line-rate="1" branch-rate="1">
-                            <lines>
-                                <line hits="13" number="59" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::set_size_limit" signature="" complexity="0" line-rate="0" branch-rate="0">
-                            <lines>
-                                <line hits="0" number="47" branch="false"/>
-                            </lines>
-                        </method>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::set_count_limit" signature="" complexity="0" line-rate="0" branch-rate="0">
+                        <method name="pyxis::types::GRS1980_F64::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
                             <lines>
                                 <line hits="0" number="53" branch="false"/>
                             </lines>
                         </method>
-                        <method name="&lt;pyxis_cuda::context::PyxisCudaContext&gt;::remove_last_module" signature="" complexity="0" line-rate="0" branch-rate="0">
+                        <method name="pyxis::types::IAG1975_F32::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
                             <lines>
-                                <line hits="0" number="115" branch="false"/>
+                                <line hits="0" number="39" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::types::IAG1975_F64::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="55" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::types::KRASOVSKY1940_F32::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="41" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::types::KRASOVSKY1940_F64::{closure#0}" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="3" number="57" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::types::WGS84_F32::{closure#0}" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="43" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="pyxis::types::WGS84_F64::{closure#0}" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="1" number="59" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="&lt;f32 as pyxis::types::ConstEllipsoid&lt;f32&gt;&gt;::krasovsky1940" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="48" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="&lt;f32 as pyxis::types::ConstEllipsoid&lt;f32&gt;&gt;::wgs84" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="49" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="&lt;f32 as pyxis::types::ConstEllipsoid&lt;f32&gt;&gt;::grs1980" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="47" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="&lt;f32 as pyxis::types::ConstEllipsoid&lt;f32&gt;&gt;::iag1975" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="46" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="&lt;f32 as pyxis::types::ConstEllipsoid&lt;f32&gt;&gt;::cgcs2000" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="45" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="&lt;f64 as pyxis::types::ConstEllipsoid&lt;f64&gt;&gt;::krasovsky1940" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="84" number="64" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="&lt;f64 as pyxis::types::ConstEllipsoid&lt;f64&gt;&gt;::wgs84" signature="" complexity="0" line-rate="1" branch-rate="1">
+                            <lines>
+                                <line hits="60" number="65" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="&lt;f64 as pyxis::types::ConstEllipsoid&lt;f64&gt;&gt;::grs1980" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="63" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="&lt;f64 as pyxis::types::ConstEllipsoid&lt;f64&gt;&gt;::iag1975" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="62" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="&lt;f64 as pyxis::types::ConstEllipsoid&lt;f64&gt;&gt;::cgcs2000" signature="" complexity="0" line-rate="0" branch-rate="0">
+                            <lines>
+                                <line hits="0" number="61" branch="false"/>
                             </lines>
                         </method>
                     </methods>
                     <lines>
-                        <line branch="false" hits="11" number="29"/>
-                        <line branch="false" hits="11" number="30"/>
-                        <line branch="false" hits="11" number="31"/>
-                        <line branch="false" hits="11" number="32"/>
-                        <line branch="false" hits="11" number="33"/>
-                        <line branch="false" hits="11" number="34"/>
-                        <line branch="false" hits="11" number="35"/>
-                        <line branch="false" hits="11" number="36"/>
-                        <line branch="false" hits="11" number="37"/>
-                        <line branch="false" hits="11" number="38"/>
-                        <line branch="false" hits="11" number="39"/>
-                        <line branch="false" hits="11" number="40"/>
-                        <line branch="false" hits="11" number="41"/>
-                        <line branch="false" hits="11" number="42"/>
+                        <line branch="false" hits="0" number="37"/>
+                        <line branch="false" hits="0" number="39"/>
+                        <line branch="false" hits="0" number="41"/>
+                        <line branch="false" hits="0" number="43"/>
+                        <line branch="false" hits="0" number="45"/>
+                        <line branch="false" hits="0" number="46"/>
                         <line branch="false" hits="0" number="47"/>
                         <line branch="false" hits="0" number="48"/>
                         <line branch="false" hits="0" number="49"/>
-                        <line branch="false" hits="0" number="50"/>
-                        <line branch="false" hits="0" number="51"/>
                         <line branch="false" hits="0" number="53"/>
-                        <line branch="false" hits="0" number="54"/>
                         <line branch="false" hits="0" number="55"/>
-                        <line branch="false" hits="0" number="56"/>
-                        <line branch="false" hits="0" number="57"/>
-                        <line branch="false" hits="13" number="59"/>
-                        <line branch="false" hits="13" number="61"/>
-                        <line branch="true" hits="13" number="62" condition-coverage="100% (2/2)"/>
-                        <line branch="false" hits="11" number="63"/>
-                        <line branch="false" hits="11" number="64"/>
-                        <line branch="false" hits="2" number="65"/>
-                        <line branch="false" hits="13" number="68"/>
-                        <line branch="false" hits="13" number="69"/>
-                        <line branch="false" hits="13" number="70"/>
-                        <line branch="false" hits="13" number="71"/>
-                        <line branch="false" hits="13" number="72"/>
-                        <line branch="false" hits="13" number="73"/>
-                        <line branch="false" hits="13" number="74"/>
-                        <line branch="false" hits="13" number="75"/>
-                        <line branch="false" hits="13" number="76"/>
-                        <line branch="false" hits="11" number="77"/>
-                        <line branch="false" hits="11" number="79"/>
-                        <line branch="false" hits="0" number="80"/>
-                        <line branch="false" hits="0" number="82"/>
-                        <line branch="false" hits="0" number="83"/>
-                        <line branch="false" hits="0" number="84"/>
-                        <line branch="false" hits="0" number="85"/>
-                        <line branch="true" hits="11" number="87" condition-coverage="50% (1/2)"/>
-                        <line branch="true" hits="0" number="88" condition-coverage="0% (0/2)"/>
-                        <line branch="false" hits="0" number="90"/>
-                        <line branch="false" hits="0" number="91"/>
-                        <line branch="false" hits="11" number="92"/>
-                        <line branch="true" hits="11" number="94" condition-coverage="50% (1/2)"/>
-                        <line branch="true" hits="11" number="95" condition-coverage="50% (1/2)"/>
-                        <line branch="false" hits="0" number="97"/>
-                        <line branch="false" hits="0" number="98"/>
-                        <line branch="false" hits="0" number="100"/>
-                        <line branch="false" hits="0" number="102"/>
-                        <line branch="false" hits="11" number="105"/>
-                        <line branch="false" hits="11" number="106"/>
-                        <line branch="false" hits="11" number="107"/>
-                        <line branch="false" hits="11" number="108"/>
-                        <line branch="false" hits="11" number="109"/>
-                        <line branch="false" hits="11" number="110"/>
-                        <line branch="false" hits="11" number="111"/>
-                        <line branch="false" hits="11" number="112"/>
-                        <line branch="false" hits="11" number="113"/>
-                        <line branch="false" hits="11" number="114"/>
-                        <line branch="false" hits="0" number="115"/>
-                        <line branch="true" hits="0" number="116" condition-coverage="0% (0/2)"/>
-                        <line branch="true" hits="0" number="117" condition-coverage="0% (0/2)"/>
-                        <line branch="false" hits="0" number="118"/>
-                        <line branch="false" hits="0" number="119"/>
-                        <line branch="false" hits="0" number="120"/>
-                        <line branch="false" hits="0" number="121"/>
-                        <line branch="false" hits="0" number="122"/>
-                        <line branch="false" hits="0" number="123"/>
-                        <line branch="false" hits="0" number="128"/>
-                        <line branch="false" hits="0" number="129"/>
-                        <line branch="false" hits="0" number="130"/>
-                        <line branch="false" hits="0" number="131"/>
-                        <line branch="false" hits="0" number="132"/>
-                        <line branch="false" hits="13" number="138"/>
-                        <line branch="false" hits="13" number="139"/>
-                        <line branch="false" hits="13" number="140"/>
-                        <line branch="false" hits="13" number="141"/>
-                        <line branch="false" hits="13" number="142"/>
-                        <line branch="false" hits="0" number="143"/>
-                        <line branch="false" hits="0" number="145"/>
-                        <line branch="false" hits="13" number="148"/>
-                        <line branch="false" hits="13" number="149"/>
-                        <line branch="false" hits="13" number="153"/>
-                        <line branch="false" hits="13" number="154"/>
-                        <line branch="false" hits="13" number="155"/>
-                        <line branch="false" hits="13" number="156"/>
-                        <line branch="false" hits="13" number="157"/>
-                        <line branch="false" hits="13" number="160"/>
-                        <line branch="true" hits="13" number="161" condition-coverage="50% (1/2)"/>
-                        <line branch="true" hits="13" number="162" condition-coverage="50% (1/2)"/>
-                        <line branch="false" hits="0" number="163"/>
-                        <line branch="false" hits="13" number="165"/>
-                        <line branch="false" hits="26" number="166"/>
-                        <line branch="false" hits="26" number="167"/>
-                        <line branch="false" hits="26" number="168"/>
+                        <line branch="false" hits="3" number="57"/>
+                        <line branch="false" hits="1" number="59"/>
+                        <line branch="false" hits="0" number="61"/>
+                        <line branch="false" hits="0" number="62"/>
+                        <line branch="false" hits="0" number="63"/>
+                        <line branch="false" hits="84" number="64"/>
+                        <line branch="false" hits="60" number="65"/>
                     </lines>
                 </class>
             </classes>

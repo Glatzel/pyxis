@@ -10,11 +10,12 @@ use super::string_list_destroy;
 use crate::data_types::iso19111::*;
 use crate::{Context, OPTION_NO, OPTION_YES, Proj, ProjOptions, check_result, pj_obj_list_to_vec};
 impl Context {
-
     ///# References
     ///
     /// <>
     fn create_operation_factory_context(&self) { todo!() }
+}
+impl OperationFactoryContext<'_> {
     ///# References
     ///
     /// <>
@@ -64,6 +65,10 @@ impl Context {
     /// <>
     fn _create_operations(&self) { todo!() }
 }
-impl OperationFactoryContext  {
-    
+impl Drop for OperationFactoryContext<'_> {
+    fn drop(&mut self) {
+        unsafe {
+            proj_sys::proj_operation_factory_context_destroy(self.ptr);
+        }
+    }
 }

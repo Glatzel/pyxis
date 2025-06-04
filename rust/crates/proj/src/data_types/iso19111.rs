@@ -721,6 +721,7 @@ pub struct InsertObjectSession<'a> {
     pub(crate) ptr: *mut proj_sys::PJ_INSERT_SESSION,
 }
 
-pub struct OperationFactoryContext {
-    pub(crate) ptr: *mut proj_sys::PJ_CONTEXT,
+pub struct OperationFactoryContext<'a> {
+    pub(crate) ctx: &'a crate::Context,
+    pub(crate) ptr: *mut proj_sys::PJ_OPERATION_FACTORY_CONTEXT,
 }

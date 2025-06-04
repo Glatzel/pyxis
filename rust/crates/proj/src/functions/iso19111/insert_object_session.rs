@@ -40,7 +40,7 @@ impl InsertObjectSession<'_> {
         numeric_codes: bool,
         allowed_authorities: Option<&[&str]>,
     ) -> miette::Result<Vec<String>> {
-        let allowed_authorities = allowed_authorities.map_or(None, |f| Some(f.to_cstr_list()));
+        let allowed_authorities = allowed_authorities.map(|f| f.to_cstr_list());
 
         let ptr = unsafe {
             proj_sys::proj_get_insert_statements(

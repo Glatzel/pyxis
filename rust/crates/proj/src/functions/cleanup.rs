@@ -13,7 +13,7 @@ mod test {
     #[test]
     fn test_cleanup() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        cleanup();
+        super::cleanup();
         Ok(())
     }
 }

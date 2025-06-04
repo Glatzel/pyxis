@@ -56,43 +56,52 @@ impl OperationFactoryContext<'_> {
     }
     ///# References
     ///
-    /// <>
-    pub fn operation_factory_context_set_area_of_interest_name(&self) -> &Self { todo!() }
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_area_of_interest_name>
+    pub fn operation_factory_context_set_area_of_interest_name(&self, area_name: &str) -> &Self {
+        unsafe {
+            proj_sys::proj_operation_factory_context_set_area_of_interest_name(
+                self.ctx.ptr,
+                self.ptr,
+                area_name.to_cstr(),
+            );
+        }
+        self
+    }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_crs_extent_use>
     pub fn operation_factory_context_set_crs_extent_use(&self) -> &Self { todo!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_spatial_criterion>
     pub fn operation_factory_context_set_spatial_criterion(&self) -> &Self { todo!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_grid_availability_use>
     pub fn operation_factory_context_set_grid_availability_use(&self) -> &Self { todo!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_use_proj_alternative_grid_names>
     pub fn operation_factory_context_set_use_proj_alternative_grid_names(&self) -> &Self { todo!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allow_use_intermediate_crs>
     pub fn operation_factory_context_set_allow_use_intermediate_crs(&self) -> &Self { todo!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allowed_intermediate_crs>
     pub fn operation_factory_context_set_allowed_intermediate_crs(&self) -> &Self { todo!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_discard_superseded>
     pub fn operation_factory_context_set_discard_superseded(&self) -> &Self { todo!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allow_ballpark_transformations>
     pub fn operation_factory_context_set_allow_ballpark_transformations(&self) -> &Self { todo!() }
     ///# References
     ///
-    /// <>
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_operations>
     pub fn create_operations(&self) -> &Self { todo!() }
 }
 impl Drop for OperationFactoryContext<'_> {

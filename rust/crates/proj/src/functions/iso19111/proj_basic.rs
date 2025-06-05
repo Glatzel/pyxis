@@ -1,7 +1,7 @@
 use std::ptr;
 use std::str::FromStr;
 
-use envoy::{CStrToString, ToCStr, ToVecCStr};
+use envoy::{CStrToString, ToCString, ToVecCStr, ToVecCString};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
@@ -206,7 +206,12 @@ impl Proj<'_> {
                 self.ctx.ptr,
                 self.ptr(),
                 wkt_type.into(),
-                options.to_vec_cstr().as_ptr(),
+                options
+                    .options
+                    .iter()
+                    .map(|s| s.as_ptr())
+                    .collect::<Vec<_>>()
+                    .as_ptr(),
             )
         }
         .to_string();
@@ -235,7 +240,12 @@ impl Proj<'_> {
                 self.ctx.ptr,
                 self.ptr(),
                 string_type.into(),
-                options.to_vec_cstr().as_ptr(),
+                options
+                    .options
+                    .iter()
+                    .map(|s| s.as_ptr())
+                    .collect::<Vec<_>>()
+                    .as_ptr(),
             )
         }
         .to_string();
@@ -259,7 +269,16 @@ impl Proj<'_> {
             .push_optional(schema, "SCHEMA", "");
 
         let result = unsafe {
-            proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr(), options.to_vec_cstr().as_ptr())
+            proj_sys::proj_as_projjson(
+                self.ctx.ptr,
+                self.ptr(),
+                options
+                    .options
+                    .iter()
+                    .map(|s| s.as_ptr())
+                    .collect::<Vec<_>>()
+                    .as_ptr(),
+            )
         }
         .to_string();
         check_result!(self);
@@ -295,7 +314,7 @@ impl Proj<'_> {
             proj_sys::proj_identify(
                 self.ctx.ptr,
                 self.ptr(),
-                auth_name.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
                 ptr::null(),
                 &mut confidence.as_mut_ptr(),
             )
@@ -623,7 +642,11 @@ impl Proj<'_> {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_index>
     pub fn coordoperation_get_param_index(&self, name: &str) -> miette::Result<u16> {
         let result = unsafe {
-            proj_sys::proj_coordoperation_get_param_index(self.ctx.ptr, self.ptr(), name.to_cstr())
+            proj_sys::proj_coordoperation_get_param_index(
+                self.ctx.ptr,
+                self.ptr(),
+                name.to_cstring().as_ptr(),
+            )
         };
         if result == -1 {
             miette::bail!("Error");

@@ -1,4 +1,4 @@
-use envoy::{ToCStr, ToVecCStr};
+use envoy::ToCString;
 
 use crate::{Proj, check_result};
 /// # Transformation setup
@@ -44,7 +44,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
-        let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstr()) };
+        let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstring().as_ptr()) };
         check_result!(self);
         Proj::new(self, ptr)
     }
@@ -122,8 +122,8 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
                 self.ptr,
-                source_crs.to_cstr(),
-                target_crs.to_cstr(),
+                source_crs.to_cstring().as_ptr(),
+                target_crs.to_cstring().as_ptr(),
                 area.ptr,
             )
         };
@@ -202,7 +202,12 @@ impl crate::Context {
                 source_crs.ptr(),
                 target_crs.ptr(),
                 area.ptr,
-                options.to_vec_cstr().as_ptr(),
+                options
+                    .options
+                    .iter()
+                    .map(|s| s.as_ptr())
+                    .collect::<Vec<_>>()
+                    .as_ptr(),
             )
         };
         check_result!(self);

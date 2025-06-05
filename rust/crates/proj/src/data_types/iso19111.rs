@@ -1,7 +1,7 @@
 use std::ffi::CString;
 use std::fmt::Display;
 
-use envoy::ToCStr;
+use envoy::ToCString;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{AsRefStr, EnumString};
 

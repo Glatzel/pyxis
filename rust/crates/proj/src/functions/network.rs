@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use envoy::{CStrToString, ToCStr};
+use envoy::{CStrToString, ToCString};
 
 use crate::check_result;
 impl crate::Context {
@@ -29,7 +29,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_url_endpoint>
     pub fn set_url_endpoint(&self, url: &str) -> miette::Result<&Self> {
         unsafe {
-            proj_sys::proj_context_set_url_endpoint(self.ptr, url.to_cstr());
+            proj_sys::proj_context_set_url_endpoint(self.ptr, url.to_cstring().as_ptr());
         };
         check_result!(self);
         Ok(self)
@@ -59,7 +59,7 @@ impl crate::Context {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_filename>
     pub fn grid_cache_set_filename(&self, fullname: &str) -> miette::Result<&Self> {
-        unsafe { proj_sys::proj_grid_cache_set_filename(self.ptr, fullname.to_cstr()) };
+        unsafe { proj_sys::proj_grid_cache_set_filename(self.ptr, fullname.to_cstring().as_ptr()) };
         check_result!(self);
         Ok(self)
     }
@@ -93,7 +93,7 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_is_download_needed(
                 self.ptr,
-                url_or_filename.to_cstr(),
+                url_or_filename.to_cstring().as_ptr(),
                 ignore_ttl_setting as i32,
             )
         } != 0;
@@ -110,7 +110,7 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_download_file(
                 self.ptr,
-                url_or_filename.to_cstr(),
+                url_or_filename.to_cstring().as_ptr(),
                 ignore_ttl_setting as i32,
                 None,
                 std::ptr::null_mut(),

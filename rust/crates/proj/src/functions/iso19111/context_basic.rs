@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use std::ptr;
 use std::str::FromStr;
 
-use envoy::{CStrListToVecString, CStrToString, ToCStr, ToVecCStr};
+use envoy::{CStrListToVecString, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 
 use super::string_list_destroy;
@@ -37,7 +37,7 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_context_set_database_path(
                 self.ptr,
-                db_path.to_str().to_cstr(),
+                db_path.to_str().to_cstring().as_ptr(),
                 aux_db_paths_ptr.map_or(ptr::null(), |ptr| ptr.as_ptr()),
                 ptr::null(),
             )
@@ -61,8 +61,13 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
     pub fn get_database_metadata(&self, key: DatabaseMetadataKey) -> Option<String> {
-        let key = key.as_ref().to_cstring();
-        unsafe { proj_sys::proj_context_get_database_metadata(self.ptr, key.as_ptr()) }.to_string()
+        unsafe {
+            proj_sys::proj_context_get_database_metadata(
+                self.ptr,
+                key.as_ref().to_cstring().as_ptr(),
+            )
+        }
+        .to_string()
     }
     ///# References
     ///
@@ -78,7 +83,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
     pub fn guess_wkt_dialect(&self, wkt: &str) -> miette::Result<GuessedWktDialect> {
         GuessedWktDialect::try_from(unsafe {
-            proj_sys::proj_context_guess_wkt_dialect(self.ptr, wkt.to_cstr())
+            proj_sys::proj_context_guess_wkt_dialect(self.ptr, wkt.to_cstring().as_ptr())
         })
         .into_diagnostic()
     }
@@ -102,8 +107,13 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_create_from_wkt(
                 self.ptr,
-                wkt.to_cstr(),
-                options.to_vec_cstr().as_ptr(),
+                wkt.to_cstring().as_ptr(),
+                options
+                    .options
+                    .iter()
+                    .map(|s| s.as_ptr())
+                    .collect::<Vec<_>>()
+                    .as_ptr(),
                 &mut out_warnings,
                 &mut out_grammar_errors,
             )
@@ -133,8 +143,8 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_create_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
-                code.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                code.to_cstring().as_ptr(),
                 category.into(),
                 use_projalternative_grid_names as i32,
                 ptr::null(),
@@ -156,8 +166,8 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_uom_get_info_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
-                code.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                code.to_cstring().as_ptr(),
                 &mut name,
                 &mut conv_factor,
                 &mut category,
@@ -186,7 +196,7 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_grid_get_info_from_database(
                 self.ptr,
-                grid_name.to_cstr(),
+                grid_name.to_cstring().as_ptr(),
                 &mut full_name,
                 &mut package_name,
                 &mut url,
@@ -226,8 +236,8 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_create_from_name(
                 self.ptr,
-                auth_name.to_cstr(),
-                searched_name.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                searched_name.to_cstring().as_ptr(),
                 types.map_or(ptr::null(), |types| types.as_ptr()),
                 count,
                 approximate_match as i32,
@@ -249,8 +259,8 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_geoid_models_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
-                code.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                code.to_cstring().as_ptr(),
                 ptr::null(),
             )
         };
@@ -285,7 +295,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_codes_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
                 proj_type.into(),
                 allow_deprecated as i32,
             )
@@ -308,7 +318,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_celestial_body_list_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
                 &mut out_result_count,
             )
         };
@@ -343,7 +353,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
                 params.map_or(ptr::null(), |p| {
                     let types: Vec<u32> = p
                         .types()
@@ -351,7 +361,8 @@ impl crate::Context {
                         .iter()
                         .map(|f| u32::from(f.clone()))
                         .collect();
-                    let celestial_body_name = p.celestial_body_name().to_owned().to_cstr();
+                    let celestial_body_name =
+                        p.celestial_body_name().to_owned().to_cstring().as_ptr();
                     &proj_sys::PROJ_CRS_LIST_PARAMETERS {
                         types: types.as_ptr(),
                         typesCount: p.types().len(),
@@ -410,8 +421,8 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_units_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
-                category.as_ref().to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                category.as_ref().to_cstring().as_ptr(),
                 allow_deprecated as i32,
                 &mut out_result_count,
             )
@@ -445,7 +456,7 @@ impl crate::Context {
             proj_sys::proj_suggests_code_for(
                 self.ptr,
                 object.ptr(),
-                authority.to_cstr(),
+                authority.to_cstring().as_ptr(),
                 numeric_code as i32,
                 ptr::null(),
             )

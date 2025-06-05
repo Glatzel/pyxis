@@ -1,4 +1,4 @@
-use envoy::{CStrToString, ToCStr};
+use envoy::{CStrToString, ToCString};
 
 use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
 
@@ -43,7 +43,7 @@ impl crate::Proj<'_> {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
 pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
-    let src = unsafe { proj_sys::proj_grid_info(grid.to_cstr()) };
+    let src = unsafe { proj_sys::proj_grid_info(grid.to_cstring().as_ptr()) };
     if src.gridname.to_string().unwrap().as_str() == ""
         && src.filename.to_string().unwrap().as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
@@ -68,7 +68,7 @@ pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
 pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
-    let src = unsafe { proj_sys::proj_init_info(initname.to_cstr()) };
+    let src = unsafe { proj_sys::proj_init_info(initname.to_cstring().as_ptr()) };
     let info = InitInfo::new(
         src.name.to_string().unwrap_or_default(),
         src.filename.to_string().unwrap_or_default(),

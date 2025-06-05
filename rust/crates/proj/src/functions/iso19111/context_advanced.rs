@@ -1,6 +1,6 @@
 use std::ptr;
 
-use envoy::{ToCStr, ToVecCStr};
+use envoy::ToCString;
 
 use crate::data_types::iso19111::*;
 use crate::{Context, Proj, ProjOptions, pj_obj_list_to_vec};
@@ -49,7 +49,7 @@ impl Context {
             proj_sys::proj_create_cartesian_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.to_cstr(),
+                unit_name.to_cstring().as_ptr(),
                 unit_conv_factor,
             )
         };
@@ -68,7 +68,7 @@ impl Context {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.to_cstr(),
+                unit_name.to_cstring().as_ptr(),
                 unit_conv_factor,
             )
         };
@@ -89,9 +89,9 @@ impl Context {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
                 ellipsoidal_cs_3d_type.into(),
-                horizontal_angular_unit_name.to_cstr(),
+                horizontal_angular_unit_name.to_cstring().as_ptr(),
                 horizontal_angular_unit_conv_factor,
-                vertical_linear_unit_name.to_cstr(),
+                vertical_linear_unit_name.to_cstring().as_ptr(),
                 vertical_linear_unit_conv_factor,
             )
         };
@@ -110,10 +110,10 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
-                crs_auth_name.to_cstr(),
-                datum_auth_name.to_cstr(),
-                datum_code.to_cstr(),
-                crs_type.to_cstr(),
+                crs_auth_name.to_cstring().as_ptr(),
+                datum_auth_name.to_cstring().as_ptr(),
+                datum_code.to_cstring().as_ptr(),
+                crs_type.to_cstring().as_ptr(),
             )
         };
         pj_obj_list_to_vec(self, ptr)
@@ -137,14 +137,14 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
-                crs_name.to_cstr(),
-                datum_name.to_cstr(),
-                ellps_name.to_cstr(),
+                crs_name.to_cstring().as_ptr(),
+                datum_name.to_cstring().as_ptr(),
+                ellps_name.to_cstring().as_ptr(),
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.to_cstr(),
+                prime_meridian_name.to_cstring().as_ptr(),
                 prime_meridian_offset,
-                pm_angular_units.to_cstr(),
+                pm_angular_units.to_cstring().as_ptr(),
                 pm_units_conv,
                 ellipsoidal_cs.ptr(),
             )
@@ -163,7 +163,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
-                crs_name.to_cstr(),
+                crs_name.to_cstring().as_ptr(),
                 datum_or_datum_ensemble.ptr(),
                 ellipsoidal_cs.ptr(),
             )
@@ -190,16 +190,16 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
                 self.ptr,
-                crs_name.to_cstr(),
-                datum_name.to_cstr(),
-                ellps_name.to_cstr(),
+                crs_name.to_cstring().as_ptr(),
+                datum_name.to_cstring().as_ptr(),
+                ellps_name.to_cstring().as_ptr(),
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.to_cstr(),
+                prime_meridian_name.to_cstring().as_ptr(),
                 prime_meridian_offset,
-                angular_units.to_cstr(),
+                angular_units.to_cstring().as_ptr(),
                 angular_units_conv,
-                linear_units.to_cstr(),
+                linear_units.to_cstring().as_ptr(),
                 linear_units_conv,
             )
         };
@@ -218,9 +218,9 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
                 self.ptr,
-                crs_name.to_cstr(),
+                crs_name.to_cstring().as_ptr(),
                 datum_or_datum_ensemble.ptr(),
-                linear_units.to_cstr(),
+                linear_units.to_cstring().as_ptr(),
                 linear_units_conv,
             )
         };
@@ -239,7 +239,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
                 self.ptr,
-                crs_name.to_cstr(),
+                crs_name.to_cstring().as_ptr(),
                 base_geographic_crs.ptr(),
                 conversion.ptr(),
                 ellipsoidal_cs.ptr(),
@@ -259,7 +259,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_crs_create_projected_3D_crs_from_2D(
                 self.ptr,
-                crs_name.to_cstr(),
+                crs_name.to_cstring().as_ptr(),
                 projected_2d_crs.ptr(),
                 geog_3d_crs.map_or(ptr::null(), |crs| crs.ptr()),
             )
@@ -270,7 +270,9 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
     pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> miette::Result<Proj> {
-        let ptr = unsafe { proj_sys::proj_create_engineering_crs(self.ptr, crs_name.to_cstr()) };
+        let ptr = unsafe {
+            proj_sys::proj_create_engineering_crs(self.ptr, crs_name.to_cstring().as_ptr())
+        };
         crate::Proj::new(self, ptr)
     }
     ///# References
@@ -286,9 +288,9 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
                 self.ptr,
-                crs_name.to_cstr(),
-                datum_name.to_cstr(),
-                linear_units.to_cstr(),
+                crs_name.to_cstring().as_ptr(),
+                datum_name.to_cstring().as_ptr(),
+                linear_units.to_cstring().as_ptr(),
                 linear_units_conv,
             )
         };
@@ -311,23 +313,28 @@ impl Context {
         geoid_geog_crs: Option<&Proj>,
         accuracy: Option<f64>,
     ) -> miette::Result<Proj> {
-        let mut option = ProjOptions::new(1);
-        option.push_optional_pass(accuracy, "ACCURACY");
+        let mut options = ProjOptions::new(1);
+        options.push_optional_pass(accuracy, "ACCURACY");
 
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs_ex(
                 self.ptr,
-                crs_name.to_cstr(),
-                datum_name.to_cstr(),
-                datum_auth_name.to_cstr(),
-                datum_code.to_cstr(),
-                linear_units.to_cstr(),
+                crs_name.to_cstring().as_ptr(),
+                datum_name.to_cstring().as_ptr(),
+                datum_auth_name.to_cstring().as_ptr(),
+                datum_code.to_cstring().as_ptr(),
+                linear_units.to_cstring().as_ptr(),
                 linear_units_conv,
-                geoid_model_name.to_cstr(),
-                geoid_model_auth_name.to_cstr(),
-                geoid_model_code.to_cstr(),
+                geoid_model_name.to_cstring().as_ptr(),
+                geoid_model_auth_name.to_cstring().as_ptr(),
+                geoid_model_code.to_cstring().as_ptr(),
                 geoid_geog_crs.map_or(ptr::null(), |crs| crs.ptr()),
-                option.to_vec_cstr().as_mut_ptr(),
+                options
+                    .options
+                    .iter()
+                    .map(|s| s.as_ptr())
+                    .collect::<Vec<_>>()
+                    .as_ptr(),
             )
         };
         crate::Proj::new(self, ptr)
@@ -344,7 +351,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
                 self.ptr,
-                crs_name.to_cstr(),
+                crs_name.to_cstring().as_ptr(),
                 horiz_crs.ptr(),
                 vert_crs.ptr(),
             )
@@ -368,11 +375,11 @@ impl Context {
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
             .iter()
             .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                name: p.name().to_cstr(),
-                auth_name: p.auth_name().to_cstr(),
-                code: p.code().to_cstr(),
+                name: p.name().to_cstring().as_ptr(),
+                auth_name: p.auth_name().to_cstring().as_ptr(),
+                code: p.code().to_cstring().as_ptr(),
                 value: *p.value(),
-                unit_name: p.unit_name().to_cstr(),
+                unit_name: p.unit_name().to_cstring().as_ptr(),
                 unit_conv_factor: *p.unit_conv_factor(),
                 unit_type: u32::from(*p.unit_type()),
             })
@@ -380,12 +387,12 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
                 self.ptr,
-                name.to_cstr(),
-                auth_name.to_cstr(),
-                code.to_cstr(),
-                method_name.to_cstr(),
-                method_auth_name.to_cstr(),
-                method_code.to_cstr(),
+                name.to_cstring().as_ptr(),
+                auth_name.to_cstring().as_ptr(),
+                code.to_cstring().as_ptr(),
+                method_name.to_cstring().as_ptr(),
+                method_auth_name.to_cstring().as_ptr(),
+                method_code.to_cstring().as_ptr(),
                 count as i32,
                 params.as_ptr(),
             )
@@ -413,11 +420,11 @@ impl Context {
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
             .iter()
             .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                name: p.name().to_cstr(),
-                auth_name: p.auth_name().to_cstr(),
-                code: p.code().to_cstr(),
+                name: p.name().to_cstring().as_ptr(),
+                auth_name: p.auth_name().to_cstring().as_ptr(),
+                code: p.code().to_cstring().as_ptr(),
                 value: *p.value(),
-                unit_name: p.unit_name().to_cstr(),
+                unit_name: p.unit_name().to_cstring().as_ptr(),
                 unit_conv_factor: *p.unit_conv_factor(),
                 unit_type: u32::from(*p.unit_type()),
             })
@@ -425,15 +432,15 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_transformation(
                 self.ptr,
-                name.to_cstr(),
-                auth_name.to_cstr(),
-                code.to_cstr(),
+                name.to_cstring().as_ptr(),
+                auth_name.to_cstring().as_ptr(),
+                code.to_cstring().as_ptr(),
                 source_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 target_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 interpolation_crs.map_or(ptr::null(), |crs| crs.ptr()),
-                method_name.to_cstr(),
-                method_auth_name.to_cstr(),
-                method_code.to_cstr(),
+                method_name.to_cstring().as_ptr(),
+                method_auth_name.to_cstring().as_ptr(),
+                method_code.to_cstring().as_ptr(),
                 count as i32,
                 params.as_ptr(),
                 accuracy,
@@ -455,7 +462,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
                 self.ptr,
-                crs_name.to_cstr(),
+                crs_name.to_cstring().as_ptr(),
                 geodetic_crs.ptr(),
                 conversion.ptr(),
                 coordinate_system.ptr(),
@@ -496,7 +503,7 @@ impl Context {
                 self.ptr,
                 vert_crs.ptr(),
                 hub_geographic_3d_crs.ptr(),
-                grid_name.to_cstr(),
+                grid_name.to_cstring().as_ptr(),
             )
         };
         crate::Proj::new(self, ptr)
@@ -535,9 +542,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -566,9 +573,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -597,9 +604,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -630,9 +637,9 @@ impl Context {
                 longitude_second_point,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -659,9 +666,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -688,9 +695,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -721,9 +728,9 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -752,9 +759,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -785,9 +792,9 @@ impl Context {
                 longitude_false_origin,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -818,9 +825,9 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -853,9 +860,9 @@ impl Context {
                 easting_false_origin,
                 northing_false_origin,
                 ellipsoid_scaling_factor,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -886,9 +893,9 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -915,9 +922,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -944,9 +951,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -973,9 +980,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1002,9 +1009,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1031,9 +1038,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1060,9 +1067,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1093,9 +1100,9 @@ impl Context {
                 latitude_second_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1120,9 +1127,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1147,9 +1154,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1174,9 +1181,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1201,9 +1208,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1228,9 +1235,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1255,9 +1262,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1284,9 +1291,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1313,9 +1320,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1340,9 +1347,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1367,9 +1374,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1394,9 +1401,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1423,9 +1430,9 @@ impl Context {
                 height,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1452,9 +1459,9 @@ impl Context {
                 height,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1481,9 +1488,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1516,9 +1523,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1551,9 +1558,9 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1588,9 +1595,9 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1621,9 +1628,9 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1652,9 +1659,9 @@ impl Context {
                 latitude_second_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1687,9 +1694,9 @@ impl Context {
                 scale_factor_pseudo_standard_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1722,9 +1729,9 @@ impl Context {
                 scale_factor_pseudo_standard_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1751,9 +1758,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1778,9 +1785,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1809,9 +1816,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1838,9 +1845,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1867,9 +1874,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1894,9 +1901,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1923,9 +1930,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1952,9 +1959,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -1981,9 +1988,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2014,9 +2021,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2043,9 +2050,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2074,9 +2081,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2103,9 +2110,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2130,9 +2137,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2157,9 +2164,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2188,9 +2195,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2215,9 +2222,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2242,9 +2249,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2269,9 +2276,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2298,9 +2305,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2325,9 +2332,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2352,9 +2359,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2379,9 +2386,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2406,9 +2413,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2435,9 +2442,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2464,9 +2471,9 @@ impl Context {
                 peg_point_long,
                 peg_point_heading,
                 peg_point_height,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2492,9 +2499,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2525,9 +2532,9 @@ impl Context {
                 view_point_height,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                linear_unit_name.to_cstring().as_ptr(),
                 linear_unit_conv_factor,
             )
         };
@@ -2550,7 +2557,7 @@ impl Context {
                 south_pole_lat_in_unrotated_crs,
                 south_pole_long_in_unrotated_crs,
                 axis_rotation,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
             )
         };
@@ -2573,7 +2580,7 @@ impl Context {
                 grid_north_pole_latitude,
                 grid_north_pole_longitude,
                 north_pole_grid_longitude,
-                ang_unit_name.to_cstr(),
+                ang_unit_name.to_cstring().as_ptr(),
                 ang_unit_conv_factor,
             )
         };

@@ -1,4 +1,4 @@
-use envoy::{ToCStr, ToVecCStr};
+use envoy::ToCString;
 
 use crate::data_types::iso19111::*;
 use crate::{Proj, ProjOptions};
@@ -18,7 +18,9 @@ impl Proj<'_> {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_name>
     pub fn alter_name(&self, name: &str) -> miette::Result<Proj> {
-        let ptr = unsafe { proj_sys::proj_alter_name(self.ctx.ptr, self.ptr(), name.to_cstr()) };
+        let ptr = unsafe {
+            proj_sys::proj_alter_name(self.ctx.ptr, self.ptr(), name.to_cstring().as_ptr())
+        };
         Proj::new(self.ctx, ptr)
     }
     ///# References
@@ -29,8 +31,8 @@ impl Proj<'_> {
             proj_sys::proj_alter_id(
                 self.ctx.ptr,
                 self.ptr(),
-                auth_name.to_cstr(),
-                code.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                code.to_cstring().as_ptr(),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -58,10 +60,10 @@ impl Proj<'_> {
             proj_sys::proj_crs_alter_cs_angular_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                angular_unit.to_cstr(),
+                angular_unit.to_cstring().as_ptr(),
                 angular_units_convs,
-                unit_auth_name.to_cstr(),
-                unit_code.to_cstr(),
+                unit_auth_name.to_cstring().as_ptr(),
+                unit_code.to_cstring().as_ptr(),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -80,10 +82,10 @@ impl Proj<'_> {
             proj_sys::proj_crs_alter_cs_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.to_cstr(),
+                linear_units.to_cstring().as_ptr(),
                 linear_units_conv,
-                unit_auth_name.to_cstr(),
-                unit_code.to_cstr(),
+                unit_auth_name.to_cstring().as_ptr(),
+                unit_code.to_cstring().as_ptr(),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -103,10 +105,10 @@ impl Proj<'_> {
             proj_sys::proj_crs_alter_parameters_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.to_cstr(),
+                linear_units.to_cstring().as_ptr(),
                 linear_units_conv,
-                unit_auth_name.to_cstr(),
-                unit_code.to_cstr(),
+                unit_auth_name.to_cstring().as_ptr(),
+                unit_code.to_cstring().as_ptr(),
                 convert_to_new_unit as i32,
             )
         };
@@ -117,7 +119,11 @@ impl Proj<'_> {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
     pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj> {
         let ptr = unsafe {
-            proj_sys::proj_crs_promote_to_3D(self.ctx.ptr, crs_3d_name.to_cstr(), self.ptr())
+            proj_sys::proj_crs_promote_to_3D(
+                self.ctx.ptr,
+                crs_3d_name.to_cstring().as_ptr(),
+                self.ptr(),
+            )
         };
         Proj::new(self.ctx, ptr)
     }
@@ -126,7 +132,11 @@ impl Proj<'_> {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_demote_to_2D>
     pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> miette::Result<Proj> {
         let ptr = unsafe {
-            proj_sys::proj_crs_demote_to_2D(self.ctx.ptr, crs_2d_name.to_cstr(), self.ptr())
+            proj_sys::proj_crs_demote_to_2D(
+                self.ctx.ptr,
+                crs_2d_name.to_cstring().as_ptr(),
+                self.ptr(),
+            )
         };
         Proj::new(self.ctx, ptr)
     }
@@ -148,7 +158,7 @@ impl Proj<'_> {
                 self.ctx.ptr,
                 self.ptr(),
                 new_method_epsg_code.unwrap_or_default() as i32,
-                new_method_name.to_cstr(),
+                new_method_name.to_cstring().as_ptr(),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -167,7 +177,12 @@ impl Proj<'_> {
             proj_sys::proj_crs_create_bound_crs_to_WGS84(
                 self.ctx.ptr,
                 self.ptr(),
-                options.to_vec_cstr().as_ptr(),
+                options
+                    .options
+                    .iter()
+                    .map(|s| s.as_ptr())
+                    .collect::<Vec<_>>()
+                    .as_ptr(),
             )
         };
         crate::Proj::new(self.ctx, ptr)

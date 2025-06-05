@@ -8,6 +8,10 @@
 //! - The `ProjOptions` struct for building and managing PROJ options as
 //!   CStrings.
 
+use std::ffi::CString;
+
+use envoy::ToCString;
+
 /// String constant representing the PROJ option value for `true`.
 pub(crate) const OPTION_YES: &str = "YES";
 /// String constant representing the PROJ option value for `false`.
@@ -51,7 +55,7 @@ impl_to_option_string!(crate::data_types::iso19111::AllowIntermediateCrs);
 /// strings.
 pub(crate) struct ProjOptions {
     /// The list of options as CStrings, suitable for passing to C APIs.
-    pub(crate) options: Vec<String>,
+    pub(crate) options: Vec<CString>,
 }
 
 impl ProjOptions {
@@ -70,7 +74,7 @@ impl ProjOptions {
     /// * `name` - The name of the option.
     pub fn _push<T: ToProjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
         self.options
-            .push(format!("{name}={}", opt.to_option_string()));
+            .push(format!("{name}={}", opt.to_option_string()).to_cstring());
         self
     }
 
@@ -90,10 +94,11 @@ impl ProjOptions {
         match opt {
             Some(opt) => {
                 self.options
-                    .push(format!("{name}={}", opt.to_option_string()));
+                    .push(format!("{name}={}", opt.to_option_string()).to_cstring());
             }
             None => {
-                self.options.push(format!("{name}={default_value}"));
+                self.options
+                    .push(format!("{name}={default_value}").to_cstring());
             }
         }
         self
@@ -112,12 +117,8 @@ impl ProjOptions {
     ) -> &mut Self {
         opt.inspect(|o| {
             self.options
-                .push(format!("{name}={}", o.to_option_string()));
+                .push(format!("{name}={}", o.to_option_string()).to_cstring());
         });
         self
     }
-}
-impl envoy::ToVecCStr for ProjOptions {
-    fn to_vec_cstring(&self) -> Vec<std::ffi::CString> { self.options.to_vec_cstring() }
-    fn to_vec_cstr(&self) -> Vec<*const i8> { self.options.to_vec_cstr() }
 }

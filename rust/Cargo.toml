@@ -18,7 +18,7 @@ clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.18" }
 criterion = { package = "codspeed-criterion-compat", version = "2.10.1" }
 dunce = "1.0.5"
 # envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.18" }
-envoy = { path="../../toolbox/rust/crates/envoy/" }
+envoy = { path = "../../toolbox/rust/crates/envoy/" }
 float-cmp = "0.10.0"
 libc = "0.2"
 miette = { version = "7.6.0", features = ["fancy"] }

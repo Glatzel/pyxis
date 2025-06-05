@@ -1,6 +1,6 @@
 use std::ptr;
 
-use envoy::ToCStr;
+use envoy::{ToCStr, ToVecCStr};
 
 use crate::data_types::iso19111::*;
 use crate::{Context, Proj, ProjOptions, pj_obj_list_to_vec};
@@ -327,7 +327,7 @@ impl Context {
                 geoid_model_auth_name.to_cstr(),
                 geoid_model_code.to_cstr(),
                 geoid_geog_crs.map_or(ptr::null(), |crs| crs.ptr()),
-                option.vec_ptr().as_mut_ptr(),
+                option.to_vec_cstr().as_mut_ptr(),
             )
         };
         crate::Proj::new(self, ptr)

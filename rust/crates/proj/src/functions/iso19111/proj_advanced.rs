@@ -1,4 +1,4 @@
-use envoy::ToCStr;
+use envoy::{ToCStr, ToVecCStr};
 
 use crate::data_types::iso19111::*;
 use crate::{Proj, ProjOptions};
@@ -162,9 +162,13 @@ impl Proj<'_> {
     ) -> miette::Result<Proj> {
         let mut options = ProjOptions::new(1);
         options.push_optional_pass(allow_intermediate_crs, "ALLOW_INTERMEDIATE_CRS");
-        let vec_ptr = options.vec_ptr();
+
         let ptr = unsafe {
-            proj_sys::proj_crs_create_bound_crs_to_WGS84(self.ctx.ptr, self.ptr(), vec_ptr.as_ptr())
+            proj_sys::proj_crs_create_bound_crs_to_WGS84(
+                self.ctx.ptr,
+                self.ptr(),
+                options.to_vec_cstr().as_ptr(),
+            )
         };
         crate::Proj::new(self.ctx, ptr)
     }

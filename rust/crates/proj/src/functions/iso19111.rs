@@ -19,11 +19,13 @@ mod operation_factory_context;
 mod proj_advanced;
 mod proj_basic;
 
+///Free a list of NULL terminated strings.
+///
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_string_list_destroy>
-fn string_list_destroy(ptr: *mut *mut i8) {
+fn string_list_destroy(proj_string_list: *mut *mut i8) {
     unsafe {
-        proj_sys::proj_string_list_destroy(ptr);
+        proj_sys::proj_string_list_destroy(proj_string_list);
     }
 }

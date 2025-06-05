@@ -14,7 +14,6 @@ use crate::GeoFloat;
 /// A tuple containing the projected XY coordinates of the sea level plane
 /// (in meters).
 ///
-///
 /// # References
 /// - 杨元兴. (2008). 抵偿高程面的选择与计算. 城市勘测 (02), 72-74.
 ///

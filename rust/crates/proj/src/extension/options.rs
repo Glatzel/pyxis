@@ -8,11 +8,6 @@
 //! - The `ProjOptions` struct for building and managing PROJ options as
 //!   CStrings.
 
-use std::ffi::CString;
-use std::ptr::null;
-
-use envoy::ToCStr;
-
 /// String constant representing the PROJ option value for `true`.
 pub(crate) const OPTION_YES: &str = "YES";
 /// String constant representing the PROJ option value for `false`.
@@ -56,7 +51,7 @@ impl_to_option_string!(crate::data_types::iso19111::AllowIntermediateCrs);
 /// strings.
 pub(crate) struct ProjOptions {
     /// The list of options as CStrings, suitable for passing to C APIs.
-    pub(crate) options: Vec<CString>,
+    pub(crate) options: Vec<String>,
 }
 
 impl ProjOptions {
@@ -75,7 +70,7 @@ impl ProjOptions {
     /// * `name` - The name of the option.
     pub fn _push<T: ToProjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
         self.options
-            .push(format!("{name}={}", opt.to_option_string()).to_cstring());
+            .push(format!("{name}={}", opt.to_option_string()));
         self
     }
 
@@ -95,11 +90,10 @@ impl ProjOptions {
         match opt {
             Some(opt) => {
                 self.options
-                    .push(format!("{name}={}", opt.to_option_string()).to_cstring());
+                    .push(format!("{name}={}", opt.to_option_string()));
             }
             None => {
-                self.options
-                    .push(format!("{name}={default_value}").to_cstring());
+                self.options.push(format!("{name}={default_value}"));
             }
         }
         self
@@ -116,21 +110,14 @@ impl ProjOptions {
         opt: Option<T>,
         name: &str,
     ) -> &mut Self {
-        if let Some(opt) = opt {
+        opt.inspect(|o| {
             self.options
-                .push(format!("{name}={}", opt.to_option_string()).to_cstring());
-        }
+                .push(format!("{name}={}", o.to_option_string()));
+        });
         self
     }
-
-    /// Returns a vector of raw pointers to the CStrings, terminated by a null
-    /// pointer.
-    ///
-    /// This is suitable for passing to C APIs that expect a null-terminated
-    /// array of strings.
-    pub fn vec_ptr(&self) -> Vec<*const i8> {
-        let mut ptrs = self.options.iter().map(|s| s.as_ptr()).collect::<Vec<_>>();
-        ptrs.push(null());
-        ptrs
-    }
+}
+impl envoy::ToVecCStr for ProjOptions {
+    fn to_vec_cstring(&self) -> Vec<std::ffi::CString> { self.options.to_vec_cstring() }
+    fn to_vec_cstr(&self) -> Vec<*const i8> { self.options.to_vec_cstr() }
 }

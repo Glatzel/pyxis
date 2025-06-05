@@ -1,6 +1,6 @@
 use std::ptr;
 
-use envoy::{CStrListToVecString, ToCStr, ToCStrList};
+use envoy::{CStrListToVecString, ToCStr, ToVecCStr};
 
 use crate::data_types::iso19111::InsertObjectSession;
 use crate::{Context, Proj};
@@ -40,8 +40,7 @@ impl InsertObjectSession<'_> {
         numeric_codes: bool,
         allowed_authorities: Option<&[&str]>,
     ) -> miette::Result<Vec<String>> {
-        let allowed_authorities = allowed_authorities.map(|f| f.to_cstr_list());
-
+        let allowed_authorities = allowed_authorities.map(|f| f.to_vec_cstr());
         let ptr = unsafe {
             proj_sys::proj_get_insert_statements(
                 self.ctx.ptr,

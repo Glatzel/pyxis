@@ -1,4 +1,4 @@
-use envoy::ToCStr;
+use envoy::{ToCStr, ToVecCStr};
 
 use crate::{Proj, check_result};
 /// # Transformation setup
@@ -196,14 +196,13 @@ impl crate::Context {
             .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")
             .push_optional_pass(only_best, "ONLY_BEST")
             .push_optional_pass(force_over, "FORCE_OVER");
-        let ptrs = options.vec_ptr();
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs_from_pj(
                 self.ptr,
                 source_crs.ptr(),
                 target_crs.ptr(),
                 area.ptr,
-                ptrs.as_ptr(),
+                options.to_vec_cstr().as_ptr(),
             )
         };
         check_result!(self);

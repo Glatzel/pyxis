@@ -1,7 +1,7 @@
 use std::ptr;
 use std::str::FromStr;
 
-use envoy::{CStrToString, ToCStr};
+use envoy::{CStrToString, ToCStr, ToVecCStr};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
@@ -201,9 +201,13 @@ impl Proj<'_> {
                 OPTION_NO,
             )
             .push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", OPTION_YES);
-        let ptrs = options.vec_ptr();
         let result = unsafe {
-            proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr(), wkt_type.into(), ptrs.as_ptr())
+            proj_sys::proj_as_wkt(
+                self.ctx.ptr,
+                self.ptr(),
+                wkt_type.into(),
+                options.to_vec_cstr().as_ptr(),
+            )
         }
         .to_string();
         check_result!(self);
@@ -226,13 +230,12 @@ impl Proj<'_> {
             .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
             .push_optional(max_line_length, "MAX_LINE_LENGTH", "80");
 
-        let ptrs = options.vec_ptr();
         let result = unsafe {
             proj_sys::proj_as_proj_string(
                 self.ctx.ptr,
                 self.ptr(),
                 string_type.into(),
-                ptrs.as_ptr(),
+                options.to_vec_cstr().as_ptr(),
             )
         }
         .to_string();
@@ -255,9 +258,10 @@ impl Proj<'_> {
             .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
             .push_optional(schema, "SCHEMA", "");
 
-        let ptrs = options.vec_ptr();
-        let result = unsafe { proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr(), ptrs.as_ptr()) }
-            .to_string();
+        let result = unsafe {
+            proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr(), options.to_vec_cstr().as_ptr())
+        }
+        .to_string();
         check_result!(self);
         Ok(result.expect("Error"))
     }

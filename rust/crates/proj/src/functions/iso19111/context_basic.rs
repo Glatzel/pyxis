@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use std::ptr;
 use std::str::FromStr;
 
-use envoy::{CStrListToVecString, CStrToString, ToCStr};
+use envoy::{CStrListToVecString, CStrToString, ToCStr, ToVecCStr};
 use miette::IntoDiagnostic;
 
 use super::string_list_destroy;
@@ -97,14 +97,13 @@ impl crate::Context {
             unset_identifiers_if_incompatible_def,
             "UNSET_IDENTIFIERS_IF_INCOMPATIBLE_DEF",
         );
-        let vec_ptr = options.vec_ptr();
         let mut out_warnings: *mut *mut i8 = std::ptr::null_mut();
         let mut out_grammar_errors: *mut *mut i8 = std::ptr::null_mut();
         let ptr = unsafe {
             proj_sys::proj_create_from_wkt(
                 self.ptr,
                 wkt.to_cstr(),
-                vec_ptr.as_ptr(),
+                options.to_vec_cstr().as_ptr(),
                 &mut out_warnings,
                 &mut out_grammar_errors,
             )
@@ -340,35 +339,32 @@ impl crate::Context {
             miette::bail!("At least one of `auth_name` and  `params` must be set.");
         }
         let mut out_result_count = i32::default();
-        let params = if let Some(params) = params {
-            let types: Vec<u32> = params
-                .types()
-                .to_owned()
-                .iter()
-                .map(|f| u32::from(f.clone()))
-                .collect();
-            let celestial_body_name = params.celestial_body_name().to_owned().to_cstr();
-            Some(proj_sys::PROJ_CRS_LIST_PARAMETERS {
-                types: types.as_ptr(),
-                typesCount: params.types().len(),
-                crs_area_of_use_contains_bbox: *params.west_lon_degree() as i32,
-                bbox_valid: *params.bbox_valid() as i32,
-                west_lon_degree: *params.west_lon_degree(),
-                south_lat_degree: *params.south_lat_degree(),
-                east_lon_degree: *params.east_lon_degree(),
-                north_lat_degree: *params.north_lat_degree(),
-                allow_deprecated: *params.allow_deprecated() as i32,
-                celestial_body_name,
-            })
-        } else {
-            None
-        };
 
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr,
                 auth_name.to_cstr(),
-                params.map_or(ptr::null(), |p| &p),
+                params.map_or(ptr::null(), |p| {
+                    let types: Vec<u32> = p
+                        .types()
+                        .to_owned()
+                        .iter()
+                        .map(|f| u32::from(f.clone()))
+                        .collect();
+                    let celestial_body_name = p.celestial_body_name().to_owned().to_cstr();
+                    &proj_sys::PROJ_CRS_LIST_PARAMETERS {
+                        types: types.as_ptr(),
+                        typesCount: p.types().len(),
+                        crs_area_of_use_contains_bbox: *p.west_lon_degree() as i32,
+                        bbox_valid: *p.bbox_valid() as i32,
+                        west_lon_degree: *p.west_lon_degree(),
+                        south_lat_degree: *p.south_lat_degree(),
+                        east_lon_degree: *p.east_lon_degree(),
+                        north_lat_degree: *p.north_lat_degree(),
+                        allow_deprecated: *p.allow_deprecated() as i32,
+                        celestial_body_name,
+                    }
+                }),
                 &mut out_result_count,
             )
         };

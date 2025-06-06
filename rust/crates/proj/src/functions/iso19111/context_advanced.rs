@@ -433,24 +433,19 @@ impl Context {
                 unit_type: u32::from(*p.unit_type()),
             })
             .collect();
-        let name = name.map(|s| s.to_cstring());
-        let auth_name = auth_name.map(|s| s.to_cstring());
-        let code = code.map(|s| s.to_cstring());
-        let method_name = method_name.map(|s| s.to_cstring());
-        let method_auth_name = method_auth_name.map(|s| s.to_cstring());
-        let method_code = method_code.map(|s| s.to_cstring());
+
         let ptr = unsafe {
             proj_sys::proj_create_transformation(
                 self.ptr,
-                name.map_or(ptr::null(), |s| s.as_ptr()),
-                auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                code.map_or(ptr::null(), |s| s.as_ptr()),
+                name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 source_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 target_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 interpolation_crs.map_or(ptr::null(), |crs| crs.ptr()),
-                method_name.map_or(ptr::null(), |s| s.as_ptr()),
-                method_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                method_code.map_or(ptr::null(), |s| s.as_ptr()),
+                method_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                method_auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                method_code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 count as i32,
                 params.as_ptr(),
                 accuracy,
@@ -469,7 +464,6 @@ impl Context {
         conversion: &Proj,
         coordinate_system: &Proj,
     ) -> miette::Result<Proj> {
-     
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
                 self.ptr,
@@ -545,7 +539,6 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-    
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
                 self.ptr,
@@ -916,8 +909,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
-        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
+       
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_belgium(
                 self.ptr,
@@ -927,9 +919,9 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
+                ang_unit_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 ang_unit_conv_factor,
-                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
+                linear_unit_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 linear_unit_conv_factor,
             )
         };

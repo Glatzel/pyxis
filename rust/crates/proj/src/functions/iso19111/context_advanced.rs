@@ -45,11 +45,12 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let unit_name = unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.to_cstring().as_ptr(),
+                unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 unit_conv_factor,
             )
         };
@@ -64,11 +65,12 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let unit_name = unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.to_cstring().as_ptr(),
+                unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 unit_conv_factor,
             )
         };
@@ -89,9 +91,9 @@ impl Context {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
                 ellipsoidal_cs_3d_type.into(),
-                horizontal_angular_unit_name.to_cstring().as_ptr(),
+                horizontal_angular_unit_name.map_or(ptr::null(), |s| s.to_cstring().as_ptr()),
                 horizontal_angular_unit_conv_factor,
-                vertical_linear_unit_name.to_cstring().as_ptr(),
+                vertical_linear_unit_name.map_or(ptr::null(), |s| s.to_cstring().as_ptr()),
                 vertical_linear_unit_conv_factor,
             )
         };
@@ -107,13 +109,15 @@ impl Context {
         datum_code: &str,
         crs_type: Option<&str>,
     ) -> miette::Result<Vec<Proj>> {
+        let crs_auth_name = crs_auth_name.map(|s| s.to_cstring());
+        let crs_type = crs_type.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
-                crs_auth_name.to_cstring().as_ptr(),
+                crs_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
                 datum_auth_name.to_cstring().as_ptr(),
                 datum_code.to_cstring().as_ptr(),
-                crs_type.to_cstring().as_ptr(),
+                crs_type.map_or(ptr::null(), |s| s.as_ptr()),
             )
         };
         pj_obj_list_to_vec(self, ptr)
@@ -137,7 +141,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
+                crs_name.map_or(std::ptr::null(), |s| s.to_cstring().as_ptr()),
                 datum_name.to_cstring().as_ptr(),
                 ellps_name.to_cstring().as_ptr(),
                 semi_major_metre,
@@ -256,10 +260,11 @@ impl Context {
         projected_2d_crs: &Proj,
         geog_3d_crs: Option<&Proj>,
     ) -> miette::Result<Proj> {
+        let crs_name = crs_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_crs_create_projected_3D_crs_from_2D(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
                 projected_2d_crs.ptr(),
                 geog_3d_crs.map_or(ptr::null(), |crs| crs.ptr()),
             )
@@ -2794,6 +2799,7 @@ mod test_context_advanced {
             ctx.crs_create_projected_3d_crs_from_2d(None, &proj_crs, Some(&geog_3d_crs))?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
+        assert!(wkt.contains("WGS 84 / UTM zone 31N"));
         assert!(wkt.contains("CS[Cartesian,3]"));
         Ok(())
     }

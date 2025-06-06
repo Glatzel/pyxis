@@ -42,7 +42,11 @@ impl crate::Context {
     pub fn set_search_paths(&self, paths: &[&Path]) -> miette::Result<&Self> {
         clerk::debug!("search_paths:{:?}", paths);
         let len = paths.len();
-        let paths: VecCString = paths.iter().map(|p| p.to_str()).collect::<Vec<_>>().into();
+        let paths: VecCString = paths
+            .iter()
+            .map(|p| p.to_str().unwrap())
+            .collect::<Vec<_>>()
+            .into();
         unsafe {
             proj_sys::proj_context_set_search_paths(
                 self.ptr,
@@ -70,7 +74,7 @@ impl crate::Context {
         unsafe {
             proj_sys::proj_context_set_ca_bundle_path(
                 self.ptr,
-                path.to_str().to_cstring().as_ptr(),
+                path.to_str().unwrap().to_cstring().as_ptr(),
             );
         };
         check_result!(self);

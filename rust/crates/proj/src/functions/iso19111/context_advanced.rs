@@ -111,15 +111,14 @@ impl Context {
         datum_code: &str,
         crs_type: Option<&str>,
     ) -> miette::Result<Vec<Proj<'_>>> {
-        let crs_auth_name = crs_auth_name.map(|s| s.to_cstring());
-        let crs_type = crs_type.map(|s| s.to_cstring());
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
-                crs_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                owned.push_option(crs_auth_name),
                 datum_auth_name.to_cstring().as_ptr(),
                 datum_code.to_cstring().as_ptr(),
-                crs_type.map_or(ptr::null(), |s| s.as_ptr()),
+                owned.push_option(crs_type),
             )
         };
         pj_obj_list_to_vec(self, ptr)

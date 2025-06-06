@@ -153,12 +153,13 @@ impl Proj<'_> {
                 "At least one of `new_method_epsg_code` and  `new_method_name` must be set."
             )
         }
+        let new_method_name = new_method_name.to_cstring();
         let ptr = unsafe {
             proj_sys::proj_convert_conversion_to_other_method(
                 self.ctx.ptr,
                 self.ptr(),
                 new_method_epsg_code.unwrap_or_default() as i32,
-                new_method_name.to_cstring().as_ptr(),
+                new_method_name.as_ptr(),
             )
         };
         Proj::new(self.ctx, ptr)

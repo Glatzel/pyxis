@@ -256,10 +256,11 @@ impl Context {
         projected_2d_crs: &Proj,
         geog_3d_crs: Option<&Proj>,
     ) -> miette::Result<Proj> {
+        let crs_name = crs_name.to_cstring();
         let ptr = unsafe {
             proj_sys::proj_crs_create_projected_3D_crs_from_2D(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
+                crs_name.as_ptr(),
                 projected_2d_crs.ptr(),
                 geog_3d_crs.map_or(ptr::null(), |crs| crs.ptr()),
             )

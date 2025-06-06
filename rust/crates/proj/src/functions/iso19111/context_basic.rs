@@ -8,7 +8,7 @@ use miette::IntoDiagnostic;
 
 use super::string_list_destroy;
 use crate::data_types::iso19111::*;
-use crate::{Proj, ProjOptions, pj_obj_list_to_vec};
+use crate::{OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
 /// # ISO-19111 Base functions
 impl crate::Context {
     ///# References
@@ -345,11 +345,11 @@ impl crate::Context {
             miette::bail!("At least one of `auth_name` and  `params` must be set.");
         }
         let mut out_result_count = i32::default();
-        let auth_name = auth_name.map(|s| s.to_cstring());
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr,
-                auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                owned.push_option(auth_name),
                 params.map_or(ptr::null(), |p| {
                     let types: Vec<u32> = p
                         .types()

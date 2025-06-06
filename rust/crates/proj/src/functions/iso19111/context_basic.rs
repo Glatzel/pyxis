@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use std::ptr;
 use std::str::FromStr;
 
-use envoy::{CStrListToVecString, CStrToString, ToCString};
+use envoy::{AsVecPtr, CStrListToVecString, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 
 use super::string_list_destroy;
@@ -108,12 +108,7 @@ impl crate::Context {
             proj_sys::proj_create_from_wkt(
                 self.ptr,
                 wkt.to_cstring().as_ptr(),
-                options
-                    .options
-                    .iter()
-                    .map(|s| s.as_ptr())
-                    .collect::<Vec<_>>()
-                    .as_ptr(),
+                options.as_vec_ptr().as_ptr(),
                 &mut out_warnings,
                 &mut out_grammar_errors,
             )
@@ -361,8 +356,7 @@ impl crate::Context {
                         .iter()
                         .map(|f| u32::from(f.clone()))
                         .collect();
-                    let celestial_body_name =
-                        p.celestial_body_name().to_owned().to_cstring().as_ptr();
+                    let celestial_body_name = p.celestial_body_name().to_cstring();
                     &proj_sys::PROJ_CRS_LIST_PARAMETERS {
                         types: types.as_ptr(),
                         typesCount: p.types().len(),
@@ -373,7 +367,7 @@ impl crate::Context {
                         east_lon_degree: *p.east_lon_degree(),
                         north_lat_degree: *p.north_lat_degree(),
                         allow_deprecated: *p.allow_deprecated() as i32,
-                        celestial_body_name,
+                        celestial_body_name: celestial_body_name.as_ptr(),
                     }
                 }),
                 &mut out_result_count,

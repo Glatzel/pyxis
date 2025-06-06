@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use envoy::ToCString;
+use envoy::{AsVecPtr, ToCString, VecCString};
 
 use crate::check_result;
 
@@ -42,15 +42,12 @@ impl crate::Context {
     pub fn set_search_paths(&self, paths: &[&Path]) -> miette::Result<&Self> {
         clerk::debug!("search_paths:{:?}", paths);
         let len = paths.len();
+        let paths: VecCString = paths.iter().map(|p| p.to_str()).collect::<Vec<_>>().into();
         unsafe {
             proj_sys::proj_context_set_search_paths(
                 self.ptr,
                 len as i32,
-                paths
-                    .iter()
-                    .map(|p| p.to_str().to_cstring().as_ptr())
-                    .collect::<Vec<_>>()
-                    .as_ptr(),
+                paths.as_vec_ptr().as_ptr(),
             );
         };
         check_result!(self);

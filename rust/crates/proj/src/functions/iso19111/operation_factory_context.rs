@@ -1,4 +1,4 @@
-use envoy::ToCString;
+use envoy::{AsVecPtr, ToCString, VecCString};
 
 use crate::data_types::iso19111::*;
 use crate::{Context, Proj, pj_obj_list_to_vec};
@@ -148,15 +148,12 @@ impl OperationFactoryContext<'_> {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allowed_intermediate_crs>
     pub fn set_allowed_intermediate_crs(&self, list_of_auth_name_codes: &[&str]) -> &Self {
+        let list_of_auth_name_codes: VecCString = list_of_auth_name_codes.into();
         unsafe {
             proj_sys::proj_operation_factory_context_set_allowed_intermediate_crs(
                 self.ctx.ptr,
                 self.ptr,
-                list_of_auth_name_codes
-                    .iter()
-                    .map(|s| s.to_cstring().as_ptr())
-                    .collect::<Vec<_>>()
-                    .as_ptr(),
+                list_of_auth_name_codes.as_vec_ptr().as_ptr(),
             );
         }
         self

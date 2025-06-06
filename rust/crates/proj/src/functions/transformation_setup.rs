@@ -1,4 +1,4 @@
-use envoy::ToCString;
+use envoy::{AsVecPtr, ToCString};
 
 use crate::{Proj, check_result};
 /// # Transformation setup
@@ -202,12 +202,7 @@ impl crate::Context {
                 source_crs.ptr(),
                 target_crs.ptr(),
                 area.ptr,
-                options
-                    .options
-                    .iter()
-                    .map(|s| s.as_ptr())
-                    .collect::<Vec<_>>()
-                    .as_ptr(),
+                options.as_vec_ptr().as_ptr(),
             )
         };
         check_result!(self);

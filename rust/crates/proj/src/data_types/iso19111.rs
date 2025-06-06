@@ -414,11 +414,11 @@ readonly_struct!(
     "Description of a parameter value for a Conversion."
     "# References"
     "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PARAM_DESCRIPTION>",
-    {name: Option<String>},
-    {auth_name:  Option<String>},
-    {code:  Option<String>},
+    {name: Option<CString>},
+    {auth_name:  Option<CString>},
+    {code:  Option<CString>},
     {value: f64},
-    {unit_name:  Option<String>},
+    {unit_name:  Option<CString>},
     {unit_conv_factor: f64},
     {unit_type: UnitType}
 );

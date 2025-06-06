@@ -55,7 +55,7 @@ impl_to_option_string!(crate::data_types::iso19111::AllowIntermediateCrs);
 /// strings.
 pub(crate) struct ProjOptions {
     /// The list of options as CStrings, suitable for passing to C APIs.
-    pub(crate) options: Vec<CString>,
+    options: Vec<CString>,
 }
 
 impl ProjOptions {
@@ -120,5 +120,16 @@ impl ProjOptions {
                 .push(format!("{name}={}", o.to_option_string()).to_cstring());
         });
         self
+    }
+}
+impl envoy::AsVecPtr for ProjOptions {
+    fn as_vec_ptr(&self) -> Vec<*const i8> {
+        let mut vec_ptr = self
+            .options
+            .iter()
+            .map(|s| s.as_ptr())
+            .collect::<Vec<*const i8>>();
+        vec_ptr.push(std::ptr::null());
+        vec_ptr
     }
 }

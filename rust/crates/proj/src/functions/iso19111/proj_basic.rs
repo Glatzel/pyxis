@@ -1,7 +1,7 @@
 use std::ptr;
 use std::str::FromStr;
 
-use envoy::{CStrToString, ToCString, ToVecCStr, ToVecCString};
+use envoy::{AsVecPtr, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
@@ -206,12 +206,7 @@ impl Proj<'_> {
                 self.ctx.ptr,
                 self.ptr(),
                 wkt_type.into(),
-                options
-                    .options
-                    .iter()
-                    .map(|s| s.as_ptr())
-                    .collect::<Vec<_>>()
-                    .as_ptr(),
+                options.as_vec_ptr().as_ptr(),
             )
         }
         .to_string();
@@ -240,12 +235,7 @@ impl Proj<'_> {
                 self.ctx.ptr,
                 self.ptr(),
                 string_type.into(),
-                options
-                    .options
-                    .iter()
-                    .map(|s| s.as_ptr())
-                    .collect::<Vec<_>>()
-                    .as_ptr(),
+                options.as_vec_ptr().as_ptr(),
             )
         }
         .to_string();
@@ -269,16 +259,7 @@ impl Proj<'_> {
             .push_optional(schema, "SCHEMA", "");
 
         let result = unsafe {
-            proj_sys::proj_as_projjson(
-                self.ctx.ptr,
-                self.ptr(),
-                options
-                    .options
-                    .iter()
-                    .map(|s| s.as_ptr())
-                    .collect::<Vec<_>>()
-                    .as_ptr(),
-            )
+            proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr(), options.as_vec_ptr().as_ptr())
         }
         .to_string();
         check_result!(self);

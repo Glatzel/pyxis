@@ -1,4 +1,4 @@
-use envoy::ToCString;
+use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
 use crate::{Proj, ProjOptions};
@@ -177,12 +177,7 @@ impl Proj<'_> {
             proj_sys::proj_crs_create_bound_crs_to_WGS84(
                 self.ctx.ptr,
                 self.ptr(),
-                options
-                    .options
-                    .iter()
-                    .map(|s| s.as_ptr())
-                    .collect::<Vec<_>>()
-                    .as_ptr(),
+                options.as_vec_ptr().as_ptr(),
             )
         };
         crate::Proj::new(self.ctx, ptr)

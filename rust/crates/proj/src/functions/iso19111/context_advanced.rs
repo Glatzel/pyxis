@@ -1,6 +1,6 @@
 use std::ptr;
 
-use envoy::ToCString;
+use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
 use crate::{Context, Proj, ProjOptions, pj_obj_list_to_vec};
@@ -329,12 +329,7 @@ impl Context {
                 geoid_model_auth_name.to_cstring().as_ptr(),
                 geoid_model_code.to_cstring().as_ptr(),
                 geoid_geog_crs.map_or(ptr::null(), |crs| crs.ptr()),
-                options
-                    .options
-                    .iter()
-                    .map(|s| s.as_ptr())
-                    .collect::<Vec<_>>()
-                    .as_ptr(),
+                options.as_vec_ptr().as_ptr(),
             )
         };
         crate::Proj::new(self, ptr)
@@ -371,19 +366,6 @@ impl Context {
         method_code: Option<&str>,
         params: &[ParamDescription],
     ) -> miette::Result<Proj> {
-        let count = params.len();
-        let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
-            .iter()
-            .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                name: p.name().to_cstring().as_ptr(),
-                auth_name: p.auth_name().to_cstring().as_ptr(),
-                code: p.code().to_cstring().as_ptr(),
-                value: *p.value(),
-                unit_name: p.unit_name().to_cstring().as_ptr(),
-                unit_conv_factor: *p.unit_conv_factor(),
-                unit_type: u32::from(*p.unit_type()),
-            })
-            .collect();
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
                 self.ptr,
@@ -393,8 +375,20 @@ impl Context {
                 method_name.to_cstring().as_ptr(),
                 method_auth_name.to_cstring().as_ptr(),
                 method_code.to_cstring().as_ptr(),
-                count as i32,
-                params.as_ptr(),
+                params.len() as i32,
+                params
+                    .iter()
+                    .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
+                        name: p.name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        auth_name: p.auth_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        code: p.code().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        value: *p.value(),
+                        unit_name: p.unit_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        unit_conv_factor: *p.unit_conv_factor(),
+                        unit_type: u32::from(*p.unit_type()),
+                    })
+                    .collect::<Vec<_>>()
+                    .as_ptr(),
             )
         };
         crate::Proj::new(self, ptr)
@@ -420,11 +414,11 @@ impl Context {
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
             .iter()
             .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                name: p.name().to_cstring().as_ptr(),
-                auth_name: p.auth_name().to_cstring().as_ptr(),
-                code: p.code().to_cstring().as_ptr(),
+                name: p.name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                auth_name: p.auth_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                code: p.code().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
                 value: *p.value(),
-                unit_name: p.unit_name().to_cstring().as_ptr(),
+                unit_name: p.unit_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
                 unit_conv_factor: *p.unit_conv_factor(),
                 unit_type: u32::from(*p.unit_type()),
             })
@@ -2878,7 +2872,7 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_string()),
+                Some("param name".to_cstring()),
                 None,
                 None,
                 0.99,
@@ -2932,7 +2926,7 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_string()),
+                Some("param name".to_cstring()),
                 None,
                 None,
                 0.99,
@@ -2958,7 +2952,7 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_string()),
+                Some("param name".to_cstring()),
                 None,
                 None,
                 0.99,

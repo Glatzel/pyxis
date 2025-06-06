@@ -105,6 +105,9 @@ mod test {
     fn test_pj_info() {
         let info = info();
         println!("{:?}", info);
+        assert_eq!(info.major(), &9);
+        assert_eq!(info.major(), &6);
+        assert_eq!(info.major(), &1);
     }
 
     #[test]

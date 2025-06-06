@@ -1,9 +1,7 @@
-use std::ptr;
-
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
-use crate::{Proj, ProjOptions};
+use crate::{OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
@@ -58,20 +56,18 @@ impl Proj<'_> {
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
     ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
-            // let angular_unit = angular_unit.map(|s| s.to_cstring());
-            // let unit_auth_name = unit_auth_name.map(|s| s.to_cstring());
-            // let unit_code = unit_code.map(|s| s.to_cstring());
             proj_sys::proj_crs_alter_cs_angular_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                angular_unit.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                owned.push_option(angular_unit),
                 angular_units_convs,
-                unit_auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
-                unit_code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                owned.push_option(unit_auth_name),
+                owned.push_option(unit_code),
             )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
@@ -83,17 +79,18 @@ impl Proj<'_> {
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
     ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_crs_alter_cs_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                owned.push_option(linear_units),
                 linear_units_conv,
-                unit_auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
-                unit_code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                owned.push_option(unit_auth_name),
+                owned.push_option(unit_code),
             )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
@@ -106,46 +103,47 @@ impl Proj<'_> {
         unit_code: Option<&str>,
         convert_to_new_unit: bool,
     ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_crs_alter_parameters_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                owned.push_option(linear_units),
                 linear_units_conv,
-                unit_auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
-                unit_code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                owned.push_option(unit_auth_name),
+                owned.push_option(unit_code),
                 convert_to_new_unit as i32,
             )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
     pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj<'_>> {
-        let crs_3d_name = crs_3d_name.map(|s| s.to_cstring());
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_crs_promote_to_3D(
                 self.ctx.ptr,
-                crs_3d_name.map_or(ptr::null(), |s| s.as_ptr()),
+                owned.push_option(crs_3d_name),
                 self.ptr(),
             )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_demote_to_2D>
     pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> miette::Result<Proj<'_>> {
-        let crs_2d_name = crs_2d_name.map(|s| s.to_cstring());
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_crs_demote_to_2D(
                 self.ctx.ptr,
-                crs_2d_name.map_or(ptr::null(), |s| s.as_ptr()),
+                owned.push_option(crs_2d_name),
                 self.ptr(),
             )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
@@ -160,16 +158,16 @@ impl Proj<'_> {
                 "At least one of `new_method_epsg_code` and  `new_method_name` must be set."
             )
         }
-        let new_method_name = new_method_name.map(|s| s.to_cstring());
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_convert_conversion_to_other_method(
                 self.ctx.ptr,
                 self.ptr(),
                 new_method_epsg_code.unwrap_or_default() as i32,
-                new_method_name.map_or(ptr::null(), |s| s.as_ptr()),
+                owned.push_option(new_method_name),
             )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///

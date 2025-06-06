@@ -123,7 +123,7 @@ impl crate::Context {
             .iter()
             .for_each(|w| clerk::error!("{w}"));
 
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///
@@ -145,7 +145,7 @@ impl crate::Context {
                 ptr::null(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///

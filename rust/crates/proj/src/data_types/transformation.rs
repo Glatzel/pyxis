@@ -1,5 +1,7 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
+use crate::OwnedCStrings;
+
 ///Object containing everything related to a given projection or
 /// transformation. As a user of the PROJ library you are only exposed to
 /// pointers to this object and the contents is hidden behind the public API.
@@ -9,6 +11,7 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 pub struct Proj<'a> {
     ptr: *mut proj_sys::PJ,
     pub(crate) ctx: &'a crate::Context,
+    _owned_cstrings: OwnedCStrings,
 }
 impl Proj<'_> {
     /// Create a `Proj` object from pointer, panic if pointer is null.
@@ -19,7 +22,26 @@ impl Proj<'_> {
         if ptr.is_null() {
             miette::bail!("Proj pointer is null.");
         }
-        Ok(crate::Proj { ctx, ptr })
+        Ok(crate::Proj {
+            ctx,
+            ptr,
+            _owned_cstrings: OwnedCStrings::new(),
+        })
+    }
+    /// Create a `Proj` object from pointer, panic if pointer is null.
+    pub(crate) fn new_with_owned_cstrings(
+        ctx: &crate::Context,
+        ptr: *mut proj_sys::PJ,
+        owned_cstrings: OwnedCStrings,
+    ) -> miette::Result<crate::Proj<'_>> {
+        if ptr.is_null() {
+            miette::bail!("Proj pointer is null.");
+        }
+        Ok(crate::Proj {
+            ctx,
+            ptr,
+            _owned_cstrings: owned_cstrings,
+        })
     }
     pub(crate) fn ptr(&self) -> *mut proj_sys::PJ { self.ptr }
 }

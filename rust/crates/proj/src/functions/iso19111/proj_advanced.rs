@@ -1,7 +1,7 @@
-use envoy::ToCStr;
+use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
-use crate::{Proj, ProjOptions};
+use crate::{OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
@@ -17,20 +17,22 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_name>
-    pub fn alter_name(&self, name: &str) -> miette::Result<Proj> {
-        let ptr = unsafe { proj_sys::proj_alter_name(self.ctx.ptr, self.ptr(), name.to_cstr()) };
+    pub fn alter_name(&self, name: &str) -> miette::Result<Proj<'_>> {
+        let ptr = unsafe {
+            proj_sys::proj_alter_name(self.ctx.ptr, self.ptr(), name.to_cstring().as_ptr())
+        };
         Proj::new(self.ctx, ptr)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_id>
-    pub fn alter_id(&self, auth_name: &str, code: &str) -> miette::Result<Proj> {
+    pub fn alter_id(&self, auth_name: &str, code: &str) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_alter_id(
                 self.ctx.ptr,
                 self.ptr(),
-                auth_name.to_cstr(),
-                code.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                code.to_cstring().as_ptr(),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -38,7 +40,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_alter_geodetic_crs>
-    pub fn crs_alter_geodetic_crs(&self, new_geod_crs: &Proj) -> miette::Result<Proj> {
+    pub fn crs_alter_geodetic_crs(&self, new_geod_crs: &Proj) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_crs_alter_geodetic_crs(self.ctx.ptr, self.ptr(), new_geod_crs.ptr())
         };
@@ -53,18 +55,19 @@ impl Proj<'_> {
         angular_units_convs: f64,
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_crs_alter_cs_angular_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                angular_unit.to_cstr(),
+                owned.push_option(angular_unit),
                 angular_units_convs,
-                unit_auth_name.to_cstr(),
-                unit_code.to_cstr(),
+                owned.push_option(unit_auth_name),
+                owned.push_option(unit_code),
             )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
@@ -75,18 +78,19 @@ impl Proj<'_> {
         linear_units_conv: f64,
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_crs_alter_cs_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.to_cstr(),
+                owned.push_option(linear_units),
                 linear_units_conv,
-                unit_auth_name.to_cstr(),
-                unit_code.to_cstr(),
+                owned.push_option(unit_auth_name),
+                owned.push_option(unit_code),
             )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
@@ -98,37 +102,48 @@ impl Proj<'_> {
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
         convert_to_new_unit: bool,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_crs_alter_parameters_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.to_cstr(),
+                owned.push_option(linear_units),
                 linear_units_conv,
-                unit_auth_name.to_cstr(),
-                unit_code.to_cstr(),
+                owned.push_option(unit_auth_name),
+                owned.push_option(unit_code),
                 convert_to_new_unit as i32,
             )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
-    pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj> {
+    pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
-            proj_sys::proj_crs_promote_to_3D(self.ctx.ptr, crs_3d_name.to_cstr(), self.ptr())
+            proj_sys::proj_crs_promote_to_3D(
+                self.ctx.ptr,
+                owned.push_option(crs_3d_name),
+                self.ptr(),
+            )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_demote_to_2D>
-    pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> miette::Result<Proj> {
+    pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
-            proj_sys::proj_crs_demote_to_2D(self.ctx.ptr, crs_2d_name.to_cstr(), self.ptr())
+            proj_sys::proj_crs_demote_to_2D(
+                self.ctx.ptr,
+                owned.push_option(crs_2d_name),
+                self.ptr(),
+            )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
@@ -137,21 +152,22 @@ impl Proj<'_> {
         &self,
         new_method_epsg_code: Option<u16>,
         new_method_name: Option<&str>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         if new_method_epsg_code.is_none() && new_method_name.is_none() {
             miette::bail!(
                 "At least one of `new_method_epsg_code` and  `new_method_name` must be set."
             )
         }
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_convert_conversion_to_other_method(
                 self.ctx.ptr,
                 self.ptr(),
                 new_method_epsg_code.unwrap_or_default() as i32,
-                new_method_name.to_cstr(),
+                owned.push_option(new_method_name),
             )
         };
-        Proj::new(self.ctx, ptr)
+        Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
     }
     ///# References
     ///
@@ -159,12 +175,16 @@ impl Proj<'_> {
     pub fn crs_create_bound_crs_to_wgs84(
         &self,
         allow_intermediate_crs: Option<AllowIntermediateCrs>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let mut options = ProjOptions::new(1);
         options.push_optional_pass(allow_intermediate_crs, "ALLOW_INTERMEDIATE_CRS");
-        let vec_ptr = options.vec_ptr();
+
         let ptr = unsafe {
-            proj_sys::proj_crs_create_bound_crs_to_WGS84(self.ctx.ptr, self.ptr(), vec_ptr.as_ptr())
+            proj_sys::proj_crs_create_bound_crs_to_WGS84(
+                self.ctx.ptr,
+                self.ptr(),
+                options.as_vec_ptr().as_ptr(),
+            )
         };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -302,50 +322,51 @@ mod test_proj_advanced {
     #[test]
     fn test_convert_conversion_to_other_method() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        {
-            let conv = ctx.create_conversion_mercator_variant_a(
-                0.0,
-                1.0,
-                0.99,
-                2.0,
-                3.0,
-                Some("Degree"),
-                0.0174532925199433,
-                Some("Metre"),
-                1.0,
-            )?;
-            let geog_cs =
-                ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
 
-            let geog_crs = ctx.create_geographic_crs(
-                Some("WGS 84"),
-                Some("World Geodetic System 1984"),
-                Some("WGS 84"),
-                6378137.0,
-                298.257223563,
-                Some("Greenwich"),
-                0.0,
-                Some("Degree"),
-                0.0174532925199433,
-                &geog_cs,
-            )?;
-            let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
-            let pj: Proj<'_> = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
-            let conv_in_proj = pj.crs_get_coordoperation()?;
-            //by code
-            {
-                let new_conv = conv_in_proj.convert_conversion_to_other_method(Some(9805), None)?;
-                let wkt =
-                    new_conv.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-                println!("{wkt}");
-                assert!(wkt.contains("9805"));
-            }
-            //both none
-            {
-                let new_conv = conv_in_proj.convert_conversion_to_other_method(None, None);
-                assert!(new_conv.is_err());
-            }
+        let conv = ctx.create_conversion_mercator_variant_a(
+            0.0,
+            1.0,
+            0.99,
+            2.0,
+            3.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let geog_cs =
+            ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
+
+        let geog_crs = ctx.create_geographic_crs(
+            Some("WGS 84"),
+            Some("World Geodetic System 1984"),
+            Some("WGS 84"),
+            6378137.0,
+            298.257223563,
+            Some("Greenwich"),
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            &geog_cs,
+        )?;
+        let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+        let pj: Proj<'_> = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        let conv_in_proj = pj.crs_get_coordoperation()?;
+        //by code
+        {
+            let new_conv = conv_in_proj.convert_conversion_to_other_method(Some(9805), None)?;
+            let wkt = new_conv.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            println!("{wkt}");
+            assert!(wkt.contains("9805"));
         }
+        //both none
+        {
+            let new_conv = conv_in_proj.convert_conversion_to_other_method(None, None);
+            assert!(new_conv.is_err());
+        }
+
         Ok(())
     }
 

@@ -3,12 +3,12 @@ use std::path::{Path, PathBuf};
 use std::ptr;
 use std::str::FromStr;
 
-use envoy::{CStrListToVecString, CStrToString, ToCStr};
+use envoy::{AsVecPtr, CStrListToVecString, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 
 use super::string_list_destroy;
 use crate::data_types::iso19111::*;
-use crate::{Proj, ProjOptions, pj_obj_list_to_vec};
+use crate::{OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
 /// # ISO-19111 Base functions
 impl crate::Context {
     ///# References
@@ -27,7 +27,7 @@ impl crate::Context {
         let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
             aux_db_paths
                 .iter()
-                .map(|f| f.to_str().to_cstring())
+                .map(|f| f.to_str().unwrap().to_cstring())
                 .collect()
         });
 
@@ -37,7 +37,7 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_context_set_database_path(
                 self.ptr,
-                db_path.to_str().to_cstr(),
+                db_path.to_str().unwrap().to_cstring().as_ptr(),
                 aux_db_paths_ptr.map_or(ptr::null(), |ptr| ptr.as_ptr()),
                 ptr::null(),
             )
@@ -61,8 +61,13 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
     pub fn get_database_metadata(&self, key: DatabaseMetadataKey) -> Option<String> {
-        let key = key.as_ref().to_cstring();
-        unsafe { proj_sys::proj_context_get_database_metadata(self.ptr, key.as_ptr()) }.to_string()
+        unsafe {
+            proj_sys::proj_context_get_database_metadata(
+                self.ptr,
+                key.as_ref().to_cstring().as_ptr(),
+            )
+        }
+        .to_string()
     }
     ///# References
     ///
@@ -78,7 +83,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
     pub fn guess_wkt_dialect(&self, wkt: &str) -> miette::Result<GuessedWktDialect> {
         GuessedWktDialect::try_from(unsafe {
-            proj_sys::proj_context_guess_wkt_dialect(self.ptr, wkt.to_cstr())
+            proj_sys::proj_context_guess_wkt_dialect(self.ptr, wkt.to_cstring().as_ptr())
         })
         .into_diagnostic()
     }
@@ -90,21 +95,20 @@ impl crate::Context {
         wkt: &str,
         strict: Option<bool>,
         unset_identifiers_if_incompatible_def: Option<bool>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let mut options = ProjOptions::new(2);
         options.push_optional_pass(strict, "STRICT");
         options.push_optional_pass(
             unset_identifiers_if_incompatible_def,
             "UNSET_IDENTIFIERS_IF_INCOMPATIBLE_DEF",
         );
-        let vec_ptr = options.vec_ptr();
         let mut out_warnings: *mut *mut i8 = std::ptr::null_mut();
         let mut out_grammar_errors: *mut *mut i8 = std::ptr::null_mut();
         let ptr = unsafe {
             proj_sys::proj_create_from_wkt(
                 self.ptr,
-                wkt.to_cstr(),
-                vec_ptr.as_ptr(),
+                wkt.to_cstring().as_ptr(),
+                options.as_vec_ptr().as_ptr(),
                 &mut out_warnings,
                 &mut out_grammar_errors,
             )
@@ -119,7 +123,7 @@ impl crate::Context {
             .iter()
             .for_each(|w| clerk::error!("{w}"));
 
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///
@@ -130,18 +134,18 @@ impl crate::Context {
         code: &str,
         category: Category,
         use_projalternative_grid_names: bool,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
-                code.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                code.to_cstring().as_ptr(),
                 category.into(),
                 use_projalternative_grid_names as i32,
                 ptr::null(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///
@@ -157,8 +161,8 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_uom_get_info_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
-                code.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                code.to_cstring().as_ptr(),
                 &mut name,
                 &mut conv_factor,
                 &mut category,
@@ -187,7 +191,7 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_grid_get_info_from_database(
                 self.ptr,
-                grid_name.to_cstr(),
+                grid_name.to_cstring().as_ptr(),
                 &mut full_name,
                 &mut package_name,
                 &mut url,
@@ -218,17 +222,18 @@ impl crate::Context {
         types: Option<&[ProjType]>,
         approximate_match: bool,
         limit_result_count: usize,
-    ) -> miette::Result<Vec<Proj>> {
+    ) -> miette::Result<Vec<Proj<'_>>> {
         let (types, count) = types.map_or((None, 0), |types| {
             let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
             let count = types.len();
             (Some(types), count)
         });
+        let auth_name = auth_name.map(|s| s.to_cstring());
         let result = unsafe {
             proj_sys::proj_create_from_name(
                 self.ptr,
-                auth_name.to_cstr(),
-                searched_name.to_cstr(),
+                auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                searched_name.to_cstring().as_ptr(),
                 types.map_or(ptr::null(), |types| types.as_ptr()),
                 count,
                 approximate_match as i32,
@@ -250,8 +255,8 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_geoid_models_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
-                code.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                code.to_cstring().as_ptr(),
                 ptr::null(),
             )
         };
@@ -286,7 +291,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_codes_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
                 proj_type.into(),
                 allow_deprecated as i32,
             )
@@ -309,7 +314,7 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_celestial_body_list_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
                 &mut out_result_count,
             )
         };
@@ -340,35 +345,35 @@ impl crate::Context {
             miette::bail!("At least one of `auth_name` and  `params` must be set.");
         }
         let mut out_result_count = i32::default();
-        let params = if let Some(params) = params {
-            let types: Vec<u32> = params
-                .types()
-                .to_owned()
-                .iter()
-                .map(|f| u32::from(f.clone()))
-                .collect();
-            let celestial_body_name = params.celestial_body_name().to_owned().to_cstr();
-            Some(proj_sys::PROJ_CRS_LIST_PARAMETERS {
-                types: types.as_ptr(),
-                typesCount: params.types().len(),
-                crs_area_of_use_contains_bbox: *params.west_lon_degree() as i32,
-                bbox_valid: *params.bbox_valid() as i32,
-                west_lon_degree: *params.west_lon_degree(),
-                south_lat_degree: *params.south_lat_degree(),
-                east_lon_degree: *params.east_lon_degree(),
-                north_lat_degree: *params.north_lat_degree(),
-                allow_deprecated: *params.allow_deprecated() as i32,
-                celestial_body_name,
-            })
-        } else {
-            None
-        };
-
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
-                params.map_or(ptr::null(), |p| &p),
+                owned.push_option(auth_name),
+                params.map_or(ptr::null(), |p| {
+                    let types: Vec<u32> = p
+                        .types()
+                        .to_owned()
+                        .iter()
+                        .map(|f| u32::from(f.clone()))
+                        .collect();
+
+                    &proj_sys::PROJ_CRS_LIST_PARAMETERS {
+                        types: types.as_ptr(),
+                        typesCount: p.types().len(),
+                        crs_area_of_use_contains_bbox: *p.west_lon_degree() as i32,
+                        bbox_valid: *p.bbox_valid() as i32,
+                        west_lon_degree: *p.west_lon_degree(),
+                        south_lat_degree: *p.south_lat_degree(),
+                        east_lon_degree: *p.east_lon_degree(),
+                        north_lat_degree: *p.north_lat_degree(),
+                        allow_deprecated: *p.allow_deprecated() as i32,
+                        celestial_body_name: p
+                            .celestial_body_name()
+                            .clone()
+                            .map_or(ptr::null(), |s| s.as_ptr()),
+                    }
+                }),
                 &mut out_result_count,
             )
         };
@@ -376,7 +381,7 @@ impl crate::Context {
             miette::bail!("Error");
         }
         let mut out_vec = Vec::new();
-        for offset in 0..1803 {
+        for offset in 0..out_result_count {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
             let info_ref = unsafe { current_ptr.as_ref().unwrap() };
             out_vec.push(CrsInfo::new(
@@ -414,8 +419,8 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_get_units_from_database(
                 self.ptr,
-                auth_name.to_cstr(),
-                category.as_ref().to_cstr(),
+                auth_name.to_cstring().as_ptr(),
+                category.as_ref().to_cstring().as_ptr(),
                 allow_deprecated as i32,
                 &mut out_result_count,
             )
@@ -449,7 +454,7 @@ impl crate::Context {
             proj_sys::proj_suggests_code_for(
                 self.ptr,
                 object.ptr(),
-                authority.to_cstr(),
+                authority.to_cstring().as_ptr(),
                 numeric_code as i32,
                 ptr::null(),
             )
@@ -463,7 +468,7 @@ impl crate::Context {
         &self,
         result: *const proj_sys::PJ_OBJ_LIST,
         index: i32,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_list_get(self.ptr, result, index) };
         Proj::new(self, ptr)
     }

@@ -81,9 +81,7 @@ impl Drop for crate::Area {
 }
 #[cfg(test)]
 mod test {
-
     use crate::Area;
-
     #[test]
     fn test_set_bbox() -> miette::Result<()> {
         //valid range

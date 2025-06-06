@@ -1,4 +1,4 @@
-use envoy::ToCStr;
+use envoy::{AsVecPtr, ToCString};
 
 use crate::{Proj, check_result};
 /// # Transformation setup
@@ -43,8 +43,8 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
-        let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstr()) };
+    pub fn create(&self, definition: &str) -> miette::Result<Proj<'_>> {
+        let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstring().as_ptr()) };
         check_result!(self);
         Proj::new(self, ptr)
     }
@@ -62,14 +62,18 @@ impl crate::Context {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Proj> {
-        let len = argv.len();
-        let mut argv_ptrs: Vec<*mut i8> = Vec::with_capacity(len);
-        for s in argv {
-            argv_ptrs.push((*s).to_cstring().into_raw());
-        }
-        let ptr =
-            unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, argv_ptrs.as_mut_ptr()) };
+    pub fn create_argv(&self, argv: &[&str]) -> miette::Result<Proj<'_>> {
+        let count = argv.len();
+        let ptr = unsafe {
+            proj_sys::proj_create_argv(
+                self.ptr,
+                count as i32,
+                argv.iter()
+                    .map(|s| s.to_cstring().into_raw())
+                    .collect::<Vec<_>>()
+                    .as_mut_ptr(),
+            )
+        };
         check_result!(self);
         Proj::new(self, ptr)
     }
@@ -118,12 +122,12 @@ impl crate::Context {
         source_crs: &str,
         target_crs: &str,
         area: &crate::Area,
-    ) -> miette::Result<crate::Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
                 self.ptr,
-                source_crs.to_cstr(),
-                target_crs.to_cstr(),
+                source_crs.to_cstring().as_ptr(),
+                target_crs.to_cstring().as_ptr(),
                 area.ptr,
             )
         };
@@ -188,7 +192,7 @@ impl crate::Context {
         allow_ballpark: Option<bool>,
         only_best: Option<bool>,
         force_over: Option<bool>,
-    ) -> miette::Result<crate::Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let mut options = crate::ProjOptions::new(5);
         options
             .push_optional_pass(authority, "AUTHORITY")
@@ -196,14 +200,13 @@ impl crate::Context {
             .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")
             .push_optional_pass(only_best, "ONLY_BEST")
             .push_optional_pass(force_over, "FORCE_OVER");
-        let ptrs = options.vec_ptr();
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs_from_pj(
                 self.ptr,
                 source_crs.ptr(),
                 target_crs.ptr(),
                 area.ptr,
-                ptrs.as_ptr(),
+                options.as_vec_ptr().as_ptr(),
             )
         };
         check_result!(self);
@@ -224,7 +227,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
-    pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<crate::Proj> {
+    pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr()) };
         Proj::new(self, ptr)
     }
@@ -240,10 +243,15 @@ impl Drop for crate::Proj<'_> {
 }
 #[cfg(test)]
 mod test {
+    use crate::data_types::iso19111::WktType;
+
     #[test]
     fn test_create() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("WGS 84"));
         let _ = pj.clone();
         Ok(())
     }
@@ -251,14 +259,20 @@ mod test {
     #[test]
     fn test_create_argv() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let _ = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
+        let pj = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("PROJ-based operation method: proj=utm zone=32 ellps=GRS80"));
         Ok(())
     }
 
     #[test]
     fn test_create_crs_to_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let _ = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("9602"));
         Ok(())
     }
 
@@ -267,7 +281,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4978")?;
-        let _ = ctx.create_crs_to_crs_from_pj(
+        let pj = ctx.create_crs_to_crs_from_pj(
             pj1,
             pj2,
             &crate::Area::default(),
@@ -277,6 +291,9 @@ mod test {
             Some(true),
             Some(true),
         )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("9602"));
         Ok(())
     }
 }

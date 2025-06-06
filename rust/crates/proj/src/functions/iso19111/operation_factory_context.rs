@@ -1,4 +1,6 @@
-use envoy::{ToCStr, ToCStrList};
+use std::ptr;
+
+use envoy::{AsVecPtr, ToCString, VecCString};
 
 use crate::data_types::iso19111::*;
 use crate::{Context, Proj, pj_obj_list_to_vec};
@@ -9,11 +11,15 @@ impl Context {
     pub fn create_operation_factory_context(
         &self,
         authority: Option<&str>,
-    ) -> OperationFactoryContext {
+    ) -> OperationFactoryContext<'_> {
+        let authority = authority.map(|s| s.to_cstring());
         OperationFactoryContext {
             ctx: self,
             ptr: unsafe {
-                proj_sys::proj_create_operation_factory_context(self.ptr, authority.to_cstr())
+                proj_sys::proj_create_operation_factory_context(
+                    self.ptr,
+                    authority.map_or(ptr::null(), |s| s.as_ptr()),
+                )
             },
         }
     }
@@ -68,7 +74,7 @@ impl OperationFactoryContext<'_> {
             proj_sys::proj_operation_factory_context_set_area_of_interest_name(
                 self.ctx.ptr,
                 self.ptr,
-                area_name.to_cstr(),
+                area_name.to_cstring().as_ptr(),
             );
         }
         self
@@ -145,12 +151,12 @@ impl OperationFactoryContext<'_> {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allowed_intermediate_crs>
     pub fn set_allowed_intermediate_crs(&self, list_of_auth_name_codes: &[&str]) -> &Self {
-        let list_of_auth_name_codes = list_of_auth_name_codes.to_cstr_list();
+        let list_of_auth_name_codes: VecCString = list_of_auth_name_codes.into();
         unsafe {
             proj_sys::proj_operation_factory_context_set_allowed_intermediate_crs(
                 self.ctx.ptr,
                 self.ptr,
-                list_of_auth_name_codes.as_ptr(),
+                list_of_auth_name_codes.as_vec_ptr().as_ptr(),
             );
         }
         self
@@ -188,7 +194,7 @@ impl OperationFactoryContext<'_> {
         &self,
         source_crs: &Proj,
         target_crs: &Proj,
-    ) -> miette::Result<Vec<Proj>> {
+    ) -> miette::Result<Vec<Proj<'_>>> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
                 self.ctx.ptr,

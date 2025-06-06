@@ -1,4 +1,4 @@
-use envoy::{CStrToString, ToCStr};
+use envoy::{CStrToString, ToCString};
 
 use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
 
@@ -43,7 +43,7 @@ impl crate::Proj<'_> {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
 pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
-    let src = unsafe { proj_sys::proj_grid_info(grid.to_cstr()) };
+    let src = unsafe { proj_sys::proj_grid_info(grid.to_cstring().as_ptr()) };
     if src.gridname.to_string().unwrap().as_str() == ""
         && src.filename.to_string().unwrap().as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
@@ -68,7 +68,7 @@ pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
 pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
-    let src = unsafe { proj_sys::proj_init_info(initname.to_cstr()) };
+    let src = unsafe { proj_sys::proj_init_info(initname.to_cstring().as_ptr()) };
     let info = InitInfo::new(
         src.name.to_string().unwrap_or_default(),
         src.filename.to_string().unwrap_or_default(),
@@ -99,12 +99,17 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         println!("{:?}", pj.info());
+        assert_eq!(pj.info().description(), "WGS 84");
+        assert!(!pj.info().has_inverse());
         Ok(())
     }
     #[test]
     fn test_pj_info() {
         let info = info();
         println!("{:?}", info);
+        assert_eq!(info.major(), &9);
+        assert_eq!(info.minor(), &6);
+        assert_eq!(info.patch(), &1);
     }
 
     #[test]
@@ -131,15 +136,17 @@ mod test {
     }
     #[test]
     fn test_init_info() -> miette::Result<()> {
-        let info = init_info("ITRF2000")?;
-        println!("{:?}", info);
-        Ok(())
-    }
-
-    #[test]
-    fn test_init_info_fail() -> miette::Result<()> {
-        let info = init_info("invalid init");
-        assert!(info.is_err());
+        //valid
+        {
+            let info = init_info("ITRF2000")?;
+            println!("{:?}", info);
+            assert_eq!(info.name(), "ITRF2000");
+        }
+        //invalid
+        {
+            let info = init_info("invalid init");
+            assert!(info.is_err());
+        }
         Ok(())
     }
 }

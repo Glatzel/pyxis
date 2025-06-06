@@ -1,7 +1,7 @@
 use std::ffi::CString;
 use std::fmt::Display;
 
-use envoy::ToCStr;
+use envoy::ToCString;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{AsRefStr, EnumString};
 
@@ -277,7 +277,7 @@ CrsListParameters,
     {east_lon_degree:f64,"Eastern-most longitude of the area of use, in degrees."},
     {north_lat_degree:f64,"Northern-most latitude of the area of use, in degrees."},
     {allow_deprecated:bool,"Whether deprecated objects are allowed. Default to FALSE."},
-    {celestial_body_name:Option<String>,"Celestial body of the CRS (e.g.` Earth`). The default value, NULL, means no restriction"}
+    {celestial_body_name:Option<CString>,"Celestial body of the CRS (e.g.` Earth`). The default value, NULL, means no restriction"}
 );
 
 readonly_struct!(
@@ -414,11 +414,11 @@ readonly_struct!(
     "Description of a parameter value for a Conversion."
     "# References"
     "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PARAM_DESCRIPTION>",
-    {name: Option<String>},
-    {auth_name:  Option<String>},
-    {code:  Option<String>},
+    {name: Option<CString>},
+    {auth_name:  Option<CString>},
+    {code:  Option<CString>},
     {value: f64},
-    {unit_name:  Option<String>},
+    {unit_name:  Option<CString>},
     {unit_conv_factor: f64},
     {unit_type: UnitType}
 );

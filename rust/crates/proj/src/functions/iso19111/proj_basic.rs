@@ -1,7 +1,7 @@
 use std::ptr;
 use std::str::FromStr;
 
-use envoy::{CStrToString, ToCStr};
+use envoy::{AsVecPtr, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
@@ -22,7 +22,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
-    pub fn get_non_deprecated(&self) -> miette::Result<Vec<Proj>> {
+    pub fn get_non_deprecated(&self) -> miette::Result<Vec<Proj<'_>>> {
         let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
         pj_obj_list_to_vec(self.ctx, result)
     }
@@ -201,9 +201,13 @@ impl Proj<'_> {
                 OPTION_NO,
             )
             .push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", OPTION_YES);
-        let ptrs = options.vec_ptr();
         let result = unsafe {
-            proj_sys::proj_as_wkt(self.ctx.ptr, self.ptr(), wkt_type.into(), ptrs.as_ptr())
+            proj_sys::proj_as_wkt(
+                self.ctx.ptr,
+                self.ptr(),
+                wkt_type.into(),
+                options.as_vec_ptr().as_ptr(),
+            )
         }
         .to_string();
         check_result!(self);
@@ -226,13 +230,12 @@ impl Proj<'_> {
             .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
             .push_optional(max_line_length, "MAX_LINE_LENGTH", "80");
 
-        let ptrs = options.vec_ptr();
         let result = unsafe {
             proj_sys::proj_as_proj_string(
                 self.ctx.ptr,
                 self.ptr(),
                 string_type.into(),
-                ptrs.as_ptr(),
+                options.as_vec_ptr().as_ptr(),
             )
         }
         .to_string();
@@ -255,9 +258,10 @@ impl Proj<'_> {
             .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
             .push_optional(schema, "SCHEMA", "");
 
-        let ptrs = options.vec_ptr();
-        let result = unsafe { proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr(), ptrs.as_ptr()) }
-            .to_string();
+        let result = unsafe {
+            proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr(), options.as_vec_ptr().as_ptr())
+        }
+        .to_string();
         check_result!(self);
         Ok(result.expect("Error"))
     }
@@ -285,13 +289,13 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
-    pub fn identify(&self, auth_name: &str) -> miette::Result<Vec<Proj>> {
+    pub fn identify(&self, auth_name: &str) -> miette::Result<Vec<Proj<'_>>> {
         let mut confidence: Vec<i32> = Vec::new();
         let result = unsafe {
             proj_sys::proj_identify(
                 self.ctx.ptr,
                 self.ptr(),
-                auth_name.to_cstr(),
+                auth_name.to_cstring().as_ptr(),
                 ptr::null(),
                 &mut confidence.as_mut_ptr(),
             )
@@ -308,28 +312,28 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
-    pub fn crs_get_geodetic_crs(&self) -> miette::Result<Proj> {
+    pub fn crs_get_geodetic_crs(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_crs_get_geodetic_crs(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
-    pub fn crs_get_horizontal_datum(&self) -> miette::Result<Proj> {
+    pub fn crs_get_horizontal_datum(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_crs_get_horizontal_datum(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
-    pub fn crs_get_sub_crs(&self, index: u16) -> miette::Result<Proj> {
+    pub fn crs_get_sub_crs(&self, index: u16) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx.ptr, self.ptr(), index as i32) };
         crate::Proj::new(self.ctx, ptr)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
-    pub fn crs_get_datum(&self) -> miette::Result<Option<Proj>> {
+    pub fn crs_get_datum(&self) -> miette::Result<Option<Proj<'_>>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -340,7 +344,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_ensemble>
-    pub fn crs_get_datum_ensemble(&self) -> miette::Result<Option<Proj>> {
+    pub fn crs_get_datum_ensemble(&self) -> miette::Result<Option<Proj<'_>>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_ensemble(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -351,7 +355,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_forced>
-    pub fn crs_get_datum_forced(&self) -> miette::Result<Option<Proj>> {
+    pub fn crs_get_datum_forced(&self) -> miette::Result<Option<Proj<'_>>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_forced(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -385,7 +389,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
-    pub fn datum_ensemble_get_member(&self, member_index: u16) -> miette::Result<Option<Proj>> {
+    pub fn datum_ensemble_get_member(&self, member_index: u16) -> miette::Result<Option<Proj<'_>>> {
         let ptr = unsafe {
             proj_sys::proj_datum_ensemble_get_member(self.ctx.ptr, self.ptr(), member_index as i32)
         };
@@ -410,7 +414,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
-    pub fn crs_get_coordinate_system(&self) -> miette::Result<Proj> {
+    pub fn crs_get_coordinate_system(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordinate_system(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -479,7 +483,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
-    pub fn get_ellipsoid(&self) -> miette::Result<Proj> {
+    pub fn get_ellipsoid(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_get_ellipsoid(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -520,7 +524,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
-    pub fn get_prime_meridian(&self) -> miette::Result<Proj> {
+    pub fn get_prime_meridian(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -553,7 +557,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
-    pub fn crs_get_coordoperation(&self) -> miette::Result<Proj> {
+    pub fn crs_get_coordoperation(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordoperation(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -619,7 +623,11 @@ impl Proj<'_> {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_index>
     pub fn coordoperation_get_param_index(&self, name: &str) -> miette::Result<u16> {
         let result = unsafe {
-            proj_sys::proj_coordoperation_get_param_index(self.ctx.ptr, self.ptr(), name.to_cstr())
+            proj_sys::proj_coordoperation_get_param_index(
+                self.ctx.ptr,
+                self.ptr(),
+                name.to_cstring().as_ptr(),
+            )
         };
         if result == -1 {
             miette::bail!("Error");
@@ -754,7 +762,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
-    pub fn coordoperation_create_inverse(&self) -> miette::Result<Proj> {
+    pub fn coordoperation_create_inverse(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_coordoperation_create_inverse(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -772,7 +780,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
-    pub fn concatoperation_get_step(&self, index: u16) -> miette::Result<Proj> {
+    pub fn concatoperation_get_step(&self, index: u16) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_concatoperation_get_step(self.ctx.ptr, self.ptr(), index as i32)
         };
@@ -781,7 +789,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
-    pub fn coordinate_metadata_create(&self, epoch: f64) -> miette::Result<Proj> {
+    pub fn coordinate_metadata_create(&self, epoch: f64) -> miette::Result<Proj<'_>> {
         let ptr =
             unsafe { proj_sys::proj_coordinate_metadata_create(self.ctx.ptr, self.ptr(), epoch) };
         crate::Proj::new(self.ctx, ptr)

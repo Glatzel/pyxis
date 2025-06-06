@@ -1,11 +1,14 @@
 pub(crate) fn pj_obj_list_to_vec(
     ctx: &Context,
     result: *const proj_sys::PJ_OBJ_LIST,
-) -> miette::Result<Vec<Proj>> {
+) -> miette::Result<Vec<Proj<'_>>> {
     if result.is_null() {
-        miette::bail!("Error");
+        miette::bail!("PJ_OBJ_LIST is null.");
     }
     let count = unsafe { proj_sys::proj_list_get_count(result) };
+    if count < 1 {
+        miette::bail!("PJ_OBJ_LIST count 0.");
+    }
     clerk::debug!("pj_obj_list count: {count}");
     let mut proj_list = Vec::with_capacity(count as usize);
     for i in 0..count {

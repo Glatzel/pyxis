@@ -9,9 +9,8 @@
 //!   CStrings.
 
 use std::ffi::CString;
-use std::ptr::null;
 
-use envoy::ToCStr;
+use envoy::ToCString;
 
 /// String constant representing the PROJ option value for `true`.
 pub(crate) const OPTION_YES: &str = "YES";
@@ -56,7 +55,7 @@ impl_to_option_string!(crate::data_types::iso19111::AllowIntermediateCrs);
 /// strings.
 pub(crate) struct ProjOptions {
     /// The list of options as CStrings, suitable for passing to C APIs.
-    pub(crate) options: Vec<CString>,
+    options: Vec<CString>,
 }
 
 impl ProjOptions {
@@ -116,21 +115,21 @@ impl ProjOptions {
         opt: Option<T>,
         name: &str,
     ) -> &mut Self {
-        if let Some(opt) = opt {
+        opt.inspect(|o| {
             self.options
-                .push(format!("{name}={}", opt.to_option_string()).to_cstring());
-        }
+                .push(format!("{name}={}", o.to_option_string()).to_cstring());
+        });
         self
     }
-
-    /// Returns a vector of raw pointers to the CStrings, terminated by a null
-    /// pointer.
-    ///
-    /// This is suitable for passing to C APIs that expect a null-terminated
-    /// array of strings.
-    pub fn vec_ptr(&self) -> Vec<*const i8> {
-        let mut ptrs = self.options.iter().map(|s| s.as_ptr()).collect::<Vec<_>>();
-        ptrs.push(null());
-        ptrs
+}
+impl envoy::AsVecPtr for ProjOptions {
+    fn as_vec_ptr(&self) -> Vec<*const i8> {
+        let mut vec_ptr = self
+            .options
+            .iter()
+            .map(|s| s.as_ptr())
+            .collect::<Vec<*const i8>>();
+        vec_ptr.push(std::ptr::null());
+        vec_ptr
     }
 }

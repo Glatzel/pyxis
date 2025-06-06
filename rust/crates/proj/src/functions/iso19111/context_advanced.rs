@@ -1,9 +1,9 @@
 use std::ptr;
 
-use envoy::ToCStr;
+use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
-use crate::{Context, Proj, ProjOptions, pj_obj_list_to_vec};
+use crate::{Context, OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
 /// # ISO-19111 Advanced functions
 impl Context {
     ///# References
@@ -13,7 +13,7 @@ impl Context {
         &self,
         coordinate_system_type: CoordinateSystemType,
         axis: &[AxisDescription],
-    ) -> miette::Result<crate::Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let axis_count = axis.len();
         let mut axis_vec: Vec<proj_sys::PJ_AXIS_DESCRIPTION> = Vec::with_capacity(axis_count);
         for a in axis {
@@ -34,7 +34,7 @@ impl Context {
                 axis_vec.as_ptr(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///
@@ -44,16 +44,17 @@ impl Context {
         ellipsoidal_cs_2d_type: CartesianCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let unit_name = unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.to_cstr(),
+                unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///
@@ -63,16 +64,17 @@ impl Context {
         ellipsoidal_cs_2d_type: EllipsoidalCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.to_cstr(),
+                owned.push_option(unit_name),
                 unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -84,18 +86,20 @@ impl Context {
         horizontal_angular_unit_conv_factor: f64,
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let horizontal_angular_unit_name = horizontal_angular_unit_name.map(|s| s.to_cstring());
+        let vertical_linear_unit_name = vertical_linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
                 ellipsoidal_cs_3d_type.into(),
-                horizontal_angular_unit_name.to_cstr(),
+                horizontal_angular_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 horizontal_angular_unit_conv_factor,
-                vertical_linear_unit_name.to_cstr(),
+                vertical_linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 vertical_linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///
@@ -106,14 +110,15 @@ impl Context {
         datum_auth_name: &str,
         datum_code: &str,
         crs_type: Option<&str>,
-    ) -> miette::Result<Vec<Proj>> {
+    ) -> miette::Result<Vec<Proj<'_>>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,
-                crs_auth_name.to_cstr(),
-                datum_auth_name.to_cstr(),
-                datum_code.to_cstr(),
-                crs_type.to_cstr(),
+                owned.push_option(crs_auth_name),
+                datum_auth_name.to_cstring().as_ptr(),
+                datum_code.to_cstring().as_ptr(),
+                owned.push_option(crs_type),
             )
         };
         pj_obj_list_to_vec(self, ptr)
@@ -133,23 +138,24 @@ impl Context {
         pm_angular_units: Option<&str>,
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
-                crs_name.to_cstr(),
-                datum_name.to_cstr(),
-                ellps_name.to_cstr(),
+                owned.push_option(crs_name),
+                owned.push_option(datum_name),
+                owned.push_option(ellps_name),
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.to_cstr(),
+                owned.push_option(prime_meridian_name),
                 prime_meridian_offset,
-                pm_angular_units.to_cstr(),
+                owned.push_option(pm_angular_units),
                 pm_units_conv,
                 ellipsoidal_cs.ptr(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -159,16 +165,17 @@ impl Context {
         crs_name: Option<&str>,
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
-                crs_name.to_cstr(),
+                owned.push_option(crs_name),
                 datum_or_datum_ensemble.ptr(),
                 ellipsoidal_cs.ptr(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -186,24 +193,25 @@ impl Context {
         angular_units_conv: f64,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
                 self.ptr,
-                crs_name.to_cstr(),
-                datum_name.to_cstr(),
-                ellps_name.to_cstr(),
+                owned.push_option(crs_name),
+                owned.push_option(datum_name),
+                owned.push_option(ellps_name),
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.to_cstr(),
+                owned.push_option(prime_meridian_name),
                 prime_meridian_offset,
-                angular_units.to_cstr(),
+                owned.push_option(angular_units),
                 angular_units_conv,
-                linear_units.to_cstr(),
+                owned.push_option(linear_units),
                 linear_units_conv,
             )
         };
-        Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -214,17 +222,18 @@ impl Context {
         datum_or_datum_ensemble: &Proj,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
                 self.ptr,
-                crs_name.to_cstr(),
+                owned.push_option(crs_name),
                 datum_or_datum_ensemble.ptr(),
-                linear_units.to_cstr(),
+                owned.push_option(linear_units),
                 linear_units_conv,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -235,17 +244,18 @@ impl Context {
         base_geographic_crs: &Proj,
         conversion: &Proj,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
                 self.ptr,
-                crs_name.to_cstr(),
+                owned.push_option(crs_name),
                 base_geographic_crs.ptr(),
                 conversion.ptr(),
                 ellipsoidal_cs.ptr(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -255,23 +265,26 @@ impl Context {
         crs_name: Option<&str>,
         projected_2d_crs: &Proj,
         geog_3d_crs: Option<&Proj>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let crs_name = crs_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_crs_create_projected_3D_crs_from_2D(
                 self.ptr,
-                crs_name.to_cstr(),
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
                 projected_2d_crs.ptr(),
                 geog_3d_crs.map_or(ptr::null(), |crs| crs.ptr()),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
-    pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> miette::Result<Proj> {
-        let ptr = unsafe { proj_sys::proj_create_engineering_crs(self.ptr, crs_name.to_cstr()) };
-        crate::Proj::new(self, ptr)
+    pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
+        let ptr =
+            unsafe { proj_sys::proj_create_engineering_crs(self.ptr, owned.push_option(crs_name)) };
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -282,17 +295,18 @@ impl Context {
         datum_name: Option<&str>,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
                 self.ptr,
-                crs_name.to_cstr(),
-                datum_name.to_cstr(),
-                linear_units.to_cstr(),
+                owned.push_option(crs_name),
+                owned.push_option(datum_name),
+                owned.push_option(linear_units),
                 linear_units_conv,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -310,27 +324,27 @@ impl Context {
         geoid_model_code: Option<&str>,
         geoid_geog_crs: Option<&Proj>,
         accuracy: Option<f64>,
-    ) -> miette::Result<Proj> {
-        let mut option = ProjOptions::new(1);
-        option.push_optional_pass(accuracy, "ACCURACY");
-
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
+        let mut options = ProjOptions::new(1);
+        options.push_optional_pass(accuracy, "ACCURACY");
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs_ex(
                 self.ptr,
-                crs_name.to_cstr(),
-                datum_name.to_cstr(),
-                datum_auth_name.to_cstr(),
-                datum_code.to_cstr(),
-                linear_units.to_cstr(),
+                owned.push_option(crs_name),
+                owned.push_option(datum_name),
+                owned.push_option(datum_auth_name),
+                owned.push_option(datum_code),
+                owned.push_option(linear_units),
                 linear_units_conv,
-                geoid_model_name.to_cstr(),
-                geoid_model_auth_name.to_cstr(),
-                geoid_model_code.to_cstr(),
+                owned.push_option(geoid_model_name),
+                owned.push_option(geoid_model_auth_name),
+                owned.push_option(geoid_model_code),
                 geoid_geog_crs.map_or(ptr::null(), |crs| crs.ptr()),
-                option.vec_ptr().as_mut_ptr(),
+                options.as_vec_ptr().as_ptr(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -340,16 +354,17 @@ impl Context {
         crs_name: Option<&str>,
         horiz_crs: &Proj,
         vert_crs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
                 self.ptr,
-                crs_name.to_cstr(),
+                owned.push_option(crs_name),
                 horiz_crs.ptr(),
                 vert_crs.ptr(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -363,34 +378,34 @@ impl Context {
         method_auth_name: Option<&str>,
         method_code: Option<&str>,
         params: &[ParamDescription],
-    ) -> miette::Result<Proj> {
-        let count = params.len();
-        let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
-            .iter()
-            .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                name: p.name().to_cstr(),
-                auth_name: p.auth_name().to_cstr(),
-                code: p.code().to_cstr(),
-                value: *p.value(),
-                unit_name: p.unit_name().to_cstr(),
-                unit_conv_factor: *p.unit_conv_factor(),
-                unit_type: u32::from(*p.unit_type()),
-            })
-            .collect();
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
                 self.ptr,
-                name.to_cstr(),
-                auth_name.to_cstr(),
-                code.to_cstr(),
-                method_name.to_cstr(),
-                method_auth_name.to_cstr(),
-                method_code.to_cstr(),
-                count as i32,
-                params.as_ptr(),
+                owned.push_option(name),
+                owned.push_option(auth_name),
+                owned.push_option(code),
+                owned.push_option(method_name),
+                owned.push_option(method_auth_name),
+                owned.push_option(method_code),
+                params.len() as i32,
+                params
+                    .iter()
+                    .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
+                        name: p.name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        auth_name: p.auth_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        code: p.code().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        value: *p.value(),
+                        unit_name: p.unit_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        unit_conv_factor: *p.unit_conv_factor(),
+                        unit_type: u32::from(*p.unit_type()),
+                    })
+                    .collect::<Vec<_>>()
+                    .as_ptr(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -408,38 +423,40 @@ impl Context {
         method_code: Option<&str>,
         params: &[ParamDescription],
         accuracy: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let count = params.len();
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
             .iter()
             .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                name: p.name().to_cstr(),
-                auth_name: p.auth_name().to_cstr(),
-                code: p.code().to_cstr(),
+                name: p.name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                auth_name: p.auth_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                code: p.code().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
                 value: *p.value(),
-                unit_name: p.unit_name().to_cstr(),
+                unit_name: p.unit_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
                 unit_conv_factor: *p.unit_conv_factor(),
                 unit_type: u32::from(*p.unit_type()),
             })
             .collect();
+
         let ptr = unsafe {
             proj_sys::proj_create_transformation(
                 self.ptr,
-                name.to_cstr(),
-                auth_name.to_cstr(),
-                code.to_cstr(),
+                owned.push_option(name),
+                owned.push_option(auth_name),
+                owned.push_option(code),
                 source_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 target_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 interpolation_crs.map_or(ptr::null(), |crs| crs.ptr()),
-                method_name.to_cstr(),
-                method_auth_name.to_cstr(),
-                method_code.to_cstr(),
+                owned.push_option(method_name),
+                owned.push_option(method_auth_name),
+                owned.push_option(method_code),
                 count as i32,
                 params.as_ptr(),
                 accuracy,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
 
     ///# References
@@ -451,17 +468,18 @@ impl Context {
         geodetic_crs: &Proj,
         conversion: &Proj,
         coordinate_system: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
                 self.ptr,
-                crs_name.to_cstr(),
+                owned.push_option(crs_name),
                 geodetic_crs.ptr(),
                 conversion.ptr(),
                 coordinate_system.ptr(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -471,7 +489,7 @@ impl Context {
         base_crs: &Proj,
         hub_crs: &Proj,
         transformation: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_crs(
                 self.ptr,
@@ -480,7 +498,7 @@ impl Context {
                 transformation.ptr(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///
@@ -490,27 +508,27 @@ impl Context {
         vert_crs: &Proj,
         hub_geographic_3d_crs: &Proj,
         grid_name: &str,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_vertical_crs(
                 self.ptr,
                 vert_crs.ptr(),
                 hub_geographic_3d_crs.ptr(),
-                grid_name.to_cstr(),
+                grid_name.to_cstring().as_ptr(),
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_utm>
-    pub fn create_conversion_utm(&self, zone: u8, north: bool) -> miette::Result<Proj> {
+    pub fn create_conversion_utm(&self, zone: u8, north: bool) -> miette::Result<Proj<'_>> {
         if !(1..=60).contains(&zone) {
             miette::bail!("UTM zone number should between 1 and 60.");
         }
         let ptr =
             unsafe { proj_sys::proj_create_conversion_utm(self.ptr, zone as i32, north as i32) };
-        crate::Proj::new(self, ptr)
+        Proj::new(self, ptr)
     }
     ///# References
     ///
@@ -526,7 +544,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
                 self.ptr,
@@ -535,13 +554,13 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -557,7 +576,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gauss_schreiber_transverse_mercator(
                 self.ptr,
@@ -566,13 +586,13 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -588,7 +608,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator_south_oriented(
                 self.ptr,
@@ -597,13 +618,13 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -620,7 +641,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_two_point_equidistant(
                 self.ptr,
@@ -630,13 +652,13 @@ impl Context {
                 longitude_second_point,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -651,7 +673,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mapping_grid(
                 self.ptr,
@@ -659,13 +682,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -680,7 +703,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mining_grid(
                 self.ptr,
@@ -688,13 +712,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -711,7 +735,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_albers_equal_area(
                 self.ptr,
@@ -721,13 +746,13 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -743,7 +768,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp(
                 self.ptr,
@@ -752,13 +778,13 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -775,7 +801,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp_variant_b(
                 self.ptr,
@@ -785,13 +812,13 @@ impl Context {
                 longitude_false_origin,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -808,7 +835,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp(
                 self.ptr,
@@ -818,13 +846,13 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -842,7 +870,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_michigan(
                 self.ptr,
@@ -853,13 +882,13 @@ impl Context {
                 easting_false_origin,
                 northing_false_origin,
                 ellipsoid_scaling_factor,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -876,7 +905,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_belgium(
                 self.ptr,
@@ -886,13 +916,13 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -907,7 +937,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_azimuthal_equidistant(
                 self.ptr,
@@ -915,13 +946,13 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -936,7 +967,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_guam_projection(
                 self.ptr,
@@ -944,13 +976,13 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -965,7 +997,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_bonne(
                 self.ptr,
@@ -973,13 +1006,13 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -994,7 +1027,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area_spherical(
                 self.ptr,
@@ -1002,13 +1036,13 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1023,7 +1057,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area(
                 self.ptr,
@@ -1031,13 +1066,13 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1052,7 +1087,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_cassini_soldner(
                 self.ptr,
@@ -1060,13 +1096,13 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1083,7 +1119,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_conic(
                 self.ptr,
@@ -1093,13 +1130,13 @@ impl Context {
                 latitude_second_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1113,20 +1150,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_i(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1140,20 +1178,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_ii(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1167,20 +1206,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iii(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1194,20 +1234,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iv(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1221,20 +1262,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_v(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1248,20 +1290,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_vi(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1276,7 +1319,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical(
                 self.ptr,
@@ -1284,13 +1328,13 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1305,7 +1349,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical_spherical(
                 self.ptr,
@@ -1313,13 +1358,13 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1333,20 +1378,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gall(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1360,20 +1406,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_goode_homolosine(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1387,20 +1434,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_interrupted_goode_homolosine(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1415,7 +1463,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_x(
                 self.ptr,
@@ -1423,13 +1472,13 @@ impl Context {
                 height,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1444,7 +1493,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_y(
                 self.ptr,
@@ -1452,13 +1502,13 @@ impl Context {
                 height,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1473,7 +1523,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gnomonic(
                 self.ptr,
@@ -1481,13 +1532,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1505,7 +1556,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_a(
                 self.ptr,
@@ -1516,13 +1568,13 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1540,7 +1592,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_b(
                 self.ptr,
@@ -1551,13 +1604,13 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1576,7 +1629,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin(
                 self.ptr,
@@ -1588,13 +1642,13 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1611,7 +1665,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_laborde_oblique_mercator(
                 self.ptr,
@@ -1621,13 +1676,13 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1643,7 +1698,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_international_map_world_polyconic(
                 self.ptr,
@@ -1652,13 +1708,13 @@ impl Context {
                 latitude_second_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1676,7 +1732,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak_north_oriented(
                 self.ptr,
@@ -1687,13 +1744,13 @@ impl Context {
                 scale_factor_pseudo_standard_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1711,7 +1768,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak(
                 self.ptr,
@@ -1722,13 +1780,13 @@ impl Context {
                 scale_factor_pseudo_standard_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1743,7 +1801,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_azimuthal_equal_area(
                 self.ptr,
@@ -1751,13 +1810,13 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1771,20 +1830,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_miller_cylindrical(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1800,7 +1860,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_a(
                 self.ptr,
@@ -1809,13 +1870,13 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1830,7 +1891,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
                 self.ptr,
@@ -1838,13 +1900,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1859,7 +1921,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_popular_visualisation_pseudo_mercator(
                 self.ptr,
@@ -1867,13 +1930,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1887,20 +1950,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mollweide(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1915,7 +1979,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
                 self.ptr,
@@ -1923,13 +1988,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1944,7 +2009,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
                 self.ptr,
@@ -1952,13 +2018,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -1973,7 +2039,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_orthographic(
                 self.ptr,
@@ -1981,13 +2048,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2004,7 +2071,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_local_orthographic(
                 self.ptr,
@@ -2014,13 +2082,13 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2035,7 +2103,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_american_polyconic(
                 self.ptr,
@@ -2043,13 +2112,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2065,7 +2134,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_polar_stereographic_variant_a(
                 self.ptr,
@@ -2074,13 +2144,13 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2095,7 +2165,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
                 self.ptr,
@@ -2103,13 +2174,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2123,20 +2194,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_robinson(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2150,20 +2222,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_sinusoidal(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2179,7 +2252,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_stereographic(
                 self.ptr,
@@ -2188,13 +2262,13 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2208,20 +2282,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_van_der_grinten(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2235,20 +2310,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_i(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2262,20 +2338,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_ii(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2290,7 +2367,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iii(
                 self.ptr,
@@ -2298,13 +2376,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2318,20 +2396,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iv(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2345,20 +2424,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_v(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2372,20 +2452,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vi(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2399,20 +2480,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vii(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2427,7 +2509,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_quadrilateralized_spherical_cube(
                 self.ptr,
@@ -2435,13 +2518,13 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2456,7 +2539,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_spherical_cross_track_height(
                 self.ptr,
@@ -2464,13 +2548,13 @@ impl Context {
                 peg_point_long,
                 peg_point_heading,
                 peg_point_height,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2485,20 +2569,21 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equal_earth(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2515,7 +2600,8 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_vertical_perspective(
                 self.ptr,
@@ -2525,13 +2611,13 @@ impl Context {
                 view_point_height,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstr(),
+                owned.push_option(linear_unit_name),
                 linear_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2543,18 +2629,19 @@ impl Context {
         axis_rotation: f64,
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_grib_convention(
                 self.ptr,
                 south_pole_lat_in_unrotated_crs,
                 south_pole_long_in_unrotated_crs,
                 axis_rotation,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///# References
     ///
@@ -2566,18 +2653,19 @@ impl Context {
         north_pole_grid_longitude: f64,
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
+        let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_netcdf_cf_convention(
                 self.ptr,
                 grid_north_pole_latitude,
                 grid_north_pole_longitude,
                 north_pole_grid_longitude,
-                ang_unit_name.to_cstr(),
+                owned.push_option(ang_unit_name),
                 ang_unit_conv_factor,
             )
         };
-        crate::Proj::new(self, ptr)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
 }
 
@@ -2612,6 +2700,7 @@ mod test_context_advanced {
                 ],
             )?;
             let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            println!("{}\n", wkt);
             assert!(wkt.contains("9122"));
         }
         Ok(())
@@ -2623,7 +2712,7 @@ mod test_context_advanced {
             ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, Some("Degree"), 1.0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("LENGTHUNIT"));
+        assert!(wkt.contains("CS[Cartesian,2]"));
         Ok(())
     }
     #[test]
@@ -2636,7 +2725,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("9122"));
+        assert!(wkt.contains("CS[ellipsoidal,2]"));
         Ok(())
     }
     #[test]
@@ -2651,7 +2740,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("LENGTHUNIT"));
+        assert!(wkt.contains("CS[ellipsoidal,3]"));
         Ok(())
     }
     #[test]
@@ -2695,7 +2784,9 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("9122"));
+        assert!(wkt.contains("WGS 84"));
+        assert!(wkt.contains("World Geodetic System 1984"));
+        assert!(wkt.contains("Greenwich"));
         Ok(())
     }
     #[test]
@@ -2714,7 +2805,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("9122"));
+        assert!(wkt.contains("GRS 1980"));
         Ok(())
     }
     #[test]
@@ -2728,14 +2819,20 @@ mod test_context_advanced {
             298.257223563,
             Some("Greenwich"),
             0.0,
-            Some("Degree"),
+            Some("MyDegree"),
             0.0174532925199433,
-            Some("Metre"),
+            Some("MyMetre"),
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("9122"));
+        assert!(wkt.contains("WGS 84"));
+        assert!(wkt.contains("World Geodetic System 1984"));
+        assert!(wkt.contains("Greenwich"));
+        assert!(wkt.contains("MyDegree"));
+        assert!(wkt.contains("World Geodetic System 1984"));
+        assert!(wkt.contains("MyMetre"));
+
         Ok(())
     }
     #[test]
@@ -2749,20 +2846,21 @@ mod test_context_advanced {
             298.257223563,
             Some("Greenwich"),
             0.0,
-            Some("Degree"),
+            Some("MyDegree"),
             0.0174532925199433,
-            Some("Metre"),
-            1.0,
+            Some("MyMetre1"),
+            1.1,
         )?;
         let pj2: Proj<'_> = ctx.create_geocentric_crs_from_datum(
-            Some("WGS 84"),
+            Some("new crs"),
             &pj1.crs_get_datum()?.unwrap(),
-            Some("Metre"),
+            Some("MyMetre2"),
             1.0,
         )?;
         let wkt = pj2.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("9122"));
+        assert!(wkt.contains("new crs"));
+        assert!(wkt.contains("MyMetre2"));
         Ok(())
     }
     #[test]
@@ -2794,16 +2892,17 @@ mod test_context_advanced {
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("WGS 84 / UTM zone 31N"));
+        assert!(wkt.contains("CS[Cartesian,3]"));
         Ok(())
     }
     #[test]
     fn test_create_engineering_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
 
-        let pj: Proj<'_> = ctx.create_engineering_crs(Some("name"))?;
+        let pj: Proj<'_> = ctx.create_engineering_crs(Some("engineering crs"))?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("Unknown engineering datum"));
+        assert!(wkt.contains("engineering crs"));
         Ok(())
     }
     #[test]
@@ -2871,7 +2970,7 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_string()),
+                Some("param name".to_cstring()),
                 None,
                 None,
                 0.99,
@@ -2925,7 +3024,7 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_string()),
+                Some("param name".to_cstring()),
                 None,
                 None,
                 0.99,
@@ -2951,7 +3050,7 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_string()),
+                Some("param name".to_cstring()),
                 None,
                 None,
                 0.99,

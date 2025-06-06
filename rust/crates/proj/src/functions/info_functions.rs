@@ -99,6 +99,8 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         println!("{:?}", pj.info());
+        assert_eq!(pj.info().description(), "WGS 84");
+        assert!(!pj.info().has_inverse());
         Ok(())
     }
     #[test]
@@ -134,15 +136,17 @@ mod test {
     }
     #[test]
     fn test_init_info() -> miette::Result<()> {
-        let info = init_info("ITRF2000")?;
-        println!("{:?}", info);
-        Ok(())
-    }
-
-    #[test]
-    fn test_init_info_fail() -> miette::Result<()> {
-        let info = init_info("invalid init");
-        assert!(info.is_err());
+        //valid
+        {
+            let info = init_info("ITRF2000")?;
+            println!("{:?}", info);
+            assert_eq!(info.name(), "ITRF2000");
+        }
+        //invalid
+        {
+            let info = init_info("invalid init");
+            assert!(info.is_err());
+        }
         Ok(())
     }
 }

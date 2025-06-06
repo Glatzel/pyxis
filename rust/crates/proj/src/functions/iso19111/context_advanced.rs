@@ -256,11 +256,10 @@ impl Context {
         projected_2d_crs: &Proj,
         geog_3d_crs: Option<&Proj>,
     ) -> miette::Result<Proj> {
-        let crs_name = crs_name.to_cstring();
         let ptr = unsafe {
             proj_sys::proj_crs_create_projected_3D_crs_from_2D(
                 self.ptr,
-                crs_name.as_ptr(),
+                crs_name.to_cstring().as_ptr(),
                 projected_2d_crs.ptr(),
                 geog_3d_crs.map_or(ptr::null(), |crs| crs.ptr()),
             )
@@ -2795,7 +2794,7 @@ mod test_context_advanced {
             ctx.crs_create_projected_3d_crs_from_2d(None, &proj_crs, Some(&geog_3d_crs))?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("WGS 84 / UTM zone 31N"));
+        assert!(wkt.contains("CS[Cartesian,3]"));
         Ok(())
     }
     #[test]

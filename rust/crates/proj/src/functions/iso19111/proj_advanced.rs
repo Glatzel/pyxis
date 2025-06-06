@@ -317,50 +317,51 @@ mod test_proj_advanced {
     #[test]
     fn test_convert_conversion_to_other_method() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        {
-            let conv = ctx.create_conversion_mercator_variant_a(
-                0.0,
-                1.0,
-                0.99,
-                2.0,
-                3.0,
-                Some("Degree"),
-                0.0174532925199433,
-                Some("Metre"),
-                1.0,
-            )?;
-            let geog_cs =
-                ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
 
-            let geog_crs = ctx.create_geographic_crs(
-                Some("WGS 84"),
-                Some("World Geodetic System 1984"),
-                Some("WGS 84"),
-                6378137.0,
-                298.257223563,
-                Some("Greenwich"),
-                0.0,
-                Some("Degree"),
-                0.0174532925199433,
-                &geog_cs,
-            )?;
-            let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
-            let pj: Proj<'_> = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
-            let conv_in_proj = pj.crs_get_coordoperation()?;
-            //by code
-            {
-                let new_conv = conv_in_proj.convert_conversion_to_other_method(Some(9805), None)?;
-                let wkt =
-                    new_conv.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-                println!("{wkt}");
-                assert!(wkt.contains("9805"));
-            }
-            //both none
-            {
-                let new_conv = conv_in_proj.convert_conversion_to_other_method(None, None);
-                assert!(new_conv.is_err());
-            }
+        let conv = ctx.create_conversion_mercator_variant_a(
+            0.0,
+            1.0,
+            0.99,
+            2.0,
+            3.0,
+            Some("Degree"),
+            0.0174532925199433,
+            Some("Metre"),
+            1.0,
+        )?;
+        let geog_cs =
+            ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
+
+        let geog_crs = ctx.create_geographic_crs(
+            Some("WGS 84"),
+            Some("World Geodetic System 1984"),
+            Some("WGS 84"),
+            6378137.0,
+            298.257223563,
+            Some("Greenwich"),
+            0.0,
+            Some("Degree"),
+            0.0174532925199433,
+            &geog_cs,
+        )?;
+        let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+        let pj: Proj<'_> = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        let conv_in_proj = pj.crs_get_coordoperation()?;
+        //by code
+        {
+            let new_conv = conv_in_proj.convert_conversion_to_other_method(Some(9805), None)?;
+            let wkt = new_conv.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            println!("{wkt}");
+            assert!(wkt.contains("9805"));
         }
+        //both none
+        {
+            let new_conv = conv_in_proj.convert_conversion_to_other_method(None, None);
+            assert!(new_conv.is_err());
+        }
+
         Ok(())
     }
 

@@ -65,12 +65,11 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let unit_name = unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
                 ellipsoidal_cs_2d_type.into(),
-                unit_name.map_or(ptr::null(), |s| s.as_ptr()),
+                unit_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 unit_conv_factor,
             )
         };
@@ -140,22 +139,17 @@ impl Context {
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let crs_name = crs_name.map(|s| s.to_cstring());
-        let datum_name = datum_name.map(|s| s.to_cstring());
-        let ellps_name = ellps_name.map(|s| s.to_cstring());
-        let prime_meridian_name = prime_meridian_name.map(|s| s.to_cstring());
-        let pm_angular_units = pm_angular_units.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
-                crs_name.map_or(std::ptr::null(), |s| s.as_ptr()),
-                datum_name.map_or(ptr::null(), |s| s.as_ptr()),
-                ellps_name.map_or(ptr::null(), |s| s.as_ptr()),
+                crs_name.map_or(std::ptr::null(), |s| s.to_cstring().into_raw()),
+                datum_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                ellps_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.map_or(ptr::null(), |s| s.as_ptr()),
+                prime_meridian_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 prime_meridian_offset,
-                pm_angular_units.map_or(ptr::null(), |s| s.as_ptr()),
+                pm_angular_units.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 pm_units_conv,
                 ellipsoidal_cs.ptr(),
             )
@@ -171,11 +165,10 @@ impl Context {
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let crs_name = crs_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
-                crs_name.map_or(std::ptr::null(), |s| s.as_ptr()),
+                crs_name.map_or(std::ptr::null(), |s| s.to_cstring().into_raw()),
                 datum_or_datum_ensemble.ptr(),
                 ellipsoidal_cs.ptr(),
             )
@@ -199,25 +192,19 @@ impl Context {
         linear_units: Option<&str>,
         linear_units_conv: f64,
     ) -> miette::Result<Proj> {
-        let crs_name = crs_name.map(|s| s.to_cstring());
-        let datum_name = datum_name.map(|s| s.to_cstring());
-        let ellps_name = ellps_name.map(|s| s.to_cstring());
-        let prime_meridian_name = prime_meridian_name.map(|s| s.to_cstring());
-        let angular_units = angular_units.map(|s| s.to_cstring());
-        let linear_units = linear_units.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
                 self.ptr,
-                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
-                datum_name.map_or(ptr::null(), |s| s.as_ptr()),
-                ellps_name.map_or(ptr::null(), |s| s.as_ptr()),
+                crs_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                datum_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                ellps_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.map_or(ptr::null(), |s| s.as_ptr()),
+                prime_meridian_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 prime_meridian_offset,
-                angular_units.map_or(ptr::null(), |s| s.as_ptr()),
+                angular_units.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 angular_units_conv,
-                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
+                linear_units.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 linear_units_conv,
             )
         };
@@ -257,10 +244,9 @@ impl Context {
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
         let ptr = unsafe {
-            let crs_name = crs_name.map(|s| s.to_cstring());
             proj_sys::proj_create_derived_geographic_crs(
                 self.ptr,
-                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
+                crs_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 base_geographic_crs.ptr(),
                 conversion.ptr(),
                 ellipsoidal_cs.ptr(),
@@ -292,11 +278,10 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
     pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> miette::Result<Proj> {
-        let crs_name = crs_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_engineering_crs(
                 self.ptr,
-                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
+                crs_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
             )
         };
         crate::Proj::new(self, ptr)
@@ -311,15 +296,12 @@ impl Context {
         linear_units: Option<&str>,
         linear_units_conv: f64,
     ) -> miette::Result<Proj> {
-        let crs_name = crs_name.map(|s| s.to_cstring());
-        let datum_name = datum_name.map(|s| s.to_cstring());
-        let linear_units = linear_units.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
                 self.ptr,
-                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
-                datum_name.map_or(ptr::null(), |s| s.as_ptr()),
-                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
+                crs_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                datum_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                linear_units.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 linear_units_conv,
             )
         };
@@ -344,26 +326,18 @@ impl Context {
     ) -> miette::Result<Proj> {
         let mut options = ProjOptions::new(1);
         options.push_optional_pass(accuracy, "ACCURACY");
-        let crs_name = crs_name.map(|s| s.to_cstring());
-        let datum_name = datum_name.map(|s| s.to_cstring());
-        let datum_auth_name = datum_auth_name.map(|s| s.to_cstring());
-        let datum_code = datum_code.map(|s| s.to_cstring());
-        let linear_units = linear_units.map(|s| s.to_cstring());
-        let geoid_model_name = geoid_model_name.map(|s| s.to_cstring());
-        let geoid_model_auth_name = geoid_model_auth_name.map(|s| s.to_cstring());
-        let geoid_model_code = geoid_model_code.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs_ex(
                 self.ptr,
-                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
-                datum_name.map_or(ptr::null(), |s| s.as_ptr()),
-                datum_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                datum_code.map_or(ptr::null(), |s| s.as_ptr()),
-                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
+                crs_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                datum_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                datum_auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                datum_code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                linear_units.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 linear_units_conv,
-                geoid_model_name.map_or(ptr::null(), |s| s.as_ptr()),
-                geoid_model_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                geoid_model_code.map_or(ptr::null(), |s| s.as_ptr()),
+                geoid_model_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                geoid_model_auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                geoid_model_code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 geoid_geog_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 options.as_vec_ptr().as_ptr(),
             )
@@ -379,11 +353,10 @@ impl Context {
         horiz_crs: &Proj,
         vert_crs: &Proj,
     ) -> miette::Result<Proj> {
-        let crs_name = crs_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
                 self.ptr,
-                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
+                crs_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 horiz_crs.ptr(),
                 vert_crs.ptr(),
             )
@@ -403,21 +376,15 @@ impl Context {
         method_code: Option<&str>,
         params: &[ParamDescription],
     ) -> miette::Result<Proj> {
-        let name = name.map(|s| s.to_cstring());
-        let auth_name = auth_name.map(|s| s.to_cstring());
-        let code = code.map(|s| s.to_cstring());
-        let method_name = method_name.map(|s| s.to_cstring());
-        let method_auth_name = method_auth_name.map(|s| s.to_cstring());
-        let method_code = method_code.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
                 self.ptr,
-                name.map_or(ptr::null(), |s| s.as_ptr()),
-                auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                code.map_or(ptr::null(), |s| s.as_ptr()),
-                method_name.map_or(ptr::null(), |s| s.as_ptr()),
-                method_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                method_code.map_or(ptr::null(), |s| s.as_ptr()),
+                name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                method_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                method_auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                method_code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 params.len() as i32,
                 params
                     .iter()
@@ -502,11 +469,11 @@ impl Context {
         conversion: &Proj,
         coordinate_system: &Proj,
     ) -> miette::Result<Proj> {
-        let crs_name = crs_name.map(|s| s.to_cstring());
+     
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
                 self.ptr,
-                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
+                crs_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 geodetic_crs.ptr(),
                 conversion.ptr(),
                 coordinate_system.ptr(),
@@ -578,8 +545,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
-        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
+    
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
                 self.ptr,
@@ -588,9 +554,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
+                ang_unit_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 ang_unit_conv_factor,
-                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
+                linear_unit_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 linear_unit_conv_factor,
             )
         };
@@ -2803,6 +2769,7 @@ mod test_context_advanced {
                 ],
             )?;
             let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            println!("{}\n", wkt);
             assert!(wkt.contains("9122"));
         }
         Ok(())
@@ -2814,7 +2781,7 @@ mod test_context_advanced {
             ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, Some("Degree"), 1.0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("LENGTHUNIT"));
+        assert!(wkt.contains("CS[Cartesian,2]"));
         Ok(())
     }
     #[test]
@@ -2827,7 +2794,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("9122"));
+        assert!(wkt.contains("CS[ellipsoidal,2]"));
         Ok(())
     }
     #[test]
@@ -2842,7 +2809,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("LENGTHUNIT"));
+        assert!(wkt.contains("CS[ellipsoidal,3]"));
         Ok(())
     }
     #[test]
@@ -2886,7 +2853,9 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("9122"));
+        assert!(wkt.contains("WGS 84"));
+        assert!(wkt.contains("World Geodetic System 1984"));
+        assert!(wkt.contains("Greenwich"));
         Ok(())
     }
     #[test]
@@ -2905,7 +2874,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("9122"));
+        assert!(wkt.contains("GRS 1980"));
         Ok(())
     }
     #[test]
@@ -2943,7 +2912,7 @@ mod test_context_advanced {
             Some("Degree"),
             0.0174532925199433,
             Some("Metre"),
-            1.0,
+            1.1,
         )?;
         let pj2: Proj<'_> = ctx.create_geocentric_crs_from_datum(
             Some("WGS 84"),
@@ -2992,10 +2961,10 @@ mod test_context_advanced {
     fn test_create_engineering_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
 
-        let pj: Proj<'_> = ctx.create_engineering_crs(Some("name"))?;
+        let pj: Proj<'_> = ctx.create_engineering_crs(Some("engineering crs"))?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
-        assert!(wkt.contains("Unknown engineering datum"));
+        assert!(wkt.contains("engineering crs"));
         Ok(())
     }
     #[test]

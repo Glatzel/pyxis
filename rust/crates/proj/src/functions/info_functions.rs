@@ -108,8 +108,8 @@ mod test {
         let info = info();
         println!("{:?}", info);
         assert_eq!(info.major(), &9);
-        assert_eq!(info.major(), &6);
-        assert_eq!(info.major(), &1);
+        assert_eq!(info.minor(), &6);
+        assert_eq!(info.patch(), &1);
     }
 
     #[test]

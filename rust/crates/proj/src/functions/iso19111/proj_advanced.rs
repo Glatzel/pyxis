@@ -84,16 +84,13 @@ impl Proj<'_> {
         unit_code: Option<&str>,
     ) -> miette::Result<Proj> {
         let ptr = unsafe {
-            let linear_units = linear_units.map(|s| s.to_cstring());
-            let unit_auth_name = unit_auth_name.map(|s| s.to_cstring());
-            let unit_code = unit_code.map(|s| s.to_cstring());
             proj_sys::proj_crs_alter_cs_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
+                linear_units.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 linear_units_conv,
-                unit_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                unit_code.map_or(ptr::null(), |s| s.as_ptr()),
+                unit_auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                unit_code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -110,16 +107,13 @@ impl Proj<'_> {
         convert_to_new_unit: bool,
     ) -> miette::Result<Proj> {
         let ptr = unsafe {
-            let linear_units = linear_units.map(|s| s.to_cstring());
-            let unit_auth_name = unit_auth_name.map(|s| s.to_cstring());
-            let unit_code = unit_code.map(|s| s.to_cstring());
             proj_sys::proj_crs_alter_parameters_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
+                linear_units.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 linear_units_conv,
-                unit_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                unit_code.map_or(ptr::null(), |s| s.as_ptr()),
+                unit_auth_name.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
+                unit_code.map_or(ptr::null(), |s| s.to_cstring().into_raw()),
                 convert_to_new_unit as i32,
             )
         };

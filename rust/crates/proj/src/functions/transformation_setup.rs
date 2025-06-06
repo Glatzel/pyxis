@@ -1,4 +1,4 @@
-use envoy::{AsVecPtr, ToCString, VecCString};
+use envoy::{AsVecPtr, ToCString};
 
 use crate::{Proj, check_result};
 /// # Transformation setup

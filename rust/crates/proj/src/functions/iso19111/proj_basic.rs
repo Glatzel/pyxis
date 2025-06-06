@@ -333,7 +333,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
-    pub fn crs_get_datum(&self) -> miette::Result<Option<Proj>> {
+    pub fn crs_get_datum(&self) -> miette::Result<Option<Proj<'_>>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -344,7 +344,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_ensemble>
-    pub fn crs_get_datum_ensemble(&self) -> miette::Result<Option<Proj>> {
+    pub fn crs_get_datum_ensemble(&self) -> miette::Result<Option<Proj<'_>>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_ensemble(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -355,7 +355,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_forced>
-    pub fn crs_get_datum_forced(&self) -> miette::Result<Option<Proj>> {
+    pub fn crs_get_datum_forced(&self) -> miette::Result<Option<Proj<'_>>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_forced(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -389,7 +389,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
-    pub fn datum_ensemble_get_member(&self, member_index: u16) -> miette::Result<Option<Proj>> {
+    pub fn datum_ensemble_get_member(&self, member_index: u16) -> miette::Result<Option<Proj<'_>>> {
         let ptr = unsafe {
             proj_sys::proj_datum_ensemble_get_member(self.ctx.ptr, self.ptr(), member_index as i32)
         };

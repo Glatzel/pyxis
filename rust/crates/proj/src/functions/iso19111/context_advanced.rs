@@ -469,7 +469,6 @@ impl Context {
         conversion: &Proj,
         coordinate_system: &Proj,
     ) -> miette::Result<Proj> {
-     
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
                 self.ptr,
@@ -545,7 +544,6 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-    
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
                 self.ptr,

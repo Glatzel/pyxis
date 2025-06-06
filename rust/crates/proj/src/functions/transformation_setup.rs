@@ -239,10 +239,15 @@ impl Drop for crate::Proj<'_> {
 }
 #[cfg(test)]
 mod test {
+    use crate::data_types::iso19111::WktType;
+
     #[test]
     fn test_create() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("WGS 84"));
         let _ = pj.clone();
         Ok(())
     }
@@ -250,14 +255,20 @@ mod test {
     #[test]
     fn test_create_argv() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let _ = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
+        let pj = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("PROJ-based operation method: proj=utm zone=32 ellps=GRS80"));
         Ok(())
     }
 
     #[test]
     fn test_create_crs_to_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let _ = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("9602"));
         Ok(())
     }
 
@@ -266,7 +277,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4978")?;
-        let _ = ctx.create_crs_to_crs_from_pj(
+        let pj = ctx.create_crs_to_crs_from_pj(
             pj1,
             pj2,
             &crate::Area::default(),
@@ -276,6 +287,9 @@ mod test {
             Some(true),
             Some(true),
         )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("9602"));
         Ok(())
     }
 }

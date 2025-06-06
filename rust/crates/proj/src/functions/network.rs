@@ -134,7 +134,9 @@ mod test {
     #[test]
     fn test_set_url_endpoint() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.set_url_endpoint("https://cdn.proj.org")?;
+        ctx.set_url_endpoint("https://test.proj.org")?;
+        let endpoint = ctx.get_url_endpoint()?;
+        assert_eq!(endpoint, "https://test.proj.org");
         Ok(())
     }
     #[test]

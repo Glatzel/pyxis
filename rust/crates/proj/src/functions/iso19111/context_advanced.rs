@@ -13,7 +13,7 @@ impl Context {
         &self,
         coordinate_system_type: CoordinateSystemType,
         axis: &[AxisDescription],
-    ) -> miette::Result<crate::Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let axis_count = axis.len();
         let mut axis_vec: Vec<proj_sys::PJ_AXIS_DESCRIPTION> = Vec::with_capacity(axis_count);
         for a in axis {

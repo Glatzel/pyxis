@@ -43,7 +43,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn create(&self, definition: &str) -> miette::Result<crate::Proj> {
+    pub fn create(&self, definition: &str) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstring().as_ptr()) };
         check_result!(self);
         Proj::new(self, ptr)
@@ -62,7 +62,7 @@ impl crate::Context {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Proj> {
+    pub fn create_argv(&self, argv: &[&str]) -> miette::Result<Proj<'_>> {
         let count = argv.len();
         let ptr = unsafe {
             proj_sys::proj_create_argv(
@@ -122,7 +122,7 @@ impl crate::Context {
         source_crs: &str,
         target_crs: &str,
         area: &crate::Area,
-    ) -> miette::Result<crate::Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
                 self.ptr,
@@ -192,7 +192,7 @@ impl crate::Context {
         allow_ballpark: Option<bool>,
         only_best: Option<bool>,
         force_over: Option<bool>,
-    ) -> miette::Result<crate::Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let mut options = crate::ProjOptions::new(5);
         options
             .push_optional_pass(authority, "AUTHORITY")
@@ -227,7 +227,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
-    pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<crate::Proj> {
+    pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr()) };
         Proj::new(self, ptr)
     }

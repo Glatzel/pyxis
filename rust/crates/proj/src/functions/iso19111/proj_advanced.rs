@@ -19,7 +19,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_name>
-    pub fn alter_name(&self, name: &str) -> miette::Result<Proj> {
+    pub fn alter_name(&self, name: &str) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_alter_name(self.ctx.ptr, self.ptr(), name.to_cstring().as_ptr())
         };
@@ -28,7 +28,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_id>
-    pub fn alter_id(&self, auth_name: &str, code: &str) -> miette::Result<Proj> {
+    pub fn alter_id(&self, auth_name: &str, code: &str) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_alter_id(
                 self.ctx.ptr,
@@ -42,7 +42,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_alter_geodetic_crs>
-    pub fn crs_alter_geodetic_crs(&self, new_geod_crs: &Proj) -> miette::Result<Proj> {
+    pub fn crs_alter_geodetic_crs(&self, new_geod_crs: &Proj) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_crs_alter_geodetic_crs(self.ctx.ptr, self.ptr(), new_geod_crs.ptr())
         };
@@ -57,7 +57,7 @@ impl Proj<'_> {
         angular_units_convs: f64,
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             // let angular_unit = angular_unit.map(|s| s.to_cstring());
             // let unit_auth_name = unit_auth_name.map(|s| s.to_cstring());
@@ -82,7 +82,7 @@ impl Proj<'_> {
         linear_units_conv: f64,
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_crs_alter_cs_linear_unit(
                 self.ctx.ptr,
@@ -105,7 +105,7 @@ impl Proj<'_> {
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
         convert_to_new_unit: bool,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_crs_alter_parameters_linear_unit(
                 self.ctx.ptr,
@@ -122,7 +122,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
-    pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj> {
+    pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj<'_>> {
         let crs_3d_name = crs_3d_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_crs_promote_to_3D(
@@ -136,7 +136,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_demote_to_2D>
-    pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> miette::Result<Proj> {
+    pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> miette::Result<Proj<'_>> {
         let crs_2d_name = crs_2d_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_crs_demote_to_2D(
@@ -154,7 +154,7 @@ impl Proj<'_> {
         &self,
         new_method_epsg_code: Option<u16>,
         new_method_name: Option<&str>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         if new_method_epsg_code.is_none() && new_method_name.is_none() {
             miette::bail!(
                 "At least one of `new_method_epsg_code` and  `new_method_name` must be set."
@@ -177,7 +177,7 @@ impl Proj<'_> {
     pub fn crs_create_bound_crs_to_wgs84(
         &self,
         allow_intermediate_crs: Option<AllowIntermediateCrs>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let mut options = ProjOptions::new(1);
         options.push_optional_pass(allow_intermediate_crs, "ALLOW_INTERMEDIATE_CRS");
 

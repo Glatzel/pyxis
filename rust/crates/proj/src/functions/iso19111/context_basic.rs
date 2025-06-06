@@ -95,7 +95,7 @@ impl crate::Context {
         wkt: &str,
         strict: Option<bool>,
         unset_identifiers_if_incompatible_def: Option<bool>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let mut options = ProjOptions::new(2);
         options.push_optional_pass(strict, "STRICT");
         options.push_optional_pass(
@@ -134,7 +134,7 @@ impl crate::Context {
         code: &str,
         category: Category,
         use_projalternative_grid_names: bool,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_from_database(
                 self.ptr,
@@ -468,7 +468,7 @@ impl crate::Context {
         &self,
         result: *const proj_sys::PJ_OBJ_LIST,
         index: i32,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_list_get(self.ptr, result, index) };
         Proj::new(self, ptr)
     }

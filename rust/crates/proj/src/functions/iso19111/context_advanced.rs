@@ -44,7 +44,7 @@ impl Context {
         ellipsoidal_cs_2d_type: CartesianCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let unit_name = unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
@@ -64,7 +64,7 @@ impl Context {
         ellipsoidal_cs_2d_type: EllipsoidalCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
@@ -85,7 +85,7 @@ impl Context {
         horizontal_angular_unit_conv_factor: f64,
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let horizontal_angular_unit_name = horizontal_angular_unit_name.map(|s| s.to_cstring());
         let vertical_linear_unit_name = vertical_linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
@@ -138,7 +138,7 @@ impl Context {
         pm_angular_units: Option<&str>,
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
@@ -164,7 +164,7 @@ impl Context {
         crs_name: Option<&str>,
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
@@ -191,7 +191,7 @@ impl Context {
         angular_units_conv: f64,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
                 self.ptr,
@@ -219,7 +219,7 @@ impl Context {
         datum_or_datum_ensemble: &Proj,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
                 self.ptr,
@@ -240,7 +240,7 @@ impl Context {
         base_geographic_crs: &Proj,
         conversion: &Proj,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
                 self.ptr,
@@ -260,7 +260,7 @@ impl Context {
         crs_name: Option<&str>,
         projected_2d_crs: &Proj,
         geog_3d_crs: Option<&Proj>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let crs_name = crs_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_crs_create_projected_3D_crs_from_2D(
@@ -275,7 +275,7 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
-    pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> miette::Result<Proj> {
+    pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_engineering_crs(
                 self.ptr,
@@ -293,7 +293,7 @@ impl Context {
         datum_name: Option<&str>,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
                 self.ptr,
@@ -321,7 +321,7 @@ impl Context {
         geoid_model_code: Option<&str>,
         geoid_geog_crs: Option<&Proj>,
         accuracy: Option<f64>,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let mut options = ProjOptions::new(1);
         options.push_optional_pass(accuracy, "ACCURACY");
         let ptr = unsafe {
@@ -350,7 +350,7 @@ impl Context {
         crs_name: Option<&str>,
         horiz_crs: &Proj,
         vert_crs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
                 self.ptr,
@@ -373,7 +373,7 @@ impl Context {
         method_auth_name: Option<&str>,
         method_code: Option<&str>,
         params: &[ParamDescription],
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
                 self.ptr,
@@ -417,7 +417,7 @@ impl Context {
         method_code: Option<&str>,
         params: &[ParamDescription],
         accuracy: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let count = params.len();
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
             .iter()
@@ -461,7 +461,7 @@ impl Context {
         geodetic_crs: &Proj,
         conversion: &Proj,
         coordinate_system: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
                 self.ptr,
@@ -481,7 +481,7 @@ impl Context {
         base_crs: &Proj,
         hub_crs: &Proj,
         transformation: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_crs(
                 self.ptr,
@@ -500,7 +500,7 @@ impl Context {
         vert_crs: &Proj,
         hub_geographic_3d_crs: &Proj,
         grid_name: &str,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_vertical_crs(
                 self.ptr,
@@ -514,7 +514,7 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_utm>
-    pub fn create_conversion_utm(&self, zone: u8, north: bool) -> miette::Result<Proj> {
+    pub fn create_conversion_utm(&self, zone: u8, north: bool) -> miette::Result<Proj<'_>> {
         if !(1..=60).contains(&zone) {
             miette::bail!("UTM zone number should between 1 and 60.");
         }
@@ -536,7 +536,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
                 self.ptr,
@@ -567,7 +567,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gauss_schreiber_transverse_mercator(
                 self.ptr,
@@ -598,7 +598,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator_south_oriented(
                 self.ptr,
@@ -630,7 +630,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_two_point_equidistant(
                 self.ptr,
@@ -661,7 +661,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mapping_grid(
                 self.ptr,
@@ -690,7 +690,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mining_grid(
                 self.ptr,
@@ -721,7 +721,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_albers_equal_area(
                 self.ptr,
@@ -753,7 +753,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp(
                 self.ptr,
@@ -785,7 +785,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp_variant_b(
                 self.ptr,
@@ -818,7 +818,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp(
                 self.ptr,
@@ -852,7 +852,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_michigan(
                 self.ptr,
@@ -886,7 +886,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_belgium(
                 self.ptr,
@@ -917,7 +917,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_azimuthal_equidistant(
                 self.ptr,
@@ -946,7 +946,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_guam_projection(
                 self.ptr,
@@ -975,7 +975,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_bonne(
                 self.ptr,
@@ -1004,7 +1004,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area_spherical(
                 self.ptr,
@@ -1033,7 +1033,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area(
                 self.ptr,
@@ -1062,7 +1062,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_cassini_soldner(
                 self.ptr,
@@ -1093,7 +1093,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_conic(
                 self.ptr,
@@ -1123,7 +1123,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_i(
                 self.ptr,
@@ -1150,7 +1150,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_ii(
                 self.ptr,
@@ -1177,7 +1177,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iii(
                 self.ptr,
@@ -1204,7 +1204,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iv(
                 self.ptr,
@@ -1231,7 +1231,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_v(
                 self.ptr,
@@ -1258,7 +1258,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_vi(
                 self.ptr,
@@ -1286,7 +1286,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical(
                 self.ptr,
@@ -1315,7 +1315,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical_spherical(
                 self.ptr,
@@ -1343,7 +1343,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gall(
                 self.ptr,
@@ -1370,7 +1370,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_goode_homolosine(
                 self.ptr,
@@ -1397,7 +1397,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_interrupted_goode_homolosine(
                 self.ptr,
@@ -1425,7 +1425,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_x(
                 self.ptr,
@@ -1454,7 +1454,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_y(
                 self.ptr,
@@ -1483,7 +1483,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gnomonic(
                 self.ptr,
@@ -1515,7 +1515,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_a(
                 self.ptr,
@@ -1550,7 +1550,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_b(
                 self.ptr,
@@ -1586,7 +1586,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin(
                 self.ptr,
@@ -1621,7 +1621,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_laborde_oblique_mercator(
                 self.ptr,
@@ -1653,7 +1653,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_international_map_world_polyconic(
                 self.ptr,
@@ -1686,7 +1686,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak_north_oriented(
                 self.ptr,
@@ -1721,7 +1721,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak(
                 self.ptr,
@@ -1753,7 +1753,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_azimuthal_equal_area(
                 self.ptr,
@@ -1781,7 +1781,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_miller_cylindrical(
                 self.ptr,
@@ -1810,7 +1810,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_a(
                 self.ptr,
@@ -1840,7 +1840,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
                 self.ptr,
@@ -1869,7 +1869,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_popular_visualisation_pseudo_mercator(
                 self.ptr,
@@ -1897,7 +1897,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mollweide(
                 self.ptr,
@@ -1925,7 +1925,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
                 self.ptr,
@@ -1954,7 +1954,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
                 self.ptr,
@@ -1983,7 +1983,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_orthographic(
                 self.ptr,
@@ -2014,7 +2014,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_local_orthographic(
                 self.ptr,
@@ -2045,7 +2045,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_american_polyconic(
                 self.ptr,
@@ -2075,7 +2075,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_polar_stereographic_variant_a(
                 self.ptr,
@@ -2105,7 +2105,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
                 self.ptr,
@@ -2133,7 +2133,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_robinson(
                 self.ptr,
@@ -2160,7 +2160,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_sinusoidal(
                 self.ptr,
@@ -2189,7 +2189,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_stereographic(
                 self.ptr,
@@ -2218,7 +2218,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_van_der_grinten(
                 self.ptr,
@@ -2245,7 +2245,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_i(
                 self.ptr,
@@ -2272,7 +2272,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_ii(
                 self.ptr,
@@ -2300,7 +2300,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iii(
                 self.ptr,
@@ -2328,7 +2328,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iv(
                 self.ptr,
@@ -2355,7 +2355,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_v(
                 self.ptr,
@@ -2382,7 +2382,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vi(
                 self.ptr,
@@ -2409,7 +2409,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vii(
                 self.ptr,
@@ -2437,7 +2437,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_quadrilateralized_spherical_cube(
                 self.ptr,
@@ -2466,7 +2466,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_spherical_cross_track_height(
                 self.ptr,
@@ -2495,7 +2495,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equal_earth(
                 self.ptr,
@@ -2525,7 +2525,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_vertical_perspective(
                 self.ptr,
@@ -2553,7 +2553,7 @@ impl Context {
         axis_rotation: f64,
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_grib_convention(
                 self.ptr,
@@ -2576,7 +2576,7 @@ impl Context {
         north_pole_grid_longitude: f64,
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_netcdf_cf_convention(
                 self.ptr,

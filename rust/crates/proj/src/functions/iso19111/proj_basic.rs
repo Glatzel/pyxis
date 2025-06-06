@@ -312,21 +312,21 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
-    pub fn crs_get_geodetic_crs(&self) -> miette::Result<Proj> {
+    pub fn crs_get_geodetic_crs(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_crs_get_geodetic_crs(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
-    pub fn crs_get_horizontal_datum(&self) -> miette::Result<Proj> {
+    pub fn crs_get_horizontal_datum(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_crs_get_horizontal_datum(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
-    pub fn crs_get_sub_crs(&self, index: u16) -> miette::Result<Proj> {
+    pub fn crs_get_sub_crs(&self, index: u16) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx.ptr, self.ptr(), index as i32) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -414,7 +414,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
-    pub fn crs_get_coordinate_system(&self) -> miette::Result<Proj> {
+    pub fn crs_get_coordinate_system(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordinate_system(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -483,7 +483,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
-    pub fn get_ellipsoid(&self) -> miette::Result<Proj> {
+    pub fn get_ellipsoid(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_get_ellipsoid(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -524,7 +524,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
-    pub fn get_prime_meridian(&self) -> miette::Result<Proj> {
+    pub fn get_prime_meridian(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -557,7 +557,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
-    pub fn crs_get_coordoperation(&self) -> miette::Result<Proj> {
+    pub fn crs_get_coordoperation(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordoperation(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -762,7 +762,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
-    pub fn coordoperation_create_inverse(&self) -> miette::Result<Proj> {
+    pub fn coordoperation_create_inverse(&self) -> miette::Result<Proj<'_>> {
         let ptr = unsafe { proj_sys::proj_coordoperation_create_inverse(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
@@ -780,7 +780,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
-    pub fn concatoperation_get_step(&self, index: u16) -> miette::Result<Proj> {
+    pub fn concatoperation_get_step(&self, index: u16) -> miette::Result<Proj<'_>> {
         let ptr = unsafe {
             proj_sys::proj_concatoperation_get_step(self.ctx.ptr, self.ptr(), index as i32)
         };
@@ -789,7 +789,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
-    pub fn coordinate_metadata_create(&self, epoch: f64) -> miette::Result<Proj> {
+    pub fn coordinate_metadata_create(&self, epoch: f64) -> miette::Result<Proj<'_>> {
         let ptr =
             unsafe { proj_sys::proj_coordinate_metadata_create(self.ctx.ptr, self.ptr(), epoch) };
         crate::Proj::new(self.ctx, ptr)

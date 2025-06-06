@@ -381,7 +381,7 @@ impl crate::Context {
             miette::bail!("Error");
         }
         let mut out_vec = Vec::new();
-        for offset in 0..1803 {
+        for offset in 0..out_result_count {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
             let info_ref = unsafe { current_ptr.as_ref().unwrap() };
             out_vec.push(CrsInfo::new(

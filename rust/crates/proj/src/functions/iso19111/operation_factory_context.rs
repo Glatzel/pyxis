@@ -11,7 +11,7 @@ impl Context {
     pub fn create_operation_factory_context(
         &self,
         authority: Option<&str>,
-    ) -> OperationFactoryContext<'_>  {
+    ) -> OperationFactoryContext<'_> {
         let authority = authority.map(|s| s.to_cstring());
         OperationFactoryContext {
             ctx: self,
@@ -28,7 +28,7 @@ impl OperationFactoryContext<'_> {
     pub fn from_context<'a>(
         ctx: &'a Context,
         authority: Option<&str>,
-    ) -> OperationFactoryContext<'_> <'a> {
+    ) -> OperationFactoryContext<'a> {
         ctx.create_operation_factory_context(authority)
     }
     ///# References

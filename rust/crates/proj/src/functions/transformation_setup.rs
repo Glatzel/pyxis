@@ -1,4 +1,4 @@
-use envoy::{AsVecPtr, ToCString};
+use envoy::{AsVecPtr, ToCString, VecCString};
 
 use crate::{Proj, check_result};
 /// # Transformation setup
@@ -63,13 +63,17 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     pub fn create_argv(&self, argv: &[&str]) -> miette::Result<crate::Proj> {
-        let len = argv.len();
-        let mut argv_ptrs: Vec<*mut i8> = Vec::with_capacity(len);
-        for s in argv {
-            argv_ptrs.push((*s).to_cstring().into_raw());
-        }
-        let ptr =
-            unsafe { proj_sys::proj_create_argv(self.ptr, len as i32, argv_ptrs.as_mut_ptr()) };
+        let count = argv.len();
+        let ptr = unsafe {
+            proj_sys::proj_create_argv(
+                self.ptr,
+                count as i32,
+                argv.iter()
+                    .map(|s| s.to_cstring().into_raw())
+                    .collect::<Vec<_>>()
+                    .as_mut_ptr(),
+            )
+        };
         check_result!(self);
         Proj::new(self, ptr)
     }

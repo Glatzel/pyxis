@@ -1,3 +1,5 @@
+use std::ptr;
+
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
@@ -57,13 +59,16 @@ impl Proj<'_> {
         unit_code: Option<&str>,
     ) -> miette::Result<Proj> {
         let ptr = unsafe {
+            let angular_unit = angular_unit.map(|s| s.to_cstring());
+            let unit_auth_name = unit_auth_name.map(|s| s.to_cstring());
+            let unit_code = unit_code.map(|s| s.to_cstring());
             proj_sys::proj_crs_alter_cs_angular_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                angular_unit.to_cstring().as_ptr(),
+                angular_unit.map_or(ptr::null(), |s| s.as_ptr()),
                 angular_units_convs,
-                unit_auth_name.to_cstring().as_ptr(),
-                unit_code.to_cstring().as_ptr(),
+                unit_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                unit_code.map_or(ptr::null(), |s| s.as_ptr()),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -79,13 +84,16 @@ impl Proj<'_> {
         unit_code: Option<&str>,
     ) -> miette::Result<Proj> {
         let ptr = unsafe {
+            let linear_units = linear_units.map(|s| s.to_cstring());
+            let unit_auth_name = unit_auth_name.map(|s| s.to_cstring());
+            let unit_code = unit_code.map(|s| s.to_cstring());
             proj_sys::proj_crs_alter_cs_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.to_cstring().as_ptr(),
+                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_units_conv,
-                unit_auth_name.to_cstring().as_ptr(),
-                unit_code.to_cstring().as_ptr(),
+                unit_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                unit_code.map_or(ptr::null(), |s| s.as_ptr()),
             )
         };
         Proj::new(self.ctx, ptr)
@@ -102,13 +110,16 @@ impl Proj<'_> {
         convert_to_new_unit: bool,
     ) -> miette::Result<Proj> {
         let ptr = unsafe {
+            let linear_units = linear_units.map(|s| s.to_cstring());
+            let unit_auth_name = unit_auth_name.map(|s| s.to_cstring());
+            let unit_code = unit_code.map(|s| s.to_cstring());
             proj_sys::proj_crs_alter_parameters_linear_unit(
                 self.ctx.ptr,
                 self.ptr(),
-                linear_units.to_cstring().as_ptr(),
+                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_units_conv,
-                unit_auth_name.to_cstring().as_ptr(),
-                unit_code.to_cstring().as_ptr(),
+                unit_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                unit_code.map_or(ptr::null(), |s| s.as_ptr()),
                 convert_to_new_unit as i32,
             )
         };
@@ -118,10 +129,11 @@ impl Proj<'_> {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
     pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj> {
+        let crs_3d_name = crs_3d_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_crs_promote_to_3D(
                 self.ctx.ptr,
-                crs_3d_name.to_cstring().as_ptr(),
+                crs_3d_name.map_or(ptr::null(), |s| s.as_ptr()),
                 self.ptr(),
             )
         };
@@ -131,10 +143,11 @@ impl Proj<'_> {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_demote_to_2D>
     pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> miette::Result<Proj> {
+        let crs_2d_name = crs_2d_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_crs_demote_to_2D(
                 self.ctx.ptr,
-                crs_2d_name.to_cstring().as_ptr(),
+                crs_2d_name.map_or(ptr::null(), |s| s.as_ptr()),
                 self.ptr(),
             )
         };
@@ -153,13 +166,13 @@ impl Proj<'_> {
                 "At least one of `new_method_epsg_code` and  `new_method_name` must be set."
             )
         }
-        let new_method_name = new_method_name.to_cstring();
+        let new_method_name = new_method_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_convert_conversion_to_other_method(
                 self.ctx.ptr,
                 self.ptr(),
                 new_method_epsg_code.unwrap_or_default() as i32,
-                new_method_name.as_ptr(),
+                new_method_name.map_or(ptr::null(), |s| s.as_ptr()),
             )
         };
         Proj::new(self.ctx, ptr)

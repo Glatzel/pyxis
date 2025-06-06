@@ -1,3 +1,5 @@
+use std::ptr;
+
 use envoy::{AsVecPtr, ToCString, VecCString};
 
 use crate::data_types::iso19111::*;
@@ -10,12 +12,13 @@ impl Context {
         &self,
         authority: Option<&str>,
     ) -> OperationFactoryContext {
+        let authority = authority.map(|s| s.to_cstring());
         OperationFactoryContext {
             ctx: self,
             ptr: unsafe {
                 proj_sys::proj_create_operation_factory_context(
                     self.ptr,
-                    authority.to_cstring().as_ptr(),
+                    authority.map_or(ptr::null(), |s| s.as_ptr()),
                 )
             },
         }

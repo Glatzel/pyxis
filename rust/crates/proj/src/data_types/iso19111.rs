@@ -277,7 +277,7 @@ CrsListParameters,
     {east_lon_degree:f64,"Eastern-most longitude of the area of use, in degrees."},
     {north_lat_degree:f64,"Northern-most latitude of the area of use, in degrees."},
     {allow_deprecated:bool,"Whether deprecated objects are allowed. Default to FALSE."},
-    {celestial_body_name:Option<String>,"Celestial body of the CRS (e.g.` Earth`). The default value, NULL, means no restriction"}
+    {celestial_body_name:Option<CString>,"Celestial body of the CRS (e.g.` Earth`). The default value, NULL, means no restriction"}
 );
 
 readonly_struct!(

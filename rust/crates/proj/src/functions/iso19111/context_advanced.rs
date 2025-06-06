@@ -87,13 +87,15 @@ impl Context {
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let horizontal_angular_unit_name = horizontal_angular_unit_name.map(|s| s.to_cstring());
+        let vertical_linear_unit_name = vertical_linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
                 ellipsoidal_cs_3d_type.into(),
-                horizontal_angular_unit_name.map_or(ptr::null(), |s| s.to_cstring().as_ptr()),
+                horizontal_angular_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 horizontal_angular_unit_conv_factor,
-                vertical_linear_unit_name.map_or(ptr::null(), |s| s.to_cstring().as_ptr()),
+                vertical_linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 vertical_linear_unit_conv_factor,
             )
         };
@@ -138,17 +140,22 @@ impl Context {
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
+        let crs_name = crs_name.map(|s| s.to_cstring());
+        let datum_name = datum_name.map(|s| s.to_cstring());
+        let ellps_name = ellps_name.map(|s| s.to_cstring());
+        let prime_meridian_name = prime_meridian_name.map(|s| s.to_cstring());
+        let pm_angular_units = pm_angular_units.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
-                crs_name.map_or(std::ptr::null(), |s| s.to_cstring().as_ptr()),
-                datum_name.to_cstring().as_ptr(),
-                ellps_name.to_cstring().as_ptr(),
+                crs_name.map_or(std::ptr::null(), |s| s.as_ptr()),
+                datum_name.map_or(ptr::null(), |s| s.as_ptr()),
+                ellps_name.map_or(ptr::null(), |s| s.as_ptr()),
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.to_cstring().as_ptr(),
+                prime_meridian_name.map_or(ptr::null(), |s| s.as_ptr()),
                 prime_meridian_offset,
-                pm_angular_units.to_cstring().as_ptr(),
+                pm_angular_units.map_or(ptr::null(), |s| s.as_ptr()),
                 pm_units_conv,
                 ellipsoidal_cs.ptr(),
             )
@@ -164,10 +171,11 @@ impl Context {
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
+        let crs_name = crs_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
+                crs_name.map_or(std::ptr::null(), |s| s.as_ptr()),
                 datum_or_datum_ensemble.ptr(),
                 ellipsoidal_cs.ptr(),
             )
@@ -191,19 +199,25 @@ impl Context {
         linear_units: Option<&str>,
         linear_units_conv: f64,
     ) -> miette::Result<Proj> {
+        let crs_name = crs_name.map(|s| s.to_cstring());
+        let datum_name = datum_name.map(|s| s.to_cstring());
+        let ellps_name = ellps_name.map(|s| s.to_cstring());
+        let prime_meridian_name = prime_meridian_name.map(|s| s.to_cstring());
+        let angular_units = angular_units.map(|s| s.to_cstring());
+        let linear_units = linear_units.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
-                datum_name.to_cstring().as_ptr(),
-                ellps_name.to_cstring().as_ptr(),
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
+                datum_name.map_or(ptr::null(), |s| s.as_ptr()),
+                ellps_name.map_or(ptr::null(), |s| s.as_ptr()),
                 semi_major_metre,
                 inv_flattening,
-                prime_meridian_name.to_cstring().as_ptr(),
+                prime_meridian_name.map_or(ptr::null(), |s| s.as_ptr()),
                 prime_meridian_offset,
-                angular_units.to_cstring().as_ptr(),
+                angular_units.map_or(ptr::null(), |s| s.as_ptr()),
                 angular_units_conv,
-                linear_units.to_cstring().as_ptr(),
+                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_units_conv,
             )
         };
@@ -220,11 +234,13 @@ impl Context {
         linear_units_conv: f64,
     ) -> miette::Result<Proj> {
         let ptr = unsafe {
+            let crs_name = crs_name.map(|s| s.to_cstring());
+            let linear_units = linear_units.map(|s| s.to_cstring());
             proj_sys::proj_create_geocentric_crs_from_datum(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
                 datum_or_datum_ensemble.ptr(),
-                linear_units.to_cstring().as_ptr(),
+                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_units_conv,
             )
         };
@@ -241,9 +257,10 @@ impl Context {
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
         let ptr = unsafe {
+            let crs_name = crs_name.map(|s| s.to_cstring());
             proj_sys::proj_create_derived_geographic_crs(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
                 base_geographic_crs.ptr(),
                 conversion.ptr(),
                 ellipsoidal_cs.ptr(),
@@ -275,8 +292,12 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
     pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> miette::Result<Proj> {
+        let crs_name = crs_name.map(|s| s.to_cstring());
         let ptr = unsafe {
-            proj_sys::proj_create_engineering_crs(self.ptr, crs_name.to_cstring().as_ptr())
+            proj_sys::proj_create_engineering_crs(
+                self.ptr,
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
+            )
         };
         crate::Proj::new(self, ptr)
     }
@@ -290,12 +311,15 @@ impl Context {
         linear_units: Option<&str>,
         linear_units_conv: f64,
     ) -> miette::Result<Proj> {
+        let crs_name = crs_name.map(|s| s.to_cstring());
+        let datum_name = datum_name.map(|s| s.to_cstring());
+        let linear_units = linear_units.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
-                datum_name.to_cstring().as_ptr(),
-                linear_units.to_cstring().as_ptr(),
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
+                datum_name.map_or(ptr::null(), |s| s.as_ptr()),
+                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_units_conv,
             )
         };
@@ -320,19 +344,26 @@ impl Context {
     ) -> miette::Result<Proj> {
         let mut options = ProjOptions::new(1);
         options.push_optional_pass(accuracy, "ACCURACY");
-
+        let crs_name = crs_name.map(|s| s.to_cstring());
+        let datum_name = datum_name.map(|s| s.to_cstring());
+        let datum_auth_name = datum_auth_name.map(|s| s.to_cstring());
+        let datum_code = datum_code.map(|s| s.to_cstring());
+        let linear_units = linear_units.map(|s| s.to_cstring());
+        let geoid_model_name = geoid_model_name.map(|s| s.to_cstring());
+        let geoid_model_auth_name = geoid_model_auth_name.map(|s| s.to_cstring());
+        let geoid_model_code = geoid_model_code.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs_ex(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
-                datum_name.to_cstring().as_ptr(),
-                datum_auth_name.to_cstring().as_ptr(),
-                datum_code.to_cstring().as_ptr(),
-                linear_units.to_cstring().as_ptr(),
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
+                datum_name.map_or(ptr::null(), |s| s.as_ptr()),
+                datum_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                datum_code.map_or(ptr::null(), |s| s.as_ptr()),
+                linear_units.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_units_conv,
-                geoid_model_name.to_cstring().as_ptr(),
-                geoid_model_auth_name.to_cstring().as_ptr(),
-                geoid_model_code.to_cstring().as_ptr(),
+                geoid_model_name.map_or(ptr::null(), |s| s.as_ptr()),
+                geoid_model_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                geoid_model_code.map_or(ptr::null(), |s| s.as_ptr()),
                 geoid_geog_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 options.as_vec_ptr().as_ptr(),
             )
@@ -348,10 +379,11 @@ impl Context {
         horiz_crs: &Proj,
         vert_crs: &Proj,
     ) -> miette::Result<Proj> {
+        let crs_name = crs_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
                 horiz_crs.ptr(),
                 vert_crs.ptr(),
             )
@@ -371,15 +403,21 @@ impl Context {
         method_code: Option<&str>,
         params: &[ParamDescription],
     ) -> miette::Result<Proj> {
+        let name = name.map(|s| s.to_cstring());
+        let auth_name = auth_name.map(|s| s.to_cstring());
+        let code = code.map(|s| s.to_cstring());
+        let method_name = method_name.map(|s| s.to_cstring());
+        let method_auth_name = method_auth_name.map(|s| s.to_cstring());
+        let method_code = method_code.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
                 self.ptr,
-                name.to_cstring().as_ptr(),
-                auth_name.to_cstring().as_ptr(),
-                code.to_cstring().as_ptr(),
-                method_name.to_cstring().as_ptr(),
-                method_auth_name.to_cstring().as_ptr(),
-                method_code.to_cstring().as_ptr(),
+                name.map_or(ptr::null(), |s| s.as_ptr()),
+                auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                code.map_or(ptr::null(), |s| s.as_ptr()),
+                method_name.map_or(ptr::null(), |s| s.as_ptr()),
+                method_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                method_code.map_or(ptr::null(), |s| s.as_ptr()),
                 params.len() as i32,
                 params
                     .iter()
@@ -428,18 +466,24 @@ impl Context {
                 unit_type: u32::from(*p.unit_type()),
             })
             .collect();
+        let name = name.map(|s| s.to_cstring());
+        let auth_name = auth_name.map(|s| s.to_cstring());
+        let code = code.map(|s| s.to_cstring());
+        let method_name = method_name.map(|s| s.to_cstring());
+        let method_auth_name = method_auth_name.map(|s| s.to_cstring());
+        let method_code = method_code.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_transformation(
                 self.ptr,
-                name.to_cstring().as_ptr(),
-                auth_name.to_cstring().as_ptr(),
-                code.to_cstring().as_ptr(),
+                name.map_or(ptr::null(), |s| s.as_ptr()),
+                auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                code.map_or(ptr::null(), |s| s.as_ptr()),
                 source_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 target_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 interpolation_crs.map_or(ptr::null(), |crs| crs.ptr()),
-                method_name.to_cstring().as_ptr(),
-                method_auth_name.to_cstring().as_ptr(),
-                method_code.to_cstring().as_ptr(),
+                method_name.map_or(ptr::null(), |s| s.as_ptr()),
+                method_auth_name.map_or(ptr::null(), |s| s.as_ptr()),
+                method_code.map_or(ptr::null(), |s| s.as_ptr()),
                 count as i32,
                 params.as_ptr(),
                 accuracy,
@@ -458,10 +502,11 @@ impl Context {
         conversion: &Proj,
         coordinate_system: &Proj,
     ) -> miette::Result<Proj> {
+        let crs_name = crs_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
                 self.ptr,
-                crs_name.to_cstring().as_ptr(),
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
                 geodetic_crs.ptr(),
                 conversion.ptr(),
                 coordinate_system.ptr(),
@@ -533,6 +578,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
                 self.ptr,
@@ -541,9 +588,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -564,6 +611,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gauss_schreiber_transverse_mercator(
                 self.ptr,
@@ -572,9 +621,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -595,6 +644,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator_south_oriented(
                 self.ptr,
@@ -603,9 +654,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -627,6 +678,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_two_point_equidistant(
                 self.ptr,
@@ -636,9 +689,9 @@ impl Context {
                 longitude_second_point,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -658,6 +711,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mapping_grid(
                 self.ptr,
@@ -665,9 +720,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -687,6 +742,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mining_grid(
                 self.ptr,
@@ -694,9 +751,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -718,6 +775,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_albers_equal_area(
                 self.ptr,
@@ -727,9 +786,9 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -750,6 +809,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp(
                 self.ptr,
@@ -758,9 +819,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -782,6 +843,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp_variant_b(
                 self.ptr,
@@ -791,9 +854,9 @@ impl Context {
                 longitude_false_origin,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -815,6 +878,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp(
                 self.ptr,
@@ -824,9 +889,9 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -849,6 +914,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_michigan(
                 self.ptr,
@@ -859,9 +926,9 @@ impl Context {
                 easting_false_origin,
                 northing_false_origin,
                 ellipsoid_scaling_factor,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -883,6 +950,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_belgium(
                 self.ptr,
@@ -892,9 +961,9 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -914,6 +983,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_azimuthal_equidistant(
                 self.ptr,
@@ -921,9 +992,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -943,6 +1014,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_guam_projection(
                 self.ptr,
@@ -950,9 +1023,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -972,6 +1045,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_bonne(
                 self.ptr,
@@ -979,9 +1054,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1001,6 +1076,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area_spherical(
                 self.ptr,
@@ -1008,9 +1085,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1030,6 +1107,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area(
                 self.ptr,
@@ -1037,9 +1116,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1059,6 +1138,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_cassini_soldner(
                 self.ptr,
@@ -1066,9 +1147,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1090,6 +1171,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_conic(
                 self.ptr,
@@ -1099,9 +1182,9 @@ impl Context {
                 latitude_second_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1120,15 +1203,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_i(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1147,15 +1232,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_ii(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1174,15 +1261,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iii(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1201,15 +1290,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iv(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1228,15 +1319,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_v(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1255,15 +1348,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_vi(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1283,6 +1378,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical(
                 self.ptr,
@@ -1290,9 +1387,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1312,6 +1409,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical_spherical(
                 self.ptr,
@@ -1319,9 +1418,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1340,15 +1439,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gall(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1367,15 +1468,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_goode_homolosine(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1394,15 +1497,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_interrupted_goode_homolosine(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1422,6 +1527,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_x(
                 self.ptr,
@@ -1429,9 +1536,9 @@ impl Context {
                 height,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1451,6 +1558,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_y(
                 self.ptr,
@@ -1458,9 +1567,9 @@ impl Context {
                 height,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1480,6 +1589,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gnomonic(
                 self.ptr,
@@ -1487,9 +1598,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1512,6 +1623,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_a(
                 self.ptr,
@@ -1522,9 +1635,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1547,6 +1660,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_b(
                 self.ptr,
@@ -1557,9 +1672,9 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1583,6 +1698,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin(
                 self.ptr,
@@ -1594,9 +1711,9 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1618,6 +1735,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_laborde_oblique_mercator(
                 self.ptr,
@@ -1627,9 +1746,9 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1650,6 +1769,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_international_map_world_polyconic(
                 self.ptr,
@@ -1658,9 +1779,9 @@ impl Context {
                 latitude_second_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1683,6 +1804,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak_north_oriented(
                 self.ptr,
@@ -1693,9 +1816,9 @@ impl Context {
                 scale_factor_pseudo_standard_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1718,6 +1841,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak(
                 self.ptr,
@@ -1728,9 +1853,9 @@ impl Context {
                 scale_factor_pseudo_standard_parallel,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1750,6 +1875,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_azimuthal_equal_area(
                 self.ptr,
@@ -1757,9 +1884,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1778,15 +1905,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_miller_cylindrical(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1807,6 +1936,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_a(
                 self.ptr,
@@ -1815,9 +1946,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1837,6 +1968,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
                 self.ptr,
@@ -1844,9 +1977,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1866,6 +1999,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_popular_visualisation_pseudo_mercator(
                 self.ptr,
@@ -1873,9 +2008,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1894,15 +2029,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mollweide(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1922,6 +2059,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
                 self.ptr,
@@ -1929,9 +2068,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1951,6 +2090,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
                 self.ptr,
@@ -1958,9 +2099,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -1980,6 +2121,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_orthographic(
                 self.ptr,
@@ -1987,9 +2130,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2011,6 +2154,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_local_orthographic(
                 self.ptr,
@@ -2020,9 +2165,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2042,6 +2187,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_american_polyconic(
                 self.ptr,
@@ -2049,9 +2196,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2072,6 +2219,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_polar_stereographic_variant_a(
                 self.ptr,
@@ -2080,9 +2229,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2102,6 +2251,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
                 self.ptr,
@@ -2109,9 +2260,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2130,15 +2281,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_robinson(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2157,15 +2310,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_sinusoidal(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2186,6 +2341,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_stereographic(
                 self.ptr,
@@ -2194,9 +2351,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2215,15 +2372,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_van_der_grinten(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2242,15 +2401,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_i(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2269,15 +2430,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_ii(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2297,6 +2460,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iii(
                 self.ptr,
@@ -2304,9 +2469,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2325,15 +2490,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iv(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2352,15 +2519,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_v(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2379,15 +2548,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vi(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2406,15 +2577,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vii(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2434,6 +2607,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_quadrilateralized_spherical_cube(
                 self.ptr,
@@ -2441,9 +2616,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2463,6 +2638,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_spherical_cross_track_height(
                 self.ptr,
@@ -2470,9 +2647,9 @@ impl Context {
                 peg_point_long,
                 peg_point_heading,
                 peg_point_height,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2492,15 +2669,17 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equal_earth(
                 self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2522,6 +2701,8 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+        let linear_unit_name = linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_conversion_vertical_perspective(
                 self.ptr,
@@ -2531,9 +2712,9 @@ impl Context {
                 view_point_height,
                 false_easting,
                 false_northing,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
-                linear_unit_name.to_cstring().as_ptr(),
+                linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 linear_unit_conv_factor,
             )
         };
@@ -2550,13 +2731,15 @@ impl Context {
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_grib_convention(
                 self.ptr,
                 south_pole_lat_in_unrotated_crs,
                 south_pole_long_in_unrotated_crs,
                 axis_rotation,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
             )
         };
@@ -2573,13 +2756,15 @@ impl Context {
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
+        let ang_unit_name = ang_unit_name.map(|s| s.to_cstring());
+
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_netcdf_cf_convention(
                 self.ptr,
                 grid_north_pole_latitude,
                 grid_north_pole_longitude,
                 north_pole_grid_longitude,
-                ang_unit_name.to_cstring().as_ptr(),
+                ang_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 ang_unit_conv_factor,
             )
         };

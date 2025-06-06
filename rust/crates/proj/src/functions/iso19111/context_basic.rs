@@ -27,7 +27,7 @@ impl crate::Context {
         let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
             aux_db_paths
                 .iter()
-                .map(|f| f.to_str().to_cstring())
+                .map(|f| f.to_str().unwrap().to_cstring())
                 .collect()
         });
 
@@ -37,7 +37,7 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_context_set_database_path(
                 self.ptr,
-                db_path.to_str().to_cstring().as_ptr(),
+                db_path.to_str().unwrap().to_cstring().as_ptr(),
                 aux_db_paths_ptr.map_or(ptr::null(), |ptr| ptr.as_ptr()),
                 ptr::null(),
             )
@@ -228,10 +228,11 @@ impl crate::Context {
             let count = types.len();
             (Some(types), count)
         });
+        let auth_name = auth_name.map(|s| s.to_cstring());
         let result = unsafe {
             proj_sys::proj_create_from_name(
                 self.ptr,
-                auth_name.to_cstring().as_ptr(),
+                auth_name.map_or(ptr::null(), |s| s.as_ptr()),
                 searched_name.to_cstring().as_ptr(),
                 types.map_or(ptr::null(), |types| types.as_ptr()),
                 count,
@@ -344,11 +345,11 @@ impl crate::Context {
             miette::bail!("At least one of `auth_name` and  `params` must be set.");
         }
         let mut out_result_count = i32::default();
-
+        let auth_name = auth_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr,
-                auth_name.to_cstring().as_ptr(),
+                auth_name.map_or(ptr::null(), |s| s.as_ptr()),
                 params.map_or(ptr::null(), |p| {
                     let types: Vec<u32> = p
                         .types()
@@ -356,7 +357,7 @@ impl crate::Context {
                         .iter()
                         .map(|f| u32::from(f.clone()))
                         .collect();
-                    let celestial_body_name = p.celestial_body_name().to_cstring();
+
                     &proj_sys::PROJ_CRS_LIST_PARAMETERS {
                         types: types.as_ptr(),
                         typesCount: p.types().len(),
@@ -367,7 +368,10 @@ impl crate::Context {
                         east_lon_degree: *p.east_lon_degree(),
                         north_lat_degree: *p.north_lat_degree(),
                         allow_deprecated: *p.allow_deprecated() as i32,
-                        celestial_body_name: celestial_body_name.as_ptr(),
+                        celestial_body_name: p
+                            .celestial_body_name()
+                            .clone()
+                            .map_or(ptr::null(), |s| s.as_ptr()),
                     }
                 }),
                 &mut out_result_count,

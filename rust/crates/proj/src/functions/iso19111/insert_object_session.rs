@@ -10,7 +10,7 @@ impl Context {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_create>
-    pub fn insert_object_session_create(&self) -> InsertObjectSession<'_>  {
+    pub fn insert_object_session_create(&self) -> InsertObjectSession<'_> {
         InsertObjectSession {
             ctx: self,
             ptr: unsafe { proj_sys::proj_insert_object_session_create(self.ptr) },

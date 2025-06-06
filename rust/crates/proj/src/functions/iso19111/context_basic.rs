@@ -222,7 +222,7 @@ impl crate::Context {
         types: Option<&[ProjType]>,
         approximate_match: bool,
         limit_result_count: usize,
-    ) -> miette::Result<Vec<Proj>> {
+    ) -> miette::Result<Vec<Proj<'_>>> {
         let (types, count) = types.map_or((None, 0), |types| {
             let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
             let count = types.len();

@@ -194,7 +194,7 @@ impl OperationFactoryContext<'_> {
         &self,
         source_crs: &Proj,
         target_crs: &Proj,
-    ) -> miette::Result<Vec<Proj>> {
+    ) -> miette::Result<Vec<Proj<'_>>> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
                 self.ctx.ptr,

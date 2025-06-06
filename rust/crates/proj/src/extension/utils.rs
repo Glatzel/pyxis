@@ -1,7 +1,7 @@
 pub(crate) fn pj_obj_list_to_vec(
     ctx: &Context,
     result: *const proj_sys::PJ_OBJ_LIST,
-) -> miette::Result<Vec<Proj>> {
+) -> miette::Result<Vec<Proj<'_>>> {
     if result.is_null() {
         miette::bail!("Error");
     }

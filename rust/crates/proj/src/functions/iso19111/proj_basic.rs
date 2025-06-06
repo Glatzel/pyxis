@@ -22,7 +22,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
-    pub fn get_non_deprecated(&self) -> miette::Result<Vec<Proj>> {
+    pub fn get_non_deprecated(&self) -> miette::Result<Vec<Proj<'_>>> {
         let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
         pj_obj_list_to_vec(self.ctx, result)
     }
@@ -289,7 +289,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
-    pub fn identify(&self, auth_name: &str) -> miette::Result<Vec<Proj>> {
+    pub fn identify(&self, auth_name: &str) -> miette::Result<Vec<Proj<'_>>> {
         let mut confidence: Vec<i32> = Vec::new();
         let result = unsafe {
             proj_sys::proj_identify(

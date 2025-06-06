@@ -109,7 +109,7 @@ impl Context {
         datum_auth_name: &str,
         datum_code: &str,
         crs_type: Option<&str>,
-    ) -> miette::Result<Vec<Proj>> {
+    ) -> miette::Result<Vec<Proj<'_>>> {
         let crs_auth_name = crs_auth_name.map(|s| s.to_cstring());
         let crs_type = crs_type.map(|s| s.to_cstring());
         let ptr = unsafe {

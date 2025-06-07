@@ -17,6 +17,7 @@ impl crate::Context {
     /// the PROJ user writable directory.
     ///
     ///# References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
     pub fn set_sqlite3_vfs_name(&self, name: &str) -> miette::Result<&Self> {
         unsafe {
@@ -38,6 +39,7 @@ impl crate::Context {
     ///Starting with PROJ 7.0, the path(s) should be encoded in UTF-8.
     ///
     ///# References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_search_paths>
     pub fn set_search_paths(&self, paths: &[&Path]) -> miette::Result<&Self> {
         clerk::debug!("search_paths:{:?}", paths);
@@ -66,9 +68,9 @@ impl crate::Context {
     ///If set on the default context, they will be inherited by contexts
     /// created later.
     ///
-    ///The path should be encoded in UTF-8.
     ///
     ///# References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
     pub fn set_ca_bundle_path(&self, path: &Path) -> miette::Result<&Self> {
         unsafe {

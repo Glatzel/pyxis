@@ -5,9 +5,11 @@ use envoy::{CStrToString, ToCString};
 use crate::check_result;
 impl crate::Context {
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_network_callbacks>
     fn _set_network_callbacks(&self) { todo!() }
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_enable_network>
     pub fn set_enable_network(&self, enabled: bool) -> miette::Result<&Self> {
         let result =
@@ -19,6 +21,7 @@ impl crate::Context {
         Ok(self)
     }
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_is_network_enabled>
     pub fn is_network_enabled(&self) -> miette::Result<bool> {
         let result = unsafe { proj_sys::proj_context_is_network_enabled(self.ptr) } != 0;
@@ -26,6 +29,7 @@ impl crate::Context {
         Ok(result)
     }
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_url_endpoint>
     pub fn set_url_endpoint(&self, url: &str) -> miette::Result<&Self> {
         unsafe {
@@ -35,6 +39,7 @@ impl crate::Context {
         Ok(self)
     }
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_url_endpoint>
     pub fn get_url_endpoint(&self) -> miette::Result<String> {
         let result = unsafe { proj_sys::proj_context_get_url_endpoint(self.ptr) };
@@ -50,6 +55,7 @@ impl crate::Context {
         Ok(PathBuf::from(result.to_string().unwrap_or_default()))
     }
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_enable>
     pub fn grid_cache_set_enable(&self, enabled: bool) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_enable(self.ptr, enabled as i32) };
@@ -57,6 +63,7 @@ impl crate::Context {
         Ok(self)
     }
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_filename>
     pub fn grid_cache_set_filename(&self, fullname: &str) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_filename(self.ptr, fullname.to_cstring().as_ptr()) };
@@ -71,6 +78,7 @@ impl crate::Context {
         Ok(self)
     }
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_ttl>
     pub fn grid_cache_set_ttl(&self, ttl_seconds: u16) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_ttl(self.ptr, ttl_seconds as i32) };
@@ -78,6 +86,7 @@ impl crate::Context {
         Ok(self)
     }
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_clear>
     pub fn grid_cache_clear(&self) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_clear(self.ptr) };
@@ -101,6 +110,7 @@ impl crate::Context {
         Ok(result)
     }
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_download_file>
     pub fn download_file(
         &self,

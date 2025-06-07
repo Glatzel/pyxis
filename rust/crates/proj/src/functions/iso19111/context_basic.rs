@@ -11,12 +11,17 @@ use crate::data_types::iso19111::*;
 use crate::{OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
 /// # ISO-19111 Base functions
 impl crate::Context {
-    ///# References
+    ///Explicitly point to the main PROJ CRS and coordinate operation
+    /// definition database ("proj.db"), and potentially auxiliary databases
+    /// with same structure.
     ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_autoclose_database>
-    #[deprecated]
-    fn _set_autoclose_database(&self) { unimplemented!("Deprecated") }
-    ///# References
+    ///Starting with PROJ 8.1, if the auxDbPaths parameter is an empty array,
+    /// the PROJ_AUX_DB environment variable will be used, if set. It must
+    /// contain one or several paths. If several paths are provided, they must
+    /// be separated by the colon (:) character on Unix, and on Windows, by the
+    /// semi-colon (;) character.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
     pub fn set_database_path(
@@ -47,6 +52,11 @@ impl crate::Context {
         }
         Ok(self)
     }
+    ///Returns the path to the database.
+    ///
+    ///The returned pointer remains valid while ctx is valid, and until
+    /// [`Self::set_database_path()`] is called.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_path>
@@ -57,6 +67,8 @@ impl crate::Context {
                 .unwrap_or_default(),
         )
     }
+    ///Return a metadata from the database.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
@@ -69,6 +81,12 @@ impl crate::Context {
         }
         .to_string()
     }
+    ///Return the database structure.
+    ///
+    ///Return SQL statements to run to initiate a new valid auxiliary empty
+    /// database. It contains definitions of tables, views and triggers, as well
+    /// as metadata for the version of the layout of the database.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
@@ -78,6 +96,8 @@ impl crate::Context {
         string_list_destroy(ptr);
         Ok(out_vec)
     }
+    ///Guess the "dialect" of the WKT string.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
@@ -87,6 +107,17 @@ impl crate::Context {
         })
         .into_diagnostic()
     }
+    ///Instantiate an object from a WKT string.
+    ///
+    /// The returned object must be unreferenced with proj_destroy() after use.
+    /// It should be used by at most one thread at a time.
+    ///
+    ///The distinction between warnings and grammar errors is somewhat
+    /// artificial and does not tell much about the real criticity of the
+    /// non-compliance. Some warnings may be more concerning than some grammar
+    /// errors. Human expertise (or, by the time this comment will be read,
+    /// specialized AI) is generally needed to perform that assessment.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_wkt>
@@ -125,6 +156,11 @@ impl crate::Context {
 
         Proj::new(self, ptr)
     }
+    ///Instantiate an object from a database lookup.
+    ///
+    /// The returned object must be unreferenced with proj_destroy() after use.
+    /// It should be used by at most one thread at a time.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_database>
@@ -147,6 +183,8 @@ impl crate::Context {
         };
         Proj::new(self, ptr)
     }
+    ///Get information for a unit of measure from a database lookup.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>
@@ -178,6 +216,8 @@ impl crate::Context {
             UomCategory::from_str(&category.to_string().unwrap()).into_diagnostic()?,
         ))
     }
+    ///Get information for a grid from a database lookup.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_get_info_from_database>
@@ -212,6 +252,8 @@ impl crate::Context {
             available != 0,
         ))
     }
+    ///Return a list of objects by their name.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
@@ -267,6 +309,7 @@ impl crate::Context {
         string_list_destroy(ptr);
         Ok(out_vec)
     }
+
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_authorities_from_database>
@@ -279,6 +322,7 @@ impl crate::Context {
         string_list_destroy(ptr);
         Ok(out_vec)
     }
+
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_codes_from_database>

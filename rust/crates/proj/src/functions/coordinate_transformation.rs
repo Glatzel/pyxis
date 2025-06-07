@@ -9,12 +9,18 @@ impl crate::Proj<'_> {
     ///  <div class="warning">Available
     /// on <b>crate feature</b> <code>unrecommended</code> only.</div>
     ///
+    /// # Parameters
+    ///
+    /// * direction: Transformation direction.
+    /// * coord: Coordinate that will be transformed.
+    ///
     /// # See Also
     ///
     /// * [`Self::convert`]
     /// * [`Self::project`]
     ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn trans(
@@ -124,6 +130,7 @@ impl crate::Proj<'_> {
     /// See [`Self::convert_array`], [`Self::project_array`]
     ///
     ///  # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
     #[cfg(any(feature = "unrecommended", test))]
     pub fn trans_array(
@@ -146,7 +153,44 @@ impl crate::Proj<'_> {
 }
 
 impl crate::Context {
+    ///Transform boundary.
+    ///
+    ///Transform boundary densifying the edges to account for nonlinear
+    /// transformations along these edges and extracting the outermost bounds.
+    ///
+    ///If the destination CRS is geographic, the first axis is longitude, and
+    /// *out_xmax < *out_xmin then the bounds crossed the antimeridian. In this
+    /// scenario there are two polygons, one on each side of the antimeridian.
+    /// The first polygon should be constructed with (*out_xmin, *out_ymin, 180,
+    /// ymax) and the second with (-180, *out_ymin, *out_xmax, *out_ymax).
+    ///
+    ///If the destination CRS is geographic, the first axis is latitude, and
+    /// *out_ymax < *out_ymin then the bounds crossed the antimeridian. In this
+    /// scenario there are two polygons, one on each side of the antimeridian.
+    /// The first polygon should be constructed with (*out_ymin, *out_xmin,
+    /// *out_ymax, 180) and the second with (*out_ymin, -180, *out_ymax,
+    /// *out_xmax).
+    ///
+    /// # Parameters
+    ///
+    /// * P: The PJ object representing the transformation.
+    /// * direction: The direction of the transformation.
+    /// * xmin: Minimum bounding coordinate of the first axis in source CRS
+    ///   (target CRS if direction is inverse).
+    /// * ymin: Minimum bounding coordinate of the second axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    /// * xmax: Maximum bounding coordinate of the first axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    /// * ymax: Maximum bounding coordinate of the second axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    ///
+    /// # Returns
+    ///
+    /// * (out_xmin, out_ymin, out_xmax, out_ymax): bounding
+    /// coordinate target CRS.(source CRS if direction is inverse).
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>
     pub fn trans_bounds(
         &self,
@@ -156,12 +200,12 @@ impl crate::Context {
         ymin: f64,
         xmax: f64,
         ymax: f64,
-        out_xmin: &mut f64,
-        out_ymin: &mut f64,
-        out_xmax: &mut f64,
-        out_ymax: &mut f64,
         densify_pts: i32,
-    ) -> miette::Result<&Self> {
+    ) -> miette::Result<(f64, f64, f64, f64)> {
+        let mut out_xmin = f64::default();
+        let mut out_ymin = f64::default();
+        let mut out_xmax = f64::default();
+        let mut out_ymax = f64::default();
         let code = unsafe {
             proj_sys::proj_trans_bounds(
                 self.ptr,
@@ -171,20 +215,60 @@ impl crate::Context {
                 ymin,
                 xmax,
                 ymax,
-                out_xmin,
-                out_ymin,
-                out_xmax,
-                out_ymax,
+                &mut out_xmin,
+                &mut out_ymin,
+                &mut out_xmax,
+                &mut out_ymax,
                 densify_pts,
             )
         };
         if code != 1 {
             miette::bail!("Failures encountered.")
         }
-        Ok(self)
+        Ok((out_xmin, out_ymin, out_xmax, out_ymax))
     }
-
+    ///Transform boundary, taking into account 3D coordinates.
+    ///
+    ///Transform boundary densifying the edges to account for nonlinear
+    /// transformations along these edges and extracting the outermost bounds.
+    ///
+    ///Note that the current implementation is not "perfect" when the source
+    /// CRS is geocentric, the target CRS is geographic, and the input bounding
+    /// box includes the center of the Earth, a pole or the antimeridian. In
+    /// those circumstances, exact values of the latitude of longitude of
+    /// discontinuity will not be returned.
+    ///
+    ///If one of the source or target CRS of the transformation is not 3D, the
+    /// values of *out_zmin / *out_zmax may not be significant.
+    ///
+    ///For 2D or "2.5D" transformation (that is planar component is
+    /// geographic/coordinates and 3D axis is elevation), the documentation of
+    /// [`Self::trans_bounds()`] applies.
+    ///
+    /// # Parameters
+    ///
+    /// * P: The PJ object representing the transformation.
+    /// * direction: The direction of the transformation.
+    /// * xmin: Minimum bounding coordinate of the first axis in source CRS
+    ///   (target CRS if direction is inverse).
+    /// * ymin: Minimum bounding coordinate of the second axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    /// * zmin: Minimum bounding coordinate of the third axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    /// * xmax: Maximum bounding coordinate of the first axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    /// * ymax: Maximum bounding coordinate of the second axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    /// * zmax: Maximum bounding coordinate of the third axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    ///
+    /// # Returns
+    ///
+    /// * (out_xmin, out_ymin, out_zmin, out_xmax, out_ymax, out_zmax): bounding
+    /// coordinate target CRS.(source CRS if direction is inverse).
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds_3D>
     pub fn trans_bounds_3d(
         &self,
@@ -196,14 +280,14 @@ impl crate::Context {
         xmax: f64,
         ymax: f64,
         zmax: f64,
-        out_xmin: &mut f64,
-        out_ymin: &mut f64,
-        out_zmin: &mut f64,
-        out_xmax: &mut f64,
-        out_ymax: &mut f64,
-        out_zmax: &mut f64,
         densify_pts: i32,
-    ) -> miette::Result<&Self> {
+    ) -> miette::Result<(f64, f64, f64, f64, f64, f64)> {
+        let mut out_xmin = f64::default();
+        let mut out_ymin = f64::default();
+        let mut out_zmin = f64::default();
+        let mut out_xmax = f64::default();
+        let mut out_ymax = f64::default();
+        let mut out_zmax = f64::default();
         let code = unsafe {
             proj_sys::proj_trans_bounds_3D(
                 self.ptr,
@@ -215,19 +299,19 @@ impl crate::Context {
                 xmax,
                 ymax,
                 zmax,
-                out_xmin,
-                out_ymin,
-                out_zmin,
-                out_xmax,
-                out_ymax,
-                out_zmax,
+                &mut out_xmin,
+                &mut out_ymin,
+                &mut out_zmin,
+                &mut out_xmax,
+                &mut out_ymax,
+                &mut out_zmax,
                 densify_pts,
             )
         };
         if code != 1 {
             miette::bail!("Failures encountered.")
         }
-        Ok(self)
+        Ok((out_xmin, out_ymin, out_zmin, out_xmax, out_ymax, out_zmax))
     }
 }
 #[cfg(test)]
@@ -290,24 +374,9 @@ mod test {
         let ymin = 1.0;
         let xmax = 20.0;
         let ymax = 30.0;
-        let mut out_xmin = f64::default();
-        let mut out_ymin = f64::default();
-        let mut out_xmax = f64::default();
-        let mut out_ymax = f64::default();
 
-        ctx.trans_bounds(
-            &pj,
-            crate::Direction::Fwd,
-            xmin,
-            ymin,
-            xmax,
-            ymax,
-            &mut out_xmin,
-            &mut out_ymin,
-            &mut out_xmax,
-            &mut out_ymax,
-            21,
-        )?;
+        let (out_xmin, out_ymin, out_xmax, out_ymax) =
+            ctx.trans_bounds(&pj, crate::Direction::Fwd, xmin, ymin, xmax, ymax, 21)?;
         assert_approx_eq!(f64, out_xmin, 2297280.4262236636);
         assert_approx_eq!(f64, out_ymin, 6639816.584496002);
         assert_approx_eq!(f64, out_xmax, 10788961.870597329);
@@ -326,14 +395,8 @@ mod test {
         let xmax = 20.0;
         let ymax = 30.0;
         let zmax = 3.0;
-        let mut out_xmin = f64::default();
-        let mut out_ymin = f64::default();
-        let mut out_zmin = f64::default();
-        let mut out_xmax = f64::default();
-        let mut out_ymax = f64::default();
-        let mut out_zmax = f64::default();
 
-        ctx.trans_bounds_3d(
+        let (out_xmin, out_ymin, out_zmin, out_xmax, out_ymax, out_zmax) = ctx.trans_bounds_3d(
             &pj,
             crate::Direction::Fwd,
             xmin,
@@ -342,12 +405,6 @@ mod test {
             xmax,
             ymax,
             zmax,
-            &mut out_xmin,
-            &mut out_ymin,
-            &mut out_zmin,
-            &mut out_xmax,
-            &mut out_ymax,
-            &mut out_zmax,
             21,
         )?;
         assert_approx_eq!(f64, out_xmin, 2297280.4262236636);

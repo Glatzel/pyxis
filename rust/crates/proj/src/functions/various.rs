@@ -136,22 +136,7 @@ impl crate::Proj<'_> {
 pub fn coord(x: f64, y: f64, z: f64, t: f64) -> proj_sys::PJ_COORD {
     unsafe { proj_sys::proj_coord(x, y, z, t) }
 }
-///# See Also
-///
-/// * [`std::f64::to_radians`]
-///
-///# References
-///
-/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_torad>
-fn _torad() { unimplemented!("Use other function to instead.") }
-///# See Also
-///
-/// * [`std::f64::to_degrees`]
-///
-///# References
-///
-/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_todeg>
-fn _todeg() { unimplemented!("Use other function to instead.") }
+
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
@@ -159,15 +144,6 @@ pub fn dmstor(is: &str) -> miette::Result<f64> {
     let rs = "xxxdxxmxx.xxs ".to_cstring();
     Ok(unsafe { proj_sys::proj_dmstor(is.to_cstring().as_ptr(), &mut rs.as_ptr().cast_mut()) })
 }
-///# See Also
-///
-/// * [`rtodms2`]
-///
-///# References
-///
-/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms>
-#[deprecated]
-fn _rtodms() { unimplemented!("Use other function to instead.") }
 
 ///Convert radians to string representation of degrees, minutes and seconds.
 ///

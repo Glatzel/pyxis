@@ -46,9 +46,9 @@ impl crate::Context {
     ///Starting with PROJ 7.0, the path(s) should be encoded in UTF-8.
     ///
     /// # Parameters
-    /// 
+    ///
     /// * paths: Paths. May be NULL.
-    /// 
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_search_paths>

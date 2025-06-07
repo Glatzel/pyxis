@@ -11,12 +11,17 @@ use crate::data_types::iso19111::*;
 use crate::{OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
 /// # ISO-19111 Base functions
 impl crate::Context {
-    ///# References
+    ///Explicitly point to the main PROJ CRS and coordinate operation
+    /// definition database ("proj.db"), and potentially auxiliary databases
+    /// with same structure.
     ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_autoclose_database>
-    #[deprecated]
-    fn _set_autoclose_database(&self) { unimplemented!("Deprecated") }
-    ///# References
+    ///Starting with PROJ 8.1, if the auxDbPaths parameter is an empty array,
+    /// the PROJ_AUX_DB environment variable will be used, if set. It must
+    /// contain one or several paths. If several paths are provided, they must
+    /// be separated by the colon (:) character on Unix, and on Windows, by the
+    /// semi-colon (;) character.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
     pub fn set_database_path(

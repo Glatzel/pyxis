@@ -9,6 +9,11 @@ impl crate::Proj<'_> {
     ///  <div class="warning">Available
     /// on <b>crate feature</b> <code>unrecommended</code> only.</div>
     ///
+    /// # Parameters
+    ///
+    /// * direction: Transformation direction.
+    /// * coord: Coordinate that will be transformed.
+    ///
     /// # See Also
     ///
     /// * [`Self::convert`]

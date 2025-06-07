@@ -16,6 +16,11 @@ impl crate::Context {
     ///It will be used to read proj.db or create&access the cache.db file in
     /// the PROJ user writable directory.
     ///
+    /// # Parameters
+    ///
+    /// *name: SQLite3 VFS name. If NULL is passed, default implementation by
+    /// SQLite will be used.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
@@ -26,7 +31,9 @@ impl crate::Context {
         check_result!(self);
         Ok(self)
     }
-
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_file_finder>
     fn _set_file_finder(&self) { todo!() }
     ///Sets search paths.
     ///
@@ -38,6 +45,10 @@ impl crate::Context {
     ///
     ///Starting with PROJ 7.0, the path(s) should be encoded in UTF-8.
     ///
+    /// # Parameters
+    /// 
+    /// * paths: Paths. May be NULL.
+    /// 
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_search_paths>

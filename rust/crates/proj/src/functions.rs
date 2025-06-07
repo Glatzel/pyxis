@@ -4,7 +4,6 @@
 //!
 //! * <https://proj.org/en/stable/development/reference/functions.html>
 mod area_of_interest;
-mod cleanup;
 mod coordinate_transformation;
 mod custom_io;
 mod distances;
@@ -18,7 +17,6 @@ mod threading_contexts;
 mod transformation_setup;
 mod various;
 
-pub use cleanup::*;
 pub use distances::*;
 pub use info_functions::*;
 pub use lists::*;

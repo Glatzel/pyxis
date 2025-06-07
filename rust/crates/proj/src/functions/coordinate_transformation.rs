@@ -148,6 +148,42 @@ impl crate::Proj<'_> {
 }
 
 impl crate::Context {
+    ///Transform boundary.
+    ///
+    ///Transform boundary densifying the edges to account for nonlinear
+    /// transformations along these edges and extracting the outermost bounds.
+    ///
+    ///If the destination CRS is geographic, the first axis is longitude, and
+    /// *out_xmax < *out_xmin then the bounds crossed the antimeridian. In this
+    /// scenario there are two polygons, one on each side of the antimeridian.
+    /// The first polygon should be constructed with (*out_xmin, *out_ymin, 180,
+    /// ymax) and the second with (-180, *out_ymin, *out_xmax, *out_ymax).
+    ///
+    ///If the destination CRS is geographic, the first axis is latitude, and
+    /// *out_ymax < *out_ymin then the bounds crossed the antimeridian. In this
+    /// scenario there are two polygons, one on each side of the antimeridian.
+    /// The first polygon should be constructed with (*out_ymin, *out_xmin,
+    /// *out_ymax, 180) and the second with (*out_ymin, -180, *out_ymax,
+    /// *out_xmax).
+    ///
+    /// # Parameters
+    ///
+    /// * P: The PJ object representing the transformation.
+    /// * direction: The direction of the transformation.
+    /// * xmin: Minimum bounding coordinate of the first axis in source CRS
+    ///   (target CRS if direction is inverse).
+    /// * ymin: Minimum bounding coordinate of the second axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    /// * xmax: Maximum bounding coordinate of the first axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    /// * ymax: Maximum bounding coordinate of the second axis in source CRS.
+    ///   (target CRS if direction is inverse).
+    ///
+    /// # Returns
+    ///
+    /// * (out_xmin, out_ymin, out_xmax, out_ymax): bounding
+    /// coordinate target CRS.(source CRS if direction is inverse).
+    ///
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_bounds>

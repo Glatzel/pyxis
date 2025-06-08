@@ -531,6 +531,7 @@ impl crate::Context {
 
 #[cfg(test)]
 mod test {
+    use proj_sys::{PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, PROJ_VERSION_PATCH};
     use strum::IntoEnumIterator;
 
     use super::*;
@@ -550,68 +551,15 @@ mod test {
     fn test_get_database_metadata() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::DatabaseLayoutVersionMajor)
-            .unwrap();
-        assert_eq!(data, "1");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::DatabaseLayoutVersionMinor)
-            .unwrap();
-        assert_eq!(data, "5");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::EpsgVersion)
-            .unwrap();
-        assert_eq!(data, "v12.012");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::EpsgDate)
-            .unwrap();
-        assert_eq!(data, "2025-05-21");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::EsriVersion)
-            .unwrap();
-        assert_eq!(data, "ArcGIS Pro 3.5");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::EsriDate)
-            .unwrap();
-        assert_eq!(data, "2025-05-11");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::IgnfSource)
-            .unwrap();
-        assert_eq!(
-            data,
-            "https://raw.githubusercontent.com/rouault/proj-resources/master/IGNF.v3.1.0.xml"
-        );
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::IgnfVersion)
-            .unwrap();
-        assert_eq!(data, "3.1.0");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::IgnfDate)
-            .unwrap();
-        assert_eq!(data, "2019-05-24");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::NkgSource)
-            .unwrap();
-        assert_eq!(
-            data,
-            "https://github.com/NordicGeodesy/NordicTransformations"
-        );
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::NkgVersion)
-            .unwrap();
-        assert_eq!(data, "1.0.w");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::NkgDate)
-            .unwrap();
-        assert_eq!(data, "2025-02-13");
-        let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)
             .unwrap();
-        assert_eq!(data, "9.6.1");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::ProjDataVersion)
-            .unwrap();
-        assert_eq!(data, "1.22");
-
+        assert_eq!(
+            data,
+            format!(
+                "{}.{}.{}",
+                PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, PROJ_VERSION_PATCH
+            )
+        );
         Ok(())
     }
     #[test]

@@ -6,14 +6,6 @@ use crate::{OwnedCStrings, Proj, ProjOptions};
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
 impl Proj<'_> {
-    ///# See Also
-    ///
-    /// * [`Self::crs_is_derived`]
-    ///
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_derived_crs>
-    fn _is_derived_crs(&self) { unimplemented!("Use other function to instead.") }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_name>

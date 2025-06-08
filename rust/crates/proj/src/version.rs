@@ -55,5 +55,8 @@ pub fn at_least_version(maj: u32, min: u32, patch: u32) -> bool {
 mod test {
     use super::*;
     #[test]
-    fn test_proj_version_number() { at_least_version(9, 6, 1); }
+    fn test_proj_version_number() {
+        at_least_version(9, 6, 0);
+        assert_eq!(PROJ_VERSION_NUMBER, 90601)
+    }
 }

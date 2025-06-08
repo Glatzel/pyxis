@@ -5,12 +5,8 @@ version = "9.6.1"
 
 [dependencies]
 libc = { workspace = true }
-serde = { workspace = true, optional = true }
 
 [build-dependencies]
 bindgen = { workspace = true }
 dunce = { workspace = true }
 pkg-config = { workspace = true }
-
-[features]
-serde = ["dep:serde"]

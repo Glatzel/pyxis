@@ -128,7 +128,7 @@ impl OperationFactoryContext<'_> {
     ///
     ///The default is [`CrsExtentUse::Smallest`].
     ///
-    /// # Paramters
+    /// # Parameters
     ///
     /// * `use`: How source and target CRS extent should be used.
     ///

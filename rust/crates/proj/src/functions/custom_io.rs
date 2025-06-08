@@ -1,4 +1,5 @@
 use std::path::Path;
+use std::ptr;
 
 use envoy::{AsVecPtr, ToCString, VecCString};
 
@@ -18,8 +19,8 @@ impl crate::Context {
     ///
     /// # Parameters
     ///
-    /// *name: SQLite3 VFS name. If NULL is passed, default implementation by
-    /// SQLite will be used.
+    /// * name: SQLite3 VFS name. If NULL is passed, default implementation by
+    ///   SQLite will be used.
     ///
     ///# References
     ///
@@ -47,7 +48,7 @@ impl crate::Context {
     ///
     /// # Parameters
     ///
-    /// * paths: Paths. May be NULL.
+    /// * paths: Paths. May be empty.
     ///
     ///# References
     ///
@@ -79,15 +80,19 @@ impl crate::Context {
     ///If set on the default context, they will be inherited by contexts
     /// created later.
     ///
+    /// # Parameters
+    ///
+    /// * paths: Paths. May be None.
     ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
-    pub fn set_ca_bundle_path(&self, path: &Path) -> miette::Result<&Self> {
+    pub fn set_ca_bundle_path(&self, path: Option<&Path>) -> miette::Result<&Self> {
+        let path = path.map(|s| s.to_str().unwrap().to_cstring());
         unsafe {
             proj_sys::proj_context_set_ca_bundle_path(
                 self.ptr,
-                path.to_str().unwrap().to_cstring().as_ptr(),
+                path.map_or(ptr::null(), |p| p.as_ptr()),
             );
         };
         check_result!(self);

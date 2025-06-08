@@ -186,8 +186,8 @@ impl crate::Context {
     ///
     /// # Returns
     ///
-    /// * (out_xmin, out_ymin, out_xmax, out_ymax): bounding
-    /// coordinate target CRS.(source CRS if direction is inverse).
+    /// * (out_xmin, out_ymin, out_xmax, out_ymax): bounding coordinate target
+    ///   CRS.(source CRS if direction is inverse).
     ///
     /// # References
     ///
@@ -265,7 +265,7 @@ impl crate::Context {
     /// # Returns
     ///
     /// * (out_xmin, out_ymin, out_zmin, out_xmax, out_ymax, out_zmax): bounding
-    /// coordinate target CRS.(source CRS if direction is inverse).
+    ///   coordinate target CRS.(source CRS if direction is inverse).
     ///
     /// # References
     ///

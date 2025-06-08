@@ -1,37 +1,6 @@
 use crate::check_result;
 // region:Coordinate transformation
 impl crate::Proj<'_> {
-    ///Transform a single PJ_COORD coordinate.
-    ///
-    ///If the input coordinate contains any NaNs you are guaranteed to get a
-    /// coordinate with all NaNs as a result.
-    ///
-    ///  <div class="warning">Available
-    /// on <b>crate feature</b> <code>unrecommended</code> only.</div>
-    ///
-    /// # Parameters
-    ///
-    /// * direction: Transformation direction.
-    /// * coord: Coordinate that will be transformed.
-    ///
-    /// # See Also
-    ///
-    /// * [`Self::convert`]
-    /// * [`Self::project`]
-    ///
-    /// # References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
-    #[cfg(any(feature = "unrecommended", test))]
-    pub fn trans(
-        &self,
-        direction: crate::Direction,
-        coord: crate::data_types::Coord,
-    ) -> miette::Result<crate::data_types::Coord> {
-        let out_coord = unsafe { proj_sys::proj_trans(self.ptr(), i32::from(direction), coord) };
-        check_result!(self);
-        Ok(out_coord)
-    }
     ///Return the operation used during the last invocation of
     /// [`Self::trans()`]. This is especially useful when P has been created
     /// with [`crate::Context::create_crs_to_crs()`] and has several alternative
@@ -40,7 +9,6 @@ impl crate::Proj<'_> {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    #[cfg(any(feature = "unrecommended", test))]
     pub fn get_last_used_operation(&self) -> Option<crate::Proj<'_>> {
         use crate::Proj;
 
@@ -122,33 +90,6 @@ impl crate::Proj<'_> {
         };
         check_result!(self);
         Ok(result)
-    }
-
-    /// <div class="warning">Available on <b>crate feature</b>
-    /// <code>unrecommended</code> only.</div>
-    ///
-    /// See [`Self::convert_array`], [`Self::project_array`]
-    ///
-    ///  # References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_array>
-    #[cfg(any(feature = "unrecommended", test))]
-    pub fn trans_array(
-        &self,
-        direction: crate::Direction,
-        coord: &mut [crate::data_types::Coord],
-    ) -> miette::Result<&Self> {
-        let code = unsafe {
-            proj_sys::proj_trans_array(
-                self.ptr(),
-                i32::from(direction),
-                coord.len(),
-                coord.as_mut_ptr(),
-            )
-        };
-
-        check_result!(self, code);
-        Ok(self)
     }
 }
 
@@ -318,25 +259,12 @@ impl crate::Context {
 mod test {
     use float_cmp::assert_approx_eq;
 
-    use crate::ToCoord;
-
-    #[test]
-    fn test_trans() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
-        let pj = ctx.normalize_for_visualization(&pj)?;
-        let coord = pj.trans(crate::Direction::Fwd, (120.0, 30.0).to_coord()?)?;
-
-        assert_eq!(unsafe { coord.xy.x }, 19955590.73888901);
-        assert_eq!(unsafe { coord.xy.y }, 3416780.562127255);
-        Ok(())
-    }
     #[test]
     fn test_get_last_used_operation() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let _ = pj.trans(crate::Direction::Fwd, (120.0, 30.0).to_coord()?)?;
+        let _ = pj.convert(&(120.0, 30.0))?;
         let last_op = pj.get_last_used_operation();
         assert!(last_op.is_some());
         println!("{:?}", last_op.unwrap().info());
@@ -348,20 +276,6 @@ mod test {
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let last_op = pj.get_last_used_operation();
         assert!(last_op.is_none());
-        Ok(())
-    }
-
-    #[test]
-    fn test_trans_array() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
-        let pj = ctx.normalize_for_visualization(&pj)?;
-        let mut coord = [[120.0, 30.0].to_coord()?, [50.0, -80.0].to_coord()?];
-        pj.trans_array(crate::Direction::Fwd, &mut coord)?;
-        assert_eq!(unsafe { coord[0].xy.x }, 19955590.73888901);
-        assert_eq!(unsafe { coord[0].xy.y }, 3416780.562127255);
-        assert_eq!(unsafe { coord[1].xy.x }, 17583572.872089125);
-        assert_eq!(unsafe { coord[1].xy.y }, -9356989.97994042);
         Ok(())
     }
 

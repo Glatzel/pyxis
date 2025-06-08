@@ -122,17 +122,6 @@ impl crate::Proj<'_> {
     }
 }
 
-///Initializer for the PJ_COORD union. The function is shorthand for the
-/// otherwise convoluted assignment.
-///
-///# References
-///
-/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coord>
-#[cfg(any(feature = "unrecommended", test))]
-pub fn coord(x: f64, y: f64, z: f64, t: f64) -> proj_sys::PJ_COORD {
-    unsafe { proj_sys::proj_coord(x, y, z, t) }
-}
-
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
@@ -159,13 +148,11 @@ mod test {
 
     use float_cmp::assert_approx_eq;
 
-    use crate::ToCoord;
-
     #[test]
     fn test_roundtrip() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("+proj=tmerc +lat_0=0 +lon_0=75 +k=1 +x_0=13500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs","EPSG:4326",  &crate::Area::default())?;
-        let mut coord = (5877537.151800396, 4477291.358855194);
+        let coord = (5877537.151800396, 4477291.358855194);
         let distance = pj.roundtrip(crate::Direction::Fwd, 10000, &coord)?;
         assert_approx_eq!(f64, distance, 0.023350762947799957, epsilon = 1e-6);
         Ok(())
@@ -255,11 +242,7 @@ mod test {
         assert!(factor.is_err());
         Ok(())
     }
-    #[test]
-    fn test_coor() -> miette::Result<()> {
-        super::coord(1.0, 2.0, 3.0, 4.0);
-        Ok(())
-    }
+
     #[test]
     fn test_dmstor() -> miette::Result<()> {
         assert_approx_eq!(

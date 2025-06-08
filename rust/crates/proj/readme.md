@@ -76,19 +76,31 @@ Check examples folder.
 | Module                                    | Name     | Reson                        | References                                                                        |
 | ----------------------------------------- | -------- | ---------------------------- | --------------------------------------------------------------------------------- |
 | 2 dimensional coordinates                 | PJ_LP    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LP)    |
-| 2 dimensional coordinates                 | PJ_XY    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XY)    |
 | 2 dimensional coordinates                 | PJ_UV    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UV)    |
+| 2 dimensional coordinates                 | PJ_XY    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XY)    |
 | 3 dimensional coordinates                 | PJ_LPZ   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LPZ)   |
-| 3 dimensional coordinates                 | PJ_XYZ   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XYZ)   |
 | 3 dimensional coordinates                 | PJ_UVW   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UVW)   |
-| Spatiotemporal coordinate types           | PJ_LPZT  | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LPZT)  |
-| Spatiotemporal coordinate types           | PJ_XYZT  | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XYZT)  |
-| Spatiotemporal coordinate types           | PJ_UVWT  | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UVWT)  |
-| Ancillary types for geodetic computations | PJ_OPK   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPK)   |
-| Ancillary types for geodetic computations | PJ_ENU   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ENU)   |
-| Ancillary types for geodetic computations | PJ_ENU   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ENU)   |
+| 3 dimensional coordinates                 | PJ_XYZ   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XYZ)   |
 | Ancillary types for geodetic computations | PJ_COORD | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORD) |
+| Ancillary types for geodetic computations | PJ_ENU   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ENU)   |
+| Ancillary types for geodetic computations | PJ_ENU   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ENU)   |
+| Ancillary types for geodetic computations | PJ_OPK   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPK)   |
+| Spatiotemporal coordinate types           | PJ_LPZT  | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LPZT)  |
+| Spatiotemporal coordinate types           | PJ_UVWT  | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UVWT)  |
+| Spatiotemporal coordinate types           | PJ_XYZT  | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XYZT)  |
 
+### Functions
+
+| Module                            | Name                                | Reson                                                         | References                                                                                            |
+| --------------------------------- | ----------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| C API for ISO-19111 functionality | proj_context_set_autoclose_database | Deprecated                                                    | <https://proj.org/en/stable/development/reference/functions.html#proj_context_set_autoclose_database> |
+| Cleanup                           | proj_cleanup                        | Useless                                                       | <https://proj.org/en/stable/development/reference/functions.html#cleanup>                             |
+| Coordinate transformation         | proj_trans                          | Use `Proj::convert` or `Proj::project` to instead             | <https://proj.org/en/stable/development/reference/functions.html#proj_trans>                          |
+| Coordinate transformation         | proj_trans_array                    | Use `Proj::convert_array` or `Proj::project_array` to instead | <https://proj.org/en/stable/development/reference/functions.html#proj_trans_array>                    |
+| Various                           | proj_coord                          | Use `impl ICoord` to instead                                  | <https://proj.org/en/stable/development/reference/functions.html#proj_coord>                          |
+| Various                           | proj_rtodms                         | Deprecated                                                    | <https://proj.org/en/stable/development/reference/functions.html#proj_rtodms>                         |
+| Various                           | proj_todeg                          | Use `f64::to_degrees` to instead                              | <https://proj.org/en/stable/development/reference/functions.html#proj_todeg>                          |
+| Various                           | proj_torad                          | Use `f64::to_radians` to instead                              | <https://proj.org/en/stable/development/reference/functions.html#proj_torad>                          |
 
 ## References
 

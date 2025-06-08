@@ -8,11 +8,11 @@ use crate::{Context, Proj};
 /// insert object session
 impl Context {
     ///Starts a session for
-    /// [`crate::data_types::iso19111::InsertObjectSession::get_insert_statements()`].
+    /// [`InsertObjectSession::get_insert_statements()`].
     ///
     ///
     ///Starts a new session for one or several calls to
-    /// [`crate::data_types::iso19111::InsertObjectSession::get_insert_statements()`].
+    /// [`InsertObjectSession::get_insert_statements()`].
     ///
     ///An insertion session guarantees that the inserted objects will not
     /// create conflicting intermediate objects.
@@ -29,7 +29,7 @@ impl Context {
 }
 impl Drop for InsertObjectSession<'_> {
     ///Stops an insertion session started with
-    /// [`crate::Context::insert_object_session_create()`].
+    /// [`Context::insert_object_session_create()`].
     ///
     /// # References
     ///

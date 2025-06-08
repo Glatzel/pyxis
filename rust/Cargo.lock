@@ -896,7 +896,6 @@ dependencies = [
  "dunce",
  "libc",
  "pkg-config",
- "serde",
 ]
 
 [[package]]

@@ -21,4 +21,4 @@ tracing-subscriber = { workspace = true }
 
 [features]
 log = ["clerk/log"]
-serde = ["dep:serde", "proj-sys/serde"]
+serde = ["dep:serde"]

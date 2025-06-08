@@ -164,7 +164,7 @@ impl crate::Context {
     ///   EPSG).
     /// * `accuracy`: to set the minimum desired accuracy (in metres) of the
     ///   candidate coordinate operations.
-    /// * allow_ballpark can be set to NO to disallow the use of Ballpark
+    /// * `allow_ballpark`: can be set to NO to disallow the use of Ballpark
     ///   transformation in the candidate coordinate operations.
     /// * `only_best`: (PROJ >= 9.2) Can be set to YES to cause PROJ to error
     ///   out   if the best transformation, known of PROJ, and usable by PROJ if

@@ -4,7 +4,7 @@ use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
 
 /// Get information about the current instance of the PROJ library.
 ///
-/// References
+/// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_info>
 pub fn info() -> Info {
@@ -39,7 +39,7 @@ impl crate::Proj<'_> {
 
 /// Get information about a specific grid.
 ///
-/// References
+/// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
 pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
@@ -64,7 +64,11 @@ pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
 }
 /// Get information about a specific init file.
 ///
-/// References
+/// # Arguments
+///
+/// * `initname`: Init file in the PROJ searchpath
+///
+/// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
 pub fn init_info(initname: &str) -> miette::Result<InitInfo> {

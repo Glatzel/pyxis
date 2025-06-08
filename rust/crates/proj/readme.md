@@ -89,7 +89,6 @@ Check examples folder.
 | Ancillary types for geodetic computations | PJ_ENU   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ENU)   |
 | Ancillary types for geodetic computations | PJ_COORD | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORD) |
 
-
 ## References
 
 * [Proj](https://proj.org/en/stable/)

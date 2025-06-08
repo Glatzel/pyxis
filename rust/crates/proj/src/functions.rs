@@ -11,7 +11,6 @@ mod error_reporting;
 mod info_functions;
 mod iso19111;
 mod lists;
-mod logging;
 mod network;
 mod threading_contexts;
 mod transformation_setup;

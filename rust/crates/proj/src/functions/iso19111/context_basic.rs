@@ -6,7 +6,6 @@ use std::str::FromStr;
 use envoy::{AsVecPtr, CStrListToVecString, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 
-use super::string_list_destroy;
 use crate::data_types::iso19111::*;
 use crate::{OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
 /// # ISO-19111 Base functions
@@ -93,7 +92,9 @@ impl crate::Context {
     pub fn get_database_structure(&self) -> miette::Result<Vec<String>> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
         let out_vec = ptr.to_vec_string();
-        string_list_destroy(ptr);
+        unsafe {
+            proj_sys::proj_string_list_destroy(ptr);
+        }
         Ok(out_vec)
     }
     ///Guess the "dialect" of the WKT string.
@@ -306,7 +307,9 @@ impl crate::Context {
             miette::bail!("Error");
         }
         let out_vec = ptr.to_vec_string();
-        string_list_destroy(ptr);
+        unsafe {
+            proj_sys::proj_string_list_destroy(ptr);
+        }
         Ok(out_vec)
     }
 
@@ -319,7 +322,9 @@ impl crate::Context {
             miette::bail!("Error");
         }
         let out_vec = ptr.to_vec_string();
-        string_list_destroy(ptr);
+        unsafe {
+            proj_sys::proj_string_list_destroy(ptr);
+        }
         Ok(out_vec)
     }
 
@@ -344,7 +349,9 @@ impl crate::Context {
             miette::bail!("Error");
         }
         let out_vec = ptr.to_vec_string();
-        string_list_destroy(ptr);
+        unsafe {
+            proj_sys::proj_string_list_destroy(ptr);
+        }
         Ok(out_vec)
     }
     ///# References

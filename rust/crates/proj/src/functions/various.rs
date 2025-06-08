@@ -20,7 +20,9 @@ impl crate::Proj<'_> {
     /// # Returns
     ///
     /// double Distance between original coordinate and the resulting coordinate
-    /// after n transformation iterations. # References
+    /// after n transformation iterations.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_roundtrip>
 

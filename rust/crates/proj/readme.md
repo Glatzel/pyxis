@@ -73,7 +73,7 @@ Check examples folder.
 
 ### Data Types
 
-| Module                                    | Name     | Reson                        | References                                                                        |
+| Module                                    | Name     | Reason                        | References                                                                        |
 | ----------------------------------------- | -------- | ---------------------------- | --------------------------------------------------------------------------------- |
 | 2 dimensional coordinates                 | PJ_LP    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LP)    |
 | 2 dimensional coordinates                 | PJ_UV    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UV)    |
@@ -91,7 +91,7 @@ Check examples folder.
 
 ### Functions
 
-| Module                            | Name                                | Reson                                                         | References                                                                                                 |
+| Module                            | Name                                | Reason                                                         | References                                                                                                 |
 | --------------------------------- | ----------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | C API for ISO-19111 functionality | proj_context_set_autoclose_database | Deprecated                                                    | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_context_set_autoclose_database) |
 | C API for ISO-19111 functionality | proj_is_derived_crs                 | Use `Proj::crs_is_derived` to instead                         | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_is_derived_crs)                 |

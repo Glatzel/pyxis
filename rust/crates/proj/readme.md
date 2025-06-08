@@ -102,7 +102,6 @@ Check examples folder.
 | Various                           | proj_rtodms                         | Deprecated                                                    | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_rtodms)                         |
 | Various                           | proj_todeg                          | Use `f64::to_degrees` to instead                              | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_todeg)                          |
 | Various                           | proj_torad                          | Use `f64::to_radians` to instead                              | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_torad)                          |
-| Coordinate transformation         | proj_trans_get_last_used_operation  | `proj_trans` is unimplemented                                 | <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>     |
 
 ## References
 

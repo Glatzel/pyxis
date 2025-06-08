@@ -586,8 +586,22 @@ mod test {
     #[test]
     fn test_create_from_wkt() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
+        //invalid
         assert!(ctx.create_from_wkt("invalid wkt", None, None).is_err());
-        ctx.create_from_wkt("ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n    LENGTHUNIT[\"metre\",1],\n    ID[\"EPSG\",7030]]", None, None)?;
+        //valid
+        ctx.create_from_wkt(
+            &ctx.create("EPSG:4326")?.as_wkt(
+                WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?,
+            None,
+            None,
+        )?;
         Ok(())
     }
     #[test]

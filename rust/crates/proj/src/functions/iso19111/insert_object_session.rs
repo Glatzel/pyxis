@@ -7,7 +7,17 @@ use crate::{Context, Proj};
 
 /// insert object session
 impl Context {
-    ///# References
+    ///Starts a session for
+    /// [`crate::data_types::iso19111::InsertObjectSession::get_insert_statements()`].
+    ///
+    ///
+    ///Starts a new session for one or several calls to
+    /// [`crate::data_types::iso19111::InsertObjectSession::get_insert_statements()`].
+    ///
+    ///An insertion session guarantees that the inserted objects will not
+    /// create conflicting intermediate objects.
+    ///
+    /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_create>
     pub fn insert_object_session_create(&self) -> InsertObjectSession<'_> {
@@ -18,6 +28,9 @@ impl Context {
     }
 }
 impl Drop for InsertObjectSession<'_> {
+    ///Stops an insertion session started with
+    /// [`crate::Context::insert_object_session_create()`].
+    ///
     /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_destroy>
@@ -26,9 +39,48 @@ impl Drop for InsertObjectSession<'_> {
     }
 }
 impl InsertObjectSession<'_> {
+    /// # See Also
+    ///
+    /// * [crate::Context::insert_object_session_create]
     pub fn from_context(ctx: &Context) -> InsertObjectSession<'_> {
         ctx.insert_object_session_create()
     }
+    ///Returns SQL statements needed to insert the passed object into the
+    /// database.
+    ///
+    ///It is strongly recommended that new objects should not be added in
+    /// common registries, such as "EPSG", "ESRI", "IAU", etc.  Users should
+    /// use a custom authority name instead.
+    /// If a new object should be added to the official EPSG registry,
+    /// users are invited to follow the procedure explained at <https://epsg.org/dataset-change-requests.html>.
+    ///
+    /// Combined with [`crate::Context::get_database_structure()`],
+    /// users can create auxiliary databases, instead of directly modifying
+    /// the main proj.db database. Those auxiliary databases can be
+    /// specified through [`crate::Context::set_database_path()`] or the
+    /// `PROJ_AUX_DB` environment variable.
+    ///
+    /// # Parameters
+    ///
+    /// * object: The object to insert into the database. Currently only
+    ///   PrimeMeridian, Ellipsoid, Datum, GeodeticCRS, ProjectedCRS,
+    ///   VerticalCRS, CompoundCRS or BoundCRS are supported.
+    /// * authority: Authority name into which the object will be inserted. Must
+    ///   not be NULL.
+    /// * code: Code with which the object will be inserted.Must not be NULL.
+    /// * numeric_codes: Whether intermediate objects that can be created should
+    ///   use numeric codes (true), or may be alphanumeric (false)
+    /// * allowed_authorities: NULL terminated list of authority names, or NULL.
+    ///   Authorities to which intermediate objects are allowed to refer to.
+    ///   "authority" will be implicitly added to it. Note that unit, coordinate
+    ///   systems, projection methods and parameters will in any case be allowed
+    ///   to refer to EPSG. If NULL, allowed_authorities defaults to {"EPSG",
+    ///   "PROJ", nullptr}
+    ///
+    /// # Returns
+    ///
+    /// a list of insert statements.
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_insert_statements>

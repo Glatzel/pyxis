@@ -5,9 +5,9 @@
 
 mod derivatives;
 mod errors;
-mod infos;
+pub mod infos;
 pub mod iso19111;
-mod list_structures;
+pub mod list_structures;
 pub(crate) mod logging;
 pub(crate) mod transformation;
 

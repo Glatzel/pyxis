@@ -69,6 +69,27 @@ Check examples folder.
 * To add new tools or APIs, put them in `extension` folder.
 * If extended API cover the native function, consider to set the native function private and add link to extended API in native function doc.
 
+## Unimplemented
+
+### Data Types
+
+| Module                                    | Name     | Reson                        | References                                                                        |
+| ----------------------------------------- | -------- | ---------------------------- | --------------------------------------------------------------------------------- |
+| 2 dimensional coordinates                 | PJ_LP    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LP)    |
+| 2 dimensional coordinates                 | PJ_XY    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XY)    |
+| 2 dimensional coordinates                 | PJ_UV    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UV)    |
+| 3 dimensional coordinates                 | PJ_LPZ   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LPZ)   |
+| 3 dimensional coordinates                 | PJ_XYZ   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XYZ)   |
+| 3 dimensional coordinates                 | PJ_UVW   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UVW)   |
+| Spatiotemporal coordinate types           | PJ_LPZT  | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LPZT)  |
+| Spatiotemporal coordinate types           | PJ_XYZT  | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_XYZT)  |
+| Spatiotemporal coordinate types           | PJ_UVWT  | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UVWT)  |
+| Ancillary types for geodetic computations | PJ_OPK   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPK)   |
+| Ancillary types for geodetic computations | PJ_ENU   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ENU)   |
+| Ancillary types for geodetic computations | PJ_ENU   | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ENU)   |
+| Ancillary types for geodetic computations | PJ_COORD | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORD) |
+
+
 ## References
 
 * [Proj](https://proj.org/en/stable/)

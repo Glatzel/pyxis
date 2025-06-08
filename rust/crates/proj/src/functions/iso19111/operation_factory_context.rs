@@ -105,7 +105,7 @@ impl OperationFactoryContext<'_> {
     ///Set the name of the desired area of interest for the resulting
     /// coordinate transformations.
     ///
-    /// # Paramters
+    /// # Parameters
     ///
     /// * `area_name`: Area name. Must be known of the database.
     ///

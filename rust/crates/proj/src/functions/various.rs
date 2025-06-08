@@ -25,7 +25,6 @@ impl crate::Proj<'_> {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_roundtrip>
-
     pub fn roundtrip(
         &self,
         direction: crate::Direction,

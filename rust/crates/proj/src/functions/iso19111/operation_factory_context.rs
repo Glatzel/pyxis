@@ -15,9 +15,9 @@ impl Context {
     /// authority is a non-empty string different of "any", then coordinate
     /// operations will be searched only in that authority namespace.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * authority: Name of authority to which to restrict the search of
+    /// * `authority`: Name of authority to which to restrict the search of
     ///   candidate operations.
     ///
     ///# References
@@ -50,9 +50,9 @@ impl OperationFactoryContext<'_> {
     }
     ///Set the desired accuracy of the resulting coordinate transformations.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * accuracy: Accuracy in meter (or 0 to disable the filter).
+    /// * `accuracy`: Accuracy in meter (or 0 to disable the filter).
     ///
     ///# References
     ///
@@ -73,12 +73,12 @@ impl OperationFactoryContext<'_> {
     ///For an area of interest crossing the anti-meridian, west_lon_degree will
     /// be greater than east_lon_degree.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * west_lon_degree: West longitude (in degrees).
-    /// * south_lat_degree: South latitude (in degrees).
-    /// * east_lon_degree: East longitude (in degrees).
-    /// * north_lat_degree: North latitude (in degrees).
+    /// * `west_lon_degree`: West longitude (in degrees).
+    /// * `south_lat_degree`: South latitude (in degrees).
+    /// * `east_lon_degree`: East longitude (in degrees).
+    /// * `north_lat_degree`: North latitude (in degrees).
     ///
     /// # References
     ///
@@ -107,7 +107,7 @@ impl OperationFactoryContext<'_> {
     ///
     /// # Paramters
     ///
-    /// * area_name: Area name. Must be known of the database.
+    /// * `area_name`: Area name. Must be known of the database.
     ///
     ///  # References
     ///
@@ -130,7 +130,7 @@ impl OperationFactoryContext<'_> {
     ///
     /// # Paramters
     ///
-    /// * use: How source and target CRS extent should be used.
+    /// * `use`: How source and target CRS extent should be used.
     ///
     ///# References
     ///
@@ -151,9 +151,9 @@ impl OperationFactoryContext<'_> {
     ///
     /// The default is [`SpatialCriterion::StrictContainment`].
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * criterion: spatial criterion to use
+    /// * `criterion`: spatial criterion to use
     ///
     ///# References
     ///
@@ -172,9 +172,9 @@ impl OperationFactoryContext<'_> {
     ///
     /// The default is [`GridAvailabilityUse::UsedForSorting`].
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * use: how grid availability is used.
+    /// \* `use`: how grid availability is used.
     ///
     ///# References
     ///
@@ -194,9 +194,9 @@ impl OperationFactoryContext<'_> {
     ///
     /// The default is true.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * use_proj_names: whether PROJ alternative grid names should be used
+    /// * `use_proj_names`: whether PROJ alternative grid names should be used
     ///
     ///# References
     ///
@@ -225,9 +225,9 @@ impl OperationFactoryContext<'_> {
     ///By default, with the IF_NO_DIRECT_TRANSFORMATION strategy, all potential
     /// C candidates will be used if there is no direct transformation.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * use: whether and how intermediate CRS may be used.
+    /// * `use`: whether and how intermediate CRS may be used.
     ///
     ///# References
     ///
@@ -249,10 +249,10 @@ impl OperationFactoryContext<'_> {
     ///Restrict the potential pivot CRSs that can be used when trying to build
     /// a coordinate operation between two CRS that have no direct operation.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * list_of_auth_name_codes: an array of strings NLL terminated, with the
-    ///   format { "auth_name1", "code1", "auth_name2", "code2", ... NULL }
+    /// * `list_of_auth_name_codes`: an array of strings NLL terminated, with
+    ///   the format { "auth_name1", "code1", "auth_name2", "code2", ... NULL }
     ///
     ///# References
     ///
@@ -271,9 +271,9 @@ impl OperationFactoryContext<'_> {
     /// Set whether transformations that are superseded (but not deprecated)
     /// should be discarded.
     ///
-    ///# Parameters
+    /// # Arguments
     ///
-    /// * discard: superseded crs or not
+    /// * `discard`: superseded crs or not
     ///
     ///# References
     ///
@@ -290,9 +290,9 @@ impl OperationFactoryContext<'_> {
     }
     ///Set whether ballpark transformations are allowed.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// allow: set to TRUE to allow ballpark transformations.
+    /// * `allow`: set to TRUE to allow ballpark transformations.
     ///
     ///# References
     ///

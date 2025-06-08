@@ -12,10 +12,10 @@ impl crate::Proj<'_> {
     /// reverse direction. Returns the euclidean distance of the starting point
     /// coo and the resulting coordinate after n iterations back and forth.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * direction: Starting direction of transformation
-    /// * n: Number of roundtrip transformations
+    /// * `direction`: Starting direction of transformation
+    /// * `n`: Number of roundtrip transformations
     ///
     /// # Returns
     ///

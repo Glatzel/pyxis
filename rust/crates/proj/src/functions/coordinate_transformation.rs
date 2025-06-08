@@ -20,25 +20,25 @@ impl crate::Proj<'_> {
     }
     ///Transform a series of coordinates
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * direction: Transformation direction.
-    /// * x: Array of x-coordinates
-    /// * sx: Step length, in bytes, between consecutive elements of the
+    /// * `direction`: Transformation direction.
+    /// * `x`: Array of x-coordinates
+    /// * `sx`: Step length, in bytes, between consecutive elements of the
     ///   corresponding array
-    /// * nx: Number of elements in the corresponding array
-    /// * y: Array of y-coordinates
-    /// * sy: Step length, in bytes, between consecutive elements of the
+    /// * `nx`: Number of elements in the corresponding array
+    /// * `y`: Array of y-coordinates
+    /// * `sy`: Step length, in bytes, between consecutive elements of the
     ///   corresponding array
-    /// * ny: Number of elements in the corresponding array
-    /// * z: Array of z-coordinates
-    /// * sz: Step length, in bytes, between consecutive elements of the
+    /// * `ny`: Number of elements in the corresponding array
+    /// * `z`: Array of z-coordinates
+    /// * `sz`: Step length, in bytes, between consecutive elements of the
     ///   corresponding array
-    /// * nz: Number of elements in the corresponding array
-    /// * t: Array of t-coordinates
-    /// * st: Step length, in bytes, between consecutive elements of the
+    /// * `nz`: Number of elements in the corresponding array
+    /// * `t`: Array of t-coordinates
+    /// * `st`: Step length, in bytes, between consecutive elements of the
     ///   corresponding array
-    /// * nt: Number of elements in the corresponding array
+    /// * `nt`: Number of elements in the corresponding array
     ///
     /// # Safety
     ///
@@ -112,17 +112,17 @@ impl crate::Context {
     /// *out_ymax, 180) and the second with (*out_ymin, -180, *out_ymax,
     /// *out_xmax).
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * P: The PJ object representing the transformation.
-    /// * direction: The direction of the transformation.
-    /// * xmin: Minimum bounding coordinate of the first axis in source CRS
+    /// * `P`: The PJ object representing the transformation.
+    /// * `direction`: The direction of the transformation.
+    /// * `xmin`: Minimum bounding coordinate of the first axis in source CRS
     ///   (target CRS if direction is inverse).
-    /// * ymin: Minimum bounding coordinate of the second axis in source CRS.
+    /// * `ymin`: Minimum bounding coordinate of the second axis in source CRS.
     ///   (target CRS if direction is inverse).
-    /// * xmax: Maximum bounding coordinate of the first axis in source CRS.
+    /// * `xmax`: Maximum bounding coordinate of the first axis in source CRS.
     ///   (target CRS if direction is inverse).
-    /// * ymax: Maximum bounding coordinate of the second axis in source CRS.
+    /// * `ymax`: Maximum bounding coordinate of the second axis in source CRS.
     ///   (target CRS if direction is inverse).
     ///
     /// # Returns
@@ -186,21 +186,21 @@ impl crate::Context {
     /// geographic/coordinates and 3D axis is elevation), the documentation of
     /// [`Self::trans_bounds()`] applies.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * P: The PJ object representing the transformation.
-    /// * direction: The direction of the transformation.
-    /// * xmin: Minimum bounding coordinate of the first axis in source CRS
+    /// * `P`: The PJ object representing the transformation.
+    /// * `direction`: The direction of the transformation.
+    /// * `xmin`: Minimum bounding coordinate of the first axis in source CRS
     ///   (target CRS if direction is inverse).
-    /// * ymin: Minimum bounding coordinate of the second axis in source CRS.
+    /// * `ymin`: Minimum bounding coordinate of the second axis in source CRS.
     ///   (target CRS if direction is inverse).
-    /// * zmin: Minimum bounding coordinate of the third axis in source CRS.
+    /// * `zmin`: Minimum bounding coordinate of the third axis in source CRS.
     ///   (target CRS if direction is inverse).
-    /// * xmax: Maximum bounding coordinate of the first axis in source CRS.
+    /// * `xmax`: Maximum bounding coordinate of the first axis in source CRS.
     ///   (target CRS if direction is inverse).
-    /// * ymax: Maximum bounding coordinate of the second axis in source CRS.
+    /// * `ymax`: Maximum bounding coordinate of the second axis in source CRS.
     ///   (target CRS if direction is inverse).
-    /// * zmax: Maximum bounding coordinate of the third axis in source CRS.
+    /// * `zmax`: Maximum bounding coordinate of the third axis in source CRS.
     ///   (target CRS if direction is inverse).
     ///
     /// # Returns

@@ -17,9 +17,9 @@ impl crate::Context {
     ///It will be used to read proj.db or create&access the cache.db file in
     /// the PROJ user writable directory.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * name: SQLite3 VFS name. If NULL is passed, default implementation by
+    /// * `name`: SQLite3 VFS name. If NULL is passed, default implementation by
     ///   SQLite will be used.
     ///
     ///# References
@@ -46,9 +46,9 @@ impl crate::Context {
     ///
     ///Starting with PROJ 7.0, the path(s) should be encoded in UTF-8.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * paths: Paths. May be empty.
+    /// * `paths`: Paths. May be empty.
     ///
     ///# References
     ///
@@ -80,9 +80,9 @@ impl crate::Context {
     ///If set on the default context, they will be inherited by contexts
     /// created later.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * paths: Paths. May be None.
+    /// * `paths`: Paths. May be None.
     ///
     ///# References
     ///

@@ -60,17 +60,17 @@ impl InsertObjectSession<'_> {
     /// specified through [`crate::Context::set_database_path()`] or the
     /// `PROJ_AUX_DB` environment variable.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * object: The object to insert into the database. Currently only
+    /// * `object`: The object to insert into the database. Currently only
     ///   PrimeMeridian, Ellipsoid, Datum, GeodeticCRS, ProjectedCRS,
     ///   VerticalCRS, CompoundCRS or BoundCRS are supported.
-    /// * authority: Authority name into which the object will be inserted. Must
+    /// * `authority`: Authority name into which the object will be inserted. Must
     ///   not be NULL.
-    /// * code: Code with which the object will be inserted.Must not be NULL.
-    /// * numeric_codes: Whether intermediate objects that can be created should
+    /// * `code`: Code with which the object will be inserted.Must not be NULL.
+    /// * `numeric_codes`: Whether intermediate objects that can be created should
     ///   use numeric codes (true), or may be alphanumeric (false)
-    /// * allowed_authorities: NULL terminated list of authority names, or NULL.
+    /// * `allowed_authorities`: NULL terminated list of authority names, or NULL.
     ///   Authorities to which intermediate objects are allowed to refer to.
     ///   "authority" will be implicitly added to it. Note that unit, coordinate
     ///   systems, projection methods and parameters will in any case be allowed

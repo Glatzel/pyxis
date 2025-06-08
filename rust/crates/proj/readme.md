@@ -91,16 +91,17 @@ Check examples folder.
 
 ### Functions
 
-| Module                            | Name                                | Reson                                                         | References                                                                                            |
-| --------------------------------- | ----------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| C API for ISO-19111 functionality | proj_context_set_autoclose_database | Deprecated                                                    | <https://proj.org/en/stable/development/reference/functions.html#proj_context_set_autoclose_database> |
-| Cleanup                           | proj_cleanup                        | Useless                                                       | <https://proj.org/en/stable/development/reference/functions.html#cleanup>                             |
-| Coordinate transformation         | proj_trans                          | Use `Proj::convert` or `Proj::project` to instead             | <https://proj.org/en/stable/development/reference/functions.html#proj_trans>                          |
-| Coordinate transformation         | proj_trans_array                    | Use `Proj::convert_array` or `Proj::project_array` to instead | <https://proj.org/en/stable/development/reference/functions.html#proj_trans_array>                    |
-| Various                           | proj_coord                          | Use `impl ICoord` to instead                                  | <https://proj.org/en/stable/development/reference/functions.html#proj_coord>                          |
-| Various                           | proj_rtodms                         | Deprecated                                                    | <https://proj.org/en/stable/development/reference/functions.html#proj_rtodms>                         |
-| Various                           | proj_todeg                          | Use `f64::to_degrees` to instead                              | <https://proj.org/en/stable/development/reference/functions.html#proj_todeg>                          |
-| Various                           | proj_torad                          | Use `f64::to_radians` to instead                              | <https://proj.org/en/stable/development/reference/functions.html#proj_torad>                          |
+| Module                            | Name                                | Reson                                                         | References                                                                                                 |
+| --------------------------------- | ----------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| C API for ISO-19111 functionality | proj_context_set_autoclose_database | Deprecated                                                    | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_context_set_autoclose_database) |
+| C API for ISO-19111 functionality | proj_is_derived_crs                 | Use `Proj::crs_is_derived` to instead                         | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_is_derived_crs)                 |
+| Cleanup                           | proj_cleanup                        | Useless                                                       | [doc](https://proj.org/en/stable/development/reference/functions.html#cleanup)                             |
+| Coordinate transformation         | proj_trans                          | Use `Proj::convert` or `Proj::project` to instead             | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_trans)                          |
+| Coordinate transformation         | proj_trans_array                    | Use `Proj::convert_array` or `Proj::project_array` to instead | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_trans_array)                    |
+| Various                           | proj_coord                          | Use `impl ICoord` to instead                                  | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_coord)                          |
+| Various                           | proj_rtodms                         | Deprecated                                                    | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_rtodms)                         |
+| Various                           | proj_todeg                          | Use `f64::to_degrees` to instead                              | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_todeg)                          |
+| Various                           | proj_torad                          | Use `f64::to_radians` to instead                              | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_torad)                          |
 
 ## References
 

@@ -812,6 +812,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
+    /// Conformal 1SP projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp>
@@ -844,6 +847,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
+    /// Conformal (1SP Variant B) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp_variant_b>
@@ -878,6 +884,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
+    /// Conformal (2SP) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp>
@@ -912,6 +921,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
+    /// Conformal (2SP Michigan) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_michigan>
@@ -948,6 +960,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
+    /// Conformal (2SP Belgium) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_belgium>
@@ -982,6 +997,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Modified
+    /// Azimuthal Equidistant projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_azimuthal_equidistant>
@@ -1012,6 +1030,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Guam
+    /// Projection projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_guam_projection>
@@ -1042,6 +1063,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Bonne
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_bonne>
@@ -1072,7 +1096,10 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
-    ///# References
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert
+    /// Cylindrical Equal Area (Spherical) projection method.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area_spherical>
     pub fn create_conversion_lambert_cylindrical_equal_area_spherical(
@@ -1102,6 +1129,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert
+    /// Cylindrical Equal Area (ellipsoidal form) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area>
@@ -1132,6 +1162,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the
+    /// Cassini-Soldner projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_cassini_soldner>

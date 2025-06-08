@@ -73,7 +73,7 @@ Check examples folder.
 
 ### Data Types
 
-| Module                                    | Name     | Reason                        | References                                                                        |
+| Module                                    | Name     | Reason                       | References                                                                        |
 | ----------------------------------------- | -------- | ---------------------------- | --------------------------------------------------------------------------------- |
 | 2 dimensional coordinates                 | PJ_LP    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LP)    |
 | 2 dimensional coordinates                 | PJ_UV    | Use `impl ICoord` to instead | [doc](https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UV)    |
@@ -91,7 +91,7 @@ Check examples folder.
 
 ### Functions
 
-| Module                            | Name                                | Reason                                                         | References                                                                                                 |
+| Module                            | Name                                | Reason                                                        | References                                                                                                 |
 | --------------------------------- | ----------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | C API for ISO-19111 functionality | proj_context_set_autoclose_database | Deprecated                                                    | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_context_set_autoclose_database) |
 | C API for ISO-19111 functionality | proj_is_derived_crs                 | Use `Proj::crs_is_derived` to instead                         | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_is_derived_crs)                 |
@@ -102,6 +102,7 @@ Check examples folder.
 | Various                           | proj_rtodms                         | Deprecated                                                    | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_rtodms)                         |
 | Various                           | proj_todeg                          | Use `f64::to_degrees` to instead                              | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_todeg)                          |
 | Various                           | proj_torad                          | Use `f64::to_radians` to instead                              | [doc](https://proj.org/en/stable/development/reference/functions.html#proj_torad)                          |
+| Coordinate transformation         | proj_trans_get_last_used_operation  | `proj_trans` is unimplemented                                 | <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>     |
 
 ## References
 

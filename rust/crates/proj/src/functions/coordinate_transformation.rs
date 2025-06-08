@@ -1,23 +1,6 @@
 use crate::check_result;
 // region:Coordinate transformation
 impl crate::Proj<'_> {
-    ///Return the operation used during the last invocation of
-    /// [`Self::trans()`]. This is especially useful when P has been created
-    /// with [`crate::Context::create_crs_to_crs()`] and has several alternative
-    /// operations.
-    ///
-    ///  # References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    pub fn get_last_used_operation(&self) -> Option<crate::Proj<'_>> {
-        use crate::Proj;
-
-        let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr()) };
-        if ptr.is_null() {
-            return None;
-        }
-        Some(Proj::new(self.ctx, ptr).unwrap())
-    }
     ///Transform a series of coordinates
     ///
     /// # Parameters

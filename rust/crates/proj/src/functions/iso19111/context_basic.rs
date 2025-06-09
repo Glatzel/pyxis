@@ -471,8 +471,8 @@ impl crate::Context {
     ///
     /// * auth_name: Authority name, used to restrict the search. Or `None` for
     ///   all authorities.
-    /// * params: Additional criteria, or `None`. If not-None, params SHOULD have
-    ///   been allocated by proj_get_crs_list_parameters_create(), as the
+    /// * params: Additional criteria, or `None`. If not-None, params SHOULD
+    ///   have been allocated by proj_get_crs_list_parameters_create(), as the
     ///   PROJ_CRS_LIST_PARAMETERS structure might grow over time.
     ///
     ///# References

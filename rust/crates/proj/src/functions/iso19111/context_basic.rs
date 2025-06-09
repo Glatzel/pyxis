@@ -20,6 +20,11 @@ impl crate::Context {
     /// be separated by the colon (:) character on Unix, and on Windows, by the
     /// semi-colon (;) character.
     ///
+    /// # Arguments
+    ///
+    /// * `db_path`: Path to main database.
+    /// * `aux_db_paths`: List of auxiliary database filenames, or `None`.
+    ///
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
@@ -67,6 +72,10 @@ impl crate::Context {
         )
     }
     ///Return a metadata from the database.
+    ///
+    /// # Arguments
+    ///
+    /// * `key`: Metadata key. Must not be NULL
     ///
     ///# References
     ///
@@ -119,6 +128,15 @@ impl crate::Context {
     /// errors. Human expertise (or, by the time this comment will be read,
     /// specialized AI) is generally needed to perform that assessment.
     ///
+    /// # Arguments
+    ///
+    /// * `wkt`: WKT string (must not be NULL)
+    /// * `strict/: Defaults to `false`. When set to `true`, strict validation
+    ///   will be enabled.
+    /// * `unset_identifiers_if_incompatible_def`: Defaults to `true`. When set
+    ///   to `true`, object identifiers are unset when there is a contradiction
+    ///   between the definition from WKT and the one from the database.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_wkt>
@@ -162,6 +180,15 @@ impl crate::Context {
     /// The returned object must be unreferenced with proj_destroy() after use.
     /// It should be used by at most one thread at a time.
     ///
+    /// # Arguments
+    ///
+    /// * `auth_name`: Authority name
+    /// * `code`: Object code
+    /// * `category`: Object category
+    /// * `use_projalternative_grid_names`: Whether PROJ alternative grid names
+    ///   should be substituted to the official grid names. Only used on
+    ///   transformations
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_database>
@@ -185,6 +212,11 @@ impl crate::Context {
         Proj::new(self, ptr)
     }
     ///Get information for a unit of measure from a database lookup.
+    ///
+    /// # Arguments
+    ///
+    /// * `auth_name`: Authority name
+    /// * `code`: Unit of measure code
     ///
     ///# References
     ///
@@ -218,6 +250,10 @@ impl crate::Context {
         ))
     }
     ///Get information for a grid from a database lookup.
+    ///
+    /// # Arguments
+    ///
+    /// * `grid_name`: Grid name
     ///
     ///# References
     ///
@@ -255,6 +291,17 @@ impl crate::Context {
     }
     ///Return a list of objects by their name.
     ///
+    /// # Arguments
+    /// * `auth_name`: Authority name, used to restrict the search. Or `None`
+    ///   for all authorities.
+    /// * `searched_name`: Searched name. Must be at least 2 character long.
+    /// * `types`: List of object types into which to search. If `None`, all
+    ///   object types will be searched.
+    /// * `approximate_match`: Whether approximate name identification is
+    ///   allowed.
+    /// * `limit_result_count`: Maximum number of results to return. Or 0 for
+    ///   unlimited.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
@@ -286,7 +333,17 @@ impl crate::Context {
         };
         pj_obj_list_to_vec(self, result)
     }
-
+    ///Returns a list of geoid models available for that crs.
+    ///
+    ///The list includes the geoid models connected directly with the crs, or
+    /// via "Height Depth Reversal" or "Change of Vertical Unit"
+    /// transformations.
+    ///
+    /// # Arguments
+    ///
+    /// * auth_name: Authority name
+    /// * code: Object code
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_geoid_models_from_database>
@@ -312,7 +369,8 @@ impl crate::Context {
         }
         Ok(out_vec)
     }
-
+    ///  Return the list of authorities used in the database.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_authorities_from_database>
@@ -327,7 +385,15 @@ impl crate::Context {
         }
         Ok(out_vec)
     }
-
+    /// Returns the set of authority codes of the given object type.
+    ///
+    /// # Arguments
+    ///
+    /// * `auth_name`: Authority name
+    /// * `type`: Object type.
+    /// * `allow_deprecated`: whether we should return deprecated objects as
+    ///   well.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_codes_from_database>
@@ -354,6 +420,15 @@ impl crate::Context {
         }
         Ok(out_vec)
     }
+    ///Enumerate celestial bodies from the database.
+    ///
+    /// # Arguments
+    ///
+    /// * `auth_name`: Authority name, used to restrict the search. Or `None`
+    ///   for all authorities.
+    /// * `out_result_count`: Output parameter pointing to an integer to receive
+    ///   the size of the result list. Might be `None`
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
@@ -384,6 +459,22 @@ impl crate::Context {
         unsafe { proj_sys::proj_celestial_body_list_destroy(ptr) };
         Ok(out_vec)
     }
+    ///Enumerate CRS objects from the database, taking into account various
+    /// criteria.
+    ///
+    /// When no filter parameters are set, this is functionally equivalent to
+    /// proj_get_codes_from_database(), instantiating a PJ* object for each of
+    /// the codes with proj_create_from_database() and retrieving information
+    /// with the various getters. However this function will be much faster.
+    ///
+    /// # Arguments
+    ///
+    /// * auth_name: Authority name, used to restrict the search. Or NULL for
+    ///   all authorities.
+    /// * params: Additional criteria, or NULL. If not-NULL, params SHOULD have
+    ///   been allocated by proj_get_crs_list_parameters_create(), as the
+    ///   PROJ_CRS_LIST_PARAMETERS structure might grow over time.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
@@ -457,6 +548,16 @@ impl crate::Context {
         unsafe { proj_sys::proj_crs_info_list_destroy(ptr) };
         Ok(out_vec)
     }
+    ///Enumerate units from the database, taking into account various criteria.
+    ///
+    /// # Arguments
+    ///
+    /// * `auth_name`: Authority name, used to restrict the search. Or `None`
+    ///   for all authorities.
+    /// * `category`: Filter by category, if this parameter is not `None`.
+    /// * `allow_deprecated`: whether we should return deprecated objects as
+    ///   well.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_units_from_database>
@@ -497,21 +598,14 @@ impl crate::Context {
         unsafe { proj_sys::proj_unit_list_destroy(ptr) };
         Ok(out_vec)
     }
-    ///# References
+
+    ///Return an object from the result set.
     ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_suggests_code_for>
-    pub fn suggests_code_for(&self, object: &Proj, authority: &str, numeric_code: bool) -> String {
-        let result = unsafe {
-            proj_sys::proj_suggests_code_for(
-                self.ptr,
-                object.ptr(),
-                authority.to_cstring().as_ptr(),
-                numeric_code as i32,
-                ptr::null(),
-            )
-        };
-        result.to_string().expect("Error")
-    }
+    /// # Arguments
+    ///
+    /// * `result`:  Object of type PJ_OBJ_LIST
+    /// * `index`:  Index
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
@@ -716,28 +810,7 @@ mod test {
         assert!(!list.is_empty());
         Ok(())
     }
-    #[test]
-    fn test_suggests_code_for() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let wkt = "GEOGCRS[\"myGDA2020\",
-                       DATUM[\"GDA2020\",
-                           ELLIPSOID[\"GRS_1980\",6378137,298.257222101,
-                               LENGTHUNIT[\"metre\",1]]],
-                       PRIMEM[\"Greenwich\",0,
-                           ANGLEUNIT[\"Degree\",0.0174532925199433]],
-                       CS[ellipsoidal,2],
-                           AXIS[\"geodetic latitude (Lat)\",north,
-                               ORDER[1],
-                               ANGLEUNIT[\"degree\",0.0174532925199433]],
-                           AXIS[\"geodetic longitude (Lon)\",east,
-                               ORDER[2],
-                               ANGLEUNIT[\"degree\",0.0174532925199433]]]";
-        println!("{wkt}");
-        let crs = ctx.create_from_wkt(wkt, None, None)?;
-        let code = ctx.suggests_code_for(&crs, "HOBU", true);
-        assert_eq!(code, "1");
-        Ok(())
-    }
+
     #[test]
     fn test_get_units_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;

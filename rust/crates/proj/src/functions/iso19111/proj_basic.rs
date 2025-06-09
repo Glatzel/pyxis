@@ -302,6 +302,33 @@ impl Proj<'_> {
         };
         pj_obj_list_to_vec(self.ctx, result)
     }
+    ///Suggests a database code for the passed object.
+    ///
+    ///Supported type of objects are PrimeMeridian, Ellipsoid, Datum,
+    /// DatumEnsemble, GeodeticCRS, ProjectedCRS, VerticalCRS, CompoundCRS,
+    /// BoundCRS, Conversion.
+    ///
+    /// # Arguments
+    ///
+    /// * `authority`: Authority name into which the object will be inserted.
+    /// * `numeric_code`: Whether the code should be numeric, or derived from
+    ///   the object name.
+    ///
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_suggests_code_for>
+    pub fn suggests_code_for(&self, authority: &str, numeric_code: bool) -> String {
+        let result = unsafe {
+            proj_sys::proj_suggests_code_for(
+                self.ctx.ptr,
+                self.ptr(),
+                authority.to_cstring().as_ptr(),
+                numeric_code as i32,
+                ptr::null(),
+            )
+        };
+        result.to_string().expect("Error")
+    }
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
@@ -1025,6 +1052,28 @@ mod test_proj_basic {
             )?
         );
         assert!(!pj_list.is_empty());
+        Ok(())
+    }
+    #[test]
+    fn test_suggests_code_for() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let wkt = "GEOGCRS[\"myGDA2020\",
+                       DATUM[\"GDA2020\",
+                           ELLIPSOID[\"GRS_1980\",6378137,298.257222101,
+                               LENGTHUNIT[\"metre\",1]]],
+                       PRIMEM[\"Greenwich\",0,
+                           ANGLEUNIT[\"Degree\",0.0174532925199433]],
+                       CS[ellipsoidal,2],
+                           AXIS[\"geodetic latitude (Lat)\",north,
+                               ORDER[1],
+                               ANGLEUNIT[\"degree\",0.0174532925199433]],
+                           AXIS[\"geodetic longitude (Lon)\",east,
+                               ORDER[2],
+                               ANGLEUNIT[\"degree\",0.0174532925199433]]]";
+        println!("{wkt}");
+        let crs = ctx.create_from_wkt(wkt, None, None)?;
+        let code = crs.suggests_code_for("HOBU", true);
+        assert_eq!(code, "1");
         Ok(())
     }
     #[test]

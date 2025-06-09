@@ -130,7 +130,7 @@ impl crate::Context {
     ///
     /// # Arguments
     ///
-    /// * `wkt`: WKT string (must not be NULL)
+    /// * `wkt`: WKT string
     /// * `strict/: Defaults to `false`. When set to `true`, strict validation
     ///   will be enabled.
     /// * `unset_identifiers_if_incompatible_def`: Defaults to `true`. When set
@@ -469,9 +469,9 @@ impl crate::Context {
     ///
     /// # Arguments
     ///
-    /// * auth_name: Authority name, used to restrict the search. Or NULL for
+    /// * auth_name: Authority name, used to restrict the search. Or `None` for
     ///   all authorities.
-    /// * params: Additional criteria, or NULL. If not-NULL, params SHOULD have
+    /// * params: Additional criteria, or `None`. If not-None, params SHOULD have
     ///   been allocated by proj_get_crs_list_parameters_create(), as the
     ///   PROJ_CRS_LIST_PARAMETERS structure might grow over time.
     ///

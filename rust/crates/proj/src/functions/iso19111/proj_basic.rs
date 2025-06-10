@@ -8,6 +8,8 @@ use crate::data_types::iso19111::*;
 use crate::{OPTION_NO, OPTION_YES, Proj, check_result, pj_obj_list_to_vec};
 /// # ISO-19111 Base functions
 impl Proj<'_> {
+    ///Return the type of an object.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
@@ -15,10 +17,14 @@ impl Proj<'_> {
         let result = unsafe { proj_sys::proj_get_type(self.ptr()) };
         ProjType::try_from(result).into_diagnostic()
     }
+    ///Return whether an object is deprecated.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_deprecated>
     pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.ptr()) != 0 } }
+    ///Return a list of non-deprecated objects related to the passed one.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
@@ -26,12 +32,29 @@ impl Proj<'_> {
         let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
         pj_obj_list_to_vec(self.ctx, result)
     }
+    ///Return whether two objects are equivalent.
+    ///
+    /// # Argument
+    ///
+    /// * `other`: Other object
+    /// * `criterion`: Comparison criterion
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
     pub fn is_equivalent_to(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
         unsafe { proj_sys::proj_is_equivalent_to(self.ptr(), other.ptr(), criterion.into()) != 0 }
     }
+
+    /// Return whether two objects are equivalent.
+    ///
+    ///Possibly using database to check for name aliases.
+    ///
+    /// # Argument
+    ///
+    /// * `other`: Other object
+    /// * `criterion`: Comparison criterion
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to_with_ctx>
@@ -45,11 +68,18 @@ impl Proj<'_> {
             ) != 0
         }
     }
+    ///Return whether an object is a CRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_crs>
     pub fn is_crs(&self) -> bool { unsafe { proj_sys::proj_is_crs(self.ptr()) != 0 } }
-    ///# References
+    /// Get the name of an object.
+    ///
+    ///The lifetime of the returned string is the same as the input obj
+    /// parameter.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_name>
     pub fn get_name(&self) -> String {
@@ -57,18 +87,32 @@ impl Proj<'_> {
             .to_string()
             .unwrap_or_default()
     }
+    ///Get the authority name / codespace of an identifier of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * index: Index of the identifier. 0 = first identifier
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
     pub fn get_id_auth_name(&self, index: u16) -> Option<String> {
         unsafe { proj_sys::proj_get_id_auth_name(self.ptr(), index as i32) }.to_string()
     }
+    ///Get the code of an identifier of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * index: Index of the identifier. 0 = first identifier
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
     pub fn get_id_code(&self, index: u16) -> Option<String> {
         unsafe { proj_sys::proj_get_id_code(self.ptr(), index as i32) }.to_string()
     }
+    ///Get the remarks of an object.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_remarks>
@@ -77,6 +121,11 @@ impl Proj<'_> {
             .to_string()
             .unwrap_or_default()
     }
+    ///Get the number of domains/usages for a given object.
+    ///
+    ///Most objects have a single domain/usage, but for some of them, there
+    /// might be multiple.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
@@ -87,18 +136,34 @@ impl Proj<'_> {
         };
         Ok(count as u32)
     }
+    ///Get the scope of an object.
+    ///
+    ///In case of multiple usages, this will be the one of first usage.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope>
     pub fn get_scope(&self) -> Option<String> {
         unsafe { proj_sys::proj_get_scope(self.ptr()) }.to_string()
     }
+    ///Get the scope of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * `domainIdx`: Index of the domain/usage. In
+    ///   [0,proj_get_domain_count(obj)[
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
     pub fn get_scope_ex(&self, domain_idx: u16) -> Option<String> {
         unsafe { proj_sys::proj_get_scope_ex(self.ptr(), domain_idx as i32) }.to_string()
     }
+
+    ///Return the area of use of an object.
+    ///
+    ///In case of multiple usages, this will be the one of first usage.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>
@@ -137,6 +202,13 @@ impl Proj<'_> {
             north_lat_degree,
         )))
     }
+    ///Return the area of use of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * `domainIdx`: Index of the domain/usage. In
+    ///   [0,proj_get_domain_count(obj)[
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use_ex>
@@ -176,6 +248,33 @@ impl Proj<'_> {
             north_lat_degree,
         )))
     }
+    /// Get a WKT representation of an object.
+    ///
+    ///The returned string is valid while the input obj parameter is valid, and
+    /// until a next call to proj_as_wkt() with the same input object.
+    ///
+    /// # Arguments
+    ///
+    /// * `wkt_type`: WKT version.
+    /// * `MULTILINE`:Defaults to `true`, except for WKT1_ESRI
+    /// * `INDENTATION_WIDTH`: number. Defaults to 4 (when multiline output is
+    ///   on).
+    /// * `OUTPUT_AXIS`: In AUTO mode, axis will be output for WKT2 variants,
+    ///   for WKT1_GDAL for ProjectedCRS with easting/northing ordering
+    ///   (otherwise stripped), but not for WKT1_ESRI. Setting to `true` will
+    ///   output them unconditionally, and to `false` will omit them
+    ///   unconditionally.
+    /// * `STRICT`: Default is `true`. If NO, a Geographic 3D CRS can be for
+    ///   example exported as WKT1_GDAL with 3 axes, whereas this is normally
+    ///   not allowed.
+    /// * `ALLOW_ELLIPSOIDAL_HEIGHT_AS_VERTICAL_CRS`: Default is `false`. If set
+    ///   to `true` and type == PJ_WKT1_GDAL, a Geographic 3D CRS or a Projected
+    ///   3D CRS will be exported as a compound CRS whose vertical part
+    ///   represents an ellipsoidal height (for example for use with LAS 1.4
+    ///   WKT1).
+    /// * `ALLOW_LINUNIT_NODE`: Default is `true` starting with PROJ 9.1. Only
+    ///   taken into account with type == PJ_WKT1_ESRI on a Geographic 3D CRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_wkt>
@@ -213,18 +312,31 @@ impl Proj<'_> {
         check_result!(self);
         Ok(result.expect("Error"))
     }
-
+    ///Get a PROJ string representation of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * `string_type`: PROJ String version.
+    /// * `use_approx_tmerc`: `true` to add the +approx flag to +proj=tmerc or
+    ///   +proj=utm.
+    /// * `multiline`: Defaults to NO
+    /// * `indentation_width`: Defaults to 2 (when multiline output is on).
+    /// * `max_line_length`: Defaults to 80 (when multiline output is on).
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_proj_string>
     pub fn as_proj_string(
         &self,
         string_type: ProjStringType,
+        use_approx_tmerc: bool,
         multiline: Option<bool>,
         indentation_width: Option<usize>,
         max_line_length: Option<usize>,
     ) -> miette::Result<String> {
         let mut options = crate::ProjOptions::new(6);
+        if use_approx_tmerc {
+            options.push(use_approx_tmerc, "USE_APPROX_TMERC");
+        }
         options
             .push_optional(multiline, "MULTILINE", OPTION_NO)
             .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
@@ -1004,7 +1116,7 @@ mod test_proj_basic {
     pub fn test_as_proj_string() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let proj_string = pj.as_proj_string(ProjStringType::Proj4, None, None, None)?;
+        let proj_string = pj.as_proj_string(ProjStringType::Proj4, true, None, None, None)?;
         println!("{proj_string}");
         assert_eq!(proj_string, "+proj=longlat +datum=WGS84 +no_defs +type=crs");
         Ok(())

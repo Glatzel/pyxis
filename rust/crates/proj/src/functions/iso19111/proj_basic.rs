@@ -438,7 +438,7 @@ impl Proj<'_> {
     ///   isEquivalentTo(EPSG_4326,
     ///   util::IComparable::Criterion::EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS)
     /// * 90% means that CRS are equivalent, but the names are not exactly the
-    /// same.
+    ///   same.
     /// * 70% means that CRS are equivalent, but the names are not equivalent.
     /// * 25% means that the CRS are not equivalent, but there is some
     ///   similarity in the names.

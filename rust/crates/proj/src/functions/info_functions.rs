@@ -111,9 +111,9 @@ mod test {
     fn test_pj_info() {
         let info = info();
         println!("{:?}", info);
-        assert_eq!(info.major(), &9);
-        assert_eq!(info.minor(), &6);
-        assert_eq!(info.patch(), &1);
+        assert_eq!(info.major(), &(crate::version::PROJ_VERSION_MAJOR as i32));
+        assert_eq!(info.minor(), &(crate::version::PROJ_VERSION_MINOR as i32));
+        assert_eq!(info.patch(), &(crate::version::PROJ_VERSION_PATCH as i32));
     }
 
     #[test]

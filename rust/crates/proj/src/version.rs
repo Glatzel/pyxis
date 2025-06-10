@@ -57,6 +57,6 @@ mod test {
     #[test]
     fn test_proj_version_number() {
         at_least_version(9, 6, 0);
-        assert_eq!(PROJ_VERSION_NUMBER, 90601)
+        assert_eq!(PROJ_VERSION_NUMBER, 90602)
     }
 }

@@ -291,7 +291,8 @@ mod test {
 
         let (out_xmin, out_ymin, out_xmax, out_ymax) =
             ctx.trans_bounds(&pj, crate::Direction::Fwd, xmin, ymin, xmax, ymax, 21)?;
-        assert_approx_eq!(f64, out_xmin, 2297280.4262236636);
+        println!("{out_xmin},{out_ymin},{out_xmax},{out_ymax}");
+        assert_approx_eq!(f64, out_xmin, 1799949.56320294);
         assert_approx_eq!(f64, out_ymin, 6639816.584496002);
         assert_approx_eq!(f64, out_xmax, 10788961.870597329);
         assert_approx_eq!(f64, out_ymax, 19555124.881683525);
@@ -321,7 +322,7 @@ mod test {
             zmax,
             21,
         )?;
-        assert_approx_eq!(f64, out_xmin, 2297280.4262236636);
+        assert_approx_eq!(f64, out_xmin, 1799949.56320294);
         assert_approx_eq!(f64, out_ymin, 6639816.584496002);
         assert_approx_eq!(f64, out_zmin, 1.0);
         assert_approx_eq!(f64, out_xmax, 10788961.870597329);

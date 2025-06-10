@@ -1,6 +1,6 @@
 # proj-rs
 
-![PROJ](https://img.shields.io/badge/Proj-9.6.1-blue?logo=rust)
+![PROJ](https://img.shields.io/badge/Proj-9.6.2-blue?logo=rust)
 
 **Safe Rust bindings for [PROJ](https://proj.org/)** – the definitive library for cartographic projections and coordinate transformations.
 
@@ -42,7 +42,7 @@ Use [pixi](https://github.com/prefix-dev/pixi/?tab=readme-ov-file#installation) 
 ```toml
 [dependencies]
 pkg-config = "==0.29.2"
-proj = { version = "==9.6.0", channel = "https://repo.prefix.dev/glatzel" }
+proj = { version = "==9.6.2", channel = "https://repo.prefix.dev/glatzel" }
 ```
 
 ## Usage

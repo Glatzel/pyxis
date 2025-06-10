@@ -681,6 +681,7 @@ impl Proj<'_> {
     ///Returns information on an axis.
     ///
     /// # Arguments
+    ///
     /// * `index`: Index of the coordinate system (between 0 and
     ///   proj_cs_get_axis_count() - 1)
     ///
@@ -904,6 +905,7 @@ impl Proj<'_> {
     ///Return the index of a parameter of a SingleOperation.
     ///
     /// # Arguments
+    ///
     /// * `name`: Parameter name.
     ///
     ///# References

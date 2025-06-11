@@ -789,7 +789,8 @@ impl ProjObjList<'_> {
             miette::bail!("Error");
         }
         let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, index as i32) };
-        Proj::new(self.ctx, ptr)
+
+        Proj::new_with_owned_cstrings(self.ctx, ptr, self._owned_cstrings.clone())
     }
     pub(crate) fn ptr(&self) -> *mut proj_sys::PJ_OBJ_LIST { self.ptr }
     pub fn get_count(&self) -> usize { self.count }

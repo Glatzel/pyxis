@@ -15,7 +15,7 @@ lazy-loader = "==0.4"
 nomkl = "==1.0"
 numpy = "==2.3.0"
 scipy = "==1.15.2"
-
+ 
 [feature.test.dependencies]
 pytest = "==8.4.0"
 pytest-cov = "==6.1.1"

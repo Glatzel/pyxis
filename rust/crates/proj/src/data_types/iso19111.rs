@@ -741,7 +741,7 @@ impl ProjObjList<'_> {
     pub(crate) fn new(
         ctx: &crate::Context,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
-    ) -> miette::Result<ProjObjList> {
+    ) -> miette::Result<ProjObjList<'_>> {
         if ptr.is_null() {
             miette::bail!("PJ_OBJ_LIST pointer is null.");
         }
@@ -750,7 +750,6 @@ impl ProjObjList<'_> {
             miette::bail!("PJ_OBJ_LIST count 0.");
         }
         clerk::debug!("pj_obj_list count: {count}");
-
         Ok(ProjObjList {
             ctx,
             ptr,
@@ -764,7 +763,7 @@ impl ProjObjList<'_> {
         ctx: &crate::Context,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
         owned_cstrings: OwnedCStrings,
-    ) -> miette::Result<ProjObjList> {
+    ) -> miette::Result<ProjObjList<'_>> {
         if ptr.is_null() {
             miette::bail!("PJ_OBJ_LIST pointer is null.");
         }
@@ -773,10 +772,6 @@ impl ProjObjList<'_> {
             miette::bail!("PJ_OBJ_LIST count 0.");
         }
         clerk::debug!("pj_obj_list count: {count}");
-
-        unsafe {
-            proj_sys::proj_list_destroy(ptr);
-        }
         Ok(ProjObjList {
             ctx,
             ptr,

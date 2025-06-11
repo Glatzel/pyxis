@@ -77,7 +77,7 @@ impl Context {
         types: Option<&[ProjType]>,
         approximate_match: bool,
         limit_result_count: usize,
-    ) -> miette::Result<ProjObjList> {
+    ) -> miette::Result<ProjObjList<'_>> {
         let (types, count) = types.map_or((None, 0), |types| {
             let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
             let count = types.len();
@@ -116,7 +116,7 @@ impl Context {
         datum_auth_name: &str,
         datum_code: &str,
         crs_type: Option<&str>,
-    ) -> miette::Result<ProjObjList> {
+    ) -> miette::Result<ProjObjList<'_>> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
@@ -136,7 +136,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
-    pub fn get_non_deprecated(&self) -> miette::Result<ProjObjList> {
+    pub fn get_non_deprecated(&self) -> miette::Result<ProjObjList<'_>> {
         let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
         ProjObjList::new(self.ctx, result)
     }
@@ -187,7 +187,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
-    pub fn identify(&self, auth_name: &str) -> miette::Result<ProjObjList> {
+    pub fn identify(&self, auth_name: &str) -> miette::Result<ProjObjList<'_>> {
         let mut confidence: Vec<i32> = Vec::new();
         let result = unsafe {
             proj_sys::proj_identify(

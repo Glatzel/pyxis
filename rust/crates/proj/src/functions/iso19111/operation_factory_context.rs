@@ -326,7 +326,7 @@ impl OperationFactoryContext<'_> {
         &self,
         source_crs: &Proj,
         target_crs: &Proj,
-    ) -> miette::Result<ProjObjList> {
+    ) -> miette::Result<ProjObjList<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
                 self.ctx.ptr,

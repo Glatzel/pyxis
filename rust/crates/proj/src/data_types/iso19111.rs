@@ -743,7 +743,7 @@ impl ProjObjList<'_> {
         ptr: *mut proj_sys::PJ_OBJ_LIST,
     ) -> miette::Result<ProjObjList> {
         if ptr.is_null() {
-            miette::bail!("Proj pointer is null.");
+            miette::bail!("PJ_OBJ_LIST pointer is null.");
         }
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         if count < 1 {
@@ -766,7 +766,7 @@ impl ProjObjList<'_> {
         owned_cstrings: OwnedCStrings,
     ) -> miette::Result<ProjObjList> {
         if ptr.is_null() {
-            miette::bail!("Proj pointer is null.");
+            miette::bail!("PJ_OBJ_LIST pointer is null.");
         }
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         if count < 1 {

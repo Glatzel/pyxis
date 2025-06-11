@@ -210,15 +210,9 @@ mod test_context {
         let pj_list = ctx.create_from_name(None, "WGS 84", None, false, 0)?;
         println!(
             "{}",
-            pj_list.to_vec().first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
+            pj_list
+                .get(0)?
+                .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?
         );
 
         Ok(())
@@ -230,15 +224,9 @@ mod test_context {
             ctx.query_geodetic_crs_from_datum(Some("EPSG"), "EPSG", "6326", Some("geographic 2D"))?;
         println!(
             "{}",
-            pj_list.to_vec().first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
+            pj_list
+                .get(0)?
+                .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?
         );
 
         Ok(())
@@ -254,15 +242,9 @@ mod test_proj {
         let pj_list = pj.get_non_deprecated()?;
         println!(
             "{}",
-            pj_list.to_vec().first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
+            pj_list
+                .get(0)?
+                .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?
         );
 
         Ok(())
@@ -274,15 +256,9 @@ mod test_proj {
         let pj_list = pj.identify("EPSG")?;
         println!(
             "{}",
-            pj_list.to_vec().first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
+            pj_list
+                .get(0)?
+                .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?
         );
 
         Ok(())

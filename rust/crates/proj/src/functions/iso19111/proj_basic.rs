@@ -1637,10 +1637,7 @@ mod test_proj_basic {
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
             .set_grid_availability_use(GridAvailabilityUse::Ignored)
             .create_operations(&source_crs, &target_crs)?;
-        let list = ops.to_vec();
-        let op = list.first().unwrap();
-        let count = op.concatoperation_get_step_count()?;
-        assert_eq!(count, 3);
+        assert_eq!(ops.get_count(), 3);
         Ok(())
     }
     #[test]
@@ -1653,10 +1650,9 @@ mod test_proj_basic {
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
             .set_grid_availability_use(GridAvailabilityUse::Ignored)
             .create_operations(&source_crs, &target_crs)?;
-        let list = ops.to_vec();
-        let op: &Proj<'_> = list.first().unwrap();
-        let step = op.concatoperation_get_step(1)?;
-        let wkt = step.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        let wkt = ops
+            .get(0)?
+            .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("GDA94 to GDA2020"));
         Ok(())

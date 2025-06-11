@@ -784,15 +784,13 @@ impl ProjObjList<'_> {
             _owned_cstrings: owned_cstrings,
         })
     }
-    pub fn to_vec(&self) -> Vec<Proj<'_>> {
-        let mut proj_list = Vec::with_capacity(self.count);
-        for i in 0..self.count {
-            proj_list.push({
-                let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, i as i32) };
-                Proj::new(self.ctx, ptr).unwrap()
-            });
+    pub fn get(&self, index: usize) -> miette::Result<Proj<'_>> {
+        if index > self.count {
+            miette::bail!("Error");
         }
-        proj_list
+        let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, index as i32) };
+        Proj::new(self.ctx, ptr)
     }
     pub(crate) fn ptr(&self) -> *mut proj_sys::PJ_OBJ_LIST { self.ptr }
+    pub fn get_count(&self) -> usize { self.count }
 }

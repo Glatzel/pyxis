@@ -384,15 +384,8 @@ mod test {
         let ops = factory.create_operations(&source_crs, &target_crs)?;
         println!(
             "{}",
-            ops.to_vec().first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
+            ops.get(0)?
+                .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?
         );
 
         Ok(())

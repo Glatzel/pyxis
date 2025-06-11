@@ -3,6 +3,7 @@ use std::ptr;
 
 use envoy::ToCString;
 
+#[derive(Debug, Clone)]
 pub(crate) struct OwnedCStrings {
     _owned_cstrings: Vec<CString>,
 }
@@ -27,4 +28,5 @@ impl OwnedCStrings {
             None => ptr::null(),
         }
     }
+    pub fn len(&self) -> usize { self._owned_cstrings.len() }
 }

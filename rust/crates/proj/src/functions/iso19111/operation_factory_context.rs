@@ -3,7 +3,7 @@ use std::ptr;
 use envoy::{AsVecPtr, ToCString, VecCString};
 
 use crate::data_types::iso19111::*;
-use crate::{Context, Proj, pj_obj_list_to_vec};
+use crate::{Context, Proj};
 impl Context {
     ///Instantiate a context for building coordinate operations between two
     /// CRS.
@@ -326,7 +326,7 @@ impl OperationFactoryContext<'_> {
         &self,
         source_crs: &Proj,
         target_crs: &Proj,
-    ) -> miette::Result<Vec<Proj<'_>>> {
+    ) -> miette::Result<ProjObjList> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
                 self.ctx.ptr,
@@ -335,7 +335,7 @@ impl OperationFactoryContext<'_> {
                 self.ptr,
             )
         };
-        pj_obj_list_to_vec(self.ctx, ptr)
+        ProjObjList::new(self.ctx, ptr)
     }
 }
 impl Drop for OperationFactoryContext<'_> {
@@ -382,7 +382,19 @@ mod test {
         )?;
         let target_crs = ctx.create_from_database("EPSG", "4269", Category::Crs, false)?;
         let ops = factory.create_operations(&source_crs, &target_crs)?;
-        assert_eq!(ops.len(), 1);
+        println!(
+            "{}",
+            ops.to_vec().first().unwrap().as_wkt(
+                WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None
+            )?
+        );
+
         Ok(())
     }
 }

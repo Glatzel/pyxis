@@ -3,7 +3,7 @@ use std::ptr;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
-use crate::{Context, OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
+use crate::{Context, OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
 impl Context {
     ///Instantiate a CoordinateSystem.
@@ -141,37 +141,7 @@ impl Context {
         };
         Proj::new(self, ptr)
     }
-    /// Return GeodeticCRS that use the specified datum.
-    ///
-    /// # Arguments
-    ///
-    /// * `crs_auth_name`: CRS authority name, or `None`.
-    /// * `datum_auth_name`: Datum authority name
-    /// * `datum_code`: Datum code
-    /// * `crs_type`: "geographic 2D", "geographic 3D", "geocentric" or `None`
-    ///
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
-    pub fn query_geodetic_crs_from_datum(
-        &self,
-        crs_auth_name: Option<&str>,
-        datum_auth_name: &str,
-        datum_code: &str,
-        crs_type: Option<&str>,
-    ) -> miette::Result<Vec<Proj<'_>>> {
-        let mut owned = OwnedCStrings::new();
-        let ptr = unsafe {
-            proj_sys::proj_query_geodetic_crs_from_datum(
-                self.ptr,
-                owned.push_option(crs_auth_name),
-                datum_auth_name.to_cstring().as_ptr(),
-                datum_code.to_cstring().as_ptr(),
-                owned.push_option(crs_type),
-            )
-        };
-        pj_obj_list_to_vec(self, ptr)
-    }
+
     ///Create a GeographicCRS.
     ///
     /// # Arguments
@@ -3169,26 +3139,7 @@ mod test_context_advanced {
         assert!(wkt.contains("CS[ellipsoidal,3]"));
         Ok(())
     }
-    #[test]
-    fn test_query_geodetic_crs_from_datum() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj_list =
-            ctx.query_geodetic_crs_from_datum(Some("EPSG"), "EPSG", "6326", Some("geographic 2D"))?;
-        println!(
-            "{}",
-            pj_list.first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
-        );
-        assert!(!pj_list.is_empty());
-        Ok(())
-    }
+
     #[test]
     fn test_create_geographic_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;

@@ -5,7 +5,7 @@ use envoy::{AsVecPtr, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
-use crate::{OPTION_NO, OPTION_YES, Proj, check_result, pj_obj_list_to_vec};
+use crate::{OPTION_NO, OPTION_YES, Proj, check_result};
 /// # ISO-19111 Base functions
 impl Proj<'_> {
     ///Return the type of an object.
@@ -23,15 +23,7 @@ impl Proj<'_> {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_deprecated>
     pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.ptr()) != 0 } }
-    ///Return a list of non-deprecated objects related to the passed one.
-    ///
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
-    pub fn get_non_deprecated(&self) -> miette::Result<Vec<Proj<'_>>> {
-        let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
-        pj_obj_list_to_vec(self.ctx, result)
-    }
+
     ///Return whether two objects are equivalent.
     ///
     /// # Argument
@@ -411,65 +403,7 @@ impl Proj<'_> {
         }
         Some(Self::new(self.ctx, out_ptr).unwrap())
     }
-    ///Identify the CRS with reference CRSs.
-    ///
-    ///The candidate CRSs are either hard-coded, or looked in the database when
-    /// it is available.
-    ///
-    ///Note that the implementation uses a set of heuristics to have a good
-    /// compromise of successful identifications over execution time. It might
-    /// miss legitimate matches in some circumstances.
-    ///
-    ///The method returns a list of matching reference CRS, and the percentage
-    /// (0-100) of confidence in the match. The list is sorted by decreasing
-    /// confidence.
-    ///
-    /// * 100% means that the name of the reference entry perfectly matches the
-    ///   CRS name, and both are equivalent. In which case a single result is
-    ///   returned. Note: in the case of a GeographicCRS whose axis order is
-    ///   implicit in the input definition (for example ESRI WKT), then axis
-    ///   order is ignored for the purpose of identification. That is the CRS
-    ///   built from
-    ///   GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.
-    ///   0, 298.257223563]],
-    ///   PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]] will be
-    ///   identified to EPSG:4326, but will not pass a isEquivalentTo(EPSG_4326,
-    ///   util::IComparable::Criterion::EQUIVALENT) test, but rather
-    ///   isEquivalentTo(EPSG_4326,
-    ///   util::IComparable::Criterion::EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS)
-    /// * 90% means that CRS are equivalent, but the names are not exactly the
-    ///   same.
-    /// * 70% means that CRS are equivalent, but the names are not equivalent.
-    /// * 25% means that the CRS are not equivalent, but there is some
-    ///   similarity in the names.
-    ///
-    ///Other confidence values may be returned by some specialized
-    /// implementations.
-    ///
-    /// This is implemented for GeodeticCRS, ProjectedCRS,
-    /// VerticalCRS and CompoundCRS. Return the hub CRS of a BoundCRS or the
-    /// target CRS of a CoordinateOperation.
-    ///
-    /// # Arguments
-    ///
-    /// * `auth_name`: Authority name, or NULL for all authorities
-    ///
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
-    pub fn identify(&self, auth_name: &str) -> miette::Result<Vec<Proj<'_>>> {
-        let mut confidence: Vec<i32> = Vec::new();
-        let result = unsafe {
-            proj_sys::proj_identify(
-                self.ctx.ptr,
-                self.ptr(),
-                auth_name.to_cstring().as_ptr(),
-                ptr::null(),
-                &mut confidence.as_mut_ptr(),
-            )
-        };
-        pj_obj_list_to_vec(self.ctx, result)
-    }
+
     ///Suggests a database code for the passed object.
     ///
     ///Supported type of objects are PrimeMeridian, Ellipsoid, Datum,
@@ -1157,26 +1091,7 @@ mod test_proj_basic {
         assert!(!deprecated);
         Ok(())
     }
-    #[test]
-    fn test_get_non_deprecated() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create("EPSG:4226")?;
-        let pj_list = pj.get_non_deprecated()?;
-        println!(
-            "{}",
-            pj_list.first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
-        );
-        assert!(!pj_list.is_empty());
-        Ok(())
-    }
+
     #[test]
     fn test_is_equivalent_to() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
@@ -1333,26 +1248,7 @@ mod test_proj_basic {
         assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");
         Ok(())
     }
-    #[test]
-    fn test_identify() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create("EPSG:4326")?;
-        let pj_list = pj.identify("EPSG")?;
-        println!(
-            "{}",
-            pj_list.first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
-        );
-        assert!(!pj_list.is_empty());
-        Ok(())
-    }
+
     #[test]
     fn test_suggests_code_for() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
@@ -1741,7 +1637,8 @@ mod test_proj_basic {
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
             .set_grid_availability_use(GridAvailabilityUse::Ignored)
             .create_operations(&source_crs, &target_crs)?;
-        let op = ops.first().unwrap();
+        let list = ops.to_vec();
+        let op = list.first().unwrap();
         let count = op.concatoperation_get_step_count()?;
         assert_eq!(count, 3);
         Ok(())
@@ -1756,7 +1653,8 @@ mod test_proj_basic {
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
             .set_grid_availability_use(GridAvailabilityUse::Ignored)
             .create_operations(&source_crs, &target_crs)?;
-        let op = ops.first().unwrap();
+        let list = ops.to_vec();
+        let op: &Proj<'_> = list.first().unwrap();
         let step = op.concatoperation_get_step(1)?;
         let wkt = step.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);

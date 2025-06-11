@@ -7,7 +7,7 @@ use envoy::{AsVecPtr, CStrListToVecString, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
-use crate::{OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
+use crate::{OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Base functions
 impl crate::Context {
     ///Explicitly point to the main PROJ CRS and coordinate operation
@@ -289,50 +289,7 @@ impl crate::Context {
             available != 0,
         ))
     }
-    ///Return a list of objects by their name.
-    ///
-    /// # Arguments
-    /// * `auth_name`: Authority name, used to restrict the search. Or `None`
-    ///   for all authorities.
-    /// * `searched_name`: Searched name. Must be at least 2 character long.
-    /// * `types`: List of object types into which to search. If `None`, all
-    ///   object types will be searched.
-    /// * `approximate_match`: Whether approximate name identification is
-    ///   allowed.
-    /// * `limit_result_count`: Maximum number of results to return. Or 0 for
-    ///   unlimited.
-    ///
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
-    pub fn create_from_name(
-        &self,
-        auth_name: Option<&str>,
-        searched_name: &str,
-        types: Option<&[ProjType]>,
-        approximate_match: bool,
-        limit_result_count: usize,
-    ) -> miette::Result<Vec<Proj<'_>>> {
-        let (types, count) = types.map_or((None, 0), |types| {
-            let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
-            let count = types.len();
-            (Some(types), count)
-        });
-        let auth_name = auth_name.map(|s| s.to_cstring());
-        let result = unsafe {
-            proj_sys::proj_create_from_name(
-                self.ptr,
-                auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                searched_name.to_cstring().as_ptr(),
-                types.map_or(ptr::null(), |types| types.as_ptr()),
-                count,
-                approximate_match as i32,
-                limit_result_count,
-                ptr::null(),
-            )
-        };
-        pj_obj_list_to_vec(self, result)
-    }
+
     ///Returns a list of geoid models available for that crs.
     ///
     ///The list includes the geoid models connected directly with the crs, or
@@ -599,28 +556,6 @@ impl crate::Context {
         Ok(out_vec)
     }
 
-    ///Return an object from the result set.
-    ///
-    /// # Arguments
-    ///
-    /// * `result`:  Object of type PJ_OBJ_LIST
-    /// * `index`:  Index
-    ///
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
-    pub(crate) fn list_get(
-        &self,
-        result: *const proj_sys::PJ_OBJ_LIST,
-        index: i32,
-    ) -> miette::Result<Proj<'_>> {
-        let ptr = unsafe { proj_sys::proj_list_get(self.ptr, result, index) };
-        Proj::new(self, ptr)
-    }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_suggested_operation>
-    fn _get_suggested_operation(&self) { todo!() }
 }
 
 #[cfg(test)]
@@ -735,25 +670,7 @@ mod test {
         assert!(info.available());
         Ok(())
     }
-    #[test]
-    fn test_create_from_name() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj_list = ctx.create_from_name(None, "WGS 84", None, false, 0)?;
-        println!(
-            "{}",
-            pj_list.first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
-        );
-        assert!(!pj_list.is_empty());
-        Ok(())
-    }
+  
     #[test]
     fn test_get_geoid_models_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;

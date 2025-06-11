@@ -9,6 +9,7 @@ impl ProjObjList<'_> {
     /// transform the specified coordinates.
     ///
     /// # Arguments
+    ///
     /// * `direction`: Direction into which to transform the point.
     /// * `coord`: Coordinate to transform
     ///

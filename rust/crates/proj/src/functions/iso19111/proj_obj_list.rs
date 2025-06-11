@@ -46,6 +46,11 @@ impl ProjObjList<'_> {
     }
 }
 impl Drop for ProjObjList<'_> {
+    ///Drops a reference on the result set.
+    ///
+    /// # References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_destroy>
     fn drop(&mut self) {
         unsafe {
             proj_sys::proj_list_destroy(self.ptr());

@@ -758,7 +758,7 @@ impl ProjObjList<'_> {
         })
     }
 
-    /// Create a `Proj` object from pointer, panic if pointer is null.
+    /// Create a `ProjObjList` object from pointer, panic if pointer is null.
     pub(crate) fn new_with_owned_cstrings(
         ctx: &crate::Context,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
@@ -779,6 +779,13 @@ impl ProjObjList<'_> {
             _owned_cstrings: owned_cstrings,
         })
     }
+
+    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ_OBJ_LIST { self.ptr }
+    ///Return an object from the result set.
+    ///
+    /// # References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
     pub fn get(&self, index: usize) -> miette::Result<Proj<'_>> {
         if index > self.count {
             miette::bail!("Error");
@@ -787,6 +794,10 @@ impl ProjObjList<'_> {
 
         Proj::new_with_owned_cstrings(self.ctx, ptr, self._owned_cstrings.clone())
     }
-    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ_OBJ_LIST { self.ptr }
+    ///Return the number of objects in the result set.
+    ///
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
     pub fn get_count(&self) -> usize { self.count }
 }

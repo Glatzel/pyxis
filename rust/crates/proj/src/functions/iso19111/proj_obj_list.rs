@@ -29,7 +29,11 @@ impl ProjObjList<'_> {
         if self._owned_cstrings.len() > 0 {
             Ok(Some(Proj::new(self.ctx, ptr)?))
         } else {
-            Ok(Some(Proj::new_with_owned_cstrings(self.ctx, ptr,self._owned_cstrings.clone())?))
+            Ok(Some(Proj::new_with_owned_cstrings(
+                self.ctx,
+                ptr,
+                self._owned_cstrings.clone(),
+            )?))
         }
     }
 }

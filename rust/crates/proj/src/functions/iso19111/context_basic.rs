@@ -555,7 +555,6 @@ impl crate::Context {
         unsafe { proj_sys::proj_unit_list_destroy(ptr) };
         Ok(out_vec)
     }
-
 }
 
 #[cfg(test)]
@@ -670,7 +669,7 @@ mod test {
         assert!(info.available());
         Ok(())
     }
-  
+
     #[test]
     fn test_get_geoid_models_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;

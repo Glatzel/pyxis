@@ -1,3 +1,5 @@
+use std::ptr;
+
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
@@ -205,6 +207,47 @@ impl Proj<'_> {
             )
         };
         Proj::new_with_owned_cstrings(self.ctx, ptr, owned)
+    }
+    ///Create a projected 3D CRS from an existing projected 2D CRS.
+    ///
+    /// The passed projected_2D_crs is used so that its name is replaced by
+    /// crs_name and its base geographic CRS is replaced by geog_3D_crs. The
+    /// vertical axis of geog_3D_crs (ellipsoidal height) will be added as the
+    /// 3rd axis of the resulting projected 3D CRS. Normally, the passed
+    /// geog_3D_crs should be the 3D counterpart of the original 2D base
+    /// geographic CRS of projected_2D_crs, but such no check is done.
+    ///
+    /// It is also possible to invoke this function with a `None` geog_3D_crs.
+    /// In which case, the existing base geographic 2D CRS of
+    /// projected_2D_crs will be automatically promoted to 3D by assuming a
+    /// 3rd axis being an ellipsoidal height, oriented upwards, and with
+    /// metre units. This is equivalent to using proj_crs_promote_to_3D().
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: CRS name. Or `None` (in which case the name of
+    ///   projected_2D_crs will be used)
+    /// * `projected_2D_crs`: Projected 2D CRS to be "promoted" to 3D.
+    /// * `geog_3D_crs`: Base geographic 3D CRS for the new CRS. May be `None`.
+    ///
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_projected_3D_crs_from_2D>
+    pub fn crs_create_projected_3d_crs_from_2d(
+        &self,
+        crs_name: Option<&str>,
+        geog_3d_crs: Option<&Proj>,
+    ) -> miette::Result<Proj<'_>> {
+        let crs_name = crs_name.map(|s| s.to_cstring());
+        let ptr = unsafe {
+            proj_sys::proj_crs_create_projected_3D_crs_from_2D(
+                self.ctx.ptr,
+                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
+                self.ptr(),
+                geog_3d_crs.map_or(ptr::null(), |crs| crs.ptr()),
+            )
+        };
+        Proj::new(self.ctx, ptr)
     }
     ///Create a 2D CRS from an existing 3D CRS.
     ///
@@ -417,6 +460,19 @@ mod test_proj_advanced {
         let wkt = pj_3d.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
         assert!(wkt.contains("CS[ellipsoidal,3]"));
+        Ok(())
+    }
+    #[test]
+    fn test_crs_create_projected_3d_crs_from_2d() -> miette::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let proj_crs = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
+        let geog_3d_crs = ctx.create_from_database("EPSG", "4979", Category::Crs, false)?;
+        let pj: Proj<'_> =
+            proj_crs.crs_create_projected_3d_crs_from_2d(None, Some(&geog_3d_crs))?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{}", wkt);
+        assert!(wkt.contains("WGS 84 / UTM zone 31N"));
+        assert!(wkt.contains("CS[Cartesian,3]"));
         Ok(())
     }
     #[test]

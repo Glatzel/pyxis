@@ -8,6 +8,11 @@ use crate::{Context, OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
 impl Context {
     ///Instantiate a CoordinateSystem.
     ///
+    /// # Arguments
+    ///
+    /// * `type`: Coordinate system type.
+    /// * `axis`: Axis description (array of size axis_count)
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
@@ -40,6 +45,12 @@ impl Context {
     }
     ///Instantiate a CartesiansCS 2D.
     ///
+    /// # Arguments
+    ///
+    /// * `type`: Coordinate system type.
+    /// * `unit_name`: Unit name.
+    /// * `unit_conv_factor`: Unit conversion factor to SI.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
@@ -62,6 +73,13 @@ impl Context {
     }
     ///Instantiate a Ellipsoidal 2D.
     ///
+    /// # Arguments
+    ///
+    /// * `type`: Coordinate system type.
+    /// * `unit_name`: Name of the angular units. Or `None` for Degree
+    /// * `unit_conv_factor`: Conversion factor from the angular unit to radian.
+    ///   Or 0 for Degree if unit_name == `None`. Otherwise should be not `None`
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
@@ -83,6 +101,20 @@ impl Context {
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///Instantiate a Ellipsoidal 3D.
+    ///
+    /// # Arguments
+    ///
+    /// * `type`: Coordinate system type.
+    /// * `horizontal_angular_unit_name`: Name of the angular units. Or `None`
+    ///   for Degree.
+    /// * `horizontal_angular_unit_conv_factor`: Conversion factor from the
+    ///   angular unit to radian. Or 0 for Degree if
+    ///   horizontal_angular_unit_name == `None`. Otherwise should be not `None`
+    /// * `vertical_linear_unit_name`: Vertical linear unit name. Or `None` for
+    ///   Metre.
+    /// * `vertical_linear_unit_conv_factor`: Vertical linear unit conversion
+    ///   factor to metre. Or 0 for Metre if vertical_linear_unit_name ==
+    ///   `None`. Otherwise should be not `None`
     ///
     ///# References
     ///
@@ -111,6 +143,13 @@ impl Context {
     }
     /// Return GeodeticCRS that use the specified datum.
     ///
+    /// # Arguments
+    ///
+    /// * `crs_auth_name`: CRS authority name, or `None`.
+    /// * `datum_auth_name`: Datum authority name
+    /// * `datum_code`: Datum code
+    /// * `crs_type`: "geographic 2D", "geographic 3D", "geocentric" or `None`
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
@@ -134,6 +173,22 @@ impl Context {
         pj_obj_list_to_vec(self, ptr)
     }
     ///Create a GeographicCRS.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_name`: Name of the GeodeticReferenceFrame. Or `None`
+    /// * `ellps_name`: Name of the Ellipsoid. Or `None`
+    /// * `semi_major_metre`: Ellipsoid semi-major axis, in metres.
+    /// * `inv_flattening`: Ellipsoid inverse flattening. Or 0 for a sphere.
+    /// * `prime_meridian_name`: Name of the PrimeMeridian. Or `None`
+    /// * `prime_meridian_offset`: Offset of the prime meridian, expressed in
+    ///   the specified angular units.
+    /// * `pm_angular_units`: Name of the angular units. Or `None` for Degree
+    /// * `pm_angular_units_conv`: Conversion factor from the angular unit to
+    ///   radian. Or 0 for Degree if pm_angular_units == `None`. Otherwise
+    ///   should be not `None`
+    /// * `ellipsoidal_cs`: Coordinate system.
     ///
     ///# References
     ///
@@ -171,6 +226,13 @@ impl Context {
     }
     ///Create a GeographicCRS.
     ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_or_datum_ensemble`: Datum or DatumEnsemble (DatumEnsemble
+    ///   possible since 7.2).
+    /// * `ellipsoidal_cs`: Coordinate system.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs_from_datum>
@@ -192,6 +254,25 @@ impl Context {
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///Create a GeodeticCRS of geocentric type.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_name`: Name of the GeodeticReferenceFrame. Or `None`
+    /// * `ellps_name`: Name of the Ellipsoid. Or `None`
+    /// * `semi_major_metre`: Ellipsoid semi-major axis, in metres.
+    /// * `inv_flattening`: Ellipsoid inverse flattening. Or 0 for a sphere.
+    /// * `prime_meridian_name`: Name of the PrimeMeridian. Or `None`
+    /// * `prime_meridian_offset`: Offset of the prime meridian, expressed in
+    ///   the specified angular units.
+    /// * `angular_units`: Name of the angular units. Or `None` for Degree
+    /// * `angular_units_conv`: Conversion factor from the angular unit to
+    ///   radian. Or 0 for Degree if angular_units == `None`. Otherwise should
+    ///   be not `None`
+    /// * `linear_units`: Name of the linear units. Or `None` for Metre
+    /// * `linear_units_conv`: Conversion factor from the linear unit to metre.
+    ///   Or 0 for Metre if linear_units == `None`. Otherwise should be not
+    ///   `None`
     ///
     ///# References
     ///
@@ -231,6 +312,16 @@ impl Context {
     }
     ///Create a GeodeticCRS of geocentric type.
     ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_or_datum_ensemble`: Datum or DatumEnsemble (DatumEnsemble
+    ///   possible since 7.2).
+    /// * `linear_units`: Name of the linear units. Or `None` for Metre
+    /// * `linear_units_conv`: Conversion factor from the linear unit to metre.
+    ///   Or 0 for Metre if linear_units == `None`. Otherwise should be not
+    ///   `None`
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geocentric_crs_from_datum>
@@ -253,6 +344,16 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Create a DerivedGeograhicCRS.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `base_geographic_crs`: Base Geographic CRS.
+    /// * `conversion`: Conversion from the base Geographic to the
+    ///   DerivedGeograhicCRS.
+    /// * `ellipsoidal_cs`: Coordinate system.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_derived_geographic_crs>
@@ -275,7 +376,27 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
-    ///Create a DerivedGeograhicCRS.
+    ///Create a projected 3D CRS from an existing projected 2D CRS.
+    ///
+    /// The passed projected_2D_crs is used so that its name is replaced by
+    /// crs_name and its base geographic CRS is replaced by geog_3D_crs. The
+    /// vertical axis of geog_3D_crs (ellipsoidal height) will be added as the
+    /// 3rd axis of the resulting projected 3D CRS. Normally, the passed
+    /// geog_3D_crs should be the 3D counterpart of the original 2D base
+    /// geographic CRS of projected_2D_crs, but such no check is done.
+    ///
+    /// It is also possible to invoke this function with a `None` geog_3D_crs.
+    /// In which case, the existing base geographic 2D CRS of
+    /// projected_2D_crs will be automatically promoted to 3D by assuming a
+    /// 3rd axis being an ellipsoidal height, oriented upwards, and with
+    /// metre units. This is equivalent to using proj_crs_promote_to_3D().
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: CRS name. Or `None` (in which case the name of
+    ///   projected_2D_crs will be used)
+    /// * `projected_2D_crs`: Projected 2D CRS to be "promoted" to 3D.
+    /// * `geog_3D_crs`: Base geographic 3D CRS for the new CRS. May be `None`.
     ///
     ///# References
     ///
@@ -298,6 +419,11 @@ impl Context {
         Proj::new(self, ptr)
     }
     ///Instantiate a EngineeringCRS with just a name.
+    ///
+    /// # Arguments
+    ///
+    /// `crs_name`: CRS name. Or `None`.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
@@ -307,7 +433,18 @@ impl Context {
             unsafe { proj_sys::proj_create_engineering_crs(self.ptr, owned.push_option(crs_name)) };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a EngineeringCRS with just a name.
+    ///
     ///# References
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_name`: Name of the VerticalReferenceFrame. Or `None`
+    /// * `linear_units`: Name of the linear units. Or `None` for Metre
+    /// * `linear_units_conv`: Conversion factor from the linear unit to metre.
+    ///   Or 0 for Metre if linear_units == `None`. Otherwise should be not
+    ///   `None`
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_vertical_crs>
     pub fn create_vertical_crs(
@@ -333,6 +470,29 @@ impl Context {
     ///
     /// This is an extended (_ex) version of [`Self::create_vertical_crs()`]
     /// that adds the capability of defining a geoid model.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_name`: Name of the VerticalReferenceFrame. Or `None`
+    /// * `datum_auth_name`: Authority name of the VerticalReferenceFrame. Or
+    ///   `None`
+    /// * `datum_code`: Code of the VerticalReferenceFrame. Or `None`
+    /// * `linear_units`: Name of the linear units. Or `None` for Metre
+    /// * `linear_units_conv`: Conversion factor from the linear unit to metre.
+    ///   Or 0 for Metre if linear_units == `None`. Otherwise should be not
+    ///   `None`
+    /// * `geoid_model_name`: Geoid model name, or `None`. Can be a name from
+    ///   the geoid_model name or a string "PROJ foo.gtx"
+    /// * `geoid_model_auth_name`: Authority name of the transformation for the
+    ///   geoid model. or `None`
+    /// * `geoid_model_code`: Code of the transformation for the geoid model. or
+    ///   `None`
+    /// * `geoid_geog_crs`: Geographic CRS for the geoid transformation, or
+    ///   `None`.
+    /// * `options`: `None`-terminated list of strings with "KEY=VALUE" format.
+    ///   or `None`. The currently recognized option is ACCURACY=value, where
+    ///   value is in metre.
     ///
     ///# References
     ///
@@ -374,6 +534,12 @@ impl Context {
     }
     ///Create a CompoundCRS.
     ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `horiz_crs`: Horizontal CRS.
+    /// * `vert_crs`: Vertical CRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_compound_crs>
@@ -395,6 +561,17 @@ impl Context {
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///Instantiate a Conversion.
+    ///
+    /// # Arguments
+    ///
+    /// * `name`: Conversion name. Or `None`.
+    /// * `auth_name`: Conversion authority name. Or `None`.
+    /// * `code`: Conversion code. Or `None`.
+    /// * `method_name`: Method name. Or `None`.
+    /// * `method_auth_name`: Method authority name. Or `None`.
+    /// * `method_code`: Method code. Or `None`.
+    /// * `param_count`: Number of parameters (size of params argument)
+    /// * `params`: Parameter descriptions (array of size param_count)
     ///
     ///# References
     ///
@@ -438,6 +615,23 @@ impl Context {
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///Instantiate a Transformation.
+    ///
+    /// # Arguments
+    ///
+    /// * `name`: Transformation name. Or `None`.
+    /// * `auth_name`: Transformation authority name. Or `None`.
+    /// * `code`: Transformation code. Or `None`.
+    /// * `source_crs`: Object of type CRS representing the source CRS.
+    /// * `target_crs`: Object of type CRS representing the target CRS.
+    /// * `interpolation_crs`: Object of type CRS representing the interpolation
+    ///   CRS. Or `None`.
+    /// * `method_name`: Method name. Or `None`.
+    /// * `method_auth_name`: Method authority name. Or `None`.
+    /// * `method_code`: Method code. Or `None`.
+    /// * `param_count`: Number of parameters (size of params argument)
+    /// * `params`: Parameter descriptions (array of size param_count)
+    /// * `accuracy`: Accuracy of the transformation in meters. A negative
+    ///   values means unknown.
     ///
     ///# References
     ///
@@ -492,6 +686,13 @@ impl Context {
     }
     ///Return an equivalent projection.
     ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: CRS name. Or `None`
+    /// * `geodetic_crs`: Base GeodeticCRS.
+    /// * `conversion`: Conversion.
+    /// * `coordinate_system`: Cartesian coordinate system.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_projected_crs>
@@ -516,6 +717,12 @@ impl Context {
     }
     ///Returns a BoundCRS.
     ///
+    /// # Arguments
+    ///
+    /// * `base_crs`: Base CRS
+    /// * `hub_crs`: Hub CRS
+    /// * `transformation`: Transformation
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs>
@@ -536,7 +743,15 @@ impl Context {
         Proj::new(self, ptr)
     }
     ///Returns potentially a BoundCRS, with a transformation to `EPSG:4326`,
-    /// wrapping this CRS. # References
+    /// wrapping this CRS.
+    ///
+    /// # Arguments
+    ///
+    /// * `vert_crs`: Object of type VerticalCRS
+    /// * `hub_geographic_3D_crs`: Object of type Geographic 3D CRS
+    /// * `grid_name`: Grid name (typically a .gtx file)
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_vertical_crs>
     pub fn crs_create_bound_vertical_crs(
@@ -605,7 +820,9 @@ impl Context {
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Gauss
-    /// Schreiber Transverse Mercator projection method. # References
+    /// Schreiber Transverse Mercator projection method.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gauss_schreiber_transverse_mercator>
     pub fn create_conversion_gauss_schreiber_transverse_mercator(
@@ -639,6 +856,9 @@ impl Context {
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Transverse
     /// Mercator South Orientated projection method.
+    ///
+    /// # Arguments
+    ///
     ///
     ///# References
     ///

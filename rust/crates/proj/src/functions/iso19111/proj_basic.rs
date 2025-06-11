@@ -5,9 +5,11 @@ use envoy::{AsVecPtr, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 
 use crate::data_types::iso19111::*;
-use crate::{OPTION_NO, OPTION_YES, Proj, check_result, pj_obj_list_to_vec};
+use crate::{OPTION_NO, OPTION_YES, Proj, check_result};
 /// # ISO-19111 Base functions
 impl Proj<'_> {
+    ///Return the type of an object.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
@@ -15,23 +17,36 @@ impl Proj<'_> {
         let result = unsafe { proj_sys::proj_get_type(self.ptr()) };
         ProjType::try_from(result).into_diagnostic()
     }
+    ///Return whether an object is deprecated.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_deprecated>
     pub fn is_deprecated(&self) -> bool { unsafe { proj_sys::proj_is_deprecated(self.ptr()) != 0 } }
-    ///# References
+
+    ///Return whether two objects are equivalent.
     ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
-    pub fn get_non_deprecated(&self) -> miette::Result<Vec<Proj<'_>>> {
-        let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
-        pj_obj_list_to_vec(self.ctx, result)
-    }
+    /// # Argument
+    ///
+    /// * `other`: Other object
+    /// * `criterion`: Comparison criterion
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
     pub fn is_equivalent_to(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
         unsafe { proj_sys::proj_is_equivalent_to(self.ptr(), other.ptr(), criterion.into()) != 0 }
     }
+
+    /// Return whether two objects are equivalent.
+    ///
+    ///Possibly using database to check for name aliases.
+    ///
+    /// # Argument
+    ///
+    /// * `other`: Other object
+    /// * `criterion`: Comparison criterion
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to_with_ctx>
@@ -45,11 +60,18 @@ impl Proj<'_> {
             ) != 0
         }
     }
+    ///Return whether an object is a CRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_crs>
     pub fn is_crs(&self) -> bool { unsafe { proj_sys::proj_is_crs(self.ptr()) != 0 } }
-    ///# References
+    /// Get the name of an object.
+    ///
+    ///The lifetime of the returned string is the same as the input obj
+    /// parameter.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_name>
     pub fn get_name(&self) -> String {
@@ -57,18 +79,32 @@ impl Proj<'_> {
             .to_string()
             .unwrap_or_default()
     }
+    ///Get the authority name / codespace of an identifier of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * index: Index of the identifier. 0 = first identifier
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
     pub fn get_id_auth_name(&self, index: u16) -> Option<String> {
         unsafe { proj_sys::proj_get_id_auth_name(self.ptr(), index as i32) }.to_string()
     }
+    ///Get the code of an identifier of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * index: Index of the identifier. 0 = first identifier
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
     pub fn get_id_code(&self, index: u16) -> Option<String> {
         unsafe { proj_sys::proj_get_id_code(self.ptr(), index as i32) }.to_string()
     }
+    ///Get the remarks of an object.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_remarks>
@@ -77,6 +113,11 @@ impl Proj<'_> {
             .to_string()
             .unwrap_or_default()
     }
+    ///Get the number of domains/usages for a given object.
+    ///
+    ///Most objects have a single domain/usage, but for some of them, there
+    /// might be multiple.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
@@ -87,18 +128,34 @@ impl Proj<'_> {
         };
         Ok(count as u32)
     }
+    ///Get the scope of an object.
+    ///
+    ///In case of multiple usages, this will be the one of first usage.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope>
     pub fn get_scope(&self) -> Option<String> {
         unsafe { proj_sys::proj_get_scope(self.ptr()) }.to_string()
     }
+    ///Get the scope of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * `domainIdx`: Index of the domain/usage. In
+    ///   [0,proj_get_domain_count(obj)[
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
     pub fn get_scope_ex(&self, domain_idx: u16) -> Option<String> {
         unsafe { proj_sys::proj_get_scope_ex(self.ptr(), domain_idx as i32) }.to_string()
     }
+
+    ///Return the area of use of an object.
+    ///
+    ///In case of multiple usages, this will be the one of first usage.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>
@@ -137,6 +194,13 @@ impl Proj<'_> {
             north_lat_degree,
         )))
     }
+    ///Return the area of use of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * `domainIdx`: Index of the domain/usage. In
+    ///   [0,proj_get_domain_count(obj)[
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use_ex>
@@ -176,6 +240,33 @@ impl Proj<'_> {
             north_lat_degree,
         )))
     }
+    /// Get a WKT representation of an object.
+    ///
+    ///The returned string is valid while the input obj parameter is valid, and
+    /// until a next call to proj_as_wkt() with the same input object.
+    ///
+    /// # Arguments
+    ///
+    /// * `wkt_type`: WKT version.
+    /// * `multiline`:Defaults to `true`, except for WKT1_ESRI
+    /// * `indentation_width`: number. Defaults to 4 (when multiline output is
+    ///   on).
+    /// * `output_axis`: In AUTO mode, axis will be output for WKT2 variants,
+    ///   for WKT1_GDAL for ProjectedCRS with easting/northing ordering
+    ///   (otherwise stripped), but not for WKT1_ESRI. Setting to `true` will
+    ///   output them unconditionally, and to `false` will omit them
+    ///   unconditionally.
+    /// * `strict`: Default is `true`. If NO, a Geographic 3D CRS can be for
+    ///   example exported as WKT1_GDAL with 3 axes, whereas this is normally
+    ///   not allowed.
+    /// * `ALLOW_ELLIPSOIDAL_HEIGHT_AS_VERTICAL_CRS`: Default is `false`. If set
+    ///   to `true` and type == PJ_WKT1_GDAL, a Geographic 3D CRS or a Projected
+    ///   3D CRS will be exported as a compound CRS whose vertical part
+    ///   represents an ellipsoidal height (for example for use with LAS 1.4
+    ///   WKT1).
+    /// * `allow_linunit_node`: Default is `true` starting with PROJ 9.1. Only
+    ///   taken into account with type == PJ_WKT1_ESRI on a Geographic 3D CRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_wkt>
@@ -213,18 +304,31 @@ impl Proj<'_> {
         check_result!(self);
         Ok(result.expect("Error"))
     }
-
+    ///Get a PROJ string representation of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * `string_type`: PROJ String version.
+    /// * `use_approx_tmerc`: `true` to add the +approx flag to +proj=tmerc or
+    ///   +proj=utm.
+    /// * `multiline`: Defaults to NO
+    /// * `indentation_width`: Defaults to 2 (when multiline output is on).
+    /// * `max_line_length`: Defaults to 80 (when multiline output is on).
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_proj_string>
     pub fn as_proj_string(
         &self,
         string_type: ProjStringType,
+        use_approx_tmerc: bool,
         multiline: Option<bool>,
         indentation_width: Option<usize>,
         max_line_length: Option<usize>,
     ) -> miette::Result<String> {
         let mut options = crate::ProjOptions::new(6);
+        if use_approx_tmerc {
+            options.push(use_approx_tmerc, "USE_APPROX_TMERC");
+        }
         options
             .push_optional(multiline, "MULTILINE", OPTION_NO)
             .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
@@ -242,7 +346,15 @@ impl Proj<'_> {
         check_result!(self);
         Ok(result.expect("Error"))
     }
-
+    ///Get a PROJJSON string representation of an object.
+    ///
+    /// # Arguments
+    ///
+    /// * `multiline`: Defaults to `true`
+    /// * `indentation_width`: Defaults to 2 (when multiline output is on).
+    /// * `schema`: URL to PROJJSON schema. Can be set to empty string to
+    ///   disable it.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_as_projjson>
@@ -265,7 +377,10 @@ impl Proj<'_> {
         check_result!(self);
         Ok(result.expect("Error"))
     }
-    ///# References
+
+    ///Return the base CRS of a BoundCRS or a DerivedCRS/ProjectedCRS, or the
+    /// source CRS of a CoordinateOperation, or the CRS of a CoordinateMetadata.
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
     pub fn get_source_crs(&self) -> Option<Proj<'_>> {
@@ -275,8 +390,10 @@ impl Proj<'_> {
         }
         Some(Self::new(self.ctx, out_ptr).unwrap())
     }
-
-    ///# References
+    ///Return the hub CRS of a BoundCRS or the target CRS of a
+    /// CoordinateOperation.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
     pub fn get_target_crs(&self) -> Option<Proj<'_>> {
@@ -286,29 +403,44 @@ impl Proj<'_> {
         }
         Some(Self::new(self.ctx, out_ptr).unwrap())
     }
+
+    ///Suggests a database code for the passed object.
+    ///
+    ///Supported type of objects are PrimeMeridian, Ellipsoid, Datum,
+    /// DatumEnsemble, GeodeticCRS, ProjectedCRS, VerticalCRS, CompoundCRS,
+    /// BoundCRS, Conversion.
+    ///
+    /// # Arguments
+    ///
+    /// * `authority`: Authority name into which the object will be inserted.
+    /// * `numeric_code`: Whether the code should be numeric, or derived from
+    ///   the object name.
+    ///
     ///# References
     ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
-    pub fn identify(&self, auth_name: &str) -> miette::Result<Vec<Proj<'_>>> {
-        let mut confidence: Vec<i32> = Vec::new();
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_suggests_code_for>
+    pub fn suggests_code_for(&self, authority: &str, numeric_code: bool) -> String {
         let result = unsafe {
-            proj_sys::proj_identify(
+            proj_sys::proj_suggests_code_for(
                 self.ctx.ptr,
                 self.ptr(),
-                auth_name.to_cstring().as_ptr(),
+                authority.to_cstring().as_ptr(),
+                numeric_code as i32,
                 ptr::null(),
-                &mut confidence.as_mut_ptr(),
             )
         };
-        pj_obj_list_to_vec(self.ctx, result)
+        result.to_string().expect("Error")
     }
+    ///Returns whether a CRS is a derived CRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
     pub fn crs_is_derived(&self) -> bool {
         unsafe { proj_sys::proj_crs_is_derived(self.ctx.ptr, self.ptr()) != 0 }
     }
-
+    ///Get the geodeticCRS / geographicCRS from a CRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
@@ -316,6 +448,10 @@ impl Proj<'_> {
         let ptr = unsafe { proj_sys::proj_crs_get_geodetic_crs(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
+    /// Get the horizontal datum from a CRS.
+    ///
+    /// This function may return a Datum or DatumEnsemble object.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
@@ -323,6 +459,8 @@ impl Proj<'_> {
         let ptr = unsafe { proj_sys::proj_crs_get_horizontal_datum(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
+    ///Get a CRS component from a CompoundCRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
@@ -330,6 +468,8 @@ impl Proj<'_> {
         let ptr = unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx.ptr, self.ptr(), index as i32) };
         crate::Proj::new(self.ctx, ptr)
     }
+    ///Returns the datum of a SingleCRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
@@ -341,6 +481,10 @@ impl Proj<'_> {
         }
         Ok(Some(crate::Proj::new(self.ctx, ptr).unwrap()))
     }
+    /// Returns the datum ensemble of a SingleCRS.
+    ///
+    ///This function may return a Datum or DatumEnsemble object.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_ensemble>
@@ -352,6 +496,12 @@ impl Proj<'_> {
         }
         Ok(Some(crate::Proj::new(self.ctx, ptr).unwrap()))
     }
+    ///Returns a datum for a SingleCRS.
+    ///
+    ///If the SingleCRS has a datum, then this datum is returned. Otherwise,
+    /// the SingleCRS has a datum ensemble, and this datum ensemble is returned
+    /// as a regular datum instead of a datum ensemble.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_forced>
@@ -363,18 +513,23 @@ impl Proj<'_> {
         }
         Ok(Some(crate::Proj::new(self.ctx, ptr).unwrap()))
     }
+    ///Return whether a CRS has an associated PointMotionOperation.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_has_point_motion_operation>
     pub fn crs_has_point_motion_operation(&self) -> bool {
         unsafe { proj_sys::proj_crs_has_point_motion_operation(self.ctx.ptr, self.ptr()) != 0 }
     }
+    ///Return whether a CRS has an associated PointMotionOperation.
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member_count>
     pub fn datum_ensemble_get_member_count(&self) -> u16 {
         unsafe { proj_sys::proj_datum_ensemble_get_member_count(self.ctx.ptr, self.ptr()) as u16 }
     }
+    /// Returns the positional accuracy of the datum ensemble.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_accuracy>
@@ -386,6 +541,12 @@ impl Proj<'_> {
         }
         Ok(result)
     }
+    ///Returns a member from a datum ensemble.
+    ///
+    /// # Arguments
+    /// * member_index: Index of the datum member to extract (between 0 and
+    ///   proj_datum_ensemble_get_member_count()-1)
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
@@ -399,6 +560,10 @@ impl Proj<'_> {
         }
         Ok(Some(crate::Proj::new(self.ctx, ptr).unwrap()))
     }
+    ///Returns the frame reference epoch of a dynamic geodetic or vertical
+    ///
+    /// reference frame.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dynamic_datum_get_frame_reference_epoch>
@@ -411,6 +576,8 @@ impl Proj<'_> {
         }
         Ok(result)
     }
+    //Returns the coordinate system of a SingleCRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
@@ -418,6 +585,8 @@ impl Proj<'_> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordinate_system(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
+    ///Returns the type of the coordinate system.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_type>
@@ -431,6 +600,8 @@ impl Proj<'_> {
         }
         Ok(cs_type)
     }
+    ///Returns the number of axis of the coordinate system.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_count>
@@ -441,6 +612,13 @@ impl Proj<'_> {
         }
         Ok(count as u16)
     }
+    ///Returns information on an axis.
+    ///
+    /// # Arguments
+    ///
+    /// * `index`: Index of the coordinate system (between 0 and
+    ///   proj_cs_get_axis_count() - 1)
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>
@@ -480,6 +658,8 @@ impl Proj<'_> {
             unit_code.to_string().unwrap(),
         ))
     }
+    ///Get the ellipsoid from a CRS or a GeodeticReferenceFrame.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
@@ -487,6 +667,8 @@ impl Proj<'_> {
         let ptr = unsafe { proj_sys::proj_get_ellipsoid(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
+    ///Return ellipsoid parameters.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_ellipsoid_get_parameters>
@@ -515,12 +697,18 @@ impl Proj<'_> {
             inv_flattening,
         ))
     }
+    ///Get the name of the celestial body of this object.
+    ///
+    ///Object should be a CRS, Datum or Ellipsoid.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_name>
     pub fn get_celestial_body_name(&self) -> Option<String> {
         unsafe { proj_sys::proj_get_celestial_body_name(self.ctx.ptr, self.ptr()) }.to_string()
     }
+    ///Get the prime meridian of a CRS or a GeodeticReferenceFrame.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
@@ -528,6 +716,8 @@ impl Proj<'_> {
         let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
+    ///Return prime meridian parameters.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_prime_meridian_get_parameters>
@@ -554,6 +744,9 @@ impl Proj<'_> {
             unit_name.to_string().unwrap_or_default(),
         ))
     }
+    ///Return the Conversion of a DerivedCRS (such as a ProjectedCRS), or the
+    /// Transformation from the baseCRS to the hubCRS of a BoundCRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
@@ -561,6 +754,8 @@ impl Proj<'_> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordoperation(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
+    ///Return information on the operation method of the SingleOperation.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_method_info>
@@ -587,12 +782,24 @@ impl Proj<'_> {
             method_code.to_string().unwrap_or_default(),
         ))
     }
+    ///Return whether a coordinate operation can be instantiated as a PROJ
+    /// pipeline, checking in particular that referenced grids are available.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_is_instantiable>
     pub fn coordoperation_is_instantiable(&self) -> bool {
         unsafe { proj_sys::proj_coordoperation_is_instantiable(self.ctx.ptr, self.ptr()) != 0 }
     }
+    ///Return whether a coordinate operation has a "ballpark" transformation,
+    /// that is a very approximate one, due to lack of more accurate
+    /// transformations.
+    ///
+    ///Typically a null geographic offset between two horizontal datum, or a
+    /// null vertical offset (or limited to unit changes) between two vertical
+    /// datum. Errors of several tens to one hundred meters might be expected,
+    /// compared to more accurate transformations.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_has_ballpark_transformation>
@@ -601,6 +808,15 @@ impl Proj<'_> {
             proj_sys::proj_coordoperation_has_ballpark_transformation(self.ctx.ptr, self.ptr()) != 0
         }
     }
+    ///Return whether a coordinate operation requires coordinate tuples to have
+    /// a valid input time for the coordinate transformation to succeed. (this
+    /// applies for the forward direction)
+    ///
+    ///Note: in the case of a time-dependent Helmert transformation, this
+    /// function will return true, but when executing proj_trans(), execution
+    /// will still succeed if the time information is missing, due to the
+    /// transformation central epoch being used as a fallback.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_requires_per_coordinate_input_time>
@@ -612,12 +828,20 @@ impl Proj<'_> {
             ) != 0
         }
     }
+    ///Return the number of parameters of a SingleOperation.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_count>
     pub fn coordoperation_get_param_count(&self) -> u16 {
         unsafe { proj_sys::proj_coordoperation_get_param_count(self.ctx.ptr, self.ptr()) as u16 }
     }
+    ///Return the index of a parameter of a SingleOperation.
+    ///
+    /// # Arguments
+    ///
+    /// * `name`: Parameter name.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_index>
@@ -634,6 +858,12 @@ impl Proj<'_> {
         }
         Ok(result as u16)
     }
+    ///Return a parameter of a SingleOperation.
+    ///
+    /// # Arguments
+    ///
+    /// * `index`: Parameter index.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param>
@@ -682,6 +912,8 @@ impl Proj<'_> {
             UnitCategory::from_str(&(unit_category).to_string().unwrap()).into_diagnostic()?,
         ))
     }
+    ///Return the number of grids used by a CoordinateOperation.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used_count>
@@ -690,6 +922,12 @@ impl Proj<'_> {
             proj_sys::proj_coordoperation_get_grid_used_count(self.ctx.ptr, self.ptr()) as u16
         }
     }
+    ///Return a parameter of a SingleOperation.
+    ///
+    /// # Arguments
+    ///
+    /// * `index`: Parameter index.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_grid_used>
@@ -732,6 +970,8 @@ impl Proj<'_> {
             available != 0,
         ))
     }
+    ///Return the accuracy (in metre) of a coordinate operation.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_accuracy>
@@ -743,6 +983,9 @@ impl Proj<'_> {
         }
         Ok(result)
     }
+    ///Return the parameters of a Helmert transformation as WKT1 TOWGS84
+    /// values.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_towgs84_values>
@@ -759,6 +1002,9 @@ impl Proj<'_> {
         };
         to_wgs84
     }
+    ///Returns a PJ* coordinate operation object which represents the inverse
+    /// operation of the specified coordinate operation.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
@@ -766,6 +1012,10 @@ impl Proj<'_> {
         let ptr = unsafe { proj_sys::proj_coordoperation_create_inverse(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(self.ctx, ptr)
     }
+    ///Returns the number of steps of a concatenated operation.
+    ///
+    ///The input object must be a concatenated operation.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step_count>
@@ -777,6 +1027,10 @@ impl Proj<'_> {
         }
         Ok(result as u16)
     }
+    ///Returns a step of a concatenated operation.
+    ///
+    ///The input object must be a concatenated operation.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
@@ -786,6 +1040,8 @@ impl Proj<'_> {
         };
         crate::Proj::new(self.ctx, ptr)
     }
+    ///Instantiate a CoordinateMetadata object.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
@@ -794,6 +1050,10 @@ impl Proj<'_> {
             unsafe { proj_sys::proj_coordinate_metadata_create(self.ctx.ptr, self.ptr(), epoch) };
         crate::Proj::new(self.ctx, ptr)
     }
+    ///Return the coordinate epoch associated with a CoordinateMetadata.
+    ///
+    /// It may return a NaN value if there is no associated coordinate epoch.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_get_epoch>
@@ -831,26 +1091,7 @@ mod test_proj_basic {
         assert!(!deprecated);
         Ok(())
     }
-    #[test]
-    fn test_get_non_deprecated() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create("EPSG:4226")?;
-        let pj_list = pj.get_non_deprecated()?;
-        println!(
-            "{}",
-            pj_list.first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
-        );
-        assert!(!pj_list.is_empty());
-        Ok(())
-    }
+
     #[test]
     fn test_is_equivalent_to() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
@@ -977,7 +1218,7 @@ mod test_proj_basic {
     pub fn test_as_proj_string() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let proj_string = pj.as_proj_string(ProjStringType::Proj4, None, None, None)?;
+        let proj_string = pj.as_proj_string(ProjStringType::Proj4, true, None, None, None)?;
         println!("{proj_string}");
         assert_eq!(proj_string, "+proj=longlat +datum=WGS84 +no_defs +type=crs");
         Ok(())
@@ -1007,24 +1248,27 @@ mod test_proj_basic {
         assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");
         Ok(())
     }
+
     #[test]
-    fn test_identify() -> miette::Result<()> {
+    fn test_suggests_code_for() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create("EPSG:4326")?;
-        let pj_list = pj.identify("EPSG")?;
-        println!(
-            "{}",
-            pj_list.first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
-        );
-        assert!(!pj_list.is_empty());
+        let wkt = "GEOGCRS[\"myGDA2020\",
+                       DATUM[\"GDA2020\",
+                           ELLIPSOID[\"GRS_1980\",6378137,298.257222101,
+                               LENGTHUNIT[\"metre\",1]]],
+                       PRIMEM[\"Greenwich\",0,
+                           ANGLEUNIT[\"Degree\",0.0174532925199433]],
+                       CS[ellipsoidal,2],
+                           AXIS[\"geodetic latitude (Lat)\",north,
+                               ORDER[1],
+                               ANGLEUNIT[\"degree\",0.0174532925199433]],
+                           AXIS[\"geodetic longitude (Lon)\",east,
+                               ORDER[2],
+                               ANGLEUNIT[\"degree\",0.0174532925199433]]]";
+        println!("{wkt}");
+        let crs = ctx.create_from_wkt(wkt, None, None)?;
+        let code = crs.suggests_code_for("HOBU", true);
+        assert_eq!(code, "1");
         Ok(())
     }
     #[test]
@@ -1393,9 +1637,7 @@ mod test_proj_basic {
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
             .set_grid_availability_use(GridAvailabilityUse::Ignored)
             .create_operations(&source_crs, &target_crs)?;
-        let op = ops.first().unwrap();
-        let count = op.concatoperation_get_step_count()?;
-        assert_eq!(count, 3);
+        assert_eq!(ops.get_count(), 3);
         Ok(())
     }
     #[test]
@@ -1408,9 +1650,9 @@ mod test_proj_basic {
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
             .set_grid_availability_use(GridAvailabilityUse::Ignored)
             .create_operations(&source_crs, &target_crs)?;
-        let op = ops.first().unwrap();
-        let step = op.concatoperation_get_step(1)?;
-        let wkt = step.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        let wkt = ops
+            .get(0)?
+            .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{}", wkt);
         assert!(wkt.contains("GDA94 to GDA2020"));
         Ok(())

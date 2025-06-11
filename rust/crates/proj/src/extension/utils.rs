@@ -1,25 +1,3 @@
-pub(crate) fn pj_obj_list_to_vec(
-    ctx: &Context,
-    result: *const proj_sys::PJ_OBJ_LIST,
-) -> miette::Result<Vec<Proj<'_>>> {
-    if result.is_null() {
-        miette::bail!("PJ_OBJ_LIST is null.");
-    }
-    let count = unsafe { proj_sys::proj_list_get_count(result) };
-    if count < 1 {
-        miette::bail!("PJ_OBJ_LIST count 0.");
-    }
-    clerk::debug!("pj_obj_list count: {count}");
-    let mut proj_list = Vec::with_capacity(count as usize);
-    for i in 0..count {
-        proj_list.push(ctx.list_get(result, i)?);
-    }
-    unsafe {
-        proj_sys::proj_list_destroy(result.cast_mut());
-    }
-    Ok(proj_list)
-}
-
 macro_rules! readonly_struct {
     ($name:ident, $($struct_doc:expr)+, $({$field:ident: $type:ty $(, $field_doc:expr)?}),*) => {
         $(#[doc=$struct_doc])+
@@ -50,8 +28,6 @@ macro_rules! readonly_struct {
 }
 
 pub(crate) use readonly_struct;
-
-use crate::{Context, Proj};
 impl crate::Proj<'_> {
     /// Panic if a `Proj` object is not CRS.
     pub fn assert_crs(&self) -> miette::Result<&Self> {

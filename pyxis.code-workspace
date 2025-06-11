@@ -47,6 +47,9 @@
     ],
     "settings": {
         // ,"rust-analyzer.cargo.features": "all"
+        "[markdown]": {
+            "editor.wordWrap": "off",
+        },
         "rust-analyzer.cargo.extraEnv": {
             "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
         },
@@ -55,6 +58,6 @@
         },
         "rust-analyzer.server.extraEnv": {
             "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
-        }
+        },
     }
 }

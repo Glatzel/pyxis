@@ -29,12 +29,12 @@ impl crate::Area {
     /// In the case of an area of use crossing the antimeridian (longitude +/-
     /// 180 degrees), west_lon_degree will be greater than east_lon_degree.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * west_lon_degree: West longitude, in degrees. In `[-180,180]` range.
-    /// * south_lat_degree: South latitude, in degrees. In `[-90,90]` range.
-    /// * east_lon_degree: East longitude, in degrees. In `[-180,180]` range.
-    /// * north_lat_degree: North latitude, in degrees. In `[-90,90]` range.
+    /// * `west_lon_degree`: West longitude, in degrees. In `[-180,180]` range.
+    /// * `south_lat_degree`: South latitude, in degrees. In `[-90,90]` range.
+    /// * `east_lon_degree`: East longitude, in degrees. In `[-180,180]` range.
+    /// * `north_lat_degree`: North latitude, in degrees. In `[-90,90]` range.
     ///
     /// # References
     ///

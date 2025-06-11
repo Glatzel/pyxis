@@ -22,26 +22,8 @@ impl crate::Context {
         let _ = LogLevel::try_from(level).into_diagnostic()?;
         Ok(self)
     }
-    #[cfg(feature = "unrecommended")]
-    pub fn set_log_fn(
-        &self,
-        app_data: *mut c_void,
-        logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
-    ) -> miette::Result<&Self> {
-        self._set_log_fn(app_data, logf)
-    }
 
-    #[cfg(not(feature = "unrecommended"))]
     pub(crate) fn set_log_fn(
-        &self,
-        app_data: *mut c_void,
-        logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
-    ) -> miette::Result<&Self> {
-        self._set_log_fn(app_data, logf)
-    }
-
-    // Shared implementation
-    fn _set_log_fn(
         &self,
         app_data: *mut c_void,
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,

@@ -4,7 +4,7 @@ use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
 
 /// Get information about the current instance of the PROJ library.
 ///
-/// References
+/// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_info>
 pub fn info() -> Info {
@@ -39,7 +39,7 @@ impl crate::Proj<'_> {
 
 /// Get information about a specific grid.
 ///
-/// References
+/// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
 pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
@@ -54,8 +54,8 @@ pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
         src.gridname.to_string().unwrap(),
         src.filename.to_string().unwrap(),
         src.format.to_string().unwrap(),
-        src.lowerleft,
-        src.upperright,
+        (src.lowerleft.lam, src.lowerleft.phi),
+        (src.upperright.lam, src.upperright.phi),
         src.n_lon,
         src.n_lat,
         src.cs_lon,
@@ -64,7 +64,11 @@ pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
 }
 /// Get information about a specific init file.
 ///
-/// References
+/// # Arguments
+///
+/// * `initname`: Init file in the PROJ searchpath
+///
+/// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
 pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
@@ -107,9 +111,9 @@ mod test {
     fn test_pj_info() {
         let info = info();
         println!("{:?}", info);
-        assert_eq!(info.major(), &9);
-        assert_eq!(info.minor(), &6);
-        assert_eq!(info.patch(), &1);
+        assert_eq!(info.major(), &(crate::version::PROJ_VERSION_MAJOR as i32));
+        assert_eq!(info.minor(), &(crate::version::PROJ_VERSION_MINOR as i32));
+        assert_eq!(info.patch(), &(crate::version::PROJ_VERSION_PATCH as i32));
     }
 
     #[test]

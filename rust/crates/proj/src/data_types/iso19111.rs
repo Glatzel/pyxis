@@ -5,7 +5,7 @@ use envoy::ToCString;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{AsRefStr, EnumString};
 
-use crate::readonly_struct;
+use crate::{OwnedCStrings, Proj, readonly_struct};
 ///Guessed WKT "dialect".
 ///
 /// # Reference
@@ -730,4 +730,74 @@ pub struct InsertObjectSession<'a> {
 pub struct OperationFactoryContext<'a> {
     pub(crate) ctx: &'a crate::Context,
     pub(crate) ptr: *mut proj_sys::PJ_OPERATION_FACTORY_CONTEXT,
+}
+pub struct ProjObjList<'a> {
+    pub(crate) ctx: &'a crate::Context,
+    ptr: *mut proj_sys::PJ_OBJ_LIST,
+    count: usize,
+    pub(crate) _owned_cstrings: OwnedCStrings,
+}
+impl ProjObjList<'_> {
+    pub(crate) fn new(
+        ctx: &crate::Context,
+        ptr: *mut proj_sys::PJ_OBJ_LIST,
+    ) -> miette::Result<ProjObjList<'_>> {
+        if ptr.is_null() {
+            miette::bail!("PJ_OBJ_LIST pointer is null.");
+        }
+        let count = unsafe { proj_sys::proj_list_get_count(ptr) };
+        if count < 1 {
+            miette::bail!("PJ_OBJ_LIST count 0.");
+        }
+        clerk::debug!("pj_obj_list count: {count}");
+        Ok(ProjObjList {
+            ctx,
+            ptr,
+            count: count as usize,
+            _owned_cstrings: OwnedCStrings::new(),
+        })
+    }
+
+    /// Create a `ProjObjList` object from pointer, panic if pointer is null.
+    pub(crate) fn new_with_owned_cstrings(
+        ctx: &crate::Context,
+        ptr: *mut proj_sys::PJ_OBJ_LIST,
+        owned_cstrings: OwnedCStrings,
+    ) -> miette::Result<ProjObjList<'_>> {
+        if ptr.is_null() {
+            miette::bail!("PJ_OBJ_LIST pointer is null.");
+        }
+        let count = unsafe { proj_sys::proj_list_get_count(ptr) };
+        if count < 1 {
+            miette::bail!("PJ_OBJ_LIST count 0.");
+        }
+        clerk::debug!("pj_obj_list count: {count}");
+        Ok(ProjObjList {
+            ctx,
+            ptr,
+            count: count as usize,
+            _owned_cstrings: owned_cstrings,
+        })
+    }
+
+    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ_OBJ_LIST { self.ptr }
+    ///Return an object from the result set.
+    ///
+    /// # References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
+    pub fn get(&self, index: usize) -> miette::Result<Proj<'_>> {
+        if index > self.count {
+            miette::bail!("Error");
+        }
+        let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, index as i32) };
+
+        Proj::new_with_owned_cstrings(self.ctx, ptr, self._owned_cstrings.clone())
+    }
+    ///Return the number of objects in the result set.
+    ///
+    ///# References
+    ///
+    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
+    pub fn get_count(&self) -> usize { self.count }
 }

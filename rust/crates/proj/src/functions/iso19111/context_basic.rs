@@ -6,17 +6,26 @@ use std::str::FromStr;
 use envoy::{AsVecPtr, CStrListToVecString, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 
-use super::string_list_destroy;
 use crate::data_types::iso19111::*;
-use crate::{OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
+use crate::{OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Base functions
 impl crate::Context {
-    ///# References
+    ///Explicitly point to the main PROJ CRS and coordinate operation
+    /// definition database ("proj.db"), and potentially auxiliary databases
+    /// with same structure.
     ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_autoclose_database>
-    #[deprecated]
-    fn _set_autoclose_database(&self) { unimplemented!("Deprecated") }
-    ///# References
+    ///Starting with PROJ 8.1, if the auxDbPaths parameter is an empty array,
+    /// the PROJ_AUX_DB environment variable will be used, if set. It must
+    /// contain one or several paths. If several paths are provided, they must
+    /// be separated by the colon (:) character on Unix, and on Windows, by the
+    /// semi-colon (;) character.
+    ///
+    /// # Arguments
+    ///
+    /// * `db_path`: Path to main database.
+    /// * `aux_db_paths`: List of auxiliary database filenames, or `None`.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
     pub fn set_database_path(
@@ -47,6 +56,11 @@ impl crate::Context {
         }
         Ok(self)
     }
+    ///Returns the path to the database.
+    ///
+    ///The returned pointer remains valid while ctx is valid, and until
+    /// [`Self::set_database_path()`] is called.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_path>
@@ -57,6 +71,12 @@ impl crate::Context {
                 .unwrap_or_default(),
         )
     }
+    ///Return a metadata from the database.
+    ///
+    /// # Arguments
+    ///
+    /// * `key`: Metadata key. Must not be NULL
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
@@ -69,15 +89,25 @@ impl crate::Context {
         }
         .to_string()
     }
+    ///Return the database structure.
+    ///
+    ///Return SQL statements to run to initiate a new valid auxiliary empty
+    /// database. It contains definitions of tables, views and triggers, as well
+    /// as metadata for the version of the layout of the database.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
     pub fn get_database_structure(&self) -> miette::Result<Vec<String>> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
         let out_vec = ptr.to_vec_string();
-        string_list_destroy(ptr);
+        unsafe {
+            proj_sys::proj_string_list_destroy(ptr);
+        }
         Ok(out_vec)
     }
+    ///Guess the "dialect" of the WKT string.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
@@ -87,6 +117,26 @@ impl crate::Context {
         })
         .into_diagnostic()
     }
+    ///Instantiate an object from a WKT string.
+    ///
+    /// The returned object must be unreferenced with proj_destroy() after use.
+    /// It should be used by at most one thread at a time.
+    ///
+    ///The distinction between warnings and grammar errors is somewhat
+    /// artificial and does not tell much about the real criticity of the
+    /// non-compliance. Some warnings may be more concerning than some grammar
+    /// errors. Human expertise (or, by the time this comment will be read,
+    /// specialized AI) is generally needed to perform that assessment.
+    ///
+    /// # Arguments
+    ///
+    /// * `wkt`: WKT string
+    /// * `strict/: Defaults to `false`. When set to `true`, strict validation
+    ///   will be enabled.
+    /// * `unset_identifiers_if_incompatible_def`: Defaults to `true`. When set
+    ///   to `true`, object identifiers are unset when there is a contradiction
+    ///   between the definition from WKT and the one from the database.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_wkt>
@@ -125,6 +175,20 @@ impl crate::Context {
 
         Proj::new(self, ptr)
     }
+    ///Instantiate an object from a database lookup.
+    ///
+    /// The returned object must be unreferenced with proj_destroy() after use.
+    /// It should be used by at most one thread at a time.
+    ///
+    /// # Arguments
+    ///
+    /// * `auth_name`: Authority name
+    /// * `code`: Object code
+    /// * `category`: Object category
+    /// * `use_projalternative_grid_names`: Whether PROJ alternative grid names
+    ///   should be substituted to the official grid names. Only used on
+    ///   transformations
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_database>
@@ -147,6 +211,13 @@ impl crate::Context {
         };
         Proj::new(self, ptr)
     }
+    ///Get information for a unit of measure from a database lookup.
+    ///
+    /// # Arguments
+    ///
+    /// * `auth_name`: Authority name
+    /// * `code`: Unit of measure code
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>
@@ -178,6 +249,12 @@ impl crate::Context {
             UomCategory::from_str(&category.to_string().unwrap()).into_diagnostic()?,
         ))
     }
+    ///Get information for a grid from a database lookup.
+    ///
+    /// # Arguments
+    ///
+    /// * `grid_name`: Grid name
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_get_info_from_database>
@@ -212,38 +289,18 @@ impl crate::Context {
             available != 0,
         ))
     }
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
-    pub fn create_from_name(
-        &self,
-        auth_name: Option<&str>,
-        searched_name: &str,
-        types: Option<&[ProjType]>,
-        approximate_match: bool,
-        limit_result_count: usize,
-    ) -> miette::Result<Vec<Proj<'_>>> {
-        let (types, count) = types.map_or((None, 0), |types| {
-            let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
-            let count = types.len();
-            (Some(types), count)
-        });
-        let auth_name = auth_name.map(|s| s.to_cstring());
-        let result = unsafe {
-            proj_sys::proj_create_from_name(
-                self.ptr,
-                auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                searched_name.to_cstring().as_ptr(),
-                types.map_or(ptr::null(), |types| types.as_ptr()),
-                count,
-                approximate_match as i32,
-                limit_result_count,
-                ptr::null(),
-            )
-        };
-        pj_obj_list_to_vec(self, result)
-    }
 
+    ///Returns a list of geoid models available for that crs.
+    ///
+    ///The list includes the geoid models connected directly with the crs, or
+    /// via "Height Depth Reversal" or "Change of Vertical Unit"
+    /// transformations.
+    ///
+    /// # Arguments
+    ///
+    /// * auth_name: Authority name
+    /// * code: Object code
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_geoid_models_from_database>
@@ -264,9 +321,13 @@ impl crate::Context {
             miette::bail!("Error");
         }
         let out_vec = ptr.to_vec_string();
-        string_list_destroy(ptr);
+        unsafe {
+            proj_sys::proj_string_list_destroy(ptr);
+        }
         Ok(out_vec)
     }
+    ///  Return the list of authorities used in the database.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_authorities_from_database>
@@ -276,9 +337,20 @@ impl crate::Context {
             miette::bail!("Error");
         }
         let out_vec = ptr.to_vec_string();
-        string_list_destroy(ptr);
+        unsafe {
+            proj_sys::proj_string_list_destroy(ptr);
+        }
         Ok(out_vec)
     }
+    /// Returns the set of authority codes of the given object type.
+    ///
+    /// # Arguments
+    ///
+    /// * `auth_name`: Authority name
+    /// * `type`: Object type.
+    /// * `allow_deprecated`: whether we should return deprecated objects as
+    ///   well.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_codes_from_database>
@@ -300,9 +372,20 @@ impl crate::Context {
             miette::bail!("Error");
         }
         let out_vec = ptr.to_vec_string();
-        string_list_destroy(ptr);
+        unsafe {
+            proj_sys::proj_string_list_destroy(ptr);
+        }
         Ok(out_vec)
     }
+    ///Enumerate celestial bodies from the database.
+    ///
+    /// # Arguments
+    ///
+    /// * `auth_name`: Authority name, used to restrict the search. Or `None`
+    ///   for all authorities.
+    /// * `out_result_count`: Output parameter pointing to an integer to receive
+    ///   the size of the result list. Might be `None`
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
@@ -333,6 +416,22 @@ impl crate::Context {
         unsafe { proj_sys::proj_celestial_body_list_destroy(ptr) };
         Ok(out_vec)
     }
+    ///Enumerate CRS objects from the database, taking into account various
+    /// criteria.
+    ///
+    /// When no filter parameters are set, this is functionally equivalent to
+    /// proj_get_codes_from_database(), instantiating a PJ* object for each of
+    /// the codes with proj_create_from_database() and retrieving information
+    /// with the various getters. However this function will be much faster.
+    ///
+    /// # Arguments
+    ///
+    /// * auth_name: Authority name, used to restrict the search. Or `None` for
+    ///   all authorities.
+    /// * params: Additional criteria, or `None`. If not-None, params SHOULD
+    ///   have been allocated by proj_get_crs_list_parameters_create(), as the
+    ///   PROJ_CRS_LIST_PARAMETERS structure might grow over time.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
@@ -406,6 +505,16 @@ impl crate::Context {
         unsafe { proj_sys::proj_crs_info_list_destroy(ptr) };
         Ok(out_vec)
     }
+    ///Enumerate units from the database, taking into account various criteria.
+    ///
+    /// # Arguments
+    ///
+    /// * `auth_name`: Authority name, used to restrict the search. Or `None`
+    ///   for all authorities.
+    /// * `category`: Filter by category, if this parameter is not `None`.
+    /// * `allow_deprecated`: whether we should return deprecated objects as
+    ///   well.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_units_from_database>
@@ -446,40 +555,11 @@ impl crate::Context {
         unsafe { proj_sys::proj_unit_list_destroy(ptr) };
         Ok(out_vec)
     }
-    ///# References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_suggests_code_for>
-    pub fn suggests_code_for(&self, object: &Proj, authority: &str, numeric_code: bool) -> String {
-        let result = unsafe {
-            proj_sys::proj_suggests_code_for(
-                self.ptr,
-                object.ptr(),
-                authority.to_cstring().as_ptr(),
-                numeric_code as i32,
-                ptr::null(),
-            )
-        };
-        result.to_string().expect("Error")
-    }
-    ///# References
-    ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
-    pub(crate) fn list_get(
-        &self,
-        result: *const proj_sys::PJ_OBJ_LIST,
-        index: i32,
-    ) -> miette::Result<Proj<'_>> {
-        let ptr = unsafe { proj_sys::proj_list_get(self.ptr, result, index) };
-        Proj::new(self, ptr)
-    }
-    ///# References
-    ///
-    /// <>
-    fn _get_suggested_operation(&self) { todo!() }
 }
 
 #[cfg(test)]
 mod test {
+    use proj_sys::{PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, PROJ_VERSION_PATCH};
     use strum::IntoEnumIterator;
 
     use super::*;
@@ -499,68 +579,15 @@ mod test {
     fn test_get_database_metadata() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::DatabaseLayoutVersionMajor)
-            .unwrap();
-        assert_eq!(data, "1");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::DatabaseLayoutVersionMinor)
-            .unwrap();
-        assert_eq!(data, "5");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::EpsgVersion)
-            .unwrap();
-        assert_eq!(data, "v12.012");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::EpsgDate)
-            .unwrap();
-        assert_eq!(data, "2025-05-21");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::EsriVersion)
-            .unwrap();
-        assert_eq!(data, "ArcGIS Pro 3.5");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::EsriDate)
-            .unwrap();
-        assert_eq!(data, "2025-05-11");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::IgnfSource)
-            .unwrap();
-        assert_eq!(
-            data,
-            "https://raw.githubusercontent.com/rouault/proj-resources/master/IGNF.v3.1.0.xml"
-        );
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::IgnfVersion)
-            .unwrap();
-        assert_eq!(data, "3.1.0");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::IgnfDate)
-            .unwrap();
-        assert_eq!(data, "2019-05-24");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::NkgSource)
-            .unwrap();
-        assert_eq!(
-            data,
-            "https://github.com/NordicGeodesy/NordicTransformations"
-        );
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::NkgVersion)
-            .unwrap();
-        assert_eq!(data, "1.0.w");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::NkgDate)
-            .unwrap();
-        assert_eq!(data, "2025-02-13");
-        let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)
             .unwrap();
-        assert_eq!(data, "9.6.1");
-        let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::ProjDataVersion)
-            .unwrap();
-        assert_eq!(data, "1.22");
-
+        assert_eq!(
+            data,
+            format!(
+                "{}.{}.{}",
+                PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, PROJ_VERSION_PATCH
+            )
+        );
         Ok(())
     }
     #[test]
@@ -587,8 +614,22 @@ mod test {
     #[test]
     fn test_create_from_wkt() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
+        //invalid
         assert!(ctx.create_from_wkt("invalid wkt", None, None).is_err());
-        ctx.create_from_wkt("ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n    LENGTHUNIT[\"metre\",1],\n    ID[\"EPSG\",7030]]", None, None)?;
+        //valid
+        ctx.create_from_wkt(
+            &ctx.create("EPSG:4326")?.as_wkt(
+                WktType::Wkt2_2019,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            )?,
+            None,
+            None,
+        )?;
         Ok(())
     }
     #[test]
@@ -628,25 +669,7 @@ mod test {
         assert!(info.available());
         Ok(())
     }
-    #[test]
-    fn test_create_from_name() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj_list = ctx.create_from_name(None, "WGS 84", None, false, 0)?;
-        println!(
-            "{}",
-            pj_list.first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
-        );
-        assert!(!pj_list.is_empty());
-        Ok(())
-    }
+
     #[test]
     fn test_get_geoid_models_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
@@ -703,28 +726,7 @@ mod test {
         assert!(!list.is_empty());
         Ok(())
     }
-    #[test]
-    fn test_suggests_code_for() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let wkt = "GEOGCRS[\"myGDA2020\",
-                       DATUM[\"GDA2020\",
-                           ELLIPSOID[\"GRS_1980\",6378137,298.257222101,
-                               LENGTHUNIT[\"metre\",1]]],
-                       PRIMEM[\"Greenwich\",0,
-                           ANGLEUNIT[\"Degree\",0.0174532925199433]],
-                       CS[ellipsoidal,2],
-                           AXIS[\"geodetic latitude (Lat)\",north,
-                               ORDER[1],
-                               ANGLEUNIT[\"degree\",0.0174532925199433]],
-                           AXIS[\"geodetic longitude (Lon)\",east,
-                               ORDER[2],
-                               ANGLEUNIT[\"degree\",0.0174532925199433]]]";
-        println!("{wkt}");
-        let crs = ctx.create_from_wkt(wkt, None, None)?;
-        let code = ctx.suggests_code_for(&crs, "HOBU", true);
-        assert_eq!(code, "1");
-        Ok(())
-    }
+
     #[test]
     fn test_get_units_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;

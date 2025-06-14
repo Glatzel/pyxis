@@ -15,13 +15,12 @@ $code = $code + $LASTEXITCODE
 Write-Output "::endgroup::"
 
 Write-Output "::group::report"
-cargo +nightly llvm-cov report
-Write-Output "::endgroup::"
-
-Write-Output "::group::lcov"
 if ( $env:CI ) {
     cargo +nightly llvm-cov report --lcov --output-path lcov.info
-    cargo +nightly llvm-cov report --html --output-path coverage.html
+}
+else {
+    cargo +nightly llvm-cov report
+    cargo +nightly llvm-cov report --html
 }
 Write-Output "::endgroup::"
 

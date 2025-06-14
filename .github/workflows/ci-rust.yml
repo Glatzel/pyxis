@@ -61,21 +61,3 @@ jobs:
       - name: cargo-doc
         run: ${{env.RUST_ROOT}}/scripts/cargo-doc.ps1
         shell: pwsh
-
-  cargo-bench:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - run: cargo install cargo-codspeed --locked
-
-      - name: Build the benchmark target(s)
-        run: cargo codspeed build -p pyxis
-        working-directory: ${{env.RUST_ROOT}}
-
-      - name: Run the benchmarks
-        uses: CodSpeedHQ/action@v3
-        with:
-          run: cargo codspeed run
-          token: ${{ secrets.CODSPEED_TOKEN }}
-          working-directory: ${{env.RUST_ROOT}}

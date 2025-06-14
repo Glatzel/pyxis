@@ -16,10 +16,8 @@ pixi run -e test pytest `
     ./tests `
     -v `
     --durations=10 `
-    --junitxml=junit.xml `
     -o junit_family=legacy `
     --cov `
     --cov-report term `
-    --cov-report=xml:coverage.xml `
     --cov-report=html:htmlcov
 Set-Location $ROOT

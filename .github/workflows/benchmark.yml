@@ -42,7 +42,7 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v3
         env:
-          PYTHONPATH: ./python
+          PYTHONPATH: ./
         with:
           token: ${{ secrets.CODSPEED_TOKEN }}
           run: pixi run -e bench pytest ./benches --codspeed

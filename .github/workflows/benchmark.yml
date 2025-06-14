@@ -2,6 +2,11 @@ name: benchmark
 
 on:
   pull_request:
+    types:
+      - edited
+      - synchronize
+      - labeled
+      
   push:
     branches: [main]
 

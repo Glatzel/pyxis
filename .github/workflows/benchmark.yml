@@ -1,0 +1,47 @@
+name: benchmark
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions: read-all
+
+jobs:
+  cargo-bench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo install cargo-codspeed --locked
+
+      - name: Build the benchmark target(s)
+        run: cargo codspeed build -p pyxis
+        working-directory: ./rust
+
+      - name: Run the benchmarks
+        uses: CodSpeedHQ/action@v3
+        with:
+          run: cargo codspeed run
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          working-directory: ./rust
+  pytest-benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.8
+        with:
+          run-install: false
+
+      - run: ./python/scripts/maturin-develop.ps1 -config release
+        shell: pwsh
+
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v3
+        env:
+          PYTHONPATH: ./python
+        with:
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          run: pixi run -e bench pytest ./benches --codspeed
+          working-directory: ./python

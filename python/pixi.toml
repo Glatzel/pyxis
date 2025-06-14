@@ -13,7 +13,7 @@ rattler-build = "==0.43.1"
 [feature.deps.dependencies]
 lazy-loader = "==0.4"
 nomkl = "==1.0"
-numpy = "==2.3.0"
+numpy = "==2.2.0"
 scipy = "==1.15.2"
 
 [feature.test.dependencies]

@@ -4,6 +4,7 @@ use std::path::PathBuf;
 
 fn main() {
     let workspace_root = env::var("CARGO_WORKSPACE_DIR").unwrap();
+
     // run pixi install
     std::process::Command::new("pixi")
         .arg("install")
@@ -51,20 +52,6 @@ fn main() {
             env::set_var("PKG_CONFIG_PATH", &default_pkg_config_path);
         }
     }
-
-    // check LIBCLANG_PATH
-    #[cfg(target_os = "windows")]
-    match env::var("LIBCLANG_PATH") {
-        Ok(path) => println!("Found `LIBCLANG_PATH`: {path}"),
-        Err(_) => {
-            let path = "C:/Program Files/LLVM/bin";
-            if PathBuf::from(path).exists() {
-                println!("cargo:rustc-env=LIBCLANG_PATH={path}");
-            } else {
-                panic!("`LIBCLANG_PATH` not found.");
-            }
-        }
-    };
 
     // Link
     let pk_proj = link_lib("proj", "proj");

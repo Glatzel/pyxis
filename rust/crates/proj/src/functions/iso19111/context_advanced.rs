@@ -3,9 +3,16 @@ use std::ptr;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
-use crate::{Context, OwnedCStrings, Proj, ProjOptions, pj_obj_list_to_vec};
+use crate::{Context, OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
 impl Context {
+    ///Instantiate a CoordinateSystem.
+    ///
+    /// # Arguments
+    ///
+    /// * `type`: Coordinate system type.
+    /// * `axis`: Axis description (array of size axis_count)
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
@@ -36,6 +43,14 @@ impl Context {
         };
         Proj::new(self, ptr)
     }
+    ///Instantiate a CartesiansCS 2D.
+    ///
+    /// # Arguments
+    ///
+    /// * `type`: Coordinate system type.
+    /// * `unit_name`: Unit name.
+    /// * `unit_conv_factor`: Unit conversion factor to SI.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
@@ -56,6 +71,15 @@ impl Context {
         };
         Proj::new(self, ptr)
     }
+    ///Instantiate a Ellipsoidal 2D.
+    ///
+    /// # Arguments
+    ///
+    /// * `type`: Coordinate system type.
+    /// * `unit_name`: Name of the angular units. Or `None` for Degree
+    /// * `unit_conv_factor`: Conversion factor from the angular unit to radian.
+    ///   Or 0 for Degree if unit_name == `None`. Otherwise should be not `None`
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
@@ -76,6 +100,22 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a Ellipsoidal 3D.
+    ///
+    /// # Arguments
+    ///
+    /// * `type`: Coordinate system type.
+    /// * `horizontal_angular_unit_name`: Name of the angular units. Or `None`
+    ///   for Degree.
+    /// * `horizontal_angular_unit_conv_factor`: Conversion factor from the
+    ///   angular unit to radian. Or 0 for Degree if
+    ///   horizontal_angular_unit_name == `None`. Otherwise should be not `None`
+    /// * `vertical_linear_unit_name`: Vertical linear unit name. Or `None` for
+    ///   Metre.
+    /// * `vertical_linear_unit_conv_factor`: Vertical linear unit conversion
+    ///   factor to metre. Or 0 for Metre if vertical_linear_unit_name ==
+    ///   `None`. Otherwise should be not `None`
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
@@ -101,28 +141,25 @@ impl Context {
         };
         Proj::new(self, ptr)
     }
-    ///# References
+
+    ///Create a GeographicCRS.
     ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
-    pub fn query_geodetic_crs_from_datum(
-        &self,
-        crs_auth_name: Option<&str>,
-        datum_auth_name: &str,
-        datum_code: &str,
-        crs_type: Option<&str>,
-    ) -> miette::Result<Vec<Proj<'_>>> {
-        let mut owned = OwnedCStrings::new();
-        let ptr = unsafe {
-            proj_sys::proj_query_geodetic_crs_from_datum(
-                self.ptr,
-                owned.push_option(crs_auth_name),
-                datum_auth_name.to_cstring().as_ptr(),
-                datum_code.to_cstring().as_ptr(),
-                owned.push_option(crs_type),
-            )
-        };
-        pj_obj_list_to_vec(self, ptr)
-    }
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_name`: Name of the GeodeticReferenceFrame. Or `None`
+    /// * `ellps_name`: Name of the Ellipsoid. Or `None`
+    /// * `semi_major_metre`: Ellipsoid semi-major axis, in metres.
+    /// * `inv_flattening`: Ellipsoid inverse flattening. Or 0 for a sphere.
+    /// * `prime_meridian_name`: Name of the PrimeMeridian. Or `None`
+    /// * `prime_meridian_offset`: Offset of the prime meridian, expressed in
+    ///   the specified angular units.
+    /// * `pm_angular_units`: Name of the angular units. Or `None` for Degree
+    /// * `pm_angular_units_conv`: Conversion factor from the angular unit to
+    ///   radian. Or 0 for Degree if pm_angular_units == `None`. Otherwise
+    ///   should be not `None`
+    /// * `ellipsoidal_cs`: Coordinate system.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs>
@@ -157,6 +194,15 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Create a GeographicCRS.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_or_datum_ensemble`: Datum or DatumEnsemble (DatumEnsemble
+    ///   possible since 7.2).
+    /// * `ellipsoidal_cs`: Coordinate system.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs_from_datum>
@@ -177,6 +223,27 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Create a GeodeticCRS of geocentric type.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_name`: Name of the GeodeticReferenceFrame. Or `None`
+    /// * `ellps_name`: Name of the Ellipsoid. Or `None`
+    /// * `semi_major_metre`: Ellipsoid semi-major axis, in metres.
+    /// * `inv_flattening`: Ellipsoid inverse flattening. Or 0 for a sphere.
+    /// * `prime_meridian_name`: Name of the PrimeMeridian. Or `None`
+    /// * `prime_meridian_offset`: Offset of the prime meridian, expressed in
+    ///   the specified angular units.
+    /// * `angular_units`: Name of the angular units. Or `None` for Degree
+    /// * `angular_units_conv`: Conversion factor from the angular unit to
+    ///   radian. Or 0 for Degree if angular_units == `None`. Otherwise should
+    ///   be not `None`
+    /// * `linear_units`: Name of the linear units. Or `None` for Metre
+    /// * `linear_units_conv`: Conversion factor from the linear unit to metre.
+    ///   Or 0 for Metre if linear_units == `None`. Otherwise should be not
+    ///   `None`
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geocentric_crs>
@@ -213,6 +280,18 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Create a GeodeticCRS of geocentric type.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_or_datum_ensemble`: Datum or DatumEnsemble (DatumEnsemble
+    ///   possible since 7.2).
+    /// * `linear_units`: Name of the linear units. Or `None` for Metre
+    /// * `linear_units_conv`: Conversion factor from the linear unit to metre.
+    ///   Or 0 for Metre if linear_units == `None`. Otherwise should be not
+    ///   `None`
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geocentric_crs_from_datum>
@@ -235,6 +314,16 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Create a DerivedGeograhicCRS.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `base_geographic_crs`: Base Geographic CRS.
+    /// * `conversion`: Conversion from the base Geographic to the
+    ///   DerivedGeograhicCRS.
+    /// * `ellipsoidal_cs`: Coordinate system.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_derived_geographic_crs>
@@ -257,26 +346,13 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
-    ///# References
+
+    ///Instantiate a EngineeringCRS with just a name.
     ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_projected_3D_crs_from_2D>
-    pub fn crs_create_projected_3d_crs_from_2d(
-        &self,
-        crs_name: Option<&str>,
-        projected_2d_crs: &Proj,
-        geog_3d_crs: Option<&Proj>,
-    ) -> miette::Result<Proj<'_>> {
-        let crs_name = crs_name.map(|s| s.to_cstring());
-        let ptr = unsafe {
-            proj_sys::proj_crs_create_projected_3D_crs_from_2D(
-                self.ptr,
-                crs_name.map_or(ptr::null(), |s| s.as_ptr()),
-                projected_2d_crs.ptr(),
-                geog_3d_crs.map_or(ptr::null(), |crs| crs.ptr()),
-            )
-        };
-        Proj::new(self, ptr)
-    }
+    /// # Arguments
+    ///
+    /// `crs_name`: CRS name. Or `None`.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
@@ -286,7 +362,18 @@ impl Context {
             unsafe { proj_sys::proj_create_engineering_crs(self.ptr, owned.push_option(crs_name)) };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a EngineeringCRS with just a name.
+    ///
     ///# References
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_name`: Name of the VerticalReferenceFrame. Or `None`
+    /// * `linear_units`: Name of the linear units. Or `None` for Metre
+    /// * `linear_units_conv`: Conversion factor from the linear unit to metre.
+    ///   Or 0 for Metre if linear_units == `None`. Otherwise should be not
+    ///   `None`
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_vertical_crs>
     pub fn create_vertical_crs(
@@ -308,6 +395,34 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Create a VerticalCRS.
+    ///
+    /// This is an extended (_ex) version of [`Self::create_vertical_crs()`]
+    /// that adds the capability of defining a geoid model.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `datum_name`: Name of the VerticalReferenceFrame. Or `None`
+    /// * `datum_auth_name`: Authority name of the VerticalReferenceFrame. Or
+    ///   `None`
+    /// * `datum_code`: Code of the VerticalReferenceFrame. Or `None`
+    /// * `linear_units`: Name of the linear units. Or `None` for Metre
+    /// * `linear_units_conv`: Conversion factor from the linear unit to metre.
+    ///   Or 0 for Metre if linear_units == `None`. Otherwise should be not
+    ///   `None`
+    /// * `geoid_model_name`: Geoid model name, or `None`. Can be a name from
+    ///   the geoid_model name or a string "PROJ foo.gtx"
+    /// * `geoid_model_auth_name`: Authority name of the transformation for the
+    ///   geoid model. or `None`
+    /// * `geoid_model_code`: Code of the transformation for the geoid model. or
+    ///   `None`
+    /// * `geoid_geog_crs`: Geographic CRS for the geoid transformation, or
+    ///   `None`.
+    /// * `options`: `None`-terminated list of strings with "KEY=VALUE" format.
+    ///   or `None`. The currently recognized option is ACCURACY=value, where
+    ///   value is in metre.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_vertical_crs_ex>
@@ -346,6 +461,14 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Create a CompoundCRS.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: Name of the GeographicCRS. Or `None`
+    /// * `horiz_crs`: Horizontal CRS.
+    /// * `vert_crs`: Vertical CRS.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_compound_crs>
@@ -366,6 +489,19 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a Conversion.
+    ///
+    /// # Arguments
+    ///
+    /// * `name`: Conversion name. Or `None`.
+    /// * `auth_name`: Conversion authority name. Or `None`.
+    /// * `code`: Conversion code. Or `None`.
+    /// * `method_name`: Method name. Or `None`.
+    /// * `method_auth_name`: Method authority name. Or `None`.
+    /// * `method_code`: Method code. Or `None`.
+    /// * `param_count`: Number of parameters (size of params argument)
+    /// * `params`: Parameter descriptions (array of size param_count)
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion>
@@ -407,6 +543,25 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a Transformation.
+    ///
+    /// # Arguments
+    ///
+    /// * `name`: Transformation name. Or `None`.
+    /// * `auth_name`: Transformation authority name. Or `None`.
+    /// * `code`: Transformation code. Or `None`.
+    /// * `source_crs`: Object of type CRS representing the source CRS.
+    /// * `target_crs`: Object of type CRS representing the target CRS.
+    /// * `interpolation_crs`: Object of type CRS representing the interpolation
+    ///   CRS. Or `None`.
+    /// * `method_name`: Method name. Or `None`.
+    /// * `method_auth_name`: Method authority name. Or `None`.
+    /// * `method_code`: Method code. Or `None`.
+    /// * `param_count`: Number of parameters (size of params argument)
+    /// * `params`: Parameter descriptions (array of size param_count)
+    /// * `accuracy`: Accuracy of the transformation in meters. A negative
+    ///   values means unknown.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_transformation>
@@ -458,7 +613,15 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
-
+    ///Return an equivalent projection.
+    ///
+    /// # Arguments
+    ///
+    /// * `crs_name`: CRS name. Or `None`
+    /// * `geodetic_crs`: Base GeodeticCRS.
+    /// * `conversion`: Conversion.
+    /// * `coordinate_system`: Cartesian coordinate system.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_projected_crs>
@@ -481,6 +644,14 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Returns a BoundCRS.
+    ///
+    /// # Arguments
+    ///
+    /// * `base_crs`: Base CRS
+    /// * `hub_crs`: Hub CRS
+    /// * `transformation`: Transformation
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs>
@@ -500,7 +671,16 @@ impl Context {
         };
         Proj::new(self, ptr)
     }
-    ///# References
+    ///Returns potentially a BoundCRS, with a transformation to `EPSG:4326`,
+    /// wrapping this CRS.
+    ///
+    /// # Arguments
+    ///
+    /// * `vert_crs`: Object of type VerticalCRS
+    /// * `hub_geographic_3D_crs`: Object of type Geographic 3D CRS
+    /// * `grid_name`: Grid name (typically a .gtx file)
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_vertical_crs>
     pub fn crs_create_bound_vertical_crs(
@@ -519,6 +699,9 @@ impl Context {
         };
         Proj::new(self, ptr)
     }
+    ///Instantiate a ProjectedCRS with a Universal Transverse Mercator
+    /// conversion.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_utm>
@@ -530,6 +713,9 @@ impl Context {
             unsafe { proj_sys::proj_create_conversion_utm(self.ptr, zone as i32, north as i32) };
         Proj::new(self, ptr)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Transverse
+    /// Mercator projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_transverse_mercator>
@@ -562,7 +748,10 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
-    ///# References
+    ///Instantiate a ProjectedCRS with a conversion based on the Gauss
+    /// Schreiber Transverse Mercator projection method.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gauss_schreiber_transverse_mercator>
     pub fn create_conversion_gauss_schreiber_transverse_mercator(
@@ -594,6 +783,12 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Transverse
+    /// Mercator South Orientated projection method.
+    ///
+    /// # Arguments
+    ///
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_transverse_mercator_south_oriented>
@@ -626,6 +821,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Two Point
+    /// Equidistant projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_two_point_equidistant>
@@ -660,6 +858,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Tunisia Mining
+    /// Grid projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mapping_grid>
@@ -690,6 +891,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Tunisia Mining
+    /// Grid projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mining_grid>
@@ -720,6 +924,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Albers Conic
+    /// Equal Area projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_albers_equal_area>
@@ -754,6 +961,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
+    /// Conformal 1SP projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp>
@@ -786,6 +996,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
+    /// Conformal (1SP Variant B) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp_variant_b>
@@ -820,6 +1033,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
+    /// Conformal (2SP) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp>
@@ -854,6 +1070,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
+    /// Conformal (2SP Michigan) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_michigan>
@@ -890,6 +1109,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
+    /// Conformal (2SP Belgium) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_belgium>
@@ -924,6 +1146,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Modified
+    /// Azimuthal Equidistant projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_azimuthal_equidistant>
@@ -954,6 +1179,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Guam
+    /// Projection projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_guam_projection>
@@ -984,6 +1212,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Bonne
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_bonne>
@@ -1014,7 +1245,10 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
-    ///# References
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert
+    /// Cylindrical Equal Area (Spherical) projection method.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area_spherical>
     pub fn create_conversion_lambert_cylindrical_equal_area_spherical(
@@ -1044,6 +1278,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert
+    /// Cylindrical Equal Area (ellipsoidal form) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area>
@@ -1074,6 +1311,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the
+    /// Cassini-Soldner projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_cassini_soldner>
@@ -1104,6 +1344,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Equidistant
+    /// Conic projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_conic>
@@ -1138,6 +1381,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Eckert I
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_i>
@@ -1166,7 +1412,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
-    ///# References
+    ///Instantiate a ProjectedCRS with a conversion based on the Eckert II
+    /// projection method. # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_ii>
     pub fn create_conversion_eckert_ii(
@@ -1194,6 +1441,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Eckert III
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_iii>
@@ -1222,6 +1472,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Eckert IV
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_iv>
@@ -1250,6 +1503,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Eckert V
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_v>
@@ -1278,6 +1534,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Eckert VI
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_vi>
@@ -1306,6 +1565,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Equidistant
+    /// Cylindrical projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_cylindrical>
@@ -1336,6 +1598,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Equidistant
+    /// Cylindrical (Spherical) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_cylindrical_spherical>
@@ -1366,6 +1631,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Gall
+    /// (Stereographic) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gall>
@@ -1394,6 +1662,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Goode
+    /// Homolosine projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_goode_homolosine>
@@ -1422,6 +1693,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Interrupted
+    /// Goode Homolosine projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_interrupted_goode_homolosine>
@@ -1450,6 +1724,10 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Geostationary
+    /// Satellite View projection method, with the sweep angle axis of the
+    /// viewing instrument being x.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_geostationary_satellite_sweep_x>
@@ -1480,6 +1758,10 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Geostationary
+    /// Satellite View projection method, with the sweep angle axis of the
+    /// viewing instrument being y.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_geostationary_satellite_sweep_y>
@@ -1510,6 +1792,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Gnomonic
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gnomonic>
@@ -1540,6 +1825,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Hotine Oblique
+    /// Mercator (Variant A) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_variant_a>
@@ -1576,6 +1864,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Hotine Oblique
+    /// Mercator (Variant B) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_variant_b>
@@ -1612,6 +1903,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    /// Instantiate a ProjectedCRS with a conversion based on the Hotine Oblique
+    /// Mercator Two Point Natural Origin projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin>
@@ -1650,6 +1944,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Laborde
+    /// Oblique Mercator projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_laborde_oblique_mercator>
@@ -1684,6 +1981,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the International
+    /// Map of the World Polyconic projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_international_map_world_polyconic>
@@ -1716,6 +2016,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Krovak (north
+    /// oriented) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_krovak_north_oriented>
@@ -1752,6 +2055,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Krovak
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_krovak>
@@ -1788,6 +2094,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Lambert
+    /// Azimuthal Equal Area projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_azimuthal_equal_area>
@@ -1818,6 +2127,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Miller
+    /// Cylindrical projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_miller_cylindrical>
@@ -1846,6 +2158,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Mercator
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mercator_variant_a>
@@ -1878,6 +2193,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Mercator
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mercator_variant_b>
@@ -1908,6 +2226,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Popular
+    /// Visualisation Pseudo Mercator projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_popular_visualisation_pseudo_mercator>
@@ -1938,6 +2259,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Mollweide
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mollweide>
@@ -1966,6 +2290,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the New Zealand
+    /// Map Grid projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_new_zealand_mapping_grid>
@@ -1996,6 +2323,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Oblique
+    /// Stereographic (Alternative) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_oblique_stereographic>
@@ -2026,6 +2356,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Orthographic
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_orthographic>
@@ -2056,6 +2389,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Local
+    /// Orthographic projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_local_orthographic>
@@ -2090,6 +2426,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the American
+    /// Polyconic projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_american_polyconic>
@@ -2120,6 +2459,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Polar
+    /// Stereographic (Variant A) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_polar_stereographic_variant_a>
@@ -2152,6 +2494,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Polar
+    /// Stereographic (Variant B) projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_polar_stereographic_variant_b>
@@ -2182,6 +2527,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Robinson
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_robinson>
@@ -2210,6 +2558,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Sinusoidal
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_sinusoidal>
@@ -2238,6 +2589,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Stereographic
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_stereographic>
@@ -2270,6 +2624,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Van der
+    /// Grinten projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_van_der_grinten>
@@ -2298,6 +2655,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Wagner I
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_i>
@@ -2326,6 +2686,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Wagner II
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_ii>
@@ -2354,6 +2717,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Wagner III
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_iii>
@@ -2384,6 +2750,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Wagner IV
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_iv>
@@ -2412,6 +2781,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Wagner V
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_v>
@@ -2440,6 +2812,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Wagner VI
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_vi>
@@ -2468,6 +2843,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Wagner VII
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_vii>
@@ -2496,6 +2874,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the
+    /// Quadrilateralized Spherical Cube projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_quadrilateralized_spherical_cube>
@@ -2526,6 +2907,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Spherical
+    /// Cross-Track Height projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_spherical_cross_track_height>
@@ -2556,6 +2940,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a ProjectedCRS with a conversion based on the Equal Earth
+    /// projection method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equal_earth>
@@ -2585,6 +2972,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a conversion based on the Vertical Perspective projection
+    /// method.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_vertical_perspective>
@@ -2619,6 +3009,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a conversion based on the Pole Rotation method, using the
+    /// conventions of the GRIB 1 and GRIB 2 data formats.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_grib_convention>
@@ -2643,6 +3036,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self, ptr, owned)
     }
+    ///Instantiate a conversion based on the Pole Rotation method, using the
+    /// conventions of the netCDF CF convention for the netCDF format.
+    ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_netcdf_cf_convention>
@@ -2743,26 +3139,7 @@ mod test_context_advanced {
         assert!(wkt.contains("CS[ellipsoidal,3]"));
         Ok(())
     }
-    #[test]
-    fn test_query_geodetic_crs_from_datum() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj_list =
-            ctx.query_geodetic_crs_from_datum(Some("EPSG"), "EPSG", "6326", Some("geographic 2D"))?;
-        println!(
-            "{}",
-            pj_list.first().unwrap().as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None
-            )?
-        );
-        assert!(!pj_list.is_empty());
-        Ok(())
-    }
+
     #[test]
     fn test_create_geographic_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
@@ -2882,19 +3259,7 @@ mod test_context_advanced {
         assert!(wkt.contains("my rotated CRS"));
         Ok(())
     }
-    #[test]
-    fn test_crs_create_projected_3d_crs_from_2d() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let proj_crs = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
-        let geog_3d_crs = ctx.create_from_database("EPSG", "4979", Category::Crs, false)?;
-        let pj: Proj<'_> =
-            ctx.crs_create_projected_3d_crs_from_2d(None, &proj_crs, Some(&geog_3d_crs))?;
-        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
-        assert!(wkt.contains("WGS 84 / UTM zone 31N"));
-        assert!(wkt.contains("CS[Cartesian,3]"));
-        Ok(())
-    }
+
     #[test]
     fn test_create_engineering_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;

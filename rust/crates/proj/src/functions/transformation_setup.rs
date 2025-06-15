@@ -151,9 +151,9 @@ impl crate::Context {
     /// limited to use of velocity grids inside the same dynamic CRS.
     ///
     ///
-    /// #Parameters
+    /// # Arguments
     ///
-    /// * authority: to restrict the authority of coordinate operations looked
+    /// * `authority`: to restrict the authority of coordinate operations looked
     ///   up in the database. When not specified, coordinate operations from any
     ///   authority will be searched, with the restrictions set in the
     ///   authority_to_authority_preference database table related to the
@@ -162,20 +162,20 @@ impl crate::Context {
     ///   If authority is a non-empty string different of any, then coordinate
     ///   operations will be searched only in that authority namespace (e.g
     ///   EPSG).
-    /// * accuracy: to set the minimum desired accuracy (in metres) of the
+    /// * `accuracy`: to set the minimum desired accuracy (in metres) of the
     ///   candidate coordinate operations.
-    /// * allow_ballpark can be set to NO to disallow the use of Ballpark
+    /// * `allow_ballpark`: can be set to NO to disallow the use of Ballpark
     ///   transformation in the candidate coordinate operations.
-    /// * only_best: (PROJ >= 9.2) Can be set to YES to cause PROJ to error out
-    ///   if the best transformation, known of PROJ, and usable by PROJ if all
-    ///   grids known and usable by PROJ were accessible, cannot be used. Best
-    ///   transformation should be understood as the transformation returned by
-    ///   proj_get_suggested_operation() if all known grids were accessible
-    ///   (either locally or through network). Note that the default value for
-    ///   this option can be also set with the PROJ_ONLY_BEST_DEFAULT
-    ///   environment variable, or with the only_best_default setting of
-    ///   proj.ini (the ONLY_BEST option when specified overrides such default
-    ///   value).
+    /// * `only_best`: (PROJ >= 9.2) Can be set to YES to cause PROJ to error
+    ///   out   if the best transformation, known of PROJ, and usable by PROJ if
+    ///   all   grids known and usable by PROJ were accessible, cannot be used.
+    ///   Best   transformation should be understood as the transformation
+    ///   returned by   proj_get_suggested_operation() if all known grids were
+    ///   accessible   (either locally or through network). Note that the
+    ///   default value for   this option can be also set with the
+    ///   PROJ_ONLY_BEST_DEFAULT   environment variable, or with the
+    ///   only_best_default setting of   proj.ini (the ONLY_BEST option when
+    ///   specified overrides such default   value).
     /// * force_over=YES/NO: can be set to YES to force the +over flag on the
     ///   transformation returned by this function. See Longitude Wrapping
     ///

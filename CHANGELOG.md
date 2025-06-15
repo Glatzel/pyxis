@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.26] - 2025-06-11
+
+### Documentation
+
+- **(rust)** Proj doc by @Glatzel in [#476](https://github.com/Glatzel/pyxis/pull/476)
+
+### Fixed
+
+- Dangling pointers by @Glatzel in [#473](https://github.com/Glatzel/pyxis/pull/473)
+
 ## [0.0.25] - 2025-06-04
 
 ### Added
@@ -473,6 +483,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2025-02-05
 
+[0.0.26]: https://github.com/Glatzel/pyxis/compare/v0.0.25..v0.0.26
 [0.0.25]: https://github.com/Glatzel/pyxis/compare/v0.0.24..v0.0.25
 [0.0.24]: https://github.com/Glatzel/pyxis/compare/v0.0.23..v0.0.24
 [0.0.23]: https://github.com/Glatzel/pyxis/compare/v0.0.22..v0.0.23

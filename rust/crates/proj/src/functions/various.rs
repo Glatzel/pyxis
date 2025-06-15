@@ -2,8 +2,8 @@ use std::char;
 
 use envoy::{CStrToString, ToCString};
 
-#[cfg(any(feature = "unrecommended", test))]
-use crate::check_result;
+use crate::data_types::Factors;
+use crate::{ICoord, ToCoord, check_result};
 
 /// # Various
 impl crate::Proj<'_> {
@@ -12,25 +12,28 @@ impl crate::Proj<'_> {
     /// reverse direction. Returns the euclidean distance of the starting point
     /// coo and the resulting coordinate after n iterations back and forth.
     ///
-    /// # Parameters
+    /// # Arguments
     ///
-    /// * direction: Starting direction of transformation
-    /// * n: Number of roundtrip transformations
+    /// * `direction`: Starting direction of transformation
+    /// * `n`: Number of roundtrip transformations
     ///
     /// # Returns
     ///
     /// double Distance between original coordinate and the resulting coordinate
-    /// after n transformation iterations. # References
+    /// after n transformation iterations.
+    ///
+    /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_roundtrip>
-    #[cfg(any(feature = "unrecommended", test))]
     pub fn roundtrip(
         &self,
         direction: crate::Direction,
         n: i32,
-        coord: &mut proj_sys::PJ_COORD,
+        coord: &impl ICoord,
     ) -> miette::Result<f64> {
-        let distance = unsafe { proj_sys::proj_roundtrip(self.ptr(), direction.into(), n, coord) };
+        let mut coord = coord.to_coord()?;
+        let distance =
+            unsafe { proj_sys::proj_roundtrip(self.ptr(), direction.into(), n, &mut coord) };
         check_result!(self);
         Ok(distance)
     }
@@ -57,14 +60,8 @@ impl crate::Proj<'_> {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_factors>
-    #[cfg(any(feature = "unrecommended", test))]
-    pub fn factors(
-        &self,
-        coord: crate::data_types::Coord,
-    ) -> miette::Result<crate::data_types::Factors> {
-        use crate::data_types::Factors;
-
-        let factor = unsafe { proj_sys::proj_factors(self.ptr(), coord) };
+    pub fn factors(&self, coord: &impl ICoord) -> miette::Result<crate::data_types::Factors> {
+        let factor = unsafe { proj_sys::proj_factors(self.ptr(), coord.to_coord()?) };
         match self.errno() {
             crate::data_types::ProjError::Success => (),
             crate::data_types::ProjError::CoordTransfmOutsideProjectionDomain => (),
@@ -126,32 +123,6 @@ impl crate::Proj<'_> {
     }
 }
 
-///Initializer for the PJ_COORD union. The function is shorthand for the
-/// otherwise convoluted assignment.
-///
-///# References
-///
-/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coord>
-#[cfg(any(feature = "unrecommended", test))]
-pub fn coord(x: f64, y: f64, z: f64, t: f64) -> proj_sys::PJ_COORD {
-    unsafe { proj_sys::proj_coord(x, y, z, t) }
-}
-///# See Also
-///
-/// * [`std::f64::to_radians`]
-///
-///# References
-///
-/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_torad>
-fn _torad() { unimplemented!("Use other function to instead.") }
-///# See Also
-///
-/// * [`std::f64::to_degrees`]
-///
-///# References
-///
-/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_todeg>
-fn _todeg() { unimplemented!("Use other function to instead.") }
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
@@ -159,15 +130,6 @@ pub fn dmstor(is: &str) -> miette::Result<f64> {
     let rs = "xxxdxxmxx.xxs ".to_cstring();
     Ok(unsafe { proj_sys::proj_dmstor(is.to_cstring().as_ptr(), &mut rs.as_ptr().cast_mut()) })
 }
-///# See Also
-///
-/// * [`rtodms2`]
-///
-///# References
-///
-/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms>
-#[deprecated]
-fn _rtodms() { unimplemented!("Use other function to instead.") }
 
 ///Convert radians to string representation of degrees, minutes and seconds.
 ///
@@ -187,16 +149,12 @@ mod test {
 
     use float_cmp::assert_approx_eq;
 
-    use crate::ToCoord;
-
     #[test]
     fn test_roundtrip() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("+proj=tmerc +lat_0=0 +lon_0=75 +k=1 +x_0=13500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs","EPSG:4326",  &crate::Area::default())?;
-        let mut coord = (5877537.151800396, 4477291.358855194).to_coord()?;
-        let distance = pj.roundtrip(crate::Direction::Fwd, 10000, &mut coord)?;
-        println!("{:?}", unsafe { coord.xy.x });
-        println!("{:?}", unsafe { coord.xy.y });
+        let coord = (5877537.151800396, 4477291.358855194);
+        let distance = pj.roundtrip(crate::Direction::Fwd, 10000, &coord)?;
         assert_approx_eq!(f64, distance, 0.023350762947799957, epsilon = 1e-6);
         Ok(())
     }
@@ -204,7 +162,7 @@ mod test {
     fn test_factors() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
-        let factor = pj.factors((12.0f64.to_radians(), 55.0f64.to_radians()).to_coord()?)?;
+        let factor = pj.factors(&(12.0f64.to_radians(), 55.0f64.to_radians()))?;
 
         println!("{:?}", factor);
 
@@ -281,15 +239,11 @@ mod test {
     fn test_factors_fail() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let factor = pj.factors((12.0f64.to_radians(), 55.0f64.to_radians()).to_coord()?);
+        let factor = pj.factors(&(12.0f64.to_radians(), 55.0f64.to_radians()));
         assert!(factor.is_err());
         Ok(())
     }
-    #[test]
-    fn test_coor() -> miette::Result<()> {
-        super::coord(1.0, 2.0, 3.0, 4.0);
-        Ok(())
-    }
+
     #[test]
     fn test_dmstor() -> miette::Result<()> {
         assert_approx_eq!(

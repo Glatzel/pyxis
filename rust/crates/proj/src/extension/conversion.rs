@@ -2,6 +2,18 @@ use crate::Direction::{Fwd, Inv};
 use crate::ICoord;
 
 impl crate::Proj<'_> {
+    /// Projects a single coordinate using the specified direction (forward or
+    /// inverse).
+    ///
+    /// # Arguments
+    ///
+    /// * `inv`: If true, performs the inverse transformation; otherwise,
+    ///   forward.
+    /// * `coord`: The coordinate to transform.
+    ///
+    /// # Returns
+    ///
+    /// The transformed coordinate.
     pub fn project<T>(&self, inv: bool, coord: &T) -> miette::Result<T>
     where
         T: ICoord,
@@ -34,6 +46,15 @@ impl crate::Proj<'_> {
 
         Ok(coord)
     }
+    /// Projects a single coordinate using the forward direction.
+    ///
+    /// # Arguments
+    ///
+    /// * `coord`: The coordinate to transform.
+    ///
+    /// # Returns
+    ///
+    /// The transformed coordinate.
     pub fn convert<T>(&self, coord: &T) -> miette::Result<T>
     where
         T: ICoord,
@@ -68,6 +89,18 @@ impl crate::Proj<'_> {
 }
 
 impl crate::Proj<'_> {
+    /// Projects an array of coordinates using the specified direction (forward
+    /// or inverse).
+    ///
+    /// # Arguments
+    ///
+    /// * `inv`: If true, performs the inverse transformation; otherwise,
+    ///   forward.
+    /// * `coord` - The mutable slice of coordinates to transform in-place.
+    ///
+    /// # Returns
+    ///
+    /// A reference to self for chaining.
     pub fn project_array<T>(&self, inv: bool, coord: &mut [T]) -> miette::Result<&Self>
     where
         T: ICoord,
@@ -107,6 +140,15 @@ impl crate::Proj<'_> {
         }?;
         Ok(self)
     }
+    /// Projects an array of coordinates using the forward direction.
+    ///
+    /// # Arguments
+    ///
+    /// * `coord`:The mutable slice of coordinates to transform in-place.
+    ///
+    /// # Returns
+    ///
+    /// A reference to self for chaining.
     pub fn convert_array<T>(&self, coord: &mut [T]) -> miette::Result<&Self>
     where
         T: ICoord,

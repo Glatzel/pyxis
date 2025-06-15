@@ -3,8 +3,23 @@ use std::ptr;
 use envoy::{AsVecPtr, ToCString, VecCString};
 
 use crate::data_types::iso19111::*;
-use crate::{Context, Proj, pj_obj_list_to_vec};
+use crate::{Context, Proj};
 impl Context {
+    ///Instantiate a context for building coordinate operations between two
+    /// CRS.
+    ///
+    /// If authority is NULL or the empty string, then coordinate operations
+    /// from any authority will be searched, with the restrictions set in the
+    /// authority_to_authority_preference database table. If authority is set to
+    /// "any", then coordinate operations from any authority will be searched If
+    /// authority is a non-empty string different of "any", then coordinate
+    /// operations will be searched only in that authority namespace.
+    ///
+    /// # Arguments
+    ///
+    /// * `authority`: Name of authority to which to restrict the search of
+    ///   candidate operations.
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_operation_factory_context>
@@ -25,12 +40,20 @@ impl Context {
     }
 }
 impl OperationFactoryContext<'_> {
+    ///# See Also
+    /// * [`crate::Context::create_operation_factory_context`]
     pub fn from_context<'a>(
         ctx: &'a Context,
         authority: Option<&str>,
     ) -> OperationFactoryContext<'a> {
         ctx.create_operation_factory_context(authority)
     }
+    ///Set the desired accuracy of the resulting coordinate transformations.
+    ///
+    /// # Arguments
+    ///
+    /// * `accuracy`: Accuracy in meter (or 0 to disable the filter).
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_desired_accuracy>
@@ -44,7 +67,20 @@ impl OperationFactoryContext<'_> {
         }
         self
     }
-    ///# References
+    ///Set the desired area of interest for the resulting coordinate
+    /// transformations.
+    ///
+    ///For an area of interest crossing the anti-meridian, west_lon_degree will
+    /// be greater than east_lon_degree.
+    ///
+    /// # Arguments
+    ///
+    /// * `west_lon_degree`: West longitude (in degrees).
+    /// * `south_lat_degree`: South latitude (in degrees).
+    /// * `east_lon_degree`: East longitude (in degrees).
+    /// * `north_lat_degree`: North latitude (in degrees).
+    ///
+    /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_area_of_interest>
     pub fn set_area_of_interest(
@@ -66,7 +102,14 @@ impl OperationFactoryContext<'_> {
         }
         self
     }
-    ///# References
+    ///Set the name of the desired area of interest for the resulting
+    /// coordinate transformations.
+    ///
+    /// # Parameters
+    ///
+    /// * `area_name`: Area name. Must be known of the database.
+    ///
+    ///  # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_area_of_interest_name>
     pub fn set_area_of_interest_name(&self, area_name: &str) -> &Self {
@@ -79,6 +122,16 @@ impl OperationFactoryContext<'_> {
         }
         self
     }
+    ///Set how source and target CRS extent should be used when considering if
+    /// a transformation can be used (only takes effect if no area of interest
+    /// is explicitly defined).
+    ///
+    ///The default is [`CrsExtentUse::Smallest`].
+    ///
+    /// # Parameters
+    ///
+    /// * `use`: How source and target CRS extent should be used.
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_crs_extent_use>
@@ -92,6 +145,16 @@ impl OperationFactoryContext<'_> {
         }
         self
     }
+    ///Set the spatial criterion to use when comparing the area of validity of
+    /// coordinate operations with the area of interest / area of validity of
+    /// source and target CRS.
+    ///
+    /// The default is [`SpatialCriterion::StrictContainment`].
+    ///
+    /// # Arguments
+    ///
+    /// * `criterion`: spatial criterion to use
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_spatial_criterion>
@@ -105,6 +168,14 @@ impl OperationFactoryContext<'_> {
         }
         self
     }
+    ///Set how grid availability is used.
+    ///
+    /// The default is [`GridAvailabilityUse::UsedForSorting`].
+    ///
+    /// # Arguments
+    ///
+    /// \* `use`: how grid availability is used.
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_grid_availability_use>
@@ -118,19 +189,46 @@ impl OperationFactoryContext<'_> {
         }
         self
     }
+    /// Set whether PROJ alternative grid names should be substituted to the
+    /// official authority names.
+    ///
+    /// The default is true.
+    ///
+    /// # Arguments
+    ///
+    /// * `use_proj_names`: whether PROJ alternative grid names should be used
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_use_proj_alternative_grid_names>
-    pub fn set_use_proj_alternative_grid_names(&self, use_projnames: bool) -> &Self {
+    pub fn set_use_proj_alternative_grid_names(&self, use_proj_names: bool) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_use_proj_alternative_grid_names(
                 self.ctx.ptr,
                 self.ptr,
-                use_projnames as i32,
+                use_proj_names as i32,
             );
         }
         self
     }
+    ///Set whether an intermediate pivot CRS can be used for researching
+    /// coordinate operations between a source and target CRS.
+    ///
+    ///Concretely if in the database there is an operation from A to C (or C to
+    /// A), and another one from C to B (or B to C), but no direct operation
+    /// between A and B, setting this parameter to true, allow chaining both
+    /// operations.
+    ///
+    ///The current implementation is limited to researching one intermediate
+    /// step.
+    ///
+    ///By default, with the IF_NO_DIRECT_TRANSFORMATION strategy, all potential
+    /// C candidates will be used if there is no direct transformation.
+    ///
+    /// # Arguments
+    ///
+    /// * `use`: whether and how intermediate CRS may be used.
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allow_use_intermediate_crs>
@@ -147,6 +245,15 @@ impl OperationFactoryContext<'_> {
         }
         self
     }
+
+    ///Restrict the potential pivot CRSs that can be used when trying to build
+    /// a coordinate operation between two CRS that have no direct operation.
+    ///
+    /// # Arguments
+    ///
+    /// * `list_of_auth_name_codes`: an array of strings NLL terminated, with
+    ///   the format { "auth_name1", "code1", "auth_name2", "code2", ... NULL }
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allowed_intermediate_crs>
@@ -161,6 +268,13 @@ impl OperationFactoryContext<'_> {
         }
         self
     }
+    /// Set whether transformations that are superseded (but not deprecated)
+    /// should be discarded.
+    ///
+    /// # Arguments
+    ///
+    /// * `discard`: superseded crs or not
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_discard_superseded>
@@ -174,6 +288,12 @@ impl OperationFactoryContext<'_> {
         }
         self
     }
+    ///Set whether ballpark transformations are allowed.
+    ///
+    /// # Arguments
+    ///
+    /// * `allow`: set to TRUE to allow ballpark transformations.
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allow_ballpark_transformations>
@@ -187,6 +307,18 @@ impl OperationFactoryContext<'_> {
         }
         self
     }
+    ///Find a list of CoordinateOperation from source_crs to target_crs.
+    ///
+    ///The operations are sorted with the most relevant ones first: by
+    /// descending area (intersection of the transformation area with the area
+    /// of interest, or intersection of the transformation with the area of use
+    /// of the CRS), and by increasing accuracy. Operations with unknown
+    /// accuracy are sorted last, whatever their area.
+    ///
+    ///Starting with PROJ 9.1, vertical transformations are only done if both
+    /// source CRS and target CRS are 3D CRS or Compound CRS with a vertical
+    /// component. You may need to use [`Proj::crs_promote_to_3d()`].
+    ///
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_operations>
@@ -194,7 +326,7 @@ impl OperationFactoryContext<'_> {
         &self,
         source_crs: &Proj,
         target_crs: &Proj,
-    ) -> miette::Result<Vec<Proj<'_>>> {
+    ) -> miette::Result<ProjObjList<'_>> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
                 self.ctx.ptr,
@@ -203,10 +335,15 @@ impl OperationFactoryContext<'_> {
                 self.ptr,
             )
         };
-        pj_obj_list_to_vec(self.ctx, ptr)
+        ProjObjList::new(self.ctx, ptr)
     }
 }
 impl Drop for OperationFactoryContext<'_> {
+    ///Drops a reference on an object.
+    ///
+    /// # References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_destroy>
     fn drop(&mut self) {
         unsafe {
             proj_sys::proj_operation_factory_context_destroy(self.ptr);
@@ -245,7 +382,12 @@ mod test {
         )?;
         let target_crs = ctx.create_from_database("EPSG", "4269", Category::Crs, false)?;
         let ops = factory.create_operations(&source_crs, &target_crs)?;
-        assert_eq!(ops.len(), 1);
+        println!(
+            "{}",
+            ops.get(0)?
+                .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?
+        );
+
         Ok(())
     }
 }

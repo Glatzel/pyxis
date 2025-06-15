@@ -178,8 +178,8 @@ dependencies = [
 
 [[package]]
 name = "clerk"
-version = "0.0.18"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.18#3f85df2966813535deab19d6ae68a3a3b6544ee0"
+version = "0.0.20"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.20#e36184f8fc608fd3cb031273345d27619497674b"
 
 [[package]]
 name = "core-foundation-sys"
@@ -580,15 +580,15 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.25"
+version = "0.0.26"
 dependencies = [
- "clerk 0.0.18",
+ "clerk 0.0.20",
  "num-traits",
 ]
 
 [[package]]
 name = "pyxis-cuda"
-version = "0.0.25"
+version = "0.0.26"
 dependencies = [
  "clerk 0.0.12",
  "criterion",

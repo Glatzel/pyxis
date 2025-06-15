@@ -10,16 +10,6 @@ env:
   RUST_CUDA_ROOT: ./rust-cuda
 
 jobs:
-  upload-test:
-    runs-on: [ubuntu-latest]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Upload results to Codecov
-        uses: codecov/codecov-action@v5
-      - name: Upload test results to Codecov
-        uses: codecov/test-results-action@v1
-        with:
-          fail_ci_if_error: true
   build-rust-cuda:
     strategy:
       fail-fast: false
@@ -34,7 +24,7 @@ jobs:
         with:
           msbuild-architecture: x64
       - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.8
+        uses: prefix-dev/setup-pixi@v0.8.10
         with:
           run-install: false
       - uses: dtolnay/rust-toolchain@stable

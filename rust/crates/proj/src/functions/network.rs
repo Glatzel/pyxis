@@ -5,9 +5,16 @@ use envoy::{CStrToString, ToCString};
 use crate::check_result;
 impl crate::Context {
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_network_callbacks>
     fn _set_network_callbacks(&self) { todo!() }
+    ///Enable or disable network access.
+    ///
+    ///This overrides the default endpoint in the PROJ configuration file or
+    /// with the PROJ_NETWORK environment variable.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_enable_network>
     pub fn set_enable_network(&self, enabled: bool) -> miette::Result<&Self> {
         let result =
@@ -18,14 +25,23 @@ impl crate::Context {
         check_result!(self);
         Ok(self)
     }
+    ///Return if network access is enabled.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_is_network_enabled>
     pub fn is_network_enabled(&self) -> miette::Result<bool> {
         let result = unsafe { proj_sys::proj_context_is_network_enabled(self.ptr) } != 0;
         check_result!(self);
         Ok(result)
     }
+    ///Define the URL endpoint to query for remote grids.
+    ///
+    ///This overrides the default endpoint in the PROJ configuration file or
+    /// with the PROJ_NETWORK_ENDPOINT environment variable.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_url_endpoint>
     pub fn set_url_endpoint(&self, url: &str) -> miette::Result<&Self> {
         unsafe {
@@ -34,14 +50,21 @@ impl crate::Context {
         check_result!(self);
         Ok(self)
     }
+    ///Get the URL endpoint to query for remote grids.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_url_endpoint>
     pub fn get_url_endpoint(&self) -> miette::Result<String> {
         let result = unsafe { proj_sys::proj_context_get_url_endpoint(self.ptr) };
         check_result!(self);
         Ok(result.to_string().unwrap_or_default())
     }
+    ///Get the PROJ user writable directory for downloadable resource files,
+    /// such as datum shift grids.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_user_writable_directory>
     pub fn get_user_writable_directory(&self, create: bool) -> miette::Result<PathBuf> {
         let result =
@@ -49,21 +72,34 @@ impl crate::Context {
         check_result!(self);
         Ok(PathBuf::from(result.to_string().unwrap_or_default()))
     }
+    ///Enable or disable the local cache of grid chunks
+    ///
+    ///This overrides the setting in the PROJ configuration file.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_enable>
     pub fn grid_cache_set_enable(&self, enabled: bool) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_enable(self.ptr, enabled as i32) };
         check_result!(self);
         Ok(self)
     }
+    ///Override, for the considered context, the path and file of the local
+    /// cache of grid chunks.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_filename>
     pub fn grid_cache_set_filename(&self, fullname: &str) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_filename(self.ptr, fullname.to_cstring().as_ptr()) };
         check_result!(self);
         Ok(self)
     }
+    ///Override, for the considered context, the maximum size of the local
+    /// cache of grid chunks.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_max_size>
     pub fn grid_cache_set_max_size(&self, max_size_mbyte: u16) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_max_size(self.ptr, max_size_mbyte as i32) };
@@ -71,19 +107,38 @@ impl crate::Context {
         Ok(self)
     }
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_ttl>
     pub fn grid_cache_set_ttl(&self, ttl_seconds: u16) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_set_ttl(self.ptr, ttl_seconds as i32) };
         check_result!(self);
         Ok(self)
     }
+    ///Clear the local cache of grid chunks.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_clear>
     pub fn grid_cache_clear(&self) -> miette::Result<&Self> {
         unsafe { proj_sys::proj_grid_cache_clear(self.ptr) };
         Ok(self)
     }
+    ///Return if a file must be downloaded or is already available in the PROJ
+    /// user-writable directory.
+    ///
+    ///The file will be determinted to have to be downloaded if it does not
+    /// exist yet in the user-writable directory, or if it is determined that a
+    /// more recent version exists. To determine if a more recent version
+    /// exists, PROJ will use the "downloaded_file_properties" table of its grid
+    /// cache database. Consequently files manually placed in the user-writable
+    /// directory without using this function would be considered as
+    /// non-existing/obsolete and would be unconditionally downloaded again.
+    ///
+    ///This function can only be used if networking is enabled, and either the
+    /// default curl network API or a custom one have been installed.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_download_needed>
     pub fn is_download_needed(
         &self,
@@ -100,7 +155,21 @@ impl crate::Context {
         check_result!(self);
         Ok(result)
     }
+    ///Download a file in the PROJ user-writable directory.
+    ///
+    ///The file will only be downloaded if it does not exist yet in the
+    /// user-writable directory, or if it is determined that a more recent
+    /// version exists. To determine if a more recent version exists, PROJ will
+    /// use the "downloaded_file_properties" table of its grid cache database.
+    /// Consequently files manually placed in the user-writable directory
+    /// without using this function would be considered as non-existing/obsolete
+    /// and would be unconditionally downloaded again.
+    ///
+    ///This function can only be used if networking is enabled, and either the
+    /// default curl network API or a custom one have been installed.
+    ///
     /// # References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_download_file>
     pub fn download_file(
         &self,

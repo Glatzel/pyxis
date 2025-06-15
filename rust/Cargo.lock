@@ -271,8 +271,8 @@ checksum = "f46ad14479a25103f283c0f10005961cf086d8dc42205bb44c46ac563475dca6"
 
 [[package]]
 name = "clerk"
-version = "0.0.18"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.18#3f85df2966813535deab19d6ae68a3a3b6544ee0"
+version = "0.0.20"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.20#e36184f8fc608fd3cb031273345d27619497674b"
 dependencies = [
  "chrono",
  "owo-colors",
@@ -872,7 +872,7 @@ dependencies = [
 
 [[package]]
 name = "proj"
-version = "0.0.25"
+version = "0.0.26"
 dependencies = [
  "assert_cmd",
  "clerk",
@@ -890,18 +890,17 @@ dependencies = [
 
 [[package]]
 name = "proj-sys"
-version = "9.6.1"
+version = "9.6.2"
 dependencies = [
  "bindgen",
  "dunce",
  "libc",
  "pkg-config",
- "serde",
 ]
 
 [[package]]
 name = "pyxis"
-version = "0.0.25"
+version = "0.0.26"
 dependencies = [
  "clerk",
  "codspeed-criterion-compat",
@@ -914,7 +913,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cli"
-version = "0.0.25"
+version = "0.0.26"
 dependencies = [
  "assert_cmd",
  "bpaf",

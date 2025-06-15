@@ -1,4 +1,5 @@
 use std::path::Path;
+use std::ptr;
 
 use envoy::{AsVecPtr, ToCString, VecCString};
 
@@ -16,7 +17,13 @@ impl crate::Context {
     ///It will be used to read proj.db or create&access the cache.db file in
     /// the PROJ user writable directory.
     ///
+    /// # Arguments
+    ///
+    /// * `name`: SQLite3 VFS name. If NULL is passed, default implementation by
+    ///   SQLite will be used.
+    ///
     ///# References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
     pub fn set_sqlite3_vfs_name(&self, name: &str) -> miette::Result<&Self> {
         unsafe {
@@ -25,7 +32,9 @@ impl crate::Context {
         check_result!(self);
         Ok(self)
     }
-
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_file_finder>
     fn _set_file_finder(&self) { todo!() }
     ///Sets search paths.
     ///
@@ -37,7 +46,12 @@ impl crate::Context {
     ///
     ///Starting with PROJ 7.0, the path(s) should be encoded in UTF-8.
     ///
+    /// # Arguments
+    ///
+    /// * `paths`: Paths. May be empty.
+    ///
     ///# References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_search_paths>
     pub fn set_search_paths(&self, paths: &[&Path]) -> miette::Result<&Self> {
         clerk::debug!("search_paths:{:?}", paths);
@@ -66,15 +80,19 @@ impl crate::Context {
     ///If set on the default context, they will be inherited by contexts
     /// created later.
     ///
-    ///The path should be encoded in UTF-8.
+    /// # Arguments
+    ///
+    /// * `paths`: Paths. May be None.
     ///
     ///# References
+    ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
-    pub fn set_ca_bundle_path(&self, path: &Path) -> miette::Result<&Self> {
+    pub fn set_ca_bundle_path(&self, path: Option<&Path>) -> miette::Result<&Self> {
+        let path = path.map(|s| s.to_str().unwrap().to_cstring());
         unsafe {
             proj_sys::proj_context_set_ca_bundle_path(
                 self.ptr,
-                path.to_str().unwrap().to_cstring().as_ptr(),
+                path.map_or(ptr::null(), |p| p.as_ptr()),
             );
         };
         check_result!(self);

@@ -72,7 +72,7 @@ impl ProjOptions {
     /// # Arguments
     /// * `opt` - The value to convert and push.
     /// * `name` - The name of the option.
-    pub fn _push<T: ToProjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
+    pub fn push<T: ToProjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
         self.options
             .push(format!("{name}={}", opt.to_option_string()).to_cstring());
         self

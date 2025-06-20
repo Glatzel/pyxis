@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<RootNamespace>Pyxis.Test</RootNamespace>
-	</PropertyGroup>
-	<ItemGroup>
-		<ProjectReference Include="../../src/Pyxis/Pyxis.csproj" />
-	</ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>Pyxis.Test</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Pyxis/Pyxis.csproj" />
+  </ItemGroup>
 </Project>

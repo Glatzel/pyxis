@@ -11,9 +11,9 @@ rattler-build = "==0.43.1"
 [feature.test.dependencies]
 cupy = "==13.4.1"
 nomkl = "==1.0"
-pytest = "==8.4.0"
+pytest = "==8.4.1"
 pytest-benchmark = "==5.1.0"
-pytest-cov = "==6.1.1"
+pytest-cov = "==6.2.1"
 
 [environments]
 test = ["test"]

@@ -8,13 +8,13 @@ python = "3.11.*"
 [feature.build.dependencies]
 maturin = "==1.9.0"
 pip = "==25.1.1"
-rattler-build = "==0.43.1"
+rattler-build = "==0.44.0"
 
 [feature.deps.dependencies]
 lazy-loader = "==0.4"
 nomkl = "==1.0"
 numpy = "*"
-scipy = "==1.15.2"
+scipy = "==1.16.0"
 
 [feature.test.dependencies]
 pytest = "==8.4.1"

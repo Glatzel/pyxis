@@ -145,7 +145,7 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-///  clerk::init_log_with_level(clerk::LevelFilter::TRACE);
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = bd09_to_gcj02(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-6);
@@ -183,7 +183,7 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-///  clerk::init_log_with_level(clerk::LevelFilter::TRACE);
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (GCJ02_LON, GCJ02_LAT);
 /// let p = gcj02_to_wgs84(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-5);

@@ -3,6 +3,7 @@ use crate::GeoFloat;
 /// # Examples
 /// ```
 /// use float_cmp::assert_approx_eq;
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let m = pyxis::rotate_matrix_2d(150.0f64.to_radians());
 /// let result = pyxis::migrate::rel_2d(10.0, 20.0, 2.0, -1.0, &m);
 /// assert_approx_eq!(f64, result.0, -3.5717967697244886, epsilon = 1e-17);

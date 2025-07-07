@@ -2,7 +2,7 @@ use super::{CoordSpace, CryptoSpace, MigrateOption2d, RotateUnit, options};
 pub struct ContextTransform {
     pub x: f64,
     pub y: f64,
-    pub z: f64,
+      pub z: f64,
 }
 
 impl ContextTransform {

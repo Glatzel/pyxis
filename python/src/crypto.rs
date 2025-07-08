@@ -53,10 +53,9 @@ fn get_crypto_fn(
         }),
         ("wgs84", "bd09", _) => Ok(wgs84_to_bd09 as fn(f64, f64) -> (f64, f64)),
         ("wgs84", "gcj02", _) => Ok(wgs84_to_gcj02 as fn(f64, f64) -> (f64, f64)),
-        _ => Err(pyo3::exceptions::PyTypeError::new_err(format!(
-            "Unsupported input: from: {}, to: {}",
-            from, to,
-        ))),
+        _ => Err(pyo3::exceptions::PyTypeError::new_err(
+            "Unsupported input: from: {from}, to: {to}",
+        )),
     }
 }
 #[pyfunction]

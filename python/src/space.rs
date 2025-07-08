@@ -25,10 +25,9 @@ fn get_space_fn(from: &str, to: &str) -> Result<impl Fn(f64, f64, f64) -> (f64, 
             Ok(spherical_to_cylindrical as fn(f64, f64, f64) -> (f64, f64, f64))
         }
 
-        _ => Err(pyo3::exceptions::PyTypeError::new_err(format!(
-            "Unsupported input: from: {}, to: {}",
-            from, to
-        ))),
+        _ => Err(pyo3::exceptions::PyTypeError::new_err(
+            "Unsupported input: from: {from}, to: {to}",
+        )),
     }
 }
 #[pyfunction]

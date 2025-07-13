@@ -7,7 +7,7 @@ use crate::Ellipsoid;
 pub trait GeoFloat:
     Float + FromPrimitive + FloatConst + ConstOne + NumAssign + Debug + Display + LowerExp
 {
-    const TWO: Self;
+    const TWO:  Self;
 }
 macro_rules! num {
     ($value:expr) => {

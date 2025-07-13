@@ -1287,7 +1287,7 @@ mod test_proj_basic {
         assert!(pj.is_crs());
         let geodetic = pj.crs_get_geodetic_crs()?;
         let wkt = geodetic.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("4326"));
         Ok(())
     }
@@ -1298,7 +1298,7 @@ mod test_proj_basic {
         assert!(pj.is_crs());
         let horizontal = pj.crs_get_horizontal_datum()?;
         let wkt = horizontal.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("6326"));
         Ok(())
     }
@@ -1323,7 +1323,7 @@ mod test_proj_basic {
             ctx.create_compound_crs(Some("Compound"), &horiz_crs, &vert_crs)?;
         let pj = compound.crs_get_sub_crs(0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("NAD83"));
         Ok(())
     }
@@ -1403,7 +1403,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
         let wkt = cs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("9122"));
         Ok(())
     }
@@ -1431,7 +1431,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
         let info = cs.cs_get_axis_info(1)?;
-        println!("{:?}", info);
+        println!("{info:?}");
         assert_eq!(info.name(), "Geodetic longitude");
         assert_eq!(info.abbrev(), "Lon");
         assert_eq!(info.direction(), &AxisDirection::East);
@@ -1447,7 +1447,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let ellps = pj.get_ellipsoid()?;
         let wkt = ellps.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("7030"));
         Ok(())
     }
@@ -1457,7 +1457,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let ellps = pj.get_ellipsoid()?;
         let param = ellps.ellipsoid_get_parameters()?;
-        println!("{:?}", param);
+        println!("{param:?}");
         Ok(())
     }
     #[test]
@@ -1474,7 +1474,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let meridian = pj.get_prime_meridian()?;
         let wkt = meridian.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("8901"));
         Ok(())
     }
@@ -1484,9 +1484,9 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let meridian = pj.get_prime_meridian()?;
         let params = meridian.prime_meridian_get_parameters()?;
-        println!("{:?}", params);
+        println!("{params:?}");
         assert_eq!(
-            format!("{:?}", params),
+            format!("{params:?}"),
             "PrimeMeridianParameters { longitude: 0.0, unit_conv_factor: 0.017453292519943295, unit_name: \"degree\" }"
         );
         Ok(())
@@ -1497,7 +1497,7 @@ mod test_proj_basic {
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
         let wkt = op.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("16031"));
         Ok(())
     }
@@ -1507,9 +1507,9 @@ mod test_proj_basic {
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
         let info = op.coordoperation_get_method_info()?;
-        println!("{:?}", info);
+        println!("{info:?}");
         assert_eq!(
-            format!("{:?}", info),
+            format!("{info:?}"),
             "CoordOperationMethodInfo { method_name: \"Transverse Mercator\", method_auth_name: \"EPSG\", method_code: \"9807\" }"
         );
         Ok(())
@@ -1585,8 +1585,8 @@ mod test_proj_basic {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "1312", Category::CoordinateOperation, true)?;
         let grid = pj.coordoperation_get_grid_used(0)?;
-        println!("{:?}", grid);
-        assert!(format!("{:?}", grid).contains("ca_nrc_ntv1_can.tif"));
+        println!("{grid:?}");
+        assert!(format!("{grid:?}").contains("ca_nrc_ntv1_can.tif"));
         Ok(())
     }
     #[test]
@@ -1623,7 +1623,7 @@ mod test_proj_basic {
         let op = pj.crs_get_coordoperation()?;
         let inversed = op.coordoperation_create_inverse()?;
         let wkt = inversed.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("16031"));
         Ok(())
     }
@@ -1653,7 +1653,7 @@ mod test_proj_basic {
         let wkt = ops
             .get(0)?
             .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("GDA94 to GDA2020"));
         Ok(())
     }

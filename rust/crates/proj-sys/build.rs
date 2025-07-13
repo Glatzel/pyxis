@@ -44,7 +44,7 @@ fn main() {
         .to_string_lossy()
         .to_string(),
         other => {
-            panic!("Unsupported OS: {}", other)
+            panic!("Unsupported OS: {other}")
         }
     };
     if env::var("PKG_CONFIG_PATH").is_err() {
@@ -91,10 +91,10 @@ fn main() {
 fn link_lib(name: &str, lib: &str) -> pkg_config::Library {
     match pkg_config::Config::new().probe(name) {
         Ok(pklib) => {
-            println!("cargo:rustc-link-lib=static={}", lib);
-            println!("Link to `{}`", lib);
+            println!("cargo:rustc-link-lib=static={lib}");
+            println!("Link to `{lib}`");
             pklib
         }
-        Err(e) => panic!("cargo:warning=Pkg-config error: {:?}", e),
+        Err(e) => panic!("cargo:warning=Pkg-config error: {e:?}"),
     }
 }

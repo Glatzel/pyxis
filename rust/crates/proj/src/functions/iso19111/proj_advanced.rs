@@ -470,7 +470,7 @@ mod test_proj_advanced {
         let pj: Proj<'_> =
             proj_crs.crs_create_projected_3d_crs_from_2d(None, Some(&geog_3d_crs))?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("WGS 84 / UTM zone 31N"));
         assert!(wkt.contains("CS[Cartesian,3]"));
         Ok(())

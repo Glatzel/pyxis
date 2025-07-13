@@ -46,7 +46,7 @@ pub fn output_plain(name: &str, records: &[Record]) {
             serde_json::to_string_pretty(&record.parameter)
                 .unwrap()
                 .lines()
-                .map(|line| format!("|       {}", line))
+                .map(|line| format!("|       {line}"))
                 .collect::<Vec<String>>()
                 .join("\n"),
             "\u{25BC}",

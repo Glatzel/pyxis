@@ -250,7 +250,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("WGS 84"));
         let _ = pj.clone();
         Ok(())
@@ -261,7 +261,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("PROJ-based operation method: proj=utm zone=32 ellps=GRS80"));
         Ok(())
     }
@@ -271,7 +271,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("9602"));
         Ok(())
     }
@@ -292,7 +292,7 @@ mod test {
             Some(true),
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("9602"));
         Ok(())
     }

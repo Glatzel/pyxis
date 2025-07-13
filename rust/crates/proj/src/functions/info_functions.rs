@@ -110,7 +110,7 @@ mod test {
     #[test]
     fn test_pj_info() {
         let info = info();
-        println!("{:?}", info);
+        println!("{info:?}");
         assert_eq!(info.major(), &(crate::version::PROJ_VERSION_MAJOR as i32));
         assert_eq!(info.minor(), &(crate::version::PROJ_VERSION_MINOR as i32));
         assert_eq!(info.patch(), &(crate::version::PROJ_VERSION_PATCH as i32));
@@ -128,7 +128,7 @@ mod test {
                     .to_str()
                     .unwrap(),
             )?;
-            println!("{:?}", info);
+            println!("{info:?}");
             assert_eq!(info.format(), "ntv2");
         }
         // invalid
@@ -143,7 +143,7 @@ mod test {
         //valid
         {
             let info = init_info("ITRF2000")?;
-            println!("{:?}", info);
+            println!("{info:?}");
             assert_eq!(info.name(), "ITRF2000");
         }
         //invalid

@@ -164,7 +164,7 @@ mod test {
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let factor = pj.factors(&(12.0f64.to_radians(), 55.0f64.to_radians()))?;
 
-        println!("{:?}", factor);
+        println!("{factor:?}");
 
         assert_approx_eq!(
             f64,

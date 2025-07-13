@@ -3096,7 +3096,7 @@ mod test_context_advanced {
                 ],
             )?;
             let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-            println!("{}\n", wkt);
+            println!("{wkt}\n");
             assert!(wkt.contains("9122"));
         }
         Ok(())
@@ -3107,7 +3107,7 @@ mod test_context_advanced {
         let pj: Proj<'_> =
             ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, Some("Degree"), 1.0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("CS[Cartesian,2]"));
         Ok(())
     }
@@ -3120,7 +3120,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("CS[ellipsoidal,2]"));
         Ok(())
     }
@@ -3135,7 +3135,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("CS[ellipsoidal,3]"));
         Ok(())
     }
@@ -3160,7 +3160,7 @@ mod test_context_advanced {
             )?,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("WGS 84"));
         assert!(wkt.contains("World Geodetic System 1984"));
         assert!(wkt.contains("Greenwich"));
@@ -3181,7 +3181,7 @@ mod test_context_advanced {
             )?,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("GRS 1980"));
         Ok(())
     }
@@ -3202,7 +3202,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("WGS 84"));
         assert!(wkt.contains("World Geodetic System 1984"));
         assert!(wkt.contains("Greenwich"));
@@ -3235,7 +3235,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj2.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("new crs"));
         assert!(wkt.contains("MyMetre2"));
         Ok(())
@@ -3255,7 +3255,7 @@ mod test_context_advanced {
         let pj: Proj<'_> =
             ctx.create_derived_geographic_crs(Some("my rotated CRS"), &crs_4326, &conversion, &cs)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("my rotated CRS"));
         Ok(())
     }
@@ -3266,7 +3266,7 @@ mod test_context_advanced {
 
         let pj: Proj<'_> = ctx.create_engineering_crs(Some("engineering crs"))?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("engineering crs"));
         Ok(())
     }
@@ -3276,7 +3276,7 @@ mod test_context_advanced {
         let pj: Proj<'_> =
             ctx.create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("myVertDatum"));
         Ok(())
     }
@@ -3297,7 +3297,7 @@ mod test_context_advanced {
             None,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("myVertCRS (ftUS)"));
         Ok(())
     }
@@ -3320,7 +3320,7 @@ mod test_context_advanced {
         )?;
         let pj: Proj<'_> = ctx.create_compound_crs(Some("Compound"), &horiz_crs, &vert_crs)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("Compound"));
         Ok(())
     }
@@ -3345,7 +3345,7 @@ mod test_context_advanced {
             )],
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("conv"));
         Ok(())
     }
@@ -3400,7 +3400,7 @@ mod test_context_advanced {
             0.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("transf"));
         Ok(())
     }
@@ -3443,7 +3443,7 @@ mod test_context_advanced {
         let pj: Proj<'_> = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
 
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("my CRS"));
         Ok(())
     }
@@ -3457,7 +3457,7 @@ mod test_context_advanced {
         let transf = res.crs_get_coordoperation()?;
         let bound_crs = ctx.crs_create_bound_crs(&base_crs, &hub_crs, &transf)?;
         let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3469,7 +3469,7 @@ mod test_context_advanced {
 
         let bound_crs = ctx.crs_create_bound_vertical_crs(&vert_crs, &crs, "foo.gtx")?;
         let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3477,7 +3477,7 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_utm(31, true)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("UTM zone 31N"));
         Ok(())
     }
@@ -3496,7 +3496,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3514,7 +3514,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3532,7 +3532,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3551,7 +3551,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3568,7 +3568,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3585,7 +3585,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3604,7 +3604,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3622,7 +3622,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3641,7 +3641,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3660,7 +3660,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3680,7 +3680,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3699,7 +3699,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3716,7 +3716,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3733,7 +3733,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3750,7 +3750,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3767,7 +3767,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3784,7 +3784,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3801,7 +3801,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3820,7 +3820,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3836,7 +3836,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3852,7 +3852,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3868,7 +3868,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3884,7 +3884,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3900,7 +3900,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3916,7 +3916,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3933,7 +3933,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3950,7 +3950,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3966,7 +3966,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3982,7 +3982,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -3998,7 +3998,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4015,7 +4015,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4032,7 +4032,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4049,7 +4049,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4069,7 +4069,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4089,7 +4089,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4111,7 +4111,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4130,7 +4130,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4148,7 +4148,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4168,7 +4168,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4188,7 +4188,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4205,7 +4205,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4221,7 +4221,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4239,7 +4239,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4256,7 +4256,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4273,7 +4273,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4289,7 +4289,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4306,7 +4306,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4323,7 +4323,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4340,7 +4340,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4359,7 +4359,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4376,7 +4376,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4394,7 +4394,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4411,7 +4411,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4427,7 +4427,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4443,7 +4443,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4461,7 +4461,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4477,7 +4477,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4493,7 +4493,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4509,7 +4509,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4526,7 +4526,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4542,7 +4542,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4558,7 +4558,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4574,7 +4574,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4590,7 +4590,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4607,7 +4607,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4624,7 +4624,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
 
@@ -4641,7 +4641,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4660,7 +4660,7 @@ mod test_context_advanced {
             1.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4674,7 +4674,7 @@ mod test_context_advanced {
             0.0174532925199433,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
     #[test]
@@ -4688,7 +4688,7 @@ mod test_context_advanced {
             0.0174532925199433,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         Ok(())
     }
 }

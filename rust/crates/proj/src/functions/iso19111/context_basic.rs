@@ -584,8 +584,7 @@ mod test {
         assert_eq!(
             data,
             format!(
-                "{}.{}.{}",
-                PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, PROJ_VERSION_PATCH
+                "{PROJ_VERSION_MAJOR}.{PROJ_VERSION_MINOR}.{PROJ_VERSION_PATCH}"
             )
         );
         Ok(())
@@ -637,7 +636,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("32631"));
         Ok(())
     }
@@ -645,7 +644,7 @@ mod test {
     fn test_uom_get_info_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.uom_get_info_from_database("EPSG", "9102")?;
-        println!("{:?}", info);
+        println!("{info:?}");
         assert_eq!(info.name(), "degree");
         assert_eq!(info.conv_factor(), &0.017453292519943295);
         assert_eq!(info.category(), &UomCategory::Angular);
@@ -655,7 +654,7 @@ mod test {
     fn test_grid_get_info_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.grid_get_info_from_database("au_icsm_GDA94_GDA2020_conformal.tif")?;
-        println!("{:?}", info);
+        println!("{info:?}");
         assert_eq!(
             info.full_name(),
             "https://cdn.proj.org/au_icsm_GDA94_GDA2020_conformal.tif"
@@ -701,7 +700,7 @@ mod test {
         for t in ProjType::iter() {
             let codes = ctx.get_codes_from_database("EPSG", t.clone(), true);
             if codes.is_err() {
-                println!("{:?}", t);
+                println!("{t:?}");
             } else {
                 let result = codes?;
                 println!("{:?}:{}", t, result.len());

@@ -571,8 +571,8 @@ mod test {
             }
         }
         println!("average distance: {:.2e}", all_dist / count as f64 / 3.0);
-        println!("max distance: {:.2e}", max_dist);
+        println!("max distance: {max_dist:.2e}");
         println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 6.0);
-        println!("max lonlat: {:.2e}", max_lonlat);
+        println!("max lonlat: {max_lonlat:.2e}");
     }
 }

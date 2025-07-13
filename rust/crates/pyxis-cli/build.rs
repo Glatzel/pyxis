@@ -28,7 +28,7 @@ fn main() {
                 .to_string()
         }
         other => {
-            panic!("Unsupported OS: {}", other)
+            panic!("Unsupported OS: {other}")
         }
     };
     if env::var("PROJ_DATA").is_err() {

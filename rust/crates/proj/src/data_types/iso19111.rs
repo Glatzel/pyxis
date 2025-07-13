@@ -663,7 +663,7 @@ impl Display for AllowIntermediateCrs {
             AllowIntermediateCrs::IfNoDirectTransformation => "IF_NO_DIRECT_TRANSFORMATION",
             AllowIntermediateCrs::Never => "NEVER",
         };
-        write!(f, "{}", text)
+        write!(f, "{text}")
     }
 }
 readonly_struct!(

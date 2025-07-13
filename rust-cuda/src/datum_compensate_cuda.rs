@@ -64,7 +64,7 @@ mod test {
         dxc.copy_to(&mut xc).unwrap();
         dyc.copy_to(&mut yc).unwrap();
 
-        println!("yc:{:?}", xc);
-        println!("yc:{:?}", yc);
+        println!("yc:{xc:?}");
+        println!("yc:{yc:?}");
     }
 }

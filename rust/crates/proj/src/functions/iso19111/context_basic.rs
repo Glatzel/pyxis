@@ -583,9 +583,7 @@ mod test {
             .unwrap();
         assert_eq!(
             data,
-            format!(
-                "{PROJ_VERSION_MAJOR}.{PROJ_VERSION_MINOR}.{PROJ_VERSION_PATCH}"
-            )
+            format!("{PROJ_VERSION_MAJOR}.{PROJ_VERSION_MINOR}.{PROJ_VERSION_PATCH}")
         );
         Ok(())
     }

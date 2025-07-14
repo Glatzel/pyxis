@@ -52,7 +52,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/pycparser-2.22-pyh29332c3_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pygments-2.19.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pytest-8.4.1-pyhd8ed1ab_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/linux-64/pytest-codspeed-3.2.0-py311he282080_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/pytest-codspeed-4.0.0-py311hb6eeb03_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pytest-cov-6.2.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/python-3.11.12-h9e4cc4f_0_cpython.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/python_abi-3.11-7_cp311.conda
@@ -1584,9 +1584,9 @@ packages:
   license: MIT
   size: 276562
   timestamp: 1750239526127
-- conda: https://conda.anaconda.org/conda-forge/linux-64/pytest-codspeed-3.2.0-py311he282080_0.conda
-  sha256: 296d3959c61d0791f606dd02b0899b96c176469f2ef83c65f458dc0aeb5cb58f
-  md5: ff90aef10212e46416d00b1d71b3ff46
+- conda: https://conda.anaconda.org/conda-forge/linux-64/pytest-codspeed-4.0.0-py311hb6eeb03_0.conda
+  sha256: 171d17b86f12f4e35f24746032d6efbd849b002dd9cafe4b136447e35ce909aa
+  md5: 6eecf346e5af3581076e93451bfbcd3a
   depends:
   - python
   - cffi >=1.17.1
@@ -1594,13 +1594,12 @@ packages:
   - pytest >=3.8
   - rich >=13.8.1
   - importlib-metadata >=8.5.0
+  - libgcc >=14
   - __glibc >=2.17,<3.0.a0
-  - libgcc >=13
   - python_abi 3.11.* *_cp311
   license: MIT
-  license_family: MIT
-  size: 41799
-  timestamp: 1745927946372
+  size: 132817
+  timestamp: 1752248907242
 - conda: https://conda.anaconda.org/conda-forge/noarch/pytest-cov-6.2.1-pyhd8ed1ab_0.conda
   sha256: 3a9fc07be76bc67aef355b78816b5117bfe686e7d8c6f28b45a1f89afe104761
   md5: ce978e1b9ed8b8d49164e90a5cdc94cd

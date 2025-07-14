@@ -7,7 +7,7 @@ edition = "2024"
 version = "0.0.27"
 
 [workspace.dependencies]
-proj = { path = "./crates/proj" }
+proj = { path  = "./crates/proj" }
 proj-sys = { path = "./crates/proj-sys" }
 pyxis = { path = "./crates/pyxis" }
 

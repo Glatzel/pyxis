@@ -1,8 +1,11 @@
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
+if (Test-Path $PSScriptRoot/setup.ps1) {
+    &$PSScriptRoot/setup.ps1
+}
 $ROOT = git rev-parse --show-toplevel
 Set-Location $PSScriptRoot/..
-$env:RUSTDOCFLAGS="--html-in-header katex.html -Dwarnings"
+$env:RUSTDOCFLAGS = "--html-in-header katex.html -Dwarnings"
 cargo doc --no-deps --all-features -p pyxis -p proj
 
 Remove-Item ./dist/rust-doc.7z -Force -ErrorAction SilentlyContinue

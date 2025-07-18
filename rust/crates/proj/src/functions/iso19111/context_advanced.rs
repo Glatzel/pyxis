@@ -279,7 +279,7 @@ impl Context {
                 linear_units_conv,
             )
         };
-        Proj::new_with_owned_cstrings(self.clone(), ptr, owned)
+        Proj::new_with_owned_cstrings(self, ptr, owned)
     }
     ///Create a GeodeticCRS of geocentric type.
     ///

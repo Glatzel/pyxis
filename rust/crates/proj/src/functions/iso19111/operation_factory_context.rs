@@ -43,7 +43,7 @@ impl Context {
 impl OperationFactoryContext {
     ///# See Also
     /// * [`crate::Context::create_operation_factory_context`]
-    pub fn from_context(ctx: Arc<Context>, authority: Option<&str>) -> OperationFactoryContext {
+    pub fn from_context(ctx: &Arc<Context>, authority: Option<&str>) -> OperationFactoryContext {
         ctx.create_operation_factory_context(authority)
     }
     ///Set the desired accuracy of the resulting coordinate transformations.
@@ -333,7 +333,7 @@ impl OperationFactoryContext {
                 self.ptr,
             )
         };
-        ProjObjList::new(self.ctx, ptr)
+        ProjObjList::new(&self.ctx, ptr)
     }
 }
 impl Drop for OperationFactoryContext {
@@ -354,7 +354,7 @@ mod test {
     #[test]
     fn test_settings() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let factory = OperationFactoryContext::from_context(ctx, None);
+        let factory = OperationFactoryContext::from_context(&ctx, None);
         factory
             .set_desired_accuracy(1.0)
             .set_area_of_interest(-60.0, 90.0, 60.0, 90.0)
@@ -371,7 +371,7 @@ mod test {
     #[test]
     fn test_create_operations() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let factory = OperationFactoryContext::from_context(ctx, None);
+        let factory = OperationFactoryContext::from_context(&ctx, None);
         let source_crs = ctx.create_from_database(
             "EPSG",
             "4267",

@@ -33,7 +33,7 @@ impl crate::Context {
         self: &Arc<Self>,
         db_path: &Path,
         aux_db_paths: Option<&[PathBuf]>,
-    ) -> miette::Result<Arc<Self>> {
+    ) -> miette::Result<& Arc<Self>> {
         let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
             aux_db_paths
                 .iter()

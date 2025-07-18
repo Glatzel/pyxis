@@ -16,7 +16,7 @@ impl crate::Proj {
         if ptr.is_null() {
             return None;
         }
-        Some(Proj::new(self.ctx, ptr).unwrap())
+        Some(Proj::new(&self.ctx, ptr).unwrap())
     }
     ///Transform a series of coordinates
     ///

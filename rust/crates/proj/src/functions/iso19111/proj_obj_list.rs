@@ -133,7 +133,7 @@ impl Context {
                 owned.push_option(crs_type),
             )
         };
-        ProjObjList::new_with_owned_cstrings(&self, ptr, owned)
+        ProjObjList::new_with_owned_cstrings(self, ptr, owned)
     }
 }
 impl Proj {

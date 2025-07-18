@@ -31,8 +31,7 @@ pub(crate) fn new_test_ctx() -> miette::Result<Arc<Context>> {
     } else {
         panic!("Unsupported OS")
     };
-    ctx
-        .set_database_path(&default_proj_data.join("proj.db"), None)?;
+    ctx.set_database_path(&default_proj_data.join("proj.db"), None)?;
     ctx.set_search_paths(&[&default_proj_data])?;
     Ok(ctx)
 }

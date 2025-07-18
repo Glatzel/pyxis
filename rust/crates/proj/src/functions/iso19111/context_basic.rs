@@ -33,7 +33,7 @@ impl crate::Context {
         self: &Arc<Self>,
         db_path: &Path,
         aux_db_paths: Option<&[PathBuf]>,
-    ) -> miette::Result<& Arc<Self>> {
+    ) -> miette::Result<&Arc<Self>> {
         let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
             aux_db_paths
                 .iter()
@@ -616,11 +616,7 @@ mod test {
     fn test_create_from_wkt() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         //invalid
-        assert!(
-            ctx
-                .create_from_wkt("invalid wkt", None, None)
-                .is_err()
-        );
+        assert!(ctx.create_from_wkt("invalid wkt", None, None).is_err());
         //valid
         ctx.create_from_wkt(
             &ctx.create("EPSG:4326")?.as_wkt(

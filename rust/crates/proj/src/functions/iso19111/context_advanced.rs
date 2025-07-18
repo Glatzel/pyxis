@@ -357,7 +357,10 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
-    pub fn create_engineering_crs(self: &Arc<Self>, crs_name: Option<&str>) -> miette::Result<Proj> {
+    pub fn create_engineering_crs(
+        self: &Arc<Self>,
+        crs_name: Option<&str>,
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr =
             unsafe { proj_sys::proj_create_engineering_crs(self.ptr, owned.push_option(crs_name)) };
@@ -3172,8 +3175,7 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_geographic_crs_from_datum(
             Some("WGS 84"),
-            &ctx
-                .create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?
+            &ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?
                 .crs_get_datum()?
                 .unwrap(),
             &ctx.create_ellipsoidal_2d_cs(
@@ -3358,11 +3360,8 @@ mod test_context_advanced {
     #[test]
     fn test_create_transformation() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let geog_cs = ctx.create_ellipsoidal_2d_cs(
-            EllipsoidalCs2dType::LongitudeLatitude,
-            None,
-            0.0,
-        )?;
+        let geog_cs =
+            ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
         let source_crs = ctx.create_geographic_crs(
             Some("Source CRS"),
             Some("World Geodetic System 1984"),
@@ -3433,11 +3432,8 @@ mod test_context_advanced {
                 UnitType::Scale,
             )],
         )?;
-        let geog_cs = ctx.create_ellipsoidal_2d_cs(
-            EllipsoidalCs2dType::LongitudeLatitude,
-            None,
-            0.0,
-        )?;
+        let geog_cs =
+            ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
 
         let geog_crs = ctx.create_geographic_crs(
             Some("WGS 84"),
@@ -3451,9 +3447,7 @@ mod test_context_advanced {
             0.0174532925199433,
             &geog_cs,
         )?;
-        let cs =
-            ctx
-                .create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+        let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
         let pj: Proj = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
 
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -3481,8 +3475,7 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let crs = ctx.create("EPSG:4979")?;
         let vert_crs =
-            ctx
-                .create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
+            ctx.create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
 
         let bound_crs = ctx.crs_create_bound_vertical_crs(&vert_crs, &crs, "foo.gtx")?;
         let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;

@@ -43,7 +43,7 @@ impl Context {
 impl OperationFactoryContext {
     ///# See Also
     /// * [`crate::Context::create_operation_factory_context`]
-    pub fn from_context<'a>(ctx: Arc<Context>, authority: Option<&str>) -> OperationFactoryContext {
+    pub fn from_context(ctx: Arc<Context>, authority: Option<&str>) -> OperationFactoryContext {
         ctx.create_operation_factory_context(authority)
     }
     ///Set the desired accuracy of the resulting coordinate transformations.

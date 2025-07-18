@@ -28,7 +28,7 @@ macro_rules! readonly_struct {
 }
 
 pub(crate) use readonly_struct;
-impl crate::Proj<'_> {
+impl crate::Proj {
     /// Panic if a `Proj` object is not CRS.
     pub fn assert_crs(&self) -> miette::Result<&Self> {
         if !self.is_crs() {
@@ -45,7 +45,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         //is crs
         {
-            let pj = ctx.create("EPSG:4326")?;
+            let pj = ctx.clone().create("EPSG:4326")?;
             assert!(pj.assert_crs().is_ok());
         }
         //not crs

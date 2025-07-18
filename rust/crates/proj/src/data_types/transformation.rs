@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 use crate::OwnedCStrings;
@@ -8,17 +10,14 @@ use crate::OwnedCStrings;
 ///
 /// # References
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ>
-pub struct Proj<'a> {
+pub struct Proj {
     ptr: *mut proj_sys::PJ,
-    pub(crate) ctx: &'a crate::Context,
+    pub(crate) ctx: Arc<Context>,
     _owned_cstrings: OwnedCStrings,
 }
-impl Proj<'_> {
+impl Proj {
     /// Create a `Proj` object from pointer, panic if pointer is null.
-    pub(crate) fn new(
-        ctx: &crate::Context,
-        ptr: *mut proj_sys::PJ,
-    ) -> miette::Result<crate::Proj<'_>> {
+    pub(crate) fn new(ctx: Arc<Context>, ptr: *mut proj_sys::PJ) -> miette::Result<crate::Proj> {
         if ptr.is_null() {
             miette::bail!("Proj pointer is null.");
         }
@@ -30,10 +29,10 @@ impl Proj<'_> {
     }
     /// Create a `Proj` object from pointer, panic if pointer is null.
     pub(crate) fn new_with_owned_cstrings(
-        ctx: &crate::Context,
+        ctx: Arc<Context>,
         ptr: *mut proj_sys::PJ,
         owned_cstrings: OwnedCStrings,
-    ) -> miette::Result<crate::Proj<'_>> {
+    ) -> miette::Result<crate::Proj> {
         if ptr.is_null() {
             miette::bail!("Proj pointer is null.");
         }
@@ -72,6 +71,10 @@ pub enum Direction {
 pub struct Context {
     pub(crate) ptr: *mut proj_sys::PJ_CONTEXT,
 }
+
+unsafe impl Send for Context {}
+
+unsafe impl Sync for Context {}
 ///Opaque object describing an area in which a transformation is performed.
 ///
 ///It is used with proj_create_crs_to_crs() to select the best transformation
@@ -90,7 +93,7 @@ mod test {
     #[test]
     fn test_proj_new() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = Proj::new(&ctx, std::ptr::null_mut());
+        let pj = Proj::new(ctx, std::ptr::null_mut());
         assert!(pj.is_err());
         Ok(())
     }

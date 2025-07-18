@@ -1,19 +1,21 @@
 use std::io::Write;
 use std::path::PathBuf;
+use std::sync::Arc;
 
 use miette::IntoDiagnostic;
+use proj::Context;
 
 const PROJ_DB: &[u8] = include_bytes!(concat!(env!("PROJ_DATA"), "/proj.db"));
-pub fn init_proj_builder() -> miette::Result<proj::Context> {
-    let ctx = proj::Context::default();
+pub fn init_proj_builder() -> miette::Result<Arc<Context>> {
+    let ctx = proj::Context::new();
 
     // setup logging
-    ctx.set_log_level(proj::LogLevel::Trace)?;
+    ctx.clone().set_log_level(proj::LogLevel::Trace)?;
 
     // search for proj.db
     if let Ok(proj_data) = std::env::var("PROJ_DATA") {
         clerk::info!("PROJ_DATA environment variable is found: {proj_data}");
-        ctx.set_search_paths(&[&PathBuf::from(proj_data)])?;
+        ctx.clone().set_search_paths(&[&PathBuf::from(proj_data)])?;
     } else {
         clerk::debug!("PROJ_DATA environment variable is not found");
         let exe_path = std::env::current_exe().into_diagnostic()?;
@@ -24,7 +26,7 @@ pub fn init_proj_builder() -> miette::Result<proj::Context> {
             db_file.write_all(PROJ_DB).into_diagnostic()?;
             clerk::info!("Write to: {}", exe_root.join("proj.db").to_str().unwrap());
         }
-        ctx.set_search_paths(&[exe_root])?;
+        ctx.clone().set_search_paths(&[exe_root])?;
     }
     Ok(ctx)
 }

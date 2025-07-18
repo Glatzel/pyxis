@@ -1,11 +1,12 @@
 use std::ffi::CString;
 use std::fmt::Display;
+use std::sync::Arc;
 
 use envoy::ToCString;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{AsRefStr, EnumString};
 
-use crate::{OwnedCStrings, Proj, readonly_struct};
+use crate::{Context, OwnedCStrings, Proj, readonly_struct};
 ///Guessed WKT "dialect".
 ///
 /// # Reference
@@ -722,26 +723,26 @@ readonly_struct!(
     {open_license:bool,"a boolean value to store whether the grid is released with an open license."},
     {available:bool,"a boolean value to store whether the grid is available at runtime."}
 );
-pub struct InsertObjectSession<'a> {
-    pub(crate) ctx: &'a crate::Context,
+pub struct InsertObjectSession {
+    pub(crate) ctx: Arc<Context>,
     pub(crate) ptr: *mut proj_sys::PJ_INSERT_SESSION,
 }
 
-pub struct OperationFactoryContext<'a> {
-    pub(crate) ctx: &'a crate::Context,
+pub struct OperationFactoryContext {
+    pub(crate) ctx: Arc<Context>,
     pub(crate) ptr: *mut proj_sys::PJ_OPERATION_FACTORY_CONTEXT,
 }
-pub struct ProjObjList<'a> {
-    pub(crate) ctx: &'a crate::Context,
+pub struct ProjObjList {
+    pub(crate) ctx: Arc<Context>,
     ptr: *mut proj_sys::PJ_OBJ_LIST,
     count: usize,
     pub(crate) _owned_cstrings: OwnedCStrings,
 }
-impl ProjObjList<'_> {
+impl ProjObjList {
     pub(crate) fn new(
-        ctx: &crate::Context,
+        ctx: Arc<Context>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
-    ) -> miette::Result<ProjObjList<'_>> {
+    ) -> miette::Result<ProjObjList> {
         if ptr.is_null() {
             miette::bail!("PJ_OBJ_LIST pointer is null.");
         }
@@ -760,10 +761,10 @@ impl ProjObjList<'_> {
 
     /// Create a `ProjObjList` object from pointer, panic if pointer is null.
     pub(crate) fn new_with_owned_cstrings(
-        ctx: &crate::Context,
+        ctx: Arc<Context>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
         owned_cstrings: OwnedCStrings,
-    ) -> miette::Result<ProjObjList<'_>> {
+    ) -> miette::Result<ProjObjList> {
         if ptr.is_null() {
             miette::bail!("PJ_OBJ_LIST pointer is null.");
         }
@@ -786,13 +787,13 @@ impl ProjObjList<'_> {
     /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
-    pub fn get(&self, index: usize) -> miette::Result<Proj<'_>> {
+    pub fn get(&self, index: usize) -> miette::Result<Proj> {
         if index > self.count {
             miette::bail!("Error");
         }
         let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, index as i32) };
 
-        Proj::new_with_owned_cstrings(self.ctx, ptr, self._owned_cstrings.clone())
+        Proj::new_with_owned_cstrings(self.ctx.clone(), ptr, self._owned_cstrings.clone())
     }
     ///Return the number of objects in the result set.
     ///

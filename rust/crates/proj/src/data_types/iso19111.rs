@@ -740,7 +740,7 @@ pub struct ProjObjList {
 }
 impl ProjObjList {
     pub(crate) fn new(
-        ctx: Arc<Context>,
+        ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
     ) -> miette::Result<ProjObjList> {
         if ptr.is_null() {
@@ -752,7 +752,7 @@ impl ProjObjList {
         }
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
-            ctx,
+            ctx: ctx.clone(),
             ptr,
             count: count as usize,
             _owned_cstrings: OwnedCStrings::new(),
@@ -761,7 +761,7 @@ impl ProjObjList {
 
     /// Create a `ProjObjList` object from pointer, panic if pointer is null.
     pub(crate) fn new_with_owned_cstrings(
-        ctx: Arc<Context>,
+        ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
         owned_cstrings: OwnedCStrings,
     ) -> miette::Result<ProjObjList> {
@@ -774,7 +774,7 @@ impl ProjObjList {
         }
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
-            ctx,
+            ctx: ctx.clone(),
             ptr,
             count: count as usize,
             _owned_cstrings: owned_cstrings,
@@ -793,7 +793,7 @@ impl ProjObjList {
         }
         let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, index as i32) };
 
-        Proj::new_with_owned_cstrings(self.ctx.clone(), ptr, self._owned_cstrings.clone())
+        Proj::new_with_owned_cstrings(&self.ctx, ptr, self._owned_cstrings.clone())
     }
     ///Return the number of objects in the result set.
     ///

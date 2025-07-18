@@ -8,7 +8,7 @@ use crate::check_result;
 
 ///Setting custom I/O functions
 impl crate::Context {
-    fn _set_fileapi(self: Arc<Self>) { todo!() }
+    fn _set_fileapi(self: &Arc<Self>) { todo!() }
 
     ///Set the name of a custom SQLite3 VFS.
     ///
@@ -26,7 +26,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
-    pub fn set_sqlite3_vfs_name(self: Arc<Self>, name: &str) -> miette::Result<Arc<Self>> {
+    pub fn set_sqlite3_vfs_name(self: &Arc<Self>, name: &str) -> miette::Result<&Arc<Self>> {
         unsafe {
             proj_sys::proj_context_set_sqlite3_vfs_name(self.ptr, name.to_cstring().as_ptr());
         };
@@ -36,7 +36,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_file_finder>
-    fn _set_file_finder(self: Arc<Self>) { todo!() }
+    fn _set_file_finder(self: &Arc<Self>) { todo!() }
     ///Sets search paths.
     ///
     ///Those search paths will be used whenever PROJ must open one of its
@@ -54,7 +54,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_search_paths>
-    pub fn set_search_paths(self: Arc<Self>, paths: &[&Path]) -> miette::Result<Arc<Self>> {
+    pub fn set_search_paths(self: &Arc<Self>, paths: &[&Path]) -> miette::Result<&Arc<Self>> {
         clerk::debug!("search_paths:{:?}", paths);
         let len = paths.len();
         let paths: VecCString = paths
@@ -88,7 +88,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
-    pub fn set_ca_bundle_path(self: Arc<Self>, path: Option<&Path>) -> miette::Result<Arc<Self>> {
+    pub fn set_ca_bundle_path(self: &Arc<Self>, path: Option<&Path>) -> miette::Result<&Arc<Self>> {
         let path = path.map(|s| s.to_str().unwrap().to_cstring());
         unsafe {
             proj_sys::proj_context_set_ca_bundle_path(

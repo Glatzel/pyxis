@@ -36,10 +36,10 @@ impl ProjObjList {
         let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr(), index) };
 
         if self._owned_cstrings.len() > 0 {
-            Ok(Some(Proj::new(self.ctx.clone(), ptr)?))
+            Ok(Some(Proj::new(&self.ctx, ptr)?))
         } else {
             Ok(Some(Proj::new_with_owned_cstrings(
-                self.ctx.clone(),
+                &self.ctx,
                 ptr,
                 self._owned_cstrings.clone(),
             )?))
@@ -77,7 +77,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
     pub fn create_from_name(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         auth_name: Option<&str>,
         searched_name: &str,
         types: Option<&[ProjType]>,
@@ -117,7 +117,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
     pub fn query_geodetic_crs_from_datum(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         crs_auth_name: Option<&str>,
         datum_auth_name: &str,
         datum_code: &str,
@@ -144,7 +144,7 @@ impl Proj {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
     pub fn get_non_deprecated(&self) -> miette::Result<ProjObjList> {
         let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
-        ProjObjList::new(self.ctx.clone(), result)
+        ProjObjList::new(&self.ctx, result)
     }
 
     ///Identify the CRS with reference CRSs.
@@ -204,7 +204,7 @@ impl Proj {
                 &mut confidence.as_mut_ptr(),
             )
         };
-        ProjObjList::new(self.ctx.clone(), result)
+        ProjObjList::new(&self.ctx, result)
     }
 }
 #[cfg(test)]

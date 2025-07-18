@@ -30,10 +30,10 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
     pub fn set_database_path(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         db_path: &Path,
         aux_db_paths: Option<&[PathBuf]>,
-    ) -> miette::Result<Arc<Self>> {
+    ) -> miette::Result<&Arc<Self>> {
         let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
             aux_db_paths
                 .iter()
@@ -81,7 +81,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
-    pub fn get_database_metadata(self: Arc<Self>, key: DatabaseMetadataKey) -> Option<String> {
+    pub fn get_database_metadata(self: &Arc<Self>, key: DatabaseMetadataKey) -> Option<String> {
         unsafe {
             proj_sys::proj_context_get_database_metadata(
                 self.ptr,
@@ -112,7 +112,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
-    pub fn guess_wkt_dialect(self: Arc<Self>, wkt: &str) -> miette::Result<GuessedWktDialect> {
+    pub fn guess_wkt_dialect(self: &Arc<Self>, wkt: &str) -> miette::Result<GuessedWktDialect> {
         GuessedWktDialect::try_from(unsafe {
             proj_sys::proj_context_guess_wkt_dialect(self.ptr, wkt.to_cstring().as_ptr())
         })
@@ -142,7 +142,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_wkt>
     pub fn create_from_wkt(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         wkt: &str,
         strict: Option<bool>,
         unset_identifiers_if_incompatible_def: Option<bool>,
@@ -194,7 +194,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_database>
     pub fn create_from_database(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         auth_name: &str,
         code: &str,
         category: Category,
@@ -223,7 +223,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>
     pub fn uom_get_info_from_database(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         auth_name: &str,
         code: &str,
     ) -> miette::Result<UomInfo> {
@@ -260,7 +260,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_get_info_from_database>
     pub fn grid_get_info_from_database(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         grid_name: &str,
     ) -> miette::Result<GridInfoDB> {
         let mut full_name: *const std::ffi::c_char = std::ptr::null();
@@ -309,7 +309,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_geoid_models_from_database>
     pub fn get_geoid_models_from_database(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         auth_name: &str,
         code: &str,
     ) -> miette::Result<Vec<String>> {
@@ -359,7 +359,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_codes_from_database>
     pub fn get_codes_from_database(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         auth_name: &str,
         proj_type: ProjType,
         allow_deprecated: bool,
@@ -394,7 +394,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
     pub fn get_celestial_body_list_from_database(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         auth_name: &str,
     ) -> miette::Result<Vec<CelestialBodyInfo>> {
         let mut out_result_count = i32::default();
@@ -440,7 +440,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
     pub fn get_crs_info_list_from_database(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         auth_name: Option<&str>,
         params: Option<CrsListParameters>,
     ) -> miette::Result<Vec<CrsInfo>> {
@@ -523,7 +523,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_units_from_database>
     pub fn get_units_from_database(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         auth_name: &str,
         category: UnitCategory,
         allow_deprecated: bool,
@@ -606,7 +606,7 @@ mod test {
     #[test]
     fn test_guess_wkt_dialect() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = ctx.clone().create("EPSG:4326")?;
+        let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         let dialect = ctx.guess_wkt_dialect(&wkt)?;
         assert_eq!(dialect, GuessedWktDialect::Wkt2_2019);
@@ -616,13 +616,9 @@ mod test {
     fn test_create_from_wkt() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         //invalid
-        assert!(
-            ctx.clone()
-                .create_from_wkt("invalid wkt", None, None)
-                .is_err()
-        );
+        assert!(ctx.create_from_wkt("invalid wkt", None, None).is_err());
         //valid
-        ctx.clone().create_from_wkt(
+        ctx.create_from_wkt(
             &ctx.create("EPSG:4326")?.as_wkt(
                 WktType::Wkt2_2019,
                 None,
@@ -704,7 +700,7 @@ mod test {
     fn test_get_codes_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         for t in ProjType::iter() {
-            let codes = ctx.clone().get_codes_from_database("EPSG", t.clone(), true);
+            let codes = ctx.get_codes_from_database("EPSG", t.clone(), true);
             if codes.is_err() {
                 println!("{t:?}");
             } else {

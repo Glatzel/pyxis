@@ -17,19 +17,19 @@ pub struct Proj {
 }
 impl Proj {
     /// Create a `Proj` object from pointer, panic if pointer is null.
-    pub(crate) fn new(ctx: Arc<Context>, ptr: *mut proj_sys::PJ) -> miette::Result<crate::Proj> {
+    pub(crate) fn new(ctx: &Arc<Context>, ptr: *mut proj_sys::PJ) -> miette::Result<crate::Proj> {
         if ptr.is_null() {
             miette::bail!("Proj pointer is null.");
         }
         Ok(crate::Proj {
-            ctx,
+            ctx: ctx.clone(),
             ptr,
             _owned_cstrings: OwnedCStrings::new(),
         })
     }
     /// Create a `Proj` object from pointer, panic if pointer is null.
     pub(crate) fn new_with_owned_cstrings(
-        ctx: Arc<Context>,
+        ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ,
         owned_cstrings: OwnedCStrings,
     ) -> miette::Result<crate::Proj> {
@@ -37,7 +37,7 @@ impl Proj {
             miette::bail!("Proj pointer is null.");
         }
         Ok(crate::Proj {
-            ctx,
+            ctx: ctx.clone(),
             ptr,
             _owned_cstrings: owned_cstrings,
         })
@@ -93,7 +93,7 @@ mod test {
     #[test]
     fn test_proj_new() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = Proj::new(ctx, std::ptr::null_mut());
+        let pj = Proj::new(&ctx, std::ptr::null_mut());
         assert!(pj.is_err());
         Ok(())
     }

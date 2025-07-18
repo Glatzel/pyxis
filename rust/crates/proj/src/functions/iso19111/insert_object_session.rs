@@ -21,7 +21,7 @@ impl Context {
     /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_create>
-    pub fn insert_object_session_create(self: Arc<Context>) -> InsertObjectSession {
+    pub fn insert_object_session_create(self: &Arc<Self>) -> InsertObjectSession {
         InsertObjectSession {
             ctx: self.clone(),
             ptr: unsafe { proj_sys::proj_insert_object_session_create(self.ptr) },
@@ -134,7 +134,7 @@ mod test {
                                ORDER[2],
                                ANGLEUNIT[\"degree\",0.0174532925199433]]]";
         println!("{wkt}");
-        let crs = ctx.clone().create_from_wkt(wkt, None, None)?;
+        let crs = ctx.create_from_wkt(wkt, None, None)?;
         let session = InsertObjectSession::from_context(ctx);
         let statements = session.get_insert_statements(&crs, "HOBU", "XXXX", false, None)?;
         for i in statements.iter() {

@@ -14,9 +14,8 @@ impl crate::Context {
         let ctx = Arc::new(Self {
             ptr: unsafe { proj_sys::proj_context_create() },
         });
-        ctx.clone().set_log_level(LogLevel::None).unwrap();
-        ctx.clone()
-            .set_log_fn(null_mut::<c_void>(), Some(crate::proj_clerk))
+        ctx.set_log_level(LogLevel::None).unwrap();
+        ctx.set_log_fn(null_mut::<c_void>(), Some(crate::proj_clerk))
             .unwrap();
         ctx
     }

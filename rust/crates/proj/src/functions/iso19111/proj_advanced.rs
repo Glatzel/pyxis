@@ -23,7 +23,7 @@ impl Proj {
         let ptr = unsafe {
             proj_sys::proj_alter_name(self.ctx.ptr, self.ptr(), name.to_cstring().as_ptr())
         };
-        Proj::new(self.ctx.clone(), ptr)
+        Proj::new(&self.ctx, ptr)
     }
     ///Return a copy of the object with its identifier changed/set.
     ///
@@ -46,7 +46,7 @@ impl Proj {
                 code.to_cstring().as_ptr(),
             )
         };
-        Proj::new(self.ctx.clone(), ptr)
+        Proj::new(&self.ctx, ptr)
     }
     ///Return a copy of the CRS with its geodetic CRS changed.
     ///
@@ -67,7 +67,7 @@ impl Proj {
         let ptr = unsafe {
             proj_sys::proj_crs_alter_geodetic_crs(self.ctx.ptr, self.ptr(), new_geod_crs.ptr())
         };
-        Proj::new(self.ctx.clone(), ptr)
+        Proj::new(&self.ctx, ptr)
     }
     ///Return a copy of the CRS with its angular units changed.
     ///
@@ -102,7 +102,7 @@ impl Proj {
                 owned.push_option(unit_code),
             )
         };
-        Proj::new_with_owned_cstrings(self.ctx.clone(), ptr, owned)
+        Proj::new_with_owned_cstrings(&self.ctx, ptr, owned)
     }
     ///Return a copy of the CRS with the linear units of its coordinate system
     /// changed.
@@ -140,7 +140,7 @@ impl Proj {
                 owned.push_option(unit_code),
             )
         };
-        Proj::new_with_owned_cstrings(self.ctx.clone(), ptr, owned)
+        Proj::new_with_owned_cstrings(&self.ctx, ptr, owned)
     }
     ///Return a copy of the CRS with the linear units of the parameters of its
     /// conversion modified.
@@ -182,7 +182,7 @@ impl Proj {
                 convert_to_new_unit as i32,
             )
         };
-        Proj::new_with_owned_cstrings(self.ctx.clone(), ptr, owned)
+        Proj::new_with_owned_cstrings(&self.ctx, ptr, owned)
     }
     ///Create a 3D CRS from an existing 2D CRS.
     ///
@@ -206,7 +206,7 @@ impl Proj {
                 self.ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self.ctx.clone(), ptr, owned)
+        Proj::new_with_owned_cstrings(&self.ctx, ptr, owned)
     }
     ///Create a projected 3D CRS from an existing projected 2D CRS.
     ///
@@ -247,7 +247,7 @@ impl Proj {
                 geog_3d_crs.map_or(ptr::null(), |crs| crs.ptr()),
             )
         };
-        Proj::new(self.ctx.clone(), ptr)
+        Proj::new(&self.ctx, ptr)
     }
     ///Create a 2D CRS from an existing 3D CRS.
     ///
@@ -267,7 +267,7 @@ impl Proj {
                 self.ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self.ctx.clone(), ptr, owned)
+        Proj::new_with_owned_cstrings(&self.ctx, ptr, owned)
     }
     ///Return an equivalent projection.
     ///
@@ -311,7 +311,7 @@ impl Proj {
                 owned.push_option(new_method_name),
             )
         };
-        Proj::new_with_owned_cstrings(self.ctx.clone(), ptr, owned)
+        Proj::new_with_owned_cstrings(&self.ctx, ptr, owned)
     }
     ///Returns potentially a BoundCRS, with a transformation to EPSG:4326,
     /// wrapping this CRS.
@@ -339,7 +339,7 @@ impl Proj {
                 options.as_vec_ptr().as_ptr(),
             )
         };
-        crate::Proj::new(self.ctx.clone(), ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
 }
 
@@ -351,7 +351,7 @@ mod test_proj_advanced {
     #[test]
     fn test_alter_name() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj = ctx.clone().create_geographic_crs(
+        let pj: Proj = ctx.create_geographic_crs(
             Some("WGS 84"),
             Some("World Geodetic System 1984"),
             Some("WGS84"),
@@ -376,7 +376,7 @@ mod test_proj_advanced {
     #[test]
     fn test_alter_id() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj = ctx.clone().create_geographic_crs(
+        let pj: Proj = ctx.create_geographic_crs(
             Some("WGS 84"),
             Some("World Geodetic System 1984"),
             Some("WGS84"),
@@ -492,7 +492,7 @@ mod test_proj_advanced {
     fn test_convert_conversion_to_other_method() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
 
-        let conv = ctx.clone().create_conversion_mercator_variant_a(
+        let conv = ctx.create_conversion_mercator_variant_a(
             0.0,
             1.0,
             0.99,
@@ -503,13 +503,10 @@ mod test_proj_advanced {
             Some("Metre"),
             1.0,
         )?;
-        let geog_cs = ctx.clone().create_ellipsoidal_2d_cs(
-            EllipsoidalCs2dType::LongitudeLatitude,
-            None,
-            0.0,
-        )?;
+        let geog_cs =
+            ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
 
-        let geog_crs = ctx.clone().create_geographic_crs(
+        let geog_crs = ctx.create_geographic_crs(
             Some("WGS 84"),
             Some("World Geodetic System 1984"),
             Some("WGS 84"),
@@ -521,9 +518,7 @@ mod test_proj_advanced {
             0.0174532925199433,
             &geog_cs,
         )?;
-        let cs =
-            ctx.clone()
-                .create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+        let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
         let pj: Proj = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");

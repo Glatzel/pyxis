@@ -1,4 +1,5 @@
 use std::ffi::c_void;
+use std::sync::Arc;
 
 use envoy::CStrToString;
 use miette::IntoDiagnostic;
@@ -17,17 +18,17 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
 }
 
 impl crate::Context {
-    pub fn set_log_level(&self, level: LogLevel) -> miette::Result<&Self> {
+    pub fn set_log_level(self: Arc<Self>, level: LogLevel) -> miette::Result<Arc<Self>> {
         let level = unsafe { proj_sys::proj_log_level(self.ptr, level.into()) };
         let _ = LogLevel::try_from(level).into_diagnostic()?;
         Ok(self)
     }
 
     pub(crate) fn set_log_fn(
-        &self,
+        self: Arc<Self>,
         app_data: *mut c_void,
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
-    ) -> miette::Result<&Self> {
+    ) -> miette::Result<Arc<Self>> {
         unsafe {
             proj_sys::proj_log_func(self.ptr, app_data, logf);
         };
@@ -43,7 +44,7 @@ mod test {
     #[test]
     fn test_log() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.set_log_level(LogLevel::Trace)?;
+        ctx.clone().set_log_level(LogLevel::Trace)?;
         let _ = ctx.create("EPSG:4326")?;
 
         Ok(())
@@ -52,7 +53,7 @@ mod test {
     #[test]
     fn test_log_error() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.set_log_level(LogLevel::Trace)?;
+        ctx.clone().set_log_level(LogLevel::Trace)?;
         let pj = ctx.create("Unknown crs");
         assert!(pj.is_err());
         Ok(())
@@ -61,10 +62,10 @@ mod test {
     #[test]
     fn test_log_change_level() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        ctx.set_log_level(LogLevel::Debug)?;
-        let pj = ctx.create("Show log");
+        ctx.clone().set_log_level(LogLevel::Debug)?;
+        let pj = ctx.clone().create("Show log");
         assert!(pj.is_err());
-        ctx.set_log_level(LogLevel::None)?;
+        ctx.clone().set_log_level(LogLevel::None)?;
         let pj = ctx.create("Hide log");
         assert!(pj.is_err());
         Ok(())

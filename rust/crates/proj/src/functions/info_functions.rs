@@ -19,7 +19,7 @@ pub fn info() -> Info {
     )
 }
 ///# Info functions
-impl crate::Proj<'_> {
+impl crate::Proj {
     /// Get information about a specific grid.
     ///
     /// References

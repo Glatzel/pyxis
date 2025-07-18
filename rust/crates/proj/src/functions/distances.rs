@@ -1,6 +1,6 @@
 use crate::{ToCoord, check_result};
 ///# Distances
-impl crate::Proj<'_> {
+impl crate::Proj {
     ///Calculate geodesic distance between two points in geodetic coordinates.
     /// The calculated distance is between the two points located on the
     /// ellipsoid.

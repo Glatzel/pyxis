@@ -1,4 +1,5 @@
 use std::ptr;
+use std::sync::Arc;
 
 use envoy::{AsVecPtr, ToCString};
 
@@ -17,10 +18,10 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
     pub fn create_cs(
-        &self,
+        self: Arc<Self>,
         coordinate_system_type: CoordinateSystemType,
         axis: &[AxisDescription],
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let axis_count = axis.len();
         let mut axis_vec: Vec<proj_sys::PJ_AXIS_DESCRIPTION> = Vec::with_capacity(axis_count);
         for a in axis {
@@ -55,11 +56,11 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
     pub fn create_cartesian_2d_cs(
-        &self,
+        self: Arc<Self>,
         ellipsoidal_cs_2d_type: CartesianCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let unit_name = unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
@@ -84,11 +85,11 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
     pub fn create_ellipsoidal_2d_cs(
-        &self,
+        self: Arc<Self>,
         ellipsoidal_cs_2d_type: EllipsoidalCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
@@ -120,13 +121,13 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
     pub fn create_ellipsoidal_3d_cs(
-        &self,
+        self: Arc<Self>,
         ellipsoidal_cs_3d_type: EllipsoidalCs3dType,
         horizontal_angular_unit_name: Option<&str>,
         horizontal_angular_unit_conv_factor: f64,
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let horizontal_angular_unit_name = horizontal_angular_unit_name.map(|s| s.to_cstring());
         let vertical_linear_unit_name = vertical_linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
@@ -164,7 +165,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs>
     pub fn create_geographic_crs(
-        &self,
+        self: Arc<Self>,
         crs_name: Option<&str>,
         datum_name: Option<&str>,
         ellps_name: Option<&str>,
@@ -175,7 +176,7 @@ impl Context {
         pm_angular_units: Option<&str>,
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
@@ -207,11 +208,11 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs_from_datum>
     pub fn create_geographic_crs_from_datum(
-        &self,
+        self: Arc<Self>,
         crs_name: Option<&str>,
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
@@ -248,7 +249,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geocentric_crs>
     pub fn create_geocentric_crs(
-        &self,
+        self: Arc<Self>,
         crs_name: Option<&str>,
         datum_name: Option<&str>,
         ellps_name: Option<&str>,
@@ -260,7 +261,7 @@ impl Context {
         angular_units_conv: f64,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
@@ -278,7 +279,7 @@ impl Context {
                 linear_units_conv,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.clone(), ptr, owned)
     }
     ///Create a GeodeticCRS of geocentric type.
     ///
@@ -296,12 +297,12 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geocentric_crs_from_datum>
     pub fn create_geocentric_crs_from_datum(
-        &self,
+        self: Arc<Self>,
         crs_name: Option<&str>,
         datum_or_datum_ensemble: &Proj,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
@@ -328,12 +329,12 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_derived_geographic_crs>
     pub fn create_derived_geographic_crs(
-        &self,
+        self: Arc<Self>,
         crs_name: Option<&str>,
         base_geographic_crs: &Proj,
         conversion: &Proj,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
@@ -356,7 +357,7 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
-    pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> miette::Result<Proj<'_>> {
+    pub fn create_engineering_crs(self: Arc<Self>, crs_name: Option<&str>) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr =
             unsafe { proj_sys::proj_create_engineering_crs(self.ptr, owned.push_option(crs_name)) };
@@ -377,12 +378,12 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_vertical_crs>
     pub fn create_vertical_crs(
-        &self,
+        self: Arc<Self>,
         crs_name: Option<&str>,
         datum_name: Option<&str>,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
@@ -427,7 +428,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_vertical_crs_ex>
     pub fn create_vertical_crs_ex(
-        &self,
+        self: Arc<Self>,
         crs_name: Option<&str>,
         datum_name: Option<&str>,
         datum_auth_name: Option<&str>,
@@ -439,7 +440,7 @@ impl Context {
         geoid_model_code: Option<&str>,
         geoid_geog_crs: Option<&Proj>,
         accuracy: Option<f64>,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let mut options = ProjOptions::new(1);
         options.push_optional_pass(accuracy, "ACCURACY");
@@ -473,11 +474,11 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_compound_crs>
     pub fn create_compound_crs(
-        &self,
+        self: Arc<Self>,
         crs_name: Option<&str>,
         horiz_crs: &Proj,
         vert_crs: &Proj,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
@@ -506,7 +507,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion>
     pub fn create_conversion(
-        &self,
+        self: Arc<Self>,
         name: Option<&str>,
         auth_name: Option<&str>,
         code: Option<&str>,
@@ -514,7 +515,7 @@ impl Context {
         method_auth_name: Option<&str>,
         method_code: Option<&str>,
         params: &[ParamDescription],
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
@@ -566,7 +567,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_transformation>
     pub fn create_transformation(
-        &self,
+        self: Arc<Self>,
         name: Option<&str>,
         auth_name: Option<&str>,
         code: Option<&str>,
@@ -578,7 +579,7 @@ impl Context {
         method_code: Option<&str>,
         params: &[ParamDescription],
         accuracy: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let count = params.len();
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
@@ -626,12 +627,12 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_projected_crs>
     pub fn create_projected_crs(
-        &self,
+        self: Arc<Self>,
         crs_name: Option<&str>,
         geodetic_crs: &Proj,
         conversion: &Proj,
         coordinate_system: &Proj,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
@@ -656,11 +657,11 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs>
     pub fn crs_create_bound_crs(
-        &self,
+        self: Arc<Self>,
         base_crs: &Proj,
         hub_crs: &Proj,
         transformation: &Proj,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_crs(
                 self.ptr,
@@ -684,11 +685,11 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_vertical_crs>
     pub fn crs_create_bound_vertical_crs(
-        &self,
+        self: Arc<Self>,
         vert_crs: &Proj,
         hub_geographic_3d_crs: &Proj,
         grid_name: &str,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_vertical_crs(
                 self.ptr,
@@ -705,7 +706,7 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_utm>
-    pub fn create_conversion_utm(&self, zone: u8, north: bool) -> miette::Result<Proj<'_>> {
+    pub fn create_conversion_utm(self: Arc<Self>, zone: u8, north: bool) -> miette::Result<Proj> {
         if !(1..=60).contains(&zone) {
             miette::bail!("UTM zone number should between 1 and 60.");
         }
@@ -720,7 +721,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_transverse_mercator>
     pub fn create_conversion_transverse_mercator(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -730,7 +731,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
@@ -755,7 +756,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gauss_schreiber_transverse_mercator>
     pub fn create_conversion_gauss_schreiber_transverse_mercator(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -765,7 +766,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gauss_schreiber_transverse_mercator(
@@ -793,7 +794,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_transverse_mercator_south_oriented>
     pub fn create_conversion_transverse_mercator_south_oriented(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -803,7 +804,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator_south_oriented(
@@ -828,7 +829,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_two_point_equidistant>
     pub fn create_conversion_two_point_equidistant(
-        &self,
+        self: Arc<Self>,
         latitude_first_point: f64,
         longitude_first_point: f64,
         latitude_second_point: f64,
@@ -839,7 +840,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_two_point_equidistant(
@@ -865,7 +866,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mapping_grid>
     pub fn create_conversion_tunisia_mapping_grid(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -874,7 +875,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mapping_grid(
@@ -898,7 +899,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mining_grid>
     pub fn create_conversion_tunisia_mining_grid(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -907,7 +908,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mining_grid(
@@ -931,7 +932,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_albers_equal_area>
     pub fn create_conversion_albers_equal_area(
-        &self,
+        self: Arc<Self>,
         latitude_false_origin: f64,
         longitude_false_origin: f64,
         latitude_first_parallel: f64,
@@ -942,7 +943,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_albers_equal_area(
@@ -968,7 +969,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp>
     pub fn create_conversion_lambert_conic_conformal_1sp(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -978,7 +979,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp(
@@ -1003,7 +1004,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp_variant_b>
     pub fn create_conversion_lambert_conic_conformal_1sp_variant_b(
-        &self,
+        self: Arc<Self>,
         latitude_nat_origin: f64,
         scale: f64,
         latitude_false_origin: f64,
@@ -1014,7 +1015,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp_variant_b(
@@ -1040,7 +1041,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp>
     pub fn create_conversion_lambert_conic_conformal_2sp(
-        &self,
+        self: Arc<Self>,
         latitude_false_origin: f64,
         longitude_false_origin: f64,
         latitude_first_parallel: f64,
@@ -1051,7 +1052,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp(
@@ -1077,7 +1078,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_michigan>
     pub fn create_conversion_lambert_conic_conformal_2sp_michigan(
-        &self,
+        self: Arc<Self>,
         latitude_false_origin: f64,
         longitude_false_origin: f64,
         latitude_first_parallel: f64,
@@ -1089,7 +1090,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_michigan(
@@ -1116,7 +1117,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_belgium>
     pub fn create_conversion_lambert_conic_conformal_2sp_belgium(
-        &self,
+        self: Arc<Self>,
         latitude_false_origin: f64,
         longitude_false_origin: f64,
         latitude_first_parallel: f64,
@@ -1127,7 +1128,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_belgium(
@@ -1153,7 +1154,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_azimuthal_equidistant>
     pub fn create_conversion_azimuthal_equidistant(
-        &self,
+        self: Arc<Self>,
         latitude_nat_origin: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1162,7 +1163,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_azimuthal_equidistant(
@@ -1186,7 +1187,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_guam_projection>
     pub fn create_conversion_guam_projection(
-        &self,
+        self: Arc<Self>,
         latitude_nat_origin: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1195,7 +1196,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_guam_projection(
@@ -1219,7 +1220,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_bonne>
     pub fn create_conversion_bonne(
-        &self,
+        self: Arc<Self>,
         latitude_nat_origin: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1228,7 +1229,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_bonne(
@@ -1252,7 +1253,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area_spherical>
     pub fn create_conversion_lambert_cylindrical_equal_area_spherical(
-        &self,
+        self: Arc<Self>,
         latitude_first_parallel: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1261,7 +1262,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area_spherical(
@@ -1285,7 +1286,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area>
     pub fn create_conversion_lambert_cylindrical_equal_area(
-        &self,
+        self: Arc<Self>,
         latitude_first_parallel: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1294,7 +1295,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area(
@@ -1318,7 +1319,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_cassini_soldner>
     pub fn create_conversion_cassini_soldner(
-        &self,
+        self: Arc<Self>,
         latitude_first_parallel: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1327,7 +1328,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_cassini_soldner(
@@ -1351,7 +1352,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_conic>
     pub fn create_conversion_equidistant_conic(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         latitude_first_parallel: f64,
@@ -1362,7 +1363,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_conic(
@@ -1388,7 +1389,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_i>
     pub fn create_conversion_eckert_i(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1396,7 +1397,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_i(
@@ -1417,7 +1418,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_ii>
     pub fn create_conversion_eckert_ii(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1425,7 +1426,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_ii(
@@ -1448,7 +1449,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_iii>
     pub fn create_conversion_eckert_iii(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1456,7 +1457,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iii(
@@ -1479,7 +1480,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_iv>
     pub fn create_conversion_eckert_iv(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1487,7 +1488,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iv(
@@ -1510,7 +1511,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_v>
     pub fn create_conversion_eckert_v(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1518,7 +1519,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_v(
@@ -1541,7 +1542,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_vi>
     pub fn create_conversion_eckert_vi(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1549,7 +1550,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_vi(
@@ -1572,7 +1573,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_cylindrical>
     pub fn create_conversion_equidistant_cylindrical(
-        &self,
+        self: Arc<Self>,
         latitude_first_parallel: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1581,7 +1582,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical(
@@ -1605,7 +1606,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_cylindrical_spherical>
     pub fn create_conversion_equidistant_cylindrical_spherical(
-        &self,
+        self: Arc<Self>,
         latitude_first_parallel: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1614,7 +1615,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical_spherical(
@@ -1638,7 +1639,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gall>
     pub fn create_conversion_gall(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1646,7 +1647,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gall(
@@ -1669,7 +1670,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_goode_homolosine>
     pub fn create_conversion_goode_homolosine(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1677,7 +1678,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_goode_homolosine(
@@ -1700,7 +1701,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_interrupted_goode_homolosine>
     pub fn create_conversion_interrupted_goode_homolosine(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1708,7 +1709,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_interrupted_goode_homolosine(
@@ -1732,7 +1733,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_geostationary_satellite_sweep_x>
     pub fn create_conversion_geostationary_satellite_sweep_x(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         height: f64,
         false_easting: f64,
@@ -1741,7 +1742,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_x(
@@ -1766,7 +1767,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_geostationary_satellite_sweep_y>
     pub fn create_conversion_geostationary_satellite_sweep_y(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         height: f64,
         false_easting: f64,
@@ -1775,7 +1776,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_y(
@@ -1799,7 +1800,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gnomonic>
     pub fn create_conversion_gnomonic(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -1808,7 +1809,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gnomonic(
@@ -1832,7 +1833,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_variant_a>
     pub fn create_conversion_hotine_oblique_mercator_variant_a(
-        &self,
+        self: Arc<Self>,
         latitude_projection_centre: f64,
         longitude_projection_centre: f64,
         azimuth_initial_line: f64,
@@ -1844,7 +1845,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_a(
@@ -1871,7 +1872,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_variant_b>
     pub fn create_conversion_hotine_oblique_mercator_variant_b(
-        &self,
+        self: Arc<Self>,
         latitude_projection_centre: f64,
         longitude_projection_centre: f64,
         azimuth_initial_line: f64,
@@ -1883,7 +1884,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_b(
@@ -1910,7 +1911,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin>
     pub fn create_conversion_hotine_oblique_mercator_two_point_natural_origin(
-        &self,
+        self: Arc<Self>,
         latitude_projection_centre: f64,
         latitude_point1: f64,
         longitude_point1: f64,
@@ -1923,7 +1924,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin(
@@ -1951,7 +1952,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_laborde_oblique_mercator>
     pub fn create_conversion_laborde_oblique_mercator(
-        &self,
+        self: Arc<Self>,
         latitude_projection_centre: f64,
         longitude_projection_centre: f64,
         azimuth_initial_line: f64,
@@ -1962,7 +1963,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_laborde_oblique_mercator(
@@ -1988,7 +1989,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_international_map_world_polyconic>
     pub fn create_conversion_international_map_world_polyconic(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         latitude_first_parallel: f64,
         latitude_second_parallel: f64,
@@ -1998,7 +1999,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_international_map_world_polyconic(
@@ -2023,7 +2024,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_krovak_north_oriented>
     pub fn create_conversion_krovak_north_oriented(
-        &self,
+        self: Arc<Self>,
         latitude_projection_centre: f64,
         longitude_of_origin: f64,
         colatitude_cone_axis: f64,
@@ -2035,7 +2036,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak_north_oriented(
@@ -2062,7 +2063,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_krovak>
     pub fn create_conversion_krovak(
-        &self,
+        self: Arc<Self>,
         latitude_projection_centre: f64,
         longitude_of_origin: f64,
         colatitude_cone_axis: f64,
@@ -2074,7 +2075,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak(
@@ -2101,7 +2102,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_azimuthal_equal_area>
     pub fn create_conversion_lambert_azimuthal_equal_area(
-        &self,
+        self: Arc<Self>,
         latitude_nat_origin: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -2110,7 +2111,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_azimuthal_equal_area(
@@ -2134,7 +2135,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_miller_cylindrical>
     pub fn create_conversion_miller_cylindrical(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2142,7 +2143,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_miller_cylindrical(
@@ -2165,7 +2166,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mercator_variant_a>
     pub fn create_conversion_mercator_variant_a(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -2175,7 +2176,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_a(
@@ -2200,7 +2201,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mercator_variant_b>
     pub fn create_conversion_mercator_variant_b(
-        &self,
+        self: Arc<Self>,
         latitude_first_parallel: f64,
         center_long: f64,
         false_easting: f64,
@@ -2209,7 +2210,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
@@ -2233,7 +2234,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_popular_visualisation_pseudo_mercator>
     pub fn create_conversion_popular_visualisation_pseudo_mercator(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2242,7 +2243,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_popular_visualisation_pseudo_mercator(
@@ -2266,7 +2267,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mollweide>
     pub fn create_conversion_mollweide(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2274,7 +2275,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mollweide(
@@ -2297,7 +2298,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_new_zealand_mapping_grid>
     pub fn create_conversion_new_zealand_mapping_grid(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2306,7 +2307,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
@@ -2330,7 +2331,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_oblique_stereographic>
     pub fn create_conversion_oblique_stereographic(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2339,7 +2340,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
@@ -2363,7 +2364,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_orthographic>
     pub fn create_conversion_orthographic(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2372,7 +2373,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_orthographic(
@@ -2396,7 +2397,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_local_orthographic>
     pub fn create_conversion_local_orthographic(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         azimuth: f64,
@@ -2407,7 +2408,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_local_orthographic(
@@ -2433,7 +2434,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_american_polyconic>
     pub fn create_conversion_american_polyconic(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2442,7 +2443,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_american_polyconic(
@@ -2466,7 +2467,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_polar_stereographic_variant_a>
     pub fn create_conversion_polar_stereographic_variant_a(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -2476,7 +2477,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_polar_stereographic_variant_a(
@@ -2501,7 +2502,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_polar_stereographic_variant_b>
     pub fn create_conversion_polar_stereographic_variant_b(
-        &self,
+        self: Arc<Self>,
         latitude_standard_parallel: f64,
         center_long: f64,
         false_easting: f64,
@@ -2510,7 +2511,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
@@ -2534,7 +2535,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_robinson>
     pub fn create_conversion_robinson(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2542,7 +2543,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_robinson(
@@ -2565,7 +2566,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_sinusoidal>
     pub fn create_conversion_sinusoidal(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2573,7 +2574,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_sinusoidal(
@@ -2596,7 +2597,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_stereographic>
     pub fn create_conversion_stereographic(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -2606,7 +2607,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_stereographic(
@@ -2631,7 +2632,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_van_der_grinten>
     pub fn create_conversion_van_der_grinten(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2639,7 +2640,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_van_der_grinten(
@@ -2662,7 +2663,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_i>
     pub fn create_conversion_wagner_i(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2670,7 +2671,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_i(
@@ -2693,7 +2694,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_ii>
     pub fn create_conversion_wagner_ii(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2701,7 +2702,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_ii(
@@ -2724,7 +2725,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_iii>
     pub fn create_conversion_wagner_iii(
-        &self,
+        self: Arc<Self>,
         latitude_true_scale: f64,
         center_long: f64,
         false_easting: f64,
@@ -2733,7 +2734,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iii(
@@ -2757,7 +2758,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_iv>
     pub fn create_conversion_wagner_iv(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2765,7 +2766,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iv(
@@ -2788,7 +2789,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_v>
     pub fn create_conversion_wagner_v(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2796,7 +2797,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_v(
@@ -2819,7 +2820,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_vi>
     pub fn create_conversion_wagner_vi(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2827,7 +2828,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vi(
@@ -2850,7 +2851,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_vii>
     pub fn create_conversion_wagner_vii(
-        &self,
+        self: Arc<Self>,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2858,7 +2859,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vii(
@@ -2881,7 +2882,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_quadrilateralized_spherical_cube>
     pub fn create_conversion_quadrilateralized_spherical_cube(
-        &self,
+        self: Arc<Self>,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2890,7 +2891,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_quadrilateralized_spherical_cube(
@@ -2914,7 +2915,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_spherical_cross_track_height>
     pub fn create_conversion_spherical_cross_track_height(
-        &self,
+        self: Arc<Self>,
         peg_point_lat: f64,
         peg_point_long: f64,
         peg_point_heading: f64,
@@ -2923,7 +2924,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_spherical_cross_track_height(
@@ -2947,7 +2948,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equal_earth>
     pub fn create_conversion_equal_earth(
-        &self,
+        self: Arc<Self>,
 
         center_long: f64,
         false_easting: f64,
@@ -2956,7 +2957,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equal_earth(
@@ -2979,7 +2980,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_vertical_perspective>
     pub fn create_conversion_vertical_perspective(
-        &self,
+        self: Arc<Self>,
         topo_origin_lat: f64,
         topo_origin_long: f64,
         topo_origin_height: f64,
@@ -2990,7 +2991,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_vertical_perspective(
@@ -3016,13 +3017,13 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_grib_convention>
     pub fn create_conversion_pole_rotation_grib_convention(
-        &self,
+        self: Arc<Self>,
         south_pole_lat_in_unrotated_crs: f64,
         south_pole_long_in_unrotated_crs: f64,
         axis_rotation: f64,
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_grib_convention(
@@ -3043,13 +3044,13 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_netcdf_cf_convention>
     pub fn create_conversion_pole_rotation_netcdf_cf_convention(
-        &self,
+        self: Arc<Self>,
         grid_north_pole_latitude: f64,
         grid_north_pole_longitude: f64,
         north_pole_grid_longitude: f64,
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_netcdf_cf_convention(
@@ -3074,7 +3075,7 @@ mod test_context_advanced {
     fn test_create_cs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         for a in AxisDirection::iter() {
-            let pj: Proj<'_> = ctx.create_cs(
+            let pj: Proj = ctx.clone().create_cs(
                 CoordinateSystemType::Cartesian,
                 &[
                     AxisDescription::new(
@@ -3104,7 +3105,7 @@ mod test_context_advanced {
     #[test]
     fn test_create_cartesian_2d_cs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> =
+        let pj: Proj =
             ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, Some("Degree"), 1.0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
@@ -3114,7 +3115,7 @@ mod test_context_advanced {
     #[test]
     fn test_create_ellipsoidal_2d_cs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> = ctx.create_ellipsoidal_2d_cs(
+        let pj: Proj = ctx.create_ellipsoidal_2d_cs(
             EllipsoidalCs2dType::LatitudeLongitude,
             Some("Degree"),
             1.0,
@@ -3143,7 +3144,7 @@ mod test_context_advanced {
     #[test]
     fn test_create_geographic_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> = ctx.create_geographic_crs(
+        let pj: Proj = ctx.clone().create_geographic_crs(
             Some("WGS 84"),
             Some("World Geodetic System 1984"),
             Some("WGS84"),
@@ -3169,12 +3170,13 @@ mod test_context_advanced {
     #[test]
     fn test_create_geographic_crs_from_datum() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> = ctx.create_geographic_crs_from_datum(
+        let pj: Proj = ctx.clone().create_geographic_crs_from_datum(
             Some("WGS 84"),
-            &ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?
+            &ctx.clone()
+                .create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?
                 .crs_get_datum()?
                 .unwrap(),
-            &ctx.create_ellipsoidal_2d_cs(
+            &ctx.clone().create_ellipsoidal_2d_cs(
                 EllipsoidalCs2dType::LatitudeLongitude,
                 Some("Degree"),
                 1.0,
@@ -3188,7 +3190,7 @@ mod test_context_advanced {
     #[test]
     fn test_create_create_geocentric_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> = ctx.create_geocentric_crs(
+        let pj: Proj = ctx.create_geocentric_crs(
             Some("WGS 84"),
             Some("World Geodetic System 1984"),
             Some("WGS 84"),
@@ -3215,7 +3217,7 @@ mod test_context_advanced {
     #[test]
     fn test_create_geocentric_crs_from_datum() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj1: Proj<'_> = ctx.create_geocentric_crs(
+        let pj1: Proj = ctx.clone().create_geocentric_crs(
             Some("WGS 84"),
             Some("World Geodetic System 1984"),
             Some("WGS 84"),
@@ -3228,7 +3230,7 @@ mod test_context_advanced {
             Some("MyMetre1"),
             1.1,
         )?;
-        let pj2: Proj<'_> = ctx.create_geocentric_crs_from_datum(
+        let pj2: Proj = ctx.create_geocentric_crs_from_datum(
             Some("new crs"),
             &pj1.crs_get_datum()?.unwrap(),
             Some("MyMetre2"),
@@ -3243,16 +3245,18 @@ mod test_context_advanced {
     #[test]
     fn test_create_derived_geographic_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let crs_4326 = ctx.create("EPSG:4326")?;
-        let conversion = ctx.create_conversion_pole_rotation_grib_convention(
-            2.0,
-            3.0,
-            4.0,
-            Some("Degree"),
-            0.0174532925199433,
-        )?;
+        let crs_4326 = ctx.clone().create("EPSG:4326")?;
+        let conversion = ctx
+            .clone()
+            .create_conversion_pole_rotation_grib_convention(
+                2.0,
+                3.0,
+                4.0,
+                Some("Degree"),
+                0.0174532925199433,
+            )?;
         let cs = crs_4326.crs_get_coordinate_system()?;
-        let pj: Proj<'_> =
+        let pj: Proj =
             ctx.create_derived_geographic_crs(Some("my rotated CRS"), &crs_4326, &conversion, &cs)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
@@ -3264,7 +3268,7 @@ mod test_context_advanced {
     fn test_create_engineering_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
 
-        let pj: Proj<'_> = ctx.create_engineering_crs(Some("engineering crs"))?;
+        let pj: Proj = ctx.create_engineering_crs(Some("engineering crs"))?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
         assert!(wkt.contains("engineering crs"));
@@ -3273,7 +3277,7 @@ mod test_context_advanced {
     #[test]
     fn test_create_vertical_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> =
+        let pj: Proj =
             ctx.create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
@@ -3283,7 +3287,7 @@ mod test_context_advanced {
     #[test]
     fn test_create_vertical_crs_ex() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> = ctx.create_vertical_crs_ex(
+        let pj: Proj = ctx.create_vertical_crs_ex(
             Some("myVertCRS (ftUS)"),
             Some("myVertDatum"),
             None,
@@ -3304,8 +3308,10 @@ mod test_context_advanced {
     #[test]
     fn test_create_compound_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let horiz_crs = ctx.create_from_database("EPSG", "6340", Category::Crs, false)?;
-        let vert_crs: Proj<'_> = ctx.create_vertical_crs_ex(
+        let horiz_crs = ctx
+            .clone()
+            .create_from_database("EPSG", "6340", Category::Crs, false)?;
+        let vert_crs: Proj = ctx.clone().create_vertical_crs_ex(
             Some("myVertCRS (ftUS)"),
             Some("myVertDatum"),
             None,
@@ -3318,7 +3324,7 @@ mod test_context_advanced {
             None,
             None,
         )?;
-        let pj: Proj<'_> = ctx.create_compound_crs(Some("Compound"), &horiz_crs, &vert_crs)?;
+        let pj: Proj = ctx.create_compound_crs(Some("Compound"), &horiz_crs, &vert_crs)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
         assert!(wkt.contains("Compound"));
@@ -3327,7 +3333,7 @@ mod test_context_advanced {
     #[test]
     fn test_create_conversion() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj<'_> = ctx.create_conversion(
+        let pj: Proj = ctx.create_conversion(
             Some("conv"),
             Some("conv auth"),
             Some("conv code"),
@@ -3352,9 +3358,12 @@ mod test_context_advanced {
     #[test]
     fn test_create_transformation() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let geog_cs =
-            ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
-        let source_crs = ctx.create_geographic_crs(
+        let geog_cs = ctx.clone().create_ellipsoidal_2d_cs(
+            EllipsoidalCs2dType::LongitudeLatitude,
+            None,
+            0.0,
+        )?;
+        let source_crs = ctx.clone().create_geographic_crs(
             Some("Source CRS"),
             Some("World Geodetic System 1984"),
             Some("WGS 84"),
@@ -3366,7 +3375,7 @@ mod test_context_advanced {
             0.0174532925199433,
             &geog_cs,
         )?;
-        let target_crs = ctx.create_geographic_crs(
+        let target_crs = ctx.clone().create_geographic_crs(
             Some("WGS 84"),
             Some("World Geodetic System 1984"),
             Some("WGS 84"),
@@ -3378,7 +3387,7 @@ mod test_context_advanced {
             0.0174532925199433,
             &geog_cs,
         )?;
-        let pj = ctx.create_transformation(
+        let pj = ctx.clone().create_transformation(
             Some("transf"),
             Some("transf auth"),
             Some("conv code"),
@@ -3407,7 +3416,7 @@ mod test_context_advanced {
     #[test]
     fn test_projected_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let conv = ctx.create_conversion(
+        let conv = ctx.clone().create_conversion(
             Some("conv"),
             Some("conv auth"),
             Some("conv code"),
@@ -3424,10 +3433,13 @@ mod test_context_advanced {
                 UnitType::Scale,
             )],
         )?;
-        let geog_cs =
-            ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
+        let geog_cs = ctx.clone().create_ellipsoidal_2d_cs(
+            EllipsoidalCs2dType::LongitudeLatitude,
+            None,
+            0.0,
+        )?;
 
-        let geog_crs = ctx.create_geographic_crs(
+        let geog_crs = ctx.clone().create_geographic_crs(
             Some("WGS 84"),
             Some("World Geodetic System 1984"),
             Some("WGS 84"),
@@ -3439,8 +3451,10 @@ mod test_context_advanced {
             0.0174532925199433,
             &geog_cs,
         )?;
-        let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
-        let pj: Proj<'_> = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
+        let cs =
+            ctx.clone()
+                .create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+        let pj: Proj = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
 
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
@@ -3450,7 +3464,9 @@ mod test_context_advanced {
     #[test]
     fn test_crs_create_bound_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let crs = ctx.create_from_database("EPSG", "4807", Category::Crs, false)?;
+        let crs = ctx
+            .clone()
+            .create_from_database("EPSG", "4807", Category::Crs, false)?;
         let res = crs.crs_create_bound_crs_to_wgs84(None)?;
         let base_crs = res.get_source_crs().unwrap();
         let hub_crs = res.get_target_crs().unwrap();
@@ -3463,9 +3479,10 @@ mod test_context_advanced {
     #[test]
     fn test_crs_create_bound_vertical_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let crs = ctx.create("EPSG:4979")?;
+        let crs = ctx.clone().create("EPSG:4979")?;
         let vert_crs =
-            ctx.create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
+            ctx.clone()
+                .create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
 
         let bound_crs = ctx.crs_create_bound_vertical_crs(&vert_crs, &crs, "foo.gtx")?;
         let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;

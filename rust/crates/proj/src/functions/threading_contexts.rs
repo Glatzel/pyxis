@@ -1,17 +1,8 @@
 use std::ffi::c_void;
 use std::ptr::null_mut;
+use std::sync::Arc;
 
 use crate::LogLevel;
-
-impl Default for crate::Context {
-    fn default() -> Self {
-        let ctx = Self::new();
-        ctx.set_log_level(LogLevel::None).unwrap();
-        ctx.set_log_fn(null_mut::<c_void>(), Some(crate::proj_clerk))
-            .unwrap();
-        ctx
-    }
-}
 
 impl crate::Context {
     ///Create a new threading-context.
@@ -19,10 +10,15 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
-    pub fn new() -> Self {
-        Self {
+    pub fn new() -> Arc<Self> {
+        let ctx = Arc::new(Self {
             ptr: unsafe { proj_sys::proj_context_create() },
-        }
+        });
+        ctx.clone().set_log_level(LogLevel::None).unwrap();
+        ctx.clone()
+            .set_log_fn(null_mut::<c_void>(), Some(crate::proj_clerk))
+            .unwrap();
+        ctx
     }
 }
 

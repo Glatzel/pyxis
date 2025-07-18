@@ -2,7 +2,7 @@ use envoy::CStrToString;
 
 use crate::data_types::ProjError;
 ///# Error reporting
-impl crate::Proj<'_> {
+impl crate::Proj {
     /// Get a reading of the current error-state of P. An non-zero error codes
     /// indicates an error either with the transformation setup or during a
     /// transformation. In cases P is 0 the error number of the default context

@@ -1,3 +1,4 @@
+pixi install
 if ($IsWindows) {
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig
 }

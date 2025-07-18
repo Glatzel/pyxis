@@ -45,7 +45,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn create(self: Arc<Self>, definition: &str) -> miette::Result<Proj> {
+    pub fn create(self: &Arc<Self>, definition: &str) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstring().as_ptr()) };
         check_result!(self);
         Proj::new(self, ptr)
@@ -64,7 +64,7 @@ impl crate::Context {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(self: Arc<Self>, argv: &[&str]) -> miette::Result<Proj> {
+    pub fn create_argv(self: &Arc<Self>, argv: &[&str]) -> miette::Result<Proj> {
         let count = argv.len();
         let ptr = unsafe {
             proj_sys::proj_create_argv(
@@ -120,7 +120,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     pub fn create_crs_to_crs(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         source_crs: &str,
         target_crs: &str,
         area: &crate::Area,
@@ -185,7 +185,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub fn create_crs_to_crs_from_pj(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         source_crs: crate::Proj,
         target_crs: crate::Proj,
         area: &crate::Area,
@@ -229,7 +229,10 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
-    pub fn normalize_for_visualization(self: Arc<Self>, obj: &crate::Proj) -> miette::Result<Proj> {
+    pub fn normalize_for_visualization(
+        self: &Arc<Self>,
+        obj: &crate::Proj,
+    ) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr()) };
         Proj::new(self, ptr)
     }
@@ -281,8 +284,8 @@ mod test {
     #[test]
     fn test_create_crs_to_crs_from_pj() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj1 = ctx.clone().create("EPSG:4326")?;
-        let pj2 = ctx.clone().create("EPSG:4978")?;
+        let pj1 = ctx.create("EPSG:4326")?;
+        let pj2 = ctx.create("EPSG:4978")?;
         let pj = ctx.create_crs_to_crs_from_pj(
             pj1,
             pj2,

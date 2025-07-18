@@ -45,7 +45,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         //is crs
         {
-            let pj = ctx.clone().create("EPSG:4326")?;
+            let pj = ctx.create("EPSG:4326")?;
             assert!(pj.assert_crs().is_ok());
         }
         //not crs

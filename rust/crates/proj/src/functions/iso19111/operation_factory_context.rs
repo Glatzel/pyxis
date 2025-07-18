@@ -25,7 +25,7 @@ impl Context {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_operation_factory_context>
     pub fn create_operation_factory_context(
-        self: Arc<Self>,
+        self: &Arc<Self>,
         authority: Option<&str>,
     ) -> OperationFactoryContext {
         let authority = authority.map(|s| s.to_cstring());
@@ -333,7 +333,7 @@ impl OperationFactoryContext {
                 self.ptr,
             )
         };
-        ProjObjList::new(self.ctx.clone(), ptr)
+        ProjObjList::new(self.ctx, ptr)
     }
 }
 impl Drop for OperationFactoryContext {
@@ -371,8 +371,8 @@ mod test {
     #[test]
     fn test_create_operations() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let factory = OperationFactoryContext::from_context(ctx.clone(), None);
-        let source_crs = ctx.clone().create_from_database(
+        let factory = OperationFactoryContext::from_context(ctx, None);
+        let source_crs = ctx.create_from_database(
             "EPSG",
             "4267",
             crate::data_types::iso19111::Category::Crs,

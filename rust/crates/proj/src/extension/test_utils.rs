@@ -9,7 +9,7 @@ use crate::{Context, LogLevel};
 pub(crate) fn new_test_ctx() -> miette::Result<Arc<Context>> {
     clerk::init_log_with_level(LevelFilter::TRACE);
     let ctx = crate::Context::new();
-    ctx.clone().set_log_level(LogLevel::Trace)?;
+    ctx.set_log_level(LogLevel::Trace)?;
     ctx.set_enable_network(true)?;
     // PROJ_DATA
     let workspace_root = env::var("CARGO_WORKSPACE_DIR").unwrap();
@@ -31,8 +31,8 @@ pub(crate) fn new_test_ctx() -> miette::Result<Arc<Context>> {
     } else {
         panic!("Unsupported OS")
     };
-    ctx.clone()
+    ctx
         .set_database_path(&default_proj_data.join("proj.db"), None)?;
-    ctx.clone().set_search_paths(&[&default_proj_data])?;
+    ctx.set_search_paths(&[&default_proj_data])?;
     Ok(ctx)
 }

@@ -793,7 +793,7 @@ impl ProjObjList {
         }
         let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, index as i32) };
 
-        Proj::new_with_owned_cstrings(self.ctx.clone(), ptr, self._owned_cstrings.clone())
+        Proj::new_with_owned_cstrings(self.ctx, ptr, self._owned_cstrings.clone())
     }
     ///Return the number of objects in the result set.
     ///

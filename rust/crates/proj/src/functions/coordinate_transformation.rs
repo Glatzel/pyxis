@@ -16,7 +16,7 @@ impl crate::Proj {
         if ptr.is_null() {
             return None;
         }
-        Some(Proj::new(self.ctx.clone(), ptr).unwrap())
+        Some(Proj::new(self.ctx, ptr).unwrap())
     }
     ///Transform a series of coordinates
     ///
@@ -262,9 +262,7 @@ mod test {
     #[test]
     fn test_get_last_used_operation() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj =
-            ctx.clone()
-                .create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let _ = pj.convert(&(120.0, 30.0))?;
         let last_op = pj.get_last_used_operation();
@@ -284,10 +282,8 @@ mod test {
     #[test]
     fn test_trans_bounds() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj =
-            ctx.clone()
-                .create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
-        let pj = ctx.clone().normalize_for_visualization(&pj)?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
         let xmin = 0.0;
         let ymin = 1.0;
         let xmax = 20.0;
@@ -306,10 +302,8 @@ mod test {
     #[test]
     fn test_trans_bounds_3d() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj =
-            ctx.clone()
-                .create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
-        let pj = ctx.clone().normalize_for_visualization(&pj)?;
+        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
+        let pj = ctx.normalize_for_visualization(&pj)?;
         let xmin = 0.0;
         let ymin = 1.0;
         let zmin = 1.0;

@@ -14,6 +14,11 @@ fn main() {
     println!("cargo:rerun-if-env-changed=UPDATE");
     println!("cargo:rerun-if-env-changed=BINDGEN");
 
+    // Link `libm` on Unix-like platforms
+    if cfg!(target_os = "linux") || cfg!(target_os = "macos") {
+        println!("cargo:rustc-link-lib=m");
+    }
+
     // === Link all static libraries in LIB_DIR ===
     println!("cargo:rustc-link-search=native={lib_dir}");
     for entry in fs::read_dir(&lib_dir).expect("Cannot read LIB_DIR") {

@@ -1,7 +1,4 @@
-use std::env;
 use std::sync::Arc;
-
-use miette::IntoDiagnostic;
 
 use crate::Context;
 

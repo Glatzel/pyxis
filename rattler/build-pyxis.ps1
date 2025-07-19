@@ -5,9 +5,9 @@ if ($IsWindows) {
     Copy-Item "$ROOT/rust/dist/cli/pyxis.exe" "$env:PREFIX/pyxis/bin/pyxis.exe"
 }
 if ($IsLinux -or $IsMacOS) {
-    Copy-Item "$ROOT/rust/dist/cli/pyxis" "$env:PREFIX/pyxis/bin/pyxis"
+    Copy-Item "$ROOT/rust/dist/cli/pyxis/" "$env:PREFIX/pyxis/bin/pyxis"
 }
-Copy-Item "$ROOT/cpp/dist/*" "$env:PREFIX/pyxis" -Recurse
+Copy-Item "$ROOT/cpp/dist/*" "$env:PREFIX/pyxis/" -Recurse
 if (-not $IsMacOS) {
-    Copy-Item "$ROOT/cuda/dist/*" "$env:PREFIX/pyxis" -Recurse
+    Copy-Item "$ROOT/cuda/dist/*" "$env:PREFIX/pyxis/" -Recurse
 }

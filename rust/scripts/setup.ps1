@@ -1,13 +1,14 @@
 Set-Location $PSScriptRoot/..
 pixi install
 if ($IsWindows) {
-    $bin = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin
-    $env:Path = "$bin" + ";" + "$env:Path"
-    $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig
+    $env:PROJ_LIB_DIR = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-windows-static/lib
+    $env:PROJ_INCLUDE_DIR = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-windows-static/include/proj
 }
 if ($IsMacOS) {
-    $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-osx-release/lib/pkgconfig
+    $env:PROJ_LIB_DIR = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-osx-release/lib
+    $env:PROJ_INCLUDE_DIR = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-osx-release/include/proj
 }
 if ($IsLinux) {
-    $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig
+    $env:PROJ_LIB_DIR = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/lib
+    $env:PROJ_INCLUDE_DIR = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/include/proj
 }

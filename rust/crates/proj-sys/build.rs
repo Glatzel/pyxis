@@ -1,6 +1,5 @@
-use std::env;
-use std::fs;
 use std::path::PathBuf;
+use std::{env, fs};
 
 fn main() {
     // === Read environment variables ===
@@ -16,7 +15,7 @@ fn main() {
     println!("cargo:rerun-if-env-changed=BINDGEN");
 
     // === Link all static libraries in LIB_DIR ===
-    println!("cargo:rustc-link-search=native={}", lib_dir);
+    println!("cargo:rustc-link-search=native={lib_dir}");
     for entry in fs::read_dir(&lib_dir).expect("Cannot read LIB_DIR") {
         let entry = entry.expect("Invalid entry");
         let path = entry.path();
@@ -35,7 +34,7 @@ fn main() {
                 "lib" => {
                     if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
                         // MSVC static libraries
-                        println!("cargo:rustc-link-lib=static={}", name);
+                        println!("cargo:rustc-link-lib=static={name}");
                     }
                 }
                 _ => {}

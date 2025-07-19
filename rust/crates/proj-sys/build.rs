@@ -34,7 +34,7 @@ fn main() {
         println!("cargo:rustc-link-lib=dl");
         println!("cargo:rustc-link-lib=c++");
     }
-    
+
     // === Skip bindgen unless explicitly requested ===
     if !do_update && !do_bindgen {
         return;

@@ -1,5 +1,5 @@
 Set-Location $PSScriptRoot/..
-$version = "0.0.31"
+$version = "0.0.32"
 
 # cpp
 $cmakeListsPath = "./cpp/CMakeLists.txt"

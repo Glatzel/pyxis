@@ -5,11 +5,6 @@ use dunce::canonicalize;
 use glob::glob;
 use path_slash::PathExt;
 fn main() {
-    // run pixi install
-    std::process::Command::new("pixi")
-        .arg("install")
-        .output()
-        .expect("Failed to execute script");
     // env
     if cfg!(target_os = "windows") {
         //path

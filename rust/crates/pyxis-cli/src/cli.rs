@@ -78,12 +78,12 @@ fn execute(cmd: Commands) {
 }
 fn init_log(level: Level) {
     let tracing_level = match level {
-        Level::Quiet => tracing::level_filters::LevelFilter::OFF,
-        Level::Error => tracing::level_filters::LevelFilter::ERROR,
-        Level::Warning => tracing::level_filters::LevelFilter::WARN,
-        Level::Info => tracing::level_filters::LevelFilter::INFO,
-        Level::Debug => tracing::level_filters::LevelFilter::DEBUG,
-        Level::Trace => tracing::level_filters::LevelFilter::TRACE,
+        Level::Quiet => clerk::LogLevel::OFF,
+        Level::Error => clerk::LogLevel::ERROR,
+        Level::Warning => clerk::LogLevel::WARN,
+        Level::Info => clerk::LogLevel::INFO,
+        Level::Debug => clerk::LogLevel::DEBUG,
+        Level::Trace => clerk::LogLevel::TRACE,
     };
     tracing_subscriber::registry()
         .with(clerk::terminal_layer(tracing_level, true))

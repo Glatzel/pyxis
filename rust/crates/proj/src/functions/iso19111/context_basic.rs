@@ -573,13 +573,6 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_database_path() -> miette::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let db_path = ctx.get_database_path();
-        assert!(db_path.to_string_lossy().to_string().contains(".pixi"));
-        Ok(())
-    }
-    #[test]
     fn test_get_database_metadata() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let data = ctx

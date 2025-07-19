@@ -16,11 +16,31 @@ fn main() {
 
     // === Link all static libraries in LIB_DIR ===
     println!("cargo:rustc-link-search=native={lib_dir}");
-    // Explicitly link the static libs in correct order
-    println!("cargo:rustc-link-lib=static=proj");
-    println!("cargo:rustc-link-lib=static=sqlite3");
-    println!("cargo:rustc-link-lib=static=curl");
-    println!("cargo:rustc-link-lib=static=tiff");
+    for entry in fs::read_dir(&lib_dir).expect("Cannot read LIB_DIR") {
+        let entry = entry.expect("Invalid entry");
+        let path = entry.path();
+
+        if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
+            match ext {
+                "a" => {
+                    if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
+                        // Remove "lib" prefix for Unix .a files
+                        println!(
+                            "cargo:rustc-link-lib=static={}",
+                            name.trim_start_matches("lib")
+                        );
+                    }
+                }
+                "lib" => {
+                    if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
+                        // MSVC static libraries
+                        println!("cargo:rustc-link-lib=static={name}");
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
 
     // Link `libm` on Unix-like platforms
     let target = env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
@@ -34,7 +54,7 @@ fn main() {
         println!("cargo:rustc-link-lib=dl");
         println!("cargo:rustc-link-lib=c++");
     }
-    
+
     // === Skip bindgen unless explicitly requested ===
     if !do_update && !do_bindgen {
         return;

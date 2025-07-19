@@ -1,8 +1,5 @@
-use std::io::Write;
-use std::path::PathBuf;
 use std::sync::Arc;
 
-use miette::IntoDiagnostic;
 use proj::Context;
 
 pub fn init_proj_builder() -> miette::Result<Arc<Context>> {

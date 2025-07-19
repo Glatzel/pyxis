@@ -7,7 +7,7 @@ fn main() {
     let include_dir = env::var("PROJ_INCLUDE_DIR").expect("PROJ_INCLUDE_DIR not set");
 
     // Link the library statically (or dynamically if preferred)
-    println!("cargo:rustc-link-search=native={}", lib_dir);
+    println!("cargo:rustc-link-search=native={lib_dir}");
     println!("cargo:rustc-link-lib=static=proj"); // use `dylib=proj` for dynamic
     println!("cargo:rustc-link-lib=m"); // proj often depends on `libm`
 

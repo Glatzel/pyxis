@@ -1,6 +1,6 @@
 package:
   version: 0.0.30
-  name: pyxis-cuda-py
+  name: pyxis-py-cuda
 build:
   number: 0
   string: ${{ 'core' if cuda_variant=='cupy-core' else 'full'}}_${{ hash }}_${{ build_number }}

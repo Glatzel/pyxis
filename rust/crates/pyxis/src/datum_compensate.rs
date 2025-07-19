@@ -20,7 +20,7 @@ use crate::GeoFloat;
 /// # Examples
 /// ```
 /// use float_cmp::assert_approx_eq;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
+/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
 /// let p = (469704.6693, 2821940.796);
 /// let processor = pyxis::DatumCompensate::new(400.0, 6_378_137.0, 500_000.0, 0.0);
 /// let p = processor.transform(p.0, p.1);

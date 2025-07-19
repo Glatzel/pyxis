@@ -1,12 +1,22 @@
+use std::env;
+use std::fs;
 use std::path::PathBuf;
-use std::{env, fs};
 
 fn main() {
-    let lib_dir = PathBuf::from(env::var("LIB_DIR").expect("LIB_DIR not set"));
-    println!("cargo:rustc-link-search=native={}", lib_dir.display());
-    println!("cargo:rerun-if-env-changed=LIB_DIR");
+    // === Read environment variables ===
+    let lib_dir = env::var("LIB_DIR").expect("LIB_DIR not set");
+    let include_dir = env::var("INCLUDE_DIR").expect("INCLUDE_DIR not set");
+    let do_update = env::var("UPDATE").unwrap_or_default() == "true";
+    let do_bindgen = env::var("BINDGEN").unwrap_or_default() == "true";
 
-    // Detect all static libraries in the directory
+    // === Instruct Cargo to rerun if env vars change ===
+    println!("cargo:rerun-if-env-changed=LIB_DIR");
+    println!("cargo:rerun-if-env-changed=INCLUDE_DIR");
+    println!("cargo:rerun-if-env-changed=UPDATE");
+    println!("cargo:rerun-if-env-changed=BINDGEN");
+
+    // === Link all static libraries in LIB_DIR ===
+    println!("cargo:rustc-link-search=native={}", lib_dir);
     for entry in fs::read_dir(&lib_dir).expect("Cannot read LIB_DIR") {
         let entry = entry.expect("Invalid entry");
         let path = entry.path();
@@ -15,6 +25,7 @@ fn main() {
             match ext {
                 "a" => {
                     if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
+                        // Remove "lib" prefix for Unix .a files
                         println!(
                             "cargo:rustc-link-lib=static={}",
                             name.trim_start_matches("lib")
@@ -23,6 +34,7 @@ fn main() {
                 }
                 "lib" => {
                     if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
+                        // MSVC static libraries
                         println!("cargo:rustc-link-lib=static={}", name);
                     }
                 }
@@ -31,17 +43,13 @@ fn main() {
         }
     }
 
-    // Bindgen section (if needed)
-    let include_dir = PathBuf::from(env::var("INCLUDE_DIR").expect("INCLUDE_DIR not set"));
-    let do_update = env::var("UPDATE").unwrap_or_default() == "true";
-    let do_bindgen = env::var("BINDGEN").unwrap_or_default() == "true";
-
+    // === Skip bindgen unless explicitly requested ===
     if !do_update && !do_bindgen {
         return;
     }
 
+    // === Generate bindings with bindgen ===
     let header = PathBuf::from(&include_dir).join("proj.h");
-
     let bindings = bindgen::Builder::default()
         .header(header.to_string_lossy())
         .size_t_is_usize(true)
@@ -59,8 +67,9 @@ fn main() {
 
     if do_bindgen {
         println!("cargo:rustc-cfg=bindgen");
+        let out_path = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR not set"));
         bindings
-            .write_to_file(PathBuf::from(env::var("OUT_DIR").unwrap()).join("bindings.rs"))
+            .write_to_file(out_path.join("bindings.rs"))
             .expect("Couldn't write bindings!");
     }
 }

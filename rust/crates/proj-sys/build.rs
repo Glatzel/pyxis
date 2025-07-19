@@ -17,8 +17,10 @@ fn main() {
     // Link `libm` on Unix-like platforms
     if cfg!(target_os = "linux") || cfg!(target_os = "macos") {
         println!("cargo:rustc-link-lib=m");
-        println!("cargo:rustc-link-lib=dl");
         println!("cargo:rustc-link-lib=stdc++");
+    }
+    if cfg!(target_os = "linux") {
+        println!("cargo:rustc-link-lib=dl");
     }
 
     // === Link all static libraries in LIB_DIR ===

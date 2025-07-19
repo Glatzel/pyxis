@@ -14,6 +14,14 @@ fn main() {
     println!("cargo:rerun-if-env-changed=UPDATE");
     println!("cargo:rerun-if-env-changed=BINDGEN");
 
+    // === Link all static libraries in LIB_DIR ===
+    println!("cargo:rustc-link-search=native={lib_dir}");
+    // Explicitly link the static libs in correct order
+    println!("cargo:rustc-link-lib=static=proj");
+    println!("cargo:rustc-link-lib=static=sqlite3");
+    println!("cargo:rustc-link-lib=static=curl");
+    println!("cargo:rustc-link-lib=static=tiff");
+
     // Link `libm` on Unix-like platforms
     let target = env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
     if target == "linux" {
@@ -26,15 +34,7 @@ fn main() {
         println!("cargo:rustc-link-lib=dl");
         println!("cargo:rustc-link-lib=c++");
     }
-
-    // === Link all static libraries in LIB_DIR ===
-    println!("cargo:rustc-link-search=native={lib_dir}");
-    // Explicitly link the static libs in correct order
-    println!("cargo:rustc-link-lib=static=proj");
-    println!("cargo:rustc-link-lib=static=sqlite3");
-    println!("cargo:rustc-link-lib=static=curl");
-    println!("cargo:rustc-link-lib=static=tiff");
-
+    
     // === Skip bindgen unless explicitly requested ===
     if !do_update && !do_bindgen {
         return;

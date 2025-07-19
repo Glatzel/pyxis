@@ -1,12 +1,6 @@
 use std::env;
 
 fn main() {
-    // run pixi install
-    std::process::Command::new("pixi")
-        .arg("install")
-        .current_dir(env::var("CARGO_WORKSPACE_DIR").unwrap())
-        .output()
-        .expect("Failed to execute script");
     // PROJ_DATA
     let default_proj_data = match env::var("CARGO_CFG_TARGET_OS").unwrap().as_str() {
         "windows" => {

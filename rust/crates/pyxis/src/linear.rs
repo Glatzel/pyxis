@@ -21,7 +21,7 @@ use crate::GeoFloat;
 ///
 /// ```rust
 /// use float_cmp::assert_approx_eq;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
+/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
 /// let radians = 30.0f64.to_radians(); // 90 degrees in radians
 /// let m = pyxis::rotate_matrix_2d(radians);
 /// assert_approx_eq!(f64, m[0][0], radians.cos(), epsilon = 1e-17);
@@ -43,7 +43,7 @@ where
 ///
 /// ```rust
 /// use float_cmp::assert_approx_eq;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
+/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
 /// let radians = 30.0f64.to_radians(); // 90 degrees in radians
 /// let m = pyxis::rotate_matrix_2d(radians);
 /// let result = pyxis::rotate_2d(3.0, 2.0, &m);

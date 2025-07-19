@@ -4,7 +4,7 @@ resolver = "2"
 
 [workspace.package]
 edition = "2024"
-version = "0.0.30"
+version = "0.0.31"
 
 [workspace.dependencies]
 proj = { path = "./crates/proj" }
@@ -14,7 +14,7 @@ pyxis = { path = "./crates/pyxis" }
 assert_cmd = "2.0"
 bindgen = "0.71"
 bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.22" }
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.23" }
 criterion = { package = "codspeed-criterion-compat", version = "2.10.1" }
 dunce = "1.0.5"
 envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.22" }

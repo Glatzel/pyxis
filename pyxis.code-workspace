@@ -53,17 +53,20 @@
         "rust-analyzer.cargo.extraEnv": {
             "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
             "Path": "${workspaceFolder}/rust/.pixi/envs/default/Library/bin;${env:PATH}",
-            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
+            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig",
+            "CONDA_PREFIX":"${workspaceFolder}/python/.pixi/envs/default"
         },
         "rust-analyzer.runnables.extraEnv": {
             "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
             "Path": "${workspaceFolder}/rust/.pixi/envs/default/Library/bin;${env:PATH}",
-            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
+            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig",
+            "CONDA_PREFIX":"${workspaceFolder}/python/.pixi/envs/default"
         },
         "rust-analyzer.server.extraEnv": {
             "CUDA_ROOT": "${workspaceFolder}/rust-cuda/.pixi/envs/default/Library",
             "Path": "${workspaceFolder}/rust/.pixi/envs/default/Library/bin;${env:PATH}",
-            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig"
+            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig",
+            "CONDA_PREFIX":"${workspaceFolder}/python/.pixi/envs/default"
         },
     }
 }

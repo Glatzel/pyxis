@@ -9,7 +9,7 @@ use crate::GeoFloat;
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::Ellipsoid;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
+/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
 /// let semi_major_axis = 6378137.0; // Semi-major axis in meters
 /// let inverse_flattening = 298.257223563; // Inverse flattening
 /// let ellipsoid = Ellipsoid::from_semi_major_and_invf(semi_major_axis, inverse_flattening);
@@ -57,7 +57,7 @@ impl<T: GeoFloat> Ellipsoid<T> {
     /// ```
     /// use float_cmp::assert_approx_eq;
     /// use pyxis::Ellipsoid;
-    /// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
+    /// clerk::init_log_with_level(clerk::LogLevel::TRACE);
     /// let semi_major_axis = 6378137.0; // WGS84 semi-major axis in meters
     /// let inverse_flattening = 298.257223563; // WGS84 inverse flattening
     ///
@@ -122,7 +122,7 @@ impl<T: GeoFloat> Ellipsoid<T> {
     ///
     /// ```
     /// use pyxis::Ellipsoid;
-    /// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
+    /// clerk::init_log_with_level(clerk::LogLevel::TRACE);
     /// let ellipsoid = Ellipsoid::from_semi_axis(6378137.0, 6356752.314245);
     /// assert_eq!(ellipsoid.semi_major_axis(), 6378137.0);
     /// assert_eq!(ellipsoid.semi_minor_axis(), 6356752.314245);

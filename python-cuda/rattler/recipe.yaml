@@ -1,6 +1,6 @@
 package:
-  version: 0.0.30
-  name: pyxis-cuda-py
+  version: 0.0.31
+  name: pyxis-py-cuda
 build:
   number: 0
   string: ${{ 'core' if cuda_variant=='cupy-core' else 'full'}}_${{ hash }}_${{ build_number }}
@@ -8,10 +8,10 @@ build:
   script:
     - if: win
       then:
-        - pwsh -f %RECIPE_DIR%/build-pyxis-cuda-py.ps1
+        - pwsh -f %RECIPE_DIR%/build-pyxis-py-cuda.ps1
     - if: unix
       then:
-        - pwsh -f $RECIPE_DIR/build-pyxis-cuda-py.ps1
+        - pwsh -f $RECIPE_DIR/build-pyxis-py-cuda.ps1
 
 requirements:
   host:

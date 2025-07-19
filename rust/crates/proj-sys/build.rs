@@ -23,7 +23,7 @@ fn main() {
                 }
                 "lib" => {
                     if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
-                        println!("cargo:rustc-link-lib=static={}", name);
+                        println!("cargo:rustc-link-lib=static={name}");
                     }
                 }
                 _ => {}

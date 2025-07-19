@@ -15,12 +15,15 @@ fn main() {
     println!("cargo:rerun-if-env-changed=BINDGEN");
 
     // Link `libm` on Unix-like platforms
-    if cfg!(target_os = "linux") || cfg!(target_os = "macos") {
+    let target = env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
+    if target == "linux" {
         println!("cargo:rustc-link-lib=m");
+        println!("cargo:rustc-link-lib=dl");
         println!("cargo:rustc-link-lib=stdc++");
     }
-    if cfg!(target_os = "linux") {
-        println!("cargo:rustc-link-lib=dl");
+    if target == "macos" {
+        println!("cargo:rustc-link-lib=m");
+        println!("cargo:rustc-link-lib=c++"); // ✅ use libc++ on macOS, not stdc++
     }
 
     // === Link all static libraries in LIB_DIR ===

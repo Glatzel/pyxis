@@ -1,21 +1,38 @@
-use std::env;
 use std::path::PathBuf;
+use std::{env, fs};
 
 fn main() {
-    // Read env vars
-    let lib_dir = env::var("PROJ_LIB_DIR").expect("PROJ_LIB_DIR not set");
-    let include_dir = env::var("PROJ_INCLUDE_DIR").expect("PROJ_INCLUDE_DIR not set");
+    let lib_dir = PathBuf::from(env::var("LIB_DIR").expect("LIB_DIR not set"));
+    println!("cargo:rustc-link-search=native={}", lib_dir.display());
+    println!("cargo:rerun-if-env-changed=LIB_DIR");
 
-    // Link the library statically (or dynamically if preferred)
-    println!("cargo:rustc-link-search=native={lib_dir}");
-    println!("cargo:rustc-link-lib=static=proj"); // use `dylib=proj` for dynamic
-    println!("cargo:rustc-link-lib=m"); // proj often depends on `libm`
+    // Detect all static libraries in the directory
+    for entry in fs::read_dir(&lib_dir).expect("Cannot read LIB_DIR") {
+        let entry = entry.expect("Invalid entry");
+        let path = entry.path();
 
-    // Tell cargo to rerun if these env vars change
-    println!("cargo:rerun-if-env-changed=PROJ_LIB_DIR");
-    println!("cargo:rerun-if-env-changed=PROJ_INCLUDE_DIR");
+        if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
+            match ext {
+                "a" => {
+                    if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
+                        println!(
+                            "cargo:rustc-link-lib=static={}",
+                            name.trim_start_matches("lib")
+                        );
+                    }
+                }
+                "lib" => {
+                    if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
+                        println!("cargo:rustc-link-lib=static={}", name);
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
 
-    // bindgen logic
+    // Bindgen section (if needed)
+    let include_dir = PathBuf::from(env::var("INCLUDE_DIR").expect("INCLUDE_DIR not set"));
     let do_update = env::var("UPDATE").unwrap_or_default() == "true";
     let do_bindgen = env::var("BINDGEN").unwrap_or_default() == "true";
 

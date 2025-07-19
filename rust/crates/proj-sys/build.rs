@@ -16,40 +16,42 @@ fn main() {
 
     // === Link all static libraries in LIB_DIR ===
     println!("cargo:rustc-link-search=native={lib_dir}");
+    let mut static_libs = vec![];
+
     for entry in fs::read_dir(&lib_dir).expect("Cannot read LIB_DIR") {
         let entry = entry.expect("Invalid entry");
         let path = entry.path();
 
         if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
-            match ext {
-                "a" => {
-                    if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
-                        // Remove "lib" prefix for Unix .a files
-                        println!(
-                            "cargo:rustc-link-lib=static={}",
-                            name.trim_start_matches("lib")
-                        );
+            if ext == "a" {
+                if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
+                    let name = name.trim_start_matches("lib").to_string();
+                    if name != "proj" && name != "libproj" {
+                        static_libs.push(name);
                     }
                 }
-                "lib" => {
-                    if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
-                        // MSVC static libraries
-                        println!("cargo:rustc-link-lib=static={name}");
-                    }
-                }
-                _ => {}
             }
         }
     }
 
+    // First: all deps except proj
+    for lib in &static_libs {
+        println!("cargo:rustc-link-lib=static={}", lib);
+    }
+
     // Link `libm` on Unix-like platforms
     let target = env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
+    if target == "windows" {
+        println!("cargo:rustc-link-lib=static=proj");
+    }
     if target == "linux" {
+        println!("cargo:rustc-link-lib=static=libproj");
         println!("cargo:rustc-link-lib=m");
         println!("cargo:rustc-link-lib=dl");
         println!("cargo:rustc-link-lib=stdc++");
     }
     if target == "macos" {
+        println!("cargo:rustc-link-lib=static=libproj");
         println!("cargo:rustc-link-lib=m");
         println!("cargo:rustc-link-lib=dl");
         println!("cargo:rustc-link-lib=c++");

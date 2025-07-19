@@ -36,7 +36,7 @@ fn main() {
 
     // First: all deps except proj
     for lib in &static_libs {
-        println!("cargo:rustc-link-lib=static={}", lib);
+        println!("cargo:rustc-link-lib=static={lib}");
     }
 
     // Link `libm` on Unix-like platforms

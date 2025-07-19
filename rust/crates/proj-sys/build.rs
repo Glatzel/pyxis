@@ -23,7 +23,8 @@ fn main() {
     }
     if target == "macos" {
         println!("cargo:rustc-link-lib=m");
-        println!("cargo:rustc-link-lib=c++"); // ✅ use libc++ on macOS, not stdc++
+        println!("cargo:rustc-link-lib=dl");
+        println!("cargo:rustc-link-lib=c++");
     }
 
     // === Link all static libraries in LIB_DIR ===

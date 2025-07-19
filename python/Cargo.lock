@@ -233,7 +233,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.30"
+version = "0.0.31"
 dependencies = [
  "clerk",
  "num-traits",
@@ -241,7 +241,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-py"
-version = "0.0.30"
+version = "0.0.31"
 dependencies = [
  "numpy",
  "pyo3",

@@ -8,7 +8,6 @@ if ($IsLinux) {
   $p = resolve-path ~/.pixi/envs/proj/proj/arm64-linux-release/lib/pkgconfig
   $env:PKG_CONFIG_PATH = "$p" + ":" + "$env:PKG_CONFIG_PATH"
   $env:PKG_CONFIG_ALLOW_CROSS = 1
-  
   cargo build --target aarch64-unknown-linux-gnu --all-features
 }
 else { exit 1 }

@@ -14,7 +14,7 @@ pre-build = [
 
   # Set PKG_CONFIG_PATH to vcpkg's pkgconfig directory
   "export PKG_CONFIG_PATH=/vcpkg/installed/aarch64-linux/lib/pkgconfig:$PKG_CONFIG_PATH",
-  
+
   # Check if proj is installed
   "pkg-config --modversion proj",
 ]

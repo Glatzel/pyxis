@@ -3,7 +3,7 @@ $PSNativeCommandUseErrorActionPreference = $true
 if ($IsLinux) {
   Set-Location $PSScriptRoot/..
   sudo apt-get update
-  sudo apt-get install -y build-essential qemu-user-static g++-aarch64-linux-gnu
+  sudo apt-get install -y g++-aarch64-linux-gnu
   rustup target add aarch64-unknown-linux-gnu
   pixi global install proj -c https://repo.prefix.dev/glatzel --platform linux-aarch64
 

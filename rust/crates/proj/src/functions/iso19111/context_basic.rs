@@ -41,7 +41,7 @@ impl crate::Context {
                 .collect()
         });
 
-        let aux_db_paths_ptr: Option<Vec<*const i8>> =
+        let aux_db_paths_ptr: Option<Vec<*const c_char>> =
             aux_db_paths.map(|aux_db_paths| aux_db_paths.iter().map(|f| f.as_ptr()).collect());
 
         let result = unsafe {
@@ -153,8 +153,8 @@ impl crate::Context {
             unset_identifiers_if_incompatible_def,
             "UNSET_IDENTIFIERS_IF_INCOMPATIBLE_DEF",
         );
-        let mut out_warnings: *mut *mut i8 = std::ptr::null_mut();
-        let mut out_grammar_errors: *mut *mut i8 = std::ptr::null_mut();
+        let mut out_warnings: *mut *mut c_char = std::ptr::null_mut();
+        let mut out_grammar_errors: *mut *mut c_char = std::ptr::null_mut();
         let ptr = unsafe {
             proj_sys::proj_create_from_wkt(
                 self.ptr,

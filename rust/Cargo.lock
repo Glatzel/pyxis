@@ -271,8 +271,8 @@ checksum = "b94f61472cee1439c0b966b47e3aca9ae07e45d070759512cd390ea2bebc6675"
 
 [[package]]
 name = "clerk"
-version = "0.0.23"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.23#40cf9af5631429351daa93009669ea10847c8a41"
+version = "0.0.24"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.24#3467e10006453ffa8d480c819286811cd7f20602"
 dependencies = [
  "chrono",
  "owo-colors",
@@ -415,8 +415,8 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
 name = "envoy"
-version = "0.0.23"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.23#40cf9af5631429351daa93009669ea10847c8a41"
+version = "0.0.24"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.24#3467e10006453ffa8d480c819286811cd7f20602"
 
 [[package]]
 name = "equivalent"
@@ -873,7 +873,7 @@ dependencies = [
 
 [[package]]
 name = "proj"
-version = "0.0.32"
+version = "0.0.33"
 dependencies = [
  "assert_cmd",
  "clerk",
@@ -901,7 +901,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.32"
+version = "0.0.33"
 dependencies = [
  "clerk",
  "codspeed-criterion-compat",
@@ -914,7 +914,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cli"
-version = "0.0.32"
+version = "0.0.33"
 dependencies = [
  "assert_cmd",
  "bpaf",

@@ -10,8 +10,8 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "clerk"
-version = "0.0.23"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.23#40cf9af5631429351daa93009669ea10847c8a41"
+version = "0.0.24"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.24#3467e10006453ffa8d480c819286811cd7f20602"
 
 [[package]]
 name = "crossbeam-deque"
@@ -233,7 +233,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.32"
+version = "0.0.33"
 dependencies = [
  "clerk",
  "num-traits",
@@ -241,7 +241,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-py"
-version = "0.0.32"
+version = "0.0.33"
 dependencies = [
  "numpy",
  "pyo3",

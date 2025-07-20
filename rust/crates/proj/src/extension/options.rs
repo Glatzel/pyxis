@@ -8,7 +8,7 @@
 //! - The `ProjOptions` struct for building and managing PROJ options as
 //!   CStrings.
 
-use std::ffi::CString;
+use std::ffi::{CString, c_char};
 
 use envoy::ToCString;
 
@@ -123,12 +123,12 @@ impl ProjOptions {
     }
 }
 impl envoy::AsVecPtr for ProjOptions {
-    fn as_vec_ptr(&self) -> Vec<*const i8> {
+    fn as_vec_ptr(&self) -> Vec<*const c_char> {
         let mut vec_ptr = self
             .options
             .iter()
             .map(|s| s.as_ptr())
-            .collect::<Vec<*const i8>>();
+            .collect::<Vec<*const c_char>>();
         vec_ptr.push(std::ptr::null());
         vec_ptr
     }

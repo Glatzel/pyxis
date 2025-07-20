@@ -10,7 +10,7 @@ pre-build = [
   "cd /vcpkg && ./bootstrap-vcpkg.sh",
 
   # Use vcpkg to install proj for aarch64
-  "cd /vcpkg && ./vcpkg install proj --triplet arm64-linux-release",
+  "cd /vcpkg && ./vcpkg install proj --triplet arm64-linux",
 
   # Set PKG_CONFIG_PATH to vcpkg's pkgconfig directory
   "export PKG_CONFIG_PATH=/vcpkg/installed/arm64-linux-release/lib/pkgconfig:$PKG_CONFIG_PATH",

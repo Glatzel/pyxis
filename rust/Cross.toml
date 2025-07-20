@@ -3,7 +3,7 @@ image = "ghcr.io/cross-rs/aarch64-unknown-linux-gnu:latest"
 pre-build = [
   # Install dependencies for building proj
   "apt-get update",
-  "apt-get install --assume-yes curl git build-essential cmake pkg-config zip unzip tar",
+  "apt-get install --assume-yes curl git build-essential cmake pkg-config zip unzip tar qemu-user-static g++-aarch64-linux-gnu cmake ninja-build",
 
   # Install vcpkg
   "git clone https://github.com/microsoft/vcpkg.git /vcpkg",

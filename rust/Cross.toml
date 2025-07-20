@@ -1,7 +1,7 @@
 [target.aarch64-unknown-linux-gnu]
 image = "ghcr.io/cross-rs/aarch64-unknown-linux-gnu:latest"
 pre-build = [
- "apt-get update",
+  "apt-get update",
   "apt-get install -y git build-essential cmake libsqlite3-dev libtiff-dev pkg-config curl",
   # clone and build PROJ
   "git clone --depth 1 https://github.com/OSGeo/PROJ.git /tmp/proj",

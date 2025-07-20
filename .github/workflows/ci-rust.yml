@@ -61,3 +61,10 @@ jobs:
       - name: cargo-doc
         run: ${{env.RUST_ROOT}}/scripts/cargo-doc.ps1
         shell: pwsh
+  cross-build-linux-aarch64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: cross-build
+        run: ${{env.RUST_ROOT}}/scripts/cross-build-linux-aarch64.ps1
+        shell: pwsh

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(PyxisCppProject VERSION 0.0.32)
+project(PyxisCppProject VERSION 0.0.33)
 # set cpp project dir
 set(CPP_CMAKE_DIR ../cpp)
 

@@ -1,5 +1,6 @@
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
+rustup target add aarch64-unknown-linux-gnu
 Set-Location $PSScriptRoot/..
   sudo apt-get update
  sudo  apt-get install --assume-yes curl git build-essential cmake pkg-config zip unzip tar qemu-user-static g++-aarch64-linux-gnu cmake ninja-build

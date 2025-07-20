@@ -9,99 +9,99 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- **(rust)** Remove unused db for pyxis cli
+- **(rust)** Remove unused db for pyxis cli by @Glatzel
 
 ## [0.0.31] - 2025-07-19
 
 ### Changed
 
-- **(rust)** Update clerk
+- **(rust)** Update clerk by @Glatzel
 
 ### Fixed
 
-- Release ci
-- Install cpp headers
+- Release ci by @Glatzel
+- Install cpp headers by @Glatzel
 
 ## [0.0.30] - 2025-07-18
 
 ### Removed
 
-- Remove unused clone
+- Remove unused clone by @Glatzel
 
 ## [0.0.29] - 2025-07-18
 
 ### Changed
 
-- **(rust)** Arc proj
+- **(rust)** Arc proj by @Glatzel
 
 ## [0.0.28] - 2025-07-18
 
 ### Fixed
 
-- Rattler build
+- Rattler build by @Glatzel
 
 ## [0.0.27] - 2025-07-13
 
 ### Fixed
 
-- Clippy
+- Clippy by @Glatzel
 
 ### Removed
 
-- Remove cuda test report
+- Remove cuda test report by @Glatzel
 
 ## [0.0.26] - 2025-06-11
 
 ### Documentation
 
-- **(rust)** Proj doc
+- **(rust)** Proj doc by @Glatzel
 
 ### Fixed
 
-- Dangling pointers
+- Dangling pointers by @Glatzel
 
 ## [0.0.25] - 2025-06-04
 
 ### Added
 
-- Add cuda runner
+- Add cuda runner by @Glatzel
 
 ### Changed
 
-- **(rust)** Proj iso19111 advanced functions
-- **(rust)** Proj network
+- **(rust)** Proj iso19111 advanced functions by @Glatzel
+- **(rust)** Proj network by @Glatzel
 
 ### Refactor
 
-- **(rust)** Change iso19111 structure
+- **(rust)** Change iso19111 structure by @Glatzel
 
 ### Testing
 
-- **(rust)** Add iso19111 advanced functions test
-- **(rust)** Add iso19111 advanced functions test
+- **(rust)** Add iso19111 advanced functions test by @Glatzel
+- **(rust)** Add iso19111 advanced functions test by @Glatzel
 
 ## [0.0.24] - 2025-05-31
 
 ### Changed
 
 - **(rust)** Impl some iso19111 functions
-- **(rust)** Proj pj_obj_list
-- **(rust)** Use envoy in proj
-- **(rust)** Iso19111
+- **(rust)** Proj pj_obj_list by @Glatzel
+- **(rust)** Use envoy in proj by @Glatzel
+- **(rust)** Iso19111 by @Glatzel
 
 ### Refactor
 
 - **(rust)** Simplify string enum
 - Simplify some string enum
-- Ffi string
-- **(rust)** Simplify *mut i8 to string
+- Ffi string by @Glatzel
+- **(rust)** Simplify *mut i8 to string by @Glatzel
 
 ### Testing
 
 - **(rust)** Add some test for iso19111
-- **(rust)** Proj iso19111 pj_obj_list
-- **(rust)** Proj 4d
-- **(rust)** Iso19111
+- **(rust)** Proj iso19111 pj_obj_list by @Glatzel
+- **(rust)** Proj 4d by @Glatzel
+- **(rust)** Iso19111 by @Glatzel
 
 ## [0.0.23] - 2025-05-29
 

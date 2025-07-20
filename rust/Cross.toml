@@ -1,19 +1,18 @@
 [target.aarch64-unknown-linux-gnu]
 image = "ghcr.io/cross-rs/aarch64-unknown-linux-gnu:latest"
 pre-build = [
-  # Let apt know we’re grabbing ARM-64 packages
-  "dpkg --add-architecture $CROSS_DEB_ARCH",
-  # Install the dev package (brings in libutil, librt, pthread, etc. for arm64)
-  "apt-get update",
-  "apt-get install --assume-yes libudev-dev:$CROSS_DEB_ARCH libc6-dev:$CROSS_DEB_ARCH gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libproj-dev:arm64",
-  # "curl -fsSL https://pixi.sh/install.sh | sh",
-  # "~/.pixi/bin/pixi global install proj -c https://repo.prefix.dev/glatzel --platform linux-aarch64",
-  # "~/.pixi/bin/pixi global install proj --platform linux-aarch64",
-  # "ls -l /root/.pixi/envs/proj/lib/pkgconfig || echo 'pkgconfig not found!'",
-  # "sh -c 'export PKG_CONFIG_PATH=/root/.pixi/envs/proj/lib/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig && pkg-config --modversion proj'",
+ "apt-get update",
+  "apt-get install -y git build-essential cmake libsqlite3-dev libtiff-dev pkg-config curl",
+  # clone and build PROJ
+  "git clone --depth 1 https://github.com/OSGeo/PROJ.git /tmp/proj",
+  "mkdir -p /tmp/proj/build",
+  "cd /tmp/proj/build && cmake .. -DCMAKE_INSTALL_PREFIX=/opt/proj -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release",
+  "cmake --build /tmp/proj/build --target install -- -j$(nproc)",
+  # check installed .pc
+  "ls /opt/proj/lib/pkgconfig",
 ]
 [target.aarch64-unknown-linux-gnu.env]
 passthrough = [
-  "PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig",
+  "PKG_CONFIG_PATH=/opt/proj/lib/pkgconfig",
   "PKG_CONFIG_ALLOW_CROSS=1",
 ]

@@ -4,10 +4,6 @@ use std::path::PathBuf;
 
 fn main() {
     // Link
-    println!(
-        "cargo:warning=Using PKG_CONFIG_PATH: {:?}",
-        std::env::var("PKG_CONFIG_PATH")
-    );
     let pk_proj = link_lib("proj", "proj");
 
     //bindgen

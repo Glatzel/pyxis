@@ -1,4 +1,4 @@
-use std::ffi::CString;
+use std::ffi::{c_char, CString};
 use std::ptr;
 
 use envoy::ToCString;

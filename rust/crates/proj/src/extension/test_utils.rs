@@ -22,17 +22,17 @@ pub(crate) fn new_test_ctx() -> miette::Result<Arc<Context>> {
             "{workspace_root}/.pixi/envs/default/proj/arm64-osx-release/share/proj"
         ))
         .into_diagnostic()?
-    } else if cfg!(target_os = "linux") && target_arch = "x86_64" {
+    } else if cfg!(target_os = "linux") && cfg!(target_arch = "x86_64") {
         dunce::canonicalize(format!(
             "{workspace_root}/.pixi/envs/default/proj/x64-linux-release/share/proj"
         ))
         .into_diagnostic()?
-    } else if cfg!(target_os = "linux") && target_arch = "aarch64" {
+    } else if cfg!(target_os = "linux") && cfg!(target_arch = "aarch64") {
         dunce::canonicalize(format!(
             "{workspace_root}/.pixi/envs/default/proj/arm64-linux-release/share/proj"
         ))
         .into_diagnostic()?
-    }else {
+    } else {
         panic!("Unsupported OS")
     };
     ctx.set_database_path(&default_proj_data.join("proj.db"), None)?;

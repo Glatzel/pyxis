@@ -36,15 +36,15 @@ jobs:
         with:
           run-install: false
       - name: build
-        run: ./rattler/ci-pyxis.ps1
+        run: .//rattler/ci-pyxis.ps1
         shell: pwsh
 
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: pyxis-cli-${{matrix.machine}}
+          name: pyxis-${{matrix.machine}}
           path: |
-            ./rattler/output/*/*.conda
+            ./rust/rattler/output/*/*.conda
           if-no-files-found: error
   rattler-cpp:
     strategy:
@@ -76,7 +76,7 @@ jobs:
         with:
           name: pyxis-cli-${{matrix.machine}}
           path: |
-            ./rattler/output/*/*.conda
+            ./cpp/rattler/output/*/*.conda
           if-no-files-found: error
   rattler-cuda:
     strategy:
@@ -104,7 +104,7 @@ jobs:
         with:
           name: pyxis-cli-${{matrix.machine}}
           path: |
-            ./rattler/output/*/*.conda
+            ./rust/rattler/output/*/*.conda
           if-no-files-found: error
   rattler-python:
     env:
@@ -116,10 +116,8 @@ jobs:
         include:
           - machine: windows-latest
             os: win-64
-
           - machine: ubuntu-latest
             os: linux-64
-
           - machine: macos-latest
             os: osx-arm64
 
@@ -141,7 +139,7 @@ jobs:
         with:
           name: pyxis-python-${{matrix.machine}}
           path: |
-            ./python/rattler/output/${{matrix.os}}/*.conda
+            ./rust/rattler/output/*/*.conda
           if-no-files-found: error
 
   rattler-python-cuda:
@@ -239,7 +237,7 @@ jobs:
   release:
     permissions:
       contents: write
-    needs: [rattler-pyxis, rattler-python, rattler-python-cuda, nukpg, cargo-doc, python-doc]
+    needs: [rattler-cpp,rattler-cuda,rattler-cli, rattler-python, rattler-python-cuda, nukpg, cargo-doc, python-doc]
     uses: Glatzel/template/.github/workflows/release.yml@main
     with:
       override: true

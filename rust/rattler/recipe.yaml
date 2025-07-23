@@ -1,6 +1,6 @@
 package:
   version: 0.0.33
-  name: pyxis
+  name: pyxis-cli
 build:
   number: 0
   script:

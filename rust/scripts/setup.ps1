@@ -11,9 +11,11 @@ if ($IsMacOS) {
 Write-Output $(uname -m)
 if ($IsLinux -and ($(uname -m) -eq 'x86_64' )) {
     rustup target add x86_64-unknown-linux-musl
+    $env:RUSTUP_TOOLCHAIN=stable-x86_64-unknown-linux-musl
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig
 }
 if ($IsLinux -and ($(uname -m) -eq 'aarch64' )) {
     rustup target add aarch64-unknown-linux-musl
+    $env:RUSTUP_TOOLCHAIN=stable-arm64-unknown-linux-musl
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-linux-release/lib/pkgconfig
 }

@@ -9,9 +9,9 @@ if ($IsMacOS) {
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-osx-release/lib/pkgconfig
 }
 Write-Output $(uname -m)
-if ($IsLinux -and ($(uname -m) -contains 'x64' )) {
+if ($IsLinux -and ($(uname -m) -eq 'x86_64' )) {
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig
 }
-if ($IsLinux -and ($(uname -m) -contains 'ARM64' )) {
+if ($IsLinux -and ($(uname -m) -eq 'aarch64' )) {
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-linux-release/lib/pkgconfig
 }

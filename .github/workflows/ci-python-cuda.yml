@@ -16,9 +16,7 @@ jobs:
         machine: [windows-latest, ubuntu-latest]
         include:
           - machine: windows-latest
-            os: win-64
           - machine: ubuntu-latest
-            os: linux-64
 
     runs-on: ${{matrix.machine}}
     steps:

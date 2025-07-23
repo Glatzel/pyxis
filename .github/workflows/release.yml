@@ -14,18 +14,11 @@ concurrency:
 permissions:
   contents: write
 jobs:
-  rattler-pyxis:
+  rattler-cli:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest, macos-latest]
-        include:
-          - machine: windows-latest
-            os: win-64
-          - machine: ubuntu-latest
-            os: linux-64
-          - machine: macos-latest
-            os: osx-arm64
+        machine: [windows-latest, ubuntu-latest,ubuntu-24.04-arm, macos-latest]
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +28,7 @@ jobs:
         with:
           run-install: false
       - name: build
-        run: ./rattler/ci-pyxis.ps1
+        run: ./rust/rattler/ci-pyxis-cli.ps1
         shell: pwsh
 
       - name: upload
@@ -43,7 +36,56 @@ jobs:
         with:
           name: pyxis-cli-${{matrix.machine}}
           path: |
-            ./rattler/output/${{matrix.os}}/*.conda
+            ./rust/rattler/output/*/*.conda
+          if-no-files-found: error
+  rattler-cpp:
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest, ubuntu-latest,ubuntu-24.04-arm, macos-latest]
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.12
+        with:
+          run-install: false
+      - name: build
+        run: ./cpp/rattler/ci-pyxis-cpp.ps1
+        shell: pwsh
+
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cpp-${{matrix.machine}}
+          path: |
+            ./cpp/rattler/output/*/*.conda
+          if-no-files-found: error
+
+  rattler-cuda:
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest, ubuntu-latest]
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.12
+        with:
+          run-install: false
+      - name: build
+        run: ./cuda/rattler/ci-pyxis-cuda.ps1
+        shell: pwsh
+
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cuda-${{matrix.machine}}
+          path: |
+            ./cuda/rattler/output/*/*.conda
           if-no-files-found: error
 
   rattler-python:
@@ -52,16 +94,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest]
-        include:
-          - machine: windows-latest
-            os: win-64
-
-          - machine: ubuntu-latest
-            os: linux-64
-
-          - machine: macos-latest
-            os: osx-arm64
+        machine: [windows-latest, ubuntu-latest,ubuntu-24.04-arm, macos-latest]
 
     runs-on: ${{matrix.machine}}
     steps:
@@ -81,7 +114,7 @@ jobs:
         with:
           name: pyxis-python-${{matrix.machine}}
           path: |
-            ./python/rattler/output/${{matrix.os}}/*.conda
+            ./python/rattler/output/*/*.conda
           if-no-files-found: error
 
   rattler-python-cuda:
@@ -179,7 +212,7 @@ jobs:
   release:
     permissions:
       contents: write
-    needs: [rattler-pyxis, rattler-python, rattler-python-cuda, nukpg, cargo-doc, python-doc]
+    needs: [rattler-cpp,rattler-cuda,rattler-cli, rattler-python, rattler-python-cuda, nukpg, cargo-doc, python-doc]
     uses: Glatzel/template/.github/workflows/release.yml@main
     with:
       override: true

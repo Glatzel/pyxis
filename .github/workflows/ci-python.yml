@@ -27,16 +27,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest]
+        machine: [windows-latest, ubuntu-latest,ubuntu-24.04-arm]
         include:
           - machine: windows-latest
-            os: win-64
-
           - machine: ubuntu-latest
-            os: linux-64
-
           - machine: macos-latest
-            os: osx-arm64
 
     runs-on: ${{matrix.machine}}
     steps:

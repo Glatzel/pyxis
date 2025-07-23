@@ -19,5 +19,5 @@ if ($IsLinux -and ($(uname -m) -eq 'x86_64' )) {
     cargo build --release -p pyxis-cli --target aarch64-unknown-linux-musl
 }
 
-Set-Location $PSScriptRoot..
+Set-Location $PSScriptRoot/..
 Set-Location $ROOT

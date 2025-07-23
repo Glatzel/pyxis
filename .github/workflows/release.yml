@@ -120,6 +120,8 @@ jobs:
             os: linux-64
           - machine: macos-latest
             os: osx-arm64
+          - machine: ubuntu-24.04-arm
+            os: linux-arm64
 
     runs-on: ${{matrix.machine}}
     steps:

@@ -7,3 +7,6 @@ linker = "aarch64-linux-gnu-gcc"
 
 [env]
 CARGO_WORKSPACE_DIR = { value = "", relative = true }
+
+[build]
+target = ["x86_64-unknown-linux-musl", "x86_64-pc-windows-msvc","aarch64-unknown-linux-musl","aarch64-unknown-darwin-musl"]

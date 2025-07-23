@@ -107,7 +107,7 @@ jobs:
           run-install: false
 
       - name: build
-        run: ./python/rattler/ci-pyxis-py.ps1 -config release
+        run: ./python/rattler/ci-pyxis-py.ps1
         shell: pwsh
 
       - name: upload

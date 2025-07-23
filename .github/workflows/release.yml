@@ -38,6 +38,7 @@ jobs:
           path: |
             ./rust/rattler/output/*/*.conda
           if-no-files-found: error
+
   rattler-cpp:
     strategy:
       fail-fast: false

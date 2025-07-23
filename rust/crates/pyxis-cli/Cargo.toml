@@ -5,7 +5,6 @@ version.workspace = true
 
 [[bin]]
 name = "pyxis"
-path = "src/main.rs"
 
 [dependencies]
 bpaf = { workspace = true }

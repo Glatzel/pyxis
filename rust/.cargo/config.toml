@@ -2,11 +2,5 @@
 linker = "rust-lld"
 rustflags = ["-C", "target-feature=+crt-static"]
 
-[target.aarch64-unknown-linux-musl]
-linker = "aarch64-linux-gnu-gcc"
-
-[build]
-target = "x86_64-unknown-linux-musl"
-
 [env]
 CARGO_WORKSPACE_DIR = { value = "", relative = true }

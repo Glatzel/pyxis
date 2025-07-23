@@ -14,11 +14,10 @@ concurrency:
 permissions:
   contents: write
 jobs:
-  rattler-pyxis:
+  rattler-cli:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest, macos-latest]
         include:
           - machine: windows-latest
             os: win-64
@@ -26,6 +25,8 @@ jobs:
             os: linux-64
           - machine: macos-latest
             os: osx-arm64
+          - machine: ubuntu-24.04-arm
+            os: linux-aarch64
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
@@ -43,9 +44,68 @@ jobs:
         with:
           name: pyxis-cli-${{matrix.machine}}
           path: |
-            ./rattler/output/${{matrix.os}}/*.conda
+            ./rattler/output/*/*.conda
           if-no-files-found: error
+  rattler-cpp:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - machine: windows-latest
+            os: win-64
+          - machine: ubuntu-latest
+            os: linux-64
+          - machine: macos-latest
+            os: osx-arm64
+          - machine: ubuntu-24.04-arm
+            os: linux-aarch64
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.12
+        with:
+          run-install: false
+      - name: build
+        run: ./rattler/ci-pyxis.ps1
+        shell: pwsh
 
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cli-${{matrix.machine}}
+          path: |
+            ./rattler/output/*/*.conda
+          if-no-files-found: error
+  rattler-cuda:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - machine: windows-latest
+            os: win-64
+          - machine: ubuntu-latest
+            os: linux-64
+    runs-on: ${{matrix.machine}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.12
+        with:
+          run-install: false
+      - name: build
+        run: ./rattler/ci-pyxis.ps1
+        shell: pwsh
+
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyxis-cli-${{matrix.machine}}
+          path: |
+            ./rattler/output/*/*.conda
+          if-no-files-found: error
   rattler-python:
     env:
       PYTEST_ADDOPTS: "--color=yes"

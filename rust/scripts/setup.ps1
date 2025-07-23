@@ -9,13 +9,8 @@ if ($IsMacOS) {
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-osx-release/lib/pkgconfig
 }
 if ($IsLinux -and ($(uname -m) -eq 'x86_64' )) {
-    sudo apt install musl-tools
-    rustup target add x86_64-unknown-linux-musl
-    rustup default stable-x86_64-unknown-linux-musl
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig
 }
 if ($IsLinux -and ($(uname -m) -eq 'aarch64' )) {
-    sudo apt install musl-tools
-    rustup target add aarch64-unknown-linux-musl
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-linux-release/lib/pkgconfig
 }

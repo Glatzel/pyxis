@@ -36,13 +36,13 @@ jobs:
         with:
           run-install: false
       - name: build
-        run: .//rattler/ci-pyxis.ps1
+        run: ./rust/rattler/ci-pyxis.ps1
         shell: pwsh
 
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: pyxis-${{matrix.machine}}
+          name: pyxis-cli-${{matrix.machine}}
           path: |
             ./rust/rattler/output/*/*.conda
           if-no-files-found: error
@@ -68,13 +68,13 @@ jobs:
         with:
           run-install: false
       - name: build
-        run: ./rattler/ci-pyxis.ps1
+        run: ./cpp/rattler/ci-pyxis.ps1
         shell: pwsh
 
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: pyxis-cli-${{matrix.machine}}
+          name: pyxis-cpp-${{matrix.machine}}
           path: |
             ./cpp/rattler/output/*/*.conda
           if-no-files-found: error
@@ -96,15 +96,15 @@ jobs:
         with:
           run-install: false
       - name: build
-        run: ./rattler/ci-pyxis.ps1
+        run: ./cuda/rattler/ci-pyxis.ps1
         shell: pwsh
 
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: pyxis-cli-${{matrix.machine}}
+          name: pyxis-cuda-${{matrix.machine}}
           path: |
-            ./rust/rattler/output/*/*.conda
+            ./cuda/rattler/output/*/*.conda
           if-no-files-found: error
   rattler-python:
     env:

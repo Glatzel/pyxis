@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(PyxisCppProject VERSION 0.0.26)
+project(PyxisCppProject VERSION 0.0.33)
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -52,9 +52,7 @@ install(TARGETS pyxis_shared
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
         DESTINATION include
         FILES_MATCHING PATTERN "*.h")
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/pyxis
-        DESTINATION include/pyxis
-        FILES_MATCHING PATTERN "*.h")
+
 # Configure and install .pc files
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/pyxis_shared.pc.in

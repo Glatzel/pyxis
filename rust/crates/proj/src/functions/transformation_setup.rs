@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use envoy::{AsVecPtr, ToCString};
 
 use crate::{Proj, check_result};
@@ -43,7 +45,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn create(&self, definition: &str) -> miette::Result<Proj<'_>> {
+    pub fn create(self: &Arc<Self>, definition: &str) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstring().as_ptr()) };
         check_result!(self);
         Proj::new(self, ptr)
@@ -62,7 +64,7 @@ impl crate::Context {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(&self, argv: &[&str]) -> miette::Result<Proj<'_>> {
+    pub fn create_argv(self: &Arc<Self>, argv: &[&str]) -> miette::Result<Proj> {
         let count = argv.len();
         let ptr = unsafe {
             proj_sys::proj_create_argv(
@@ -118,11 +120,11 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     pub fn create_crs_to_crs(
-        &self,
+        self: &Arc<Self>,
         source_crs: &str,
         target_crs: &str,
         area: &crate::Area,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
                 self.ptr,
@@ -183,7 +185,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub fn create_crs_to_crs_from_pj(
-        &self,
+        self: &Arc<Self>,
         source_crs: crate::Proj,
         target_crs: crate::Proj,
         area: &crate::Area,
@@ -192,7 +194,7 @@ impl crate::Context {
         allow_ballpark: Option<bool>,
         only_best: Option<bool>,
         force_over: Option<bool>,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut options = crate::ProjOptions::new(5);
         options
             .push_optional_pass(authority, "AUTHORITY")
@@ -227,13 +229,16 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
-    pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> miette::Result<Proj<'_>> {
+    pub fn normalize_for_visualization(
+        self: &Arc<Self>,
+        obj: &crate::Proj,
+    ) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr()) };
         Proj::new(self, ptr)
     }
 }
 
-impl Drop for crate::Proj<'_> {
+impl Drop for crate::Proj {
     ///Deallocate a PJ transformation object.
     ///
     /// # References
@@ -250,7 +255,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("WGS 84"));
         let _ = pj.clone();
         Ok(())
@@ -261,7 +266,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("PROJ-based operation method: proj=utm zone=32 ellps=GRS80"));
         Ok(())
     }
@@ -271,7 +276,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("9602"));
         Ok(())
     }
@@ -292,7 +297,7 @@ mod test {
             Some(true),
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("9602"));
         Ok(())
     }

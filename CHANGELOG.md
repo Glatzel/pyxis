@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.32] - 2025-07-19
+
+### Removed
+
+- **(rust)** Remove unused db for pyxis cli by @Glatzel in [#538](https://github.com/Glatzel/pyxis/pull/538)
+
+## [0.0.31] - 2025-07-19
+
+### Changed
+
+- **(rust)** Update clerk by @Glatzel in [#527](https://github.com/Glatzel/pyxis/pull/527)
+
+### Fixed
+
+- Release ci by @Glatzel in [#534](https://github.com/Glatzel/pyxis/pull/534)
+- Install cpp headers by @Glatzel in [#536](https://github.com/Glatzel/pyxis/pull/536)
+
+## [0.0.30] - 2025-07-18
+
+### Removed
+
+- Remove unused clone by @Glatzel in [#526](https://github.com/Glatzel/pyxis/pull/526)
+
+## [0.0.29] - 2025-07-18
+
+### Changed
+
+- **(rust)** Arc proj by @Glatzel in [#524](https://github.com/Glatzel/pyxis/pull/524)
+
+## [0.0.28] - 2025-07-18
+
+### Fixed
+
+- Rattler build by @Glatzel in [#522](https://github.com/Glatzel/pyxis/pull/522)
+
+## [0.0.27] - 2025-07-13
+
+### Fixed
+
+- Clippy by @Glatzel in [#509](https://github.com/Glatzel/pyxis/pull/509)
+
+### Removed
+
+- Remove cuda test report by @Glatzel in [#488](https://github.com/Glatzel/pyxis/pull/488)
+
 ## [0.0.26] - 2025-06-11
 
 ### Documentation
@@ -483,6 +528,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2025-02-05
 
+[0.0.32]: https://github.com/Glatzel/pyxis/compare/v0.0.31..v0.0.32
+[0.0.31]: https://github.com/Glatzel/pyxis/compare/v0.0.30..v0.0.31
+[0.0.30]: https://github.com/Glatzel/pyxis/compare/v0.0.29..v0.0.30
+[0.0.29]: https://github.com/Glatzel/pyxis/compare/v0.0.28..v0.0.29
+[0.0.28]: https://github.com/Glatzel/pyxis/compare/v0.0.27..v0.0.28
+[0.0.27]: https://github.com/Glatzel/pyxis/compare/v0.0.26..v0.0.27
 [0.0.26]: https://github.com/Glatzel/pyxis/compare/v0.0.25..v0.0.26
 [0.0.25]: https://github.com/Glatzel/pyxis/compare/v0.0.24..v0.0.25
 [0.0.24]: https://github.com/Glatzel/pyxis/compare/v0.0.23..v0.0.24

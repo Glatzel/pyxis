@@ -229,8 +229,8 @@ mod test {
         dlon.copy_to(&mut lon).unwrap();
         dlat.copy_to(&mut lat).unwrap();
 
-        println!("lon:{:?}", lon);
-        println!("lat:{:?}", lat);
+        println!("lon:{lon:?}");
+        println!("lat:{lat:?}");
 
         assert_approx_eq!(f64, lon[0], expect_gcj.0, epsilon = 1e-14);
         assert_approx_eq!(f64, lat[0], expect_gcj.1, epsilon = 1e-14);
@@ -246,8 +246,8 @@ mod test {
         dlon.copy_to(&mut lon).unwrap();
         dlat.copy_to(&mut lat).unwrap();
         println!("gcj02:{GCJ02_LON},{GCJ02_LAT}");
-        println!("yc:{:?}", lon);
-        println!("yc:{:?}", lat);
+        println!("yc:{lon:?}");
+        println!("yc:{lat:?}");
         println!("bd09:{BD09_LON},{BD09_LAT}");
         assert_approx_eq!(f64, lon[0], BD09_LON, epsilon = 1e-17);
         assert_approx_eq!(f64, lat[0], BD09_LAT, epsilon = 1e-17);
@@ -264,8 +264,8 @@ mod test {
         dlon.copy_to(&mut lon).unwrap();
         dlat.copy_to(&mut lat).unwrap();
 
-        println!("yc:{:?}", lon);
-        println!("yc:{:?}", lat);
+        println!("yc:{lon:?}");
+        println!("yc:{lat:?}");
 
         assert_approx_eq!(f64, lon[0], expect_wgs.0, epsilon = 1e-17);
         assert_approx_eq!(f64, lat[0], expect_wgs.1, epsilon = 1e-17);
@@ -281,8 +281,8 @@ mod test {
         dlon.copy_to(&mut lon).unwrap();
         dlat.copy_to(&mut lat).unwrap();
         println!("wgs84:{WGS84_LON},{WGS84_LAT}");
-        println!("lon:{:?}", lon);
-        println!("lat:{:?}", lat);
+        println!("lon:{lon:?}");
+        println!("lat:{lat:?}");
         println!("gcj02:{GCJ02_LON},{GCJ02_LAT}");
         assert_approx_eq!(f64, lon[0], GCJ02_LON, epsilon = 1e-17);
         assert_approx_eq!(f64, lat[0], GCJ02_LAT, epsilon = 1e-17);
@@ -298,8 +298,8 @@ mod test {
         dlon.copy_to(&mut lon).unwrap();
         dlat.copy_to(&mut lat).unwrap();
 
-        println!("lon:{:?}", lon);
-        println!("lat:{:?}", lat);
+        println!("lon:{lon:?}");
+        println!("lat:{lat:?}");
         assert_approx_eq!(f64, lon[0], BD09_LON, epsilon = 1e-15);
         assert_approx_eq!(f64, lat[0], BD09_LAT, epsilon = 1e-15);
     }
@@ -315,8 +315,8 @@ mod test {
         dlon.copy_to(&mut lon).unwrap();
         dlat.copy_to(&mut lat).unwrap();
 
-        println!("yc:{:?}", lon);
-        println!("yc:{:?}", lat);
+        println!("yc:{lon:?}");
+        println!("yc:{lat:?}");
 
         assert_approx_eq!(f64, lon[0], expect_wgs.0, epsilon = 1e-14);
         assert_approx_eq!(f64, lat[0], expect_wgs.1, epsilon = 1e-14);
@@ -341,8 +341,8 @@ mod test {
         dlat.copy_to(&mut lat).unwrap();
 
         println!("bd09: {BD09_LON},{BD09_LAT}");
-        println!("lon:{:?}", lon);
-        println!("lat:{:?}", lat);
+        println!("lon:{lon:?}");
+        println!("lat:{lat:?}");
         println!("wgs84: {WGS84_LON},{WGS84_LAT}");
         assert_approx_eq!(f64, lon[0], WGS84_LON, epsilon = 1e-13);
         assert_approx_eq!(f64, lat[0], WGS84_LAT, epsilon = 1e-13);
@@ -367,8 +367,8 @@ mod test {
         dlat.copy_to(&mut lat).unwrap();
 
         println!("bd09: {BD09_LON},{BD09_LAT}");
-        println!("lon:{:?}", lon);
-        println!("lat:{:?}", lat);
+        println!("lon:{lon:?}");
+        println!("lat:{lat:?}");
         println!("gcj02: {GCJ02_LON},{GCJ02_LAT}");
         assert_approx_eq!(f64, lon[0], GCJ02_LON, epsilon = 1e-13);
         assert_approx_eq!(f64, lat[0], GCJ02_LAT, epsilon = 1e-13);
@@ -393,8 +393,8 @@ mod test {
         dlat.copy_to(&mut lat).unwrap();
 
         println!("bd09: {BD09_LON},{BD09_LAT}");
-        println!("lon:{:?}", lon);
-        println!("lat:{:?}", lat);
+        println!("lon:{lon:?}");
+        println!("lat:{lat:?}");
         println!("wgs84: {WGS84_LON},{WGS84_LAT}");
         assert_approx_eq!(f64, lon[0], WGS84_LON, epsilon = 1e-13);
         assert_approx_eq!(f64, lat[0], WGS84_LAT, epsilon = 1e-13);
@@ -463,9 +463,9 @@ mod test {
                 });
             println!("gcj02 to wgs84 exact cuda");
             println!("average distance: {:.2e}", all_dist / count as f64);
-            println!("max distance: {:.2e}", max_dist);
+            println!("max distance: {max_dist:.2e}");
             println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 2.0);
-            println!("max lonlat: {:.2e}", max_lonlat);
+            println!("max lonlat: {max_lonlat:.2e}");
         }
         {
             let mut max_dist: f64 = 0.0;
@@ -500,9 +500,9 @@ mod test {
                 });
             println!("bd09 to wgs84 exact cuda");
             println!("average distance: {:.2e}", all_dist / count as f64);
-            println!("max distance: {:.2e}", max_dist);
+            println!("max distance: {max_dist:.2e}");
             println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 2.0);
-            println!("max lonlat: {:.2e}", max_lonlat);
+            println!("max lonlat: {max_lonlat:.2e}");
         }
         {
             let mut max_dist: f64 = 0.0;
@@ -537,9 +537,9 @@ mod test {
                 });
             println!("bd09 to gcj02 exact cuda");
             println!("average distance: {:.2e}", all_dist / count as f64);
-            println!("max distance: {:.2e}", max_dist);
+            println!("max distance: {max_dist:.2e}");
             println!("average lonlat: {:.2e}", all_lonlat / count as f64 / 2.0);
-            println!("max lonlat: {:.2e}", max_lonlat);
+            println!("max lonlat: {max_lonlat:.2e}");
         }
     }
 }

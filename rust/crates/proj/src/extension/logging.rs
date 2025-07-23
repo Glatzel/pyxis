@@ -1,11 +1,12 @@
-use std::ffi::c_void;
+use std::ffi::{c_char, c_void};
+use std::sync::Arc;
 
 use envoy::CStrToString;
 use miette::IntoDiagnostic;
 
 use crate::{LogLevel, check_result};
 
-pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const i8) {
+pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const c_char) {
     let _message = info.to_string().unwrap_or_default();
 
     match level {
@@ -17,17 +18,17 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
 }
 
 impl crate::Context {
-    pub fn set_log_level(&self, level: LogLevel) -> miette::Result<&Self> {
+    pub fn set_log_level(self: &Arc<Self>, level: LogLevel) -> miette::Result<&Arc<Self>> {
         let level = unsafe { proj_sys::proj_log_level(self.ptr, level.into()) };
         let _ = LogLevel::try_from(level).into_diagnostic()?;
         Ok(self)
     }
 
     pub(crate) fn set_log_fn(
-        &self,
+        self: &Arc<Self>,
         app_data: *mut c_void,
-        logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const i8)>,
-    ) -> miette::Result<&Self> {
+        logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const c_char)>,
+    ) -> miette::Result<&Arc<Self>> {
         unsafe {
             proj_sys::proj_log_func(self.ptr, app_data, logf);
         };

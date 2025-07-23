@@ -6,7 +6,7 @@ use crate::data_types::Factors;
 use crate::{ICoord, ToCoord, check_result};
 
 /// # Various
-impl crate::Proj<'_> {
+impl crate::Proj {
     ///Measure internal consistency of a given transformation. The function
     /// performs n round trip transformations starting in either the forward or
     /// reverse direction. Returns the euclidean distance of the starting point
@@ -164,7 +164,7 @@ mod test {
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let factor = pj.factors(&(12.0f64.to_radians(), 55.0f64.to_radians()))?;
 
-        println!("{:?}", factor);
+        println!("{factor:?}");
 
         assert_approx_eq!(
             f64,

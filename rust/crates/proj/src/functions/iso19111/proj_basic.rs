@@ -7,7 +7,7 @@ use miette::IntoDiagnostic;
 use crate::data_types::iso19111::*;
 use crate::{OPTION_NO, OPTION_YES, Proj, check_result};
 /// # ISO-19111 Base functions
-impl Proj<'_> {
+impl Proj {
     ///Return the type of an object.
     ///
     ///# References
@@ -383,12 +383,12 @@ impl Proj<'_> {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
-    pub fn get_source_crs(&self) -> Option<Proj<'_>> {
+    pub fn get_source_crs(&self) -> Option<Proj> {
         let out_ptr = unsafe { proj_sys::proj_get_source_crs(self.ctx.ptr, self.ptr()) };
         if out_ptr.is_null() {
             return None;
         }
-        Some(Self::new(self.ctx, out_ptr).unwrap())
+        Some(Self::new(&self.ctx, out_ptr).unwrap())
     }
     ///Return the hub CRS of a BoundCRS or the target CRS of a
     /// CoordinateOperation.
@@ -396,12 +396,12 @@ impl Proj<'_> {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
-    pub fn get_target_crs(&self) -> Option<Proj<'_>> {
+    pub fn get_target_crs(&self) -> Option<Proj> {
         let out_ptr = unsafe { proj_sys::proj_get_target_crs(self.ctx.ptr, self.ptr()) };
         if out_ptr.is_null() {
             return None;
         }
-        Some(Self::new(self.ctx, out_ptr).unwrap())
+        Some(Self::new(&self.ctx, out_ptr).unwrap())
     }
 
     ///Suggests a database code for the passed object.
@@ -444,9 +444,9 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
-    pub fn crs_get_geodetic_crs(&self) -> miette::Result<Proj<'_>> {
+    pub fn crs_get_geodetic_crs(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_geodetic_crs(self.ctx.ptr, self.ptr()) };
-        crate::Proj::new(self.ctx, ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
     /// Get the horizontal datum from a CRS.
     ///
@@ -455,31 +455,31 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
-    pub fn crs_get_horizontal_datum(&self) -> miette::Result<Proj<'_>> {
+    pub fn crs_get_horizontal_datum(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_horizontal_datum(self.ctx.ptr, self.ptr()) };
-        crate::Proj::new(self.ctx, ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
     ///Get a CRS component from a CompoundCRS.
     ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
-    pub fn crs_get_sub_crs(&self, index: u16) -> miette::Result<Proj<'_>> {
+    pub fn crs_get_sub_crs(&self, index: u16) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx.ptr, self.ptr(), index as i32) };
-        crate::Proj::new(self.ctx, ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
     ///Returns the datum of a SingleCRS.
     ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
-    pub fn crs_get_datum(&self) -> miette::Result<Option<Proj<'_>>> {
+    pub fn crs_get_datum(&self) -> miette::Result<Option<Proj>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj::new(self.ctx, ptr).unwrap()))
+        Ok(Some(crate::Proj::new(&self.ctx, ptr).unwrap()))
     }
     /// Returns the datum ensemble of a SingleCRS.
     ///
@@ -488,13 +488,13 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_ensemble>
-    pub fn crs_get_datum_ensemble(&self) -> miette::Result<Option<Proj<'_>>> {
+    pub fn crs_get_datum_ensemble(&self) -> miette::Result<Option<Proj>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_ensemble(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj::new(self.ctx, ptr).unwrap()))
+        Ok(Some(crate::Proj::new(&self.ctx, ptr).unwrap()))
     }
     ///Returns a datum for a SingleCRS.
     ///
@@ -505,13 +505,13 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_forced>
-    pub fn crs_get_datum_forced(&self) -> miette::Result<Option<Proj<'_>>> {
+    pub fn crs_get_datum_forced(&self) -> miette::Result<Option<Proj>> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_forced(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj::new(self.ctx, ptr).unwrap()))
+        Ok(Some(crate::Proj::new(&self.ctx, ptr).unwrap()))
     }
     ///Return whether a CRS has an associated PointMotionOperation.
     ///
@@ -550,7 +550,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
-    pub fn datum_ensemble_get_member(&self, member_index: u16) -> miette::Result<Option<Proj<'_>>> {
+    pub fn datum_ensemble_get_member(&self, member_index: u16) -> miette::Result<Option<Proj>> {
         let ptr = unsafe {
             proj_sys::proj_datum_ensemble_get_member(self.ctx.ptr, self.ptr(), member_index as i32)
         };
@@ -558,7 +558,7 @@ impl Proj<'_> {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj::new(self.ctx, ptr).unwrap()))
+        Ok(Some(crate::Proj::new(&self.ctx, ptr).unwrap()))
     }
     ///Returns the frame reference epoch of a dynamic geodetic or vertical
     ///
@@ -581,9 +581,9 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
-    pub fn crs_get_coordinate_system(&self) -> miette::Result<Proj<'_>> {
+    pub fn crs_get_coordinate_system(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordinate_system(self.ctx.ptr, self.ptr()) };
-        crate::Proj::new(self.ctx, ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
     ///Returns the type of the coordinate system.
     ///
@@ -663,9 +663,9 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
-    pub fn get_ellipsoid(&self) -> miette::Result<Proj<'_>> {
+    pub fn get_ellipsoid(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_get_ellipsoid(self.ctx.ptr, self.ptr()) };
-        crate::Proj::new(self.ctx, ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
     ///Return ellipsoid parameters.
     ///
@@ -712,9 +712,9 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
-    pub fn get_prime_meridian(&self) -> miette::Result<Proj<'_>> {
+    pub fn get_prime_meridian(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx.ptr, self.ptr()) };
-        crate::Proj::new(self.ctx, ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
     ///Return prime meridian parameters.
     ///
@@ -750,9 +750,9 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
-    pub fn crs_get_coordoperation(&self) -> miette::Result<Proj<'_>> {
+    pub fn crs_get_coordoperation(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordoperation(self.ctx.ptr, self.ptr()) };
-        crate::Proj::new(self.ctx, ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
     ///Return information on the operation method of the SingleOperation.
     ///
@@ -1008,9 +1008,9 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
-    pub fn coordoperation_create_inverse(&self) -> miette::Result<Proj<'_>> {
+    pub fn coordoperation_create_inverse(&self) -> miette::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_coordoperation_create_inverse(self.ctx.ptr, self.ptr()) };
-        crate::Proj::new(self.ctx, ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
     ///Returns the number of steps of a concatenated operation.
     ///
@@ -1034,21 +1034,21 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
-    pub fn concatoperation_get_step(&self, index: u16) -> miette::Result<Proj<'_>> {
+    pub fn concatoperation_get_step(&self, index: u16) -> miette::Result<Proj> {
         let ptr = unsafe {
             proj_sys::proj_concatoperation_get_step(self.ctx.ptr, self.ptr(), index as i32)
         };
-        crate::Proj::new(self.ctx, ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
     ///Instantiate a CoordinateMetadata object.
     ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
-    pub fn coordinate_metadata_create(&self, epoch: f64) -> miette::Result<Proj<'_>> {
+    pub fn coordinate_metadata_create(&self, epoch: f64) -> miette::Result<Proj> {
         let ptr =
             unsafe { proj_sys::proj_coordinate_metadata_create(self.ctx.ptr, self.ptr(), epoch) };
-        crate::Proj::new(self.ctx, ptr)
+        crate::Proj::new(&self.ctx, ptr)
     }
     ///Return the coordinate epoch associated with a CoordinateMetadata.
     ///
@@ -1061,13 +1061,13 @@ impl Proj<'_> {
         unsafe { proj_sys::proj_coordinate_metadata_get_epoch(self.ctx.ptr, self.ptr()) }
     }
 }
-impl Clone for Proj<'_> {
+impl Clone for Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_clone>
     fn clone(&self) -> Self {
         let ptr = unsafe { proj_sys::proj_clone(self.ctx.ptr, self.ptr()) };
-        Proj::new(self.ctx, ptr).unwrap()
+        Proj::new(&self.ctx, ptr).unwrap()
     }
 }
 
@@ -1287,7 +1287,7 @@ mod test_proj_basic {
         assert!(pj.is_crs());
         let geodetic = pj.crs_get_geodetic_crs()?;
         let wkt = geodetic.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("4326"));
         Ok(())
     }
@@ -1298,15 +1298,17 @@ mod test_proj_basic {
         assert!(pj.is_crs());
         let horizontal = pj.crs_get_horizontal_datum()?;
         let wkt = horizontal.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("6326"));
         Ok(())
     }
     #[test]
     fn test_crs_get_sub_crs() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let horiz_crs = ctx.create_from_database("EPSG", "6340", Category::Crs, false)?;
-        let vert_crs: Proj<'_> = ctx.create_vertical_crs_ex(
+        let horiz_crs = ctx
+            .clone()
+            .create_from_database("EPSG", "6340", Category::Crs, false)?;
+        let vert_crs: Proj = ctx.create_vertical_crs_ex(
             Some("myVertCRS (ftUS)"),
             Some("myVertDatum"),
             None,
@@ -1319,11 +1321,10 @@ mod test_proj_basic {
             None,
             None,
         )?;
-        let compound: Proj<'_> =
-            ctx.create_compound_crs(Some("Compound"), &horiz_crs, &vert_crs)?;
+        let compound: Proj = ctx.create_compound_crs(Some("Compound"), &horiz_crs, &vert_crs)?;
         let pj = compound.crs_get_sub_crs(0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("NAD83"));
         Ok(())
     }
@@ -1403,7 +1404,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
         let wkt = cs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("9122"));
         Ok(())
     }
@@ -1431,7 +1432,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
         let info = cs.cs_get_axis_info(1)?;
-        println!("{:?}", info);
+        println!("{info:?}");
         assert_eq!(info.name(), "Geodetic longitude");
         assert_eq!(info.abbrev(), "Lon");
         assert_eq!(info.direction(), &AxisDirection::East);
@@ -1447,7 +1448,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let ellps = pj.get_ellipsoid()?;
         let wkt = ellps.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("7030"));
         Ok(())
     }
@@ -1457,7 +1458,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let ellps = pj.get_ellipsoid()?;
         let param = ellps.ellipsoid_get_parameters()?;
-        println!("{:?}", param);
+        println!("{param:?}");
         Ok(())
     }
     #[test]
@@ -1474,7 +1475,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let meridian = pj.get_prime_meridian()?;
         let wkt = meridian.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("8901"));
         Ok(())
     }
@@ -1484,9 +1485,9 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let meridian = pj.get_prime_meridian()?;
         let params = meridian.prime_meridian_get_parameters()?;
-        println!("{:?}", params);
+        println!("{params:?}");
         assert_eq!(
-            format!("{:?}", params),
+            format!("{params:?}"),
             "PrimeMeridianParameters { longitude: 0.0, unit_conv_factor: 0.017453292519943295, unit_name: \"degree\" }"
         );
         Ok(())
@@ -1497,7 +1498,7 @@ mod test_proj_basic {
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
         let wkt = op.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("16031"));
         Ok(())
     }
@@ -1507,9 +1508,9 @@ mod test_proj_basic {
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
         let info = op.coordoperation_get_method_info()?;
-        println!("{:?}", info);
+        println!("{info:?}");
         assert_eq!(
-            format!("{:?}", info),
+            format!("{info:?}"),
             "CoordOperationMethodInfo { method_name: \"Transverse Mercator\", method_auth_name: \"EPSG\", method_code: \"9807\" }"
         );
         Ok(())
@@ -1585,8 +1586,8 @@ mod test_proj_basic {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "1312", Category::CoordinateOperation, true)?;
         let grid = pj.coordoperation_get_grid_used(0)?;
-        println!("{:?}", grid);
-        assert!(format!("{:?}", grid).contains("ca_nrc_ntv1_can.tif"));
+        println!("{grid:?}");
+        assert!(format!("{grid:?}").contains("ca_nrc_ntv1_can.tif"));
         Ok(())
     }
     #[test]
@@ -1623,7 +1624,7 @@ mod test_proj_basic {
         let op = pj.crs_get_coordoperation()?;
         let inversed = op.coordoperation_create_inverse()?;
         let wkt = inversed.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("16031"));
         Ok(())
     }
@@ -1631,7 +1632,9 @@ mod test_proj_basic {
     fn test_concatoperation_get_step_count() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let factory = ctx.create_operation_factory_context(None);
-        let source_crs = ctx.create_from_database("EPSG", "28356", Category::Crs, false)?;
+        let source_crs = ctx
+            .clone()
+            .create_from_database("EPSG", "28356", Category::Crs, false)?;
         let target_crs = ctx.create_from_database("EPSG", "7856", Category::Crs, false)?;
         let ops = factory
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
@@ -1644,7 +1647,9 @@ mod test_proj_basic {
     fn test_concatoperation_get_step() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let factory = ctx.create_operation_factory_context(None);
-        let source_crs = ctx.create_from_database("EPSG", "28356", Category::Crs, false)?;
+        let source_crs = ctx
+            .clone()
+            .create_from_database("EPSG", "28356", Category::Crs, false)?;
         let target_crs = ctx.create_from_database("EPSG", "7856", Category::Crs, false)?;
         let ops = factory
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
@@ -1653,7 +1658,7 @@ mod test_proj_basic {
         let wkt = ops
             .get(0)?
             .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("GDA94 to GDA2020"));
         Ok(())
     }

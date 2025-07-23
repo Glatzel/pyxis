@@ -1,11 +1,11 @@
 [package]
 edition = "2024"
 name = "pyxis-py"
-version = "0.0.26"
+version = "0.0.33"
 
 [dependencies]
 numpy = "0.25.0"
-pyo3 = { version = "0.25.0", features = ["extension-module", "abi3-py311"] }
+pyo3 = { version = "0.25.1", features = ["extension-module", "abi3-py311"] }
 pyxis = { path = "./../rust/crates/pyxis/" }
 rayon = "1.10.0"
 

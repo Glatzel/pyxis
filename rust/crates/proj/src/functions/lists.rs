@@ -131,7 +131,7 @@ mod test {
         let ellps = list_ellps();
 
         for i in &ellps {
-            println!("{:?}", i);
+            println!("{i:?}");
         }
         assert!(!ellps.is_empty());
     }
@@ -140,7 +140,7 @@ mod test {
         let units = list_units();
 
         for i in &units {
-            println!("{:?}", i);
+            println!("{i:?}");
         }
         assert!(!units.is_empty());
     }
@@ -149,7 +149,7 @@ mod test {
         let meridians = list_prime_meridians();
 
         for i in &meridians {
-            println!("{:?}", i);
+            println!("{i:?}");
         }
         assert!(!meridians.is_empty());
     }

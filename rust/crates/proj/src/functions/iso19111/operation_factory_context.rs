@@ -1,4 +1,5 @@
 use std::ptr;
+use std::sync::Arc;
 
 use envoy::{AsVecPtr, ToCString, VecCString};
 
@@ -24,12 +25,12 @@ impl Context {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_operation_factory_context>
     pub fn create_operation_factory_context(
-        &self,
+        self: &Arc<Self>,
         authority: Option<&str>,
-    ) -> OperationFactoryContext<'_> {
+    ) -> OperationFactoryContext {
         let authority = authority.map(|s| s.to_cstring());
         OperationFactoryContext {
-            ctx: self,
+            ctx: self.clone(),
             ptr: unsafe {
                 proj_sys::proj_create_operation_factory_context(
                     self.ptr,
@@ -39,13 +40,10 @@ impl Context {
         }
     }
 }
-impl OperationFactoryContext<'_> {
+impl OperationFactoryContext {
     ///# See Also
     /// * [`crate::Context::create_operation_factory_context`]
-    pub fn from_context<'a>(
-        ctx: &'a Context,
-        authority: Option<&str>,
-    ) -> OperationFactoryContext<'a> {
+    pub fn from_context(ctx: &Arc<Context>, authority: Option<&str>) -> OperationFactoryContext {
         ctx.create_operation_factory_context(authority)
     }
     ///Set the desired accuracy of the resulting coordinate transformations.
@@ -326,7 +324,7 @@ impl OperationFactoryContext<'_> {
         &self,
         source_crs: &Proj,
         target_crs: &Proj,
-    ) -> miette::Result<ProjObjList<'_>> {
+    ) -> miette::Result<ProjObjList> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
                 self.ctx.ptr,
@@ -335,10 +333,10 @@ impl OperationFactoryContext<'_> {
                 self.ptr,
             )
         };
-        ProjObjList::new(self.ctx, ptr)
+        ProjObjList::new(&self.ctx, ptr)
     }
 }
-impl Drop for OperationFactoryContext<'_> {
+impl Drop for OperationFactoryContext {
     ///Drops a reference on an object.
     ///
     /// # References

@@ -1,7 +1,7 @@
 use crate::Direction::{Fwd, Inv};
 use crate::ICoord;
 
-impl crate::Proj<'_> {
+impl crate::Proj {
     /// Projects a single coordinate using the specified direction (forward or
     /// inverse).
     ///
@@ -88,7 +88,7 @@ impl crate::Proj<'_> {
     }
 }
 
-impl crate::Proj<'_> {
+impl crate::Proj {
     /// Projects an array of coordinates using the specified direction (forward
     /// or inverse).
     ///
@@ -244,7 +244,7 @@ mod test {
         {
             let coord = [3879000.0, 1160000.0, 5000000.0, 2024.0];
             let coord = pj.project(false, &coord)?;
-            println!("{:?}", coord);
+            println!("{coord:?}");
             assert_approx_eq!(f64, coord[0], 1935504.4269929447);
             assert_approx_eq!(f64, coord[1], -5521772.777432425);
             assert_approx_eq!(f64, coord[2], 5296676.095833973);
@@ -254,7 +254,7 @@ mod test {
         {
             let coord = (3879000.0, 1160000.0, 5000000.0, 2024.0);
             let coord = pj.project(false, &coord)?;
-            println!("{:?}", coord);
+            println!("{coord:?}");
             assert_approx_eq!(f64, coord.0, 1935504.4269929447);
             assert_approx_eq!(f64, coord.1, -5521772.777432425);
             assert_approx_eq!(f64, coord.2, 5296676.095833973);
@@ -271,7 +271,7 @@ mod test {
             let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = [120.0, 30.0];
             let coord = pj.convert(&coord)?;
-            println!("{:?}", coord);
+            println!("{coord:?}");
             assert_approx_eq!(f64, coord[0], 19955590.73888901);
             assert_approx_eq!(f64, coord[1], 3416780.562127255);
         }
@@ -280,7 +280,7 @@ mod test {
             let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = (120.0, 30.0);
             let coord = pj.convert(&coord)?;
-            println!("{:?}", coord);
+            println!("{coord:?}");
             assert_approx_eq!(f64, coord.0, 19955590.73888901);
             assert_approx_eq!(f64, coord.1, 3416780.562127255);
         }
@@ -295,7 +295,7 @@ mod test {
         {
             let coord = [120.0, 30.0, 10.0];
             let coord = pj.convert(&coord)?;
-            println!("{:?}", coord);
+            println!("{coord:?}");
             assert_approx_eq!(f64, coord[0], -2764132.649773435);
             assert_approx_eq!(f64, coord[1], 4787618.188267582);
             assert_approx_eq!(f64, coord[2], 3170378.735383637);
@@ -304,7 +304,7 @@ mod test {
         {
             let coord = (120.0, 30.0, 10.0);
             let coord = pj.convert(&coord)?;
-            println!("{:?}", coord);
+            println!("{coord:?}");
             assert_approx_eq!(f64, coord.0, -2764132.649773435);
             assert_approx_eq!(f64, coord.1, 4787618.188267582);
             assert_approx_eq!(f64, coord.2, 3170378.735383637);
@@ -319,7 +319,7 @@ mod test {
         {
             let coord = [3879000.0, 1160000.0, 5000000.0, 2024.0];
             let coord = pj.convert(&coord)?;
-            println!("{:?}", coord);
+            println!("{coord:?}");
             assert_approx_eq!(f64, coord[0], 1935504.4269929447);
             assert_approx_eq!(f64, coord[1], -5521772.777432425);
             assert_approx_eq!(f64, coord[2], 5296676.095833973);
@@ -329,7 +329,7 @@ mod test {
         {
             let coord = (3879000.0, 1160000.0, 5000000.0, 2024.0);
             let coord = pj.convert(&coord)?;
-            println!("{:?}", coord);
+            println!("{coord:?}");
             assert_approx_eq!(f64, coord.0, 1935504.4269929447);
             assert_approx_eq!(f64, coord.1, -5521772.777432425);
             assert_approx_eq!(f64, coord.2, 5296676.095833973);
@@ -345,7 +345,7 @@ mod test {
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
 
         pj.project_array(false, coord.as_mut_slice())?;
-        println!("{:?}", coord);
+        println!("{coord:?}");
         assert_approx_eq!(f64, coord[0][0], 19955590.73888901);
         assert_approx_eq!(f64, coord[0][1], 3416780.562127255);
         assert_approx_eq!(f64, coord[1][0], 17583572.872089125);
@@ -360,7 +360,7 @@ mod test {
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
 
         pj.project_array(false, coord.as_mut_slice())?;
-        println!("{:?}", coord);
+        println!("{coord:?}");
         assert_approx_eq!(f64, coord[0][0], -2764132.649773435);
         assert_approx_eq!(f64, coord[0][1], 4787618.188267582);
         assert_approx_eq!(f64, coord[0][2], 3170378.735383637);
@@ -380,7 +380,7 @@ mod test {
         ];
 
         pj.project_array(false, coord.as_mut_slice())?;
-        println!("{:?}", coord);
+        println!("{coord:?}");
         assert_approx_eq!(f64, coord[0][0], 1935504.4269929447);
         assert_approx_eq!(f64, coord[0][1], -5521772.777432425);
         assert_approx_eq!(f64, coord[0][2], 5296676.095833973);
@@ -394,7 +394,7 @@ mod test {
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
         let pj = ctx.normalize_for_visualization(&pj)?;
         pj.convert_array(coord.as_mut_slice())?;
-        println!("{:?}", coord);
+        println!("{coord:?}");
         assert_approx_eq!(f64, coord[0][0], 19955590.73888901);
         assert_approx_eq!(f64, coord[0][1], 3416780.562127255);
         assert_approx_eq!(f64, coord[1][0], 17583572.872089125);
@@ -409,7 +409,7 @@ mod test {
         let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
 
         pj.convert_array(coord.as_mut_slice())?;
-        println!("{:?}", coord);
+        println!("{coord:?}");
         assert_approx_eq!(f64, coord[0][0], -2764132.649773435);
         assert_approx_eq!(f64, coord[0][1], 4787618.188267582);
         assert_approx_eq!(f64, coord[0][2], 3170378.735383637);
@@ -428,7 +428,7 @@ mod test {
         ];
 
         pj.convert_array(coord.as_mut_slice())?;
-        println!("{:?}", coord);
+        println!("{coord:?}");
         assert_approx_eq!(f64, coord[0][0], 1935504.4269929447);
         assert_approx_eq!(f64, coord[0][1], -5521772.777432425);
         assert_approx_eq!(f64, coord[0][2], 5296676.095833973);

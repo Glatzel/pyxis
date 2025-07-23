@@ -1,7 +1,8 @@
-use std::ffi::CString;
+use std::ffi::{CString, c_char};
 use std::path::{Path, PathBuf};
 use std::ptr;
 use std::str::FromStr;
+use std::sync::Arc;
 
 use envoy::{AsVecPtr, CStrListToVecString, CStrToString, ToCString};
 use miette::IntoDiagnostic;
@@ -29,10 +30,10 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_database_path>
     pub fn set_database_path(
-        &self,
+        self: &Arc<Self>,
         db_path: &Path,
         aux_db_paths: Option<&[PathBuf]>,
-    ) -> miette::Result<&Self> {
+    ) -> miette::Result<&Arc<Self>> {
         let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
             aux_db_paths
                 .iter()
@@ -40,7 +41,7 @@ impl crate::Context {
                 .collect()
         });
 
-        let aux_db_paths_ptr: Option<Vec<*const i8>> =
+        let aux_db_paths_ptr: Option<Vec<*const c_char>> =
             aux_db_paths.map(|aux_db_paths| aux_db_paths.iter().map(|f| f.as_ptr()).collect());
 
         let result = unsafe {
@@ -80,7 +81,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
-    pub fn get_database_metadata(&self, key: DatabaseMetadataKey) -> Option<String> {
+    pub fn get_database_metadata(self: &Arc<Self>, key: DatabaseMetadataKey) -> Option<String> {
         unsafe {
             proj_sys::proj_context_get_database_metadata(
                 self.ptr,
@@ -111,7 +112,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
-    pub fn guess_wkt_dialect(&self, wkt: &str) -> miette::Result<GuessedWktDialect> {
+    pub fn guess_wkt_dialect(self: &Arc<Self>, wkt: &str) -> miette::Result<GuessedWktDialect> {
         GuessedWktDialect::try_from(unsafe {
             proj_sys::proj_context_guess_wkt_dialect(self.ptr, wkt.to_cstring().as_ptr())
         })
@@ -141,19 +142,19 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_wkt>
     pub fn create_from_wkt(
-        &self,
+        self: &Arc<Self>,
         wkt: &str,
         strict: Option<bool>,
         unset_identifiers_if_incompatible_def: Option<bool>,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let mut options = ProjOptions::new(2);
         options.push_optional_pass(strict, "STRICT");
         options.push_optional_pass(
             unset_identifiers_if_incompatible_def,
             "UNSET_IDENTIFIERS_IF_INCOMPATIBLE_DEF",
         );
-        let mut out_warnings: *mut *mut i8 = std::ptr::null_mut();
-        let mut out_grammar_errors: *mut *mut i8 = std::ptr::null_mut();
+        let mut out_warnings: *mut *mut c_char = std::ptr::null_mut();
+        let mut out_grammar_errors: *mut *mut c_char = std::ptr::null_mut();
         let ptr = unsafe {
             proj_sys::proj_create_from_wkt(
                 self.ptr,
@@ -193,12 +194,12 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_database>
     pub fn create_from_database(
-        &self,
+        self: &Arc<Self>,
         auth_name: &str,
         code: &str,
         category: Category,
         use_projalternative_grid_names: bool,
-    ) -> miette::Result<Proj<'_>> {
+    ) -> miette::Result<Proj> {
         let ptr = unsafe {
             proj_sys::proj_create_from_database(
                 self.ptr,
@@ -222,7 +223,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>
     pub fn uom_get_info_from_database(
-        &self,
+        self: &Arc<Self>,
         auth_name: &str,
         code: &str,
     ) -> miette::Result<UomInfo> {
@@ -258,7 +259,10 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_get_info_from_database>
-    pub fn grid_get_info_from_database(&self, grid_name: &str) -> miette::Result<GridInfoDB> {
+    pub fn grid_get_info_from_database(
+        self: &Arc<Self>,
+        grid_name: &str,
+    ) -> miette::Result<GridInfoDB> {
         let mut full_name: *const std::ffi::c_char = std::ptr::null();
         let mut package_name: *const std::ffi::c_char = std::ptr::null();
         let mut url: *const std::ffi::c_char = std::ptr::null();
@@ -305,7 +309,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_geoid_models_from_database>
     pub fn get_geoid_models_from_database(
-        &self,
+        self: &Arc<Self>,
         auth_name: &str,
         code: &str,
     ) -> miette::Result<Vec<String>> {
@@ -355,7 +359,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_codes_from_database>
     pub fn get_codes_from_database(
-        &self,
+        self: &Arc<Self>,
         auth_name: &str,
         proj_type: ProjType,
         allow_deprecated: bool,
@@ -390,7 +394,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_list_from_database>
     pub fn get_celestial_body_list_from_database(
-        &self,
+        self: &Arc<Self>,
         auth_name: &str,
     ) -> miette::Result<Vec<CelestialBodyInfo>> {
         let mut out_result_count = i32::default();
@@ -436,7 +440,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_crs_info_list_from_database>
     pub fn get_crs_info_list_from_database(
-        &self,
+        self: &Arc<Self>,
         auth_name: Option<&str>,
         params: Option<CrsListParameters>,
     ) -> miette::Result<Vec<CrsInfo>> {
@@ -519,7 +523,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_units_from_database>
     pub fn get_units_from_database(
-        &self,
+        self: &Arc<Self>,
         auth_name: &str,
         category: UnitCategory,
         allow_deprecated: bool,
@@ -583,10 +587,7 @@ mod test {
             .unwrap();
         assert_eq!(
             data,
-            format!(
-                "{}.{}.{}",
-                PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, PROJ_VERSION_PATCH
-            )
+            format!("{PROJ_VERSION_MAJOR}.{PROJ_VERSION_MINOR}.{PROJ_VERSION_PATCH}")
         );
         Ok(())
     }
@@ -637,7 +638,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
-        println!("{}", wkt);
+        println!("{wkt}");
         assert!(wkt.contains("32631"));
         Ok(())
     }
@@ -645,7 +646,7 @@ mod test {
     fn test_uom_get_info_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.uom_get_info_from_database("EPSG", "9102")?;
-        println!("{:?}", info);
+        println!("{info:?}");
         assert_eq!(info.name(), "degree");
         assert_eq!(info.conv_factor(), &0.017453292519943295);
         assert_eq!(info.category(), &UomCategory::Angular);
@@ -655,7 +656,7 @@ mod test {
     fn test_grid_get_info_from_database() -> miette::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.grid_get_info_from_database("au_icsm_GDA94_GDA2020_conformal.tif")?;
-        println!("{:?}", info);
+        println!("{info:?}");
         assert_eq!(
             info.full_name(),
             "https://cdn.proj.org/au_icsm_GDA94_GDA2020_conformal.tif"
@@ -701,7 +702,7 @@ mod test {
         for t in ProjType::iter() {
             let codes = ctx.get_codes_from_database("EPSG", t.clone(), true);
             if codes.is_err() {
-                println!("{:?}", t);
+                println!("{t:?}");
             } else {
                 let result = codes?;
                 println!("{:?}:{}", t, result.len());

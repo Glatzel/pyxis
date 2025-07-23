@@ -16,19 +16,17 @@ jobs:
         machine: [windows-latest, ubuntu-latest]
         include:
           - machine: windows-latest
-            os: win-64
           - machine: ubuntu-latest
-            os: linux-64
 
     runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.8.10
+        uses: prefix-dev/setup-pixi@v0.8.12
         with:
           run-install: false
 
       - name: build
-        run: ${{env.PYTHON_CUDA_ROOT}}/rattler/ci-pyxis-cuda-py.ps1
+        run: ${{env.PYTHON_CUDA_ROOT}}/rattler/ci-pyxis-py-cuda.ps1
         shell: pwsh

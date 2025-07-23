@@ -6,14 +6,14 @@ platforms = ["win-64", "linux-64"]
 lazy-loader = "==0.4"
 pip = "==25.1.1"
 python = "3.11.*"
-rattler-build = "==0.43.1"
+rattler-build = "==0.44.0"
 
 [feature.test.dependencies]
-cupy = "==13.4.1"
+cupy = "==13.5.1"
 nomkl = "==1.0"
-pytest = "==8.4.0"
+pytest = "==8.4.1"
 pytest-benchmark = "==5.1.0"
-pytest-cov = "==6.1.1"
+pytest-cov = "==6.2.1"
 
 [environments]
 test = ["test"]

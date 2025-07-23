@@ -1,23 +1,14 @@
 use std::env;
-use std::sync::LazyLock;
+use std::sync::Arc;
 
 use miette::IntoDiagnostic;
-use tracing::level_filters::LevelFilter;
-use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::util::SubscriberInitExt;
 
-use crate::LogLevel;
-static INIT_LOGGING: LazyLock<bool> = LazyLock::new(|| {
-    tracing_subscriber::registry()
-        .with(clerk::terminal_layer(LevelFilter::TRACE, true))
-        .init();
-    true
-});
-pub(crate) fn new_test_ctx() -> miette::Result<crate::Context> {
-    let log = &*INIT_LOGGING;
-    assert!(log);
-    let ctx = crate::Context::default();
-    ctx.set_log_level(LogLevel::Trace)?;
+use crate::Context;
+
+pub(crate) fn new_test_ctx() -> miette::Result<Arc<Context>> {
+    clerk::init_log_with_level(clerk::LogLevel::TRACE);
+    let ctx = crate::Context::new();
+    ctx.set_log_level(crate::LogLevel::Trace)?;
     ctx.set_enable_network(true)?;
     // PROJ_DATA
     let workspace_root = env::var("CARGO_WORKSPACE_DIR").unwrap();
@@ -26,14 +17,19 @@ pub(crate) fn new_test_ctx() -> miette::Result<crate::Context> {
             "{workspace_root}/.pixi/envs/default/proj/x64-windows-static/share/proj"
         ))
         .into_diagnostic()?
-    } else if cfg!(target_os = "linux") {
+    } else if cfg!(target_os = "macos") {
+        dunce::canonicalize(format!(
+            "{workspace_root}/.pixi/envs/default/proj/arm64-osx-release/share/proj"
+        ))
+        .into_diagnostic()?
+    } else if cfg!(target_os = "linux") && cfg!(target_arch = "x86_64") {
         dunce::canonicalize(format!(
             "{workspace_root}/.pixi/envs/default/proj/x64-linux-release/share/proj"
         ))
         .into_diagnostic()?
-    } else if cfg!(target_os = "macos") {
+    } else if cfg!(target_os = "linux") && cfg!(target_arch = "aarch64") {
         dunce::canonicalize(format!(
-            "{workspace_root}/.pixi/envs/default/proj/arm64-osx-release/share/proj"
+            "{workspace_root}/.pixi/envs/default/proj/arm64-linux-release/share/proj"
         ))
         .into_diagnostic()?
     } else {

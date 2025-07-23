@@ -13,6 +13,7 @@ use crate::GeoFloat;
 /// # Example
 /// ```
 /// use float_cmp::assert_approx_eq;
+/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
 /// let (x, y) = pyxis::polar_to_cartesian(3.605551275463989, 1.2315037123408519);
 /// assert_approx_eq!(f64, x, 1.2, epsilon = 1e-15);
 /// assert_approx_eq!(f64, y, 3.4, epsilon = 1e-15);

@@ -1,10 +1,11 @@
 use std::ptr;
+use std::sync::Arc;
 
 use envoy::ToCString;
 
 use crate::data_types::iso19111::*;
 use crate::{Context, OwnedCStrings, Proj, ToCoord};
-impl ProjObjList<'_> {
+impl ProjObjList {
     ///Return the index of the operation that would be the most appropriate to
     /// transform the specified coordinates.
     ///
@@ -20,7 +21,7 @@ impl ProjObjList<'_> {
         &self,
         direction: crate::Direction,
         coord: impl crate::ICoord,
-    ) -> miette::Result<Option<Proj<'_>>> {
+    ) -> miette::Result<Option<Proj>> {
         let index = unsafe {
             proj_sys::proj_get_suggested_operation(
                 self.ctx.ptr,
@@ -35,17 +36,17 @@ impl ProjObjList<'_> {
         let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr(), index) };
 
         if self._owned_cstrings.len() > 0 {
-            Ok(Some(Proj::new(self.ctx, ptr)?))
+            Ok(Some(Proj::new(&self.ctx, ptr)?))
         } else {
             Ok(Some(Proj::new_with_owned_cstrings(
-                self.ctx,
+                &self.ctx,
                 ptr,
                 self._owned_cstrings.clone(),
             )?))
         }
     }
 }
-impl Drop for ProjObjList<'_> {
+impl Drop for ProjObjList {
     ///Drops a reference on the result set.
     ///
     /// # References
@@ -76,13 +77,13 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
     pub fn create_from_name(
-        &self,
+        self: &Arc<Self>,
         auth_name: Option<&str>,
         searched_name: &str,
         types: Option<&[ProjType]>,
         approximate_match: bool,
         limit_result_count: usize,
-    ) -> miette::Result<ProjObjList<'_>> {
+    ) -> miette::Result<ProjObjList> {
         let (types, count) = types.map_or((None, 0), |types| {
             let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
             let count = types.len();
@@ -116,12 +117,12 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
     pub fn query_geodetic_crs_from_datum(
-        &self,
+        self: &Arc<Self>,
         crs_auth_name: Option<&str>,
         datum_auth_name: &str,
         datum_code: &str,
         crs_type: Option<&str>,
-    ) -> miette::Result<ProjObjList<'_>> {
+    ) -> miette::Result<ProjObjList> {
         let mut owned = OwnedCStrings::new();
         let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
@@ -135,15 +136,15 @@ impl Context {
         ProjObjList::new_with_owned_cstrings(self, ptr, owned)
     }
 }
-impl Proj<'_> {
+impl Proj {
     ///Return a list of non-deprecated objects related to the passed one.
     ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
-    pub fn get_non_deprecated(&self) -> miette::Result<ProjObjList<'_>> {
+    pub fn get_non_deprecated(&self) -> miette::Result<ProjObjList> {
         let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
-        ProjObjList::new(self.ctx, result)
+        ProjObjList::new(&self.ctx, result)
     }
 
     ///Identify the CRS with reference CRSs.
@@ -192,7 +193,7 @@ impl Proj<'_> {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
-    pub fn identify(&self, auth_name: &str) -> miette::Result<ProjObjList<'_>> {
+    pub fn identify(&self, auth_name: &str) -> miette::Result<ProjObjList> {
         let mut confidence: Vec<i32> = Vec::new();
         let result = unsafe {
             proj_sys::proj_identify(
@@ -203,7 +204,7 @@ impl Proj<'_> {
                 &mut confidence.as_mut_ptr(),
             )
         };
-        ProjObjList::new(self.ctx, result)
+        ProjObjList::new(&self.ctx, result)
     }
 }
 #[cfg(test)]

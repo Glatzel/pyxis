@@ -1,4 +1,5 @@
 use std::ptr;
+use std::sync::Arc;
 
 use envoy::{AsVecPtr, CStrListToVecString, ToCString, VecCString};
 
@@ -20,14 +21,14 @@ impl Context {
     /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_create>
-    pub fn insert_object_session_create(&self) -> InsertObjectSession<'_> {
+    pub fn insert_object_session_create(self: &Arc<Self>) -> InsertObjectSession {
         InsertObjectSession {
-            ctx: self,
+            ctx: self.clone(),
             ptr: unsafe { proj_sys::proj_insert_object_session_create(self.ptr) },
         }
     }
 }
-impl Drop for InsertObjectSession<'_> {
+impl Drop for InsertObjectSession {
     ///Stops an insertion session started with
     /// [`Context::insert_object_session_create()`].
     ///
@@ -38,11 +39,11 @@ impl Drop for InsertObjectSession<'_> {
         unsafe { proj_sys::proj_insert_object_session_destroy(self.ctx.ptr, self.ptr) };
     }
 }
-impl InsertObjectSession<'_> {
+impl InsertObjectSession {
     /// # See Also
     ///
     /// * [crate::Context::insert_object_session_create]
-    pub fn from_context(ctx: &Context) -> InsertObjectSession<'_> {
+    pub fn from_context(ctx: Arc<Context>) -> InsertObjectSession {
         ctx.insert_object_session_create()
     }
     ///Returns SQL statements needed to insert the passed object into the
@@ -134,7 +135,7 @@ mod test {
                                ANGLEUNIT[\"degree\",0.0174532925199433]]]";
         println!("{wkt}");
         let crs = ctx.create_from_wkt(wkt, None, None)?;
-        let session = InsertObjectSession::from_context(&ctx);
+        let session = InsertObjectSession::from_context(ctx);
         let statements = session.get_insert_statements(&crs, "HOBU", "XXXX", false, None)?;
         for i in statements.iter() {
             println!("{i}");

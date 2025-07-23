@@ -5,7 +5,7 @@ if ($IsLinux) {
   sudo apt-get update
   sudo apt-get install -y g++-aarch64-linux-gnu
   rustup target add aarch64-unknown-linux-gnu
-  pixi global install proj -c https://repo.prefix.dev/glatzel --platform linux-aarch64
+  pixi global install proj
 
   # Set PKG_CONFIG_PATH to vcpkg's pkgconfig directory
   $p = resolve-path ~/.pixi/envs/proj/proj/arm64-linux-release/lib/pkgconfig

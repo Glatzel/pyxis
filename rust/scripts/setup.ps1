@@ -16,6 +16,6 @@ if ($IsLinux -and ($(uname -m) -eq 'x86_64' )) {
 }
 if ($IsLinux -and ($(uname -m) -eq 'aarch64' )) {
     rustup target add aarch64-unknown-linux-musl
-    rustup default stable64-aarch-unknown-linux-musl
+    rustup default stable-aarch64-unknown-linux-musl
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-linux-release/lib/pkgconfig
 }

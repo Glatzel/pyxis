@@ -8,9 +8,10 @@ if ($IsWindows) {
 if ($IsMacOS) {
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-osx-release/lib/pkgconfig
 }
-if ($IsLinux -and ($env:PROCESSOR_ARCHITECTURE -eq 'AMD64' )) {
+Write-Output $(uname -m
+if ($IsLinux -and ($(uname -m) -contains 'x64' )) {
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/x64-linux-release/lib/pkgconfig
 }
-if ($IsLinux -and ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' )) {
+if ($IsLinux -and ($(uname -m) -contains 'ARM64' )) {
     $env:PKG_CONFIG_PATH = Resolve-Path $PSScriptRoot/../.pixi/envs/default/proj/arm64-linux-release/lib/pkgconfig
 }

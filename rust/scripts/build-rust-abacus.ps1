@@ -12,7 +12,7 @@ Remove-Item ./dist/cli -Recurse -ErrorAction SilentlyContinue
 if ($IsWindows) {
     Write-Output "::group::Build static"
     # build
-    cargo build --profile $config -p pyxis-cli
+    cargo build --profile $config -p pyxis-abacus
 
     # copy build file to dist
     New-Item ./dist/cli -ItemType Directory -ErrorAction SilentlyContinue
@@ -22,7 +22,7 @@ if ($IsWindows) {
 elseif ($IsLinux) {
     # build
     Write-Output "::group::Build static"
-    cargo build --profile $config -p pyxis-cli
+    cargo build --profile $config -p pyxis-abacus
 
     #copy to dist
     New-Item ./dist/cli -ItemType Directory -ErrorAction SilentlyContinue
@@ -32,7 +32,7 @@ elseif ($IsLinux) {
 elseif ($IsMacOS) {
     # build
     Write-Output "::group::Build static"
-    cargo build --profile $config -p pyxis-cli
+    cargo build --profile $config -p pyxis-abacus
 
     #copy to dist
     New-Item ./dist/cli -ItemType Directory -ErrorAction SilentlyContinue

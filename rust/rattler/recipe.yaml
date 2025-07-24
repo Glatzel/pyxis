@@ -6,10 +6,10 @@ build:
   script:
     - if: win
       then:
-        - pwsh -f %RECIPE_DIR%/build-pyxis-cli.ps1
+        - pwsh -f %RECIPE_DIR%/build-pyxis-abacus.ps1
     - if: unix
       then:
-        - pwsh -f $RECIPE_DIR/build-pyxis-cli.ps1
+        - pwsh -f $RECIPE_DIR/build-pyxis-abacus.ps1
 tests:
   - script:
       - if: win

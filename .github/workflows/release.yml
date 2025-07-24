@@ -14,7 +14,7 @@ concurrency:
 permissions:
   contents: write
 jobs:
-  rattler-cli:
+  rattler-abacus:
     strategy:
       fail-fast: false
       matrix:
@@ -28,7 +28,7 @@ jobs:
         with:
           run-install: false
       - name: build
-        run: ./rust/rattler/ci-pyxis-cli.ps1
+        run: ./rust/rattler/ci-pyxis-abacus.ps1
         shell: pwsh
 
       - name: upload

@@ -1,20 +1,22 @@
 package:
   version: 0.0.35
-  name: pyxis-abacus
+  name: pyxis-cli
 build:
   number: 0
   script:
     - if: win
       then:
-        - pwsh -f %RECIPE_DIR%/build-pyxis-abacus.ps1
+        - pwsh -f %RECIPE_DIR%/build-pyxis-cli.ps1
     - if: unix
       then:
-        - pwsh -f $RECIPE_DIR/build-pyxis-abacus.ps1
+        - pwsh -f $RECIPE_DIR/build-pyxis-cli.ps1
 tests:
   - script:
       - if: win
         then:
           - "%PREFIX%/pyxis/bin/pyxis-abacus.exe --help"
+          - "%PREFIX%/pyxis/bin/pyxis-trail.exe --help"
       - if: unix
         then:
           - "$PREFIX/pyxis/bin/pyxis-abacus --help"
+          - "$PREFIX/pyxis/bin/pyxis-trail --help"

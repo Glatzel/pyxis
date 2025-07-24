@@ -14,7 +14,7 @@ concurrency:
 permissions:
   contents: write
 jobs:
-  rattler-abacus:
+  rattler-cli:
     strategy:
       fail-fast: false
       matrix:
@@ -28,13 +28,13 @@ jobs:
         with:
           run-install: false
       - name: build
-        run: ./rust/rattler/ci-pyxis-abacus.ps1
+        run: ./rust/rattler/ci-pyxis-cli.ps1
         shell: pwsh
 
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: pyxis-abacus-${{matrix.machine}}
+          name: pyxis-cli-${{matrix.machine}}
           path: |
             ./rust/rattler/output/*/*.conda
           if-no-files-found: error
@@ -212,7 +212,7 @@ jobs:
   release:
     permissions:
       contents: write
-    needs: [rattler-cpp,rattler-cuda,rattler-abacus, rattler-python, rattler-python-cuda, nukpg, cargo-doc, python-doc]
+    needs: [rattler-cpp,rattler-cuda,rattler-cli, rattler-python, rattler-python-cuda, nukpg, cargo-doc, python-doc]
     uses: Glatzel/template/.github/workflows/release.yml@main
     with:
       override: true

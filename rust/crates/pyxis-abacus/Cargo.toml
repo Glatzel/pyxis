@@ -1,11 +1,7 @@
 [package]
 edition.workspace = true
-name = "pyxis-cli"
+name = "pyxis-abacus"
 version.workspace = true
-
-[[bin]]
-name = "pyxis"
-path = "src/main.rs"
 
 [dependencies]
 bpaf = { workspace = true }

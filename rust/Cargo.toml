@@ -4,20 +4,29 @@ resolver = "2"
 
 [workspace.package]
 edition = "2024"
-version = "0.0.34"
+version = "0.0.35"
 
 [workspace.dependencies]
 proj = { path = "./crates/proj" }
 proj-sys = { path = "./crates/proj-sys" }
 pyxis = { path = "./crates/pyxis" }
 
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.24" }
+envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.24" }
+rax = { git = "https://github.com/Glatzel/blocke", tag = "v0.0.2" }
+rax-nmea = { git = "https://github.com/Glatzel/blocke", tag = "v0.0.2" }
+
 assert_cmd = "2.0"
+async-trait = "0.1"
 bindgen = "0.71"
 bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.24" }
+chrono = "0.4.41"
+clap = { version = "4.5.41", features = ["derive"] }
+clap-verbosity-flag = "3.0.3"
 criterion = { package = "codspeed-criterion-compat", version = "2.10.1" }
+crossterm = "0.29.0"
+directories = "6.0.0"
 dunce = "1.0.5"
-envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.24" }
 float-cmp = "0.10.0"
 libc = "0.2"
 miette = { version = "7.6.0", features = ["fancy"] }
@@ -26,9 +35,14 @@ num_enum = "0.7.4"
 pkg-config = "0.3.32"
 predicates = "3.1"
 rand = "0.9.2"
+ratatui = "0.29.0"
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.141"
 strum = { version = "0.27", features = ["derive"] }
+tempfile = "3.20.0"
+tokio = { version = "1", default-features = false }
+tokio-serial = "5.4.5"
+toml = "0.8"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 
@@ -38,6 +52,3 @@ debug = false
 lto = "fat"
 opt-level = 3
 strip = true
-
-[profile.develop]
-inherits = "dev"

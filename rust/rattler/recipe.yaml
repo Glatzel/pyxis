@@ -1,5 +1,5 @@
 package:
-  version: 0.0.34
+  version: 0.0.35
   name: pyxis-cli
 build:
   number: 0
@@ -14,7 +14,9 @@ tests:
   - script:
       - if: win
         then:
-          - "%PREFIX%/pyxis/bin/pyxis.exe --help"
+          - "%PREFIX%/pyxis/bin/pyxis-abacus.exe --help"
+          - "%PREFIX%/pyxis/bin/pyxis-trail.exe --help"
       - if: unix
         then:
-          - "$PREFIX/pyxis/bin/pyxis --help"
+          - "$PREFIX/pyxis/bin/pyxis-abacus --help"
+          - "$PREFIX/pyxis/bin/pyxis-trail --help"

@@ -2,7 +2,7 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 #[test]
 fn test_proj() {
-    Command::cargo_bin("pyxis")
+    Command::cargo_bin("pyxis-abacus")
         .unwrap()
         .args([
             "transform",

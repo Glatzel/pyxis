@@ -7,7 +7,7 @@ const SPHERICAL: (f64, f64, f64) = (1.2315037123408519, 2.5695540653144073, 6.66
 
 #[test]
 fn test_cartesian_to_cylindrical() {
-    Command::cargo_bin("pyxis")
+    Command::cargo_bin("pyxis-abacus")
         .unwrap()
         .args([
             "transform",
@@ -31,7 +31,7 @@ fn test_cartesian_to_cylindrical() {
 }
 #[test]
 fn test_cartesian_to_spherical() {
-    Command::cargo_bin("pyxis")
+    Command::cargo_bin("pyxis-abacus")
         .unwrap()
         .args([
             "transform",
@@ -57,7 +57,7 @@ fn test_cartesian_to_spherical() {
 }
 #[test]
 fn test_cylindrical_to_cartesian() {
-    Command::cargo_bin("pyxis")
+    Command::cargo_bin("pyxis-abacus")
         .unwrap()
         .args([
             "transform",
@@ -77,7 +77,7 @@ fn test_cylindrical_to_cartesian() {
 }
 #[test]
 fn test_cylindrical_to_spherical() {
-    Command::cargo_bin("pyxis")
+    Command::cargo_bin("pyxis-abacus")
         .unwrap()
         .args([
             "transform",
@@ -103,7 +103,7 @@ fn test_cylindrical_to_spherical() {
 }
 #[test]
 fn test_spherical_to_cartesian() {
-    Command::cargo_bin("pyxis")
+    Command::cargo_bin("pyxis-abacus")
         .unwrap()
         .args([
             "transform",
@@ -123,7 +123,7 @@ fn test_spherical_to_cartesian() {
 }
 #[test]
 fn test_spherical_to_cylindrical() {
-    Command::cargo_bin("pyxis")
+    Command::cargo_bin("pyxis-abacus")
         .unwrap()
         .args([
             "transform",

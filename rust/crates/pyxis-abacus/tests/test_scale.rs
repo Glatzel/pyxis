@@ -2,7 +2,7 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 #[test]
 fn test_scale() {
-    Command::cargo_bin("pyxis")
+    Command::cargo_bin("pyxis-abacus")
         .unwrap()
         .args(["transform", "-x", "2", "-y", "4", "-z", "6"])
         .args([

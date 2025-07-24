@@ -8,10 +8,9 @@ use crossterm::terminal::{enable_raw_mode, *};
 use miette::IntoDiagnostic;
 use ratatui::Terminal;
 use ratatui::backend::CrosstermBackend;
+use settings::{SETTINGS, Settings};
 use tokio::sync::mpsc;
 use tokio::task;
-
-use crate::settings::{SETTINGS, Settings};
 mod app;
 mod cli;
 mod logging;

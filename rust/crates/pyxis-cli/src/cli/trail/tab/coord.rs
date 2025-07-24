@@ -9,7 +9,7 @@ use ratatui::widgets::{Block, Borders, Cell, Paragraph, Row, Table, Wrap};
 use rax::str_parser::StrParserContext;
 use rax_nmea::data::{Gga, INmeaData, Identifier, Talker};
 
-use crate::settings::SETTINGS;
+use super::super::settings::SETTINGS;
 
 pub struct TabCoord {
     parser: StrParserContext,

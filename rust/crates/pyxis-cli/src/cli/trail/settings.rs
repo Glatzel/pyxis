@@ -8,7 +8,7 @@ use directories::ProjectDirs;
 use miette::IntoDiagnostic;
 use serde::{Deserialize, Serialize};
 
-use crate::cli::CliArgs;
+use super::cli::CliArgs;
 pub static SETTINGS: OnceLock<Settings> = OnceLock::new();
 mod tab_coord;
 pub use tab_coord::TabCoordSettings;

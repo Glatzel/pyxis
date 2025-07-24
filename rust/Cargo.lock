@@ -1526,42 +1526,29 @@ name = "pyxis-abacus"
 version = "0.0.35"
 dependencies = [
  "assert_cmd",
- "bpaf",
- "clerk",
- "dunce",
- "float-cmp",
- "miette",
- "predicates",
- "proj",
- "pyxis",
- "serde",
- "serde_json",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "pyxis-trail"
-version = "0.0.35"
-dependencies = [
  "async-trait",
+ "bpaf",
  "chrono",
  "clap",
  "clap-verbosity-flag",
  "clerk",
  "crossterm 0.29.0",
  "directories",
+ "float-cmp",
  "miette",
+ "predicates",
  "proj",
  "pyxis",
  "ratatui",
  "rax",
  "rax-nmea",
  "serde",
+ "serde_json",
  "tempfile",
  "tokio",
  "tokio-serial",
  "toml",
+ "tracing",
  "tracing-subscriber",
 ]
 

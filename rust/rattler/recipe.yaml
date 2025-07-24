@@ -1,6 +1,6 @@
 package:
   version: 0.0.34
-  name: pyxis-cli
+  name: pyxis-abacus
 build:
   number: 0
   script:
@@ -14,7 +14,7 @@ tests:
   - script:
       - if: win
         then:
-          - "%PREFIX%/pyxis/bin/pyxis.exe --help"
+          - "%PREFIX%/pyxis/bin/pyxis-abacus.exe --help"
       - if: unix
         then:
-          - "$PREFIX/pyxis/bin/pyxis --help"
+          - "$PREFIX/pyxis/bin/pyxis-abacus --help"

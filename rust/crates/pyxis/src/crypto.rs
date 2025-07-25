@@ -436,7 +436,7 @@ where
 
     T::wgs84().semi_major_axis() * c
 }
-#[cfg(all(feature = "log", test))]
+#[cfg(test)]
 mod test {
 
     use core::f64;

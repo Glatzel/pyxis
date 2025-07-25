@@ -20,7 +20,6 @@ mod tab;
 mod ui;
 
 /// Entry point of the async TUI application
-#[tokio::main]
 async fn main() -> miette::Result<()> {
     // Parse CLI arguments
     let cli = cli::CliArgs::parse();

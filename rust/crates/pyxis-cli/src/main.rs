@@ -1,3 +1,4 @@
 mod cli;
 mod proj_util;
-fn main() { cli::main(); }
+#[tokio::main]
+async fn main() { cli::main(); }

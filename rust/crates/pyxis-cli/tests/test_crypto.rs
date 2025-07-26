@@ -3,10 +3,10 @@ use predicates::prelude::*;
 use pyxis::crypto::{BD09_LAT, BD09_LON, GCJ02_LAT, GCJ02_LON, WGS84_LAT, WGS84_LON};
 #[test]
 fn test_wgs84_to_gcj02() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &WGS84_LON.to_string(),
             "-y",
@@ -24,10 +24,10 @@ fn test_wgs84_to_gcj02() {
 }
 #[test]
 fn test_gcj02_to_wgs84() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &GCJ02_LON.to_string(),
             "-y",
@@ -45,10 +45,10 @@ fn test_gcj02_to_wgs84() {
 }
 #[test]
 fn test_wgs84_to_bd09() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &WGS84_LON.to_string(),
             "-y",
@@ -66,10 +66,10 @@ fn test_wgs84_to_bd09() {
 }
 #[test]
 fn test_bd09_to_wgs84() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &BD09_LON.to_string(),
             "-y",
@@ -87,10 +87,10 @@ fn test_bd09_to_wgs84() {
 }
 #[test]
 fn test_bd09_to_gcj02() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &BD09_LON.to_string(),
             "-y",
@@ -108,10 +108,10 @@ fn test_bd09_to_gcj02() {
 }
 #[test]
 fn test_gcj02_to_bd09() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &GCJ02_LON.to_string(),
             "-y",

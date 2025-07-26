@@ -4,7 +4,7 @@ use crossterm::event::KeyEvent;
 use ratatui::widgets::{Block, Paragraph, Wrap};
 use rax_nmea::data::{Identifier, Talker};
 
-use crate::settings::SETTINGS;
+use super::super::settings::SETTINGS;
 
 #[derive(Default)]
 pub struct TabSettings {}

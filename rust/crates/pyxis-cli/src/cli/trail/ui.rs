@@ -4,7 +4,7 @@ use ratatui::style::{Color, Modifier, Style};
 use ratatui::text::Span;
 use ratatui::widgets::{Block, Borders, Paragraph, Tabs};
 
-use crate::app::App;
+use super::app::App;
 
 pub fn draw(f: &mut Frame, app: &mut App) -> miette::Result<()> {
     let chunks = Layout::default()
@@ -39,7 +39,7 @@ pub fn draw(f: &mut Frame, app: &mut App) -> miette::Result<()> {
     let footer = Paragraph::new(format!(
         "{} | {}",
         app.hint(),
-        crate::app::STATUS[app.status]
+        super::app::STATUS[app.status]
     ))
     .block(Block::default().borders(Borders::TOP))
     .style(Style::default().fg(Color::Gray));

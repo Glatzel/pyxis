@@ -2,10 +2,10 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 #[test]
 fn test_proj() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             "4760096.421921",
             "-y",

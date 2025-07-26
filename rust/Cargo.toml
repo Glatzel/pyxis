@@ -11,18 +11,16 @@ proj = { path = "./crates/proj" }
 proj-sys = { path = "./crates/proj-sys" }
 pyxis = { path = "./crates/pyxis" }
 
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.24" }
-envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.24" }
-rax = { git = "https://github.com/Glatzel/blocke", tag = "v0.0.2" }
-rax-nmea = { git = "https://github.com/Glatzel/blocke", tag = "v0.0.2" }
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.25" }
+envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.25" }
+rax = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.25" }
+rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.25" }
 
 assert_cmd = "2.0"
 async-trait = "0.1"
 bindgen = "0.71"
 bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
 chrono = "0.4.41"
-clap = { version = "4.5.41", features = ["derive"] }
-clap-verbosity-flag = "3.0.3"
 criterion = { package = "codspeed-criterion-compat", version = "2.10.1" }
 crossterm = "0.29.0"
 directories = "6.0.0"

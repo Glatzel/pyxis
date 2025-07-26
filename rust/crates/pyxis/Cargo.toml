@@ -9,6 +9,7 @@ num-traits = { workspace = true }
 serde = { workspace = true, optional = true }
 
 [dev-dependencies]
+clerk = { workspace = true, features = ["log"] }
 criterion = { workspace = true }
 float-cmp = { workspace = true }
 rand = { workspace = true }

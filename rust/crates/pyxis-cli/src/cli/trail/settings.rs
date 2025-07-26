@@ -2,13 +2,10 @@ use std::path::PathBuf;
 use std::sync::OnceLock;
 use std::{fs, io};
 
-use clap_verbosity_flag::VerbosityFilter;
-use clerk::LogLevel;
 use directories::ProjectDirs;
 use miette::IntoDiagnostic;
 use serde::{Deserialize, Serialize};
 
-use crate::cli::CliArgs;
 pub static SETTINGS: OnceLock<Settings> = OnceLock::new();
 mod tab_coord;
 pub use tab_coord::TabCoordSettings;
@@ -17,7 +14,6 @@ pub struct Settings {
     pub port: String,
     pub baud_rate: u32,
     pub capacity: usize,
-    pub verbose: LogLevel,
 
     pub tab_coord: TabCoordSettings,
 }
@@ -28,7 +24,6 @@ impl Default for Settings {
             port: "COM1".into(), // pick sensible defaults for your platform
             baud_rate: 9_600,
             capacity: 1000,
-            verbose: LogLevel::ERROR,
 
             tab_coord: TabCoordSettings {
                 custom_cs: String::default(),
@@ -41,7 +36,11 @@ impl Settings {
     /// in the same directory as the executable.
     /// Falls back to `Config::default()` if the file is missing
     /// or malformed.
-    pub fn init(cli: &CliArgs) -> miette::Result<()> {
+    pub fn init(
+        port: Option<String>,
+        baud_rate: Option<u32>,
+        capacity: Option<usize>,
+    ) -> miette::Result<()> {
         let path = Self::path();
         // Read from file or fallback
         let mut settings = match fs::read_to_string(&path) {
@@ -56,23 +55,15 @@ impl Settings {
         };
 
         // Override with CLI args
-        if let Some(ref port) = cli.port {
+        if let Some(ref port) = port {
             settings.port = port.clone();
         }
-        if let Some(baud) = cli.baud_rate {
+        if let Some(baud) = baud_rate {
             settings.baud_rate = baud;
         }
-        if let Some(cap) = cli.capacity {
+        if let Some(cap) = capacity {
             settings.capacity = cap;
         }
-        settings.verbose = match cli.verbose.filter() {
-            VerbosityFilter::Error => LogLevel::ERROR,
-            VerbosityFilter::Warn => LogLevel::WARN,
-            VerbosityFilter::Info => LogLevel::INFO,
-            VerbosityFilter::Debug => LogLevel::DEBUG,
-            VerbosityFilter::Trace => LogLevel::TRACE,
-            VerbosityFilter::Off => LogLevel::OFF,
-        };
 
         // Initialize the global SETTINGS once with RwLock
         SETTINGS
@@ -82,7 +73,7 @@ impl Settings {
         Ok(())
     }
     pub fn path() -> PathBuf {
-        if let Some(proj_dirs) = ProjectDirs::from("", "", "pyxis-trail") {
+        if let Some(proj_dirs) = ProjectDirs::from("", "", "pyxis") {
             proj_dirs.config_dir().join("pyxis-trail.toml")
         } else {
             clerk::warn!("Cannot determine config directory. Using local file.");

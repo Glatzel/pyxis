@@ -136,7 +136,7 @@ pub fn execute(
     z: f64,
     output_format: OutputFormat,
     cmds: Vec<TransformCommands>,
-) {
+) -> miette::Result<()> {
     let mut ctx = ContextTransform { x, y, z };
     let mut records: Vec<Record> = vec![Record {
         idx: 0,
@@ -362,4 +362,5 @@ pub fn execute(
         OutputFormat::Plain => output_fn::output_plain(name, &records),
         OutputFormat::Json => output_fn::output_json(name, &records),
     }
+    Ok(())
 }

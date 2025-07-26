@@ -5,10 +5,10 @@ const PARAM: (f64, f64, f64, f64, f64) = (10.0, 20.0, 2.0, -1.0, 150.0);
 
 #[test]
 fn test_rel_2d() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &PARAM.2.to_string(),
             &format!("-y={}", &PARAM.3.to_string()),
@@ -31,10 +31,10 @@ fn test_rel_2d() {
         .success()
         .stdout(predicate::str::contains((-3.5717967697244886).to_string()))
         .stdout(predicate::str::contains(22.186533479473212.to_string()));
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &PARAM.0.to_string(),
             &format!("-y={}", &PARAM.1.to_string()),
@@ -60,10 +60,10 @@ fn test_rel_2d() {
 }
 #[test]
 fn test_abs_2d() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &PARAM.2.to_string(),
             &format!("-y={}", &PARAM.3.to_string()),
@@ -86,10 +86,10 @@ fn test_abs_2d() {
         .success()
         .stdout(predicate::str::contains(8.767949192431123.to_string()))
         .stdout(predicate::str::contains(21.866025403784437.to_string()));
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &PARAM.0.to_string(),
             &format!("-y={}", &PARAM.1.to_string()),
@@ -115,10 +115,10 @@ fn test_abs_2d() {
 }
 #[test]
 fn test_origin_2d() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &PARAM.2.to_string(),
             &format!("-y={}", &PARAM.3.to_string()),
@@ -141,10 +141,10 @@ fn test_origin_2d() {
         .success()
         .stdout(predicate::str::contains(11.232050807568877.to_string()))
         .stdout(predicate::str::contains(18.133974596215563.to_string()));
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &PARAM.0.to_string(),
             &format!("-y={}", &PARAM.1.to_string()),

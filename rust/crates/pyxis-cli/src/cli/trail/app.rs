@@ -3,9 +3,9 @@ use std::collections::VecDeque;
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, MouseEvent};
 use rax_nmea::data::{Identifier, Talker};
 mod status;
-pub use crate::app::status::STATUS;
-use crate::settings::SETTINGS;
-use crate::tab::{ITab, Tab, TabCoord, TabInfo, TabNmea, TabSettings};
+pub use super::app::status::STATUS;
+use super::settings::SETTINGS;
+use super::tab::{ITab, Tab, TabCoord, TabInfo, TabNmea, TabSettings};
 
 pub struct App {
     pub status: usize,

@@ -1,36 +1,30 @@
 use std::io::stdout;
 use std::time::Duration;
 
-use clap::Parser;
 use crossterm::event::Event;
 use crossterm::execute;
 use crossterm::terminal::{enable_raw_mode, *};
 use miette::IntoDiagnostic;
 use ratatui::Terminal;
 use ratatui::backend::CrosstermBackend;
+use settings::{SETTINGS, Settings};
 use tokio::sync::mpsc;
 use tokio::task;
-
-use crate::settings::{SETTINGS, Settings};
 mod app;
-mod cli;
-mod logging;
+
 mod serial;
 mod settings;
 mod tab;
 mod ui;
 
 /// Entry point of the async TUI application
-#[tokio::main]
-async fn main() -> miette::Result<()> {
-    // Parse CLI arguments
-    let cli = cli::CliArgs::parse();
-
-    // Init log
-    logging::init(&cli.verbose);
-
+pub async fn trail_main(
+    port: Option<String>,
+    baud_rate: Option<u32>,
+    capacity: Option<usize>,
+) -> miette::Result<()> {
     // Load settings from TOML, overridden by CLI arguments
-    Settings::init(&cli)?;
+    Settings::init(port, baud_rate, capacity)?;
 
     // Enable raw mode and enter alternate screen for TUI
     enable_raw_mode().into_diagnostic()?;

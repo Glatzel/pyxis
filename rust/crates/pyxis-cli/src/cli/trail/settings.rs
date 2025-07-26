@@ -6,7 +6,6 @@ use directories::ProjectDirs;
 use miette::IntoDiagnostic;
 use serde::{Deserialize, Serialize};
 
-use super::cli::CliArgs;
 pub static SETTINGS: OnceLock<Settings> = OnceLock::new();
 mod tab_coord;
 pub use tab_coord::TabCoordSettings;
@@ -37,7 +36,11 @@ impl Settings {
     /// in the same directory as the executable.
     /// Falls back to `Config::default()` if the file is missing
     /// or malformed.
-    pub fn init(cli: &CliArgs) -> miette::Result<()> {
+    pub fn init(
+        port: Option<String>,
+        baud_rate: Option<u32>,
+        capacity: Option<usize>,
+    ) -> miette::Result<()> {
         let path = Self::path();
         // Read from file or fallback
         let mut settings = match fs::read_to_string(&path) {
@@ -52,13 +55,13 @@ impl Settings {
         };
 
         // Override with CLI args
-        if let Some(ref port) = cli.port {
+        if let Some(ref port) = port {
             settings.port = port.clone();
         }
-        if let Some(baud) = cli.baud_rate {
+        if let Some(baud) = baud_rate {
             settings.baud_rate = baud;
         }
-        if let Some(cap) = cli.capacity {
+        if let Some(cap) = capacity {
             settings.capacity = cap;
         }
 

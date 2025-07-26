@@ -10,7 +10,6 @@ path = "src/main.rs"
 [dependencies]
 bpaf = { workspace = true }
 chrono = { workspace = true }
-clap = { workspace = true }
 clerk = { workspace = true, features = ["log", "serde"] }
 crossterm = { workspace = true }
 directories = { workspace = true }

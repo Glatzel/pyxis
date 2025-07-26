@@ -1,7 +1,6 @@
 use std::io::stdout;
 use std::time::Duration;
 
-use clap::Parser;
 use crossterm::event::Event;
 use crossterm::execute;
 use crossterm::terminal::{enable_raw_mode, *};
@@ -12,7 +11,6 @@ use settings::{SETTINGS, Settings};
 use tokio::sync::mpsc;
 use tokio::task;
 mod app;
-mod cli;
 
 mod serial;
 mod settings;
@@ -20,12 +18,13 @@ mod tab;
 mod ui;
 
 /// Entry point of the async TUI application
-async fn main() -> miette::Result<()> {
-    // Parse CLI arguments
-    let cli = cli::CliArgs::parse();
-
+pub async fn trail_main(
+    port: Option<String>,
+    baud_rate: Option<u32>,
+    capacity: Option<usize>,
+) -> miette::Result<()> {
     // Load settings from TOML, overridden by CLI arguments
-    Settings::init(&cli)?;
+    Settings::init(port, baud_rate, capacity)?;
 
     // Enable raw mode and enter alternate screen for TUI
     enable_raw_mode().into_diagnostic()?;

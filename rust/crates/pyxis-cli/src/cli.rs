@@ -43,6 +43,20 @@ pub enum Commands {
         #[bpaf(external, many)]
         transform_commands: Vec<abacus::TransformCommands>,
     },
+    #[bpaf(command)]
+    Trail {
+        /// Serial port to open
+        #[bpaf(short, long)]
+        port: Option<String>,
+
+        /// Baud rate of the serial port
+        #[bpaf(short, long)]
+        baud_rate: Option<u32>,
+
+        /// Line buffer capacity
+        #[bpaf(short, long)]
+        capacity: Option<usize>,
+    },
 }
 
 fn verbose() -> impl Parser<LogLevel> {
@@ -58,7 +72,7 @@ fn verbose() -> impl Parser<LogLevel> {
         ],
     )
 }
-fn execute(cmd: Commands) {
+async fn execute(cmd: Commands) -> miette::Result<()> {
     //run
     match cmd {
         Commands::Abacus {
@@ -69,11 +83,16 @@ fn execute(cmd: Commands) {
             output_format,
             transform_commands,
         } => abacus::execute(&name, x, y, z, output_format, transform_commands),
+        Commands::Trail {
+            port,
+            baud_rate,
+            capacity,
+        } => trail::trail_main(port, baud_rate, capacity).await,
     }
 }
-pub fn cli_main() {
+pub async fn cli_main() -> miette::Result<()> {
     let args = args().run();
     crate::logging::init_log(args.verbose);
     tracing::debug!("{:?}", args);
-    execute(args.commands);
+    execute(args.commands).await
 }

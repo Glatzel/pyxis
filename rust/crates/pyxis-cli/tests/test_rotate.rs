@@ -18,8 +18,7 @@ fn test_rotate_degrees_0() {
         .args(["abacus", "-x", "2", "-y", "4", "-z", "6"])
         .args(["rotate", "--value", "0", "-p", "xy", "-u", "degrees"])
         .assert()
-        .success()
-      ;
+        .success();
 }
 #[test]
 fn test_rotate_radians_0() {
@@ -28,8 +27,7 @@ fn test_rotate_radians_0() {
         .args(["abacus", "-x", "2", "-y", "4", "-z", "6"])
         .args(["rotate", "--value", "0", "-p", "xy", "-u", "radians"])
         .assert()
-        .success()
-;
+        .success();
 }
 #[test]
 fn test_rotate_equals_origin() {
@@ -42,8 +40,7 @@ fn test_rotate_equals_origin() {
                 "--oz", "6",
             ])
             .assert()
-            .success()
-     ;
+            .success();
     }
 }
 #[test]

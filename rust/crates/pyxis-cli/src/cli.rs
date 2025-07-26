@@ -16,7 +16,7 @@ struct Args {
 #[derive(Bpaf, Clone, Debug)]
 pub enum Commands {
     #[bpaf(command)]
-    Transform {
+    Abacus {
         #[bpaf(short, long,fallback("".to_string()),)]
         /// Transform task name.
         name: String,
@@ -61,7 +61,7 @@ fn verbose() -> impl Parser<LogLevel> {
 fn execute(cmd: Commands) {
     //run
     match cmd {
-        Commands::Transform {
+        Commands::Abacus {
             name,
             x,
             y,

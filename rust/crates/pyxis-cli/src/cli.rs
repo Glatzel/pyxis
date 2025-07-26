@@ -51,7 +51,7 @@ fn verbose() -> impl Parser<LogLevel> {
         [
             LogLevel::OFF,
             LogLevel::ERROR,
-            LogLevel::WARNING,
+            LogLevel::WARN,
             LogLevel::INFO,
             LogLevel::DEBUG,
             LogLevel::TRACE,

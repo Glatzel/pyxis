@@ -73,7 +73,7 @@ impl Settings {
         Ok(())
     }
     pub fn path() -> PathBuf {
-        if let Some(proj_dirs) = ProjectDirs::from("", "", "pyxis-trail") {
+        if let Some(proj_dirs) = ProjectDirs::from("", "", "pyxis") {
             proj_dirs.config_dir().join("pyxis-trail.toml")
         } else {
             clerk::warn!("Cannot determine config directory. Using local file.");

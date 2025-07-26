@@ -12,8 +12,6 @@ static LOG_INIT: OnceLock<()> = OnceLock::new();
 
 pub fn init_log(verbosity: LogLevel) {
     LOG_INIT.get_or_init(|| {
-   
-
         // Generate log file path with datetime
         let log_file_path = generate_log_filename();
 

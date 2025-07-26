@@ -2,7 +2,6 @@ use clap::Parser;
 
 /// Command-line arguments that override `pyxis-trail.toml`.
 #[derive(Debug, Parser)]
-#[command(name = "pyxis-trail", version, about = "Terminal NMEA reader")]
 pub struct CliArgs {
     /// Serial port to open
     #[arg(short, long)]
@@ -15,9 +14,6 @@ pub struct CliArgs {
     /// Line buffer capacity
     #[arg(short, long)]
     pub capacity: Option<usize>,
-
-    #[command(flatten)]
-    pub verbose: clap_verbosity_flag::Verbosity,
 }
 #[cfg(test)]
 mod tests {
@@ -45,20 +41,5 @@ mod tests {
         assert_eq!(args.port.as_deref(), Some("COM9"));
         assert_eq!(args.baud_rate, Some(38400));
         assert_eq!(args.capacity, Some(512));
-    }
-
-    #[test]
-    fn test_cli_parsing_verbosity() {
-        let args = CliArgs::parse_from(["pyxis-trail", "-v"]);
-        assert_eq!(
-            args.verbose.filter(),
-            clap_verbosity_flag::VerbosityFilter::Warn
-        );
-
-        let args = CliArgs::parse_from(["pyxis-trail", "-vvvv"]);
-        assert_eq!(
-            args.verbose.filter(),
-            clap_verbosity_flag::VerbosityFilter::Trace
-        );
     }
 }

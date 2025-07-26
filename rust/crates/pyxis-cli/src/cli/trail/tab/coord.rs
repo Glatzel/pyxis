@@ -18,16 +18,6 @@ pub struct TabCoord {
 impl Default for TabCoord {
     fn default() -> Self {
         let ctx = Context::new();
-        let level = match SETTINGS.get().unwrap().verbose {
-            clerk::LogLevel::ERROR => proj::LogLevel::Error,
-            clerk::LogLevel::WARN => proj::LogLevel::Debug,
-            clerk::LogLevel::INFO => proj::LogLevel::Debug,
-            clerk::LogLevel::DEBUG => proj::LogLevel::Debug,
-            clerk::LogLevel::TRACE => proj::LogLevel::Trace,
-            clerk::LogLevel::OFF => proj::LogLevel::None,
-        };
-        ctx.set_log_level(level)
-            .expect("Error to set proj log level.");
         let pj = match &ctx.create_crs_to_crs(
             "EPSG:4326",
             &SETTINGS.get().unwrap().tab_coord.custom_cs,

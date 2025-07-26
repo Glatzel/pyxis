@@ -3,14 +3,13 @@ mod abacus;
 mod trail;
 use abacus::transform_commands;
 use bpaf::Parser;
-use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::util::SubscriberInitExt;
+use clerk::LogLevel;
 
 #[derive(Clone, Debug, Bpaf)]
 #[bpaf(options, version)]
 struct Args {
     #[bpaf(external(verbose))]
-    verbose: Level,
+    verbose: LogLevel,
     #[bpaf(external)]
     commands: Commands,
 }
@@ -46,18 +45,18 @@ pub enum Commands {
     },
 }
 
-#[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
-enum Level {
-    Quiet,
-    Error,
-    Warning,
-    Info,
-    Debug,
-    Trace,
-}
-fn verbose() -> impl Parser<Level> {
-    use Level::*;
-    batteries::verbose_by_slice(2, [Quiet, Error, Warning, Info, Debug, Trace])
+fn verbose() -> impl Parser<LogLevel> {
+    batteries::verbose_by_slice(
+        2,
+        [
+            LogLevel::OFF,
+            LogLevel::ERROR,
+            LogLevel::WARNING,
+            LogLevel::INFO,
+            LogLevel::DEBUG,
+            LogLevel::TRACE,
+        ],
+    )
 }
 fn execute(cmd: Commands) {
     //run
@@ -72,22 +71,9 @@ fn execute(cmd: Commands) {
         } => abacus::execute(&name, x, y, z, output_format, transform_commands),
     }
 }
-fn init_log(level: Level) {
-    let tracing_level = match level {
-        Level::Quiet => clerk::LogLevel::OFF,
-        Level::Error => clerk::LogLevel::ERROR,
-        Level::Warning => clerk::LogLevel::WARN,
-        Level::Info => clerk::LogLevel::INFO,
-        Level::Debug => clerk::LogLevel::DEBUG,
-        Level::Trace => clerk::LogLevel::TRACE,
-    };
-    tracing_subscriber::registry()
-        .with(clerk::terminal_layer(tracing_level, true))
-        .init();
-}
-pub fn main() {
+pub fn cli_main() {
     let args = args().run();
-    init_log(args.verbose);
+    crate::logging::init_log(&args.verbose);
     tracing::debug!("{:?}", args);
     execute(args.commands);
 }

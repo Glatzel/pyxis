@@ -1,6 +1,6 @@
 [package]
 edition.workspace = true
-name = "pyxis-abacus"
+name = "pyxis-cli"
 version.workspace = true
 
 [[bin]]

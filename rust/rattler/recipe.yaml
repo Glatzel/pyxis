@@ -14,9 +14,8 @@ tests:
   - script:
       - if: win
         then:
-          - "%PREFIX%/pyxis/bin/pyxis-abacus.exe --help"
-          - "%PREFIX%/pyxis/bin/pyxis-trail.exe --help"
+          - "%PREFIX%/pyxis/bin/pyxis.exe --help"
       - if: unix
         then:
-          - "$PREFIX/pyxis/bin/pyxis-abacus --help"
-          - "$PREFIX/pyxis/bin/pyxis-trail --help"
+          - "$PREFIX/pyxis/bin/pyxis --help"
+

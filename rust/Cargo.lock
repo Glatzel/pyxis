@@ -381,8 +381,8 @@ checksum = "b94f61472cee1439c0b966b47e3aca9ae07e45d070759512cd390ea2bebc6675"
 
 [[package]]
 name = "clerk"
-version = "0.0.24"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.24#3467e10006453ffa8d480c819286811cd7f20602"
+version = "0.0.25"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.25#febac8487a68314d2091f8f4f4eb591d1e1e5576"
 dependencies = [
  "chrono",
  "owo-colors",
@@ -694,8 +694,8 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
 name = "envoy"
-version = "0.0.24"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.24#3467e10006453ffa8d480c819286811cd7f20602"
+version = "0.0.25"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.25#febac8487a68314d2091f8f4f4eb591d1e1e5576"
 
 [[package]]
 name = "equivalent"
@@ -1511,7 +1511,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pyxis-abacus"
+name = "pyxis-cli"
 version = "0.0.35"
 dependencies = [
  "assert_cmd",
@@ -1607,8 +1607,8 @@ dependencies = [
 
 [[package]]
 name = "rax"
-version = "0.0.2"
-source = "git+https://github.com/Glatzel/blocke?tag=v0.0.2#494dce57577717185869b2c17c3b529fe37fa5af"
+version = "0.0.25"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.25#febac8487a68314d2091f8f4f4eb591d1e1e5576"
 dependencies = [
  "async-trait",
  "clerk",
@@ -1619,8 +1619,8 @@ dependencies = [
 
 [[package]]
 name = "rax-nmea"
-version = "0.0.2"
-source = "git+https://github.com/Glatzel/blocke?tag=v0.0.2#494dce57577717185869b2c17c3b529fe37fa5af"
+version = "0.0.25"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.25#febac8487a68314d2091f8f4f4eb591d1e1e5576"
 dependencies = [
  "chrono",
  "clerk",

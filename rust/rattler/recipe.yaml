@@ -18,4 +18,3 @@ tests:
       - if: unix
         then:
           - "$PREFIX/pyxis/bin/pyxis --help"
-

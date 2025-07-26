@@ -2,9 +2,9 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 #[test]
 fn test_translate() {
-    Command::cargo_bin("pyxis-abacus")
+    Command::cargo_bin("pyxis")
         .unwrap()
-        .args(["transform"])
+        .args(["abacus"])
         .args(["translate", "--tx", "1", "--ty", "2", "--tz", "3"])
         .assert()
         .success()

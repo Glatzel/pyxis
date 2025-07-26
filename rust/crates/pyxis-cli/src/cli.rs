@@ -73,7 +73,7 @@ fn execute(cmd: Commands) {
 }
 pub fn cli_main() {
     let args = args().run();
-    crate::logging::init_log(&args.verbose);
+    crate::logging::init_log(args.verbose);
     tracing::debug!("{:?}", args);
     execute(args.commands);
 }

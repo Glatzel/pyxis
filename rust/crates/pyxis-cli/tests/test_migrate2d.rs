@@ -118,7 +118,7 @@ fn test_origin_2d() {
     Command::cargo_bin("pyxis")
         .unwrap()
         .args([
-            "transform",
+            "abacus",
             "-x",
             &PARAM.2.to_string(),
             &format!("-y={}", &PARAM.3.to_string()),

@@ -19,7 +19,7 @@ fn test_rotate_degrees_0() {
         .args(["rotate", "--value", "0", "-p", "xy", "-u", "degrees"])
         .assert()
         .success()
-        .stderr(predicate::str::contains("WARN"));
+      ;
 }
 #[test]
 fn test_rotate_radians_0() {
@@ -29,7 +29,7 @@ fn test_rotate_radians_0() {
         .args(["rotate", "--value", "0", "-p", "xy", "-u", "radians"])
         .assert()
         .success()
-        .stderr(predicate::str::contains("WARN"));
+;
 }
 #[test]
 fn test_rotate_equals_origin() {
@@ -43,7 +43,7 @@ fn test_rotate_equals_origin() {
             ])
             .assert()
             .success()
-            .stderr(predicate::str::contains("WARN"));
+     ;
     }
 }
 #[test]

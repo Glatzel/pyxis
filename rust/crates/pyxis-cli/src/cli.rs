@@ -1,7 +1,7 @@
 use bpaf::{Bpaf, batteries};
 pub mod abacus;
 pub mod trail;
-use abacus::abacus_commands;
+use abacus::abacus_args;
 use bpaf::Parser;
 use clerk::LogLevel;
 
@@ -41,7 +41,7 @@ pub enum SubCommands {
         #[bpaf(short, long, fallback(None))]
         output_format: Option<abacus::OutputFormat>,
         #[bpaf(external, many)]
-        abacus_commands: Vec<abacus::AbacusCommands>,
+        abacus_args: Vec<abacus::AbacusArgs>,
     },
     #[bpaf(command)]
     Trail {
@@ -81,9 +81,9 @@ async fn execute(cmd: SubCommands) -> miette::Result<()> {
             x,
             y,
             z,
-            abacus_commands,
+            abacus_args,
             ..
-        } => abacus::execute(&name, x, y, z, abacus_commands),
+        } => abacus::execute(&name, x, y, z, abacus_args),
         SubCommands::Trail { .. } => trail::execute().await,
     }
 }
@@ -91,5 +91,5 @@ pub async fn cli_main() -> miette::Result<()> {
     let args = args().run();
     crate::logging::init_log(args.verbose);
     tracing::debug!("{:?}", args);
-    execute(args.commands).await
+    execute(args.sub_commands).await
 }

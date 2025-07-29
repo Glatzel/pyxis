@@ -11,7 +11,7 @@ use tokio::sync::mpsc;
 use tokio::task;
 mod app;
 
-mod serial;
+pub mod serial;
 pub mod settings;
 mod tab;
 mod ui;

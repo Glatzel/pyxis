@@ -34,21 +34,17 @@ impl Settings {
         let mut settings: std::sync::MutexGuard<'_, Settings> = SETTINGS.lock().unwrap();
         match *args {
             cli::SubCommands::Abacus { output_format, .. } => {
-                // Override with CLI args
-                if let Some(output_format) = output_format {
-                    settings.abacus_settings.output_format = output_format;
-                }
+                output_format.inspect(|o| settings.abacus_settings.output_format = *o);
             }
             cli::SubCommands::Trail {
                 ref port,
                 baud_rate,
                 capacity,
-            } =>
-            // Override with CLI args
-            {
-                port.clone().map(|p| settings.trail_settings.port = p);
-                baud_rate.map(|b| settings.trail_settings.baud_rate = b);
-                capacity.map(|c| settings.trail_settings.capacity = c);
+            } => {
+                port.clone()
+                    .inspect(|p| settings.trail_settings.port = p.clone());
+                baud_rate.inspect(|b| settings.trail_settings.baud_rate = *b);
+                capacity.inspect(|c| settings.trail_settings.capacity = *c);
             }
         }
 

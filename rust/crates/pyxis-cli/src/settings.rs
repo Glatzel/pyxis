@@ -25,8 +25,8 @@ pub static SETTINGS: LazyLock<Mutex<Settings>> = LazyLock::new(|| {
 });
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Settings {
-    pub abacus_settings: crate::cli::abacus::Settings,
-    pub trail_settings: crate::cli::trail::settings::Settings,
+    pub abacus: crate::cli::abacus::Settings,
+    pub trail: crate::cli::trail::settings::Settings,
 }
 
 impl Settings {
@@ -34,17 +34,16 @@ impl Settings {
         let mut settings: std::sync::MutexGuard<'_, Settings> = SETTINGS.lock().unwrap();
         match *args {
             cli::SubCommands::Abacus { output_format, .. } => {
-                output_format.inspect(|o| settings.abacus_settings.output_format = *o);
+                output_format.inspect(|o| settings.abacus.output_format = *o);
             }
             cli::SubCommands::Trail {
                 ref port,
                 baud_rate,
                 capacity,
             } => {
-                port.clone()
-                    .inspect(|p| settings.trail_settings.port = p.clone());
-                baud_rate.inspect(|b| settings.trail_settings.baud_rate = *b);
-                capacity.inspect(|c| settings.trail_settings.capacity = *c);
+                port.clone().inspect(|p| settings.trail.port = p.clone());
+                baud_rate.inspect(|b| settings.trail.baud_rate = *b);
+                capacity.inspect(|c| settings.trail.capacity = *c);
             }
         }
 

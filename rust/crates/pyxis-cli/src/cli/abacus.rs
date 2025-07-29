@@ -356,7 +356,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mie
     match crate::settings::SETTINGS
         .lock()
         .unwrap()
-        .abacus_settings
+        .abacus
         .output_format
     {
         OutputFormat::Simple => output::output_simple(records.last().unwrap()),

@@ -20,20 +20,18 @@ pub struct App {
 
 impl App {
     pub fn new() -> miette::Result<Self> {
-      let  raw_nmea=  VecDeque::with_capacity(SETTINGS.lock().trail.capacity);
-        let a = Self {
+        let raw_nmea = VecDeque::with_capacity(SETTINGS.lock().trail.capacity);
+        Ok(Self {
             status: 0,
 
-            raw_nmea:raw_nmea,
+            raw_nmea: raw_nmea,
 
             tab: Tab::Info,
             tab_info: TabInfo::default(),
             tab_coord: TabCoord::default(),
             tab_nmea: TabNmea::default(),
             tab_settings: TabSettings::default(),
-        };
-
-        Ok(a)
+        })
     }
 
     pub fn handle_key(&mut self, key: KeyEvent) -> bool {

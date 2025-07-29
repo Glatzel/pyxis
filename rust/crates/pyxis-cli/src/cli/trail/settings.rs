@@ -1,8 +1,5 @@
-use std::sync::OnceLock;
-
 use serde::{Deserialize, Serialize};
 
-pub static SETTINGS: OnceLock<Settings> = OnceLock::new();
 mod tab_coord;
 pub use tab_coord::TabCoordSettings;
 #[derive(Debug, Serialize, Deserialize)]

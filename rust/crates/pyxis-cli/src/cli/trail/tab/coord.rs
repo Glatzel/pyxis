@@ -9,7 +9,7 @@ use ratatui::widgets::{Block, Borders, Cell, Paragraph, Row, Table, Wrap};
 use rax::str_parser::StrParserContext;
 use rax_nmea::data::{Gga, INmeaData, Identifier, Talker};
 
-use super::super::settings::SETTINGS;
+use crate::SETTINGS;
 
 pub struct TabCoord {
     parser: StrParserContext,
@@ -20,7 +20,7 @@ impl Default for TabCoord {
         let ctx = Context::new();
         let pj = match &ctx.create_crs_to_crs(
             "EPSG:4326",
-            &SETTINGS.get().unwrap().tab_coord.custom_cs,
+            &SETTINGS.lock().unwrap().trail.tab_coord.custom_cs,
             &Area::default(),
         ) {
             Ok(pj) => ctx.normalize_for_visualization(pj).ok(),
@@ -109,7 +109,7 @@ impl TabCoord {
         f: &mut ratatui::Frame,
         area: ratatui::layout::Rect,
     ) -> miette::Result<()> {
-        let input = Paragraph::new(SETTINGS.get().unwrap().tab_coord.custom_cs.clone())
+        let input = Paragraph::new(SETTINGS.lock().unwrap().trail.tab_coord.custom_cs.clone())
             .block(
                 Block::default()
                     .title("Custom Coordinate System")

@@ -38,23 +38,23 @@ pub enum Commands {
         ///  - z of cylindrical (in meters).
         ///  - radius of spherical (in meters).
         z: f64,
-        #[bpaf(short, long, fallback(abacus::OutputFormat::Simple), display_fallback)]
-        output_format: abacus::OutputFormat,
+        #[bpaf(short, long, fallback(None))]
+        output_format: Option<abacus::OutputFormat>,
         #[bpaf(external, many)]
         transform_commands: Vec<abacus::TransformCommands>,
     },
     #[bpaf(command)]
     Trail {
         /// Serial port to open
-        #[bpaf(short, long)]
+        #[bpaf(short, long, fallback(None))]
         port: Option<String>,
 
         /// Baud rate of the serial port
-        #[bpaf(short, long)]
+        #[bpaf(short, long, fallback(None))]
         baud_rate: Option<u32>,
 
         /// Line buffer capacity
-        #[bpaf(short, long)]
+        #[bpaf(short, long, fallback(None))]
         capacity: Option<usize>,
     },
 }
@@ -73,6 +73,7 @@ fn verbose() -> impl Parser<LogLevel> {
     )
 }
 async fn execute(cmd: Commands) -> miette::Result<()> {
+    crate::Settings::overwrite_settings(&cmd)?;
     //run
     match cmd {
         Commands::Abacus {
@@ -80,20 +81,10 @@ async fn execute(cmd: Commands) -> miette::Result<()> {
             x,
             y,
             z,
-            output_format,
             transform_commands,
-        } => abacus::execute(&name, x, y, z, output_format, transform_commands),
-        Commands::Trail {
-            port,
-            baud_rate,
-            capacity,
-        } => {
-            crate::settings::SETTINGS
-                .lock()
-                .unwrap()
-                .overwrite_trail_settings(port, baud_rate, capacity)?;
-            trail::execute().await
-        }
+            ..
+        } => abacus::execute(&name, x, y, z, transform_commands),
+        Commands::Trail { .. } => trail::execute().await,
     }
 }
 pub async fn cli_main() -> miette::Result<()> {

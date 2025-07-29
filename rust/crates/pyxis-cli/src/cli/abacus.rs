@@ -7,6 +7,8 @@ use context::ContextTransform;
 pub use options::*;
 use pyxis::crypto::CryptoSpace;
 use record::Record;
+mod settings;
+pub use settings::Settings;
 
 #[derive(Bpaf, Clone, Debug)]
 pub enum TransformCommands {
@@ -135,7 +137,6 @@ pub fn execute(
     x: f64,
     y: f64,
     z: f64,
-    output_format: OutputFormat,
     cmds: Vec<TransformCommands>,
 ) -> miette::Result<()> {
     let mut ctx = ContextTransform { x, y, z };
@@ -358,7 +359,12 @@ pub fn execute(
         clerk::debug!("context x: {}, y: {}, z: {}", ctx.x, ctx.y, ctx.z);
     }
     // output
-    match output_format {
+    match crate::settings::SETTINGS
+        .lock()
+        .unwrap()
+        .abacus_settings
+        .output_format
+    {
         OutputFormat::Simple => output::output_simple(records.last().unwrap()),
         OutputFormat::Plain => output::output_plain(name, &records),
         OutputFormat::Json => output::output_json(name, &records),

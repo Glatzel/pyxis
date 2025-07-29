@@ -2,7 +2,8 @@ use std::fmt;
 use std::str::FromStr;
 
 use bpaf::Bpaf;
-#[derive(Debug, Clone, Copy)]
+use serde::{Deserialize, Serialize};
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum OutputFormat {
     Simple,
     Plain,

@@ -6,50 +6,56 @@ use directories::ProjectDirs;
 use miette::IntoDiagnostic;
 use serde::{Deserialize, Serialize};
 
-pub static SETTINGS: LazyLock<Mutex<Settings>> = LazyLock::new(|| Mutex::new(Settings::default()));
+use crate::cli;
+
+pub static SETTINGS: LazyLock<Mutex<Settings>> = LazyLock::new(|| {
+    let path = Settings::path();
+    // Read from file or fallback
+    let settings = match fs::read_to_string(&path) {
+        Ok(content) => toml::from_str(&content).unwrap_or_else(|e| {
+            clerk::warn!("Malformed config file: {e}. Using defaults.");
+            Settings::default()
+        }),
+        Err(e) => {
+            clerk::warn!("Failed to read config: {e}. Using defaults.");
+            Settings::default()
+        }
+    };
+    Mutex::new(settings)
+});
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Settings {
+    pub abacus_settings: crate::cli::abacus::Settings,
     pub trail_settings: crate::cli::trail::settings::Settings,
 }
 
 impl Settings {
-    /// Initialise the config: try to read `term‑nmea.toml` located
-    /// in the same directory as the executable.
-    /// Falls back to `Config::default()` if the file is missing
-    /// or malformed.
-    pub fn overwrite_trail_settings(
-        &mut self,
-        port: Option<String>,
-        baud_rate: Option<u32>,
-        capacity: Option<usize>,
-    ) -> miette::Result<()> {
-        let path = Self::path();
-        // Read from file or fallback
-        let mut settings = match fs::read_to_string(&path) {
-            Ok(content) => toml::from_str(&content).unwrap_or_else(|e| {
-                clerk::warn!("Malformed config file: {e}. Using defaults.");
-                Self::default()
-            }),
-            Err(e) => {
-                clerk::warn!("Failed to read config: {e}. Using defaults.");
-                Self::default()
+    pub fn overwrite_settings(args: &cli::Commands) -> miette::Result<()> {
+        let mut settings: std::sync::MutexGuard<'_, Settings> = SETTINGS.lock().unwrap();
+        match args {
+            &cli::Commands::Abacus { output_format, .. } => {
+                // Override with CLI args
+                if let Some(output_format) = output_format {
+                    settings.abacus_settings.output_format = output_format;
+                }
             }
-        };
+            &cli::Commands::Trail {
+                ref port,
+                baud_rate,
+                capacity,
+            } =>
+            // Override with CLI args
+            {
+                port.clone().map(|p| settings.trail_settings.port = p);
+                baud_rate.map(|b| settings.trail_settings.baud_rate = b);
+                capacity.map(|c| settings.trail_settings.capacity = c);
+            }
+        }
 
-        // Override with CLI args
-        if let Some(port) = port {
-            settings.trail_settings.port = port;
-        }
-        if let Some(baud) = baud_rate {
-            settings.trail_settings.baud_rate = baud;
-        }
-        if let Some(cap) = capacity {
-            settings.trail_settings.capacity = cap;
-        }
-
-        self.save()?;
+        settings.save()?;
         Ok(())
     }
+
     pub fn path() -> PathBuf {
         if let Some(proj_dirs) = ProjectDirs::from("", "", "pyxis") {
             proj_dirs.config_dir().join("pyxis.toml")

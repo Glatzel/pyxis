@@ -1,6 +1,4 @@
 use std::sync::Arc;
-use std::thread;
-use std::time::Duration;
 
 use proj::Context;
 
@@ -13,7 +11,7 @@ pub fn init_proj_builder() -> miette::Result<Arc<Context>> {
 pub fn start_deadlock_detection() {
     tokio::task::spawn_blocking(|| {
         loop {
-            thread::sleep(Duration::from_secs(10));
+            std::thread::sleep(std::time::Duration::from_secs(10));
             let deadlocks = parking_lot::deadlock::check_deadlock();
             if deadlocks.is_empty() {
                 continue;

@@ -92,7 +92,6 @@ async fn execute(cmd: Commands) -> miette::Result<()> {
                 .lock()
                 .unwrap()
                 .overwrite_trail_settings(port, baud_rate, capacity)?;
-            trail::serial::check_port()?;
             trail::execute().await
         }
     }

@@ -11,13 +11,16 @@ use tokio::sync::mpsc;
 use tokio::task;
 mod app;
 
-pub mod serial;
+mod serial;
 pub mod settings;
 mod tab;
 mod ui;
 
 /// Entry point of the async TUI application
 pub async fn execute() -> miette::Result<()> {
+    // Check if serial port is available.
+    serial::check_port()?;
+
     // Enable raw mode and enter alternate screen for TUI
     enable_raw_mode().into_diagnostic()?;
     let mut stdout = stdout();

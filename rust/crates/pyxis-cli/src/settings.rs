@@ -1,9 +1,10 @@
 use std::path::PathBuf;
-use std::sync::{LazyLock, Mutex};
+use std::sync::LazyLock;
 use std::{fs, io};
 
 use directories::ProjectDirs;
 use miette::IntoDiagnostic;
+use parking_lot::Mutex;
 use serde::{Deserialize, Serialize};
 
 use crate::cli;
@@ -31,7 +32,7 @@ pub struct Settings {
 
 impl Settings {
     pub fn overwrite_settings(args: &cli::SubCommands) -> miette::Result<()> {
-        let mut settings: std::sync::MutexGuard<'_, Settings> = SETTINGS.lock().unwrap();
+        let mut settings = SETTINGS.lock();
         match *args {
             cli::SubCommands::Abacus { output_format, .. } => {
                 output_format.inspect(|o| settings.abacus.output_format = *o);

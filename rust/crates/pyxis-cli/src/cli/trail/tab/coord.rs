@@ -20,17 +20,14 @@ impl Default for TabCoord {
         let ctx = Context::new();
         let pj = match &ctx.create_crs_to_crs(
             "EPSG:4326",
-            &SETTINGS.lock().unwrap().trail.tab_coord.custom_cs,
+            &SETTINGS.lock().trail.tab_coord.custom_cs,
             &Area::default(),
         ) {
             Ok(pj) => ctx.normalize_for_visualization(pj).ok(),
             Err(_) => None,
         };
-
-        Self {
-            parser: StrParserContext::default(),
-            pj,
-        }
+        let parser = StrParserContext::default();
+        Self { parser, pj }
     }
 }
 impl TabCoord {
@@ -109,7 +106,7 @@ impl TabCoord {
         f: &mut ratatui::Frame,
         area: ratatui::layout::Rect,
     ) -> miette::Result<()> {
-        let input = Paragraph::new(SETTINGS.lock().unwrap().trail.tab_coord.custom_cs.clone())
+        let input = Paragraph::new(SETTINGS.lock().trail.tab_coord.custom_cs.clone())
             .block(
                 Block::default()
                     .title("Custom Coordinate System")

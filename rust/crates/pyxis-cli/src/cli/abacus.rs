@@ -353,12 +353,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mie
         clerk::debug!("context x: {}, y: {}, z: {}", ctx.x, ctx.y, ctx.z);
     }
     // output
-    match crate::settings::SETTINGS
-        .lock()
-        .unwrap()
-        .abacus
-        .output_format
-    {
+    match crate::settings::SETTINGS.lock().abacus.output_format {
         OutputFormat::Simple => output::output_simple(records.last().unwrap()),
         OutputFormat::Plain => output::output_plain(name, &records),
         OutputFormat::Json => output::output_json(name, &records),

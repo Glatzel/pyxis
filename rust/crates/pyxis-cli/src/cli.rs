@@ -72,13 +72,31 @@ fn verbose() -> impl Parser<LogLevel> {
         ],
     )
 }
+/// Asynchronous entry point for the CLI tool.
+///
+/// - Initializes logging and deadlock detection
+/// - Loads or overwrites settings
+/// - Dispatches subcommand to appropriate handler
 pub async fn execute() -> miette::Result<()> {
+    // Parse command-line arguments into structured form
     let args = args().run();
+
+    // Initialize logging system with the specified verbosity level
     crate::logging::init_log(args.verbose);
+
+    // Print parsed arguments at debug level
     tracing::debug!("{:?}", args);
+
+    // Start a background thread to detect deadlocks (via parking_lot)
+    #[cfg(debug_assertions)]
+    crate::utils::start_deadlock_detection();
+
+    // Overwrite global SETTINGS with command-line arguments, if applicable
     crate::Settings::overwrite_settings(&args.sub_commands)?;
-    //run
+
+    // Match and execute the selected subcommand
     match args.sub_commands {
+        // Run the abacus subcommand with given name and coordinates
         SubCommands::Abacus {
             name,
             x,
@@ -87,6 +105,8 @@ pub async fn execute() -> miette::Result<()> {
             abacus_args,
             ..
         } => abacus::execute(&name, x, y, z, abacus_args),
+
+        // Run the interactive TUI trail subcommand
         SubCommands::Trail { .. } => trail::execute().await,
     }
 }

@@ -20,17 +20,19 @@ pub struct App {
 
 impl App {
     pub fn new() -> miette::Result<Self> {
-        Ok(Self {
+        let a = Self {
             status: 0,
 
-            raw_nmea: VecDeque::with_capacity(SETTINGS.lock().unwrap().trail.capacity),
+            raw_nmea: VecDeque::with_capacity(SETTINGS.lock().trail.capacity),
 
             tab: Tab::Info,
             tab_info: TabInfo::default(),
             tab_coord: TabCoord::default(),
             tab_nmea: TabNmea::default(),
             tab_settings: TabSettings::default(),
-        })
+        };
+
+        Ok(a)
     }
 
     pub fn handle_key(&mut self, key: KeyEvent) -> bool {
@@ -119,7 +121,7 @@ impl App {
         }
     }
     pub fn update(&mut self, talker: Talker, identifier: Identifier, sentence: String) {
-        if self.raw_nmea.len() > SETTINGS.lock().unwrap().trail.capacity {
+        if self.raw_nmea.len() > SETTINGS.lock().trail.capacity {
             self.raw_nmea.pop_front();
         }
         self.raw_nmea.push_back((talker, identifier, sentence));

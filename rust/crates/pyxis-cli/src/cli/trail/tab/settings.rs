@@ -18,7 +18,7 @@ impl super::ITab for TabSettings {
         _raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> miette::Result<()> {
         let toml_str =
-            toml::to_string_pretty(&*SETTINGS.lock().unwrap()).expect("TOML serialize error: {e}");
+            toml::to_string_pretty(&*SETTINGS.lock()).expect("TOML serialize error: {e}");
         let paragraph = Paragraph::new(toml_str)
             .block(Block::default())
             .wrap(Wrap { trim: true });

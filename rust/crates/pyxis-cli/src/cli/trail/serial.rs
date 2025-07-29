@@ -7,8 +7,7 @@ use tokio::sync::mpsc::Sender;
 use tokio_serial::SerialPortBuilderExt;
 pub fn check_port() -> miette::Result<()> {
     let (port,) = {
-        let settings: std::sync::MutexGuard<'_, crate::settings::Settings> =
-            crate::settings::SETTINGS.lock().unwrap();
+        let settings = crate::settings::SETTINGS.lock();
         (settings.trail.port.clone(),)
     };
     if !tokio_serial::available_ports()
@@ -27,7 +26,7 @@ pub fn check_port() -> miette::Result<()> {
 }
 pub async fn start_serial_reader(tx: Sender<(Talker, Identifier, String)>) -> miette::Result<()> {
     let (port, baud_rate) = {
-        let settings = crate::settings::SETTINGS.lock().unwrap();
+        let settings = crate::settings::SETTINGS.lock();
         (settings.trail.port.clone(), settings.trail.baud_rate)
     };
 

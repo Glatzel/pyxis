@@ -30,16 +30,16 @@ pub struct Settings {
 }
 
 impl Settings {
-    pub fn overwrite_settings(args: &cli::Commands) -> miette::Result<()> {
+    pub fn overwrite_settings(args: &cli::SubCommands) -> miette::Result<()> {
         let mut settings: std::sync::MutexGuard<'_, Settings> = SETTINGS.lock().unwrap();
         match args {
-            &cli::Commands::Abacus { output_format, .. } => {
+            &cli::SubCommands::Abacus { output_format, .. } => {
                 // Override with CLI args
                 if let Some(output_format) = output_format {
                     settings.abacus_settings.output_format = output_format;
                 }
             }
-            &cli::Commands::Trail {
+            &cli::SubCommands::Trail {
                 ref port,
                 baud_rate,
                 capacity,

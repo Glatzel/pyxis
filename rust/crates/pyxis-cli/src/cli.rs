@@ -1,7 +1,7 @@
 use bpaf::{Bpaf, batteries};
 pub mod abacus;
 pub mod trail;
-use abacus::transform_commands;
+use abacus::abacus_commands;
 use bpaf::Parser;
 use clerk::LogLevel;
 
@@ -11,10 +11,10 @@ struct Args {
     #[bpaf(external(verbose))]
     verbose: LogLevel,
     #[bpaf(external)]
-    commands: Commands,
+    sub_commands: SubCommands,
 }
 #[derive(Bpaf, Clone, Debug)]
-pub enum Commands {
+pub enum SubCommands {
     #[bpaf(command)]
     Abacus {
         #[bpaf(short, long,fallback("".to_string()),)]
@@ -41,7 +41,7 @@ pub enum Commands {
         #[bpaf(short, long, fallback(None))]
         output_format: Option<abacus::OutputFormat>,
         #[bpaf(external, many)]
-        transform_commands: Vec<abacus::TransformCommands>,
+        abacus_commands: Vec<abacus::AbacusCommands>,
     },
     #[bpaf(command)]
     Trail {
@@ -72,19 +72,19 @@ fn verbose() -> impl Parser<LogLevel> {
         ],
     )
 }
-async fn execute(cmd: Commands) -> miette::Result<()> {
+async fn execute(cmd: SubCommands) -> miette::Result<()> {
     crate::Settings::overwrite_settings(&cmd)?;
     //run
     match cmd {
-        Commands::Abacus {
+        SubCommands::Abacus {
             name,
             x,
             y,
             z,
-            transform_commands,
+            abacus_commands,
             ..
-        } => abacus::execute(&name, x, y, z, transform_commands),
-        Commands::Trail { .. } => trail::execute().await,
+        } => abacus::execute(&name, x, y, z, abacus_commands),
+        SubCommands::Trail { .. } => trail::execute().await,
     }
 }
 pub async fn cli_main() -> miette::Result<()> {

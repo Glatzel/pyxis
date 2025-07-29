@@ -11,7 +11,7 @@ mod settings;
 pub use settings::Settings;
 
 #[derive(Bpaf, Clone, Debug)]
-pub enum TransformCommands {
+pub enum AbacusCommands {
     #[bpaf(command, adjacent)]
     /// Crypto coordinates between `BD09`, `GCJ02` and `WGS84`.
     Crypto {
@@ -137,7 +137,7 @@ pub fn execute(
     x: f64,
     y: f64,
     z: f64,
-    cmds: Vec<TransformCommands>,
+    cmds: Vec<AbacusCommands>,
 ) -> miette::Result<()> {
     let mut ctx = ContextTransform { x, y, z };
     let mut records: Vec<Record> = vec![Record {
@@ -155,7 +155,7 @@ pub fn execute(
         clerk::debug!("step: {i}");
         clerk::debug!("cmd: {cmd:?}");
         match cmd {
-            TransformCommands::Crypto { from, to } => {
+            AbacusCommands::Crypto { from, to } => {
                 ctx.crypto(*from, *to);
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -173,7 +173,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::DatumCompensate {
+            AbacusCommands::DatumCompensate {
                 hb,
                 radius: r,
                 x0,
@@ -198,7 +198,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Migrate2d {
+            AbacusCommands::Migrate2d {
                 given,
                 another,
                 another_x,
@@ -227,7 +227,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Normalize {} => {
+            AbacusCommands::Normalize {} => {
                 ctx.normalize();
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -242,7 +242,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Proj { from, to } => {
+            AbacusCommands::Proj { from, to } => {
                 ctx.proj(from.as_str(), to.as_str()).unwrap();
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -260,7 +260,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Rotate {
+            AbacusCommands::Rotate {
                 value,
                 plane,
                 unit,
@@ -289,7 +289,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Scale {
+            AbacusCommands::Scale {
                 sx,
                 sy,
                 sz,
@@ -318,7 +318,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Space { from, to } => {
+            AbacusCommands::Space { from, to } => {
                 ctx.space(*from, *to);
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -336,7 +336,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Translate { tx, ty, tz } => {
+            AbacusCommands::Translate { tx, ty, tz } => {
                 ctx.translate(*tx, *ty, *tz);
                 let record = Record {
                     idx: (i + 1) as u8,

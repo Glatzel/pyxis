@@ -1,6 +1,6 @@
 mod context;
 mod options;
-mod output_fn;
+mod output;
 mod record;
 use bpaf::Bpaf;
 use context::ContextTransform;
@@ -358,9 +358,9 @@ pub fn execute(
     }
     // output
     match output_format {
-        OutputFormat::Simple => output_fn::output_simple(records.last().unwrap()),
-        OutputFormat::Plain => output_fn::output_plain(name, &records),
-        OutputFormat::Json => output_fn::output_json(name, &records),
+        OutputFormat::Simple => output::output_simple(records.last().unwrap()),
+        OutputFormat::Plain => output::output_plain(name, &records),
+        OutputFormat::Json => output::output_json(name, &records),
     }
     Ok(())
 }

@@ -91,7 +91,7 @@ async fn execute(cmd: Commands) -> miette::Result<()> {
             crate::settings::SETTINGS
                 .lock()
                 .unwrap()
-                .overwrite_trail_settings(port, baud_rate, capacity);
+                .overwrite_trail_settings(port, baud_rate, capacity)?;
             trail::execute().await
         }
     }

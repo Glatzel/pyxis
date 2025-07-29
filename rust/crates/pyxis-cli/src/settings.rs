@@ -53,9 +53,7 @@ impl Settings {
         if let Some(cap) = capacity {
             settings.trail_settings.capacity = cap;
         }
-
-        // Initialize the global SETTINGS once with RwLock
-        SETTINGS.lock();
+        
         self.save()?;
         Ok(())
     }

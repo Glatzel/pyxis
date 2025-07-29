@@ -7,9 +7,14 @@ use tokio::sync::mpsc::Sender;
 use tokio_serial::SerialPortBuilderExt;
 
 pub async fn start_serial_reader(tx: Sender<(Talker, Identifier, String)>) -> miette::Result<()> {
-    let settings = crate::settings::SETTINGS.lock().unwrap();
-    let port = settings.trail_settings.port.clone();
-    let baud_rate = settings.trail_settings.baud_rate;
+    let (port, baud_rate) = {
+        let settings = crate::settings::SETTINGS.lock().unwrap();
+        (
+            settings.trail_settings.port.clone(),
+            settings.trail_settings.baud_rate,
+        )
+    };
+
     if !tokio_serial::available_ports()
         .into_diagnostic()?
         .iter()

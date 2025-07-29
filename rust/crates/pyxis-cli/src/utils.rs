@@ -19,7 +19,7 @@ pub fn start_deadlock_detection() {
 
             clerk::error!("{} deadlocks detected", deadlocks.len());
             for (i, threads) in deadlocks.iter().enumerate() {
-                let mut msg = format!("Deadlock #{}\n", i);
+                let mut msg = format!("Deadlock #{i}\n");
                 for t in threads {
                     msg.push_str(format!("Thread Id {:#?}\n", t.thread_id()).as_str());
                     msg.push_str(format!("{:#?}", t.backtrace()).as_str());

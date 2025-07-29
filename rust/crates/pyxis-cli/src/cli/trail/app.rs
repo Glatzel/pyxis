@@ -107,7 +107,7 @@ impl App {
         };
         clerk::trace!("Switch to Tab: {}", self.current_tab_name());
     }
-    pub  fn draw(
+    pub fn draw(
         &mut self,
         f: &mut ratatui::Frame,
         area: ratatui::layout::Rect,

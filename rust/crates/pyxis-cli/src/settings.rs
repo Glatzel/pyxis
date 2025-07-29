@@ -53,7 +53,7 @@ impl Settings {
         if let Some(cap) = capacity {
             settings.trail_settings.capacity = cap;
         }
-        
+
         self.save()?;
         Ok(())
     }

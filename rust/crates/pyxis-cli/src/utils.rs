@@ -9,6 +9,7 @@ pub fn init_proj_builder() -> miette::Result<Arc<Context>> {
 }
 #[cfg(debug_assertions)]
 pub fn start_deadlock_detection() {
+    // Skip in CI
     if std::env::var("CI").is_err() {
         tokio::task::spawn_blocking(|| {
             loop {

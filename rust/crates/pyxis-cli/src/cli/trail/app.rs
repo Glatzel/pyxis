@@ -24,7 +24,7 @@ impl App {
         Ok(Self {
             status: 0,
 
-            raw_nmea: raw_nmea,
+            raw_nmea,
 
             tab: Tab::Info,
             tab_info: TabInfo::default(),

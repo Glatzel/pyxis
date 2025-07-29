@@ -18,7 +18,7 @@ mod tab;
 mod ui;
 
 /// Entry point of the async TUI application
-pub async fn trail_main(
+pub async fn execute(
     port: Option<String>,
     baud_rate: Option<u32>,
     capacity: Option<usize>,

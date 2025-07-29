@@ -87,7 +87,7 @@ async fn execute(cmd: Commands) -> miette::Result<()> {
             port,
             baud_rate,
             capacity,
-        } => trail::trail_main(port, baud_rate, capacity).await,
+        } => trail::execute(port, baud_rate, capacity).await,
     }
 }
 pub async fn cli_main() -> miette::Result<()> {

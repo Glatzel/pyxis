@@ -11,7 +11,7 @@ pub struct TabNmea {}
 impl super::ITab for TabNmea {
     fn handle_key(&mut self, _key: KeyEvent) {}
     fn handle_mouse(&mut self, _mouse: crossterm::event::MouseEvent) {}
-    fn draw(
+     fn draw(
         &mut self,
         f: &mut ratatui::Frame,
         area: ratatui::layout::Rect,

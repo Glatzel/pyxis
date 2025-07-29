@@ -1,6 +1,6 @@
 use bpaf::{Bpaf, batteries};
-mod abacus;
-mod trail;
+pub mod abacus;
+pub mod trail;
 use abacus::transform_commands;
 use bpaf::Parser;
 use clerk::LogLevel;
@@ -87,7 +87,13 @@ async fn execute(cmd: Commands) -> miette::Result<()> {
             port,
             baud_rate,
             capacity,
-        } => trail::execute(port, baud_rate, capacity).await,
+        } => {
+            crate::settings::SETTINGS
+                .lock()
+                .unwrap()
+                .overwrite_trail_settings(port, baud_rate, capacity);
+            trail::execute().await
+        }
     }
 }
 pub async fn cli_main() -> miette::Result<()> {

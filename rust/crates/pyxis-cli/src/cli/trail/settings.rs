@@ -1,9 +1,5 @@
-use std::path::PathBuf;
 use std::sync::OnceLock;
-use std::{fs, io};
 
-use directories::ProjectDirs;
-use miette::IntoDiagnostic;
 use serde::{Deserialize, Serialize};
 
 pub static SETTINGS: OnceLock<Settings> = OnceLock::new();
@@ -29,78 +25,5 @@ impl Default for Settings {
                 custom_cs: String::default(),
             },
         }
-    }
-}
-impl Settings {
-    /// Initialise the config: try to read `term‑nmea.toml` located
-    /// in the same directory as the executable.
-    /// Falls back to `Config::default()` if the file is missing
-    /// or malformed.
-    pub fn init(
-        port: Option<String>,
-        baud_rate: Option<u32>,
-        capacity: Option<usize>,
-    ) -> miette::Result<()> {
-        let path = Self::path();
-        // Read from file or fallback
-        let mut settings = match fs::read_to_string(&path) {
-            Ok(content) => toml::from_str(&content).unwrap_or_else(|e| {
-                clerk::warn!("Malformed config file: {e}. Using defaults.");
-                Self::default()
-            }),
-            Err(e) => {
-                clerk::warn!("Failed to read config: {e}. Using defaults.");
-                Self::default()
-            }
-        };
-
-        // Override with CLI args
-        if let Some(ref port) = port {
-            settings.port = port.clone();
-        }
-        if let Some(baud) = baud_rate {
-            settings.baud_rate = baud;
-        }
-        if let Some(cap) = capacity {
-            settings.capacity = cap;
-        }
-
-        // Initialize the global SETTINGS once with RwLock
-        SETTINGS
-            .set(settings)
-            .map_err(|_| miette::miette!("SETTINGS already initialized"))?;
-        Self::save()?;
-        Ok(())
-    }
-    pub fn path() -> PathBuf {
-        if let Some(proj_dirs) = ProjectDirs::from("", "", "pyxis") {
-            proj_dirs.config_dir().join("pyxis-trail.toml")
-        } else {
-            clerk::warn!("Cannot determine config directory. Using local file.");
-            PathBuf::from("pyxis-trail.toml")
-        }
-    }
-
-    pub fn save() -> miette::Result<()> {
-        let settings = SETTINGS
-            .get()
-            .ok_or_else(|| miette::miette!("SETTINGS not initialized"))?;
-
-        let toml_str = toml::to_string_pretty(settings)
-            .map_err(|e| io::Error::other(format!("TOML serialize error: {e}")))
-            .into_diagnostic()?;
-
-        let path = Self::path();
-
-        // Create parent directory if it doesn't exist
-        if let Some(parent) = path.parent() {
-            fs::create_dir_all(parent)
-                .map_err(|e| io::Error::other(format!("Failed to create config directory: {e}")))
-                .into_diagnostic()?;
-        }
-
-        fs::write(path, toml_str)
-            .map_err(|e| io::Error::other(format!("Failed to write config: {e}")))
-            .into_diagnostic()
     }
 }

@@ -7,25 +7,17 @@ use crossterm::terminal::{enable_raw_mode, *};
 use miette::IntoDiagnostic;
 use ratatui::Terminal;
 use ratatui::backend::CrosstermBackend;
-use settings::{SETTINGS, Settings};
 use tokio::sync::mpsc;
 use tokio::task;
 mod app;
 
 mod serial;
-mod settings;
+pub mod settings;
 mod tab;
 mod ui;
 
 /// Entry point of the async TUI application
-pub async fn execute(
-    port: Option<String>,
-    baud_rate: Option<u32>,
-    capacity: Option<usize>,
-) -> miette::Result<()> {
-    // Load settings from TOML, overridden by CLI arguments
-    Settings::init(port, baud_rate, capacity)?;
-
+pub async fn execute() -> miette::Result<()> {
     // Enable raw mode and enter alternate screen for TUI
     enable_raw_mode().into_diagnostic()?;
     let mut stdout = stdout();
@@ -41,11 +33,7 @@ pub async fn execute(
     let mut app = app::App::new()?;
 
     // Spawn async task to read from serial port
-    tokio::spawn(serial::start_serial_reader(
-        SETTINGS.get().unwrap().port.clone(),
-        SETTINGS.get().unwrap().baud_rate,
-        tx,
-    ));
+    tokio::spawn(serial::start_serial_reader(tx));
 
     // Main TUI loop
     loop {
@@ -89,9 +77,6 @@ pub async fn execute(
     disable_raw_mode().into_diagnostic()?;
     execute!(terminal.backend_mut(), LeaveAlternateScreen).into_diagnostic()?;
     terminal.show_cursor().into_diagnostic()?;
-
-    // Save settings
-    Settings::save()?;
     Ok(())
 }
 async fn poll_event(timeout: Duration) -> std::io::Result<Option<Event>> {

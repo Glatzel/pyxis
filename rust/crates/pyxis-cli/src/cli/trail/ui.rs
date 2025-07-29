@@ -6,7 +6,7 @@ use ratatui::widgets::{Block, Borders, Paragraph, Tabs};
 
 use super::app::App;
 
-pub fn draw(f: &mut Frame, app: &mut App) -> miette::Result<()> {
+pub  fn draw(f: &mut Frame, app: &mut App) -> miette::Result<()> {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([

@@ -15,7 +15,7 @@ mod settings;
 pub trait ITab: Default {
     fn handle_key(&mut self, key: KeyEvent);
     fn handle_mouse(&mut self, mouse: MouseEvent);
-    fn draw(
+     fn draw(
         &mut self,
         f: &mut Frame,
         area: ratatui::layout::Rect,

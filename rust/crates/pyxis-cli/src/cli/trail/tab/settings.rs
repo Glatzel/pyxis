@@ -4,7 +4,7 @@ use crossterm::event::KeyEvent;
 use ratatui::widgets::{Block, Paragraph, Wrap};
 use rax_nmea::data::{Identifier, Talker};
 
-use super::super::settings::SETTINGS;
+use crate::settings::SETTINGS;
 
 #[derive(Default)]
 pub struct TabSettings {}
@@ -18,7 +18,7 @@ impl super::ITab for TabSettings {
         _raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> miette::Result<()> {
         let toml_str =
-            toml::to_string_pretty(SETTINGS.get().unwrap()).expect("TOML serialize error: {e}");
+            toml::to_string_pretty(&*SETTINGS.lock().unwrap()).expect("TOML serialize error: {e}");
         let paragraph = Paragraph::new(toml_str)
             .block(Block::default())
             .wrap(Wrap { trim: true });

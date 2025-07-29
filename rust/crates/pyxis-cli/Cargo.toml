@@ -27,10 +27,6 @@ toml = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 parking_lot = { workspace = true }
-addr2line = { workspace = true }
-memmap2 = { workspace = true }
-object = { workspace = true }
-gimli = { workspace = true }
 
 [dev-dependencies]
 assert_cmd = { workspace = true }

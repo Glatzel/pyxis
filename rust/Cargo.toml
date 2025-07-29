@@ -44,10 +44,6 @@ toml = "0.8"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 parking_lot = {version = "0.12.4",features = ["deadlock_detection"]}
-addr2line = "0.25.0"
-memmap2 = "0.9.7"
-object = "0.37.1"
-gimli = "0.32.0"
 
 [profile.release]
 codegen-units = 1

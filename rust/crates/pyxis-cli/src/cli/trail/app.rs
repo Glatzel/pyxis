@@ -20,10 +20,11 @@ pub struct App {
 
 impl App {
     pub fn new() -> miette::Result<Self> {
+      let  raw_nmea=  VecDeque::with_capacity(SETTINGS.lock().trail.capacity);
         let a = Self {
             status: 0,
 
-            raw_nmea: VecDeque::with_capacity(SETTINGS.lock().trail.capacity),
+            raw_nmea:raw_nmea,
 
             tab: Tab::Info,
             tab_info: TabInfo::default(),

@@ -19,15 +19,14 @@ pub fn start_deadlock_detection() {
                 continue;
             }
 
-            clerk::error!("🚨 Detected {} deadlocks", deadlocks.len());
+            clerk::error!("{} deadlocks detected", deadlocks.len());
             for (i, threads) in deadlocks.iter().enumerate() {
-                clerk::error!("Deadlock #{}:", i);
+                let mut msg = format!("Deadlock #{}\n", i);
                 for t in threads {
-                    clerk::error!(" - Thread Id: {:?}", t.thread_id());
-                    for bt in t.backtrace().frames() {
-                        clerk::error!("   {:?}", bt);
-                    }
+                    msg.push_str(format!("Thread Id {:#?}\n", t.thread_id()).as_str());
+                    msg.push_str(format!("{:#?}", t.backtrace()).as_str());
                 }
+                clerk::error!("{}", msg);
             }
         }
     });

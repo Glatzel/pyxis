@@ -7,18 +7,11 @@ use miette::IntoDiagnostic;
 use serde::{Deserialize, Serialize};
 
 pub static SETTINGS: LazyLock<Mutex<Settings>> = LazyLock::new(|| Mutex::new(Settings::default()));
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Settings {
     pub trail_settings: crate::cli::trail::settings::Settings,
 }
 
-impl Default for Settings {
-    fn default() -> Self {
-        Self {
-            trail_settings: crate::cli::trail::settings::Settings::default(),
-        }
-    }
-}
 impl Settings {
     /// Initialise the config: try to read `term‑nmea.toml` located
     /// in the same directory as the executable.

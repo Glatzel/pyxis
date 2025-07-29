@@ -14,6 +14,7 @@ clerk = { workspace = true, features = ["log", "serde"] }
 crossterm = { workspace = true }
 directories = { workspace = true }
 miette = { workspace = true }
+parking_lot = { workspace = true }
 proj = { workspace = true }
 pyxis = { workspace = true, features = ["serde", "log"] }
 ratatui = { workspace = true }
@@ -26,7 +27,6 @@ tokio-serial = { workspace = true }
 toml = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
-parking_lot = { workspace = true }
 
 [dev-dependencies]
 assert_cmd = { workspace = true }
@@ -34,4 +34,3 @@ async-trait = { workspace = true }
 float-cmp = { workspace = true }
 predicates = { workspace = true }
 tempfile = { workspace = true }
-

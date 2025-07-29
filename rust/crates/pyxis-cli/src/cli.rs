@@ -72,10 +72,13 @@ fn verbose() -> impl Parser<LogLevel> {
         ],
     )
 }
-async fn execute(cmd: SubCommands) -> miette::Result<()> {
-    crate::Settings::overwrite_settings(&cmd)?;
+pub async fn execute() -> miette::Result<()> {
+    let args = args().run();
+    crate::logging::init_log(args.verbose);
+    tracing::debug!("{:?}", args);
+    crate::Settings::overwrite_settings(&args.sub_commands)?;
     //run
-    match cmd {
+    match args.sub_commands {
         SubCommands::Abacus {
             name,
             x,
@@ -86,10 +89,4 @@ async fn execute(cmd: SubCommands) -> miette::Result<()> {
         } => abacus::execute(&name, x, y, z, abacus_args),
         SubCommands::Trail { .. } => trail::execute().await,
     }
-}
-pub async fn cli_main() -> miette::Result<()> {
-    let args = args().run();
-    crate::logging::init_log(args.verbose);
-    tracing::debug!("{:?}", args);
-    execute(args.sub_commands).await
 }

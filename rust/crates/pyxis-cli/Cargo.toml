@@ -14,6 +14,7 @@ clerk = { workspace = true, features = ["log", "serde"] }
 crossterm = { workspace = true }
 directories = { workspace = true }
 miette = { workspace = true }
+parking_lot = { workspace = true }
 proj = { workspace = true }
 pyxis = { workspace = true, features = ["serde", "log"] }
 ratatui = { workspace = true }

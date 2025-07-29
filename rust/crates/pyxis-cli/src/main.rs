@@ -1,5 +1,7 @@
 mod cli;
 mod logging;
-mod proj_util;
+mod settings;
+mod utils;
+pub use settings::{SETTINGS, Settings};
 #[tokio::main]
-async fn main() -> miette::Result<()> { cli::cli_main().await }
+async fn main() -> miette::Result<()> { cli::execute().await }

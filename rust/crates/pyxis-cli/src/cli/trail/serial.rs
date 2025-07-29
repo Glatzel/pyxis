@@ -5,12 +5,11 @@ use rax_nmea::data::{Identifier, Talker};
 use tokio::io::BufReader;
 use tokio::sync::mpsc::Sender;
 use tokio_serial::SerialPortBuilderExt;
-
-pub async fn start_serial_reader(
-    port: String,
-    baud_rate: u32,
-    tx: Sender<(Talker, Identifier, String)>,
-) -> miette::Result<()> {
+pub fn check_port() -> miette::Result<()> {
+    let (port,) = {
+        let settings = crate::settings::SETTINGS.lock();
+        (settings.trail.port.clone(),)
+    };
     if !tokio_serial::available_ports()
         .into_diagnostic()?
         .iter()
@@ -23,6 +22,13 @@ pub async fn start_serial_reader(
             std::process::exit(1);
         }
     }
+    Ok(())
+}
+pub async fn start_serial_reader(tx: Sender<(Talker, Identifier, String)>) -> miette::Result<()> {
+    let (port, baud_rate) = {
+        let settings = crate::settings::SETTINGS.lock();
+        (settings.trail.port.clone(), settings.trail.baud_rate)
+    };
 
     let serial = tokio_serial::new(port.clone(), baud_rate)
         .open_native_async()

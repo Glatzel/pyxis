@@ -1,14 +1,17 @@
 mod context;
 mod options;
-mod output_fn;
+mod output;
 mod record;
 use bpaf::Bpaf;
 use context::ContextTransform;
 pub use options::*;
 use pyxis::crypto::CryptoSpace;
 use record::Record;
+mod settings;
+pub use settings::Settings;
+
 #[derive(Bpaf, Clone, Debug)]
-pub enum TransformCommands {
+pub enum AbacusArgs {
     #[bpaf(command, adjacent)]
     /// Crypto coordinates between `BD09`, `GCJ02` and `WGS84`.
     Crypto {
@@ -129,14 +132,7 @@ pub enum TransformCommands {
         tz: f64,
     },
 }
-pub fn execute(
-    name: &str,
-    x: f64,
-    y: f64,
-    z: f64,
-    output_format: OutputFormat,
-    cmds: Vec<TransformCommands>,
-) -> miette::Result<()> {
+pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> miette::Result<()> {
     let mut ctx = ContextTransform { x, y, z };
     let mut records: Vec<Record> = vec![Record {
         idx: 0,
@@ -153,7 +149,7 @@ pub fn execute(
         clerk::debug!("step: {i}");
         clerk::debug!("cmd: {cmd:?}");
         match cmd {
-            TransformCommands::Crypto { from, to } => {
+            AbacusArgs::Crypto { from, to } => {
                 ctx.crypto(*from, *to);
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -171,7 +167,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::DatumCompensate {
+            AbacusArgs::DatumCompensate {
                 hb,
                 radius: r,
                 x0,
@@ -196,7 +192,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Migrate2d {
+            AbacusArgs::Migrate2d {
                 given,
                 another,
                 another_x,
@@ -225,7 +221,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Normalize {} => {
+            AbacusArgs::Normalize {} => {
                 ctx.normalize();
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -240,7 +236,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Proj { from, to } => {
+            AbacusArgs::Proj { from, to } => {
                 ctx.proj(from.as_str(), to.as_str()).unwrap();
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -258,7 +254,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Rotate {
+            AbacusArgs::Rotate {
                 value,
                 plane,
                 unit,
@@ -287,7 +283,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Scale {
+            AbacusArgs::Scale {
                 sx,
                 sy,
                 sz,
@@ -316,7 +312,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Space { from, to } => {
+            AbacusArgs::Space { from, to } => {
                 ctx.space(*from, *to);
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -334,7 +330,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformCommands::Translate { tx, ty, tz } => {
+            AbacusArgs::Translate { tx, ty, tz } => {
                 ctx.translate(*tx, *ty, *tz);
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -357,10 +353,10 @@ pub fn execute(
         clerk::debug!("context x: {}, y: {}, z: {}", ctx.x, ctx.y, ctx.z);
     }
     // output
-    match output_format {
-        OutputFormat::Simple => output_fn::output_simple(records.last().unwrap()),
-        OutputFormat::Plain => output_fn::output_plain(name, &records),
-        OutputFormat::Json => output_fn::output_json(name, &records),
+    match crate::settings::SETTINGS.lock().abacus.output_format {
+        OutputFormat::Simple => output::output_simple(records.last().unwrap()),
+        OutputFormat::Plain => output::output_plain(name, &records),
+        OutputFormat::Json => output::output_json(name, &records),
     }
     Ok(())
 }

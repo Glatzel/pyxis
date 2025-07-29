@@ -1,7 +1,7 @@
 use bpaf::{Bpaf, batteries};
-mod abacus;
-mod trail;
-use abacus::transform_commands;
+pub mod abacus;
+pub mod trail;
+use abacus::abacus_args;
 use bpaf::Parser;
 use clerk::LogLevel;
 
@@ -11,10 +11,10 @@ struct Args {
     #[bpaf(external(verbose))]
     verbose: LogLevel,
     #[bpaf(external)]
-    commands: Commands,
+    sub_commands: SubCommands,
 }
 #[derive(Bpaf, Clone, Debug)]
-pub enum Commands {
+pub enum SubCommands {
     #[bpaf(command)]
     Abacus {
         #[bpaf(short, long,fallback("".to_string()),)]
@@ -38,23 +38,23 @@ pub enum Commands {
         ///  - z of cylindrical (in meters).
         ///  - radius of spherical (in meters).
         z: f64,
-        #[bpaf(short, long, fallback(abacus::OutputFormat::Simple), display_fallback)]
-        output_format: abacus::OutputFormat,
+        #[bpaf(short, long, fallback(None))]
+        output_format: Option<abacus::OutputFormat>,
         #[bpaf(external, many)]
-        transform_commands: Vec<abacus::TransformCommands>,
+        abacus_args: Vec<abacus::AbacusArgs>,
     },
     #[bpaf(command)]
     Trail {
         /// Serial port to open
-        #[bpaf(short, long)]
+        #[bpaf(short, long, fallback(None))]
         port: Option<String>,
 
         /// Baud rate of the serial port
-        #[bpaf(short, long)]
+        #[bpaf(short, long, fallback(None))]
         baud_rate: Option<u32>,
 
         /// Line buffer capacity
-        #[bpaf(short, long)]
+        #[bpaf(short, long, fallback(None))]
         capacity: Option<usize>,
     },
 }
@@ -72,27 +72,41 @@ fn verbose() -> impl Parser<LogLevel> {
         ],
     )
 }
-async fn execute(cmd: Commands) -> miette::Result<()> {
-    //run
-    match cmd {
-        Commands::Abacus {
+/// Asynchronous entry point for the CLI tool.
+///
+/// - Initializes logging and deadlock detection
+/// - Loads or overwrites settings
+/// - Dispatches subcommand to appropriate handler
+pub async fn execute() -> miette::Result<()> {
+    // Parse command-line arguments into structured form
+    let args = args().run();
+
+    // Initialize logging system with the specified verbosity level
+    crate::logging::init_log(args.verbose);
+
+    // Print parsed arguments at debug level
+    tracing::debug!("{:?}", args);
+
+    // Start a background thread to detect deadlocks (via parking_lot)
+    #[cfg(debug_assertions)]
+    crate::utils::start_deadlock_detection();
+
+    // Overwrite global SETTINGS with command-line arguments, if applicable
+    crate::Settings::overwrite_settings(&args.sub_commands)?;
+
+    // Match and execute the selected subcommand
+    match args.sub_commands {
+        // Run the abacus subcommand with given name and coordinates
+        SubCommands::Abacus {
             name,
             x,
             y,
             z,
-            output_format,
-            transform_commands,
-        } => abacus::execute(&name, x, y, z, output_format, transform_commands),
-        Commands::Trail {
-            port,
-            baud_rate,
-            capacity,
-        } => trail::trail_main(port, baud_rate, capacity).await,
+            abacus_args,
+            ..
+        } => abacus::execute(&name, x, y, z, abacus_args),
+
+        // Run the interactive TUI trail subcommand
+        SubCommands::Trail { .. } => trail::execute().await,
     }
-}
-pub async fn cli_main() -> miette::Result<()> {
-    let args = args().run();
-    crate::logging::init_log(args.verbose);
-    tracing::debug!("{:?}", args);
-    execute(args.commands).await
 }

@@ -4,9 +4,8 @@ use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, MouseEvent};
 use rax_nmea::data::{Identifier, Talker};
 mod status;
 pub use super::app::status::STATUS;
-use super::settings::SETTINGS;
 use super::tab::{ITab, Tab, TabCoord, TabInfo, TabNmea, TabSettings};
-
+use crate::SETTINGS;
 pub struct App {
     pub status: usize,
 
@@ -21,10 +20,11 @@ pub struct App {
 
 impl App {
     pub fn new() -> miette::Result<Self> {
+        let raw_nmea = VecDeque::with_capacity(SETTINGS.lock().trail.capacity);
         Ok(Self {
             status: 0,
 
-            raw_nmea: VecDeque::with_capacity(SETTINGS.get().unwrap().capacity),
+            raw_nmea,
 
             tab: Tab::Info,
             tab_info: TabInfo::default(),
@@ -120,7 +120,7 @@ impl App {
         }
     }
     pub fn update(&mut self, talker: Talker, identifier: Identifier, sentence: String) {
-        if self.raw_nmea.len() > SETTINGS.get().unwrap().capacity {
+        if self.raw_nmea.len() > SETTINGS.lock().trail.capacity {
             self.raw_nmea.pop_front();
         }
         self.raw_nmea.push_back((talker, identifier, sentence));

@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 use assert_cmd::Command;
 use predicates::prelude::*;
-const A: f64 = 4.0;
+const A: f64 =  4.0;
 const OA: f64 = 1.0;
 const OB: f64 = 2.0;
 const DEGREES: f64 = 30.0;

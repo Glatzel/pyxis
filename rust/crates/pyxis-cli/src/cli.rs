@@ -106,10 +106,10 @@ pub async fn execute() -> miette::Result<()> {
             z,
             abacus_args,
             ..
-        } => abacus::execute(&name, x, y, z, abacus_args),
+        } => abacus::execute(&name, x, y, z, abacus_args)?,
 
         // Run the interactive TUI trail subcommand
-        SubCommands::Trail { .. } => trail::execute().await,
+        SubCommands::Trail { .. } => trail::execute().await?,
     };
 
     // Shutdown

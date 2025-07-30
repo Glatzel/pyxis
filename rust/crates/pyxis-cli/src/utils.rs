@@ -10,10 +10,10 @@ pub fn init_proj_builder() -> miette::Result<Arc<Context>> {
     Ok(ctx)
 }
 #[cfg(debug_assertions)]
-pub fn start_deadlock_detection(mut shutdown_rx: watch::Receiver<()>) {
+pub fn start_deadlock_detection(shutdown_rx: watch::Receiver<()>) {
     // Skip in CI
     if std::env::var("CI").is_err() {
-        tokio::task::spawn_blocking(|| {
+        tokio::task::spawn_blocking(move || {
             loop {
                 if shutdown_rx.has_changed().is_ok() {
                     break;

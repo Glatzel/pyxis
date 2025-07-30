@@ -3,7 +3,6 @@ edition.workspace = true
 name = "pyxis-cli"
 version.workspace = true
 
-
 [dependencies]
 bpaf = { workspace = true }
 chrono = { workspace = true }

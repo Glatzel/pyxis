@@ -54,8 +54,6 @@ impl Settings {
                 capacity.inspect(|c| settings.trail.capacity = *c);
             }
         }
-
-        settings.save()?;
         Ok(())
     }
 

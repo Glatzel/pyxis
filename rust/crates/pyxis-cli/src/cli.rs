@@ -87,10 +87,6 @@ pub async fn execute() -> miette::Result<()> {
     // Print parsed arguments at debug level
     tracing::debug!("{:?}", args);
 
-    // Start a background thread to detect deadlocks (via parking_lot)
-    #[cfg(debug_assertions)]
-    crate::utils::start_deadlock_detection();
-
     // Overwrite global SETTINGS with command-line arguments, if applicable
     crate::Settings::overwrite_settings(&args.sub_commands)?;
 
@@ -104,9 +100,11 @@ pub async fn execute() -> miette::Result<()> {
             z,
             abacus_args,
             ..
-        } => abacus::execute(&name, x, y, z, abacus_args),
+        } => abacus::execute(&name, x, y, z, abacus_args)?,
 
         // Run the interactive TUI trail subcommand
-        SubCommands::Trail { .. } => trail::execute().await,
-    }
+        SubCommands::Trail { .. } => trail::execute().await?,
+    };
+
+    Ok(())
 }

@@ -129,10 +129,14 @@ port = "COM3"
 baud_rate = 115200
 capacity = 500
 "#;
-
+    #[test]
+    fn test_valid_toml_parsing() -> miette::Result<()> {
+        Settings::validate_against_schema(&DEFAULT_SETTINGS_STR)?;
+        Ok(())
+    }
     #[test]
     fn test_invalid_toml_parsing() -> miette::Result<()> {
-        let result=Settings::validate_against_schema(&INVALID_TOML);
+        let result = Settings::validate_against_schema(&INVALID_TOML);
         assert!(result.is_err());
         Ok(())
     }

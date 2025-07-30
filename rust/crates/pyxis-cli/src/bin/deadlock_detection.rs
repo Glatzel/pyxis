@@ -15,7 +15,7 @@ pub fn start_deadlock_detection() {
             }
 
             clerk::error!("{} deadlocks detected", deadlocks.len());
-            for (i, threads) in deadlocks.iter().enumerate() {
+            if let Some((i, threads)) = deadlocks.iter().enumerate().next() {
                 let mut msg = format!("Deadlock #{i}\n");
                 for t in threads {
                     msg.push_str(format!("Thread Id {:#?}\n", t.thread_id()).as_str());

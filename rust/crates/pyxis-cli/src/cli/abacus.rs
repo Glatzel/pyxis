@@ -355,7 +355,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mie
     // output
     match crate::settings::SETTINGS.lock().abacus.output_format {
         OutputFormat::Simple => output::output_simple(records.last().unwrap()),
-        OutputFormat::Plain => output::output_plain(name, &records),
+        OutputFormat::Verbose => output::output_plain(name, &records),
         OutputFormat::Json => output::output_json(name, &records),
     }
     Ok(())

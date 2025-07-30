@@ -1,0 +1,8 @@
+[abacus]
+output_format = "Simple"
+
+[trail]
+baud_rate = 9600
+port = "COM1"
+capacity = 1000
+tab_coord.custom_cs = ""

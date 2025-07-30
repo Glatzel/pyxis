@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Settings",
+  "type": "object",
+  "required": [
+    "abacus",
+    "trail"
+  ],
+  "properties": {
+    "abacus": {
+      "$ref": "#/definitions/Settings"
+    },
+    "trail": {
+      "$ref": "#/definitions/Settings2"
+    }
+  },
+  "definitions": {
+    "OutputFormat": {
+      "type": "string",
+      "enum": [
+        "Simple",
+        "Plain",
+        "Json"
+      ]
+    },
+    "Settings": {
+      "type": "object",
+      "required": [
+        "output_format"
+      ],
+      "properties": {
+        "output_format": {
+          "$ref": "#/definitions/OutputFormat"
+        }
+      }
+    },
+    "Settings2": {
+      "type": "object",
+      "required": [
+        "baud_rate",
+        "capacity",
+        "port",
+        "tab_coord"
+      ],
+      "properties": {
+        "baud_rate": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "capacity": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0
+        },
+        "port": {
+          "type": "string"
+        },
+        "tab_coord": {
+          "$ref": "#/definitions/TabCoordSettings"
+        }
+      }
+    },
+    "TabCoordSettings": {
+      "type": "object",
+      "required": [
+        "custom_cs"
+      ],
+      "properties": {
+        "custom_cs": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

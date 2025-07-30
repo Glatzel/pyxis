@@ -1,0 +1,3 @@
+[schema]
+path = "./pyxis-schema.json"
+enabled = true

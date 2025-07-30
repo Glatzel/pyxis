@@ -3,10 +3,11 @@ use std::str::FromStr;
 
 use bpaf::Bpaf;
 use serde::{Deserialize, Serialize};
+#[cfg_attr(debug_assertions, derive(schemars::JsonSchema))]
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum OutputFormat {
     Simple,
-    Plain,
+    Verbose,
     Json,
 }
 impl FromStr for OutputFormat {
@@ -15,7 +16,7 @@ impl FromStr for OutputFormat {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "simple" => Ok(Self::Simple),
-            "plain" => Ok(Self::Plain),
+            "verbose" => Ok(Self::Verbose),
             "json" => Ok(Self::Json),
             _ => miette::bail!(""),
         }
@@ -25,7 +26,7 @@ impl fmt::Display for OutputFormat {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Simple => write!(f, "simple"),
-            Self::Plain => write!(f, "plain"),
+            Self::Verbose => write!(f, "verbose"),
             Self::Json => write!(f, "json"),
         }
     }

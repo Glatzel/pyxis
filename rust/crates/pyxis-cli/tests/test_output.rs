@@ -13,7 +13,7 @@ fn test_output_plain_no_name() {
             "-z",
             "0",
             "-o",
-            "plain",
+            "verbose",
         ])
         .args(["proj", "--from", "EPSG:2230", "--to", "EPSG:26946"])
         .assert()
@@ -36,7 +36,7 @@ fn test_output_plain_with_name() {
             "-z",
             "0",
             "-o",
-            "plain",
+            "verbose",
         ])
         .args(["proj", "--from", "EPSG:2230", "--to", "EPSG:26946"])
         .assert()

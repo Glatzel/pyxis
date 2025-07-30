@@ -3,20 +3,27 @@ use std::sync::LazyLock;
 use std::{fs, io};
 
 use directories::ProjectDirs;
-use miette::IntoDiagnostic;
+use jsonschema::JSONSchema;
+use miette::{Context, IntoDiagnostic};
 use parking_lot::Mutex;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 use crate::cli;
-
+const DEFAULT_SETTINGS_STR: &str = include_str!("../res/pyxis-default.toml");
+const SETTINGS_SCHEMA_STR: &str = include_str!("../res/pyxis-schema.json");
 pub static SETTINGS: LazyLock<Mutex<Settings>> = LazyLock::new(|| {
     let path = Settings::path();
     // Read from file or fallback
     let settings = match fs::read_to_string(&path) {
-        Ok(content) => toml::from_str(&content).unwrap_or_else(|e| {
-            clerk::warn!("Malformed config file: {e}. Using defaults.");
-            Settings::default()
-        }),
+        Ok(content) => {
+            Settings::validate_against_schema(&content).unwrap();
+            toml::from_str(&content).unwrap_or_else(|e| {
+                clerk::warn!("Malformed config file: {e}. Using defaults.");
+                Settings::default()
+            })
+        }
         Err(e) => {
             clerk::warn!("Failed to read config: {e}. Using defaults.");
             Settings::default()
@@ -24,7 +31,7 @@ pub static SETTINGS: LazyLock<Mutex<Settings>> = LazyLock::new(|| {
     };
     Mutex::new(settings)
 });
-#[derive(Debug, Serialize, Deserialize, Default)]
+#[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Settings {
     pub abacus: crate::cli::abacus::Settings,
     pub trail: crate::cli::trail::settings::Settings,
@@ -78,5 +85,55 @@ impl Settings {
         fs::write(path, toml_str)
             .map_err(|e| io::Error::other(format!("Failed to write config: {e}")))
             .into_diagnostic()
+    }
+    fn validate_against_schema(toml_str: &str) -> miette::Result<()> {
+        // 1. Parse TOML to a generic JSON `Value`
+        let json: Value = toml::from_str::<Value>(toml_str)
+            .into_diagnostic()
+            .wrap_err("Failed to parse TOML as JSON")?;
+
+        // 2. Parse the JSON schema
+        let schema: Value = serde_json::from_str(SETTINGS_SCHEMA_STR)
+            .into_diagnostic()
+            .wrap_err("Failed to parse TOML as JSON")?;
+        let schema_static: &'static Value = Box::leak(Box::new(schema));
+
+        // 3. Compile the schema
+        let compiled = JSONSchema::compile(&schema_static)
+            .into_diagnostic()
+            .wrap_err("Schema compile error")?;
+
+        // 4. Validate the data
+        let result = compiled.validate(&json);
+        if let Err(errors) = result {
+            for error in errors {
+                clerk::error!("Validation error: {}", error);
+            }
+            clerk::error!("Validation failed");
+            miette::bail!("Validation failed")
+        } else {
+            Ok(())
+        }
+    }
+}
+impl Default for Settings {
+    fn default() -> Self {
+        toml::from_str(&DEFAULT_SETTINGS_STR).expect("Failed to parse embedded default settings")
+    }
+}
+#[cfg(test)]
+mod test {
+    use super::*;
+    const INVALID_TOML: &str = r#"
+port = "COM3"
+baud_rate = 115200
+capacity = 500
+"#;
+
+    #[test]
+    fn test_invalid_toml_parsing() -> miette::Result<()> {
+        let result=Settings::validate_against_schema(&INVALID_TOML);
+        assert!(result.is_err());
+        Ok(())
     }
 }

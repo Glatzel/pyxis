@@ -1,8 +1,9 @@
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 mod tab_coord;
 pub use tab_coord::TabCoordSettings;
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Settings {
     pub port: String,
     pub baud_rate: u32,
@@ -14,7 +15,7 @@ pub struct Settings {
 impl Default for Settings {
     fn default() -> Self {
         Self {
-            port: "COM1".into(), // pick sensible defaults for your platform
+            port: default_port(),
             baud_rate: 9_600,
             capacity: 1000,
 
@@ -22,5 +23,26 @@ impl Default for Settings {
                 custom_cs: String::default(),
             },
         }
+    }
+}
+fn default_port() -> String {
+    #[cfg(target_os = "windows")]
+    {
+        "COM1".to_string()
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        "/dev/ttyUSB0".to_string()
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        "/dev/cu.usbserial-0001".to_string()
+    }
+
+    #[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
+    {
+        "UNKNOWN_PORT".to_string()
     }
 }

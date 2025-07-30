@@ -18,8 +18,7 @@ pub fn check_port() -> miette::Result<()> {
         let msg = format!("Port '{port}' is not available");
         clerk::error!("{msg}");
         if !cfg!(debug_assertions) {
-            eprintln!("{msg}");
-            std::process::exit(1);
+            miette::bail!("{msg}");
         }
     }
     Ok(())

@@ -19,7 +19,7 @@
       "type": "string",
       "enum": [
         "Simple",
-        "Plain",
+        "Verbose",
         "Json"
       ]
     },

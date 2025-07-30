@@ -89,7 +89,9 @@ pub async fn execute() -> miette::Result<()> {
 
     // Start a background thread to detect deadlocks (via parking_lot)
     #[cfg(debug_assertions)]
-    crate::utils::start_deadlock_detection();
+    let (shutdown_tx, shutdown_rx) = tokio::sync::watch::channel(());
+    #[cfg(debug_assertions)]
+    crate::utils::start_deadlock_detection(shutdown_rx);
 
     // Overwrite global SETTINGS with command-line arguments, if applicable
     crate::Settings::overwrite_settings(&args.sub_commands)?;
@@ -108,5 +110,11 @@ pub async fn execute() -> miette::Result<()> {
 
         // Run the interactive TUI trail subcommand
         SubCommands::Trail { .. } => trail::execute().await,
-    }
+    };
+
+    // Shutdown
+    #[cfg(debug_assertions)]
+    let _ = shutdown_tx.send(());
+
+    Ok(())
 }

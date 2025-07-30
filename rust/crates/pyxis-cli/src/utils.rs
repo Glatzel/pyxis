@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
 use proj::Context;
+#[cfg(debug_assertions)]
+use tokio::sync::watch;
 
 pub fn init_proj_builder() -> miette::Result<Arc<Context>> {
     let ctx = proj::Context::new();
@@ -8,11 +10,14 @@ pub fn init_proj_builder() -> miette::Result<Arc<Context>> {
     Ok(ctx)
 }
 #[cfg(debug_assertions)]
-pub fn start_deadlock_detection() {
+pub fn start_deadlock_detection(mut shutdown_rx: watch::Receiver<()>) {
     // Skip in CI
     if std::env::var("CI").is_err() {
         tokio::task::spawn_blocking(|| {
             loop {
+                if shutdown_rx.has_changed().is_ok() {
+                    break;
+                }
                 std::thread::sleep(std::time::Duration::from_secs(10));
                 let deadlocks = parking_lot::deadlock::check_deadlock();
                 if deadlocks.is_empty() {

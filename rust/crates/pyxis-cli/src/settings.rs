@@ -99,7 +99,7 @@ impl Settings {
         let schema_static: &'static Value = Box::leak(Box::new(schema));
 
         // 3. Compile the schema
-        let compiled = JSONSchema::compile(&schema_static)
+        let compiled = JSONSchema::compile(schema_static)
             .into_diagnostic()
             .wrap_err("Schema compile error")?;
 
@@ -118,7 +118,7 @@ impl Settings {
 }
 impl Default for Settings {
     fn default() -> Self {
-        toml::from_str(&DEFAULT_SETTINGS_STR).expect("Failed to parse embedded default settings")
+        toml::from_str(DEFAULT_SETTINGS_STR).expect("Failed to parse embedded default settings")
     }
 }
 #[cfg(test)]
@@ -131,12 +131,12 @@ capacity = 500
 "#;
     #[test]
     fn test_valid_toml_parsing() -> miette::Result<()> {
-        Settings::validate_against_schema(&DEFAULT_SETTINGS_STR)?;
+        Settings::validate_against_schema(DEFAULT_SETTINGS_STR)?;
         Ok(())
     }
     #[test]
     fn test_invalid_toml_parsing() -> miette::Result<()> {
-        let result = Settings::validate_against_schema(&INVALID_TOML);
+        let result = Settings::validate_against_schema(INVALID_TOML);
         assert!(result.is_err());
         Ok(())
     }

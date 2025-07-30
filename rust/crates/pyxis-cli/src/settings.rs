@@ -132,7 +132,7 @@ capacity = 500
 
     #[test]
     fn test_invalid_toml_parsing() -> miette::Result<()> {
-        let result=Settings::validate_against_schema(&INVALID_TOML);
+        let result = Settings::validate_against_schema(&INVALID_TOML);
         assert!(result.is_err());
         Ok(())
     }

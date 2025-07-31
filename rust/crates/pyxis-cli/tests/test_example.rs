@@ -18,7 +18,7 @@ fn test_jiaxing_bump_station() -> miette::Result<()> {
     let cmd = Command::cargo_bin("pyxis")
         .into_diagnostic()?
         .args([
-            "transform",
+            "abacus",
             "-n",
             "Jiaxing bump station",
             "-x",
@@ -42,12 +42,12 @@ fn test_zhengyong_expressway_dehua_east_interchange() -> miette::Result<()> {
         .into_diagnostic()?
     .args([
             "-v",
-            "transform",
+            "abacus",
             "-n", "Zhengyong expressway Dehua east interchange",
             "-x", "469704.6693",
             "-y", "2821940.796",
             "-z", "0",
-            "-o", "plain",
+            "-o", "verbose",
         ])
         .args([
             "datum-compensate",

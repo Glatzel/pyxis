@@ -2,9 +2,9 @@ use std::fmt;
 use std::str::FromStr;
 
 use bpaf::Bpaf;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-#[cfg_attr(debug_assertions, derive(schemars::JsonSchema))]
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, JsonSchema)]
 pub enum OutputFormat {
     Simple,
     Verbose,

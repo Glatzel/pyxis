@@ -39,8 +39,8 @@ path = "src/main.rs"
 
 [[bin]]
 name = "export-schema"
-path = "src/bin/export_schema.rs"
+path = "src/tools/export_schema.rs"
 
 [[bin]]
 name = "deadlock_detection"
-path = "src/bin/deadlock_detection.rs"
+path = "src/tools/deadlock_detection.rs"

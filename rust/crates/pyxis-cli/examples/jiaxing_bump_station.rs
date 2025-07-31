@@ -1,8 +1,9 @@
 use std::process::Command;
 
 use miette::IntoDiagnostic;
+
 fn main() -> miette::Result<()> {
-    let output = Command::new("pyxis")
+    let output = Command::new("../pyxis")
         .args([
             "transform",
             "-n",

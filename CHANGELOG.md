@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.35] - 2025-07-31
+
+### Added
+
+- **(rust)** Add tool list devices and examples by @Glatzel in [#567](https://github.com/Glatzel/pyxis/pull/567)
+
+### Changed
+
+- Rename pyxis cli by @Glatzel in [#557](https://github.com/Glatzel/pyxis/pull/557)
+- **(rust)** Merge cli by @Glatzel in [#558](https://github.com/Glatzel/pyxis/pull/558)
+- Global setting by @Glatzel in [#564](https://github.com/Glatzel/pyxis/pull/564)
+- Use config file and schema to validate setting by @Glatzel in [#565](https://github.com/Glatzel/pyxis/pull/565)
+
+### Fixed
+
+- **(rust)** Rattler build by @Glatzel in [#566](https://github.com/Glatzel/pyxis/pull/566)
+
 ## [0.0.32] - 2025-07-19
 
 ### Removed
@@ -528,6 +545,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2025-02-05
 
+[0.0.35]: https://github.com/Glatzel/pyxis/compare/v0.0.34..v0.0.35
 [0.0.32]: https://github.com/Glatzel/pyxis/compare/v0.0.31..v0.0.32
 [0.0.31]: https://github.com/Glatzel/pyxis/compare/v0.0.30..v0.0.31
 [0.0.30]: https://github.com/Glatzel/pyxis/compare/v0.0.29..v0.0.30

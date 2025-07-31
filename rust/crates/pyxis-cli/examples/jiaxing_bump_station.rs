@@ -24,9 +24,9 @@ fn main() -> miette::Result<()> {
 
     // Print results
     if output.status.success() {
-        println!("Output:\n{}", stdout);
+        println!("Output:\n{stdout}");
     } else {
-        eprintln!("Error:\n{}", stderr);
+        eprintln!("Error:\n{stderr}");
     }
     Ok(())
 }

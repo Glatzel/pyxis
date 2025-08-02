@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using ZLinq;
 
 namespace Pyxis;
 
@@ -43,13 +43,13 @@ public struct BoundingBox : IEquatable<BoundingBox>, IFormattable
         Vec3 minPt = new();
         Vec3 maxPt = new();
         List<BoundingBox> listBBox = [.. bboxs];
-        minPt.X = listBBox.Min(p => p.MaxPt.X);
-        minPt.Y = listBBox.Min(p => p.MaxPt.Y);
-        minPt.Z = listBBox.Min(p => p.MaxPt.Z);
+        minPt.X = listBBox.AsValueEnumerable().Min(p => p.MaxPt.X);
+        minPt.Y = listBBox.AsValueEnumerable().Min(p => p.MaxPt.Y);
+        minPt.Z = listBBox.AsValueEnumerable().Min(p => p.MaxPt.Z);
 
-        maxPt.X = listBBox.Max(p => p.MinPt.X);
-        maxPt.Y = listBBox.Max(p => p.MinPt.Y);
-        maxPt.Z = listBBox.Max(p => p.MinPt.Z);
+        maxPt.X = listBBox.AsValueEnumerable().Max(p => p.MinPt.X);
+        maxPt.Y = listBBox.AsValueEnumerable().Max(p => p.MinPt.Y);
+        maxPt.Z = listBBox.AsValueEnumerable().Max(p => p.MinPt.Z);
 
         BoundingBox outbbox = new(in maxPt, in minPt);
         outbbox.Check();
@@ -82,6 +82,7 @@ public struct BoundingBox : IEquatable<BoundingBox>, IFormattable
         return new(in minPt, in maxPt);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(BoundingBox left, BoundingBox right)
     {
         return !(left == right);
@@ -145,13 +146,13 @@ public struct BoundingBox : IEquatable<BoundingBox>, IFormattable
         Vec3 maxpt = new();
         Vec3 Minpt = new();
         List<BoundingBox> listBBox = [.. bboxs];
-        maxpt.X = listBBox.Max(p => p.MaxPt.X);
-        maxpt.Y = listBBox.Max(p => p.MaxPt.Y);
-        maxpt.Z = listBBox.Max(p => p.MaxPt.Z);
+        maxpt.X = listBBox.AsValueEnumerable().Max(p => p.MaxPt.X);
+        maxpt.Y = listBBox.AsValueEnumerable().Max(p => p.MaxPt.Y);
+        maxpt.Z = listBBox.AsValueEnumerable().Max(p => p.MaxPt.Z);
 
-        Minpt.X = listBBox.Min(p => p.MinPt.X);
-        Minpt.Y = listBBox.Min(p => p.MinPt.Y);
-        Minpt.Z = listBBox.Min(p => p.MinPt.Z);
+        Minpt.X = listBBox.AsValueEnumerable().Min(p => p.MinPt.X);
+        Minpt.Y = listBBox.AsValueEnumerable().Min(p => p.MinPt.Y);
+        Minpt.Z = listBBox.AsValueEnumerable().Min(p => p.MinPt.Z);
 
         return new BoundingBox(in Minpt, in maxpt);
     }

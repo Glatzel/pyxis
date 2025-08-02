@@ -9,7 +9,6 @@
     <UseWPF>true</UseWPF>
     <AnalysisLevel>latest-Recommended</AnalysisLevel>
     <TargetFrameworks>net48;net8.0-windows;net9.0-windows</TargetFrameworks>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <PropertyGroup Condition="$(Configuration)=='Release'">
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>

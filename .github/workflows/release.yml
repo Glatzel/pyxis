@@ -165,7 +165,7 @@ jobs:
         with:
           name: pyxis-csharp
           path: |
-            ./csharp/dist/*.nupkg
+            ./csharp/dist/Pyxis.*.*.*.nupkg
           if-no-files-found: error
 
   cargo-doc:

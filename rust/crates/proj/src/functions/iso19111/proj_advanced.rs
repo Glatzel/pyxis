@@ -198,7 +198,7 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
     pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj> {
-        let mut owned =OwnedCStrings::with_capacity(1);
+        let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_crs_promote_to_3D(
                 self.ctx.ptr,

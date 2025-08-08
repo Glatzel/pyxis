@@ -448,7 +448,7 @@ impl crate::Context {
             miette::bail!("At least one of `auth_name` and  `params` must be set.");
         }
         let mut out_result_count = i32::default();
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr,

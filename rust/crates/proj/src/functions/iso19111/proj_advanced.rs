@@ -91,7 +91,7 @@ impl Proj {
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_crs_alter_cs_angular_unit(
                 self.ctx.ptr,
@@ -129,7 +129,7 @@ impl Proj {
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_crs_alter_cs_linear_unit(
                 self.ctx.ptr,
@@ -170,7 +170,7 @@ impl Proj {
         unit_code: Option<&str>,
         convert_to_new_unit: bool,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_crs_alter_parameters_linear_unit(
                 self.ctx.ptr,
@@ -198,7 +198,7 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
     pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned =OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_crs_promote_to_3D(
                 self.ctx.ptr,
@@ -259,7 +259,7 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_demote_to_2D>
     pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_crs_demote_to_2D(
                 self.ctx.ptr,
@@ -302,7 +302,7 @@ impl Proj {
                 "At least one of `new_method_epsg_code` and  `new_method_name` must be set."
             )
         }
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_convert_conversion_to_other_method(
                 self.ctx.ptr,

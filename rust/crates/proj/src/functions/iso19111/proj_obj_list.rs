@@ -123,7 +123,7 @@ impl Context {
         datum_code: &str,
         crs_type: Option<&str>,
     ) -> miette::Result<ProjObjList> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 self.ptr,

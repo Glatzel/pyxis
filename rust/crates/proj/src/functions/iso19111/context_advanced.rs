@@ -90,7 +90,7 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
@@ -177,7 +177,7 @@ impl Context {
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(5);
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 self.ptr,
@@ -213,7 +213,7 @@ impl Context {
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 self.ptr,
@@ -262,7 +262,7 @@ impl Context {
         linear_units: Option<&str>,
         linear_units_conv: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(6);
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
                 self.ptr,
@@ -303,7 +303,7 @@ impl Context {
         linear_units: Option<&str>,
         linear_units_conv: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
                 self.ptr,
@@ -335,7 +335,7 @@ impl Context {
         conversion: &Proj,
         ellipsoidal_cs: &Proj,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
                 self.ptr,
@@ -361,7 +361,7 @@ impl Context {
         self: &Arc<Self>,
         crs_name: Option<&str>,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(1);
         let ptr =
             unsafe { proj_sys::proj_create_engineering_crs(self.ptr, owned.push_option(crs_name)) };
         Proj::new_with_owned_cstrings(self, ptr, owned)
@@ -387,7 +387,7 @@ impl Context {
         linear_units: Option<&str>,
         linear_units_conv: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
                 self.ptr,
@@ -444,7 +444,7 @@ impl Context {
         geoid_geog_crs: Option<&Proj>,
         accuracy: Option<f64>,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(8);
         let mut options = ProjOptions::new(1);
         options.push_optional_pass(accuracy, "ACCURACY");
         let ptr = unsafe {
@@ -482,7 +482,7 @@ impl Context {
         horiz_crs: &Proj,
         vert_crs: &Proj,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
                 self.ptr,
@@ -519,7 +519,7 @@ impl Context {
         method_code: Option<&str>,
         params: &[ParamDescription],
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(6);
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
                 self.ptr,
@@ -583,7 +583,7 @@ impl Context {
         params: &[ParamDescription],
         accuracy: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(6);
         let count = params.len();
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
             .iter()
@@ -636,7 +636,7 @@ impl Context {
         conversion: &Proj,
         coordinate_system: &Proj,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
                 self.ptr,
@@ -735,7 +735,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
                 self.ptr,
@@ -770,7 +770,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gauss_schreiber_transverse_mercator(
                 self.ptr,
@@ -808,7 +808,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator_south_oriented(
                 self.ptr,
@@ -844,7 +844,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_two_point_equidistant(
                 self.ptr,
@@ -879,7 +879,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mapping_grid(
                 self.ptr,
@@ -912,7 +912,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mining_grid(
                 self.ptr,
@@ -947,7 +947,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_albers_equal_area(
                 self.ptr,
@@ -983,7 +983,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp(
                 self.ptr,
@@ -1019,7 +1019,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp_variant_b(
                 self.ptr,
@@ -1056,7 +1056,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp(
                 self.ptr,
@@ -1094,7 +1094,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_michigan(
                 self.ptr,
@@ -1132,7 +1132,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_belgium(
                 self.ptr,
@@ -1167,7 +1167,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_azimuthal_equidistant(
                 self.ptr,
@@ -1200,7 +1200,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_guam_projection(
                 self.ptr,
@@ -1233,7 +1233,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_bonne(
                 self.ptr,
@@ -1266,7 +1266,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area_spherical(
                 self.ptr,
@@ -1299,7 +1299,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area(
                 self.ptr,
@@ -1332,7 +1332,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_cassini_soldner(
                 self.ptr,
@@ -1367,7 +1367,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_conic(
                 self.ptr,
@@ -1401,7 +1401,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_i(
                 self.ptr,
@@ -1430,7 +1430,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_ii(
                 self.ptr,
@@ -1461,7 +1461,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iii(
                 self.ptr,
@@ -1492,7 +1492,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iv(
                 self.ptr,
@@ -1523,7 +1523,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_v(
                 self.ptr,
@@ -1554,7 +1554,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_vi(
                 self.ptr,
@@ -1586,7 +1586,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical(
                 self.ptr,
@@ -1619,7 +1619,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical_spherical(
                 self.ptr,
@@ -1651,7 +1651,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gall(
                 self.ptr,
@@ -1682,7 +1682,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_goode_homolosine(
                 self.ptr,
@@ -1713,7 +1713,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_interrupted_goode_homolosine(
                 self.ptr,
@@ -1746,7 +1746,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_x(
                 self.ptr,
@@ -1780,7 +1780,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_y(
                 self.ptr,
@@ -1813,7 +1813,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gnomonic(
                 self.ptr,
@@ -1849,7 +1849,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_a(
                 self.ptr,
@@ -1888,7 +1888,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_b(
                 self.ptr,
@@ -1928,7 +1928,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin(
                 self.ptr,
@@ -1967,7 +1967,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_laborde_oblique_mercator(
                 self.ptr,
@@ -2003,7 +2003,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_international_map_world_polyconic(
                 self.ptr,
@@ -2040,7 +2040,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak_north_oriented(
                 self.ptr,
@@ -2079,7 +2079,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak(
                 self.ptr,
@@ -2115,7 +2115,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_azimuthal_equal_area(
                 self.ptr,
@@ -2147,7 +2147,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_miller_cylindrical(
                 self.ptr,
@@ -2180,7 +2180,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_a(
                 self.ptr,
@@ -2214,7 +2214,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
                 self.ptr,
@@ -2247,7 +2247,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_popular_visualisation_pseudo_mercator(
                 self.ptr,
@@ -2279,7 +2279,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mollweide(
                 self.ptr,
@@ -2311,7 +2311,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
                 self.ptr,
@@ -2344,7 +2344,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
                 self.ptr,
@@ -2377,7 +2377,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_orthographic(
                 self.ptr,
@@ -2412,7 +2412,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_local_orthographic(
                 self.ptr,
@@ -2447,7 +2447,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_american_polyconic(
                 self.ptr,
@@ -2481,7 +2481,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_polar_stereographic_variant_a(
                 self.ptr,
@@ -2515,7 +2515,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
                 self.ptr,
@@ -2547,7 +2547,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_robinson(
                 self.ptr,
@@ -2578,7 +2578,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_sinusoidal(
                 self.ptr,
@@ -2611,7 +2611,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_stereographic(
                 self.ptr,
@@ -2644,7 +2644,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_van_der_grinten(
                 self.ptr,
@@ -2675,7 +2675,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_i(
                 self.ptr,
@@ -2706,7 +2706,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_ii(
                 self.ptr,
@@ -2738,7 +2738,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iii(
                 self.ptr,
@@ -2770,7 +2770,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iv(
                 self.ptr,
@@ -2801,7 +2801,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_v(
                 self.ptr,
@@ -2832,7 +2832,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vi(
                 self.ptr,
@@ -2863,7 +2863,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vii(
                 self.ptr,
@@ -2895,7 +2895,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_quadrilateralized_spherical_cube(
                 self.ptr,
@@ -2928,7 +2928,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_spherical_cross_track_height(
                 self.ptr,
@@ -2961,7 +2961,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equal_earth(
                 self.ptr,
@@ -2995,7 +2995,7 @@ impl Context {
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_vertical_perspective(
                 self.ptr,
@@ -3027,7 +3027,7 @@ impl Context {
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_grib_convention(
                 self.ptr,
@@ -3054,7 +3054,7 @@ impl Context {
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
     ) -> miette::Result<Proj> {
-        let mut owned = OwnedCStrings::new();
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_netcdf_cf_convention(
                 self.ptr,

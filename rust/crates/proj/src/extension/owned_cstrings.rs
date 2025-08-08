@@ -10,10 +10,10 @@ pub(crate) struct OwnedCStrings {
 impl OwnedCStrings {
     pub fn new() -> Self {
         Self {
-            _owned_cstrings: Vec::new(),
+            _owned_cstrings: Vec::with_capacity(0),
         }
     }
-    pub fn _with_capacity(n: usize) -> Self {
+    pub fn with_capacity(n: usize) -> Self {
         Self {
             _owned_cstrings: Vec::with_capacity(n),
         }

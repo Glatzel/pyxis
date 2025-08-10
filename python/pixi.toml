@@ -6,9 +6,9 @@ platforms = ["win-64", "linux-64", "osx-arm64", "linux-aarch64"]
 python = "3.11.*"
 
 [feature.build.dependencies]
-maturin = "==1.9.2"
+maturin = "==1.9.3"
 pip = "==25.2"
-rattler-build = "==0.44.0"
+rattler-build = "==0.45.0"
 
 [feature.deps.dependencies]
 lazy-loader = "==0.4"

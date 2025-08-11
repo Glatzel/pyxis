@@ -5,5 +5,5 @@ platforms = ["win-64", "linux-64"]
 [tasks]
 nvcc = "$CONDA_PREFIX/Library/bin/nvcc"
 [dependencies]
-cuda-cudart = "==12.8.90"
-cuda-nvcc = "==12.8.93"
+cuda-cudart = "==13.0.48"
+cuda-nvcc = "==13.0.48"

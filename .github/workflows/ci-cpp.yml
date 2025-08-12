@@ -14,7 +14,7 @@ jobs:
         machine: [windows-latest, ubuntu-latest, macos-latest,ubuntu-24.04-arm]
     runs-on: ${{matrix.machine}}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: build cpp
         run: ${{env.CPP_ROOT}}/scripts/build-cpp.ps1
         shell: pwsh

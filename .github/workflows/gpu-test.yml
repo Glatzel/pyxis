@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: [self-hosted]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - run: ./rust-cuda/scripts/update-test-report.ps1
         shell: pwsh

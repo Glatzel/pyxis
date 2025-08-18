@@ -1,9 +1,9 @@
 # This File is automatically synchronized from https://github.com/Glatzel/template
 
-if ($env:CI) {
-    rustup toolchain install nightly --profile=minimal
-    rustup component add rustfmt --toolchain nightly
-}
+
+rustup toolchain install nightly --profile=minimal
+rustup component add rustfmt --toolchain nightly
+
 $ROOT = git rev-parse --show-toplevel
 Set-Location $ROOT
 foreach ($f in Get-ChildItem "Cargo.lock" -Recurse) {

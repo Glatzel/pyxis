@@ -1,8 +1,9 @@
 # This File is automatically synchronized from https://github.com/Glatzel/template
 
-
-rustup toolchain install nightly --profile=minimal
-rustup component add rustfmt --toolchain nightly
+if ($env:CI) {
+    rustup toolchain install nightly --profile=minimal
+    rustup component add rustfmt --toolchain nightly
+}
 
 $ROOT = git rev-parse --show-toplevel
 Set-Location $ROOT

@@ -5,7 +5,7 @@ use pyo3::{PyObject, Python, pyfunction};
 use rayon::prelude::*;
 #[pyfunction]
 pub fn py_datum_compensate(
-    py: Python,
+    py: Python<'_>,
     xc_py: PyObject,
     yc_py: PyObject,
     hb: f64,

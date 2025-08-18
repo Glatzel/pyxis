@@ -32,7 +32,7 @@ fn get_space_fn(from: &str, to: &str) -> Result<impl Fn(f64, f64, f64) -> (f64, 
 }
 #[pyfunction]
 pub fn py_space(
-    py: Python,
+    py: Python<'_>,
     x_py: PyObject,
     y_py: PyObject,
     z_py: PyObject,

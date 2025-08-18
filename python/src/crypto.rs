@@ -60,7 +60,7 @@ fn get_crypto_fn(
 }
 #[pyfunction]
 pub fn py_crypto(
-    py: Python,
+    py: Python<'_>,
     lon_py: PyObject,
     lat_py: PyObject,
     from: String,

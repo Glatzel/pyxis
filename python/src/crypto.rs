@@ -84,7 +84,6 @@ pub fn py_crypto(
     } else if let (Ok(lon), Ok(lat)) = (lon_py.extract::<f64>(py), lat_py.extract::<f64>(py)) {
         crypto_fn(lon, lat).into_pyobject(py)
     } else {
-        
         Err(pyo3::exceptions::PyTypeError::new_err(
             "Input must be a float or a 1D numpy.ndarray of floats.",
         ))

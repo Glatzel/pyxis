@@ -6,10 +6,10 @@ platforms = ["win-64", "linux-64"]
 lazy-loader = "==0.4"
 pip = "==25.2"
 python = "3.11.*"
-rattler-build = "==0.45.0"
+rattler-build = "==0.46.0"
 
 [feature.test.dependencies]
-cupy = "==13.5.1"
+cupy = "==13.6.0"
 nomkl = "==1.0"
 pytest = "==8.4.1"
 pytest-benchmark = "==5.1.0"

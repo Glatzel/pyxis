@@ -72,3 +72,4 @@ pre-commit:
     - name: markdown
       stage_fixed: true
       run: pixi {run} hook-markdown
+ 

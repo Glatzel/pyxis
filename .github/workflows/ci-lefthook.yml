@@ -17,5 +17,5 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  pre-commit:
+  lefthook:
     uses: Glatzel/template/.github/workflows/ci-lefthook.yml@main

@@ -8,8 +8,9 @@ if ($env:CI) {
 $ROOT = git rev-parse --show-toplevel
 Set-Location $ROOT
 foreach ($f in Get-ChildItem "Cargo.lock" -Recurse) {
-    # skip target folder
+    # skip target and package folder
     if ($f -contains "target") { continue }
+    if ($f -contains "crate") { continue }
 
     Set-Location $f.Directory.ToString()
     Write-Output "Cargo fmt in: $pwd"

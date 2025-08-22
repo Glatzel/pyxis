@@ -71,5 +71,6 @@ pre-commit:
 
     - name: markdown
       stage_fixed: true
+      glob: "*.md"
       run: pixi {run} hook-markdown {staged_files}
  

@@ -38,7 +38,7 @@ pub struct P5_FACTORS {
     pub parallel_scale: f64,
     pub areal_scale: f64,
     pub angular_distortion: f64,
-    pub meridian_parallel_angle:      f64 ,
+    pub meridian_parallel_angle: f64,
     pub meridian_convergence: f64,
     pub tissot_semimajor: f64,
     pub tissot_semiminor: f64,

@@ -1,3 +1,5 @@
+# This File is automatically synchronized from https://github.com/Glatzel/template
+
 lefthook: pixi run --no-progress --manifest-path ./lefthook/pixi.toml lefthook
 
 templates:
@@ -71,6 +73,8 @@ pre-commit:
 
     - name: markdown
       stage_fixed: true
+      exclude:
+        - changelog.md
+        - CHANGELOG.md
       glob: "*.md"
       run: pixi {run} hook-markdown {staged_files}
- 

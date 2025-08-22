@@ -34,7 +34,7 @@ where
     T: GeoFloat,
 {
     [
-        [radians.cos(), -radians.sin()],
+        [radians.cos(),    -radians.sin()],
         [radians.sin(), radians.cos()],
     ]
 }
@@ -68,3 +68,4 @@ where
     let out_y = rotate_matrix[1][0] * x + rotate_matrix[1][1] * y;
     (out_x, out_y)
 }
+

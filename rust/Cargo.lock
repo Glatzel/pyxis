@@ -440,6 +440,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "clerk"
+version = "0.0.26"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.26#f6b553cce9a824ab1ece42c40eb34c361ab9c732"
+
+[[package]]
 name = "codspeed"
 version = "2.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -503,7 +508,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "117725a109d387c937a1533ce01b450cbde6b88abceea8473c4d7a85853cda3c"
 dependencies = [
  "lazy_static",
- "windows-sys 0.59.0",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]
@@ -1411,7 +1416,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "07033963ba89ebaf1584d767badaa2e8fcec21aedea6b8c0346d487d49c28667"
 dependencies = [
  "cfg-if",
- "windows-targets 0.53.2",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -1977,7 +1982,7 @@ name = "proj"
 version = "0.0.35"
 dependencies = [
  "assert_cmd",
- "clerk",
+ "clerk 0.0.25",
  "dunce",
  "envoy",
  "float-cmp",
@@ -2003,7 +2008,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.35"
 dependencies = [
- "clerk",
+ "clerk 0.0.25",
  "codspeed-criterion-compat",
  "float-cmp",
  "num-traits",
@@ -2020,7 +2025,7 @@ dependencies = [
  "async-trait",
  "bpaf",
  "chrono",
- "clerk",
+ "clerk 0.0.25",
  "crossterm 0.29.0",
  "directories",
  "float-cmp",
@@ -2031,7 +2036,7 @@ dependencies = [
  "proj",
  "pyxis",
  "ratatui",
- "rax",
+ "rax 0.0.25",
  "rax-nmea",
  "schemars",
  "serde",
@@ -2115,7 +2120,7 @@ version = "0.0.25"
 source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.25#febac8487a68314d2091f8f4f4eb591d1e1e5576"
 dependencies = [
  "async-trait",
- "clerk",
+ "clerk 0.0.25",
  "miette",
  "serialport",
  "tokio",
@@ -2123,14 +2128,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "rax"
+version = "0.0.26"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.26#f6b553cce9a824ab1ece42c40eb34c361ab9c732"
+dependencies = [
+ "clerk 0.0.26",
+ "miette",
+ "tokio",
+]
+
+[[package]]
 name = "rax-nmea"
-version = "0.0.25"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.25#febac8487a68314d2091f8f4f4eb591d1e1e5576"
+version = "0.0.26"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.26#f6b553cce9a824ab1ece42c40eb34c361ab9c732"
 dependencies = [
  "chrono",
- "clerk",
+ "clerk 0.0.26",
  "miette",
- "rax",
+ "rax 0.0.26",
  "serde",
 ]
 
@@ -3159,7 +3174,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]

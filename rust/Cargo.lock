@@ -440,11 +440,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "clerk"
-version = "0.0.26"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.26#f6b553cce9a824ab1ece42c40eb34c361ab9c732"
-
-[[package]]
 name = "codspeed"
 version = "2.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1982,7 +1977,7 @@ name = "proj"
 version = "0.0.35"
 dependencies = [
  "assert_cmd",
- "clerk 0.0.25",
+ "clerk",
  "dunce",
  "envoy",
  "float-cmp",
@@ -2008,7 +2003,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.35"
 dependencies = [
- "clerk 0.0.25",
+ "clerk",
  "codspeed-criterion-compat",
  "float-cmp",
  "num-traits",
@@ -2025,7 +2020,7 @@ dependencies = [
  "async-trait",
  "bpaf",
  "chrono",
- "clerk 0.0.25",
+ "clerk",
  "crossterm 0.29.0",
  "directories",
  "float-cmp",
@@ -2036,7 +2031,7 @@ dependencies = [
  "proj",
  "pyxis",
  "ratatui",
- "rax 0.0.25",
+ "rax",
  "rax-nmea",
  "schemars",
  "serde",
@@ -2120,7 +2115,7 @@ version = "0.0.25"
 source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.25#febac8487a68314d2091f8f4f4eb591d1e1e5576"
 dependencies = [
  "async-trait",
- "clerk 0.0.25",
+ "clerk",
  "miette",
  "serialport",
  "tokio",
@@ -2128,24 +2123,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "rax"
-version = "0.0.26"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.26#f6b553cce9a824ab1ece42c40eb34c361ab9c732"
-dependencies = [
- "clerk 0.0.26",
- "miette",
- "tokio",
-]
-
-[[package]]
 name = "rax-nmea"
-version = "0.0.26"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.26#f6b553cce9a824ab1ece42c40eb34c361ab9c732"
+version = "0.0.25"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.25#febac8487a68314d2091f8f4f4eb591d1e1e5576"
 dependencies = [
  "chrono",
- "clerk 0.0.26",
+ "clerk",
  "miette",
- "rax 0.0.26",
+ "rax",
  "serde",
 ]
 

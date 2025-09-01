@@ -1,7 +1,7 @@
-use std::ffi::c_void;
-use std::ptr::null_mut;
-use std::sync::Arc;
-
+use alloc::sync::Arc;
+use core::ffi::c_void;
+use core::ptr::null_mut;
+extern crate alloc;
 use crate::LogLevel;
 
 impl crate::Context {

@@ -1,9 +1,10 @@
-use std::ffi::{CString, c_char};
+use alloc::ffi::CString;
+use alloc::sync::Arc;
+use core::ffi::c_char;
+use core::ptr;
+use core::str::FromStr;
 use std::path::{Path, PathBuf};
-use std::ptr;
-use std::str::FromStr;
-use std::sync::Arc;
-
+extern crate alloc;
 use envoy::{AsVecPtr, CStrListToVecString, CStrToString, ToCString};
 use miette::IntoDiagnostic;
 

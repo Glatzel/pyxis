@@ -1,4 +1,4 @@
-use std::ptr::null_mut;
+use core::ptr::null_mut;
 const NULL_PTR: *mut f64 = null_mut();
 /// A trait representing a mutable 4D coordinate (x, y, z, t) for use with PROJ
 /// FFI bindings.
@@ -23,7 +23,7 @@ const NULL_PTR: *mut f64 = null_mut();
 /// <summary>2D Coordinate</summary>
 ///
 /// ```
-/// use std::ptr::null_mut;
+/// use core::ptr::null_mut;
 ///
 /// use proj::ICoord;
 /// #[derive(Clone)]
@@ -44,7 +44,7 @@ const NULL_PTR: *mut f64 = null_mut();
 /// <summary>3D Coordinate</summary>
 ///
 /// ```
-/// use std::ptr::null_mut;
+/// use core::ptr::null_mut;
 ///
 /// use proj::ICoord;
 /// #[derive(Clone)]

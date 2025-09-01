@@ -1,6 +1,6 @@
-use std::ptr;
-use std::sync::Arc;
-
+use alloc::sync::Arc;
+use core::ptr;
+extern crate alloc;
 use envoy::ToCString;
 
 use crate::data_types::iso19111::*;

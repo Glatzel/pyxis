@@ -7,8 +7,9 @@
 //! - A macro for implementing the trait for types that use `to_string()`.
 //! - The `ProjOptions` struct for building and managing PROJ options as
 //!   CStrings.
-
-use std::ffi::{CString, c_char};
+extern crate alloc;
+use alloc::ffi::CString;
+use core::ffi::c_char;
 
 use envoy::ToCString;
 

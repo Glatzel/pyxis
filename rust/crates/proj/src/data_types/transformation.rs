@@ -1,4 +1,5 @@
-use std::sync::Arc;
+extern crate alloc;
+use alloc::sync::Arc;
 
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 

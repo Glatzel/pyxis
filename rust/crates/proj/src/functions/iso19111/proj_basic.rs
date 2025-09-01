@@ -1,5 +1,5 @@
-use std::ptr;
-use std::str::FromStr;
+use core::ptr;
+use core::str::FromStr;
 
 use envoy::{AsVecPtr, CStrToString, ToCString};
 use miette::IntoDiagnostic;

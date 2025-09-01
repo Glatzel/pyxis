@@ -1,5 +1,5 @@
-use std::sync::Arc;
-
+use alloc::sync::Arc;
+extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::{Proj, check_result};

@@ -1,4 +1,4 @@
-use std::fmt::{Debug, Display, LowerExp};
+use core::fmt::{Debug, Display, LowerExp};
 use std::sync::LazyLock;
 
 use num_traits::{ConstOne, Float, FloatConst, FromPrimitive, NumAssign};

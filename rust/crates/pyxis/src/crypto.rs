@@ -1,5 +1,5 @@
-use std::fmt;
-use std::str::FromStr;
+use core::fmt;
+use core::str::FromStr;
 
 /// # References
 /// - https://github.com/googollee/eviltransform/blob/master/rust/src/lib.rs

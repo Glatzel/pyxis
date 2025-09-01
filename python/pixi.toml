@@ -6,7 +6,7 @@ platforms = ["win-64", "linux-64", "osx-arm64", "linux-aarch64"]
 python = "3.11.*"
 
 [feature.build.dependencies]
-maturin = "==1.9.3"
+maturin = "==1.9.4"
 pip = "==25.2"
 rattler-build = "==0.46.0"
 
@@ -23,7 +23,7 @@ pytest-cov = "==6.2.1"
 [feature.doc.dependencies]
 autodocsumm = "==0.2.14"
 pydata-sphinx-theme = "==0.16.1"
-sphinx = "==8.2.3"
+sphinx = "==8.3.0"
 sphinx-autosummary-accessors = "==2025.3.1"
 sphinx-copybutton = "==0.5.2"
 

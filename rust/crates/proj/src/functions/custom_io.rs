@@ -1,7 +1,7 @@
+use alloc::sync::Arc;
+use core::ptr;
 use std::path::Path;
-use std::ptr;
-use std::sync::Arc;
-
+extern crate alloc;
 use envoy::{AsVecPtr, ToCString, VecCString};
 
 use crate::check_result;

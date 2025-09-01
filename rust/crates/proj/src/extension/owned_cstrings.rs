@@ -1,5 +1,7 @@
-use std::ffi::{CString, c_char};
-use std::ptr;
+extern crate alloc;
+use alloc::ffi::CString;
+use core::ffi::c_char;
+use core::ptr;
 
 use envoy::ToCString;
 

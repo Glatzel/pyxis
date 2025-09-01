@@ -1,5 +1,6 @@
-use std::ffi::{c_char, c_void};
-use std::sync::Arc;
+extern crate alloc;
+use alloc::sync::Arc;
+use core::ffi::{c_char, c_void};
 
 use envoy::CStrToString;
 use miette::IntoDiagnostic;

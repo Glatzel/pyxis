@@ -1,4 +1,4 @@
-use std::char;
+use core::char;
 
 use envoy::{CStrToString, ToCString};
 
@@ -145,7 +145,7 @@ pub fn rtodms2(r: f64, pos: char, neg: char) -> miette::Result<String> {
 
 #[cfg(test)]
 mod test {
-    use std::f64::consts::{FRAC_PI_2, PI};
+    use core::f64::consts::{FRAC_PI_2, PI};
 
     use float_cmp::assert_approx_eq;
 

@@ -1,6 +1,7 @@
-use std::ffi::CString;
-use std::fmt::Display;
-use std::sync::Arc;
+extern crate alloc;
+use alloc::ffi::CString;
+use alloc::sync::Arc;
+use core::fmt::Display;
 
 use envoy::ToCString;
 use num_enum::{IntoPrimitive, TryFromPrimitive};

@@ -13,7 +13,7 @@ jsonschema = { workspace = true }
 miette = { workspace = true }
 parking_lot = { workspace = true }
 proj = { workspace = true }
-pyxis = { workspace = true, features = ["serde", "log"] }
+pyxis = { workspace = true, features = ["serde"] }
 ratatui = { workspace = true }
 rax = { workspace = true, features = ["async", "device"] }
 rax-nmea = { workspace = true }

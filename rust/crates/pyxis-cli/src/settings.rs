@@ -4,7 +4,6 @@ use std::{fs, io};
 
 use directories::ProjectDirs;
 use jsonschema::JSONSchema;
-use miette::{Context, IntoDiagnostic};
 use parking_lot::Mutex;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -38,7 +37,7 @@ pub struct Settings {
 }
 
 impl Settings {
-    pub fn overwrite_settings(args: &cli::SubCommands) -> miette::Result<()> {
+    pub fn overwrite_settings(args: &cli::SubCommands) -> mischief::Result<()> {
         let mut settings = SETTINGS.lock();
         match *args {
             cli::SubCommands::Abacus { output_format, .. } => {
@@ -66,40 +65,33 @@ impl Settings {
         }
     }
 
-    pub fn save(&self) -> miette::Result<()> {
+    pub fn save(&self) -> mischief::Result<()> {
         let toml_str = toml::to_string_pretty(self)
-            .map_err(|e| io::Error::other(format!("TOML serialize error: {e}")))
-            .into_diagnostic()?;
+            .map_err(|e| io::Error::other(format!("TOML serialize error: {e}")))?;
 
         let path = Self::path();
 
         // Create parent directory if it doesn't exist
         if let Some(parent) = path.parent() {
             fs::create_dir_all(parent)
-                .map_err(|e| io::Error::other(format!("Failed to create config directory: {e}")))
-                .into_diagnostic()?;
+                .map_err(|e| io::Error::other(format!("Failed to create config directory: {e}")))?;
         }
 
-        fs::write(path, toml_str)
-            .map_err(|e| io::Error::other(format!("Failed to write config: {e}")))
-            .into_diagnostic()
+        Ok(fs::write(path, toml_str)?)
     }
-    fn validate_against_schema(toml_str: &str) -> miette::Result<()> {
+    fn validate_against_schema(toml_str: &str) -> mischief::Result<()> {
         // 1. Parse TOML to a generic JSON `Value`
         let json: Value = toml::from_str::<Value>(toml_str)
-            .into_diagnostic()
-            .wrap_err("Failed to parse TOML as JSON")?;
+            .map_err(|_| mischief::mischief!("Failed to parse TOML as JSON"))?;
 
         // 2. Parse the JSON schema
         let schema: Value = serde_json::from_str(SETTINGS_SCHEMA_STR)
-            .into_diagnostic()
-            .wrap_err("Failed to parse TOML as JSON")?;
+            .map_err(|_| mischief::mischief!("Failed to parse TOML as JSON"))?;
         let schema_static: &'static Value = Box::leak(Box::new(schema));
 
         // 3. Compile the schema
         let compiled = JSONSchema::compile(schema_static)
-            .into_diagnostic()
-            .wrap_err("Schema compile error")?;
+            .map_err(|_| mischief::mischief!("Schema compile error"))?;
 
         // 4. Validate the data
         let result = compiled.validate(&json);
@@ -108,7 +100,7 @@ impl Settings {
                 clerk::error!("Validation error: {}", error);
             }
             clerk::error!("Validation failed");
-            miette::bail!("Validation failed")
+            mischief::bail!("Validation failed")
         } else {
             Ok(())
         }
@@ -128,12 +120,12 @@ baud_rate = 115200
 capacity = 500
 "#;
     #[test]
-    fn test_valid_toml_parsing() -> miette::Result<()> {
+    fn test_valid_toml_parsing() -> mischief::Result<()> {
         Settings::validate_against_schema(DEFAULT_SETTINGS_STR)?;
         Ok(())
     }
     #[test]
-    fn test_invalid_toml_parsing() -> miette::Result<()> {
+    fn test_invalid_toml_parsing() -> mischief::Result<()> {
         let result = Settings::validate_against_schema(INVALID_TOML);
         assert!(result.is_err());
         Ok(())

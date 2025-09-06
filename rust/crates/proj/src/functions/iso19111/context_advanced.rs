@@ -21,7 +21,7 @@ impl Context {
         self: &Arc<Self>,
         coordinate_system_type: CoordinateSystemType,
         axis: &[AxisDescription],
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let axis_count = axis.len();
         let mut axis_vec: Vec<proj_sys::PJ_AXIS_DESCRIPTION> = Vec::with_capacity(axis_count);
         for a in axis {
@@ -60,7 +60,7 @@ impl Context {
         ellipsoidal_cs_2d_type: CartesianCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let unit_name = unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
@@ -89,7 +89,7 @@ impl Context {
         ellipsoidal_cs_2d_type: EllipsoidalCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
@@ -127,7 +127,7 @@ impl Context {
         horizontal_angular_unit_conv_factor: f64,
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let horizontal_angular_unit_name = horizontal_angular_unit_name.map(|s| s.to_cstring());
         let vertical_linear_unit_name = vertical_linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
@@ -176,7 +176,7 @@ impl Context {
         pm_angular_units: Option<&str>,
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(5);
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
@@ -212,7 +212,7 @@ impl Context {
         crs_name: Option<&str>,
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
@@ -261,7 +261,7 @@ impl Context {
         angular_units_conv: f64,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(6);
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
@@ -302,7 +302,7 @@ impl Context {
         datum_or_datum_ensemble: &Proj,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
@@ -334,7 +334,7 @@ impl Context {
         base_geographic_crs: &Proj,
         conversion: &Proj,
         ellipsoidal_cs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
@@ -360,7 +360,7 @@ impl Context {
     pub fn create_engineering_crs(
         self: &Arc<Self>,
         crs_name: Option<&str>,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr =
             unsafe { proj_sys::proj_create_engineering_crs(self.ptr, owned.push_option(crs_name)) };
@@ -386,7 +386,7 @@ impl Context {
         datum_name: Option<&str>,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
@@ -443,7 +443,7 @@ impl Context {
         geoid_model_code: Option<&str>,
         geoid_geog_crs: Option<&Proj>,
         accuracy: Option<f64>,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(8);
         let mut options = ProjOptions::new(1);
         options.push_optional_pass(accuracy, "ACCURACY");
@@ -481,7 +481,7 @@ impl Context {
         crs_name: Option<&str>,
         horiz_crs: &Proj,
         vert_crs: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
@@ -518,7 +518,7 @@ impl Context {
         method_auth_name: Option<&str>,
         method_code: Option<&str>,
         params: &[ParamDescription],
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(6);
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
@@ -582,7 +582,7 @@ impl Context {
         method_code: Option<&str>,
         params: &[ParamDescription],
         accuracy: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(6);
         let count = params.len();
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
@@ -635,7 +635,7 @@ impl Context {
         geodetic_crs: &Proj,
         conversion: &Proj,
         coordinate_system: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
@@ -664,7 +664,7 @@ impl Context {
         base_crs: &Proj,
         hub_crs: &Proj,
         transformation: &Proj,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_crs(
                 self.ptr,
@@ -692,7 +692,7 @@ impl Context {
         vert_crs: &Proj,
         hub_geographic_3d_crs: &Proj,
         grid_name: &str,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_vertical_crs(
                 self.ptr,
@@ -709,9 +709,9 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_utm>
-    pub fn create_conversion_utm(self: &Arc<Self>, zone: u8, north: bool) -> miette::Result<Proj> {
+    pub fn create_conversion_utm(self: &Arc<Self>, zone: u8, north: bool) -> mischief::Result<Proj> {
         if !(1..=60).contains(&zone) {
-            miette::bail!("UTM zone number should between 1 and 60.");
+            mischief::bail!("UTM zone number should between 1 and 60.");
         }
         let ptr =
             unsafe { proj_sys::proj_create_conversion_utm(self.ptr, zone as i32, north as i32) };
@@ -734,7 +734,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
@@ -769,7 +769,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gauss_schreiber_transverse_mercator(
@@ -807,7 +807,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator_south_oriented(
@@ -843,7 +843,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_two_point_equidistant(
@@ -878,7 +878,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mapping_grid(
@@ -911,7 +911,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mining_grid(
@@ -946,7 +946,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_albers_equal_area(
@@ -982,7 +982,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp(
@@ -1018,7 +1018,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp_variant_b(
@@ -1055,7 +1055,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp(
@@ -1093,7 +1093,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_michigan(
@@ -1131,7 +1131,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_belgium(
@@ -1166,7 +1166,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_azimuthal_equidistant(
@@ -1199,7 +1199,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_guam_projection(
@@ -1232,7 +1232,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_bonne(
@@ -1265,7 +1265,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area_spherical(
@@ -1298,7 +1298,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area(
@@ -1331,7 +1331,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_cassini_soldner(
@@ -1366,7 +1366,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_conic(
@@ -1400,7 +1400,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_i(
@@ -1429,7 +1429,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_ii(
@@ -1460,7 +1460,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iii(
@@ -1491,7 +1491,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iv(
@@ -1522,7 +1522,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_v(
@@ -1553,7 +1553,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_vi(
@@ -1585,7 +1585,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical(
@@ -1618,7 +1618,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical_spherical(
@@ -1650,7 +1650,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gall(
@@ -1681,7 +1681,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_goode_homolosine(
@@ -1712,7 +1712,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_interrupted_goode_homolosine(
@@ -1745,7 +1745,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_x(
@@ -1779,7 +1779,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_y(
@@ -1812,7 +1812,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gnomonic(
@@ -1848,7 +1848,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_a(
@@ -1887,7 +1887,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_b(
@@ -1927,7 +1927,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin(
@@ -1966,7 +1966,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_laborde_oblique_mercator(
@@ -2002,7 +2002,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_international_map_world_polyconic(
@@ -2039,7 +2039,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak_north_oriented(
@@ -2078,7 +2078,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak(
@@ -2114,7 +2114,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_azimuthal_equal_area(
@@ -2146,7 +2146,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_miller_cylindrical(
@@ -2179,7 +2179,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_a(
@@ -2213,7 +2213,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
@@ -2246,7 +2246,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_popular_visualisation_pseudo_mercator(
@@ -2278,7 +2278,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mollweide(
@@ -2310,7 +2310,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
@@ -2343,7 +2343,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
@@ -2376,7 +2376,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_orthographic(
@@ -2411,7 +2411,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_local_orthographic(
@@ -2446,7 +2446,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_american_polyconic(
@@ -2480,7 +2480,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_polar_stereographic_variant_a(
@@ -2514,7 +2514,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
@@ -2546,7 +2546,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_robinson(
@@ -2577,7 +2577,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_sinusoidal(
@@ -2610,7 +2610,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_stereographic(
@@ -2643,7 +2643,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_van_der_grinten(
@@ -2674,7 +2674,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_i(
@@ -2705,7 +2705,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_ii(
@@ -2737,7 +2737,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iii(
@@ -2769,7 +2769,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iv(
@@ -2800,7 +2800,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_v(
@@ -2831,7 +2831,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vi(
@@ -2862,7 +2862,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vii(
@@ -2894,7 +2894,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_quadrilateralized_spherical_cube(
@@ -2927,7 +2927,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_spherical_cross_track_height(
@@ -2960,7 +2960,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equal_earth(
@@ -2994,7 +2994,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_vertical_perspective(
@@ -3026,7 +3026,7 @@ impl Context {
         axis_rotation: f64,
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_grib_convention(
@@ -3053,7 +3053,7 @@ impl Context {
         north_pole_grid_longitude: f64,
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_netcdf_cf_convention(
@@ -3075,7 +3075,7 @@ mod test_context_advanced {
 
     use super::*;
     #[test]
-    fn test_create_cs() -> miette::Result<()> {
+    fn test_create_cs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         for a in AxisDirection::iter() {
             let pj: Proj = ctx.create_cs(
@@ -3106,7 +3106,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_cartesian_2d_cs() -> miette::Result<()> {
+    fn test_create_cartesian_2d_cs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj =
             ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, Some("Degree"), 1.0)?;
@@ -3116,7 +3116,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_ellipsoidal_2d_cs() -> miette::Result<()> {
+    fn test_create_ellipsoidal_2d_cs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_ellipsoidal_2d_cs(
             EllipsoidalCs2dType::LatitudeLongitude,
@@ -3129,7 +3129,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_ellipsoidal_3d_cs() -> miette::Result<()> {
+    fn test_create_ellipsoidal_3d_cs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_ellipsoidal_3d_cs(
             EllipsoidalCs3dType::LatitudeLongitudeHeight,
@@ -3145,7 +3145,7 @@ mod test_context_advanced {
     }
 
     #[test]
-    fn test_create_geographic_crs() -> miette::Result<()> {
+    fn test_create_geographic_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_geographic_crs(
             Some("WGS 84"),
@@ -3171,7 +3171,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_geographic_crs_from_datum() -> miette::Result<()> {
+    fn test_create_geographic_crs_from_datum() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_geographic_crs_from_datum(
             Some("WGS 84"),
@@ -3190,7 +3190,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_create_geocentric_crs() -> miette::Result<()> {
+    fn test_create_create_geocentric_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_geocentric_crs(
             Some("WGS 84"),
@@ -3217,7 +3217,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_geocentric_crs_from_datum() -> miette::Result<()> {
+    fn test_create_geocentric_crs_from_datum() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj1: Proj = ctx.create_geocentric_crs(
             Some("WGS 84"),
@@ -3245,7 +3245,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_derived_geographic_crs() -> miette::Result<()> {
+    fn test_create_derived_geographic_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let crs_4326 = ctx.create("EPSG:4326")?;
         let conversion = ctx
@@ -3267,7 +3267,7 @@ mod test_context_advanced {
     }
 
     #[test]
-    fn test_create_engineering_crs() -> miette::Result<()> {
+    fn test_create_engineering_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
 
         let pj: Proj = ctx.create_engineering_crs(Some("engineering crs"))?;
@@ -3277,7 +3277,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_vertical_crs() -> miette::Result<()> {
+    fn test_create_vertical_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj =
             ctx.create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
@@ -3287,7 +3287,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_vertical_crs_ex() -> miette::Result<()> {
+    fn test_create_vertical_crs_ex() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_vertical_crs_ex(
             Some("myVertCRS (ftUS)"),
@@ -3308,7 +3308,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_compound_crs() -> miette::Result<()> {
+    fn test_create_compound_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let horiz_crs = ctx
             .clone()
@@ -3333,7 +3333,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion() -> miette::Result<()> {
+    fn test_create_conversion() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_conversion(
             Some("conv"),
@@ -3358,7 +3358,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_transformation() -> miette::Result<()> {
+    fn test_create_transformation() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let geog_cs =
             ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
@@ -3413,7 +3413,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_projected_crs() -> miette::Result<()> {
+    fn test_projected_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let conv = ctx.create_conversion(
             Some("conv"),
@@ -3456,7 +3456,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_create_bound_crs() -> miette::Result<()> {
+    fn test_crs_create_bound_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let crs = ctx
             .clone()
@@ -3471,7 +3471,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_create_bound_vertical_crs() -> miette::Result<()> {
+    fn test_crs_create_bound_vertical_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let crs = ctx.create("EPSG:4979")?;
         let vert_crs =
@@ -3483,7 +3483,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_utm() -> miette::Result<()> {
+    fn test_create_conversion_utm() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_utm(31, true)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -3492,7 +3492,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_transverse_mercator() -> miette::Result<()> {
+    fn test_create_conversion_transverse_mercator() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_transverse_mercator(
             0.0,
@@ -3510,7 +3510,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_gauss_schreiber_transverse_mercator() -> miette::Result<()> {
+    fn test_create_conversion_gauss_schreiber_transverse_mercator() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_gauss_schreiber_transverse_mercator(
             0.0,
@@ -3528,7 +3528,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_transverse_mercator_south_oriented() -> miette::Result<()> {
+    fn test_create_conversion_transverse_mercator_south_oriented() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_transverse_mercator_south_oriented(
             0.0,
@@ -3546,7 +3546,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_two_point_equidistant() -> miette::Result<()> {
+    fn test_create_conversion_two_point_equidistant() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_two_point_equidistant(
             0.0,
@@ -3565,7 +3565,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_tunisia_mapping_grid() -> miette::Result<()> {
+    fn test_create_conversion_tunisia_mapping_grid() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_tunisia_mapping_grid(
             0.0,
@@ -3582,7 +3582,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_tunisia_mining_grid() -> miette::Result<()> {
+    fn test_create_conversion_tunisia_mining_grid() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_tunisia_mining_grid(
             0.0,
@@ -3599,7 +3599,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_albers_equal_area() -> miette::Result<()> {
+    fn test_create_conversion_albers_equal_area() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_albers_equal_area(
             0.0,
@@ -3618,7 +3618,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_conic_conformal_1sp() -> miette::Result<()> {
+    fn test_create_conversion_lambert_conic_conformal_1sp() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_1sp(
             1.0,
@@ -3636,7 +3636,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_conic_conformal_1sp_variant_b() -> miette::Result<()> {
+    fn test_create_conversion_lambert_conic_conformal_1sp_variant_b() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_1sp_variant_b(
             1.0,
@@ -3655,7 +3655,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_conic_conformal_2sp() -> miette::Result<()> {
+    fn test_create_conversion_lambert_conic_conformal_2sp() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_2sp(
             1.0,
@@ -3674,7 +3674,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_conic_conformal_2sp_michigan() -> miette::Result<()> {
+    fn test_create_conversion_lambert_conic_conformal_2sp_michigan() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_2sp_michigan(
             1.0,
@@ -3694,7 +3694,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_conic_conformal_2sp_belgium() -> miette::Result<()> {
+    fn test_create_conversion_lambert_conic_conformal_2sp_belgium() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_2sp_belgium(
             1.0,
@@ -3713,7 +3713,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_azimuthal_equidistant() -> miette::Result<()> {
+    fn test_create_conversion_azimuthal_equidistant() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_azimuthal_equidistant(
             1.0,
@@ -3730,7 +3730,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_guam_projection() -> miette::Result<()> {
+    fn test_create_conversion_guam_projection() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_guam_projection(
             1.0,
@@ -3747,7 +3747,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_createconversion_bonne() -> miette::Result<()> {
+    fn test_createconversion_bonne() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_bonne(
             1.0,
@@ -3764,7 +3764,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_cylindrical_equal_area_spherical() -> miette::Result<()> {
+    fn test_create_conversion_lambert_cylindrical_equal_area_spherical() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_cylindrical_equal_area_spherical(
             1.0,
@@ -3781,7 +3781,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_cylindrical_equal_area() -> miette::Result<()> {
+    fn test_create_conversion_lambert_cylindrical_equal_area() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_cylindrical_equal_area(
             1.0,
@@ -3798,7 +3798,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_cassini_soldner() -> miette::Result<()> {
+    fn test_create_conversion_cassini_soldner() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_cassini_soldner(
             1.0,
@@ -3815,7 +3815,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_equidistant_conic() -> miette::Result<()> {
+    fn test_create_conversion_equidistant_conic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_equidistant_conic(
             1.0,
@@ -3834,7 +3834,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_i() -> miette::Result<()> {
+    fn test_create_conversion_eckert_i() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_i(
             1.0,
@@ -3850,7 +3850,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_ii() -> miette::Result<()> {
+    fn test_create_conversion_eckert_ii() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_ii(
             1.0,
@@ -3866,7 +3866,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_iii() -> miette::Result<()> {
+    fn test_create_conversion_eckert_iii() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_iii(
             1.0,
@@ -3882,7 +3882,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_iv() -> miette::Result<()> {
+    fn test_create_conversion_eckert_iv() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_iv(
             1.0,
@@ -3898,7 +3898,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_v() -> miette::Result<()> {
+    fn test_create_conversion_eckert_v() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_v(
             1.0,
@@ -3914,7 +3914,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_vi() -> miette::Result<()> {
+    fn test_create_conversion_eckert_vi() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_vi(
             1.0,
@@ -3930,7 +3930,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_equidistant_cylindrical() -> miette::Result<()> {
+    fn test_create_conversion_equidistant_cylindrical() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_equidistant_cylindrical(
             1.0,
@@ -3947,7 +3947,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_equidistant_cylindrical_spherical() -> miette::Result<()> {
+    fn test_create_conversion_equidistant_cylindrical_spherical() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_equidistant_cylindrical_spherical(
             1.0,
@@ -3964,7 +3964,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_gall() -> miette::Result<()> {
+    fn test_create_conversion_gall() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_gall(
             1.0,
@@ -3980,7 +3980,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_goode_homolosine() -> miette::Result<()> {
+    fn test_create_conversion_goode_homolosine() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_goode_homolosine(
             1.0,
@@ -3996,7 +3996,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_interrupted_goode_homolosine() -> miette::Result<()> {
+    fn test_create_conversion_interrupted_goode_homolosine() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_interrupted_goode_homolosine(
             1.0,
@@ -4012,7 +4012,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_geostationary_satellite_sweep_x() -> miette::Result<()> {
+    fn test_create_conversion_geostationary_satellite_sweep_x() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_geostationary_satellite_sweep_x(
             1.0,
@@ -4029,7 +4029,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_geostationary_satellite_sweep_y() -> miette::Result<()> {
+    fn test_create_conversion_geostationary_satellite_sweep_y() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_geostationary_satellite_sweep_y(
             1.0,
@@ -4046,7 +4046,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_gnomonic() -> miette::Result<()> {
+    fn test_create_conversion_gnomonic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_gnomonic(
             1.0,
@@ -4063,7 +4063,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_hotine_oblique_mercator_variant_a() -> miette::Result<()> {
+    fn test_create_conversion_hotine_oblique_mercator_variant_a() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_hotine_oblique_mercator_variant_a(
             1.0,
@@ -4083,7 +4083,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_hotine_oblique_mercator_variant_b() -> miette::Result<()> {
+    fn test_create_conversion_hotine_oblique_mercator_variant_b() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_hotine_oblique_mercator_variant_b(
             1.0,
@@ -4104,7 +4104,7 @@ mod test_context_advanced {
     }
     #[test]
     fn test_create_conversion_hotine_oblique_mercator_two_point_natural_origin()
-    -> miette::Result<()> {
+    -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_hotine_oblique_mercator_two_point_natural_origin(
             1.0,
@@ -4125,7 +4125,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_laborde_oblique_mercator() -> miette::Result<()> {
+    fn test_create_conversion_laborde_oblique_mercator() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_laborde_oblique_mercator(
             1.0,
@@ -4144,7 +4144,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_international_map_world_polyconic() -> miette::Result<()> {
+    fn test_create_conversion_international_map_world_polyconic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_international_map_world_polyconic(
             1.0,
@@ -4162,7 +4162,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_krovak_north_oriented() -> miette::Result<()> {
+    fn test_create_conversion_krovak_north_oriented() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_krovak_north_oriented(
             1.0,
@@ -4182,7 +4182,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_krovak() -> miette::Result<()> {
+    fn test_create_conversion_krovak() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_krovak(
             1.0,
@@ -4202,7 +4202,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_azimuthal_equal_area() -> miette::Result<()> {
+    fn test_create_conversion_lambert_azimuthal_equal_area() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_azimuthal_equal_area(
             1.0,
@@ -4219,7 +4219,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_miller_cylindrical() -> miette::Result<()> {
+    fn test_create_conversion_miller_cylindrical() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_miller_cylindrical(
             1.0,
@@ -4235,7 +4235,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_mercator_variant_a() -> miette::Result<()> {
+    fn test_create_conversion_mercator_variant_a() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_mercator_variant_a(
             1.0,
@@ -4253,7 +4253,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_mercator_variant_b() -> miette::Result<()> {
+    fn test_create_conversion_mercator_variant_b() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_mercator_variant_b(
             1.0,
@@ -4270,7 +4270,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_popular_visualisation_pseudo_mercator() -> miette::Result<()> {
+    fn test_create_conversion_popular_visualisation_pseudo_mercator() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_popular_visualisation_pseudo_mercator(
             1.0,
@@ -4287,7 +4287,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_mollweide() -> miette::Result<()> {
+    fn test_create_conversion_mollweide() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_mollweide(
             1.0,
@@ -4303,7 +4303,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_new_zealand_mapping_grid() -> miette::Result<()> {
+    fn test_create_conversion_new_zealand_mapping_grid() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_new_zealand_mapping_grid(
             1.0,
@@ -4320,7 +4320,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_oblique_stereographic() -> miette::Result<()> {
+    fn test_create_conversion_oblique_stereographic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_oblique_stereographic(
             1.0,
@@ -4337,7 +4337,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_orthographic() -> miette::Result<()> {
+    fn test_create_conversion_orthographic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_orthographic(
             1.0,
@@ -4354,7 +4354,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_local_orthographic() -> miette::Result<()> {
+    fn test_create_conversion_local_orthographic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_local_orthographic(
             1.0,
@@ -4373,7 +4373,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_american_polyconic() -> miette::Result<()> {
+    fn test_create_conversion_american_polyconic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_american_polyconic(
             1.0,
@@ -4390,7 +4390,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_polar_stereographic_variant_a() -> miette::Result<()> {
+    fn test_create_conversion_polar_stereographic_variant_a() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_polar_stereographic_variant_a(
             1.0,
@@ -4408,7 +4408,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_polar_stereographic_variant_b() -> miette::Result<()> {
+    fn test_create_conversion_polar_stereographic_variant_b() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_polar_stereographic_variant_b(
             1.0,
@@ -4425,7 +4425,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_robinson() -> miette::Result<()> {
+    fn test_create_conversion_robinson() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_robinson(
             1.0,
@@ -4441,7 +4441,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_sinusoidal() -> miette::Result<()> {
+    fn test_create_conversion_sinusoidal() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_sinusoidal(
             1.0,
@@ -4457,7 +4457,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_stereographic() -> miette::Result<()> {
+    fn test_create_conversion_stereographic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_stereographic(
             1.0,
@@ -4475,7 +4475,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_van_der_grinten() -> miette::Result<()> {
+    fn test_create_conversion_van_der_grinten() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_van_der_grinten(
             1.0,
@@ -4491,7 +4491,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_i() -> miette::Result<()> {
+    fn test_create_conversion_wagner_i() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_i(
             1.0,
@@ -4507,7 +4507,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_ii() -> miette::Result<()> {
+    fn test_create_conversion_wagner_ii() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_ii(
             1.0,
@@ -4523,7 +4523,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_iii() -> miette::Result<()> {
+    fn test_create_conversion_wagner_iii() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_iii(
             1.0,
@@ -4540,7 +4540,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_iv() -> miette::Result<()> {
+    fn test_create_conversion_wagner_iv() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_iv(
             1.0,
@@ -4556,7 +4556,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_v() -> miette::Result<()> {
+    fn test_create_conversion_wagner_v() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_v(
             1.0,
@@ -4572,7 +4572,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_vi() -> miette::Result<()> {
+    fn test_create_conversion_wagner_vi() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_vi(
             1.0,
@@ -4588,7 +4588,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_vii() -> miette::Result<()> {
+    fn test_create_conversion_wagner_vii() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_vii(
             1.0,
@@ -4604,7 +4604,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_quadrilateralized_spherical_cube() -> miette::Result<()> {
+    fn test_create_conversion_quadrilateralized_spherical_cube() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_quadrilateralized_spherical_cube(
             1.0,
@@ -4621,7 +4621,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_spherical_cross_track_height() -> miette::Result<()> {
+    fn test_create_conversion_spherical_cross_track_height() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_spherical_cross_track_height(
             1.0,
@@ -4639,7 +4639,7 @@ mod test_context_advanced {
     }
 
     #[test]
-    fn test_create_conversion_equal_earth() -> miette::Result<()> {
+    fn test_create_conversion_equal_earth() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_equal_earth(
             1.0,
@@ -4655,7 +4655,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_vertical_perspective() -> miette::Result<()> {
+    fn test_create_conversion_vertical_perspective() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_vertical_perspective(
             1.0,
@@ -4674,7 +4674,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_pole_rotation_grib_convention() -> miette::Result<()> {
+    fn test_create_conversion_pole_rotation_grib_convention() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_pole_rotation_grib_convention(
             1.0,
@@ -4688,7 +4688,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_pole_rotation_netcdf_cf_convention() -> miette::Result<()> {
+    fn test_create_conversion_pole_rotation_netcdf_cf_convention() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_pole_rotation_netcdf_cf_convention(
             1.0,

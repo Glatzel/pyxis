@@ -45,18 +45,18 @@ impl crate::Area {
         south_lat_degree: f64,
         east_lon_degree: f64,
         north_lat_degree: f64,
-    ) -> miette::Result<&Self> {
+    ) -> mischief::Result<&Self> {
         if !(-180.0..=180.0).contains(&west_lon_degree) {
-            miette::bail!("`west_lon_degree` should in [-180,180] range.");
+            mischief::bail!("`west_lon_degree` should in [-180,180] range.");
         }
         if !(-90.0..=90.0).contains(&south_lat_degree) {
-            miette::bail!("`south_lat_degree ` should in [-90,90] range.");
+            mischief::bail!("`south_lat_degree ` should in [-90,90] range.");
         }
         if !(-180.0..=180.0).contains(&east_lon_degree) {
-            miette::bail!("`east_lon_degree` should in [-180,180] range.");
+            mischief::bail!("`east_lon_degree` should in [-180,180] range.");
         }
         if !(-90.0..=90.0).contains(&north_lat_degree) {
-            miette::bail!("`north_lat_degree ` should in [-90,90] range.");
+            mischief::bail!("`north_lat_degree ` should in [-90,90] range.");
         }
         unsafe {
             proj_sys::proj_area_set_bbox(
@@ -83,7 +83,7 @@ impl Drop for crate::Area {
 mod test {
     use crate::Area;
     #[test]
-    fn test_set_bbox() -> miette::Result<()> {
+    fn test_set_bbox() -> mischief::Result<()> {
         //valid range
         {
             let area = Area::new();

@@ -30,9 +30,9 @@ macro_rules! readonly_struct {
 pub(crate) use readonly_struct;
 impl crate::Proj {
     /// Panic if a `Proj` object is not CRS.
-    pub fn assert_crs(&self) -> miette::Result<&Self> {
+    pub fn assert_crs(&self) -> mischief::Result<&Self> {
         if !self.is_crs() {
-            miette::bail!("Proj object is not CRS.");
+            mischief::bail!("Proj object is not CRS.");
         }
         Ok(self)
     }
@@ -41,7 +41,7 @@ impl crate::Proj {
 #[cfg(test)]
 mod test {
     #[test]
-    fn test_assert_crs() -> miette::Result<()> {
+    fn test_assert_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         //is crs
         {

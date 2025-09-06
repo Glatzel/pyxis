@@ -42,13 +42,13 @@ impl crate::Proj {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
-pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
+pub fn grid_info(grid: &str) -> mischief::Result<GridInfo> {
     let src = unsafe { proj_sys::proj_grid_info(grid.to_cstring().as_ptr()) };
     if src.gridname.to_string().unwrap().as_str() == ""
         && src.filename.to_string().unwrap().as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
     {
-        miette::bail!("Invalid grid: {}", grid)
+        mischief::bail!("Invalid grid: {}", grid)
     }
     Ok(GridInfo::new(
         src.gridname.to_string().unwrap(),
@@ -71,7 +71,7 @@ pub fn grid_info(grid: &str) -> miette::Result<GridInfo> {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
-pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
+pub fn init_info(initname: &str) -> mischief::Result<InitInfo> {
     let src = unsafe { proj_sys::proj_init_info(initname.to_cstring().as_ptr()) };
     let info = InitInfo::new(
         src.name.to_string().unwrap_or_default(),
@@ -81,7 +81,7 @@ pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
         src.lastupdate.to_string().unwrap_or_default(),
     );
     if info.version() == "" {
-        miette::bail!(format!("Invalid proj init file or name: {}", initname))
+        mischief::bail!("Invalid proj init file or name: {}", initname)
     }
     Ok(InitInfo::new(
         src.name.to_string().unwrap_or_default(),
@@ -95,11 +95,9 @@ pub fn init_info(initname: &str) -> miette::Result<InitInfo> {
 mod test {
     use std::path::PathBuf;
 
-    use miette::IntoDiagnostic;
-
     use super::*;
     #[test]
-    fn test_ctx_info() -> miette::Result<()> {
+    fn test_ctx_info() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         println!("{:?}", pj.info());
@@ -117,11 +115,10 @@ mod test {
     }
 
     #[test]
-    fn test_grid_info() -> miette::Result<()> {
+    fn test_grid_info() -> mischief::Result<()> {
         //valid
         {
-            let workspace_dir =
-                PathBuf::from(std::env::var("CARGO_WORKSPACE_DIR").into_diagnostic()?);
+            let workspace_dir = PathBuf::from(std::env::var("CARGO_WORKSPACE_DIR")?);
             let info = grid_info(
                 workspace_dir
                     .join("external/ntv2-file-routines/samples/mne.gsb")
@@ -139,7 +136,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_init_info() -> miette::Result<()> {
+    fn test_init_info() -> mischief::Result<()> {
         //valid
         {
             let info = init_info("ITRF2000")?;

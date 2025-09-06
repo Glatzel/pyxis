@@ -11,10 +11,11 @@ proj = { path = "./crates/proj" }
 proj-sys = { path = "./crates/proj-sys" }
 pyxis = { path = "./crates/pyxis" }
 
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.27" }
-envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.27" }
-rax = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.27" }
-rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.27" }
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.28" }
+envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.28" }
+rax = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.28" }
+rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.28" }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.28" }
 
 assert_cmd = "2.0"
 async-trait = "0.1"
@@ -28,7 +29,6 @@ dunce = "1.0.5"
 float-cmp = "0.10.0"
 jsonschema = "0.17"
 libc = "0.2"
-miette = { version = "7.6.0", features = ["fancy"] }
 num-traits = "0.2.19"
 num_enum = "0.7.4"
 parking_lot = { version = "0.12.4", features = ["deadlock_detection"] }

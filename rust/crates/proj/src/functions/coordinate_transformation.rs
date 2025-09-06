@@ -69,7 +69,7 @@ impl crate::Proj {
         t: *mut f64,
         st: usize,
         nt: usize,
-    ) -> miette::Result<usize> {
+    ) -> mischief::Result<usize> {
         let result = unsafe {
             proj_sys::proj_trans_generic(
                 self.ptr(),
@@ -142,7 +142,7 @@ impl crate::Context {
         xmax: f64,
         ymax: f64,
         densify_pts: i32,
-    ) -> miette::Result<(f64, f64, f64, f64)> {
+    ) -> mischief::Result<(f64, f64, f64, f64)> {
         let mut out_xmin = f64::default();
         let mut out_ymin = f64::default();
         let mut out_xmax = f64::default();
@@ -164,7 +164,7 @@ impl crate::Context {
             )
         };
         if code != 1 {
-            miette::bail!("Failures encountered.")
+            mischief::bail!("Failures encountered.")
         }
         Ok((out_xmin, out_ymin, out_xmax, out_ymax))
     }
@@ -222,7 +222,7 @@ impl crate::Context {
         ymax: f64,
         zmax: f64,
         densify_pts: i32,
-    ) -> miette::Result<(f64, f64, f64, f64, f64, f64)> {
+    ) -> mischief::Result<(f64, f64, f64, f64, f64, f64)> {
         let mut out_xmin = f64::default();
         let mut out_ymin = f64::default();
         let mut out_zmin = f64::default();
@@ -250,7 +250,7 @@ impl crate::Context {
             )
         };
         if code != 1 {
-            miette::bail!("Failures encountered.")
+            mischief::bail!("Failures encountered.")
         }
         Ok((out_xmin, out_ymin, out_zmin, out_xmax, out_ymax, out_zmax))
     }
@@ -260,7 +260,7 @@ mod test {
     use float_cmp::assert_approx_eq;
 
     #[test]
-    fn test_get_last_used_operation() -> miette::Result<()> {
+    fn test_get_last_used_operation() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
@@ -271,7 +271,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_last_used_operation_null() -> miette::Result<()> {
+    fn test_get_last_used_operation_null() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let last_op = pj.get_last_used_operation();
@@ -280,7 +280,7 @@ mod test {
     }
 
     #[test]
-    fn test_trans_bounds() -> miette::Result<()> {
+    fn test_trans_bounds() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
@@ -300,7 +300,7 @@ mod test {
     }
 
     #[test]
-    fn test_trans_bounds_3d() -> miette::Result<()> {
+    fn test_trans_bounds_3d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;

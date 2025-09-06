@@ -14,7 +14,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// The transformed coordinate.
-    pub fn project<T>(&self, inv: bool, coord: &T) -> miette::Result<T>
+    pub fn project<T>(&self, inv: bool, coord: &T) -> mischief::Result<T>
     where
         T: ICoord,
     {
@@ -38,9 +38,9 @@ impl crate::Proj {
                 self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)
             },
             (x, y, z, t) => {
-                miette::bail!(format!(
+                mischief::bail!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                ))
+                )
             }
         }?;
 
@@ -55,7 +55,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// The transformed coordinate.
-    pub fn convert<T>(&self, coord: &T) -> miette::Result<T>
+    pub fn convert<T>(&self, coord: &T) -> mischief::Result<T>
     where
         T: ICoord,
     {
@@ -78,9 +78,9 @@ impl crate::Proj {
                 self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)
             },
             (x, y, z, t) => {
-                miette::bail!(format!(
+                mischief::bail!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                ))
+                )
             }
         }?;
 
@@ -101,7 +101,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// A reference to self for chaining.
-    pub fn project_array<T>(&self, inv: bool, coord: &mut [T]) -> miette::Result<&Self>
+    pub fn project_array<T>(&self, inv: bool, coord: &mut [T]) -> mischief::Result<&Self>
     where
         T: ICoord,
     {
@@ -133,9 +133,9 @@ impl crate::Proj {
                 )
             },
             (x, y, z, t) => {
-                miette::bail!(format!(
+                mischief::bail!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                ))
+                )
             }
         }?;
         Ok(self)
@@ -149,7 +149,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// A reference to self for chaining.
-    pub fn convert_array<T>(&self, coord: &mut [T]) -> miette::Result<&Self>
+    pub fn convert_array<T>(&self, coord: &mut [T]) -> mischief::Result<&Self>
     where
         T: ICoord,
     {
@@ -179,9 +179,9 @@ impl crate::Proj {
                 )
             },
             (x, y, z, t) => {
-                miette::bail!(format!(
+                mischief::bail!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                ))
+                )
             }
         }?;
 
@@ -192,7 +192,7 @@ impl crate::Proj {
 mod test {
     use float_cmp::assert_approx_eq;
     #[test]
-    fn test_project_2d() -> miette::Result<()> {
+    fn test_project_2d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         // array
@@ -214,7 +214,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_project_3d() -> miette::Result<()> {
+    fn test_project_3d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
@@ -237,7 +237,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_project_4d() -> miette::Result<()> {
+    fn test_project_4d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
         // array
@@ -263,7 +263,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_convert_2d() -> miette::Result<()> {
+    fn test_convert_2d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         // array
@@ -287,7 +287,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_convert_3d() -> miette::Result<()> {
+    fn test_convert_3d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
@@ -312,7 +312,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_convert_4d() -> miette::Result<()> {
+    fn test_convert_4d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
         // array
@@ -338,7 +338,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_project_array_2d() -> miette::Result<()> {
+    fn test_project_array_2d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
@@ -353,7 +353,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_project_array_3d() -> miette::Result<()> {
+    fn test_project_array_3d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
@@ -371,7 +371,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_project_array_4d() -> miette::Result<()> {
+    fn test_project_array_4d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
         let mut coord = [
@@ -388,7 +388,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_convert_array_2d() -> miette::Result<()> {
+    fn test_convert_array_2d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let mut coord = [[120.0, 30.0], [50.0, -80.0]];
@@ -402,7 +402,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_convert_array_3d() -> miette::Result<()> {
+    fn test_convert_array_3d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
@@ -419,7 +419,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_convert_array_4d() -> miette::Result<()> {
+    fn test_convert_array_4d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
         let mut coord = [

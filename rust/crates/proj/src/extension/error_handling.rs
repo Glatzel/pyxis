@@ -15,7 +15,7 @@ macro_rules! check_result {
                     i32::from(ecode.clone()),
                     report
                 );
-                miette::bail!(
+                mischief::bail!(
                     "Proj Process Failed. Exist code: {}<{}>. {}",
                     code_str,
                     i32::from(ecode),
@@ -39,7 +39,7 @@ macro_rules! check_result {
                     i32::from(ecode.clone()),
                     report
                 );
-                miette::bail!(
+                mischief::bail!(
                     "Proj Process Failed. Exist code: {}<{}>. {}",
                     code_str,
                     i32::from(ecode),

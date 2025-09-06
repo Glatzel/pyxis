@@ -92,14 +92,14 @@ pub trait ICoord: Clone {
 // Only allow use this triat in crate.
 // Prevent users from modifying the to_coord fn.
 pub(crate) trait ToCoord {
-    fn to_coord(&self) -> miette::Result<proj_sys::PJ_COORD>;
+    fn to_coord(&self) -> mischief::Result<proj_sys::PJ_COORD>;
 }
 
 impl<T> ToCoord for T
 where
     T: ICoord,
 {
-    fn to_coord(&self) -> miette::Result<proj_sys::PJ_COORD> {
+    fn to_coord(&self) -> mischief::Result<proj_sys::PJ_COORD> {
         let mut src = self.clone();
         let x = src.x();
         let y = src.y();
@@ -131,9 +131,9 @@ where
                     t: unsafe { *t },
                 },
             },
-            (x, y, z, t) => miette::bail!(format!(
+            (x, y, z, t) => mischief::bail!(
                 "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-            )),
+            ),
         };
         Ok(coord)
     }

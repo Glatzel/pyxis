@@ -324,7 +324,7 @@ impl OperationFactoryContext {
         &self,
         source_crs: &Proj,
         target_crs: &Proj,
-    ) -> miette::Result<ProjObjList> {
+    ) -> mischief::Result<ProjObjList> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
                 self.ctx.ptr,
@@ -352,7 +352,7 @@ impl Drop for OperationFactoryContext {
 mod test {
     use super::*;
     #[test]
-    fn test_settings() -> miette::Result<()> {
+    fn test_settings() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let factory = OperationFactoryContext::from_context(&ctx, None);
         factory
@@ -369,7 +369,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_create_operations() -> miette::Result<()> {
+    fn test_create_operations() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let factory = OperationFactoryContext::from_context(&ctx, None);
         let source_crs = ctx.create_from_database(

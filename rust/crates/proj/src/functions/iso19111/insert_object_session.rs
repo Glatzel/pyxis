@@ -92,7 +92,7 @@ impl InsertObjectSession {
         code: &str,
         numeric_codes: bool,
         allowed_authorities: Option<&[&str]>,
-    ) -> miette::Result<Vec<String>> {
+    ) -> mischief::Result<Vec<String>> {
         let allowed_authorities: VecCString = allowed_authorities.into();
         let ptr = unsafe {
             proj_sys::proj_get_insert_statements(
@@ -118,7 +118,7 @@ mod test {
     use crate::data_types::iso19111::InsertObjectSession;
 
     #[test]
-    fn test_get_insert_statements() -> miette::Result<()> {
+    fn test_get_insert_statements() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let wkt = "GEOGCRS[\"myGDA2020\",
                        DATUM[\"GDA2020\",

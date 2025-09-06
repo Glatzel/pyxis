@@ -4,7 +4,6 @@ use std::time::Duration;
 use crossterm::event::Event;
 use crossterm::execute;
 use crossterm::terminal::{enable_raw_mode, *};
-use miette::IntoDiagnostic;
 use ratatui::Terminal;
 use ratatui::backend::CrosstermBackend;
 use tokio::sync::mpsc;
@@ -17,17 +16,17 @@ mod tab;
 mod ui;
 
 /// Entry point of the async TUI application
-pub async fn execute() -> miette::Result<()> {
+pub async fn execute() -> mischief::Result<()> {
     // Check if serial port is available.
     serial::check_port()?;
 
     // Enable raw mode and enter alternate screen for TUI
-    enable_raw_mode().into_diagnostic()?;
+    enable_raw_mode()?;
     let mut stdout = stdout();
-    execute!(stdout, EnterAlternateScreen).into_diagnostic()?;
+    execute!(stdout, EnterAlternateScreen)?;
 
     // Set up terminal with Crossterm backend
-    let mut terminal = Terminal::new(CrosstermBackend::new(stdout)).into_diagnostic()?;
+    let mut terminal = Terminal::new(CrosstermBackend::new(stdout))?;
 
     // Create async channel for receiving serial data
     let (tx, mut rx) = mpsc::channel(100);
@@ -41,12 +40,10 @@ pub async fn execute() -> miette::Result<()> {
     // Main TUI loop
     loop {
         // Redraw the UI
-        terminal
-            .draw(|f| match ui::draw(f, &mut app) {
-                Ok(_) => (),
-                Err(e) => clerk::error!("{e}"),
-            })
-            .into_diagnostic()?;
+        terminal.draw(|f| match ui::draw(f, &mut app) {
+            Ok(_) => (),
+            Err(e) => clerk::error!("{e}"),
+        })?;
 
         // Handle input and serial updates concurrently
         tokio::select! {
@@ -77,9 +74,9 @@ pub async fn execute() -> miette::Result<()> {
     }
 
     // Restore terminal state before exiting
-    disable_raw_mode().into_diagnostic()?;
-    execute!(terminal.backend_mut(), LeaveAlternateScreen).into_diagnostic()?;
-    terminal.show_cursor().into_diagnostic()?;
+    disable_raw_mode()?;
+    execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
+    terminal.show_cursor()?;
     Ok(())
 }
 async fn poll_event(timeout: Duration) -> std::io::Result<Option<Event>> {

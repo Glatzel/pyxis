@@ -30,7 +30,7 @@ impl crate::Proj {
         direction: crate::Direction,
         n: i32,
         coord: &impl ICoord,
-    ) -> miette::Result<f64> {
+    ) -> mischief::Result<f64> {
         let mut coord = coord.to_coord()?;
         let distance =
             unsafe { proj_sys::proj_roundtrip(self.ptr(), direction.into(), n, &mut coord) };
@@ -60,7 +60,7 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_factors>
-    pub fn factors(&self, coord: &impl ICoord) -> miette::Result<crate::data_types::Factors> {
+    pub fn factors(&self, coord: &impl ICoord) -> mischief::Result<crate::data_types::Factors> {
         let factor = unsafe { proj_sys::proj_factors(self.ptr(), coord.to_coord()?) };
         match self.errno() {
             crate::data_types::ProjError::Success => (),
@@ -126,7 +126,7 @@ impl crate::Proj {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
-pub fn dmstor(is: &str) -> miette::Result<f64> {
+pub fn dmstor(is: &str) -> mischief::Result<f64> {
     let rs = "xxxdxxmxx.xxs ".to_cstring();
     Ok(unsafe { proj_sys::proj_dmstor(is.to_cstring().as_ptr(), &mut rs.as_ptr().cast_mut()) })
 }
@@ -136,7 +136,7 @@ pub fn dmstor(is: &str) -> miette::Result<f64> {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms2>
-pub fn rtodms2(r: f64, pos: char, neg: char) -> miette::Result<String> {
+pub fn rtodms2(r: f64, pos: char, neg: char) -> mischief::Result<String> {
     let dms = "xxxdxxmxx.xxs ".to_cstring();
     let ptr =
         unsafe { proj_sys::proj_rtodms2(dms.as_ptr().cast_mut(), 14, r, pos as i32, neg as i32) };
@@ -150,7 +150,7 @@ mod test {
     use float_cmp::assert_approx_eq;
 
     #[test]
-    fn test_roundtrip() -> miette::Result<()> {
+    fn test_roundtrip() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("+proj=tmerc +lat_0=0 +lon_0=75 +k=1 +x_0=13500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs","EPSG:4326",  &crate::Area::default())?;
         let coord = (5877537.151800396, 4477291.358855194);
@@ -159,7 +159,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_factors() -> miette::Result<()> {
+    fn test_factors() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let factor = pj.factors(&(12.0f64.to_radians(), 55.0f64.to_radians()))?;
@@ -236,7 +236,7 @@ mod test {
     }
 
     #[test]
-    fn test_factors_fail() -> miette::Result<()> {
+    fn test_factors_fail() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let factor = pj.factors(&(12.0f64.to_radians(), 55.0f64.to_radians()));
@@ -245,7 +245,7 @@ mod test {
     }
 
     #[test]
-    fn test_dmstor() -> miette::Result<()> {
+    fn test_dmstor() -> mischief::Result<()> {
         assert_approx_eq!(
             f64,
             super::dmstor("30d7'24.444\"E")?,
@@ -255,13 +255,13 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_rtodms2() -> miette::Result<()> {
+    fn test_rtodms2() -> mischief::Result<()> {
         let dms = super::rtodms2(30.123456789f64.to_radians(), 'E', 'W')?;
         assert_eq!(dms, "30d7'24.444\"E");
         Ok(())
     }
     #[test]
-    fn test_input_output_angle_format() -> miette::Result<()> {
+    fn test_input_output_angle_format() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         assert!(!(pj.angular_input(crate::Direction::Fwd)));

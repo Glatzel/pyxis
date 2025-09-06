@@ -400,7 +400,7 @@ impl AxisDescription {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
         unit_type: UnitType,
-    ) -> miette::Result<Self> {
+    ) -> mischief::Result<Self> {
         Ok(Self {
             name: name.unwrap_or("").to_cstring(),
             abbreviation: abbreviation.unwrap_or("").to_cstring(),
@@ -743,13 +743,13 @@ impl ProjObjList {
     pub(crate) fn new(
         ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
-    ) -> miette::Result<ProjObjList> {
+    ) -> mischief::Result<ProjObjList> {
         if ptr.is_null() {
-            miette::bail!("PJ_OBJ_LIST pointer is null.");
+            mischief::bail!("PJ_OBJ_LIST pointer is null.");
         }
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         if count < 1 {
-            miette::bail!("PJ_OBJ_LIST count 0.");
+            mischief::bail!("PJ_OBJ_LIST count 0.");
         }
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
@@ -765,13 +765,13 @@ impl ProjObjList {
         ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
         owned_cstrings: OwnedCStrings,
-    ) -> miette::Result<ProjObjList> {
+    ) -> mischief::Result<ProjObjList> {
         if ptr.is_null() {
-            miette::bail!("PJ_OBJ_LIST pointer is null.");
+            mischief::bail!("PJ_OBJ_LIST pointer is null.");
         }
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         if count < 1 {
-            miette::bail!("PJ_OBJ_LIST count 0.");
+            mischief::bail!("PJ_OBJ_LIST count 0.");
         }
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
@@ -788,9 +788,9 @@ impl ProjObjList {
     /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
-    pub fn get(&self, index: usize) -> miette::Result<Proj> {
+    pub fn get(&self, index: usize) -> mischief::Result<Proj> {
         if index > self.count {
-            miette::bail!("Error");
+            mischief::bail!("Error");
         }
         let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, index as i32) };
 

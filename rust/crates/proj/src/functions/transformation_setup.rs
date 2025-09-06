@@ -45,7 +45,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn create(self: &Arc<Self>, definition: &str) -> miette::Result<Proj> {
+    pub fn create(self: &Arc<Self>, definition: &str) -> mischief::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstring().as_ptr()) };
         check_result!(self);
         Proj::new(self, ptr)
@@ -64,7 +64,7 @@ impl crate::Context {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(self: &Arc<Self>, argv: &[&str]) -> miette::Result<Proj> {
+    pub fn create_argv(self: &Arc<Self>, argv: &[&str]) -> mischief::Result<Proj> {
         let count = argv.len();
         let ptr = unsafe {
             proj_sys::proj_create_argv(
@@ -124,7 +124,7 @@ impl crate::Context {
         source_crs: &str,
         target_crs: &str,
         area: &crate::Area,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
                 self.ptr,
@@ -194,7 +194,7 @@ impl crate::Context {
         allow_ballpark: Option<bool>,
         only_best: Option<bool>,
         force_over: Option<bool>,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let mut options = crate::ProjOptions::new(5);
         options
             .push_optional_pass(authority, "AUTHORITY")
@@ -232,7 +232,7 @@ impl crate::Context {
     pub fn normalize_for_visualization(
         self: &Arc<Self>,
         obj: &crate::Proj,
-    ) -> miette::Result<Proj> {
+    ) -> mischief::Result<Proj> {
         let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr()) };
         Proj::new(self, ptr)
     }
@@ -251,7 +251,7 @@ mod test {
     use crate::data_types::iso19111::WktType;
 
     #[test]
-    fn test_create() -> miette::Result<()> {
+    fn test_create() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -262,7 +262,7 @@ mod test {
     }
 
     #[test]
-    fn test_create_argv() -> miette::Result<()> {
+    fn test_create_argv() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_argv(&["proj=utm", "zone=32", "ellps=GRS80"])?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -272,7 +272,7 @@ mod test {
     }
 
     #[test]
-    fn test_create_crs_to_crs() -> miette::Result<()> {
+    fn test_create_crs_to_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -282,7 +282,7 @@ mod test {
     }
 
     #[test]
-    fn test_create_crs_to_crs_from_pj() -> miette::Result<()> {
+    fn test_create_crs_to_crs_from_pj() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4978")?;

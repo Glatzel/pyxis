@@ -1,6 +1,6 @@
 use assert_cmd::Command;
 use assert_cmd::assert::Assert;
-use miette::IntoDiagnostic;
+
 fn print_output(cmd: &Assert) {
     let output = cmd.get_output();
     let stdout = String::from_utf8_lossy(output.stdout.as_slice());
@@ -14,9 +14,8 @@ fn print_output(cmd: &Assert) {
     }
 }
 #[test]
-fn test_jiaxing_bump_station() -> miette::Result<()> {
-    let cmd = Command::cargo_bin("pyxis")
-        .into_diagnostic()?
+fn test_jiaxing_bump_station() -> mischief::Result<()> {
+    let cmd = Command::cargo_bin("pyxis")?
         .args([
             "abacus",
             "-n",
@@ -37,9 +36,9 @@ fn test_jiaxing_bump_station() -> miette::Result<()> {
     Ok(())
 }
 #[test]
-fn test_zhengyong_expressway_dehua_east_interchange() -> miette::Result<()> {
+fn test_zhengyong_expressway_dehua_east_interchange() -> mischief::Result<()> {
     let cmd = Command::cargo_bin("pyxis")
-        .into_diagnostic()?
+        ?
     .args([
             "-v",
             "abacus",

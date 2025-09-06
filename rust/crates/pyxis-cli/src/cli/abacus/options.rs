@@ -11,14 +11,14 @@ pub enum OutputFormat {
     Json,
 }
 impl FromStr for OutputFormat {
-    type Err = miette::Error;
+    type Err = mischief::Report;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "simple" => Ok(Self::Simple),
             "verbose" => Ok(Self::Verbose),
             "json" => Ok(Self::Json),
-            _ => miette::bail!(""),
+            _ => mischief::bail!(""),
         }
     }
 }
@@ -38,14 +38,14 @@ pub enum CoordSpace {
     Spherical,
 }
 impl FromStr for CoordSpace {
-    type Err = miette::Error;
+    type Err = mischief::Report;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "cartesian" => Ok(Self::Cartesian),
             "cylindrical" => Ok(Self::Cylindrical),
             "spherical" => Ok(Self::Spherical),
-            _ => miette::bail!(""),
+            _ => mischief::bail!(""),
         }
     }
 }
@@ -67,7 +67,7 @@ pub enum RotatePlane {
 }
 
 impl FromStr for RotatePlane {
-    type Err = miette::Error;
+    type Err = mischief::Report;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
@@ -75,7 +75,7 @@ impl FromStr for RotatePlane {
             "zx" => Ok(Self::Zx),
             "yz" => Ok(Self::Yz),
 
-            _ => miette::bail!(""),
+            _ => mischief::bail!(""),
         }
     }
 }
@@ -95,13 +95,13 @@ pub enum RotateUnit {
 }
 
 impl FromStr for RotateUnit {
-    type Err = miette::Error;
+    type Err = mischief::Report;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "degrees" => Ok(Self::Degrees),
             "radians" => Ok(Self::Radians),
-            _ => miette::bail!(""),
+            _ => mischief::bail!(""),
         }
     }
 }
@@ -121,14 +121,14 @@ pub enum MigrateOption2d {
 }
 
 impl FromStr for MigrateOption2d {
-    type Err = miette::Error;
+    type Err = mischief::Report;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "absolute" => Ok(Self::Absolute),
             "origin" => Ok(Self::Origin),
             "relative" => Ok(Self::Relative),
-            _ => miette::bail!(""),
+            _ => mischief::bail!(""),
         }
     }
 }

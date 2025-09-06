@@ -18,9 +18,9 @@ pub struct Proj {
 }
 impl Proj {
     /// Create a `Proj` object from pointer, panic if pointer is null.
-    pub(crate) fn new(ctx: &Arc<Context>, ptr: *mut proj_sys::PJ) -> miette::Result<crate::Proj> {
+    pub(crate) fn new(ctx: &Arc<Context>, ptr: *mut proj_sys::PJ) -> mischief::Result<crate::Proj> {
         if ptr.is_null() {
-            miette::bail!("Proj pointer is null.");
+            mischief::bail!("Proj pointer is null.");
         }
         Ok(crate::Proj {
             ctx: ctx.clone(),
@@ -33,9 +33,9 @@ impl Proj {
         ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ,
         owned_cstrings: OwnedCStrings,
-    ) -> miette::Result<crate::Proj> {
+    ) -> mischief::Result<crate::Proj> {
         if ptr.is_null() {
-            miette::bail!("Proj pointer is null.");
+            mischief::bail!("Proj pointer is null.");
         }
         Ok(crate::Proj {
             ctx: ctx.clone(),
@@ -92,7 +92,7 @@ mod test {
     use super::Proj;
 
     #[test]
-    fn test_proj_new() -> miette::Result<()> {
+    fn test_proj_new() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = Proj::new(&ctx, std::ptr::null_mut());
         assert!(pj.is_err());

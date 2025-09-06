@@ -77,7 +77,7 @@ fn verbose() -> impl Parser<LogLevel> {
 /// - Initializes logging and deadlock detection
 /// - Loads or overwrites settings
 /// - Dispatches subcommand to appropriate handler
-pub async fn execute() -> miette::Result<()> {
+pub async fn execute() -> mischief::Result<()> {
     // Parse command-line arguments into structured form
     let args = args().run();
 

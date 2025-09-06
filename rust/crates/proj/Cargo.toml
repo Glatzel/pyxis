@@ -19,6 +19,7 @@ dunce = { workspace = true }
 float-cmp = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
+mischief = { workspace = true ,features = ["fancy"]}
 
 [features]
 serde = ["dep:serde"]

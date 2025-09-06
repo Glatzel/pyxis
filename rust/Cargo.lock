@@ -1553,6 +1553,7 @@ version = "0.0.28"
 source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.28#2665be5b7d2c7e3b3a74bef729995f08239ee0f5"
 dependencies = [
  "mischief-macros",
+ "owo-colors",
 ]
 
 [[package]]

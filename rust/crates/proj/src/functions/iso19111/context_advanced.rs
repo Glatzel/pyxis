@@ -709,7 +709,11 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_utm>
-    pub fn create_conversion_utm(self: &Arc<Self>, zone: u8, north: bool) -> mischief::Result<Proj> {
+    pub fn create_conversion_utm(
+        self: &Arc<Self>,
+        zone: u8,
+        north: bool,
+    ) -> mischief::Result<Proj> {
         if !(1..=60).contains(&zone) {
             mischief::bail!("UTM zone number should between 1 and 60.");
         }

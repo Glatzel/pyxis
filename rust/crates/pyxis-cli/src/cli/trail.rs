@@ -4,7 +4,6 @@ use std::time::Duration;
 use crossterm::event::Event;
 use crossterm::execute;
 use crossterm::terminal::{enable_raw_mode, *};
-
 use ratatui::Terminal;
 use ratatui::backend::CrosstermBackend;
 use tokio::sync::mpsc;
@@ -41,12 +40,10 @@ pub async fn execute() -> mischief::Result<()> {
     // Main TUI loop
     loop {
         // Redraw the UI
-        terminal
-            .draw(|f| match ui::draw(f, &mut app) {
-                Ok(_) => (),
-                Err(e) => clerk::error!("{e}"),
-            })
-            ?;
+        terminal.draw(|f| match ui::draw(f, &mut app) {
+            Ok(_) => (),
+            Err(e) => clerk::error!("{e}"),
+        })?;
 
         // Handle input and serial updates concurrently
         tokio::select! {

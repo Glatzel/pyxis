@@ -15,8 +15,7 @@ fn print_output(cmd: &Assert) {
 }
 #[test]
 fn test_jiaxing_bump_station() -> mischief::Result<()> {
-    let cmd = Command::cargo_bin("pyxis")
-        ?
+    let cmd = Command::cargo_bin("pyxis")?
         .args([
             "abacus",
             "-n",

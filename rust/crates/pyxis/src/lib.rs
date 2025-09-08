@@ -10,3 +10,5 @@ pub use ellipsoid::*;
 pub use linear::*;
 pub use space::*;
 pub use types::{ConstEllipsoid, GeoFloat};
+mod gauss_projection;
+pub use gauss_projection::*;

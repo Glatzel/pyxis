@@ -28,7 +28,7 @@ jobs:
         uses: CodSpeedHQ/action@v4
         with:
           run: cargo codspeed run
-          mode: walltime
+          mode: instrument
           token: ${{ secrets.CODSPEED_TOKEN }}
           working-directory: ./rust
   pytest-benchmark:
@@ -50,5 +50,5 @@ jobs:
         with:
           token: ${{ secrets.CODSPEED_TOKEN }}
           run: pixi run -e bench pytest ./benches --codspeed
-          mode: walltime
+          mode: instrument
           working-directory: ./python

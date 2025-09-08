@@ -21,7 +21,7 @@ assert_cmd = "2.0"
 async-trait = "0.1"
 bindgen = "0.71"
 bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
-chrono = "0.4.41"
+chrono = "0.4.42"
 criterion = { package = "codspeed-criterion-compat", version = "2.10.1" }
 crossterm = "0.29.0"
 directories = "6.0.0"

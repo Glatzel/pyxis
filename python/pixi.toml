@@ -8,7 +8,7 @@ python = "3.11.*"
 [feature.build.dependencies]
 maturin = "==1.9.4"
 pip = "==25.2"
-rattler-build = "==0.46.0"
+rattler-build = "==0.47.0"
 
 [feature.deps.dependencies]
 lazy-loader = "==0.4"
@@ -17,8 +17,8 @@ numpy = "*"
 scipy = "==1.16.1"
 
 [feature.test.dependencies]
-pytest = "==8.4.1"
-pytest-cov = "==6.2.1"
+pytest = "==8.4.2"
+pytest-cov = "==6.3.0"
 
 [feature.doc.dependencies]
 autodocsumm = "==0.2.14"

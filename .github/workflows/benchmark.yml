@@ -25,7 +25,7 @@ jobs:
         working-directory: ./rust
 
       - name: Run the benchmarks
-        uses: CodSpeedHQ/action@v3
+        uses: CodSpeedHQ/action@v4
         with:
           run: cargo codspeed run
           token: ${{ secrets.CODSPEED_TOKEN }}
@@ -43,7 +43,7 @@ jobs:
         shell: pwsh
 
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@v3
+        uses: CodSpeedHQ/action@v4
         env:
           PYTHONPATH: ./
         with:

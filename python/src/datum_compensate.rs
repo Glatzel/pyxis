@@ -1,13 +1,13 @@
 use numpy::{PyArrayDyn, PyArrayMethods};
 use pyo3::prelude::*;
 use pyo3::types::PyTuple;
-use pyo3::{PyObject, Python, pyfunction};
+use pyo3::{Python, pyfunction};
 use rayon::prelude::*;
 #[pyfunction]
 pub fn py_datum_compensate(
     py: Python<'_>,
-    xc_py: PyObject,
-    yc_py: PyObject,
+    xc_py: Py<PyAny>,
+    yc_py: Py<PyAny>,
     hb: f64,
     r: f64,
     x0: f64,

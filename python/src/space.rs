@@ -1,7 +1,7 @@
 use numpy::{PyArrayDyn, PyArrayMethods};
 use pyo3::prelude::*;
+use pyo3::pyfunction;
 use pyo3::types::PyTuple;
-use pyo3::{PyObject, Python, pyfunction};
 use pyxis::*;
 use rayon::prelude::*;
 fn get_space_fn(from: &str, to: &str) -> Result<impl Fn(f64, f64, f64) -> (f64, f64, f64), PyErr> {
@@ -33,9 +33,9 @@ fn get_space_fn(from: &str, to: &str) -> Result<impl Fn(f64, f64, f64) -> (f64, 
 #[pyfunction]
 pub fn py_space(
     py: Python<'_>,
-    x_py: PyObject,
-    y_py: PyObject,
-    z_py: PyObject,
+    x_py: Py<PyAny>,
+    y_py: Py<PyAny>,
+    z_py: Py<PyAny>,
     from: String,
     to: String,
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {

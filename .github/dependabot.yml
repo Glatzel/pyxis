@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: /python
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: cargo
+    directory: /rust
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: cargo
+    directory: /rust-cuda
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+    groups:
+      dependencies:
+        patterns:
+          - "*"

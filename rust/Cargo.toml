@@ -19,7 +19,7 @@ mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.28" }
 
 assert_cmd = "2.0"
 async-trait = "0.1"
-bindgen = "0.71"
+bindgen = "0.72"
 bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
 chrono = "0.4.42"
 criterion = { package = "codspeed-criterion-compat", version = "3.0.0" }
@@ -27,7 +27,7 @@ crossterm = "0.29.0"
 directories = "6.0.0"
 dunce = "1.0.5"
 float-cmp = "0.10.0"
-jsonschema = "0.17"
+jsonschema = "0.33"
 libc = "0.2"
 num-traits = "0.2.19"
 num_enum = "0.7.4"
@@ -43,7 +43,7 @@ strum = { version = "0.27", features = ["derive"] }
 tempfile = "3.21.0"
 tokio = { version = "1", default-features = false }
 tokio-serial = "5.4.5"
-toml = "0.8"
+toml = "0.9"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
 

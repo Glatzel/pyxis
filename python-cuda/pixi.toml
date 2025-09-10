@@ -13,7 +13,7 @@ cupy = "==13.6.0"
 nomkl = "==1.0"
 pytest = "==8.4.2"
 pytest-benchmark = "==5.1.0"
-pytest-cov = "==6.3.0"
+pytest-cov = "==7.0.0"
 
 [environments]
 test = ["test"]

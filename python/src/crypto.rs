@@ -1,7 +1,7 @@
 use numpy::{PyArrayDyn, PyArrayMethods};
 use pyo3::prelude::*;
 use pyo3::types::PyTuple;
-use pyo3::{PyObject, Python, pyfunction};
+use pyo3::{Python, pyfunction};
 use pyxis::crypto::*;
 use rayon::prelude::*;
 fn get_crypto_fn(
@@ -61,8 +61,8 @@ fn get_crypto_fn(
 #[pyfunction]
 pub fn py_crypto(
     py: Python<'_>,
-    lon_py: PyObject,
-    lat_py: PyObject,
+    lon_py: Py<PyAny>,
+    lat_py: Py<PyAny>,
     from: String,
     to: String,
     exact: bool,

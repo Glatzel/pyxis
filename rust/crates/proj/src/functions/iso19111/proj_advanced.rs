@@ -330,7 +330,7 @@ impl Proj {
         allow_intermediate_crs: Option<AllowIntermediateCrs>,
     ) -> mischief::Result<Proj> {
         let mut options = ProjOptions::new(1);
-        options.push_optional_pass(allow_intermediate_crs, "ALLOW_INTERMEDIATE_CRS");
+        options.with_or_skip(allow_intermediate_crs, "ALLOW_INTERMEDIATE_CRS");
 
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_crs_to_WGS84(

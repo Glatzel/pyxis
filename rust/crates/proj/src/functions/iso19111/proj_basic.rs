@@ -281,16 +281,16 @@ impl Proj {
     ) -> mischief::Result<String> {
         let mut options = crate::ProjOptions::new(6);
         options
-            .push_optional(multiline, "MULTILINE", OPTION_YES)
-            .push_optional(indentation_width, "INDENTATION_WIDTH", "4")
-            .push_optional(output_axis, "OUTPUT_AXIS", "AUTO")
-            .push_optional(strict, "STRICT", OPTION_YES)
-            .push_optional(
+            .with_or_default(multiline, "MULTILINE", OPTION_YES)
+            .with_or_default(indentation_width, "INDENTATION_WIDTH", "4")
+            .with_or_default(output_axis, "OUTPUT_AXIS", "AUTO")
+            .with_or_default(strict, "STRICT", OPTION_YES)
+            .with_or_default(
                 allow_ellipsoidal_height_as_vertical_crs,
                 "ALLOW_ELLIPSOIDAL_HEIGHT_AS_VERTICAL_CRS",
                 OPTION_NO,
             )
-            .push_optional(allow_linunit_node, "ALLOW_LINUNIT_NODE", OPTION_YES);
+            .with_or_default(allow_linunit_node, "ALLOW_LINUNIT_NODE", OPTION_YES);
         let result = unsafe {
             proj_sys::proj_as_wkt(
                 self.ctx.ptr,
@@ -326,12 +326,12 @@ impl Proj {
     ) -> mischief::Result<String> {
         let mut options = crate::ProjOptions::new(6);
         if use_approx_tmerc {
-            options.push(use_approx_tmerc, "USE_APPROX_TMERC");
+            options.with(use_approx_tmerc, "USE_APPROX_TMERC");
         }
         options
-            .push_optional(multiline, "MULTILINE", OPTION_NO)
-            .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
-            .push_optional(max_line_length, "MAX_LINE_LENGTH", "80");
+            .with_or_default(multiline, "MULTILINE", OPTION_NO)
+            .with_or_default(indentation_width, "INDENTATION_WIDTH", "2")
+            .with_or_default(max_line_length, "MAX_LINE_LENGTH", "80");
 
         let result = unsafe {
             proj_sys::proj_as_proj_string(
@@ -365,9 +365,9 @@ impl Proj {
     ) -> mischief::Result<String> {
         let mut options = crate::ProjOptions::new(6);
         options
-            .push_optional(multiline, "MULTILINE", OPTION_YES)
-            .push_optional(indentation_width, "INDENTATION_WIDTH", "2")
-            .push_optional(schema, "SCHEMA", "");
+            .with_or_default(multiline, "MULTILINE", OPTION_YES)
+            .with_or_default(indentation_width, "INDENTATION_WIDTH", "2")
+            .with_or_default(schema, "SCHEMA", "");
 
         let result = unsafe {
             proj_sys::proj_as_projjson(self.ctx.ptr, self.ptr(), options.as_vec_ptr().as_ptr())

@@ -1,20 +1,20 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Settings",
   "type": "object",
+  "properties": {
+    "abacus": {
+      "$ref": "#/$defs/Settings"
+    },
+    "trail": {
+      "$ref": "#/$defs/Settings2"
+    }
+  },
   "required": [
     "abacus",
     "trail"
   ],
-  "properties": {
-    "abacus": {
-      "$ref": "#/definitions/Settings"
-    },
-    "trail": {
-      "$ref": "#/definitions/Settings2"
-    }
-  },
-  "definitions": {
+  "$defs": {
     "OutputFormat": {
       "type": "string",
       "enum": [
@@ -25,52 +25,52 @@
     },
     "Settings": {
       "type": "object",
-      "required": [
-        "output_format"
-      ],
       "properties": {
         "output_format": {
-          "$ref": "#/definitions/OutputFormat"
+          "$ref": "#/$defs/OutputFormat"
         }
-      }
+      },
+      "required": [
+        "output_format"
+      ]
     },
     "Settings2": {
       "type": "object",
-      "required": [
-        "baud_rate",
-        "capacity",
-        "port",
-        "tab_coord"
-      ],
       "properties": {
         "baud_rate": {
           "type": "integer",
           "format": "uint32",
-          "minimum": 0.0
+          "minimum": 0
         },
         "capacity": {
           "type": "integer",
           "format": "uint",
-          "minimum": 0.0
+          "minimum": 0
         },
         "port": {
           "type": "string"
         },
         "tab_coord": {
-          "$ref": "#/definitions/TabCoordSettings"
+          "$ref": "#/$defs/TabCoordSettings"
         }
-      }
+      },
+      "required": [
+        "port",
+        "baud_rate",
+        "capacity",
+        "tab_coord"
+      ]
     },
     "TabCoordSettings": {
       "type": "object",
-      "required": [
-        "custom_cs"
-      ],
       "properties": {
         "custom_cs": {
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "custom_cs"
+      ]
     }
   }
 }

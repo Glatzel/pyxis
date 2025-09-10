@@ -446,7 +446,7 @@ impl Context {
     ) -> mischief::Result<Proj> {
         let mut owned = OwnedCStrings::with_capacity(8);
         let mut options = ProjOptions::new(1);
-        options.push_optional_pass(accuracy, "ACCURACY");
+        options.with_or_skip(accuracy, "ACCURACY");
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs_ex(
                 self.ptr,

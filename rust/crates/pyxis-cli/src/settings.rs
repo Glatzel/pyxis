@@ -1,9 +1,8 @@
+use std::fs;
 use std::path::PathBuf;
 use std::sync::LazyLock;
-use std::{fs, io};
 
 use directories::ProjectDirs;
-use jsonschema::JSONSchema;
 use parking_lot::Mutex;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -66,39 +65,32 @@ impl Settings {
     }
 
     pub fn save(&self) -> mischief::Result<()> {
-        let toml_str = toml::to_string_pretty(self)
-            .map_err(|e| io::Error::other(format!("TOML serialize error: {e}")))?;
+        let toml_str = toml::to_string_pretty(self)?;
 
         let path = Self::path();
 
         // Create parent directory if it doesn't exist
         if let Some(parent) = path.parent() {
-            fs::create_dir_all(parent)
-                .map_err(|e| io::Error::other(format!("Failed to create config directory: {e}")))?;
+            fs::create_dir_all(parent)?;
         }
 
         Ok(fs::write(path, toml_str)?)
     }
     fn validate_against_schema(toml_str: &str) -> mischief::Result<()> {
         // 1. Parse TOML to a generic JSON `Value`
-        let json: Value = toml::from_str::<Value>(toml_str)
-            .map_err(|_| mischief::mischief!("Failed to parse TOML as JSON"))?;
+        let json: Value = toml::from_str::<Value>(toml_str)?;
 
         // 2. Parse the JSON schema
-        let schema: Value = serde_json::from_str(SETTINGS_SCHEMA_STR)
-            .map_err(|_| mischief::mischief!("Failed to parse TOML as JSON"))?;
+        let schema: Value = serde_json::from_str(SETTINGS_SCHEMA_STR)?;
         let schema_static: &'static Value = Box::leak(Box::new(schema));
 
         // 3. Compile the schema
-        let compiled = JSONSchema::compile(schema_static)
-            .map_err(|_| mischief::mischief!("Schema compile error"))?;
+        let compiled = jsonschema::draft202012::new(schema_static)?;
 
         // 4. Validate the data
         let result = compiled.validate(&json);
         if let Err(errors) = result {
-            for error in errors {
-                clerk::error!("Validation error: {}", error);
-            }
+            clerk::error!("Validation error: {}", errors);
             clerk::error!("Validation failed");
             mischief::bail!("Validation failed")
         } else {

@@ -1,4 +1,4 @@
-use rax::device::{DeviceFilter, list_devices};
+use serialport_ext::{DeviceFilter, list_devices};
 
 fn main() -> mischief::Result<()> {
     let devices = list_devices(DeviceFilter::all)?;

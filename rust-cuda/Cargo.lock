@@ -171,8 +171,8 @@ dependencies = [
 
 [[package]]
 name = "clerk"
-version = "0.0.28"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.28#2665be5b7d2c7e3b3a74bef729995f08239ee0f5"
+version = "0.0.30"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.30#8e49fa8697c4896762bfccb0afbe6e2e150ceb85"
 
 [[package]]
 name = "core-foundation-sys"
@@ -559,7 +559,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.35"
 dependencies = [
- "clerk 0.0.28",
+ "clerk 0.0.30",
  "num-traits",
 ]
 

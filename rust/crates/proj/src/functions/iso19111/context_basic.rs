@@ -148,8 +148,8 @@ impl crate::Context {
         unset_identifiers_if_incompatible_def: Option<bool>,
     ) -> mischief::Result<Proj> {
         let mut options = ProjOptions::new(2);
-        options.push_optional_pass(strict, "STRICT");
-        options.push_optional_pass(
+        options.with_or_skip(strict, "STRICT");
+        options.with_or_skip(
             unset_identifiers_if_incompatible_def,
             "UNSET_IDENTIFIERS_IF_INCOMPATIBLE_DEF",
         );

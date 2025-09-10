@@ -73,7 +73,7 @@ impl ProjOptions {
     /// # Arguments
     /// * `opt` - The value to convert and push.
     /// * `name` - The name of the option.
-    pub fn push<T: ToProjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
+    pub fn with<T: ToProjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
         self.options
             .push(format!("{name}={}", opt.to_option_string()).to_cstring());
         self
@@ -86,7 +86,7 @@ impl ProjOptions {
     /// * `opt` - The optional value to convert and push.
     /// * `name` - The name of the option.
     /// * `default_value` - The string to use if `opt` is `None`.
-    pub fn push_optional<T: ToProjOptionString>(
+    pub fn with_or_default<T: ToProjOptionString>(
         &mut self,
         opt: Option<T>,
         name: &str,
@@ -111,11 +111,7 @@ impl ProjOptions {
     /// # Arguments
     /// * `opt` - The optional value to convert and push.
     /// * `name` - The name of the option.
-    pub fn push_optional_pass<T: ToProjOptionString>(
-        &mut self,
-        opt: Option<T>,
-        name: &str,
-    ) -> &mut Self {
+    pub fn with_or_skip<T: ToProjOptionString>(&mut self, opt: Option<T>, name: &str) -> &mut Self {
         opt.inspect(|o| {
             self.options
                 .push(format!("{name}={}", o.to_option_string()).to_cstring());

@@ -197,11 +197,11 @@ impl crate::Context {
     ) -> mischief::Result<Proj> {
         let mut options = crate::ProjOptions::new(5);
         options
-            .push_optional_pass(authority, "AUTHORITY")
-            .push_optional_pass(accuracy, "ACCURACY")
-            .push_optional_pass(allow_ballpark, "ALLOW_BALLPARK")
-            .push_optional_pass(only_best, "ONLY_BEST")
-            .push_optional_pass(force_over, "FORCE_OVER");
+            .with_or_skip(authority, "AUTHORITY")
+            .with_or_skip(accuracy, "ACCURACY")
+            .with_or_skip(allow_ballpark, "ALLOW_BALLPARK")
+            .with_or_skip(only_best, "ONLY_BEST")
+            .with_or_skip(force_over, "FORCE_OVER");
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs_from_pj(
                 self.ptr,

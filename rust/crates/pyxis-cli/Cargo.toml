@@ -14,7 +14,7 @@ parking_lot = { workspace = true }
 proj = { workspace = true }
 pyxis = { workspace = true, features = ["serde"] }
 ratatui = { workspace = true }
-rax = { workspace = true, features = ["async", "device"] }
+rax = { workspace = true, features = ["async"] }
 rax-nmea = { workspace = true }
 schemars = { workspace = true }
 serde = { workspace = true }
@@ -25,6 +25,7 @@ toml = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 mischief = { workspace = true ,features = ["fancy"]}
+serialport-ext = { workspace = true }
 
 [dev-dependencies]
 assert_cmd = { workspace = true }

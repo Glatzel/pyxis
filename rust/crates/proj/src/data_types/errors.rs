@@ -1,4 +1,5 @@
 use num_enum::{FromPrimitive, IntoPrimitive};
+use thiserror::Error;
 
 ///Three classes of errors are defined below. The belonging of a given error
 /// code to a class can bit tested with a binary and test. The error class
@@ -13,7 +14,7 @@ use num_enum::{FromPrimitive, IntoPrimitive};
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#error-codes>
 #[derive(Debug, Clone, FromPrimitive, IntoPrimitive)]
 #[repr(i32)]
-pub(crate) enum ProjError {
+pub enum ProjErrorCode {
     Success = 0,
 
     //Errors in class PROJ_ERR_INVALID_OP
@@ -65,4 +66,11 @@ pub(crate) enum ProjError {
     OtherNoInverseOp = proj_sys::PROJ_ERR_OTHER_NO_INVERSE_OP as i32,
     ///Failure when accessing a network resource.
     OtherNetworkError = proj_sys::PROJ_ERR_OTHER_NETWORK_ERROR as i32,
+}
+
+#[derive(Debug, Error)]
+#[error("ProjError {code:?} [{}]: {message}", i32::from(.code.clone()))]
+pub struct ProjError {
+    pub code: ProjErrorCode,
+    pub message: String,
 }

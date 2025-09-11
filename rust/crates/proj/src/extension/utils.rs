@@ -28,12 +28,12 @@ macro_rules! readonly_struct {
 }
 
 pub(crate) use readonly_struct;
+
+use crate::{check_result, data_types::ProjError};
 impl crate::Proj {
     /// Panic if a `Proj` object is not CRS.
-    pub fn assert_crs(&self) -> mischief::Result<&Self> {
-        if !self.is_crs() {
-            mischief::bail!("Proj object is not CRS.");
-        }
+    pub fn assert_crs(&self) -> Result<&Self, ProjError> {
+        check_result!( !self.is_crs() , "Proj object is not CRS.");
         Ok(self)
     }
 }

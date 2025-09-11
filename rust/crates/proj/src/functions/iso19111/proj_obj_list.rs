@@ -3,6 +3,7 @@ use core::ptr;
 extern crate alloc;
 use envoy::ToCString;
 
+use crate::data_types::ProjError;
 use crate::data_types::iso19111::*;
 use crate::{Context, OwnedCStrings, Proj, ToCoord};
 impl ProjObjList {
@@ -21,7 +22,7 @@ impl ProjObjList {
         &self,
         direction: crate::Direction,
         coord: impl crate::ICoord,
-    ) -> mischief::Result<Option<Proj>> {
+    ) -> Result<Option<Proj>, ProjError> {
         let index = unsafe {
             proj_sys::proj_get_suggested_operation(
                 self.ctx.ptr,
@@ -83,7 +84,7 @@ impl Context {
         types: Option<&[ProjType]>,
         approximate_match: bool,
         limit_result_count: usize,
-    ) -> mischief::Result<ProjObjList> {
+    ) -> Result<ProjObjList, ProjError> {
         let (types, count) = types.map_or((None, 0), |types| {
             let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
             let count = types.len();
@@ -122,7 +123,7 @@ impl Context {
         datum_auth_name: &str,
         datum_code: &str,
         crs_type: Option<&str>,
-    ) -> mischief::Result<ProjObjList> {
+    ) -> Result<ProjObjList, ProjError> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
@@ -142,7 +143,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
-    pub fn get_non_deprecated(&self) -> mischief::Result<ProjObjList> {
+    pub fn get_non_deprecated(&self) -> Result<ProjObjList, ProjError> {
         let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
         ProjObjList::new(&self.ctx, result)
     }
@@ -193,7 +194,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
-    pub fn identify(&self, auth_name: &str) -> mischief::Result<ProjObjList> {
+    pub fn identify(&self, auth_name: &str) -> Result<ProjObjList, ProjError> {
         let mut confidence: Vec<i32> = Vec::new();
         let result = unsafe {
             proj_sys::proj_identify(
@@ -211,7 +212,7 @@ impl Proj {
 mod test_context {
     use super::*;
     #[test]
-    fn test_create_from_name() -> mischief::Result<()> {
+    fn test_create_from_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj_list = ctx.create_from_name(None, "WGS 84", None, false, 0)?;
         println!(
@@ -224,7 +225,7 @@ mod test_context {
         Ok(())
     }
     #[test]
-    fn test_query_geodetic_crs_from_datum() -> mischief::Result<()> {
+    fn test_query_geodetic_crs_from_datum() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj_list =
             ctx.query_geodetic_crs_from_datum(Some("EPSG"), "EPSG", "6326", Some("geographic 2D"))?;
@@ -242,7 +243,7 @@ mod test_context {
 mod test_proj {
     use super::*;
     #[test]
-    fn test_get_non_deprecated() -> mischief::Result<()> {
+    fn test_get_non_deprecated() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4226")?;
         let pj_list = pj.get_non_deprecated()?;
@@ -256,7 +257,7 @@ mod test_proj {
         Ok(())
     }
     #[test]
-    fn test_identify() -> mischief::Result<()> {
+    fn test_identify() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let pj_list = pj.identify("EPSG")?;

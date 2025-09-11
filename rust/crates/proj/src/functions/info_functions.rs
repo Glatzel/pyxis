@@ -1,6 +1,6 @@
 use envoy::{CStrToString, ToCString};
 
-use crate::data_types::{GridInfo, Info, InitInfo, ProjInfo};
+use crate::data_types::{GridInfo, Info, InitInfo, ProjError, ProjErrorCode, ProjInfo};
 
 /// Get information about the current instance of the PROJ library.
 ///
@@ -42,13 +42,16 @@ impl crate::Proj {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
-pub fn grid_info(grid: &str) -> mischief::Result<GridInfo> {
+pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
     let src = unsafe { proj_sys::proj_grid_info(grid.to_cstring().as_ptr()) };
     if src.gridname.to_string().unwrap().as_str() == ""
         && src.filename.to_string().unwrap().as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
     {
-        mischief::bail!("Invalid grid: {}", grid)
+        return Err(ProjError {
+            code: ProjErrorCode::Other,
+            message: format!("Invalid grid: {}", grid),
+        });
     }
     Ok(GridInfo::new(
         src.gridname.to_string().unwrap(),
@@ -71,7 +74,7 @@ pub fn grid_info(grid: &str) -> mischief::Result<GridInfo> {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
-pub fn init_info(initname: &str) -> mischief::Result<InitInfo> {
+pub fn init_info(initname: &str) -> Result<InitInfo, ProjError> {
     let src = unsafe { proj_sys::proj_init_info(initname.to_cstring().as_ptr()) };
     let info = InitInfo::new(
         src.name.to_string().unwrap_or_default(),
@@ -81,7 +84,10 @@ pub fn init_info(initname: &str) -> mischief::Result<InitInfo> {
         src.lastupdate.to_string().unwrap_or_default(),
     );
     if info.version() == "" {
-        mischief::bail!("Invalid proj init file or name: {}", initname)
+        return Err(ProjError {
+            code: ProjErrorCode::Other,
+            message: format!("Invalid proj init file or name: {initname}"),
+        });
     }
     Ok(InitInfo::new(
         src.name.to_string().unwrap_or_default(),

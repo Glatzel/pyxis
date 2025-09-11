@@ -3,7 +3,8 @@ use alloc::sync::Arc;
 
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
-use crate::OwnedCStrings;
+use crate::data_types::ProjError;
+use crate::{OwnedCStrings, check_result};
 
 ///Object containing everything related to a given projection or
 /// transformation. As a user of the PROJ library you are only exposed to
@@ -18,10 +19,11 @@ pub struct Proj {
 }
 impl Proj {
     /// Create a `Proj` object from pointer, panic if pointer is null.
-    pub(crate) fn new(ctx: &Arc<Context>, ptr: *mut proj_sys::PJ) -> mischief::Result<crate::Proj> {
-        if ptr.is_null() {
-            mischief::bail!("Proj pointer is null.");
-        }
+    pub(crate) fn new(
+        ctx: &Arc<Context>,
+        ptr: *mut proj_sys::PJ,
+    ) -> Result<crate::Proj, ProjError> {
+        check_result!(ptr.is_null(), "Proj pointer is null.");
         Ok(crate::Proj {
             ctx: ctx.clone(),
             ptr,
@@ -33,10 +35,8 @@ impl Proj {
         ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ,
         owned_cstrings: OwnedCStrings,
-    ) -> mischief::Result<crate::Proj> {
-        if ptr.is_null() {
-            mischief::bail!("Proj pointer is null.");
-        }
+    ) -> Result<crate::Proj, ProjError> {
+        check_result!(ptr.is_null(), "Proj pointer is null.");
         Ok(crate::Proj {
             ctx: ctx.clone(),
             ptr,

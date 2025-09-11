@@ -92,7 +92,7 @@ impl Settings {
         if let Err(errors) = result {
             clerk::error!("Validation error: {}", errors);
             clerk::error!("Validation failed");
-            mischief::bail!("Validation failed")
+            mischief::bail!("Validation failed");
         } else {
             Ok(())
         }

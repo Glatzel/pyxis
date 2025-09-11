@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use envoy::{CStrToString, ToCString};
 
 use crate::check_result;
+use crate::data_types::{ProjError};
 impl crate::Context {
     /// # References
     ///
@@ -16,12 +17,10 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_enable_network>
-    pub fn set_enable_network(&self, enabled: bool) -> mischief::Result<&Self> {
+    pub fn set_enable_network(&self, enabled: bool) -> Result<&Self, ProjError> {
         let result =
             unsafe { proj_sys::proj_context_set_enable_network(self.ptr, enabled as i32) } != 0;
-        if enabled ^ result {
-            mischief::bail!("Network interface is not available.")
-        }
+        check_result!(enabled ^ result, "Network interface is not available.");
         check_result!(self);
         Ok(self)
     }
@@ -30,7 +29,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_is_network_enabled>
-    pub fn is_network_enabled(&self) -> mischief::Result<bool> {
+    pub fn is_network_enabled(&self) -> Result<bool, ProjError> {
         let result = unsafe { proj_sys::proj_context_is_network_enabled(self.ptr) } != 0;
         check_result!(self);
         Ok(result)
@@ -43,7 +42,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_url_endpoint>
-    pub fn set_url_endpoint(&self, url: &str) -> mischief::Result<&Self> {
+    pub fn set_url_endpoint(&self, url: &str) -> Result<&Self, ProjError> {
         unsafe {
             proj_sys::proj_context_set_url_endpoint(self.ptr, url.to_cstring().as_ptr());
         };
@@ -55,7 +54,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_url_endpoint>
-    pub fn get_url_endpoint(&self) -> mischief::Result<String> {
+    pub fn get_url_endpoint(&self) -> Result<String, ProjError> {
         let result = unsafe { proj_sys::proj_context_get_url_endpoint(self.ptr) };
         check_result!(self);
         Ok(result.to_string().unwrap_or_default())
@@ -66,7 +65,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_user_writable_directory>
-    pub fn get_user_writable_directory(&self, create: bool) -> mischief::Result<PathBuf> {
+    pub fn get_user_writable_directory(&self, create: bool) -> Result<PathBuf, ProjError> {
         let result =
             unsafe { proj_sys::proj_context_get_user_writable_directory(self.ptr, create as i32) };
         check_result!(self);
@@ -79,7 +78,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_enable>
-    pub fn grid_cache_set_enable(&self, enabled: bool) -> mischief::Result<&Self> {
+    pub fn grid_cache_set_enable(&self, enabled: bool) -> Result<&Self, ProjError> {
         unsafe { proj_sys::proj_grid_cache_set_enable(self.ptr, enabled as i32) };
         check_result!(self);
         Ok(self)
@@ -90,7 +89,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_filename>
-    pub fn grid_cache_set_filename(&self, fullname: &str) -> mischief::Result<&Self> {
+    pub fn grid_cache_set_filename(&self, fullname: &str) -> Result<&Self, ProjError> {
         unsafe { proj_sys::proj_grid_cache_set_filename(self.ptr, fullname.to_cstring().as_ptr()) };
         check_result!(self);
         Ok(self)
@@ -101,7 +100,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_max_size>
-    pub fn grid_cache_set_max_size(&self, max_size_mbyte: u16) -> mischief::Result<&Self> {
+    pub fn grid_cache_set_max_size(&self, max_size_mbyte: u16) -> Result<&Self, ProjError> {
         unsafe { proj_sys::proj_grid_cache_set_max_size(self.ptr, max_size_mbyte as i32) };
         check_result!(self);
         Ok(self)
@@ -109,7 +108,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_ttl>
-    pub fn grid_cache_set_ttl(&self, ttl_seconds: u16) -> mischief::Result<&Self> {
+    pub fn grid_cache_set_ttl(&self, ttl_seconds: u16) -> Result<&Self, ProjError> {
         unsafe { proj_sys::proj_grid_cache_set_ttl(self.ptr, ttl_seconds as i32) };
         check_result!(self);
         Ok(self)
@@ -119,7 +118,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_clear>
-    pub fn grid_cache_clear(&self) -> mischief::Result<&Self> {
+    pub fn grid_cache_clear(&self) -> Result<&Self, ProjError> {
         unsafe { proj_sys::proj_grid_cache_clear(self.ptr) };
         Ok(self)
     }
@@ -144,7 +143,7 @@ impl crate::Context {
         &self,
         url_or_filename: &str,
         ignore_ttl_setting: bool,
-    ) -> mischief::Result<bool> {
+    ) -> Result<bool, ProjError> {
         let result = unsafe {
             proj_sys::proj_is_download_needed(
                 self.ptr,
@@ -175,7 +174,7 @@ impl crate::Context {
         &self,
         url_or_filename: &str,
         ignore_ttl_setting: bool,
-    ) -> mischief::Result<bool> {
+    ) -> Result<bool, ProjError> {
         let result = unsafe {
             proj_sys::proj_download_file(
                 self.ptr,
@@ -185,9 +184,7 @@ impl crate::Context {
                 std::ptr::null_mut(),
             )
         } != 0;
-        if !result {
-            mischief::bail!("Download failed.")
-        }
+        check_result!(!result, "Download failed.");
         check_result!(self);
         Ok(result)
     }

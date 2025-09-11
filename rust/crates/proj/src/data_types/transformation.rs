@@ -24,8 +24,10 @@ impl Proj {
         ptr: *mut proj_sys::PJ,
     ) -> Result<crate::Proj, ProjError> {
         if ptr.is_null() {
-            ProjErrorCode::Other;
-            "Proj pointer is null.".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Proj pointer is null.".to_string(),
+            });
         }
         Ok(crate::Proj {
             ctx: ctx.clone(),
@@ -40,8 +42,10 @@ impl Proj {
         owned_cstrings: OwnedCStrings,
     ) -> Result<crate::Proj, ProjError> {
         if ptr.is_null() {
-            ProjErrorCode::Other;
-            "Proj pointer is null.".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Proj pointer is null.".to_string(),
+            });
         }
         Ok(crate::Proj {
             ctx: ctx.clone(),

@@ -190,8 +190,10 @@ impl Proj {
             return Ok(None);
         }
         if result != 1 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(Some(AreaOfUse::new(
             area_name.to_string().unwrap(),
@@ -237,8 +239,10 @@ impl Proj {
             return Ok(None);
         }
         if result != 1 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(Some(AreaOfUse::new(
             area_name.to_string().unwrap(),
@@ -545,8 +549,10 @@ impl Proj {
         let result =
             unsafe { proj_sys::proj_datum_ensemble_get_accuracy(self.ctx.ptr, self.ptr()) };
         if result < 0.0 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(result)
     }
@@ -581,8 +587,10 @@ impl Proj {
             proj_sys::proj_dynamic_datum_get_frame_reference_epoch(self.ctx.ptr, self.ptr())
         };
         if result == -1.0 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(result)
     }
@@ -609,8 +617,10 @@ impl Proj {
             message: format!("{}", e),
         })?;
         if cs_type == CoordinateSystemType::Unknown {
-            ProjErrorCode::Other;
-            "Unknown coordinate system.".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Unknown coordinate system.".to_string(),
+            });
         }
         Ok(cs_type)
     }
@@ -622,8 +632,10 @@ impl Proj {
     pub fn cs_get_axis_count(&self) -> Result<u16, ProjError> {
         let count = unsafe { proj_sys::proj_cs_get_axis_count(self.ctx.ptr, self.ptr()) };
         if count == -1 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(count as u16)
     }
@@ -661,8 +673,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(AxisInfo::new(
             name.to_string().unwrap(),
@@ -707,8 +721,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(EllipsoidParameters::new(
             semi_major_metre,
@@ -756,8 +772,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(PrimeMeridianParameters::new(
             longitude,
@@ -795,8 +813,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(CoordOperationMethodInfo::new(
             method_name.to_string().unwrap_or_default(),
@@ -876,8 +896,10 @@ impl Proj {
             )
         };
         if result == -1 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(result as u16)
     }
@@ -919,8 +941,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
 
         Ok(CoordOperationParam::new(
@@ -987,8 +1011,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(CoordOperationGridUsed::new(
             (short_name).to_string().unwrap_or_default(),
@@ -1009,8 +1035,10 @@ impl Proj {
         let result =
             unsafe { proj_sys::proj_coordoperation_get_accuracy(self.ctx.ptr, self.ptr()) };
         if result < 0.0 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(result)
     }
@@ -1054,8 +1082,10 @@ impl Proj {
         let result =
             unsafe { proj_sys::proj_concatoperation_get_step_count(self.ctx.ptr, self.ptr()) };
         if result <= 0 {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         Ok(result as u16)
     }

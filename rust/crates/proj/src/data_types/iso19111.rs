@@ -746,13 +746,17 @@ impl ProjObjList {
         ptr: *mut proj_sys::PJ_OBJ_LIST,
     ) -> Result<ProjObjList, ProjError> {
         if ptr.is_null() {
-            ProjErrorCode::Other;
-            "PJ_OBJ_LIST pointer is null.".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "PJ_OBJ_LIST pointer is null.".to_string(),
+            });
         }
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         if count < 1 {
-            ProjErrorCode::Other;
-            "PJ_OBJ_LIST count 0.".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "PJ_OBJ_LIST count 0.".to_string(),
+            });
         }
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
@@ -770,13 +774,17 @@ impl ProjObjList {
         owned_cstrings: OwnedCStrings,
     ) -> Result<ProjObjList, ProjError> {
         if ptr.is_null() {
-            ProjErrorCode::Other;
-            "PJ_OBJ_LIST pointer is null.".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "PJ_OBJ_LIST pointer is null.".to_string(),
+            });
         }
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         if count < 1 {
-            ProjErrorCode::Other;
-            "PJ_OBJ_LIST count 0.".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "PJ_OBJ_LIST count 0.".to_string(),
+            });
         }
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
@@ -795,8 +803,10 @@ impl ProjObjList {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
     pub fn get(&self, index: usize) -> Result<Proj, ProjError> {
         if index > self.count {
-            ProjErrorCode::Other;
-            "Error".to_string();
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            });
         }
         let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, index as i32) };
 

@@ -7,8 +7,8 @@ use envoy::ToCString;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{AsRefStr, EnumString};
 
-use crate::data_types::{ProjError, ProjErrorCode};
-use crate::{Context, OwnedCStrings, Proj, readonly_struct};
+use crate::data_types::ProjError;
+use crate::{Context, OwnedCStrings, Proj, check_result, readonly_struct};
 ///Guessed WKT "dialect".
 ///
 /// # Reference
@@ -745,19 +745,9 @@ impl ProjObjList {
         ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
     ) -> Result<ProjObjList, ProjError> {
-        if ptr.is_null() {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "PJ_OBJ_LIST pointer is null.".to_string(),
-            });
-        }
+        check_result!(ptr.is_null(), "PJ_OBJ_LIST pointer is null.");
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
-        if count < 1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "PJ_OBJ_LIST count 0.".to_string(),
-            });
-        }
+        check_result!(count < 1, "PJ_OBJ_LIST count 0.");
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
             ctx: ctx.clone(),
@@ -773,19 +763,9 @@ impl ProjObjList {
         ptr: *mut proj_sys::PJ_OBJ_LIST,
         owned_cstrings: OwnedCStrings,
     ) -> Result<ProjObjList, ProjError> {
-        if ptr.is_null() {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "PJ_OBJ_LIST pointer is null.".to_string(),
-            });
-        }
+        check_result!(ptr.is_null(), "PJ_OBJ_LIST pointer is null.");
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
-        if count < 1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "PJ_OBJ_LIST count 0.".to_string(),
-            });
-        }
+        check_result!(count < 1, "PJ_OBJ_LIST count 0.");
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
             ctx: ctx.clone(),
@@ -802,12 +782,7 @@ impl ProjObjList {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
     pub fn get(&self, index: usize) -> Result<Proj, ProjError> {
-        if index > self.count {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!(index > self.count, "Error");
         let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, index as i32) };
 
         Proj::new_with_owned_cstrings(&self.ctx, ptr, self._owned_cstrings.clone())

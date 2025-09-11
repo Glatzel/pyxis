@@ -1,4 +1,4 @@
-use crate::data_types::{ProjError, ProjErrorCode};
+use crate::data_types::{ProjError};
 use crate::{ToCoord, check_result};
 ///# Distances
 impl crate::Proj {
@@ -18,12 +18,10 @@ impl crate::Proj {
     pub fn lp_dist(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, ProjError> {
         let dist = unsafe { proj_sys::proj_lp_dist(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
-        if dist.is_nan() {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Distance calculation failed. Check Pj object and make sure input coordinates are in radians.".to_string(),
-            });
-        }
+        check_result!(
+            dist.is_nan(),
+            "Distance calculation failed. Check Pj object and make sure input coordinates are in radians."
+        );
         Ok(dist)
     }
     ///Calculate geodesic distance between two points in geodetic coordinates.
@@ -42,12 +40,10 @@ impl crate::Proj {
     pub fn lpz_dist(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, ProjError> {
         let dist = unsafe { proj_sys::proj_lpz_dist(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
-        if dist.is_nan() {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Distance calculation failed. Check Pj object and make sure input coordinates are in radians.".to_string(),
-            });
-        }
+        check_result!(
+            dist.is_nan(),
+            "Distance calculation failed. Check Pj object and make sure input coordinates are in radians."
+        );
         Ok(dist)
     }
     ///Calculate the geodesic distance as well as forward and reverse azimuth
@@ -70,12 +66,10 @@ impl crate::Proj {
         let dist = unsafe { proj_sys::proj_geod(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };
-        if dist.is_nan() || reversed_azimuth.is_nan() {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Distance calculation failed. Check Pj object and make sure input coordinates are in radians.".to_string(),
-            });
-        }
+        check_result!(
+            dist.is_nan() || reversed_azimuth.is_nan(),
+            "Distance calculation failed. Check Pj object and make sure input coordinates are in radians."
+        );
         Ok((dist, reversed_azimuth))
     }
 }

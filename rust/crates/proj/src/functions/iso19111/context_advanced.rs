@@ -1,7 +1,7 @@
 use alloc::sync::Arc;
 use core::ptr;
 
-use crate::data_types::{ProjError, ProjErrorCode};
+use crate::data_types::{ProjError};
 extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 

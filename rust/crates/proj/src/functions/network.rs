@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use envoy::{CStrToString, ToCString};
 
 use crate::check_result;
-use crate::data_types::{ProjError, ProjErrorCode};
+use crate::data_types::{ProjError};
 impl crate::Context {
     /// # References
     ///
@@ -20,12 +20,7 @@ impl crate::Context {
     pub fn set_enable_network(&self, enabled: bool) -> Result<&Self, ProjError> {
         let result =
             unsafe { proj_sys::proj_context_set_enable_network(self.ptr, enabled as i32) } != 0;
-        if enabled ^ result {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Network interface is not available.".to_string(),
-            });
-        }
+        check_result!(enabled ^ result, "Network interface is not available.");
         check_result!(self);
         Ok(self)
     }
@@ -189,12 +184,7 @@ impl crate::Context {
                 std::ptr::null_mut(),
             )
         } != 0;
-        if !result {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Download failed.".to_string(),
-            });
-        }
+        check_result!(!result, "Download failed.");
         check_result!(self);
         Ok(result)
     }

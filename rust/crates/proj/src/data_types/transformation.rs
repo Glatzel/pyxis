@@ -3,8 +3,8 @@ use alloc::sync::Arc;
 
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
-use crate::OwnedCStrings;
-use crate::data_types::{ProjError, ProjErrorCode};
+use crate::data_types::ProjError;
+use crate::{OwnedCStrings, check_result};
 
 ///Object containing everything related to a given projection or
 /// transformation. As a user of the PROJ library you are only exposed to
@@ -23,12 +23,7 @@ impl Proj {
         ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ,
     ) -> Result<crate::Proj, ProjError> {
-        if ptr.is_null() {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Proj pointer is null.".to_string(),
-            });
-        }
+        check_result!(ptr.is_null(), "Proj pointer is null.");
         Ok(crate::Proj {
             ctx: ctx.clone(),
             ptr,
@@ -41,12 +36,7 @@ impl Proj {
         ptr: *mut proj_sys::PJ,
         owned_cstrings: OwnedCStrings,
     ) -> Result<crate::Proj, ProjError> {
-        if ptr.is_null() {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Proj pointer is null.".to_string(),
-            });
-        }
+        check_result!(ptr.is_null(), "Proj pointer is null.");
         Ok(crate::Proj {
             ctx: ctx.clone(),
             ptr,

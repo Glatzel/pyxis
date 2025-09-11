@@ -4,7 +4,7 @@ use core::str::FromStr;
 use envoy::{AsVecPtr, CStrToString, ToCString};
 
 use crate::data_types::iso19111::*;
-use crate::data_types::{ProjError, ProjErrorCode};
+use crate::data_types::{ProjError};
 use crate::{OPTION_NO, OPTION_YES, Proj, check_result};
 /// # ISO-19111 Base functions
 impl Proj {
@@ -126,12 +126,7 @@ impl Proj {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
     pub fn get_domain_count(&self) -> Result<u32, ProjError> {
         let count = unsafe { proj_sys::proj_get_domain_count(self.ptr()) };
-        if count == 0 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "get_domain_count error.".to_string(),
-            });
-        };
+        check_result!( count == 0 , "get_domain_count error.");
         Ok(count as u32)
     }
     ///Get the scope of an object.
@@ -189,12 +184,7 @@ impl Proj {
         {
             return Ok(None);
         }
-        if result != 1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result != 1 , "Error");
         Ok(Some(AreaOfUse::new(
             area_name.to_string().unwrap(),
             west_lon_degree,
@@ -238,12 +228,7 @@ impl Proj {
         {
             return Ok(None);
         }
-        if result != 1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result != 1 , "Error");
         Ok(Some(AreaOfUse::new(
             area_name.to_string().unwrap(),
             west_lon_degree,
@@ -548,12 +533,7 @@ impl Proj {
     pub fn datum_ensemble_get_accuracy(&self) -> Result<f64, ProjError> {
         let result =
             unsafe { proj_sys::proj_datum_ensemble_get_accuracy(self.ctx.ptr, self.ptr()) };
-        if result < 0.0 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result < 0.0 , "Error");
         Ok(result)
     }
     ///Returns a member from a datum ensemble.
@@ -586,12 +566,7 @@ impl Proj {
         let result = unsafe {
             proj_sys::proj_dynamic_datum_get_frame_reference_epoch(self.ctx.ptr, self.ptr())
         };
-        if result == -1.0 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result == -1.0 , "Error");
         Ok(result)
     }
     //Returns the coordinate system of a SingleCRS.
@@ -616,12 +591,7 @@ impl Proj {
             code: crate::data_types::ProjErrorCode::Other,
             message: format!("{}", e),
         })?;
-        if cs_type == CoordinateSystemType::Unknown {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Unknown coordinate system.".to_string(),
-            });
-        }
+        check_result!( cs_type == CoordinateSystemType::Unknown , "Unknown coordinate system.");
         Ok(cs_type)
     }
     ///Returns the number of axis of the coordinate system.
@@ -631,12 +601,7 @@ impl Proj {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_count>
     pub fn cs_get_axis_count(&self) -> Result<u16, ProjError> {
         let count = unsafe { proj_sys::proj_cs_get_axis_count(self.ctx.ptr, self.ptr()) };
-        if count == -1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( count == -1 , "Error");
         Ok(count as u16)
     }
     ///Returns information on an axis.
@@ -672,12 +637,7 @@ impl Proj {
                 &mut unit_code,
             )
         };
-        if result != 1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result != 1 , "Error");
         Ok(AxisInfo::new(
             name.to_string().unwrap(),
             abbrev.to_string().unwrap(),
@@ -720,12 +680,7 @@ impl Proj {
                 &mut inv_flattening,
             )
         };
-        if result != 1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result != 1 , "Error");
         Ok(EllipsoidParameters::new(
             semi_major_metre,
             semi_minor_metre,
@@ -771,12 +726,7 @@ impl Proj {
                 &mut unit_name,
             )
         };
-        if result != 1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result != 1 , "Error");
         Ok(PrimeMeridianParameters::new(
             longitude,
             unit_conv_factor,
@@ -812,12 +762,7 @@ impl Proj {
                 &mut method_code,
             )
         };
-        if result != 1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result != 1 , "Error");
         Ok(CoordOperationMethodInfo::new(
             method_name.to_string().unwrap_or_default(),
             method_auth_name.to_string().unwrap_or_default(),
@@ -895,12 +840,7 @@ impl Proj {
                 name.to_cstring().as_ptr(),
             )
         };
-        if result == -1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result == -1 , "Error");
         Ok(result as u16)
     }
     ///Return a parameter of a SingleOperation.
@@ -940,12 +880,7 @@ impl Proj {
                 &mut unit_category,
             )
         };
-        if result != 1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result != 1 , "Error");
 
         Ok(CoordOperationParam::new(
             name.to_string().unwrap_or_default(),
@@ -1010,12 +945,7 @@ impl Proj {
                 &mut available,
             )
         };
-        if result != 1 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result != 1 , "Error");
         Ok(CoordOperationGridUsed::new(
             (short_name).to_string().unwrap_or_default(),
             (full_name).to_string().unwrap_or_default(),
@@ -1034,12 +964,7 @@ impl Proj {
     pub fn coordoperation_get_accuracy(&self) -> Result<f64, ProjError> {
         let result =
             unsafe { proj_sys::proj_coordoperation_get_accuracy(self.ctx.ptr, self.ptr()) };
-        if result < 0.0 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result < 0.0 , "Error");
         Ok(result)
     }
     ///Return the parameters of a Helmert transformation as WKT1 TOWGS84
@@ -1081,12 +1006,7 @@ impl Proj {
     pub fn concatoperation_get_step_count(&self) -> Result<u16, ProjError> {
         let result =
             unsafe { proj_sys::proj_concatoperation_get_step_count(self.ctx.ptr, self.ptr()) };
-        if result <= 0 {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            });
-        }
+        check_result!( result <= 0 , "Error");
         Ok(result as u16)
     }
     ///Returns a step of a concatenated operation.

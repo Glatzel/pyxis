@@ -715,7 +715,7 @@ impl Context {
         self: &Arc<Self>,
         zone: u8,
         north: bool,
-    ) -> Result<Proj, ProjError> { 
+    ) -> Result<Proj, ProjError> {
         check_result!(!(1..=60).contains(&zone),"UTM zone number should between 1 and 60.");
         let ptr =
             unsafe { proj_sys::proj_create_conversion_utm(self.ptr, zone as i32, north as i32) };

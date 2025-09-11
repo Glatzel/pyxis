@@ -8,7 +8,7 @@
 /// check_result!(self);
 /// ```
 ///
-/// Expands to a `match` on `self.errno()`.  
+/// Expands to a `match` on `self.errno()`.
 /// - If `ProjErrorCode::Success`, logs a debug message.
 /// - Otherwise, it constructs a `ProjError` from `errno` and its string
 ///   description, logs an error, and immediately returns `Err(err)`.
@@ -20,7 +20,7 @@
 /// ```
 ///
 /// Takes an expression (typically a return code) and converts it to a
-/// `ProjError` with `ProjError::from`.  
+/// `ProjError` with `ProjError::from`.
 /// - If `Success`, logs a debug message.
 /// - Otherwise, builds a `ProjError` with `errno_string` from `self` and logs
 ///   an error. Returns `Err(err)` (no early `return`, the caller should handle

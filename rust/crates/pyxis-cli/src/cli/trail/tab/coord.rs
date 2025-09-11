@@ -36,7 +36,7 @@ impl TabCoord {
         f: &mut ratatui::Frame,
         area: ratatui::layout::Rect,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
-    ) ->Result<(),ProjError> {
+    ) ->mischief::Result<()> {
         let gga = raw_nmea
             .iter()
             .rev()
@@ -105,7 +105,7 @@ impl TabCoord {
         &mut self,
         f: &mut ratatui::Frame,
         area: ratatui::layout::Rect,
-    ) ->Result<(),ProjError> {
+    ) ->mischief::Result<()> {
         let input = Paragraph::new(SETTINGS.lock().trail.tab_coord.custom_cs.clone())
             .block(
                 Block::default()
@@ -127,7 +127,7 @@ impl super::ITab for TabCoord {
         f: &mut ratatui::Frame,
         area: ratatui::layout::Rect,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
-    ) ->Result<(),ProjError> {
+    ) ->mischief::Result<()> {
         let chunks = Layout::default()
             .direction(Direction::Vertical)
             .constraints([

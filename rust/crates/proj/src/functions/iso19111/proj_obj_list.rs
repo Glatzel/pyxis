@@ -3,8 +3,8 @@ use core::ptr;
 extern crate alloc;
 use envoy::ToCString;
 
+use crate::data_types::ProjError;
 use crate::data_types::iso19111::*;
-use crate::data_types::{ProjError, ProjErrorCode};
 use crate::{Context, OwnedCStrings, Proj, ToCoord};
 impl ProjObjList {
     ///Return the index of the operation that would be the most appropriate to

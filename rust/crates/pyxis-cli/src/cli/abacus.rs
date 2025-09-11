@@ -132,7 +132,7 @@ pub enum AbacusArgs {
         tz: f64,
     },
 }
-pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) ->Result<(),ProjError> {
+pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) ->mischief::Result<()> {
     let mut ctx = ContextTransform { x, y, z };
     let mut records: Vec<Record> = vec![Record {
         idx: 0,

@@ -14,7 +14,7 @@ use thiserror::Error;
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#error-codes>
 #[derive(Debug, Clone, FromPrimitive, IntoPrimitive)]
 #[repr(i32)]
-pub(crate) enum ProjErrorCode {
+pub enum ProjErrorCode {
     Success = 0,
 
     //Errors in class PROJ_ERR_INVALID_OP
@@ -70,7 +70,7 @@ pub(crate) enum ProjErrorCode {
 
 #[derive(Debug, Error)]
 #[error("ProjError {code:?} [{}]: {message}", i32::from(.code.clone()))]
-pub(crate) struct ProjError {
+pub struct ProjError {
     pub code: ProjErrorCode,
     pub message: String,
 }

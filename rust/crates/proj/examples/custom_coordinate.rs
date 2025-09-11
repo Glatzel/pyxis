@@ -14,12 +14,12 @@ impl ICoord for MyCoord {
     fn t(&mut self) -> *mut f64 { null_mut::<f64>() }
 }
 
-fn main() ->Result<(),ProjError> {
+fn main() -> mischief::Result<()> {
     convert_scalar()?;
     convert_array()?;
     Ok(())
 }
-fn convert_scalar() ->Result<(),ProjError> {
+fn convert_scalar() -> mischief::Result<()> {
     let ctx = proj::Context::new();
     let pj = ctx
         .clone()
@@ -32,7 +32,7 @@ fn convert_scalar() ->Result<(),ProjError> {
     assert_approx_eq!(f64, coord.b, 3416780.562127255);
     Ok(())
 }
-fn convert_array() ->Result<(),ProjError> {
+fn convert_array() -> mischief::Result<()> {
     let ctx = proj::Context::new();
     let pj = ctx
         .clone()

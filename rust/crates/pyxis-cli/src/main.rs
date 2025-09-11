@@ -5,4 +5,4 @@ mod utils;
 pub use settings::{SETTINGS, Settings};
 
 #[tokio::main]
-async fn main() ->Result<(),ProjError> { crate::cli::execute().await }
+async fn main() -> mischief::Result<()> { crate::cli::execute().await }

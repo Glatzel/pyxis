@@ -3,8 +3,8 @@ use core::ptr;
 extern crate alloc;
 use envoy::{AsVecPtr, ToCString, VecCString};
 
+use crate::data_types::ProjError;
 use crate::data_types::iso19111::*;
-use crate::data_types::{ProjError, ProjErrorCode};
 use crate::{Context, Proj};
 impl Context {
     ///Instantiate a context for building coordinate operations between two

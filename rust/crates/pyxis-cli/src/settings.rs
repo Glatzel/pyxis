@@ -36,7 +36,7 @@ pub struct Settings {
 }
 
 impl Settings {
-    pub fn overwrite_settings(args: &cli::SubCommands) ->Result<(),ProjError> {
+    pub fn overwrite_settings(args: &cli::SubCommands) -> mischief::Result<()> {
         let mut settings = SETTINGS.lock();
         match *args {
             cli::SubCommands::Abacus { output_format, .. } => {
@@ -64,7 +64,7 @@ impl Settings {
         }
     }
 
-    pub fn save(&self) ->Result<(),ProjError> {
+    pub fn save(&self) -> mischief::Result<()> {
         let toml_str = toml::to_string_pretty(self)?;
 
         let path = Self::path();
@@ -76,7 +76,7 @@ impl Settings {
 
         Ok(fs::write(path, toml_str)?)
     }
-    fn validate_against_schema(toml_str: &str) ->Result<(),ProjError> {
+    fn validate_against_schema(toml_str: &str) -> mischief::Result<()> {
         // 1. Parse TOML to a generic JSON `Value`
         let json: Value = toml::from_str::<Value>(toml_str)?;
 
@@ -92,7 +92,7 @@ impl Settings {
         if let Err(errors) = result {
             clerk::error!("Validation error: {}", errors);
             clerk::error!("Validation failed");
-            ProjError{code:ProjErrorCode::Other,message:"Validation failed".to_string()}
+            mischief::bail!("Validation failed");
         } else {
             Ok(())
         }
@@ -112,12 +112,12 @@ baud_rate = 115200
 capacity = 500
 "#;
     #[test]
-    fn test_valid_toml_parsing() ->Result<(),ProjError> {
+    fn test_valid_toml_parsing() -> mischief::Result<()> {
         Settings::validate_against_schema(DEFAULT_SETTINGS_STR)?;
         Ok(())
     }
     #[test]
-    fn test_invalid_toml_parsing() ->Result<(),ProjError> {
+    fn test_invalid_toml_parsing() -> mischief::Result<()> {
         let result = Settings::validate_against_schema(INVALID_TOML);
         assert!(result.is_err());
         Ok(())

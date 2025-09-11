@@ -20,7 +20,7 @@ pub trait ITab: Default {
         f: &mut Frame,
         area: ratatui::layout::Rect,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
-    ) ->Result<(),ProjError>;
+    ) ->mischief::Result<()>;
     fn hint(&mut self) -> &'static [&'static str];
 }
 #[derive(Clone, Debug, Copy)]

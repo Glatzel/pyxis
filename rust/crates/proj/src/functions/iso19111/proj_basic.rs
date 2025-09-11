@@ -15,7 +15,10 @@ impl Proj {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
     pub fn get_type(&self) -> Result<ProjType, ProjError> {
         let result = unsafe { proj_sys::proj_get_type(self.ptr()) };
-        ProjType::try_from(result).map_err(|e| mischief::mischief!("{e}"))
+        ProjType::try_from(result).map_err(|e| ProjError {
+            code: crate::data_types::ProjErrorCode::Other,
+            message: format!("{}", e),
+        })
     }
     ///Return whether an object is deprecated.
     ///
@@ -608,6 +611,10 @@ impl Proj {
     pub fn cs_get_type(&self) -> Result<CoordinateSystemType, ProjError> {
         let cs_type = CoordinateSystemType::try_from(unsafe {
             proj_sys::proj_cs_get_type(self.ctx.ptr, self.ptr())
+        })
+        .map_err(|e| ProjError {
+            code: crate::data_types::ProjErrorCode::Other,
+            message: format!("{}", e),
         })?;
         if cs_type == CoordinateSystemType::Unknown {
             ProjError {
@@ -674,7 +681,10 @@ impl Proj {
         Ok(AxisInfo::new(
             name.to_string().unwrap(),
             abbrev.to_string().unwrap(),
-            AxisDirection::from_str(&direction.to_string().unwrap())?,
+            AxisDirection::from_str(&direction.to_string().unwrap()).map_err(|e| ProjError {
+                code: crate::data_types::ProjErrorCode::Other,
+                message: format!("{}", e),
+            })?,
             unit_conv_factor,
             unit_name.to_string().unwrap(),
             unit_auth_name.to_string().unwrap(),
@@ -947,7 +957,12 @@ impl Proj {
             (unit_name).to_string().unwrap_or_default(),
             (unit_auth_name).to_string().unwrap_or_default(),
             (unit_code).to_string().unwrap_or_default(),
-            UnitCategory::from_str(&(unit_category).to_string().unwrap())?,
+            UnitCategory::from_str(&(unit_category).to_string().unwrap()).map_err(|e| {
+                ProjError {
+                    code: crate::data_types::ProjErrorCode::Other,
+                    message: format!("{}", e),
+                }
+            })?,
         ))
     }
     ///Return the number of grids used by a CoordinateOperation.

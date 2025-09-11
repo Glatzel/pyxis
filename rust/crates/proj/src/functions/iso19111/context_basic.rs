@@ -120,6 +120,10 @@ impl crate::Context {
         GuessedWktDialect::try_from(unsafe {
             proj_sys::proj_context_guess_wkt_dialect(self.ptr, wkt.to_cstring().as_ptr())
         })
+        .map_err(|e| ProjError {
+            code: crate::data_types::ProjErrorCode::Other,
+            message: format!("{}", e),
+        })
     }
     ///Instantiate an object from a WKT string.
     ///
@@ -253,7 +257,10 @@ impl crate::Context {
         Ok(UomInfo::new(
             name.to_string().unwrap(),
             conv_factor,
-            UomCategory::from_str(&category.to_string().unwrap())?,
+            UomCategory::from_str(&category.to_string().unwrap()).map_err(|e| ProjError {
+                code: crate::data_types::ProjErrorCode::Other,
+                message: format!("{}", e),
+            })?,
         ))
     }
     ///Get information for a grid from a database lookup.
@@ -518,7 +525,10 @@ impl crate::Context {
                 info_ref.auth_name.to_string().unwrap(),
                 info_ref.code.to_string().unwrap(),
                 info_ref.name.to_string().unwrap(),
-                ProjType::try_from(info_ref.type_)?,
+                ProjType::try_from(info_ref.type_).map_err(|e| ProjError {
+                    code: crate::data_types::ProjErrorCode::Other,
+                    message: format!("{}", e),
+                })?,
                 info_ref.deprecated != 0,
                 info_ref.bbox_valid != 0,
                 info_ref.west_lon_degree,
@@ -579,7 +589,12 @@ impl crate::Context {
                 info_ref.auth_name.to_string().unwrap(),
                 info_ref.code.to_string().unwrap(),
                 info_ref.name.to_string().unwrap(),
-                UnitCategory::from_str(&info_ref.category.to_string().unwrap())?,
+                UnitCategory::from_str(&info_ref.category.to_string().unwrap()).map_err(|e| {
+                    ProjError {
+                        code: crate::data_types::ProjErrorCode::Other,
+                        message: format!("{}", e),
+                    }
+                })?,
                 info_ref.conv_factor,
                 info_ref.code.to_string().unwrap(),
                 info_ref.deprecated != 0,

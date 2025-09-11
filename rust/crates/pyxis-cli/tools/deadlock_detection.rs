@@ -1,5 +1,5 @@
 #[tokio::main]
-async fn main() ->Result<(),ProjError> {
+async fn main() ->mischief::Result<()> {
     pyxis_cli::logging::init_log(clerk::LogLevel::TRACE);
     start_deadlock_detection();
     pyxis_cli::cli::execute().await?;

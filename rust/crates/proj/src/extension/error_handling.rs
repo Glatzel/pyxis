@@ -4,23 +4,14 @@ macro_rules! check_result {
         let code_str = format!("{:?}", code);
 
         match code {
-            $crate::data_types::ProjError::Success => {
+            $crate::data_types::ProjErrorCode::Success => {
                 clerk::debug!("Proj Process succeeded.");
             }
             ecode => {
-                let report = $self.errno_string(ecode.clone());
-                clerk::error!(
-                    "Proj Process Failed. Exist code: {}<{}>. {}",
-                    code_str,
-                    i32::from(ecode.clone()),
-                    report
-                );
-                mischief::bail!(
-                    "Proj Process Failed. Exist code: {}<{}>. {}",
-                    code_str,
-                    i32::from(ecode),
-                    report
-                )
+                let message = $self.errno_string(ecode.clone());
+                let err = crate::data_types::ProjError { code, message };
+                clerk::error!("{}", err);
+                Err(err)
             }
         }
     };
@@ -32,19 +23,10 @@ macro_rules! check_result {
                 clerk::debug!("Proj Process succeeded.");
             }
             ecode => {
-                let report = $self.errno_string(ecode.clone());
-                clerk::error!(
-                    "Proj Process Failed. Exist code: {}<{}>. {}",
-                    code_str,
-                    i32::from(ecode.clone()),
-                    report
-                );
-                mischief::bail!(
-                    "Proj Process Failed. Exist code: {}<{}>. {}",
-                    code_str,
-                    i32::from(ecode),
-                    report
-                )
+                let message = $self.errno_string(ecode.clone());
+                let err = crate::data_types::ProjError { code, message };
+                clerk::error!("{}", err);
+                Err(err)
             }
         }
     };

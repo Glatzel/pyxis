@@ -1,6 +1,6 @@
 use envoy::CStrToString;
 
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorCode;
 ///# Error reporting
 impl crate::Proj {
     /// Get a reading of the current error-state of P. An non-zero error codes
@@ -16,15 +16,15 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno>
-    pub(crate) fn errno(&self) -> ProjError {
-        ProjError::from(unsafe { proj_sys::proj_errno(self.ptr()) })
+    pub(crate) fn errno(&self) -> ProjErrorCode {
+        ProjErrorCode::from(unsafe { proj_sys::proj_errno(self.ptr()) })
     }
     ///Change the error-state of Proj to err.
     ///
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_set>
-    pub(crate) fn _errno_set(&self, err: ProjError) -> &Self {
+    pub(crate) fn _errno_set(&self, err: ProjErrorCode) -> &Self {
         unsafe { proj_sys::proj_errno_set(self.ptr(), err.into()) };
         self
     }
@@ -33,8 +33,8 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_reset>
-    pub(crate) fn _errno_reset(&self) -> ProjError {
-        ProjError::from(unsafe { proj_sys::proj_errno_reset(self.ptr()) })
+    pub(crate) fn _errno_reset(&self) -> ProjErrorCode {
+        ProjErrorCode::from(unsafe { proj_sys::proj_errno_reset(self.ptr()) })
     }
     ///Reduce some mental impedance in the canonical reset/restore use case:
     /// Basically, [`Self::_errno_restore()`] is a synonym for
@@ -48,7 +48,7 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno_restore>
-    pub(crate) fn _errno_restore(&self, err: ProjError) -> &Self {
+    pub(crate) fn _errno_restore(&self, err: ProjErrorCode) -> &Self {
         unsafe { proj_sys::proj_errno_restore(self.ptr(), err.into()) };
         self
     }
@@ -64,7 +64,7 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
-    pub(crate) fn errno_string(&self, err: ProjError) -> String { self.ctx.errno_string(err) }
+    pub(crate) fn errno_string(&self, err: ProjErrorCode) -> String { self.ctx.errno_string(err) }
 }
 
 ///# Error reporting
@@ -82,8 +82,8 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno>
-    pub(crate) fn errno(&self) -> ProjError {
-        ProjError::from(unsafe { proj_sys::proj_context_errno(self.ptr) })
+    pub(crate) fn errno(&self) -> ProjErrorCode {
+        ProjErrorCode::from(unsafe { proj_sys::proj_context_errno(self.ptr) })
     }
 
     ///Get a text representation of an error number.
@@ -95,7 +95,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
-    pub(crate) fn errno_string(&self, err: ProjError) -> String {
+    pub(crate) fn errno_string(&self, err: ProjErrorCode) -> String {
         unsafe { proj_sys::proj_context_errno_string(self.ptr, err.into()) }
             .to_string()
             .unwrap_or("Unknown error.".to_string())

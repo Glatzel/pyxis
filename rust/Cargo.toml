@@ -18,6 +18,7 @@ rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.30" }
 mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.30" }
 serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.30" }
 
+thiserror = "2.0.16"
 assert_cmd = "2.0"
 async-trait = "0.1"
 bindgen = "0.72"

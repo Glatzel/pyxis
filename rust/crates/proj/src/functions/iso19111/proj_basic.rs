@@ -4,6 +4,7 @@ use core::str::FromStr;
 use envoy::{AsVecPtr, CStrToString, ToCString};
 
 use crate::data_types::iso19111::*;
+use crate::data_types::{ProjError, ProjErrorCode};
 use crate::{OPTION_NO, OPTION_YES, Proj, check_result};
 /// # ISO-19111 Base functions
 impl Proj {
@@ -12,7 +13,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
-    pub fn get_type(&self) -> mischief::Result<ProjType> {
+    pub fn get_type(&self) -> Result<ProjType, ProjError> {
         let result = unsafe { proj_sys::proj_get_type(self.ptr()) };
         ProjType::try_from(result).map_err(|e| mischief::mischief!("{e}"))
     }
@@ -120,10 +121,13 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
-    pub fn get_domain_count(&self) -> mischief::Result<u32> {
+    pub fn get_domain_count(&self) -> Result<u32, ProjError> {
         let count = unsafe { proj_sys::proj_get_domain_count(self.ptr()) };
         if count == 0 {
-            mischief::bail!("get_domain_count error.")
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "get_domain_count error.".to_string(),
+            });
         };
         Ok(count as u32)
     }
@@ -158,7 +162,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>
-    pub fn get_area_of_use(&self) -> mischief::Result<Option<AreaOfUse>> {
+    pub fn get_area_of_use(&self) -> Result<Option<AreaOfUse>, ProjError> {
         let mut area_name: *const std::ffi::c_char = std::ptr::null();
         let mut west_lon_degree = f64::NAN;
         let mut south_lat_degree = f64::NAN;
@@ -183,7 +187,10 @@ impl Proj {
             return Ok(None);
         }
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(Some(AreaOfUse::new(
             area_name.to_string().unwrap(),
@@ -203,7 +210,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use_ex>
-    pub fn get_area_of_use_ex(&self, domain_idx: u16) -> mischief::Result<Option<AreaOfUse>> {
+    pub fn get_area_of_use_ex(&self, domain_idx: u16) -> Result<Option<AreaOfUse>, ProjError> {
         let mut area_name: *const std::ffi::c_char = std::ptr::null();
         let mut west_lon_degree = f64::NAN;
         let mut south_lat_degree = f64::NAN;
@@ -229,7 +236,10 @@ impl Proj {
             return Ok(None);
         }
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(Some(AreaOfUse::new(
             area_name.to_string().unwrap(),
@@ -278,7 +288,7 @@ impl Proj {
         strict: Option<bool>,
         allow_ellipsoidal_height_as_vertical_crs: Option<bool>,
         allow_linunit_node: Option<bool>,
-    ) -> mischief::Result<String> {
+    ) -> Result<String, ProjError> {
         let mut options = crate::ProjOptions::new(6);
         options
             .with_or_default(multiline, "MULTILINE", OPTION_YES)
@@ -323,7 +333,7 @@ impl Proj {
         multiline: Option<bool>,
         indentation_width: Option<usize>,
         max_line_length: Option<usize>,
-    ) -> mischief::Result<String> {
+    ) -> Result<String, ProjError> {
         let mut options = crate::ProjOptions::new(6);
         if use_approx_tmerc {
             options.with(use_approx_tmerc, "USE_APPROX_TMERC");
@@ -362,7 +372,7 @@ impl Proj {
         multiline: Option<bool>,
         indentation_width: Option<usize>,
         schema: Option<&str>,
-    ) -> mischief::Result<String> {
+    ) -> Result<String, ProjError> {
         let mut options = crate::ProjOptions::new(6);
         options
             .with_or_default(multiline, "MULTILINE", OPTION_YES)
@@ -443,7 +453,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
-    pub fn crs_get_geodetic_crs(&self) -> mischief::Result<Proj> {
+    pub fn crs_get_geodetic_crs(&self) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_geodetic_crs(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(&self.ctx, ptr)
     }
@@ -454,7 +464,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
-    pub fn crs_get_horizontal_datum(&self) -> mischief::Result<Proj> {
+    pub fn crs_get_horizontal_datum(&self) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_horizontal_datum(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(&self.ctx, ptr)
     }
@@ -463,7 +473,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
-    pub fn crs_get_sub_crs(&self, index: u16) -> mischief::Result<Proj> {
+    pub fn crs_get_sub_crs(&self, index: u16) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx.ptr, self.ptr(), index as i32) };
         crate::Proj::new(&self.ctx, ptr)
     }
@@ -472,7 +482,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
-    pub fn crs_get_datum(&self) -> mischief::Result<Option<Proj>> {
+    pub fn crs_get_datum(&self) -> Result<Option<Proj>, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -487,7 +497,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_ensemble>
-    pub fn crs_get_datum_ensemble(&self) -> mischief::Result<Option<Proj>> {
+    pub fn crs_get_datum_ensemble(&self) -> Result<Option<Proj>, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_ensemble(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -504,7 +514,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_forced>
-    pub fn crs_get_datum_forced(&self) -> mischief::Result<Option<Proj>> {
+    pub fn crs_get_datum_forced(&self) -> Result<Option<Proj>, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_forced(self.ctx.ptr, self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -532,11 +542,14 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_accuracy>
-    pub fn datum_ensemble_get_accuracy(&self) -> mischief::Result<f64> {
+    pub fn datum_ensemble_get_accuracy(&self) -> Result<f64, ProjError> {
         let result =
             unsafe { proj_sys::proj_datum_ensemble_get_accuracy(self.ctx.ptr, self.ptr()) };
         if result < 0.0 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(result)
     }
@@ -549,7 +562,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
-    pub fn datum_ensemble_get_member(&self, member_index: u16) -> mischief::Result<Option<Proj>> {
+    pub fn datum_ensemble_get_member(&self, member_index: u16) -> Result<Option<Proj>, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_datum_ensemble_get_member(self.ctx.ptr, self.ptr(), member_index as i32)
         };
@@ -566,12 +579,15 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dynamic_datum_get_frame_reference_epoch>
-    pub fn dynamic_datum_get_frame_reference_epoch(&self) -> mischief::Result<f64> {
+    pub fn dynamic_datum_get_frame_reference_epoch(&self) -> Result<f64, ProjError> {
         let result = unsafe {
             proj_sys::proj_dynamic_datum_get_frame_reference_epoch(self.ctx.ptr, self.ptr())
         };
         if result == -1.0 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(result)
     }
@@ -580,7 +596,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
-    pub fn crs_get_coordinate_system(&self) -> mischief::Result<Proj> {
+    pub fn crs_get_coordinate_system(&self) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordinate_system(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(&self.ctx, ptr)
     }
@@ -589,12 +605,15 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_type>
-    pub fn cs_get_type(&self) -> mischief::Result<CoordinateSystemType> {
+    pub fn cs_get_type(&self) -> Result<CoordinateSystemType, ProjError> {
         let cs_type = CoordinateSystemType::try_from(unsafe {
             proj_sys::proj_cs_get_type(self.ctx.ptr, self.ptr())
         })?;
         if cs_type == CoordinateSystemType::Unknown {
-            mischief::bail!("Unknown coordinate system.");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Unknown coordinate system.".to_string(),
+            };
         }
         Ok(cs_type)
     }
@@ -603,10 +622,13 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_count>
-    pub fn cs_get_axis_count(&self) -> mischief::Result<u16> {
+    pub fn cs_get_axis_count(&self) -> Result<u16, ProjError> {
         let count = unsafe { proj_sys::proj_cs_get_axis_count(self.ctx.ptr, self.ptr()) };
         if count == -1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(count as u16)
     }
@@ -620,7 +642,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>
-    pub fn cs_get_axis_info(&self, index: u16) -> mischief::Result<AxisInfo> {
+    pub fn cs_get_axis_info(&self, index: u16) -> Result<AxisInfo, ProjError> {
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut abbrev: *const std::ffi::c_char = std::ptr::null();
         let mut direction: *const std::ffi::c_char = std::ptr::null();
@@ -644,7 +666,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(AxisInfo::new(
             name.to_string().unwrap(),
@@ -661,7 +686,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
-    pub fn get_ellipsoid(&self) -> mischief::Result<Proj> {
+    pub fn get_ellipsoid(&self) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_get_ellipsoid(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(&self.ctx, ptr)
     }
@@ -670,7 +695,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_ellipsoid_get_parameters>
-    pub fn ellipsoid_get_parameters(&self) -> mischief::Result<EllipsoidParameters> {
+    pub fn ellipsoid_get_parameters(&self) -> Result<EllipsoidParameters, ProjError> {
         let mut semi_major_metre = f64::NAN;
         let mut semi_minor_metre = f64::NAN;
         let mut is_semi_minor_computed = i32::default();
@@ -686,7 +711,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(EllipsoidParameters::new(
             semi_major_metre,
@@ -710,7 +738,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
-    pub fn get_prime_meridian(&self) -> mischief::Result<Proj> {
+    pub fn get_prime_meridian(&self) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(&self.ctx, ptr)
     }
@@ -719,7 +747,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_prime_meridian_get_parameters>
-    pub fn prime_meridian_get_parameters(&self) -> mischief::Result<PrimeMeridianParameters> {
+    pub fn prime_meridian_get_parameters(&self) -> Result<PrimeMeridianParameters, ProjError> {
         let mut longitude = f64::NAN;
         let mut unit_conv_factor = f64::NAN;
         let mut unit_name: *const std::ffi::c_char = std::ptr::null();
@@ -734,7 +762,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(PrimeMeridianParameters::new(
             longitude,
@@ -748,7 +779,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
-    pub fn crs_get_coordoperation(&self) -> mischief::Result<Proj> {
+    pub fn crs_get_coordoperation(&self) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordoperation(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(&self.ctx, ptr)
     }
@@ -757,7 +788,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_method_info>
-    pub fn coordoperation_get_method_info(&self) -> mischief::Result<CoordOperationMethodInfo> {
+    pub fn coordoperation_get_method_info(&self) -> Result<CoordOperationMethodInfo, ProjError> {
         let mut method_name: *const std::ffi::c_char = std::ptr::null();
         let mut method_auth_name: *const std::ffi::c_char = std::ptr::null();
         let mut method_code: *const std::ffi::c_char = std::ptr::null();
@@ -772,7 +803,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(CoordOperationMethodInfo::new(
             method_name.to_string().unwrap_or_default(),
@@ -843,7 +877,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_index>
-    pub fn coordoperation_get_param_index(&self, name: &str) -> mischief::Result<u16> {
+    pub fn coordoperation_get_param_index(&self, name: &str) -> Result<u16, ProjError> {
         let result = unsafe {
             proj_sys::proj_coordoperation_get_param_index(
                 self.ctx.ptr,
@@ -852,7 +886,10 @@ impl Proj {
             )
         };
         if result == -1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(result as u16)
     }
@@ -865,7 +902,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param>
-    pub fn coordoperation_get_param(&self, index: u16) -> mischief::Result<CoordOperationParam> {
+    pub fn coordoperation_get_param(&self, index: u16) -> Result<CoordOperationParam, ProjError> {
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut auth_name: *const std::ffi::c_char = std::ptr::null();
         let mut code: *const std::ffi::c_char = std::ptr::null();
@@ -894,7 +931,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
 
         Ok(CoordOperationParam::new(
@@ -932,7 +972,7 @@ impl Proj {
     pub fn coordoperation_get_grid_used(
         &self,
         index: u16,
-    ) -> mischief::Result<CoordOperationGridUsed> {
+    ) -> Result<CoordOperationGridUsed, ProjError> {
         let mut short_name: *const std::ffi::c_char = std::ptr::null();
         let mut full_name: *const std::ffi::c_char = std::ptr::null();
         let mut package_name: *const std::ffi::c_char = std::ptr::null();
@@ -956,7 +996,10 @@ impl Proj {
             )
         };
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(CoordOperationGridUsed::new(
             (short_name).to_string().unwrap_or_default(),
@@ -973,11 +1016,14 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_accuracy>
-    pub fn coordoperation_get_accuracy(&self) -> mischief::Result<f64> {
+    pub fn coordoperation_get_accuracy(&self) -> Result<f64, ProjError> {
         let result =
             unsafe { proj_sys::proj_coordoperation_get_accuracy(self.ctx.ptr, self.ptr()) };
         if result < 0.0 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(result)
     }
@@ -1006,7 +1052,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
-    pub fn coordoperation_create_inverse(&self) -> mischief::Result<Proj> {
+    pub fn coordoperation_create_inverse(&self) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_coordoperation_create_inverse(self.ctx.ptr, self.ptr()) };
         crate::Proj::new(&self.ctx, ptr)
     }
@@ -1017,11 +1063,14 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step_count>
-    pub fn concatoperation_get_step_count(&self) -> mischief::Result<u16> {
+    pub fn concatoperation_get_step_count(&self) -> Result<u16, ProjError> {
         let result =
             unsafe { proj_sys::proj_concatoperation_get_step_count(self.ctx.ptr, self.ptr()) };
         if result <= 0 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(result as u16)
     }
@@ -1032,7 +1081,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
-    pub fn concatoperation_get_step(&self, index: u16) -> mischief::Result<Proj> {
+    pub fn concatoperation_get_step(&self, index: u16) -> Result<Proj, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_concatoperation_get_step(self.ctx.ptr, self.ptr(), index as i32)
         };
@@ -1043,7 +1092,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
-    pub fn coordinate_metadata_create(&self, epoch: f64) -> mischief::Result<Proj> {
+    pub fn coordinate_metadata_create(&self, epoch: f64) -> Result<Proj, ProjError> {
         let ptr =
             unsafe { proj_sys::proj_coordinate_metadata_create(self.ctx.ptr, self.ptr(), epoch) };
         crate::Proj::new(&self.ctx, ptr)
@@ -1074,7 +1123,7 @@ mod test_proj_basic {
     use super::*;
 
     #[test]
-    fn test_get_type() -> mischief::Result<()> {
+    fn test_get_type() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let t = pj.get_type()?;
@@ -1082,7 +1131,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_is_deprecated() -> mischief::Result<()> {
+    fn test_is_deprecated() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let deprecated = pj.is_deprecated();
@@ -1091,7 +1140,7 @@ mod test_proj_basic {
     }
 
     #[test]
-    fn test_is_equivalent_to() -> mischief::Result<()> {
+    fn test_is_equivalent_to() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4496")?;
@@ -1100,7 +1149,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_is_equivalent_to_with_ctx() -> mischief::Result<()> {
+    fn test_is_equivalent_to_with_ctx() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4496")?;
@@ -1109,7 +1158,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_is_crs() -> mischief::Result<()> {
+    fn test_is_crs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let result = pj.is_crs();
@@ -1117,7 +1166,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_name() -> mischief::Result<()> {
+    fn test_get_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let name = pj.get_name();
@@ -1126,7 +1175,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_id_auth_name() -> mischief::Result<()> {
+    fn test_get_id_auth_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let id_auth_name = pj.get_id_auth_name(0).expect("No id_auth_name");
@@ -1135,7 +1184,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_id_code() -> mischief::Result<()> {
+    fn test_get_id_code() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let id = pj.get_id_code(0).expect("No id_code");
@@ -1144,7 +1193,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_remarks() -> mischief::Result<()> {
+    fn test_get_remarks() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let remarks = pj.get_remarks();
@@ -1152,7 +1201,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_domain_count() -> mischief::Result<()> {
+    fn test_get_domain_count() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let count = pj.get_domain_count()?;
@@ -1160,7 +1209,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_scope() -> mischief::Result<()> {
+    fn test_get_scope() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let scope = pj.get_scope().expect("No scope");
@@ -1169,7 +1218,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_scope_ex() -> mischief::Result<()> {
+    fn test_get_scope_ex() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let scope = pj.get_scope_ex(0).expect("No scope");
@@ -1178,7 +1227,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_area_of_use() -> mischief::Result<()> {
+    fn test_get_area_of_use() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let area = pj.get_area_of_use()?.unwrap();
@@ -1191,7 +1240,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_area_of_use_ex() -> mischief::Result<()> {
+    fn test_get_area_of_use_ex() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "6316", Category::Crs, false)?;
         let area = pj.get_area_of_use_ex(1)?.unwrap();
@@ -1204,7 +1253,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    pub fn test_as_wkt() -> mischief::Result<()> {
+    pub fn test_as_wkt() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -1213,7 +1262,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    pub fn test_as_proj_string() -> mischief::Result<()> {
+    pub fn test_as_proj_string() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let proj_string = pj.as_proj_string(ProjStringType::Proj4, true, None, None, None)?;
@@ -1222,7 +1271,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    pub fn test_as_projjson() -> mischief::Result<()> {
+    pub fn test_as_projjson() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let json = pj.as_projjson(None, None, None)?;
@@ -1231,7 +1280,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    pub fn test_get_source_crs() -> mischief::Result<()> {
+    pub fn test_get_source_crs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let target = pj.get_source_crs().unwrap();
@@ -1239,7 +1288,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    pub fn test_get_target_crs() -> mischief::Result<()> {
+    pub fn test_get_target_crs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let target = pj.get_target_crs().unwrap();
@@ -1248,7 +1297,7 @@ mod test_proj_basic {
     }
 
     #[test]
-    fn test_suggests_code_for() -> mischief::Result<()> {
+    fn test_suggests_code_for() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let wkt = "GEOGCRS[\"myGDA2020\",
                        DATUM[\"GDA2020\",
@@ -1270,7 +1319,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_is_derived() -> mischief::Result<()> {
+    fn test_crs_is_derived() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         assert!(pj.is_crs());
@@ -1279,7 +1328,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_geodetic_crs() -> mischief::Result<()> {
+    fn test_crs_get_geodetic_crs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:3857")?;
         assert!(pj.is_crs());
@@ -1290,7 +1339,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_horizontal_datum() -> mischief::Result<()> {
+    fn test_crs_get_horizontal_datum() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:3857")?;
         assert!(pj.is_crs());
@@ -1301,7 +1350,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_sub_crs() -> mischief::Result<()> {
+    fn test_crs_get_sub_crs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let horiz_crs = ctx
             .clone()
@@ -1327,7 +1376,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_datum() -> mischief::Result<()> {
+    fn test_crs_get_datum() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;
         assert!(pj.is_crs());
@@ -1336,7 +1385,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_datum_ensemble() -> mischief::Result<()> {
+    fn test_crs_get_datum_ensemble() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
         assert!(pj.is_crs());
@@ -1345,7 +1394,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_datum_forced() -> mischief::Result<()> {
+    fn test_crs_get_datum_forced() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;
         assert!(pj.is_crs());
@@ -1354,7 +1403,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_has_point_motion_operation() -> mischief::Result<()> {
+    fn test_crs_has_point_motion_operation() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:8255")?;
         assert!(pj.is_crs());
@@ -1363,7 +1412,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_datum_ensemble_get_member_count() -> mischief::Result<()> {
+    fn test_datum_ensemble_get_member_count() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
         let datum = pj.crs_get_datum_ensemble()?.unwrap();
@@ -1372,7 +1421,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_datum_ensemble_get_accuracy() -> mischief::Result<()> {
+    fn test_datum_ensemble_get_accuracy() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
         let datum = pj.crs_get_datum_ensemble()?.unwrap();
@@ -1381,7 +1430,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_datum_ensemble_get_member() -> mischief::Result<()> {
+    fn test_datum_ensemble_get_member() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
         let datum = pj.crs_get_datum_ensemble()?.unwrap();
@@ -1389,7 +1438,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_dynamic_datum_get_frame_reference_epoch() -> mischief::Result<()> {
+    fn test_dynamic_datum_get_frame_reference_epoch() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "1061", Category::Datum, false)?;
         let epoch = pj.dynamic_datum_get_frame_reference_epoch()?;
@@ -1397,7 +1446,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_coordinate_system() -> mischief::Result<()> {
+    fn test_crs_get_coordinate_system() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
@@ -1407,7 +1456,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_cs_get_type() -> mischief::Result<()> {
+    fn test_cs_get_type() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
@@ -1416,7 +1465,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_cs_get_axis_count() -> mischief::Result<()> {
+    fn test_cs_get_axis_count() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
@@ -1425,7 +1474,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_cs_get_axis_info() -> mischief::Result<()> {
+    fn test_cs_get_axis_info() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
@@ -1441,7 +1490,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_ellipsoid() -> mischief::Result<()> {
+    fn test_get_ellipsoid() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let ellps = pj.get_ellipsoid()?;
@@ -1451,7 +1500,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_ellipsoid_get_parameters() -> mischief::Result<()> {
+    fn test_ellipsoid_get_parameters() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let ellps = pj.get_ellipsoid()?;
@@ -1460,7 +1509,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_celestial_body_name() -> mischief::Result<()> {
+    fn test_get_celestial_body_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let name = pj.get_celestial_body_name().unwrap();
@@ -1468,7 +1517,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_prime_meridian() -> mischief::Result<()> {
+    fn test_get_prime_meridian() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let meridian = pj.get_prime_meridian()?;
@@ -1478,7 +1527,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_prime_meridian_get_parameters() -> mischief::Result<()> {
+    fn test_prime_meridian_get_parameters() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let meridian = pj.get_prime_meridian()?;
@@ -1491,7 +1540,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_coordoperation() -> mischief::Result<()> {
+    fn test_crs_get_coordoperation() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1501,7 +1550,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_method_info() -> mischief::Result<()> {
+    fn test_coordoperation_get_method_info() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1514,7 +1563,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_is_instantiable() -> mischief::Result<()> {
+    fn test_coordoperation_is_instantiable() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1523,7 +1572,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_has_ballpark_transformation() -> mischief::Result<()> {
+    fn test_coordoperation_has_ballpark_transformation() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1532,7 +1581,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_requires_per_coordinate_input_time() -> mischief::Result<()> {
+    fn test_coordoperation_requires_per_coordinate_input_time() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1542,7 +1591,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_param_count() -> mischief::Result<()> {
+    fn test_coordoperation_get_param_count() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1551,7 +1600,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_param_index() -> mischief::Result<()> {
+    fn test_coordoperation_get_param_index() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1560,7 +1609,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_param() -> mischief::Result<()> {
+    fn test_coordoperation_get_param() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1571,7 +1620,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_grid_used_count() -> mischief::Result<()> {
+    fn test_coordoperation_get_grid_used_count() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "1312", Category::CoordinateOperation, true)?;
         let count = pj.coordoperation_get_grid_used_count();
@@ -1580,7 +1629,7 @@ mod test_proj_basic {
     }
 
     #[test]
-    fn test_coordoperation_get_grid_used() -> mischief::Result<()> {
+    fn test_coordoperation_get_grid_used() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "1312", Category::CoordinateOperation, true)?;
         let grid = pj.coordoperation_get_grid_used(0)?;
@@ -1589,7 +1638,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_accuracy() -> mischief::Result<()> {
+    fn test_coordoperation_get_accuracy() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
         let accuracy = pj.coordoperation_get_accuracy()?;
@@ -1597,7 +1646,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_towgs84_values() -> mischief::Result<()> {
+    fn test_coordoperation_get_towgs84_values() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
         let param = pj.coordoperation_get_towgs84_values();
@@ -1616,7 +1665,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_create_inverse() -> mischief::Result<()> {
+    fn test_coordoperation_create_inverse() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1627,7 +1676,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_concatoperation_get_step_count() -> mischief::Result<()> {
+    fn test_concatoperation_get_step_count() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let factory = ctx.create_operation_factory_context(None);
         let source_crs = ctx
@@ -1642,7 +1691,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_concatoperation_get_step() -> mischief::Result<()> {
+    fn test_concatoperation_get_step() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let factory = ctx.create_operation_factory_context(None);
         let source_crs = ctx
@@ -1661,7 +1710,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordinate_metadata_create() -> mischief::Result<()> {
+    fn test_coordinate_metadata_create() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let new = pj.coordinate_metadata_create(123.4)?;
@@ -1671,7 +1720,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordinate_metadata_get_epoch() -> mischief::Result<()> {
+    fn test_coordinate_metadata_get_epoch() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let new = pj.coordinate_metadata_create(123.4)?;

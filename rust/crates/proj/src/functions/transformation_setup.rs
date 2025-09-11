@@ -2,6 +2,7 @@ use alloc::sync::Arc;
 extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
+use crate::data_types::{ProjError};
 use crate::{Proj, check_result};
 /// # Transformation setup
 ///
@@ -45,7 +46,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn create(self: &Arc<Self>, definition: &str) -> mischief::Result<Proj> {
+    pub fn create(self: &Arc<Self>, definition: &str) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstring().as_ptr()) };
         check_result!(self);
         Proj::new(self, ptr)
@@ -64,7 +65,7 @@ impl crate::Context {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(self: &Arc<Self>, argv: &[&str]) -> mischief::Result<Proj> {
+    pub fn create_argv(self: &Arc<Self>, argv: &[&str]) -> Result<Proj, ProjError> {
         let count = argv.len();
         let ptr = unsafe {
             proj_sys::proj_create_argv(
@@ -124,7 +125,7 @@ impl crate::Context {
         source_crs: &str,
         target_crs: &str,
         area: &crate::Area,
-    ) -> mischief::Result<Proj> {
+    ) -> Result<Proj, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
                 self.ptr,
@@ -194,7 +195,7 @@ impl crate::Context {
         allow_ballpark: Option<bool>,
         only_best: Option<bool>,
         force_over: Option<bool>,
-    ) -> mischief::Result<Proj> {
+    ) -> Result<Proj, ProjError> {
         let mut options = crate::ProjOptions::new(5);
         options
             .with_or_skip(authority, "AUTHORITY")
@@ -232,7 +233,7 @@ impl crate::Context {
     pub fn normalize_for_visualization(
         self: &Arc<Self>,
         obj: &crate::Proj,
-    ) -> mischief::Result<Proj> {
+    ) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr()) };
         Proj::new(self, ptr)
     }

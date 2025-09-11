@@ -2,7 +2,7 @@ use core::char;
 
 use envoy::{CStrToString, ToCString};
 
-use crate::data_types::Factors;
+use crate::data_types::{Factors, ProjError};
 use crate::{ICoord, ToCoord, check_result};
 
 /// # Various
@@ -30,7 +30,7 @@ impl crate::Proj {
         direction: crate::Direction,
         n: i32,
         coord: &impl ICoord,
-    ) -> mischief::Result<f64> {
+    ) -> Result<f64, ProjError> {
         let mut coord = coord.to_coord()?;
         let distance =
             unsafe { proj_sys::proj_roundtrip(self.ptr(), direction.into(), n, &mut coord) };
@@ -60,7 +60,7 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_factors>
-    pub fn factors(&self, coord: &impl ICoord) -> mischief::Result<crate::data_types::Factors> {
+    pub fn factors(&self, coord: &impl ICoord) -> Result<crate::data_types::Factors, ProjError> {
         let factor = unsafe { proj_sys::proj_factors(self.ptr(), coord.to_coord()?) };
         match self.errno() {
             crate::data_types::ProjErrorCode::Success => (),
@@ -126,7 +126,7 @@ impl crate::Proj {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
-pub fn dmstor(is: &str) -> mischief::Result<f64> {
+pub fn dmstor(is: &str) -> Result<f64, ProjError> {
     let rs = "xxxdxxmxx.xxs ".to_cstring();
     Ok(unsafe { proj_sys::proj_dmstor(is.to_cstring().as_ptr(), &mut rs.as_ptr().cast_mut()) })
 }
@@ -136,7 +136,7 @@ pub fn dmstor(is: &str) -> mischief::Result<f64> {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms2>
-pub fn rtodms2(r: f64, pos: char, neg: char) -> mischief::Result<String> {
+pub fn rtodms2(r: f64, pos: char, neg: char) -> Result<String, ProjError> {
     let dms = "xxxdxxmxx.xxs ".to_cstring();
     let ptr =
         unsafe { proj_sys::proj_rtodms2(dms.as_ptr().cast_mut(), 14, r, pos as i32, neg as i32) };

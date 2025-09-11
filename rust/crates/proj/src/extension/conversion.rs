@@ -1,5 +1,6 @@
 use crate::Direction::{Fwd, Inv};
 use crate::ICoord;
+use crate::data_types::{ProjError, ProjErrorCode};
 
 impl crate::Proj {
     /// Projects a single coordinate using the specified direction (forward or
@@ -14,7 +15,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// The transformed coordinate.
-    pub fn project<T>(&self, inv: bool, coord: &T) -> mischief::Result<T>
+    pub fn project<T>(&self, inv: bool, coord: &T) -> Result<T, ProjError>
     where
         T: ICoord,
     {
@@ -27,23 +28,25 @@ impl crate::Proj {
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => unsafe {
-                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0)
+                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0)?
             },
             //3d
             (false, false, false, true) => unsafe {
-                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0)
+                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0)?
             },
             //4d
             (false, false, false, false) => unsafe {
-                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)
+                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)?
             },
             (x, y, z, t) => {
-                mischief::bail!(
-                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                )
+                return Err(ProjError {
+                    code: ProjErrorCode::Other,
+                    message: format!(
+                        "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
+                    ),
+                });
             }
-        }?;
-
+        };
         Ok(coord)
     }
     /// Projects a single coordinate using the forward direction.
@@ -55,7 +58,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// The transformed coordinate.
-    pub fn convert<T>(&self, coord: &T) -> mischief::Result<T>
+    pub fn convert<T>(&self, coord: &T) -> Result<T, ProjError>
     where
         T: ICoord,
     {
@@ -67,22 +70,25 @@ impl crate::Proj {
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => unsafe {
-                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0)
+                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0)?
             },
             //3d
             (false, false, false, true) => unsafe {
-                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0)
+                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0)?
             },
             //4d
             (false, false, false, false) => unsafe {
-                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)
+                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)?
             },
             (x, y, z, t) => {
-                mischief::bail!(
-                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                )
+                return Err(ProjError {
+                    code: ProjErrorCode::Other,
+                    message: format!(
+                        "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
+                    ),
+                });
             }
-        }?;
+        };
 
         Ok(coord)
     }
@@ -101,7 +107,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// A reference to self for chaining.
-    pub fn project_array<T>(&self, inv: bool, coord: &mut [T]) -> mischief::Result<&Self>
+    pub fn project_array<T>(&self, inv: bool, coord: &mut [T]) -> Result<&Self, ProjError>
     where
         T: ICoord,
     {
@@ -118,26 +124,29 @@ impl crate::Proj {
             (false, false, true, true) => unsafe {
                 self.trans_generic(
                     direction, x, size, length, y, size, length, z, 0, 0, t, 0, 0,
-                )
+                )?
             },
             //3d
             (false, false, false, true) => unsafe {
                 self.trans_generic(
                     direction, x, size, length, y, size, length, z, size, length, t, 0, 0,
-                )
+                )?
             },
             //4d
             (false, false, false, false) => unsafe {
                 self.trans_generic(
                     direction, x, size, length, y, size, length, z, size, length, t, size, length,
-                )
+                )?
             },
             (x, y, z, t) => {
-                mischief::bail!(
-                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                )
+                return Err(ProjError {
+                    code: ProjErrorCode::Other,
+                    message: format!(
+                        "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
+                    ),
+                });
             }
-        }?;
+        };
         Ok(self)
     }
     /// Projects an array of coordinates using the forward direction.
@@ -149,7 +158,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// A reference to self for chaining.
-    pub fn convert_array<T>(&self, coord: &mut [T]) -> mischief::Result<&Self>
+    pub fn convert_array<T>(&self, coord: &mut [T]) -> Result<&Self, ProjError>
     where
         T: ICoord,
     {
@@ -163,27 +172,30 @@ impl crate::Proj {
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
             (false, false, true, true) => unsafe {
-                self.trans_generic(Fwd, x, size, length, y, size, length, z, 0, 0, t, 0, 0)
+                self.trans_generic(Fwd, x, size, length, y, size, length, z, 0, 0, t, 0, 0)?
             },
 
             //3d
             (false, false, false, true) => unsafe {
                 self.trans_generic(
                     Fwd, x, size, length, y, size, length, z, size, length, t, 0, 0,
-                )
+                )?
             },
             //4d
             (false, false, false, false) => unsafe {
                 self.trans_generic(
                     Fwd, x, size, length, y, size, length, z, size, length, t, size, length,
-                )
+                )?
             },
             (x, y, z, t) => {
-                mischief::bail!(
-                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                )
+                return Err(ProjError {
+                    code: crate::data_types::ProjErrorCode::Other,
+                    message: format!(
+                        "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
+                    ),
+                });
             }
-        }?;
+        };
 
         Ok(self)
     }

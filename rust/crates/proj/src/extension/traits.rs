@@ -1,4 +1,6 @@
 use core::ptr::null_mut;
+
+use crate::data_types::{ProjError, ProjErrorCode};
 const NULL_PTR: *mut f64 = null_mut();
 /// A trait representing a mutable 4D coordinate (x, y, z, t) for use with PROJ
 /// FFI bindings.
@@ -92,50 +94,52 @@ pub trait ICoord: Clone {
 // Only allow use this triat in crate.
 // Prevent users from modifying the to_coord fn.
 pub(crate) trait ToCoord {
-    fn to_coord(&self) -> mischief::Result<proj_sys::PJ_COORD>;
+    fn to_coord(&self) -> Result<proj_sys::PJ_COORD, ProjError>;
 }
 
 impl<T> ToCoord for T
 where
     T: ICoord,
 {
-    fn to_coord(&self) -> mischief::Result<proj_sys::PJ_COORD> {
+    fn to_coord(&self) -> Result<proj_sys::PJ_COORD, ProjError> {
         let mut src = self.clone();
         let x = src.x();
         let y = src.y();
         let z = src.z();
         let t = src.t();
 
-        let coord = match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
+        match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
-            (false, false, true, true) => proj_sys::PJ_COORD {
+            (false, false, true, true) => Ok(proj_sys::PJ_COORD {
                 xy: proj_sys::PJ_XY {
                     x: unsafe { *x },
                     y: unsafe { *y },
                 },
-            },
+            }),
             //3d
-            (false, false, false, true) => proj_sys::PJ_COORD {
+            (false, false, false, true) => Ok(proj_sys::PJ_COORD {
                 xyz: proj_sys::PJ_XYZ {
                     x: unsafe { *x },
                     y: unsafe { *y },
                     z: unsafe { *z },
                 },
-            },
+            }),
             //4d
-            (false, false, false, false) => proj_sys::PJ_COORD {
+            (false, false, false, false) => Ok(proj_sys::PJ_COORD {
                 xyzt: proj_sys::PJ_XYZT {
                     x: unsafe { *x },
                     y: unsafe { *y },
                     z: unsafe { *z },
                     t: unsafe { *t },
                 },
-            },
-            (x, y, z, t) => mischief::bail!(
-                "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-            ),
-        };
-        Ok(coord)
+            }),
+            (x, y, z, t) => Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: format!(
+                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
+                ),
+            }),
+        }
     }
 }
 impl ICoord for (f64, f64) {

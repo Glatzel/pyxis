@@ -5,6 +5,7 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString, VecCString};
 
 use crate::check_result;
+use crate::data_types::ProjError;
 
 ///Setting custom I/O functions
 impl crate::Context {
@@ -26,7 +27,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
-    pub fn set_sqlite3_vfs_name(self: &Arc<Self>, name: &str) -> mischief::Result<&Arc<Self>> {
+    pub fn set_sqlite3_vfs_name(self: &Arc<Self>, name: &str) -> Result<&Arc<Self>, ProjError> {
         unsafe {
             proj_sys::proj_context_set_sqlite3_vfs_name(self.ptr, name.to_cstring().as_ptr());
         };
@@ -54,7 +55,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_search_paths>
-    pub fn set_search_paths(self: &Arc<Self>, paths: &[&Path]) -> mischief::Result<&Arc<Self>> {
+    pub fn set_search_paths(self: &Arc<Self>, paths: &[&Path]) -> Result<&Arc<Self>, ProjError> {
         clerk::debug!("search_paths:{:?}", paths);
         let len = paths.len();
         let paths: VecCString = paths
@@ -91,7 +92,7 @@ impl crate::Context {
     pub fn set_ca_bundle_path(
         self: &Arc<Self>,
         path: Option<&Path>,
-    ) -> mischief::Result<&Arc<Self>> {
+    ) -> Result<&Arc<Self>, ProjError> {
         let path = path.map(|s| s.to_str().unwrap().to_cstring());
         unsafe {
             proj_sys::proj_context_set_ca_bundle_path(

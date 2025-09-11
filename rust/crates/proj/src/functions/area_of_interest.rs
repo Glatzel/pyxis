@@ -1,3 +1,4 @@
+use crate::data_types::{ProjError, ProjErrorCode};
 impl Default for crate::Area {
     /// # See Also
     ///
@@ -45,18 +46,30 @@ impl crate::Area {
         south_lat_degree: f64,
         east_lon_degree: f64,
         north_lat_degree: f64,
-    ) -> mischief::Result<&Self> {
+    ) -> Result<&Self, ProjError> {
         if !(-180.0..=180.0).contains(&west_lon_degree) {
-            mischief::bail!("`west_lon_degree` should in [-180,180] range.");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "`west_lon_degree` should in [-180,180] range.".to_string(),
+            };
         }
         if !(-90.0..=90.0).contains(&south_lat_degree) {
-            mischief::bail!("`south_lat_degree ` should in [-90,90] range.");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "`south_lat_degree ` should in [-90,90] range.".to_string(),
+            };
         }
         if !(-180.0..=180.0).contains(&east_lon_degree) {
-            mischief::bail!("`east_lon_degree` should in [-180,180] range.");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "`east_lon_degree` should in [-180,180] range.".to_string(),
+            };
         }
         if !(-90.0..=90.0).contains(&north_lat_degree) {
-            mischief::bail!("`north_lat_degree ` should in [-90,90] range.");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "`north_lat_degree ` should in [-90,90] range.".to_string(),
+            };
         }
         unsafe {
             proj_sys::proj_area_set_bbox(

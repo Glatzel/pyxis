@@ -1,3 +1,4 @@
+use crate::data_types::{ProjError, ProjErrorCode};
 use crate::{ToCoord, check_result};
 ///# Distances
 impl crate::Proj {
@@ -14,14 +15,14 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
-    pub fn lp_dist(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> mischief::Result<f64> {
+    pub fn lp_dist(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, ProjError> {
         let dist = unsafe { proj_sys::proj_lp_dist(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         if dist.is_nan() {
-            mischief::bail!(
-                "Distance calculation failed.",
-                help = "Check Pj object and make sure input coordinates are in radians.",
-            )
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Distance calculation failed. Check Pj object and make sure input coordinates are in radians.".to_string(),
+            });
         }
         Ok(dist)
     }
@@ -38,14 +39,14 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_lpz_dist>
-    pub fn lpz_dist(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> mischief::Result<f64> {
+    pub fn lpz_dist(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, ProjError> {
         let dist = unsafe { proj_sys::proj_lpz_dist(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         if dist.is_nan() {
-            mischief::bail!(
-                "Distance calculation failed.",
-                help = "Check Pj object and make sure input coordinates are in radians.",
-            )
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Distance calculation failed. Check Pj object and make sure input coordinates are in radians.".to_string(),
+            });
         }
         Ok(dist)
     }
@@ -65,15 +66,15 @@ impl crate::Proj {
         &self,
         a: impl crate::ICoord,
         b: impl crate::ICoord,
-    ) -> mischief::Result<(f64, f64)> {
+    ) -> Result<(f64, f64), ProjError> {
         let dist = unsafe { proj_sys::proj_geod(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };
         if dist.is_nan() || reversed_azimuth.is_nan() {
-            mischief::bail!(
-                "Distance calculation failed.",
-                help = "Check Pj object and make sure input coordinates are in radians.",
-            )
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Distance calculation failed. Check Pj object and make sure input coordinates are in radians.".to_string(),
+            });
         }
         Ok((dist, reversed_azimuth))
     }
@@ -83,7 +84,7 @@ impl crate::Proj {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
-pub fn xy_dist(a: impl crate::ICoord, b: impl crate::ICoord) -> mischief::Result<f64> {
+pub fn xy_dist(a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, ProjError> {
     Ok(unsafe { proj_sys::proj_xy_dist(a.to_coord()?, b.to_coord()?) })
 }
 /// Calculate 3-dimensional euclidean between two projected coordinates.
@@ -91,7 +92,7 @@ pub fn xy_dist(a: impl crate::ICoord, b: impl crate::ICoord) -> mischief::Result
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xyz_dist>
-pub fn xyz_dist(a: impl crate::ICoord, b: impl crate::ICoord) -> mischief::Result<f64> {
+pub fn xyz_dist(a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, ProjError> {
     Ok(unsafe { proj_sys::proj_xyz_dist(a.to_coord()?, b.to_coord()?) })
 }
 #[cfg(test)]

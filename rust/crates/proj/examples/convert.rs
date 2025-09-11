@@ -1,13 +1,13 @@
 use float_cmp::assert_approx_eq;
 use proj::Area;
 
-fn main() -> mischief::Result<()> {
+fn main() ->Result<(),ProjError> {
     cvt_2d()?;
     cvt_3d()?;
     cvt_3d_array()?;
     Ok(())
 }
-fn cvt_2d() -> mischief::Result<()> {
+fn cvt_2d() ->Result<(),ProjError> {
     let ctx = proj::Context::new();
     let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &Area::default())?;
 
@@ -18,7 +18,7 @@ fn cvt_2d() -> mischief::Result<()> {
     assert_approx_eq!(f64, coord[1], 3416780.562127255);
     Ok(())
 }
-fn cvt_3d() -> mischief::Result<()> {
+fn cvt_3d() ->Result<(),ProjError> {
     let ctx = proj::Context::new();
     let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &Area::default())?;
     let pj = ctx.normalize_for_visualization(&pj)?;
@@ -30,7 +30,7 @@ fn cvt_3d() -> mischief::Result<()> {
     assert_approx_eq!(f64, coord[2], 3170378.735383637);
     Ok(())
 }
-fn cvt_3d_array() -> mischief::Result<()> {
+fn cvt_3d_array() ->Result<(),ProjError> {
     let ctx = proj::Context::new();
     let pj = ctx
         .clone()

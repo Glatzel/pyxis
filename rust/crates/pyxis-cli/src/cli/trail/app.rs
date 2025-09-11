@@ -19,7 +19,7 @@ pub struct App {
 }
 
 impl App {
-    pub fn new() -> mischief::Result<Self> {
+    pub fn new() ->Result<Self,ProjError> {
         // let raw_nmea = VecDeque::with_capacity(SETTINGS.lock().trail.capacity);
         Ok(Self {
             status: 0,
@@ -111,7 +111,7 @@ impl App {
         &mut self,
         f: &mut ratatui::Frame,
         area: ratatui::layout::Rect,
-    ) -> mischief::Result<()> {
+    ) ->Result<(),ProjError> {
         match self.tab {
             Tab::Info => self.tab_info.draw(f, area, &self.raw_nmea),
             Tab::Coord => self.tab_coord.draw(f, area, &self.raw_nmea),

@@ -7,6 +7,7 @@ use envoy::ToCString;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use strum::{AsRefStr, EnumString};
 
+use crate::data_types::{ProjError, ProjErrorCode};
 use crate::{Context, OwnedCStrings, Proj, readonly_struct};
 ///Guessed WKT "dialect".
 ///
@@ -400,7 +401,7 @@ impl AxisDescription {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
         unit_type: UnitType,
-    ) -> mischief::Result<Self> {
+    ) -> Result<Self, ProjError> {
         Ok(Self {
             name: name.unwrap_or("").to_cstring(),
             abbreviation: abbreviation.unwrap_or("").to_cstring(),
@@ -743,13 +744,19 @@ impl ProjObjList {
     pub(crate) fn new(
         ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
-    ) -> mischief::Result<ProjObjList> {
+    ) -> Result<ProjObjList, ProjError> {
         if ptr.is_null() {
-            mischief::bail!("PJ_OBJ_LIST pointer is null.");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "PJ_OBJ_LIST pointer is null.".to_string(),
+            };
         }
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         if count < 1 {
-            mischief::bail!("PJ_OBJ_LIST count 0.");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "PJ_OBJ_LIST count 0.".to_string(),
+            };
         }
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
@@ -765,13 +772,19 @@ impl ProjObjList {
         ctx: &Arc<Context>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
         owned_cstrings: OwnedCStrings,
-    ) -> mischief::Result<ProjObjList> {
+    ) -> Result<ProjObjList, ProjError> {
         if ptr.is_null() {
-            mischief::bail!("PJ_OBJ_LIST pointer is null.");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "PJ_OBJ_LIST pointer is null.".to_string(),
+            };
         }
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         if count < 1 {
-            mischief::bail!("PJ_OBJ_LIST count 0.");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "PJ_OBJ_LIST count 0.".to_string(),
+            };
         }
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
@@ -788,9 +801,12 @@ impl ProjObjList {
     /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
-    pub fn get(&self, index: usize) -> mischief::Result<Proj> {
+    pub fn get(&self, index: usize) -> Result<Proj, ProjError> {
         if index > self.count {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr, index as i32) };
 

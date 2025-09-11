@@ -4,6 +4,7 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString, VecCString};
 
 use crate::data_types::iso19111::*;
+use crate::data_types::{ProjError, ProjErrorCode};
 use crate::{Context, Proj};
 impl Context {
     ///Instantiate a context for building coordinate operations between two
@@ -324,7 +325,7 @@ impl OperationFactoryContext {
         &self,
         source_crs: &Proj,
         target_crs: &Proj,
-    ) -> mischief::Result<ProjObjList> {
+    ) -> Result<ProjObjList, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
                 self.ctx.ptr,
@@ -352,7 +353,7 @@ impl Drop for OperationFactoryContext {
 mod test {
     use super::*;
     #[test]
-    fn test_settings() -> mischief::Result<()> {
+    fn test_settings() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let factory = OperationFactoryContext::from_context(&ctx, None);
         factory
@@ -369,7 +370,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_create_operations() -> mischief::Result<()> {
+    fn test_create_operations() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let factory = OperationFactoryContext::from_context(&ctx, None);
         let source_crs = ctx.create_from_database(

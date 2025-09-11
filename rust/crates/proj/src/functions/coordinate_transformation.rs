@@ -1,4 +1,5 @@
 use crate::check_result;
+use crate::data_types::{ProjError, ProjErrorCode};
 // region:Coordinate transformation
 impl crate::Proj {
     ///Return the operation used during the last invocation of
@@ -69,7 +70,7 @@ impl crate::Proj {
         t: *mut f64,
         st: usize,
         nt: usize,
-    ) -> mischief::Result<usize> {
+    ) -> Result<usize, ProjError> {
         let result = unsafe {
             proj_sys::proj_trans_generic(
                 self.ptr(),
@@ -142,7 +143,7 @@ impl crate::Context {
         xmax: f64,
         ymax: f64,
         densify_pts: i32,
-    ) -> mischief::Result<(f64, f64, f64, f64)> {
+    ) -> Result<(f64, f64, f64, f64), ProjError> {
         let mut out_xmin = f64::default();
         let mut out_ymin = f64::default();
         let mut out_xmax = f64::default();
@@ -164,7 +165,10 @@ impl crate::Context {
             )
         };
         if code != 1 {
-            mischief::bail!("Failures encountered.")
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Failures encountered.".to_string(),
+            });
         }
         Ok((out_xmin, out_ymin, out_xmax, out_ymax))
     }
@@ -222,7 +226,7 @@ impl crate::Context {
         ymax: f64,
         zmax: f64,
         densify_pts: i32,
-    ) -> mischief::Result<(f64, f64, f64, f64, f64, f64)> {
+    ) -> Result<(f64, f64, f64, f64, f64, f64), ProjError> {
         let mut out_xmin = f64::default();
         let mut out_ymin = f64::default();
         let mut out_zmin = f64::default();
@@ -250,7 +254,10 @@ impl crate::Context {
             )
         };
         if code != 1 {
-            mischief::bail!("Failures encountered.")
+            return Err(ProjError {
+                code: ProjErrorCode::Other,
+                message: "Failures encountered.".to_string(),
+            });
         }
         Ok((out_xmin, out_ymin, out_zmin, out_xmax, out_ymax, out_zmax))
     }

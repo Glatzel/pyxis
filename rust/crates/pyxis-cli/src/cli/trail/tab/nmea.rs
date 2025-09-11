@@ -16,7 +16,7 @@ impl super::ITab for TabNmea {
         f: &mut ratatui::Frame,
         area: ratatui::layout::Rect,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
-    ) -> mischief::Result<()> {
+    ) ->Result<(),ProjError> {
         let count = raw_nmea.len();
 
         let visible_lines = area.height as usize;

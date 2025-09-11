@@ -8,6 +8,7 @@ extern crate alloc;
 use envoy::{AsVecPtr, CStrListToVecString, CStrToString, ToCString};
 
 use crate::data_types::iso19111::*;
+use crate::data_types::{ProjError, ProjErrorCode};
 use crate::{OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Base functions
 impl crate::Context {
@@ -33,7 +34,7 @@ impl crate::Context {
         self: &Arc<Self>,
         db_path: &Path,
         aux_db_paths: Option<&[PathBuf]>,
-    ) -> mischief::Result<&Arc<Self>> {
+    ) -> Result<&Arc<Self>, ProjError> {
         let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|aux_db_paths| {
             aux_db_paths
                 .iter()
@@ -53,7 +54,10 @@ impl crate::Context {
             )
         };
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(self)
     }
@@ -99,7 +103,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
-    pub fn get_database_structure(&self) -> mischief::Result<Vec<String>> {
+    pub fn get_database_structure(&self) -> Result<Vec<String>, ProjError> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr, ptr::null()) };
         let out_vec = ptr.to_vec_string();
         unsafe {
@@ -112,11 +116,10 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
-    pub fn guess_wkt_dialect(self: &Arc<Self>, wkt: &str) -> mischief::Result<GuessedWktDialect> {
+    pub fn guess_wkt_dialect(self: &Arc<Self>, wkt: &str) -> Result<GuessedWktDialect, ProjError> {
         GuessedWktDialect::try_from(unsafe {
             proj_sys::proj_context_guess_wkt_dialect(self.ptr, wkt.to_cstring().as_ptr())
         })
-        .map_err(|e| mischief::mischief!("{e}"))
     }
     ///Instantiate an object from a WKT string.
     ///
@@ -146,7 +149,7 @@ impl crate::Context {
         wkt: &str,
         strict: Option<bool>,
         unset_identifiers_if_incompatible_def: Option<bool>,
-    ) -> mischief::Result<Proj> {
+    ) -> Result<Proj, ProjError> {
         let mut options = ProjOptions::new(2);
         options.with_or_skip(strict, "STRICT");
         options.with_or_skip(
@@ -199,7 +202,7 @@ impl crate::Context {
         code: &str,
         category: Category,
         use_projalternative_grid_names: bool,
-    ) -> mischief::Result<Proj> {
+    ) -> Result<Proj, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_create_from_database(
                 self.ptr,
@@ -226,7 +229,7 @@ impl crate::Context {
         self: &Arc<Self>,
         auth_name: &str,
         code: &str,
-    ) -> mischief::Result<UomInfo> {
+    ) -> Result<UomInfo, ProjError> {
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut conv_factor: f64 = f64::NAN;
         let mut category: *const std::ffi::c_char = std::ptr::null();
@@ -241,7 +244,10 @@ impl crate::Context {
             )
         };
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
 
         Ok(UomInfo::new(
@@ -262,7 +268,7 @@ impl crate::Context {
     pub fn grid_get_info_from_database(
         self: &Arc<Self>,
         grid_name: &str,
-    ) -> mischief::Result<GridInfoDB> {
+    ) -> Result<GridInfoDB, ProjError> {
         let mut full_name: *const std::ffi::c_char = std::ptr::null();
         let mut package_name: *const std::ffi::c_char = std::ptr::null();
         let mut url: *const std::ffi::c_char = std::ptr::null();
@@ -282,7 +288,10 @@ impl crate::Context {
             )
         };
         if result != 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         Ok(GridInfoDB::new(
             full_name.to_string().unwrap(),
@@ -312,7 +321,7 @@ impl crate::Context {
         self: &Arc<Self>,
         auth_name: &str,
         code: &str,
-    ) -> mischief::Result<Vec<String>> {
+    ) -> Result<Vec<String>, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_get_geoid_models_from_database(
                 self.ptr,
@@ -322,7 +331,10 @@ impl crate::Context {
             )
         };
         if ptr.is_null() {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         let out_vec = ptr.to_vec_string();
         unsafe {
@@ -335,10 +347,13 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_authorities_from_database>
-    pub fn get_authorities_from_database(&self) -> mischief::Result<Vec<String>> {
+    pub fn get_authorities_from_database(&self) -> Result<Vec<String>, ProjError> {
         let ptr = unsafe { proj_sys::proj_get_authorities_from_database(self.ptr) };
         if ptr.is_null() {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         let out_vec = ptr.to_vec_string();
         unsafe {
@@ -363,7 +378,7 @@ impl crate::Context {
         auth_name: &str,
         proj_type: ProjType,
         allow_deprecated: bool,
-    ) -> mischief::Result<Vec<String>> {
+    ) -> Result<Vec<String>, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_get_codes_from_database(
                 self.ptr,
@@ -373,7 +388,10 @@ impl crate::Context {
             )
         };
         if ptr.is_null() {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         let out_vec = ptr.to_vec_string();
         unsafe {
@@ -396,7 +414,7 @@ impl crate::Context {
     pub fn get_celestial_body_list_from_database(
         self: &Arc<Self>,
         auth_name: &str,
-    ) -> mischief::Result<Vec<CelestialBodyInfo>> {
+    ) -> Result<Vec<CelestialBodyInfo>, ProjError> {
         let mut out_result_count = i32::default();
         let ptr = unsafe {
             proj_sys::proj_get_celestial_body_list_from_database(
@@ -406,7 +424,10 @@ impl crate::Context {
             )
         };
         if out_result_count < 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
@@ -443,9 +464,12 @@ impl crate::Context {
         self: &Arc<Self>,
         auth_name: Option<&str>,
         params: Option<CrsListParameters>,
-    ) -> mischief::Result<Vec<CrsInfo>> {
+    ) -> Result<Vec<CrsInfo>, ProjError> {
         if auth_name.is_none() && params.is_none() {
-            mischief::bail!("At least one of `auth_name` and  `params` must be set.");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "At least one of `auth_name` and  `params` must be set.".to_string(),
+            };
         }
         let mut out_result_count = i32::default();
         let mut owned = OwnedCStrings::with_capacity(1);
@@ -481,7 +505,10 @@ impl crate::Context {
             )
         };
         if out_result_count < 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
@@ -527,7 +554,7 @@ impl crate::Context {
         auth_name: &str,
         category: UnitCategory,
         allow_deprecated: bool,
-    ) -> mischief::Result<Vec<UnitInfo>> {
+    ) -> Result<Vec<UnitInfo>, ProjError> {
         let mut out_result_count = i32::default();
         let ptr = unsafe {
             proj_sys::proj_get_units_from_database(
@@ -539,7 +566,10 @@ impl crate::Context {
             )
         };
         if out_result_count < 1 {
-            mischief::bail!("Error");
+            ProjError {
+                code: ProjErrorCode::Other,
+                message: "Error".to_string(),
+            };
         }
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
@@ -567,19 +597,19 @@ mod test {
 
     use super::*;
     #[test]
-    fn test_set_database_path() -> mischief::Result<()> {
+    fn test_set_database_path() -> Result<(), ProjError> {
         let _ = crate::new_test_ctx()?;
         Ok(())
     }
     #[test]
-    fn test_get_database_path() -> mischief::Result<()> {
+    fn test_get_database_path() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let db_path = ctx.get_database_path();
         assert!(db_path.to_string_lossy().to_string().contains(".pixi"));
         Ok(())
     }
     #[test]
-    fn test_get_database_metadata() -> mischief::Result<()> {
+    fn test_get_database_metadata() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)
@@ -591,7 +621,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_database_structure() -> mischief::Result<()> {
+    fn test_get_database_structure() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let structure = ctx.get_database_structure()?;
         println!("{}", structure.first().unwrap());
@@ -603,7 +633,7 @@ mod test {
     }
 
     #[test]
-    fn test_guess_wkt_dialect() -> mischief::Result<()> {
+    fn test_guess_wkt_dialect() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -612,7 +642,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_create_from_wkt() -> mischief::Result<()> {
+    fn test_create_from_wkt() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         //invalid
         assert!(ctx.create_from_wkt("invalid wkt", None, None).is_err());
@@ -633,7 +663,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_create_from_database() -> mischief::Result<()> {
+    fn test_create_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -642,7 +672,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_uom_get_info_from_database() -> mischief::Result<()> {
+    fn test_uom_get_info_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.uom_get_info_from_database("EPSG", "9102")?;
         println!("{info:?}");
@@ -652,7 +682,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_grid_get_info_from_database() -> mischief::Result<()> {
+    fn test_grid_get_info_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.grid_get_info_from_database("au_icsm_GDA94_GDA2020_conformal.tif")?;
         println!("{info:?}");
@@ -671,7 +701,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_geoid_models_from_database() -> mischief::Result<()> {
+    fn test_get_geoid_models_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let models = ctx.get_geoid_models_from_database("EPSG", "5703")?;
         assert_eq!(
@@ -684,7 +714,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_authorities_from_database() -> mischief::Result<()> {
+    fn test_get_authorities_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let authorities = ctx.get_authorities_from_database()?;
         assert_eq!(
@@ -696,7 +726,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_codes_from_database() -> mischief::Result<()> {
+    fn test_get_codes_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         for t in ProjType::iter() {
             let codes = ctx.get_codes_from_database("EPSG", t.clone(), true);
@@ -711,7 +741,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_celestial_body_list_from_database() -> mischief::Result<()> {
+    fn test_get_celestial_body_list_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_celestial_body_list_from_database("ESRI")?;
         println!("{:?}", list.first().unwrap());
@@ -719,7 +749,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_crs_info_list_from_database() -> mischief::Result<()> {
+    fn test_get_crs_info_list_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_crs_info_list_from_database(Some("EPSG"), None)?;
         println!("{:?}", list.first().unwrap());
@@ -728,7 +758,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_units_from_database() -> mischief::Result<()> {
+    fn test_get_units_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let units = ctx.get_units_from_database("EPSG", UnitCategory::Linear, true)?;
         println!("{:?}", units.first().unwrap());

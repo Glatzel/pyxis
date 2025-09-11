@@ -16,7 +16,7 @@ impl super::ITab for TabSettings {
         f: &mut ratatui::Frame,
         area: ratatui::layout::Rect,
         _raw_nmea: &VecDeque<(Talker, Identifier, String)>,
-    ) ->mischief::Result<()> {
+    ) -> mischief::Result<()> {
         let toml_str =
             toml::to_string_pretty(&*SETTINGS.lock()).expect("TOML serialize error: {e}");
         let paragraph = Paragraph::new(toml_str)

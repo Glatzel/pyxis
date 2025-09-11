@@ -48,28 +48,20 @@ impl crate::Area {
         north_lat_degree: f64,
     ) -> Result<&Self, ProjError> {
         if !(-180.0..=180.0).contains(&west_lon_degree) {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "`west_lon_degree` should in [-180,180] range.".to_string(),
-            };
+            ProjErrorCode::Other;
+            "`west_lon_degree` should in [-180,180] range.".to_string();
         }
         if !(-90.0..=90.0).contains(&south_lat_degree) {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "`south_lat_degree ` should in [-90,90] range.".to_string(),
-            };
+            ProjErrorCode::Other;
+            "`south_lat_degree ` should in [-90,90] range.".to_string();
         }
         if !(-180.0..=180.0).contains(&east_lon_degree) {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "`east_lon_degree` should in [-180,180] range.".to_string(),
-            };
+            ProjErrorCode::Other;
+            "`east_lon_degree` should in [-180,180] range.".to_string();
         }
         if !(-90.0..=90.0).contains(&north_lat_degree) {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "`north_lat_degree ` should in [-90,90] range.".to_string(),
-            };
+            ProjErrorCode::Other;
+            "`north_lat_degree ` should in [-90,90] range.".to_string();
         }
         unsafe {
             proj_sys::proj_area_set_bbox(

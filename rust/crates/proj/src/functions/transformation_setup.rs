@@ -2,7 +2,7 @@ use alloc::sync::Arc;
 extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
-use crate::data_types::{ProjError};
+use crate::data_types::ProjError;
 use crate::{Proj, check_result};
 /// # Transformation setup
 ///

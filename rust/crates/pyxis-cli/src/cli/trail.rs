@@ -16,7 +16,7 @@ mod tab;
 mod ui;
 
 /// Entry point of the async TUI application
-pub async fn execute() ->mischief::Result<()> {
+pub async fn execute() -> mischief::Result<()> {
     // Check if serial port is available.
     serial::check_port()?;
 

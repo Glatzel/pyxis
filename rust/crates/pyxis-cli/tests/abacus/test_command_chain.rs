@@ -14,7 +14,7 @@ fn print_output(cmd: &Assert) {
     }
 }
 #[test]
-fn test_jiaxing_bump_station() ->mischief::Result<()> {
+fn test_jiaxing_bump_station() -> mischief::Result<()> {
     let cmd = Command::cargo_bin("pyxis")?
         .args([
             "abacus",
@@ -36,7 +36,7 @@ fn test_jiaxing_bump_station() ->mischief::Result<()> {
     Ok(())
 }
 #[test]
-fn test_zhengyong_expressway_dehua_east_interchange() ->mischief::Result<()> {
+fn test_zhengyong_expressway_dehua_east_interchange() -> mischief::Result<()> {
     let cmd = Command::cargo_bin("pyxis")
         ?
     .args([

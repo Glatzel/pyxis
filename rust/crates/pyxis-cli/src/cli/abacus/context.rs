@@ -102,7 +102,7 @@ impl ContextTransform {
             self.z /= length;
         }
     }
-    pub fn proj(&mut self, from: &str, to: &str) ->mischief::Result<()> {
+    pub fn proj(&mut self, from: &str, to: &str) -> mischief::Result<()> {
         let ctx = crate::utils::init_proj_builder()?;
         let pj = ctx
             .clone()

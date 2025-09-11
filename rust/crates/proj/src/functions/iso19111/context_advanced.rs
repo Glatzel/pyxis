@@ -717,10 +717,8 @@ impl Context {
         north: bool,
     ) -> Result<Proj, ProjError> {
         if !(1..=60).contains(&zone) {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "UTM zone number should between 1 and 60.".to_string(),
-            };
+            ProjErrorCode::Other;
+            "UTM zone number should between 1 and 60.".to_string();
         }
         let ptr =
             unsafe { proj_sys::proj_create_conversion_utm(self.ptr, zone as i32, north as i32) };

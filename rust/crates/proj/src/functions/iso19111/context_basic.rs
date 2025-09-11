@@ -54,10 +54,8 @@ impl crate::Context {
             )
         };
         if result != 1 {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            };
+            ProjErrorCode::Other;
+            "Error".to_string();
         }
         Ok(self)
     }
@@ -248,10 +246,8 @@ impl crate::Context {
             )
         };
         if result != 1 {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            };
+            ProjErrorCode::Other;
+            "Error".to_string();
         }
 
         Ok(UomInfo::new(
@@ -295,10 +291,8 @@ impl crate::Context {
             )
         };
         if result != 1 {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            };
+            ProjErrorCode::Other;
+            "Error".to_string();
         }
         Ok(GridInfoDB::new(
             full_name.to_string().unwrap(),
@@ -338,10 +332,8 @@ impl crate::Context {
             )
         };
         if ptr.is_null() {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            };
+            ProjErrorCode::Other;
+            "Error".to_string();
         }
         let out_vec = ptr.to_vec_string();
         unsafe {
@@ -357,10 +349,8 @@ impl crate::Context {
     pub fn get_authorities_from_database(&self) -> Result<Vec<String>, ProjError> {
         let ptr = unsafe { proj_sys::proj_get_authorities_from_database(self.ptr) };
         if ptr.is_null() {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            };
+            ProjErrorCode::Other;
+            "Error".to_string();
         }
         let out_vec = ptr.to_vec_string();
         unsafe {
@@ -395,10 +385,8 @@ impl crate::Context {
             )
         };
         if ptr.is_null() {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            };
+            ProjErrorCode::Other;
+            "Error".to_string();
         }
         let out_vec = ptr.to_vec_string();
         unsafe {
@@ -431,10 +419,8 @@ impl crate::Context {
             )
         };
         if out_result_count < 1 {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            };
+            ProjErrorCode::Other;
+            "Error".to_string();
         }
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
@@ -473,10 +459,8 @@ impl crate::Context {
         params: Option<CrsListParameters>,
     ) -> Result<Vec<CrsInfo>, ProjError> {
         if auth_name.is_none() && params.is_none() {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "At least one of `auth_name` and  `params` must be set.".to_string(),
-            };
+            ProjErrorCode::Other;
+            "At least one of `auth_name` and  `params` must be set.".to_string();
         }
         let mut out_result_count = i32::default();
         let mut owned = OwnedCStrings::with_capacity(1);
@@ -512,10 +496,8 @@ impl crate::Context {
             )
         };
         if out_result_count < 1 {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            };
+            ProjErrorCode::Other;
+            "Error".to_string();
         }
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
@@ -576,10 +558,8 @@ impl crate::Context {
             )
         };
         if out_result_count < 1 {
-            ProjError {
-                code: ProjErrorCode::Other,
-                message: "Error".to_string(),
-            };
+            ProjErrorCode::Other;
+            "Error".to_string();
         }
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {

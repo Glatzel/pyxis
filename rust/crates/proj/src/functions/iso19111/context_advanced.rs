@@ -6,7 +6,7 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
-use crate::{Context, OwnedCStrings, Proj, ProjOptions};
+use crate::{check_result, Context, OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
 impl Context {
     ///Instantiate a CoordinateSystem.
@@ -715,13 +715,8 @@ impl Context {
         self: &Arc<Self>,
         zone: u8,
         north: bool,
-    ) -> Result<Proj, ProjError> {
-        if !(1..=60).contains(&zone) {
-            return Err(ProjError {
-                code: ProjErrorCode::Other,
-                message: "UTM zone number should between 1 and 60.".to_string(),
-            });
-        }
+    ) -> Result<Proj, ProjError> { 
+        check_result!(!(1..=60).contains(&zone),"UTM zone number should between 1 and 60.");
         let ptr =
             unsafe { proj_sys::proj_create_conversion_utm(self.ptr, zone as i32, north as i32) };
         Proj::new(self, ptr)

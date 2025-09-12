@@ -168,26 +168,6 @@ jobs:
             ./csharp/dist/Pyxis.*.*.*.nupkg
           if-no-files-found: error
 
-  cargo-doc:
-    runs-on: ubuntu-latest
-    env:
-      RUSTFLAGS: "-Dwarnings"
-    steps:
-      - uses: actions/checkout@v5
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.9.0
-        with:
-          run-install: false
-      - name: cargo-doc
-        run: ./rust/scripts/cargo-doc.ps1
-        shell: pwsh
-      - name: upload doc
-        uses: actions/upload-artifact@v4
-        with:
-          name: rust-doc
-          path: ./rust/dist/*.7z
-          if-no-files-found: error
   python-doc:
     runs-on: ubuntu-latest
     env:
@@ -212,7 +192,7 @@ jobs:
   release:
     permissions:
       contents: write
-    needs: [rattler-cpp,rattler-cuda,rattler-cli, rattler-python, rattler-python-cuda, nukpg, cargo-doc, python-doc]
+    needs: [rattler-cpp,rattler-cuda,rattler-cli, rattler-python, rattler-python-cuda, nukpg, python-doc]
     uses: Glatzel/template/.github/workflows/release.yml@main
     with:
       override: true

@@ -1,4 +1,4 @@
-use crate::data_types::{ProjError};
+use crate::data_types::ProjError;
 use crate::{ToCoord, check_result};
 ///# Distances
 impl crate::Proj {

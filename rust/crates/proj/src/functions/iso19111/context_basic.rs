@@ -7,9 +7,9 @@ use std::path::{Path, PathBuf};
 extern crate alloc;
 use envoy::{AsVecPtr, CStrListToVecString, CStrToString, ToCString};
 
+use crate::data_types::ProjError;
 use crate::data_types::iso19111::*;
-use crate::data_types::{ProjError};
-use crate::{check_result, OwnedCStrings, Proj, ProjOptions};
+use crate::{OwnedCStrings, Proj, ProjOptions, check_result};
 /// # ISO-19111 Base functions
 impl crate::Context {
     ///Explicitly point to the main PROJ CRS and coordinate operation
@@ -53,7 +53,7 @@ impl crate::Context {
                 ptr::null(),
             )
         };
-        check_result!( result != 1 , "Error");
+        check_result!(result != 1, "Error");
         Ok(self)
     }
     ///Returns the path to the database.
@@ -242,7 +242,7 @@ impl crate::Context {
                 &mut category,
             )
         };
-        check_result!( result != 1 , "Error");
+        check_result!(result != 1, "Error");
 
         Ok(UomInfo::new(
             name.to_string().unwrap(),
@@ -284,7 +284,7 @@ impl crate::Context {
                 &mut available,
             )
         };
-        check_result!( result != 1 , "Error");
+        check_result!(result != 1, "Error");
         Ok(GridInfoDB::new(
             full_name.to_string().unwrap(),
             package_name.to_string().unwrap(),
@@ -322,7 +322,7 @@ impl crate::Context {
                 ptr::null(),
             )
         };
-        check_result!( ptr.is_null() , "Error");
+        check_result!(ptr.is_null(), "Error");
         let out_vec = ptr.to_vec_string();
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
@@ -336,7 +336,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_authorities_from_database>
     pub fn get_authorities_from_database(&self) -> Result<Vec<String>, ProjError> {
         let ptr = unsafe { proj_sys::proj_get_authorities_from_database(self.ptr) };
-        check_result!( ptr.is_null() , "Error");
+        check_result!(ptr.is_null(), "Error");
         let out_vec = ptr.to_vec_string();
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
@@ -369,7 +369,7 @@ impl crate::Context {
                 allow_deprecated as i32,
             )
         };
-        check_result!( ptr.is_null() , "Error");
+        check_result!(ptr.is_null(), "Error");
         let out_vec = ptr.to_vec_string();
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
@@ -400,7 +400,7 @@ impl crate::Context {
                 &mut out_result_count,
             )
         };
-        check_result!( out_result_count < 1 , "Error");
+        check_result!(out_result_count < 1, "Error");
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
@@ -437,7 +437,10 @@ impl crate::Context {
         auth_name: Option<&str>,
         params: Option<CrsListParameters>,
     ) -> Result<Vec<CrsInfo>, ProjError> {
-        check_result!( auth_name.is_none() && params.is_none() , "At least one of `auth_name` and  `params` must be set.");
+        check_result!(
+            auth_name.is_none() && params.is_none(),
+            "At least one of `auth_name` and  `params` must be set."
+        );
         let mut out_result_count = i32::default();
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
@@ -471,7 +474,7 @@ impl crate::Context {
                 &mut out_result_count,
             )
         };
-        check_result!( out_result_count < 1 , "Error");
+        check_result!(out_result_count < 1, "Error");
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
@@ -530,7 +533,7 @@ impl crate::Context {
                 &mut out_result_count,
             )
         };
-        check_result!( out_result_count < 1 , "Error");
+        check_result!(out_result_count < 1, "Error");
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };

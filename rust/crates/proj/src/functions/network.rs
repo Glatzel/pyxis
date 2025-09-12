@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use envoy::{CStrToString, ToCString};
 
 use crate::check_result;
-use crate::data_types::{ProjError};
+use crate::data_types::ProjError;
 impl crate::Context {
     /// # References
     ///

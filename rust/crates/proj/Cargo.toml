@@ -17,9 +17,9 @@ assert_cmd = { workspace = true }
 clerk = { workspace = true, features = ["log"] }
 dunce = { workspace = true }
 float-cmp = { workspace = true }
+mischief = { workspace = true, features = ["fancy"] }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
-mischief = { workspace = true ,features = ["fancy"]}
 
 [features]
 serde = ["dep:serde"]

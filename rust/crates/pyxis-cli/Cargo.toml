@@ -10,6 +10,7 @@ clerk = { workspace = true, features = ["log", "serde"] }
 crossterm = { workspace = true }
 directories = { workspace = true }
 jsonschema = { workspace = true }
+mischief = { workspace = true, features = ["fancy"] }
 parking_lot = { workspace = true }
 proj = { workspace = true }
 pyxis = { workspace = true, features = ["serde"] }
@@ -19,13 +20,12 @@ rax-nmea = { workspace = true }
 schemars = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+serialport-ext = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "sync"] }
 tokio-serial = { workspace = true }
 toml = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
-mischief = { workspace = true ,features = ["fancy"]}
-serialport-ext = { workspace = true }
 
 [dev-dependencies]
 assert_cmd = { workspace = true }

@@ -1,5 +1,5 @@
 use crate::check_result;
-use crate::data_types::{ProjError};
+use crate::data_types::ProjError;
 // region:Coordinate transformation
 impl crate::Proj {
     ///Return the operation used during the last invocation of
@@ -164,7 +164,7 @@ impl crate::Context {
                 densify_pts,
             )
         };
-        check_result!( code != 1 , "Failures encountered.");
+        check_result!(code != 1, "Failures encountered.");
         Ok((out_xmin, out_ymin, out_xmax, out_ymax))
     }
     ///Transform boundary, taking into account 3D coordinates.
@@ -248,7 +248,7 @@ impl crate::Context {
                 densify_pts,
             )
         };
-        check_result!( code != 1 , "Failures encountered.");
+        check_result!(code != 1, "Failures encountered.");
         Ok((out_xmin, out_ymin, out_zmin, out_xmax, out_ymax, out_zmax))
     }
 }

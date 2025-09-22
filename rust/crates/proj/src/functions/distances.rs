@@ -72,6 +72,26 @@ impl crate::Proj {
         );
         Ok((dist, reversed_azimuth))
     }
+    ///Solves the direct geodesic problem for given projection ellipsoid
+    ///
+    ///The coordinates in a needs to be given as longitude and latitude in
+    /// radians. Note that the axis order of the P object is not taken into
+    /// account in this function, so even though a CRS object comes with axis
+    /// ordering latitude/longitude coordinates used in this function should be
+    /// reordered as longitude/latitude. The azimuth azimuth should be provided
+    /// in radians, and distance should be provided in meters
+    ///
+    /// # References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_geod_direct>
+    pub fn geod_direct(
+        &self,
+        _a: impl crate::ICoord,
+        _azimuth: f64,
+        _distance: f64,
+    ) -> Result<(f64, f64, f64), ProjError> {
+        todo!()
+    }
 }
 /// Calculate 2-dimensional euclidean between two projected coordinates.
 ///

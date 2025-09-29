@@ -181,15 +181,3 @@ impl<T: GeoFloat> Ellipsoid<T> {
     /// Returns the inverse flattening (`1/f`) of the ellipsoid.
     pub fn inverse_flattening(&self) -> T { self.inverse_flattening }
 }
-#[cfg(test)]
-mod test {
-    extern crate std;
-    use super::*;
-    #[test]
-    fn foo() {
-        static GRS1980_F64: std::sync::LazyLock<Ellipsoid<f64>> = std::sync::LazyLock::new(|| {
-            Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257222101)
-        });
-        std::println!("{}", GRS1980_F64.eccentricity2);
-    }
-}

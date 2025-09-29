@@ -117,7 +117,7 @@ where
     let (mut d_lon, mut d_lat) = transform(lon - num!(105.0), lat - num!(35.0));
     let rad_lat = lat / num!(180.0) * T::PI();
     let mut magic = (rad_lat).sin();
-    let ee = num!(0.006694380022900787);
+    let ee = num!(0.006694380022900786944561879465709353098645806312561035156250);
     let earth_r = num!(6378137.0);
 
     magic = T::ONE - ee * magic * magic;
@@ -287,7 +287,7 @@ where
 /// clerk::init_log_with_level(clerk::LogLevel::TRACE);
 /// let p = (WGS84_LON, WGS84_LAT);
 /// let p = wgs84_to_gcj02(p.0, p.1);
-/// println!("{:.60},{:.60}", p.0, p.1);
+/// println!("{},{}", p.0, p.1);
 /// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, GCJ02_LAT, epsilon = 1e-17);
 /// ```

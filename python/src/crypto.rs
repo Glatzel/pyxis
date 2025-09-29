@@ -22,7 +22,7 @@ fn get_crypto_fn(
                 &bd09_to_gcj02,
                 &gcj02_to_bd09,
                 1e-17,
-                CryptoThresholdMode::LonLat,
+                &CryptoThresholdMode::LonLat,
                 100,
             )
         }),
@@ -34,7 +34,7 @@ fn get_crypto_fn(
                 &bd09_to_wgs84,
                 &wgs84_to_bd09,
                 1e-17,
-                CryptoThresholdMode::LonLat,
+                &CryptoThresholdMode::LonLat,
                 100,
             )
         }),
@@ -47,7 +47,7 @@ fn get_crypto_fn(
                 &gcj02_to_wgs84,
                 &wgs84_to_gcj02,
                 1e-17,
-                CryptoThresholdMode::LonLat,
+                &CryptoThresholdMode::LonLat,
                 100,
             )
         }),

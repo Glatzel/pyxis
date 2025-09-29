@@ -168,7 +168,7 @@ impl PyxisCudaContext {
         from: CryptoSpace,
         to: CryptoSpace,
         threshold: T,
-        threshold_mode: CryptoThresholdMode,
+        threshold_mode: CryptoThresholdMode<T>,
         max_iter: usize,
     ) {
         assert_eq!(lon.len(), lat.len());
@@ -187,7 +187,7 @@ impl PyxisCudaContext {
             _ => panic!("Unsupported "),
         };
         let distance_mode = match threshold_mode {
-            CryptoThresholdMode::Distance => true,
+            CryptoThresholdMode::Distance { .. } => true,
             CryptoThresholdMode::LonLat => false,
         };
         let stream = &self.stream;

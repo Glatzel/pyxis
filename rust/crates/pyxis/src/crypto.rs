@@ -16,13 +16,13 @@ pub const WGS84_LON: f64 = 121.0917077;
 #[cfg(debug_assertions)]
 pub const WGS84_LAT: f64 = 30.6107779;
 #[cfg(debug_assertions)]
-pub const GCJ02_LON: f64 = 121.09626927850977;
+pub const GCJ02_LON: f64 = 121.09626935518249;
 #[cfg(debug_assertions)]
-pub const GCJ02_LAT: f64 = 30.608604368560773;
+pub const GCJ02_LAT: f64 = 30.60860433047113;
 #[cfg(debug_assertions)]
-pub const BD09_LON: f64 = 121.10271724622564;
+pub const BD09_LON: f64 = 121.10271732314104;
 #[cfg(debug_assertions)]
-pub const BD09_LAT: f64 = 30.61484575976839;
+pub const BD09_LAT: f64 = 30.614845720572603;
 #[derive(Debug, Clone, Copy)]
 pub enum CryptoSpace {
     BD09,
@@ -344,7 +344,7 @@ where
 ///     &bd09_to_wgs84,
 ///     &wgs84_to_bd09,
 ///     1e-17,
-///     CryptoThresholdMode::LonLat,
+///     &CryptoThresholdMode::LonLat,
 ///     100,
 /// );
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-13);
@@ -362,7 +362,9 @@ where
 ///     &bd09_to_wgs84,
 ///     &wgs84_to_bd09,
 ///     1e-4,
-///     CryptoThresholdMode::Distance,
+///     &CryptoThresholdMode::Distance {
+///         semi_major_axis: 6378137.0,
+///     },
 ///     100,
 /// );
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-8);

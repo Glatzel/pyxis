@@ -1,6 +1,7 @@
 use std::sync::LazyLock;
 
 use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
+use pyxis::Ellipsoid;
 use pyxis::crypto::*;
 static COORDS: LazyLock<Vec<(f64, f64)>> = LazyLock::new(|| {
     let num_points = 100;
@@ -24,6 +25,9 @@ static COORDS: LazyLock<Vec<(f64, f64)>> = LazyLock::new(|| {
 
     coordinates
 });
+static GRS1980_F64: std::sync::LazyLock<Ellipsoid<f64>> =
+    std::sync::LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257222101));
+
 fn bench_crypto(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto");
 
@@ -61,7 +65,7 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
                         &bd09_to_gcj02,
                         &gcj02_to_bd09,
                         threshold,
-                        CryptoThresholdMode::LonLat,
+                        &CryptoThresholdMode::LonLat,
                         1000,
                     );
                 }
@@ -76,7 +80,7 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
                         &bd09_to_wgs84,
                         &wgs84_to_bd09,
                         threshold,
-                        CryptoThresholdMode::LonLat,
+                        &CryptoThresholdMode::LonLat,
                         1000,
                     );
                 }
@@ -91,7 +95,7 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
                         &gcj02_to_wgs84,
                         &wgs84_to_gcj02,
                         threshold,
-                        CryptoThresholdMode::LonLat,
+                        &CryptoThresholdMode::LonLat,
                         1000,
                     );
                 }
@@ -102,6 +106,9 @@ fn bench_crypto_exact_lonlat(c: &mut Criterion) {
 }
 fn bench_crypto_exact_distance(c: &mut Criterion) {
     let mut group = c.benchmark_group("crypto-exact-distance");
+    let mode = CryptoThresholdMode::Distance {
+        semi_major_axis: GRS1980_F64.semi_major_axis(),
+    };
     for i in [3, 6].iter() {
         // [1m, 1cm, 1mm]
         let threshold = 10.0f64.powi(-i);
@@ -114,7 +121,7 @@ fn bench_crypto_exact_distance(c: &mut Criterion) {
                         &bd09_to_gcj02,
                         &gcj02_to_bd09,
                         threshold,
-                        CryptoThresholdMode::Distance,
+                        &mode,
                         1000,
                     );
                 }
@@ -129,7 +136,7 @@ fn bench_crypto_exact_distance(c: &mut Criterion) {
                         &bd09_to_wgs84,
                         &wgs84_to_bd09,
                         threshold,
-                        CryptoThresholdMode::Distance,
+                        &mode,
                         1000,
                     );
                 }
@@ -144,7 +151,7 @@ fn bench_crypto_exact_distance(c: &mut Criterion) {
                         &gcj02_to_wgs84,
                         &wgs84_to_gcj02,
                         threshold,
-                        CryptoThresholdMode::Distance,
+                        &mode,
                         1000,
                     );
                 }

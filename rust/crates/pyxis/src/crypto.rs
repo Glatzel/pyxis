@@ -1,5 +1,7 @@
 use core::fmt;
 use core::str::FromStr;
+extern crate alloc;
+use alloc::string::{String, ToString};
 
 /// # References
 /// - https://github.com/googollee/eviltransform/blob/master/rust/src/lib.rs
@@ -8,7 +10,10 @@ use core::str::FromStr;
 /// - https://github.com/wandergis/coordtransform
 /// - https://blog.csdn.net/coolypf/article/details/8569813
 /// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
-use crate::types::{ConstEllipsoid, GeoFloat, num};
+use crate::{
+    Ellipsoid,
+    primitive::{GeoFloat, num},
+};
 #[cfg(debug_assertions)]
 pub const WGS84_LON: f64 = 121.0917077;
 #[cfg(debug_assertions)]
@@ -50,32 +55,30 @@ impl fmt::Display for CryptoSpace {
     }
 }
 #[derive(Debug, Clone, Copy)]
-pub enum CryptoThresholdMode {
-    Distance,
+pub enum CryptoThresholdMode<T>
+where
+    T: GeoFloat + 'static,
+{
+    Distance { semi_major_axis: T },
     LonLat,
 }
-impl FromStr for CryptoThresholdMode {
-    type Err = String;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s.to_lowercase().as_str() {
-            "distance" => Ok(Self::Distance),
-            "lonlat" => Ok(Self::LonLat),
-            _ => Err("".to_string()),
-        }
-    }
-}
-impl fmt::Display for CryptoThresholdMode {
+impl<T> fmt::Display for CryptoThresholdMode<T>
+where
+    T: GeoFloat + 'static,
+{
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Distance => write!(f, "Distance"),
+            Self::Distance { semi_major_axis } => {
+                write!(f, "Distance{{semi_major_axis: {}}}", semi_major_axis)
+            }
             Self::LonLat => write!(f, "LonLat"),
         }
     }
 }
 fn transform<T>(x: T, y: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T> + 'static,
+    T: GeoFloat + 'static,
 {
     let xy = x * y;
     let abs_x = x.abs().sqrt();
@@ -112,13 +115,13 @@ where
 
 fn delta<T>(lon: T, lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T> + 'static,
+    T: GeoFloat + 'static,
 {
     let (mut d_lon, mut d_lat) = transform(lon - num!(105.0), lat - num!(35.0));
     let rad_lat = lat / num!(180.0) * T::PI();
     let mut magic = (rad_lat).sin();
-    let ee = T::krasovsky1940().eccentricity2();
-    let earth_r = T::krasovsky1940().semi_major_axis();
+    let ee = num!(6378137.0);
+    let earth_r = num!(298.257222101);
 
     magic = T::ONE - ee * magic * magic;
     let sqrt_magic = (magic).sqrt();
@@ -153,7 +156,7 @@ where
 /// ```
 pub fn bd09_to_gcj02<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T> + 'static,
+    T: GeoFloat + 'static,
 {
     let x_pi = T::PI() * num!(3000.0) / num!(180.0);
     let x = bd09_lon - num!(0.0065);
@@ -191,7 +194,7 @@ where
 /// ```
 pub fn gcj02_to_wgs84<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T> + 'static,
+    T: GeoFloat + 'static,
 {
     let (d_lon, d_lat) = delta(gcj02_lon, gcj02_lat);
     (gcj02_lon - d_lon, gcj02_lat - d_lat)
@@ -223,7 +226,7 @@ where
 /// ```
 pub fn bd09_to_wgs84<T>(bd09_lon: T, bd09_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T> + 'static,
+    T: GeoFloat + 'static,
 {
     let (gcj_lon, gcj_lat) = bd09_to_gcj02(bd09_lon, bd09_lat);
     gcj02_to_wgs84(gcj_lon, gcj_lat)
@@ -255,7 +258,7 @@ where
 /// ```
 pub fn gcj02_to_bd09<T>(gcj02_lon: T, gcj02_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T> + 'static,
+    T: GeoFloat + 'static,
 {
     let x_pi = T::PI() * num!(3000.0) / num!(180.0);
     let z =
@@ -293,7 +296,7 @@ where
 /// ```
 pub fn wgs84_to_gcj02<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T> + 'static,
+    T: GeoFloat + 'static,
 {
     let (d_lon, d_lat) = delta(wgs84_lon, wgs84_lat);
     (wgs84_lon + d_lon, wgs84_lat + d_lat)
@@ -326,7 +329,7 @@ where
 /// ```
 pub fn wgs84_to_bd09<T>(wgs84_lon: T, wgs84_lat: T) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T> + 'static,
+    T: GeoFloat + 'static,
 {
     let (gcj_lon, gcj_lat) = wgs84_to_gcj02(wgs84_lon, wgs84_lat);
     gcj02_to_bd09(gcj_lon, gcj_lat)
@@ -374,11 +377,11 @@ pub fn crypto_exact<T>(
     crypto_fn: &impl Fn(T, T) -> (T, T),
     inv_crypto_fn: &impl Fn(T, T) -> (T, T),
     threshold: T,
-    threshold_mode: CryptoThresholdMode,
+    threshold_mode: &CryptoThresholdMode<T>,
     max_iter: usize,
 ) -> (T, T)
 where
-    T: GeoFloat + ConstEllipsoid<T> + 'static,
+    T: GeoFloat + 'static,
 {
     let (mut dst_lon, mut dst_lat) = crypto_fn(src_lon, src_lat);
     for _i in 0..max_iter {
@@ -391,17 +394,15 @@ where
         clerk::trace!("iteration: {_i}");
         clerk::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
         clerk::trace!("d_lon: {:.2e}, d_lat: {:.2e}", d_lon, d_lat);
-        clerk::trace!(
-            "distance: {}",
-            haversine_distance(src_lon, src_lat, tmp_lon, tmp_lat)
-        );
+
         if _i == max_iter - 1 {
             clerk::warn!("Exceed max iteration num!ber: {max_iter}");
         }
 
         match threshold_mode {
-            CryptoThresholdMode::Distance
-                if haversine_distance(tmp_lon, tmp_lat, dst_lon, dst_lat) < threshold =>
+            CryptoThresholdMode::Distance { semi_major_axis }
+                if haversine_distance(tmp_lon, tmp_lat, dst_lon, dst_lat, *semi_major_axis)
+                    < threshold =>
             {
                 break;
             }
@@ -418,9 +419,9 @@ where
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b,
 /// lon_b), unit in meter.
-pub fn haversine_distance<T>(lon_a: T, lat_a: T, lon_b: T, lat_b: T) -> T
+pub fn haversine_distance<T>(lon_a: T, lat_a: T, lon_b: T, lat_b: T, semi_major_axis: T) -> T
 where
-    T: GeoFloat + ConstEllipsoid<T> + 'static,
+    T: GeoFloat + 'static,
 {
     let lat1_rad = lat_a.to_radians();
     let lon1_rad = lon_a.to_radians();
@@ -434,19 +435,21 @@ where
         + lat1_rad.cos() * lat2_rad.cos() * (delta_lon / T::TWO).sin().powi(2);
     let c = T::TWO * a.sqrt().atan2((T::ONE - a).sqrt());
 
-    T::wgs84().semi_major_axis() * c
+    semi_major_axis * c
 }
 #[cfg(test)]
 mod test {
-
+    extern crate std;
     use core::f64;
+    use std::println;
 
     use clerk::LogLevel;
     use float_cmp::assert_approx_eq;
     use rand::prelude::*;
 
     use super::*;
-
+    static GRS1980_F64: std::sync::LazyLock<Ellipsoid<f64>> =
+        std::sync::LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257222101));
     #[test]
     fn test_exact() {
         clerk::init_log_with_level(LogLevel::TRACE);
@@ -472,7 +475,7 @@ mod test {
                     &bd09_to_gcj02,
                     &gcj02_to_bd09,
                     1e-20,
-                    CryptoThresholdMode::LonLat,
+                    &CryptoThresholdMode::LonLat,
                     100,
                 );
                 if (test_gcj.0 - gcj.0).abs() > threshold || (test_gcj.1 - gcj.1).abs() > threshold
@@ -483,17 +486,38 @@ mod test {
                         test_gcj.1,
                         gcj.0,
                         gcj.1,
-                        haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1),
+                        haversine_distance(
+                            test_gcj.0,
+                            test_gcj.1,
+                            gcj.0,
+                            gcj.1,
+                            GRS1980_F64.semi_major_axis()
+                        ),
                         test_gcj.0 - gcj.0,
                         test_gcj.1 - gcj.1
                     )
                 };
-                max_dist =
-                    max_dist.max(haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1).abs());
+                max_dist = max_dist.max(
+                    haversine_distance(
+                        test_gcj.0,
+                        test_gcj.1,
+                        gcj.0,
+                        gcj.1,
+                        GRS1980_F64.semi_major_axis(),
+                    )
+                    .abs(),
+                );
                 max_lonlat = max_lonlat
                     .max((test_gcj.0 - gcj.0).abs())
                     .max((test_gcj.1 - gcj.1).abs());
-                all_dist += haversine_distance(test_gcj.0, test_gcj.1, gcj.0, gcj.1).abs();
+                all_dist += haversine_distance(
+                    test_gcj.0,
+                    test_gcj.1,
+                    gcj.0,
+                    gcj.1,
+                    GRS1980_F64.semi_major_axis(),
+                )
+                .abs();
                 all_lonlat += (test_gcj.0 - gcj.0).abs() + (test_gcj.1 - gcj.1).abs();
                 if is_ci {
                     assert_approx_eq!(f64, test_gcj.0, gcj.0, epsilon = threshold);
@@ -507,7 +531,7 @@ mod test {
                     &bd09_to_wgs84,
                     &wgs84_to_bd09,
                     1e-20,
-                    CryptoThresholdMode::LonLat,
+                    &CryptoThresholdMode::LonLat,
                     100,
                 );
                 if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
@@ -518,17 +542,38 @@ mod test {
                         test_wgs.1,
                         wgs.0,
                         wgs.1,
-                        haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1),
+                        haversine_distance(
+                            test_wgs.0,
+                            test_wgs.1,
+                            wgs.0,
+                            wgs.1,
+                            GRS1980_F64.semi_major_axis()
+                        ),
                         test_wgs.0 - wgs.0,
                         test_wgs.1 - wgs.1,
                     )
                 };
-                max_dist =
-                    max_dist.max(haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs());
+                max_dist = max_dist.max(
+                    haversine_distance(
+                        test_wgs.0,
+                        test_wgs.1,
+                        wgs.0,
+                        wgs.1,
+                        GRS1980_F64.semi_major_axis(),
+                    )
+                    .abs(),
+                );
                 max_lonlat = max_lonlat
                     .max((test_wgs.0 - wgs.0).abs())
                     .max((test_wgs.1 - wgs.1).abs());
-                all_dist += haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs();
+                all_dist += haversine_distance(
+                    test_wgs.0,
+                    test_wgs.1,
+                    wgs.0,
+                    wgs.1,
+                    GRS1980_F64.semi_major_axis(),
+                )
+                .abs();
                 all_lonlat += (test_wgs.0 - wgs.0).abs() + (test_wgs.1 - wgs.1).abs();
                 if is_ci {
                     assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = threshold);
@@ -542,7 +587,7 @@ mod test {
                     &gcj02_to_wgs84,
                     &wgs84_to_gcj02,
                     1e-20,
-                    CryptoThresholdMode::LonLat,
+                    &CryptoThresholdMode::LonLat,
                     100,
                 );
                 if (test_wgs.0 - wgs.0).abs() > threshold || (test_wgs.1 - wgs.1).abs() > threshold
@@ -553,17 +598,38 @@ mod test {
                         test_wgs.1,
                         wgs.0,
                         wgs.1,
-                        haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1),
+                        haversine_distance(
+                            test_wgs.0,
+                            test_wgs.1,
+                            wgs.0,
+                            wgs.1,
+                            GRS1980_F64.semi_major_axis()
+                        ),
                         test_wgs.0 - wgs.0,
                         test_wgs.1 - wgs.1,
                     )
                 };
-                max_dist =
-                    max_dist.max(haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs());
+                max_dist = max_dist.max(
+                    haversine_distance(
+                        test_wgs.0,
+                        test_wgs.1,
+                        wgs.0,
+                        wgs.1,
+                        GRS1980_F64.semi_major_axis(),
+                    )
+                    .abs(),
+                );
                 max_lonlat = max_lonlat
                     .max((test_wgs.0 - wgs.0).abs())
                     .max((test_wgs.1 - wgs.1).abs());
-                all_dist += haversine_distance(test_wgs.0, test_wgs.1, wgs.0, wgs.1).abs();
+                all_dist += haversine_distance(
+                    test_wgs.0,
+                    test_wgs.1,
+                    wgs.0,
+                    wgs.1,
+                    GRS1980_F64.semi_major_axis(),
+                )
+                .abs();
                 all_lonlat += (test_wgs.0 - wgs.0).abs() + (test_wgs.1 - wgs.1).abs();
                 if is_ci {
                     assert_approx_eq!(f64, test_wgs.0, wgs.0, epsilon = threshold);

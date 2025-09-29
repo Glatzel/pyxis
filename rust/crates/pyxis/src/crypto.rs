@@ -117,7 +117,7 @@ where
     let (mut d_lon, mut d_lat) = transform(lon - num!(105.0), lat - num!(35.0));
     let rad_lat = lat / num!(180.0) * T::PI();
     let mut magic = (rad_lat).sin();
-    let ee = num!(298.257222101);
+    let ee = num!(0.006694380022900787);
     let earth_r = num!(6378137.0);
 
     magic = T::ONE - ee * magic * magic;

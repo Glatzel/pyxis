@@ -10,10 +10,7 @@ use alloc::string::{String, ToString};
 /// - https://github.com/wandergis/coordtransform
 /// - https://blog.csdn.net/coolypf/article/details/8569813
 /// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
-use crate::{
-    Ellipsoid,
-    primitive::{GeoFloat, num},
-};
+use crate::primitive::{GeoFloat, num};
 #[cfg(debug_assertions)]
 pub const WGS84_LON: f64 = 121.0917077;
 #[cfg(debug_assertions)]
@@ -448,6 +445,7 @@ mod test {
     use rand::prelude::*;
 
     use super::*;
+    use crate::Ellipsoid;
     static GRS1980_F64: std::sync::LazyLock<Ellipsoid<f64>> =
         std::sync::LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257222101));
     #[test]

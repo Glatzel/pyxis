@@ -39,20 +39,12 @@ jobs:
         if: ${{github.event_name == 'pull_request'}}
         with:
           files_yaml: |
-            csharp:
-              - ./.github/workflows/ci-csharp.yml
-              - ./csharp/**
             python:
               - ./.github/workflows/ci-python.yml
               - ./python/**
             rust:
               - ./.github/workflows/ci-rust.yml
               - ./rust/**
-
-  csharp:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-csharp != 'false'}}
-    uses: ./.github/workflows/ci-csharp.yml
 
   python:
     needs: changed

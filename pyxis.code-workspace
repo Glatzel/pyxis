@@ -9,32 +9,12 @@
             "path": ".github"
         },
         {
-            "name": "cpp",
-            "path": "cpp"
-        },
-        {
-            "name": "csharp",
-            "path": "csharp"
-        },
-        {
-            "name": "cuda",
-            "path": "cuda"
-        },
-        {
-            "name": "opencl",
-            "path": "opencl"
-        },
-        {
             "name": "lefthook",
             "path": "lefthook"
         },
         {
             "name": "python",
             "path": "python"
-        },
-        {
-            "name": "python-cuda",
-            "path": "python-cuda"
         },
         {
             "name": "rust",

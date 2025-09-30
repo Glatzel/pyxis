@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/gh/Glatzel/pyxis/graph/badge.svg?token=I6L8Y698AR)](https://codecov.io/gh/Glatzel/pyxis)
 [![CodSpeed Badge](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://codspeed.io/Glatzel/pyxis)
 
-**Pyxis** is a multi-language library and toolkit for coordinate conversion and processing.
+**Pyxis** is a library for coordinate conversion and processing.
 
 The repository provides a central framework for coordinate-related computation, transformations, and experimentation.
 Details for each language, including API, tools, and target platforms, are maintained in their respective subfolders.

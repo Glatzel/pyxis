@@ -51,7 +51,7 @@ impl fmt::Display for CryptoSpace {
         }
     }
 }
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub enum CryptoThresholdMode<T>
 where
     T: GeoFloat + 'static,

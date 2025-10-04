@@ -20,11 +20,7 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
 
 impl crate::Context {
     pub fn set_log_level(self: &Arc<Self>, level: LogLevel) -> Result<&Arc<Self>, ProjError> {
-        let level = unsafe { proj_sys::proj_log_level(self.ptr, level as u32) };
-        let _ = LogLevel::try_from(level).map_err(|e| ProjError {
-            code: crate::data_types::ProjErrorCode::Other,
-            message: format!("{}", e),
-        })?;
+        unsafe { proj_sys::proj_log_level(self.ptr, level as u32) };
         Ok(self)
     }
 

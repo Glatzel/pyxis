@@ -27,7 +27,7 @@ impl ProjObjList {
             proj_sys::proj_get_suggested_operation(
                 self.ctx.ptr,
                 self.ptr(),
-                i32::from(direction),
+                direction as i32,
                 coord.to_coord()?,
             )
         };

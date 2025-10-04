@@ -1,7 +1,6 @@
 extern crate alloc;
 use alloc::sync::Arc;
 
-use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 use crate::data_types::ProjError;
 use crate::{OwnedCStrings, check_result};
@@ -52,7 +51,7 @@ impl Proj {
 /// # References
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_DIRECTION>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, TryFromPrimitive, IntoPrimitive)]
+#[derive(Debug)]
 #[repr(i32)]
 pub enum Direction {
     ///Perform transformation in the forward direction.

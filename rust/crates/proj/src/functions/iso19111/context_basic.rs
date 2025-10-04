@@ -207,7 +207,7 @@ impl crate::Context {
                 self.ptr,
                 auth_name.to_cstring().as_ptr(),
                 code.to_cstring().as_ptr(),
-                category.into(),
+                category as u32,
                 use_projalternative_grid_names as i32,
                 ptr::null(),
             )
@@ -365,7 +365,7 @@ impl crate::Context {
             proj_sys::proj_get_codes_from_database(
                 self.ptr,
                 auth_name.to_cstring().as_ptr(),
-                proj_type.into(),
+                proj_type as u32,
                 allow_deprecated as i32,
             )
         };
@@ -452,7 +452,7 @@ impl crate::Context {
                         .types()
                         .to_owned()
                         .iter()
-                        .map(|f| u32::from(f.clone()))
+                        .map(|f| f.clone() as u32)
                         .collect();
 
                     &proj_sys::PROJ_CRS_LIST_PARAMETERS {

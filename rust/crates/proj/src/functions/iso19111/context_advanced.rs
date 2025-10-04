@@ -33,13 +33,13 @@ impl Context {
                 direction: a.direction.as_ptr().cast_mut(),
                 unit_name: a.unit_name.as_ptr().cast_mut(),
                 unit_conv_factor: a.unit_conv_factor,
-                unit_type: a.unit_type.into(),
+                unit_type: a.unit_type as u32,
             });
         }
         let ptr = unsafe {
             proj_sys::proj_create_cs(
                 self.ptr,
-                coordinate_system_type.into(),
+                coordinate_system_type as u32,
                 axis_count as i32,
                 axis_vec.as_ptr(),
             )
@@ -67,7 +67,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
                 self.ptr,
-                ellipsoidal_cs_2d_type.into(),
+                ellipsoidal_cs_2d_type as u32,
                 unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 unit_conv_factor,
             )
@@ -96,7 +96,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 self.ptr,
-                ellipsoidal_cs_2d_type.into(),
+                ellipsoidal_cs_2d_type as u32,
                 owned.push_option(unit_name),
                 unit_conv_factor,
             )
@@ -135,7 +135,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr,
-                ellipsoidal_cs_3d_type.into(),
+                ellipsoidal_cs_3d_type as u32,
                 horizontal_angular_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 horizontal_angular_unit_conv_factor,
                 vertical_linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
@@ -541,7 +541,7 @@ impl Context {
                         value: *p.value(),
                         unit_name: p.unit_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
                         unit_conv_factor: *p.unit_conv_factor(),
-                        unit_type: u32::from(*p.unit_type()),
+                        unit_type: *p.unit_type() as u32,
                     })
                     .collect::<Vec<_>>()
                     .as_ptr(),
@@ -596,7 +596,7 @@ impl Context {
                 value: *p.value(),
                 unit_name: p.unit_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
                 unit_conv_factor: *p.unit_conv_factor(),
-                unit_type: u32::from(*p.unit_type()),
+                unit_type: *p.unit_type() as u32,
             })
             .collect();
 

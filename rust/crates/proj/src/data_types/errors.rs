@@ -1,4 +1,4 @@
-use num_enum::{FromPrimitive, IntoPrimitive};
+use num_enum::FromPrimitive;
 use thiserror::Error;
 
 ///Three classes of errors are defined below. The belonging of a given error
@@ -12,7 +12,7 @@ use thiserror::Error;
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#error-codes>
-#[derive(Debug, Clone, FromPrimitive, IntoPrimitive)]
+#[derive(Debug, Clone, Copy, FromPrimitive)]
 #[repr(i32)]
 pub enum ProjErrorCode {
     Success = 0,
@@ -69,7 +69,7 @@ pub enum ProjErrorCode {
 }
 
 #[derive(Debug, Error)]
-#[error("ProjError {code:?} [{}]: {message}", i32::from(.code.clone()))]
+#[error("ProjError {code:?} [{}]: {message}",.code.clone() as i32)]
 pub struct ProjError {
     pub code: ProjErrorCode,
     pub message: String,

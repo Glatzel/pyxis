@@ -74,7 +74,7 @@ impl crate::Proj {
         let result = unsafe {
             proj_sys::proj_trans_generic(
                 self.ptr(),
-                i32::from(direction),
+                direction as i32,
                 x,
                 sx,
                 nx,
@@ -152,7 +152,7 @@ impl crate::Context {
             proj_sys::proj_trans_bounds(
                 self.ptr,
                 p.ptr(),
-                i32::from(direction),
+                direction as i32,
                 xmin,
                 ymin,
                 xmax,
@@ -232,7 +232,7 @@ impl crate::Context {
             proj_sys::proj_trans_bounds_3D(
                 self.ptr,
                 p.ptr(),
-                i32::from(direction),
+                direction as i32,
                 xmin,
                 ymin,
                 zmin,

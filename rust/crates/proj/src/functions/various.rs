@@ -33,7 +33,7 @@ impl crate::Proj {
     ) -> Result<f64, ProjError> {
         let mut coord = coord.to_coord()?;
         let distance =
-            unsafe { proj_sys::proj_roundtrip(self.ptr(), direction.into(), n, &mut coord) };
+            unsafe { proj_sys::proj_roundtrip(self.ptr(), direction as i32, n, &mut coord) };
         check_result!(self);
         Ok(distance)
     }
@@ -93,7 +93,7 @@ impl crate::Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_input>
     pub fn angular_input(&self, dir: crate::Direction) -> bool {
-        (unsafe { proj_sys::proj_angular_input(self.ptr(), i32::from(dir)) } != 0)
+        (unsafe { proj_sys::proj_angular_input(self.ptr(), dir as i32) } != 0)
     }
 
     ///Check if an operation returns output in radians or not.
@@ -101,7 +101,7 @@ impl crate::Proj {
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_output>
     pub fn angular_output(&self, dir: crate::Direction) -> bool {
-        (unsafe { proj_sys::proj_angular_output(self.ptr(), i32::from(dir)) } != 0)
+        (unsafe { proj_sys::proj_angular_output(self.ptr(), dir as i32) } != 0)
     }
 
     ///Check if an operation expects input in degrees or not.
@@ -110,7 +110,7 @@ impl crate::Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_input>
     pub fn degree_input(&self, dir: crate::Direction) -> bool {
-        (unsafe { proj_sys::proj_degree_input(self.ptr(), dir.into()) } != 0)
+        (unsafe { proj_sys::proj_degree_input(self.ptr(), dir as i32) } != 0)
     }
 
     ///Check if an operation returns output in degrees or not.
@@ -119,7 +119,7 @@ impl crate::Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_output>
     pub fn degree_output(&self, dir: crate::Direction) -> bool {
-        (unsafe { proj_sys::proj_degree_output(self.ptr(), dir.into()) } != 0)
+        (unsafe { proj_sys::proj_degree_output(self.ptr(), dir as i32) } != 0)
     }
 }
 

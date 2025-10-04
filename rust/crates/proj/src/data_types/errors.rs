@@ -69,7 +69,7 @@ pub enum ProjErrorCode {
 }
 
 #[derive(Debug, Error)]
-#[error("ProjError {code:?} [{}]: {message}",.code as i32)]
+#[error("ProjError {code:?} [{}]: {message}",*.code as i32 )]
 pub struct ProjError {
     pub code: ProjErrorCode,
     pub message: String,

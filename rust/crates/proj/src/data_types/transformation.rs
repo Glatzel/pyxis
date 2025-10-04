@@ -1,7 +1,6 @@
 extern crate alloc;
 use alloc::sync::Arc;
 
-
 use crate::data_types::ProjError;
 use crate::{OwnedCStrings, check_result};
 

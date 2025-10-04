@@ -1,5 +1,3 @@
-
-
 ///Enum of logging levels in PROJ. Used to set the logging level in PROJ.
 /// Usually using [`crate::Context::set_log_level`].
 ///

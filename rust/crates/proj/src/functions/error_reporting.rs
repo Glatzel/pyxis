@@ -17,7 +17,7 @@ impl crate::Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_errno>
     pub(crate) fn errno(&self) -> ProjErrorCode {
-         ProjErrorCode::from(unsafe { proj_sys::proj_errno(self.ptr()) })
+        ProjErrorCode::from(unsafe { proj_sys::proj_errno(self.ptr()) })
     }
     ///Change the error-state of Proj to err.
     ///

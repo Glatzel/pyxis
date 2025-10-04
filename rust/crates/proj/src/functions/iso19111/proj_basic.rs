@@ -38,7 +38,7 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
     pub fn is_equivalent_to(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
-        unsafe { proj_sys::proj_is_equivalent_to(self.ptr(), other.ptr(), criterion.into()) != 0 }
+        unsafe { proj_sys::proj_is_equivalent_to(self.ptr(), other.ptr(), criterion as u32) != 0 }
     }
 
     /// Return whether two objects are equivalent.
@@ -59,7 +59,7 @@ impl Proj {
                 self.ctx.ptr,
                 self.ptr(),
                 other.ptr(),
-                criterion.into(),
+                criterion as u32,
             ) != 0
         }
     }
@@ -293,7 +293,7 @@ impl Proj {
             proj_sys::proj_as_wkt(
                 self.ctx.ptr,
                 self.ptr(),
-                wkt_type.into(),
+                wkt_type as u32,
                 options.as_vec_ptr().as_ptr(),
             )
         }
@@ -335,7 +335,7 @@ impl Proj {
             proj_sys::proj_as_proj_string(
                 self.ctx.ptr,
                 self.ptr(),
-                string_type.into(),
+                string_type as u32,
                 options.as_vec_ptr().as_ptr(),
             )
         }

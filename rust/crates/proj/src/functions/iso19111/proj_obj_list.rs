@@ -86,7 +86,7 @@ impl Context {
         limit_result_count: usize,
     ) -> Result<ProjObjList, ProjError> {
         let (types, count) = types.map_or((None, 0), |types| {
-            let types: Vec<u32> = types.iter().map(|f| u32::from(f.clone())).collect();
+            let types: Vec<u32> = types.iter().map(|f| f.clone() as u32).collect();
             let count = types.len();
             (Some(types), count)
         });

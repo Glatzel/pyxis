@@ -139,7 +139,7 @@ impl OperationFactoryContext {
             proj_sys::proj_operation_factory_context_set_crs_extent_use(
                 self.ctx.ptr,
                 self.ptr,
-                u32::from(extent_use),
+                extent_use as u32,
             );
         }
         self
@@ -162,7 +162,7 @@ impl OperationFactoryContext {
             proj_sys::proj_operation_factory_context_set_spatial_criterion(
                 self.ctx.ptr,
                 self.ptr,
-                u32::from(criterion),
+                criterion as u32,
             );
         }
         self
@@ -183,7 +183,7 @@ impl OperationFactoryContext {
             proj_sys::proj_operation_factory_context_set_grid_availability_use(
                 self.ctx.ptr,
                 self.ptr,
-                u32::from(grid_availability_use),
+                grid_availability_use as u32,
             );
         }
         self
@@ -239,7 +239,7 @@ impl OperationFactoryContext {
             proj_sys::proj_operation_factory_context_set_allow_use_intermediate_crs(
                 self.ctx.ptr,
                 self.ptr,
-                u32::from(proj_intermediate_crs_use),
+                proj_intermediate_crs_use as u32,
             );
         }
         self

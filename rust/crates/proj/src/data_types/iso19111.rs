@@ -4,7 +4,7 @@ use alloc::sync::Arc;
 use core::fmt::Display;
 
 use envoy::ToCString;
-use num_enum::{IntoPrimitive, TryFromPrimitive};
+use num_enum::TryFromPrimitive;
 use strum::{AsRefStr, EnumString};
 
 use crate::data_types::ProjError;
@@ -14,7 +14,7 @@ use crate::{Context, OwnedCStrings, Proj, check_result, readonly_struct};
 /// # Reference
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GUESSED_WKT_DIALECT>
-#[derive(Debug, IntoPrimitive, TryFromPrimitive, PartialEq)]
+#[derive(Debug, TryFromPrimitive, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum GuessedWktDialect {
@@ -36,7 +36,7 @@ pub enum GuessedWktDialect {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CATEGORY>
-#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum Category {
@@ -53,7 +53,7 @@ pub enum Category {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, Clone, PartialEq, TryFromPrimitive)]
 #[cfg_attr(test, derive(strum::EnumIter))]
 #[repr(u32)]
 pub enum ProjType {
@@ -93,7 +93,7 @@ pub enum ProjType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COMPARISON_CRITERION>
-#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum ComparisonCriterion {
@@ -115,7 +115,7 @@ pub enum ComparisonCriterion {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_WKT_TYPE>
-#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum WktType {
@@ -141,7 +141,7 @@ pub enum WktType {
 /// interest is specified. # References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_EXTENT_USE>
-#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, TryFromPrimitive)]
 #[repr(u32)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum CrsExtentUse {
@@ -161,7 +161,7 @@ pub enum CrsExtentUse {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_GRID_AVAILABILITY_USE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, TryFromPrimitive)]
 #[repr(u32)]
 pub enum GridAvailabilityUse {
     ///Grid availability is only used for sorting results. Operations where
@@ -183,7 +183,7 @@ pub enum GridAvailabilityUse {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_STRING_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, TryFromPrimitive)]
 #[repr(u32)]
 pub enum ProjStringType {
     ///cf [osgeo::proj::io::PROJStringFormatter::Convention::PROJ_5](https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1PROJStringFormatter_1a797997db6984aa2bad279abb0010ff13a475fc81228e34a4715d2d28f4d7f2851)
@@ -196,7 +196,7 @@ pub enum ProjStringType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_SPATIAL_CRITERION>
-#[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, PartialEq, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum SpatialCriterion {
@@ -212,7 +212,7 @@ pub enum SpatialCriterion {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_INTERMEDIATE_CRS_USE>
-#[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, PartialEq, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum IntermediateCrsUse {
@@ -229,7 +229,7 @@ pub enum IntermediateCrsUse {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORDINATE_SYSTEM_TYPE>
-#[derive(Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, PartialEq, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum CoordinateSystemType {
@@ -313,7 +313,7 @@ readonly_struct!(
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UNIT_TYPE>
-#[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum UnitType {
@@ -333,7 +333,7 @@ pub enum UnitType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CARTESIAN_CS_2D_TYPE>
-#[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum CartesianCs2dType {
@@ -355,7 +355,7 @@ pub enum CartesianCs2dType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_2D_TYPE>
-#[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum EllipsoidalCs2dType {
@@ -369,7 +369,7 @@ pub enum EllipsoidalCs2dType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_3D_TYPE>
-#[derive(Debug, Clone, Copy, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum EllipsoidalCs3dType {

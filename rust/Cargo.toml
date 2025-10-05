@@ -23,7 +23,7 @@ async-trait = "0.1"
 bindgen = "0.72"
 bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
 chrono = "0.4.42"
-criterion = { package = "codspeed-criterion-compat", version = "3.0.0" }
+criterion = { package = "codspeed-criterion-compat", version = "4.0.0" }
 crossterm = "0.29.0"
 directories = "6.0.0"
 dunce = "1.0.5"

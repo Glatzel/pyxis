@@ -10,8 +10,8 @@ checksum = "c08606f8c3cbf4ce6ec8e28fb0014a2c086708fe954eaa885384a6165172e7e8"
 
 [[package]]
 name = "clerk"
-version = "0.0.30"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.30#57976cd8c948dd1dc0160cdaea4e4f5198bb527e"
+version = "0.0.31"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.31#d32b1c8b000262a2d507daff16a62cca6ef41dae"
 
 [[package]]
 name = "crossbeam-deque"

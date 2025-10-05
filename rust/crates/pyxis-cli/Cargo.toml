@@ -6,7 +6,7 @@ version.workspace = true
 [dependencies]
 bpaf = { workspace = true }
 chrono = { workspace = true }
-clerk = { workspace = true, features = ["log", "serde"] }
+clerk = { workspace = true, features = ["tracing", "serde"] }
 crossterm = { workspace = true }
 directories = { workspace = true }
 jsonschema = { workspace = true }

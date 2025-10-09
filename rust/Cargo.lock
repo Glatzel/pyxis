@@ -1912,7 +1912,7 @@ dependencies = [
 
 [[package]]
 name = "proj"
-version = "0.0.36"
+version = "0.0.37"
 dependencies = [
  "assert_cmd",
  "clerk",
@@ -1940,7 +1940,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.36"
+version = "0.0.37"
 dependencies = [
  "clerk",
  "codspeed-criterion-compat",
@@ -1953,7 +1953,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cli"
-version = "0.0.36"
+version = "0.0.37"
 dependencies = [
  "assert_cmd",
  "async-trait",

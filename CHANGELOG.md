@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.37] - 2025-10-09
+
+### Added
+
+- Add readme by @Glatzel in [#652](https://github.com/Glatzel/pyxis/pull/652)
+
+### Changed
+
+- **(rust)** No std pyxis by @Glatzel in [#663](https://github.com/Glatzel/pyxis/pull/663)
+
+### Performance
+
+- Remove Copy on CryptoThresholdMode by @Glatzel in [#669](https://github.com/Glatzel/pyxis/pull/669)
+- Zero copy enum to num by @Glatzel in [#670](https://github.com/Glatzel/pyxis/pull/670)
+- Zero copy enum to num by @Glatzel in [#671](https://github.com/Glatzel/pyxis/pull/671)
+
+### Removed
+
+- Remove cpp and cuda by @Glatzel in [#664](https://github.com/Glatzel/pyxis/pull/664)
+- Remove csharp and opencl by @Glatzel in [#665](https://github.com/Glatzel/pyxis/pull/665)
+
 ## [0.0.36] - 2025-09-12
 
 ### Changed
@@ -570,6 +591,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2025-02-05
 
+[0.0.37]: https://github.com/Glatzel/pyxis/compare/v0.0.36..v0.0.37
 [0.0.36]: https://github.com/Glatzel/pyxis/compare/v0.0.35..v0.0.36
 [0.0.35]: https://github.com/Glatzel/pyxis/compare/v0.0.34..v0.0.35
 [0.0.32]: https://github.com/Glatzel/pyxis/compare/v0.0.31..v0.0.32

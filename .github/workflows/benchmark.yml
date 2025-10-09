@@ -5,7 +5,7 @@ on:
     types:
       - edited
       - synchronize
-      - labeled
+      - ready_for_review
 
   push:
     branches: [main]

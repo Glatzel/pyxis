@@ -4,7 +4,9 @@ use std::str::FromStr;
 use bpaf::Bpaf;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize, JsonSchema,
+)]
 pub enum OutputFormat {
     Simple,
     Verbose,
@@ -31,7 +33,7 @@ impl fmt::Display for OutputFormat {
         }
     }
 }
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum CoordSpace {
     Cartesian,
     Cylindrical,
@@ -59,7 +61,7 @@ impl fmt::Display for CoordSpace {
     }
 }
 
-#[derive(Debug, Clone, Copy, Bpaf)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Bpaf)]
 pub enum RotatePlane {
     Xy,
     Zx,
@@ -88,7 +90,7 @@ impl fmt::Display for RotatePlane {
         }
     }
 }
-#[derive(Debug, Clone, Copy, Bpaf)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Bpaf)]
 pub enum RotateUnit {
     Degrees,
     Radians,
@@ -113,7 +115,7 @@ impl fmt::Display for RotateUnit {
         }
     }
 }
-#[derive(Debug, Clone, Copy, Bpaf)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Bpaf)]
 pub enum MigrateOption2d {
     Absolute,
     Origin,

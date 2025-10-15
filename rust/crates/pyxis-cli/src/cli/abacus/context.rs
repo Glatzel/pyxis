@@ -1,4 +1,5 @@
 use super::{CoordSpace, CryptoSpace, MigrateOption2d, RotateUnit, options};
+#[derive(Debug, Clone, PartialEq)]
 pub struct ContextTransform {
     pub x: f64,
     pub y: f64,

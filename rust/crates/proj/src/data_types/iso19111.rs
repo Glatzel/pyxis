@@ -14,7 +14,7 @@ use crate::{Context, OwnedCStrings, Proj, check_result, readonly_struct};
 /// # Reference
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_GUESSED_WKT_DIALECT>
-#[derive(Debug, TryFromPrimitive, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum GuessedWktDialect {
@@ -36,7 +36,7 @@ pub enum GuessedWktDialect {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CATEGORY>
-#[derive(Debug, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum Category {
@@ -53,7 +53,7 @@ pub enum Category {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, PartialEq, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(test, derive(strum::EnumIter))]
 #[repr(u32)]
 pub enum ProjType {
@@ -93,7 +93,7 @@ pub enum ProjType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COMPARISON_CRITERION>
-#[derive(Debug, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum ComparisonCriterion {
@@ -115,7 +115,7 @@ pub enum ComparisonCriterion {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_WKT_TYPE>
-#[derive(Debug, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum WktType {
@@ -141,7 +141,7 @@ pub enum WktType {
 /// interest is specified. # References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_EXTENT_USE>
-#[derive(Debug, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[repr(u32)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum CrsExtentUse {
@@ -161,7 +161,7 @@ pub enum CrsExtentUse {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_GRID_AVAILABILITY_USE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[repr(u32)]
 pub enum GridAvailabilityUse {
     ///Grid availability is only used for sorting results. Operations where
@@ -183,7 +183,7 @@ pub enum GridAvailabilityUse {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PROJ_STRING_TYPE>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[repr(u32)]
 pub enum ProjStringType {
     ///cf [osgeo::proj::io::PROJStringFormatter::Convention::PROJ_5](https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1PROJStringFormatter_1a797997db6984aa2bad279abb0010ff13a475fc81228e34a4715d2d28f4d7f2851)
@@ -196,7 +196,7 @@ pub enum ProjStringType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_SPATIAL_CRITERION>
-#[derive(Debug, PartialEq, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum SpatialCriterion {
@@ -212,7 +212,7 @@ pub enum SpatialCriterion {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_INTERMEDIATE_CRS_USE>
-#[derive(Debug, PartialEq, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum IntermediateCrsUse {
@@ -229,7 +229,7 @@ pub enum IntermediateCrsUse {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_COORDINATE_SYSTEM_TYPE>
-#[derive(Debug, PartialEq, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum CoordinateSystemType {
@@ -313,7 +313,7 @@ readonly_struct!(
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_UNIT_TYPE>
-#[derive(Debug, Clone, Copy, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum UnitType {
@@ -333,7 +333,7 @@ pub enum UnitType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CARTESIAN_CS_2D_TYPE>
-#[derive(Debug, Clone, Copy, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum CartesianCs2dType {
@@ -355,7 +355,7 @@ pub enum CartesianCs2dType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_2D_TYPE>
-#[derive(Debug, Clone, Copy, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum EllipsoidalCs2dType {
@@ -369,7 +369,7 @@ pub enum EllipsoidalCs2dType {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_ELLIPSOIDAL_CS_3D_TYPE>
-#[derive(Debug, Clone, Copy, TryFromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, TryFromPrimitive)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u32)]
 pub enum EllipsoidalCs3dType {
@@ -384,7 +384,7 @@ pub enum EllipsoidalCs3dType {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AXIS_DESCRIPTION>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct AxisDescription {
     pub(crate) name: CString,
     pub(crate) abbreviation: CString,
@@ -432,7 +432,7 @@ readonly_struct!(
 /// * <https://github.com/OSGeo/PROJ/blob/master/src/iso19111/static.cpp>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(test, derive(strum::EnumIter))]
-#[derive(Debug, PartialEq, EnumString, strum::AsRefStr)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, EnumString, strum::AsRefStr)]
 pub enum AxisDirection {
     #[strum(serialize = "north")]
     North,
@@ -567,7 +567,7 @@ readonly_struct!(
     {unit_code   :String},
     {unit_category   :UnitCategory}
 );
-#[derive(Debug, EnumString, AsRefStr)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, EnumString, AsRefStr)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UnitCategory {
     #[strum(serialize = "unknown")]
@@ -613,7 +613,7 @@ readonly_struct!(
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, AsRefStr)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, AsRefStr)]
 pub enum DatabaseMetadataKey {
     #[strum(serialize = "DATABASE.LAYOUT.VERSION.MAJOR")]
     DatabaseLayoutVersionMajor,
@@ -680,7 +680,7 @@ readonly_struct!(
     {east_lon_degree:f64,"a double to receive the east latitude (in degrees)."},
     {north_lat_degree:f64,"a double to receive the north latitude (in degrees)."}
 );
-#[derive(Debug, PartialEq, EnumString)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, EnumString)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UomCategory {
     #[strum(serialize = "unknown")]
@@ -725,15 +725,17 @@ readonly_struct!(
     {open_license:bool,"a boolean value to store whether the grid is released with an open license."},
     {available:bool,"a boolean value to store whether the grid is available at runtime."}
 );
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct InsertObjectSession {
     pub(crate) ctx: Arc<Context>,
     pub(crate) ptr: *mut proj_sys::PJ_INSERT_SESSION,
 }
-
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct OperationFactoryContext {
     pub(crate) ctx: Arc<Context>,
     pub(crate) ptr: *mut proj_sys::PJ_OPERATION_FACTORY_CONTEXT,
 }
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ProjObjList {
     pub(crate) ctx: Arc<Context>,
     ptr: *mut proj_sys::PJ_OBJ_LIST,

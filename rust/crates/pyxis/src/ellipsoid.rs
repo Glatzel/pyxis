@@ -30,6 +30,7 @@ use crate::GeoFloat;
 /// );
 /// ```
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Ellipsoid<T> {
     semi_major_axis: T,    // Semi-major axis `a`
     semi_minor_axis: T,    // Semi-minor axis `b`

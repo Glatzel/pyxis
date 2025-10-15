@@ -10,7 +10,7 @@ use rax::str_parser::StrParserContext;
 use rax_nmea::data::{Gga, INmeaData, Identifier, Talker};
 
 use crate::SETTINGS;
-
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TabCoord {
     parser: StrParserContext,
     pj: Option<Proj>,

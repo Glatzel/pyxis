@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 mod tab_coord;
 pub use tab_coord::TabCoordSettings;
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct Settings {
     pub port: String,
     pub baud_rate: u32,

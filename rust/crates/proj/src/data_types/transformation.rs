@@ -10,6 +10,7 @@ use crate::{OwnedCStrings, check_result};
 ///
 /// # References
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ>
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Proj {
     ptr: *mut proj_sys::PJ,
     pub(crate) ctx: Arc<Context>,
@@ -50,7 +51,7 @@ impl Proj {
 /// # References
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_DIRECTION>
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 #[repr(i32)]
 pub enum Direction {
     ///Perform transformation in the forward direction.
@@ -67,6 +68,7 @@ pub enum Direction {
 ///
 /// # References
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CONTEXT>
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Context {
     pub(crate) ptr: *mut proj_sys::PJ_CONTEXT,
 }
@@ -81,6 +83,7 @@ unsafe impl Sync for Context {}
 ///
 /// # References
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_AREA>
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Area {
     pub(crate) ptr: *mut proj_sys::PJ_AREA,
 }

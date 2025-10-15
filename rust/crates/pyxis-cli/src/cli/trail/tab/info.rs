@@ -6,7 +6,7 @@ use ratatui::widgets::{Cell, Row, Table};
 use rax::str_parser::StrParserContext;
 use rax_nmea::data::{Gga, Gsa, Gst, INmeaData, Identifier, Rmc, Talker};
 
-#[derive(Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
 pub struct TabInfo {
     ctx: StrParserContext,
 }

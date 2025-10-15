@@ -29,7 +29,7 @@ pub static SETTINGS: LazyLock<Mutex<Settings>> = LazyLock::new(|| {
     };
     Mutex::new(settings)
 });
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug,Clone, Serialize, Deserialize, JsonSchema)]
 pub struct Settings {
     pub abacus: crate::cli::abacus::Settings,
     pub trail: crate::cli::trail::settings::Settings,

@@ -12,7 +12,7 @@ use thiserror::Error;
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#error-codes>
-#[derive(Debug, Clone, Copy, FromPrimitive)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, FromPrimitive)]
 #[repr(i32)]
 pub enum ProjErrorCode {
     Success = 0,
@@ -68,7 +68,7 @@ pub enum ProjErrorCode {
     OtherNetworkError = proj_sys::PROJ_ERR_OTHER_NETWORK_ERROR as i32,
 }
 
-#[derive(Debug, Error)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Error)]
 #[error("ProjError {code:?} [{}]: {message}",*.code as i32 )]
 pub struct ProjError {
     pub code: ProjErrorCode,

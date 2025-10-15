@@ -5,8 +5,8 @@ use ratatui::text::Line;
 use ratatui::widgets::Paragraph;
 use rax_nmea::data::{Identifier, Talker};
 
-#[derive(Default)]
-pub struct TabNmea {}
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+pub struct TabNmea;
 
 impl super::ITab for TabNmea {
     fn handle_key(&mut self, _key: KeyEvent) {}

@@ -13,6 +13,7 @@ pub trait GeoFloat:
     + GeoCast<f32>
     + GeoCast<f64>
     + GeoCast<Self>
+    + PartialEq
 {
     const TWO: Self;
 }

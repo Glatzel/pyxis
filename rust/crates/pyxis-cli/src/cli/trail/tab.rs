@@ -23,7 +23,7 @@ pub trait ITab: Default {
     ) -> mischief::Result<()>;
     fn hint(&mut self) -> &'static [&'static str];
 }
-#[derive(Clone, Debug, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Tab {
     Info,
     Coord,

@@ -6,6 +6,7 @@ mod status;
 pub use super::app::status::STATUS;
 use super::tab::{ITab, Tab, TabCoord, TabInfo, TabNmea, TabSettings};
 use crate::SETTINGS;
+#[derive(Debug, Clone, PartialEq, Hash)]
 pub struct App {
     pub status: usize,
 

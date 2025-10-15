@@ -5,7 +5,7 @@ use core::ptr;
 
 use envoy::ToCString;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub(crate) struct OwnedCStrings {
     _owned_cstrings: Vec<CString>,
 }

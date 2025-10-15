@@ -27,6 +27,7 @@ use crate::GeoFloat;
 /// assert_approx_eq!(f64, p.0, 469706.56912942487, epsilon = 1e-17);
 /// assert_approx_eq!(f64, p.1, 2821763.831232311, epsilon = 1e-17);
 /// ```
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct DatumCompensate<T: GeoFloat> {
     x0: T,
     y0: T,

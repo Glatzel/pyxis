@@ -5,8 +5,7 @@ use ratatui::widgets::{Block, Paragraph, Wrap};
 use rax_nmea::data::{Identifier, Talker};
 
 use crate::settings::SETTINGS;
-
-#[derive(Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
 pub struct TabSettings {}
 impl super::ITab for TabSettings {
     fn handle_key(&mut self, _key: KeyEvent) {}

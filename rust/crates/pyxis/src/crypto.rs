@@ -23,7 +23,7 @@ pub const GCJ02_LAT: f64 = 30.60860433047113;
 pub const BD09_LON: f64 = 121.10271732314104;
 #[cfg(debug_assertions)]
 pub const BD09_LAT: f64 = 30.614845720572603;
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum CryptoSpace {
     BD09,
     GCJ02,
@@ -51,7 +51,7 @@ impl fmt::Display for CryptoSpace {
         }
     }
 }
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum CryptoThresholdMode<T>
 where
     T: GeoFloat + 'static,

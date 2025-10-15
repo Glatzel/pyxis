@@ -1,3 +1,5 @@
+# This File is automatically synchronized from https://github.com/Glatzel/template
+
 coverage:
   status:
     project:
@@ -8,5 +10,3 @@ coverage:
         informational: true
 comment:
   behavior: default
-ignore:
-  - "python/pyxis-py/src"

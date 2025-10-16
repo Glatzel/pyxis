@@ -44,7 +44,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/ncurses-6.5-h2d0b736_3.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/nomkl-1.0-h5ca1d4c_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/numba-0.62.1-py311h6220fa4_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/linux-64/numexpr-2.13.1-py311h3143de2_101.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/numexpr-2.14.1-py311h3143de2_100.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/numpy-2.2.6-py311h5d046bc_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/openssl-3.5.4-h26f9b46_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/packaging-25.0-pyh29332c3_1.conda
@@ -1820,9 +1820,9 @@ packages:
   license_family: BSD
   size: 5839130
   timestamp: 1759165252617
-- conda: https://conda.anaconda.org/conda-forge/linux-64/numexpr-2.13.1-py311h3143de2_101.conda
-  sha256: 4f672a45303da6e425d6e01258bfebeb3e7c3e1955971ea1144b1d289ff173ac
-  md5: 8f690b00b3f019222e0b65281e4384b3
+- conda: https://conda.anaconda.org/conda-forge/linux-64/numexpr-2.14.1-py311h3143de2_100.conda
+  sha256: 27acf27b719b36c53843c88c103aec52f5270c17d2473556497656bda1f2d948
+  md5: 55946e3a343ae1914a712254d8323ff3
   depends:
   - __glibc >=2.17,<3.0.a0
   - libgcc >=14
@@ -1834,8 +1834,8 @@ packages:
   - python_abi 3.11.* *_cp311
   license: MIT
   license_family: MIT
-  size: 218578
-  timestamp: 1759426786764
+  size: 218443
+  timestamp: 1760378037428
 - conda: https://conda.anaconda.org/conda-forge/linux-64/numpy-2.2.6-py311h5d046bc_0.conda
   sha256: f28273a72d25f4d7d62a9ba031d5271082afc498121bd0f6783d72b4103dbbc7
   md5: babce4d9841ebfcee64249d98eb4e0d4

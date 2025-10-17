@@ -6,7 +6,7 @@ const A: f64 = 4.0;
 const OA: f64 = 1.0;
 const OB: f64 = 2.0;
 const DEGREES: f64 = 30.0;
-static RADIANS: LazyLock<f64> = LazyLock::new(|| 30.0f64.to_radians());
+const RADIANS: f64 = 30.0f64.to_radians();
 static A1: LazyLock<f64> =
     LazyLock::new(|| (A - OA) * RADIANS.cos() - (A - OB) * RADIANS.sin() + OA);
 static B1: LazyLock<f64> =

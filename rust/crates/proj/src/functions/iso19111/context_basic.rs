@@ -448,12 +448,7 @@ impl crate::Context {
                 self.ptr,
                 owned.push_option(auth_name),
                 params.map_or(ptr::null(), |p| {
-                    let types: Vec<u32> = p
-                        .types()
-                        .to_owned()
-                        .iter()
-                        .map(|f| f.clone() as u32)
-                        .collect();
+                    let types: Vec<u32> = p.types().to_owned().iter().map(|f| *f as u32).collect();
 
                     &proj_sys::PROJ_CRS_LIST_PARAMETERS {
                         types: types.as_ptr(),

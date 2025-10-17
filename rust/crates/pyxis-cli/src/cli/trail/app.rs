@@ -30,7 +30,7 @@ impl App {
             tab: Tab::Info,
             tab_info: TabInfo::default(),
             tab_coord: TabCoord::default(),
-            tab_nmea: TabNmea::default(),
+            tab_nmea: TabNmea,
             tab_settings: TabSettings::default(),
         })
     }

@@ -42,7 +42,7 @@ Use [pixi](https://github.com/prefix-dev/pixi/?tab=readme-ov-file#installation) 
 ```toml
 [dependencies]
 pkg-config = "==0.29.2"
-proj = { version = "==9.6.2", channel = "https://repo.prefix.dev/glatzel" }
+proj = { version = "==9.6.2", channel = "https://prefix.dev/glatzel" }
 ```
 
 ## Usage

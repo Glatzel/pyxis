@@ -31,7 +31,6 @@ fn test_cartesian_to_cylindrical() {
 #[test]
 fn test_cartesian_to_spherical() {
     Command::new(assert_cmd::cargo_bin!("pyxis"))
-
         .args([
             "abacus",
             "-x",
@@ -57,7 +56,6 @@ fn test_cartesian_to_spherical() {
 #[test]
 fn test_cylindrical_to_cartesian() {
     Command::new(assert_cmd::cargo_bin!("pyxis"))
-
         .args([
             "abacus",
             "-x",
@@ -77,7 +75,6 @@ fn test_cylindrical_to_cartesian() {
 #[test]
 fn test_cylindrical_to_spherical() {
     Command::new(assert_cmd::cargo_bin!("pyxis"))
-
         .args([
             "abacus",
             "-x",
@@ -103,7 +100,6 @@ fn test_cylindrical_to_spherical() {
 #[test]
 fn test_spherical_to_cartesian() {
     Command::new(assert_cmd::cargo_bin!("pyxis"))
-
         .args([
             "abacus",
             "-x",
@@ -123,7 +119,6 @@ fn test_spherical_to_cartesian() {
 #[test]
 fn test_spherical_to_cylindrical() {
     Command::new(assert_cmd::cargo_bin!("pyxis"))
-
         .args([
             "abacus",
             "-x",

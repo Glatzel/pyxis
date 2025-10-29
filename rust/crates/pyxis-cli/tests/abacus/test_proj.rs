@@ -3,7 +3,6 @@ use predicates::prelude::*;
 #[test]
 fn test_proj() {
     Command::new(assert_cmd::cargo_bin!("pyxis"))
-
         .args([
             "abacus",
             "-x",

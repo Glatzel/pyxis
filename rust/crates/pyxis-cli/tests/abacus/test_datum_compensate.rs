@@ -2,8 +2,7 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 #[test]
 fn test_datum_compensate() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
         .args(["abacus", "-x", "469704.6693", "-y", "2821940.796"])
         .args([
             "datum-compensate",

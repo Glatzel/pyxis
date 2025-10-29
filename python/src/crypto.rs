@@ -69,8 +69,8 @@ pub fn py_crypto(
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
     let crypto_fn = get_crypto_fn(&from, &to, exact).unwrap();
     if let (Ok(lon_ref), Ok(lat_ref)) = (
-        lon_py.downcast_bound::<PyArrayDyn<f64>>(py),
-        lat_py.downcast_bound::<PyArrayDyn<f64>>(py),
+        lon_py.cast_bound::<PyArrayDyn<f64>>(py),
+        lat_py.cast_bound::<PyArrayDyn<f64>>(py),
     ) {
         let lon_array = unsafe { lon_ref.as_slice_mut().unwrap() };
         let lat_array = unsafe { lat_ref.as_slice_mut().unwrap() };

@@ -84,13 +84,12 @@ dependencies = [
 
 [[package]]
 name = "assert_cmd"
-version = "2.0.17"
+version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2bd389a4b2970a01282ee455294913c0a43724daedcd1a24c3eb0ec1c1320b66"
+checksum = "ade3e59755df470dc884dbd126416d098b783b193fdc1981b392eb79398a57a3"
 dependencies = [
  "anstyle",
  "bstr",
- "doc-comment",
  "libc",
  "predicates",
  "predicates-core",
@@ -387,12 +386,11 @@ dependencies = [
 
 [[package]]
 name = "codspeed"
-version = "4.0.4"
+version = "4.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d0f62ea8934802f8b374bf691eea524c3aa444d7014f604dd4182a3667b69510"
+checksum = "fe68fdd3fe25bc26de0230718d74eb150f09f70be3141c61ea7f9b00812054aa"
 dependencies = [
  "anyhow",
- "bindgen",
  "cc",
  "colored",
  "glob",
@@ -406,9 +404,9 @@ dependencies = [
 
 [[package]]
 name = "codspeed-criterion-compat"
-version = "4.0.4"
+version = "4.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d87efbc015fc0ff1b2001cd87df01c442824de677e01a77230bf091534687abb"
+checksum = "4a06533c3c2c7b43b2efcca2dc0f228097b4c582c95f59cc187bbeb926b42cfb"
 dependencies = [
  "clap",
  "codspeed",
@@ -419,9 +417,9 @@ dependencies = [
 
 [[package]]
 name = "codspeed-criterion-compat-walltime"
-version = "4.0.4"
+version = "4.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ae5713ace440123bb4f1f78dd068d46872cb8548bfe61f752e7b2ad2c06d7f00"
+checksum = "4102bd4dcfb09fae5cf5ca86c6c5ad0bd0cabe834cd84b5e7b7dd969fb9093e8"
 dependencies = [
  "anes",
  "cast",
@@ -451,7 +449,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "117725a109d387c937a1533ce01b450cbde6b88abceea8473c4d7a85853cda3c"
 dependencies = [
  "lazy_static",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -657,7 +655,7 @@ dependencies = [
  "libc",
  "option-ext",
  "redox_users",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -670,12 +668,6 @@ dependencies = [
  "quote",
  "syn",
 ]
-
-[[package]]
-name = "doc-comment"
-version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 
 [[package]]
 name = "document-features"
@@ -731,7 +723,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1218,7 +1210,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4b0f83760fb341a774ed326568e19f5a863af4a952def8c39f9ab92fd95b88e5"
 dependencies = [
  "equivalent",
- "hashbrown 0.16.0",
+ "hashbrown 0.15.5",
 ]
 
 [[package]]
@@ -1274,7 +1266,7 @@ checksum = "e04d7f318608d35d4b61ddd75cbdaee86b023ebe2bd5a66ee0915f0bf93095a9"
 dependencies = [
  "hermit-abi",
  "libc",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1588,7 +1580,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -1672,9 +1664,9 @@ dependencies = [
 
 [[package]]
 name = "num_enum"
-version = "0.7.4"
+version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a973b4e44ce6cad84ce69d797acf9a044532e4184c4f267913d1b546a0727b7a"
+checksum = "b1207a7e20ad57b847bbddc6776b968420d38292bbfe2089accff5e19e82454c"
 dependencies = [
  "num_enum_derive",
  "rustversion",
@@ -1682,9 +1674,9 @@ dependencies = [
 
 [[package]]
 name = "num_enum_derive"
-version = "0.7.4"
+version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "77e878c846a8abae00dd069496dbe8751b16ac1c3d6bd2a7283a938e8228f90d"
+checksum = "ff32365de1b6743cb203b710788263c44a03de03802daf96092f2da4fe6ba4d7"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
@@ -2222,7 +2214,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.4.15",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -2235,7 +2227,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.11.0",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -2600,7 +2592,7 @@ dependencies = [
  "getrandom 0.3.4",
  "once_cell",
  "rustix 1.1.2",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -3137,7 +3129,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]

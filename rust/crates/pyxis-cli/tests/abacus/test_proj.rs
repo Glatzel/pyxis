@@ -2,8 +2,8 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 #[test]
 fn test_proj() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
+
         .args([
             "abacus",
             "-x",

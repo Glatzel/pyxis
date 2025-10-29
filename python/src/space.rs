@@ -41,9 +41,9 @@ pub fn py_space(
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
     let space_fn = get_space_fn(&from, &to).unwrap();
     if let (Ok(x_ref), Ok(y_ref), Ok(z_ref)) = (
-        x_py.downcast_bound::<PyArrayDyn<f64>>(py),
-        y_py.downcast_bound::<PyArrayDyn<f64>>(py),
-        z_py.downcast_bound::<PyArrayDyn<f64>>(py),
+        x_py.cast_bound::<PyArrayDyn<f64>>(py),
+        y_py.cast_bound::<PyArrayDyn<f64>>(py),
+        z_py.cast_bound::<PyArrayDyn<f64>>(py),
     ) {
         let x_array = unsafe { x_ref.as_slice_mut().unwrap() };
         let y_array = unsafe { y_ref.as_slice_mut().unwrap() };

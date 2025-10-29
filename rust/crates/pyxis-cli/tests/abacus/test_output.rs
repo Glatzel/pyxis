@@ -2,8 +2,8 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 #[test]
 fn test_output_plain_no_name() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
+
         .args([
             "abacus",
             "-x",
@@ -23,8 +23,8 @@ fn test_output_plain_no_name() {
 }
 #[test]
 fn test_output_plain_with_name() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
+
         .args([
             "abacus",
             "-n",
@@ -46,8 +46,8 @@ fn test_output_plain_with_name() {
 }
 #[test]
 fn test_json() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
+
         .args([
             "abacus",
             "-n",

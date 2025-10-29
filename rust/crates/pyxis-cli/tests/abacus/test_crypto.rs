@@ -3,8 +3,7 @@ use predicates::prelude::*;
 use pyxis::crypto::{BD09_LAT, BD09_LON, GCJ02_LAT, GCJ02_LON, WGS84_LAT, WGS84_LON};
 #[test]
 fn test_wgs84_to_gcj02() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
         .args([
             "abacus",
             "-x",
@@ -24,8 +23,7 @@ fn test_wgs84_to_gcj02() {
 }
 #[test]
 fn test_gcj02_to_wgs84() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
         .args([
             "abacus",
             "-x",
@@ -45,8 +43,7 @@ fn test_gcj02_to_wgs84() {
 }
 #[test]
 fn test_wgs84_to_bd09() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
         .args([
             "abacus",
             "-x",
@@ -66,8 +63,7 @@ fn test_wgs84_to_bd09() {
 }
 #[test]
 fn test_bd09_to_wgs84() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
         .args([
             "abacus",
             "-x",
@@ -87,8 +83,7 @@ fn test_bd09_to_wgs84() {
 }
 #[test]
 fn test_bd09_to_gcj02() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
         .args([
             "abacus",
             "-x",
@@ -108,8 +103,7 @@ fn test_bd09_to_gcj02() {
 }
 #[test]
 fn test_gcj02_to_bd09() {
-    Command::cargo_bin("pyxis")
-        .unwrap()
+    Command::new(assert_cmd::cargo_bin!("pyxis"))
         .args([
             "abacus",
             "-x",

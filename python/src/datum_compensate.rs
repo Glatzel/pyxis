@@ -15,8 +15,8 @@ pub fn py_datum_compensate(
 ) -> Result<pyo3::Bound<'_, PyTuple>, PyErr> {
     let processor = pyxis::DatumCompensate::new(hb, r, x0, y0);
     if let (Ok(xc_ref), Ok(yc_ref)) = (
-        xc_py.downcast_bound::<PyArrayDyn<f64>>(py),
-        yc_py.downcast_bound::<PyArrayDyn<f64>>(py),
+        xc_py.cast_bound::<PyArrayDyn<f64>>(py),
+        yc_py.cast_bound::<PyArrayDyn<f64>>(py),
     ) {
         let xc_array = unsafe { xc_ref.as_slice_mut().unwrap() };
         let yc_array = unsafe { yc_ref.as_slice_mut().unwrap() };

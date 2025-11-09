@@ -17,7 +17,7 @@ numpy = "*"
 scipy = "==1.16.3"
 
 [feature.test.dependencies]
-pytest = "==8.4.2"
+pytest = "==9.0.0"
 pytest-cov = "==7.0.0"
 
 [feature.doc.dependencies]

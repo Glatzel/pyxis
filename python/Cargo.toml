@@ -5,7 +5,7 @@ version = "0.0.37"
 
 [dependencies]
 numpy = "0.27.0"
-pyo3 = { version = "0.27.0", features = ["extension-module", "abi3-py311"] }
+pyo3 = { version = "0.27.0", features = ["extension-module", "abi3-py313"] }
 pyxis = { path = "./../rust/crates/pyxis/" }
 rayon = "1.11.0"
 

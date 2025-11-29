@@ -2,7 +2,7 @@
 channels = ["conda-forge"]
 platforms = ["win-64", "linux-64", "osx-arm64", "linux-aarch64"]
 
-[feature.py311.dependencies]
+[feature.py313.dependencies]
 python = "3.13.*"
 
 [feature.build.dependencies]
@@ -35,5 +35,5 @@ numexpr = "==2.14.1"
 pytest-codspeed = "==4.2.0"
 
 [environments]
-bench = ["py311", "build", "test", "deps", "bench"]
-default = ["py311", "build", "deps", "test", "doc"]
+bench = ["py313", "build", "test", "deps", "bench"]
+default = ["py313", "build", "deps", "test", "doc"]

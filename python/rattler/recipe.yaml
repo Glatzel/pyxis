@@ -26,5 +26,3 @@ tests:
   - python:
       imports:
         - pyxis
-
-

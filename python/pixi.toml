@@ -2,8 +2,8 @@
 channels = ["conda-forge"]
 platforms = ["win-64", "linux-64", "osx-arm64", "linux-aarch64"]
 
-[feature.py311.dependencies]
-python = "3.11.*"
+[feature.py313.dependencies]
+python = "3.13.*"
 
 [feature.build.dependencies]
 maturin = "==1.9.6"
@@ -13,7 +13,7 @@ rattler-build = "==0.49.0"
 [feature.deps.dependencies]
 lazy-loader = "==0.4"
 nomkl = "==1.0"
-numpy = "*"
+numpy = "2.3.*"
 scipy = "==1.16.3"
 
 [feature.test.dependencies]
@@ -23,7 +23,7 @@ pytest-cov = "==7.0.0"
 [feature.doc.dependencies]
 autodocsumm = "==0.2.14"
 pydata-sphinx-theme = "==0.16.1"
-sphinx = "==8.3.0"
+sphinx = "==8.2.0"
 sphinx-autosummary-accessors = "==2025.3.1"
 sphinx-copybutton = "==0.5.2"
 
@@ -35,5 +35,5 @@ numexpr = "==2.14.1"
 pytest-codspeed = "==4.2.0"
 
 [environments]
-bench = ["py311", "build", "test", "deps", "bench"]
-default = ["py311", "build", "deps", "test", "doc"]
+bench = ["py313", "build", "test", "deps", "bench"]
+default = ["py313", "build", "deps", "test", "doc"]

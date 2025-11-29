@@ -19,10 +19,11 @@ requirements:
   run:
     - python >= 3.13
     - lazy-loader
-    - numpy >=2.3
+    - numpy
     - scipy
 
 tests:
   - python:
       imports:
         - pyxis
+

@@ -2,7 +2,7 @@
 
 pub const PROJ_VERSION_MAJOR: u32 = 9;
 pub const PROJ_VERSION_MINOR: u32 = 7;
-pub const PROJ_VERSION_PATCH: u32 = 0;
+pub const PROJ_VERSION_PATCH: u32 = 1;
 pub const PJ_DEFAULT_CTX: u32 = 0;
 pub const PROJ_ERR_INVALID_OP: u32 = 1024;
 pub const PROJ_ERR_INVALID_OP_WRONG_SYNTAX: u32 = 1025;

@@ -26,7 +26,7 @@ pub const PROJ_VERSION_PATCH: u32 = proj_sys::PROJ_VERSION_PATCH;
 ///# Reference
 ///
 /// * <https://proj.org/en/stable/development/reference/macros.html#c.PROJ_COMPUTE_VERSION>
-pub fn compute_version(maj: u32, min: u32, patch: u32) -> u32 {
+pub const fn compute_version(maj: u32, min: u32, patch: u32) -> u32 {
     (maj) * 10000 + (min) * 100 + (patch)
 }
 
@@ -47,7 +47,7 @@ pub const PROJ_VERSION_NUMBER: u32 =
 ///# Reference
 ///
 /// * <https://proj.org/en/stable/development/reference/macros.html#c.PROJ_AT_LEAST_VERSION>
-pub fn at_least_version(maj: u32, min: u32, patch: u32) -> bool {
+pub const fn at_least_version(maj: u32, min: u32, patch: u32) -> bool {
     PROJ_VERSION_NUMBER >= compute_version(maj, min, patch)
 }
 
@@ -56,7 +56,10 @@ mod test {
     use super::*;
     #[test]
     fn test_proj_version_number() {
-        at_least_version(9, 7, 0);
-        assert_eq!(PROJ_VERSION_NUMBER, 90700)
+        at_least_version(PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, 0);
+        assert_eq!(
+            PROJ_VERSION_NUMBER,
+            PROJ_VERSION_MAJOR * 10000 + PROJ_VERSION_MINOR + 100 + PROJ_VERSION_PATCH
+        )
     }
 }

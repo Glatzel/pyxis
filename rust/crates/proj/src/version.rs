@@ -59,7 +59,7 @@ mod test {
         at_least_version(PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, 0);
         assert_eq!(
             PROJ_VERSION_NUMBER,
-            PROJ_VERSION_MAJOR * 10000 + PROJ_VERSION_MINOR + 100 + PROJ_VERSION_PATCH
+            PROJ_VERSION_MAJOR * 10000 + PROJ_VERSION_MINOR * 100 + PROJ_VERSION_PATCH
         )
     }
 }

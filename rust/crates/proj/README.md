@@ -23,21 +23,17 @@ This crate aims to:
 
 ## Installation
 
-### Method 1 – Git
-
-1. Add this to your `Cargo.toml`:
+* Add this to your `Cargo.toml`:
 
    ```toml
    [dependencies]
-   proj = { git = "https://github.com/Glatzel/clerk", tag = "version" }
+   proj = { git = "https://github.com/Glatzel/pyxis", tag = "version" }
    ```
 
-2. Set the `PKG_CONFIG_PATH` environment variable to the directory that contains `proj.pc`.
+* Set the `PKG_CONFIG_PATH` environment variable to the directory that contains `proj.pc`.
     Windows users must install `pkg-config` and add the binary path to their `PATH` environment variable.
 
-### Method 2 – Pixi
-
-Use [pixi](https://github.com/prefix-dev/pixi/?tab=readme-ov-file#installation) to install all dependencies.
+* You can use [pixi](https://github.com/prefix-dev/pixi/?tab=readme-ov-file#installation) to install all dependencies.
 
 ```toml
 [dependencies]

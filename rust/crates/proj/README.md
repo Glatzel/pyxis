@@ -33,7 +33,6 @@ This crate aims to:
 * Set the `PKG_CONFIG_PATH` environment variable to the directory that contains `proj.pc`.
     Windows users must install `pkg-config` and add the binary path to their `PATH` environment variable.
 
-
 * You can use [pixi](https://github.com/prefix-dev/pixi/?tab=readme-ov-file#installation) to install all dependencies.
 
 ```toml

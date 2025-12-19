@@ -32,7 +32,7 @@ jobs:
         shell: pwsh
 
       - name: upload
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: pyxis-cli-${{matrix.machine}}
           path: |
@@ -61,7 +61,7 @@ jobs:
         shell: pwsh
 
       - name: upload
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: pyxis-python-${{matrix.machine}}
           path: |

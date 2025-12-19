@@ -30,7 +30,7 @@ sphinx-copybutton = "==0.5.2"
 [feature.bench]
 platforms = ["linux-64"]
 [feature.bench.dependencies]
-numba = "==0.63.0"
+numba = "==0.63.1"
 numexpr = "==2.14.1"
 pytest-codspeed = "==4.2.0"
 

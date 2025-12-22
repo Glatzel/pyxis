@@ -1,0 +1,43 @@
+{
+    "folders": [
+        {
+            "name": "pyxis",
+            "path": "."
+        },
+        {
+            "name": ".github",
+            "path": ".github"
+        },
+        {
+            "name": "lefthook",
+            "path": "lefthook"
+        },
+        {
+            "name": "python",
+            "path": "python"
+        },
+        {
+            "name": "rust",
+            "path": "rust"
+        }
+    ],
+    "settings": {
+        "[markdown]": {
+            "editor.wordWrap": "off",
+        },
+        "rust-analyzer.cargo.extraEnv": {
+            "Path": "${workspaceFolder}/rust/.pixi/envs/default/Library/bin;${env:PATH}",
+            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig",
+            "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default"
+        },
+        "rust-analyzer.runnables.extraEnv": {
+            "Path": "${env:USERPROFILE}/.cargo/bin;${workspaceFolder}/rust/.pixi/envs/default/Library/bin;${env:PATH}",
+            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig",
+            "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default"
+        },
+        "rust-analyzer.server.extraEnv": {
+            "Path": "${workspaceFolder}/rust/.pixi/envs/default/Library/bin;${env:PATH}",
+            "PKG_CONFIG_PATH": "${workspaceFolder}/rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig",
+            "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default"
+        }
+}

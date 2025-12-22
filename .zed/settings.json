@@ -6,24 +6,24 @@
           "extraEnv": {
             "Path": "./rust/.pixi/envs/default/Library/bin;${env:PATH}",
             "PKG_CONFIG_PATH": "./rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig",
-            "CONDA_PREFIX": "./python/.pixi/envs/default",
-          },
+            "CONDA_PREFIX": "./python/.pixi/envs/default"
+          }
         },
         "runnables": {
           "extraEnv": {
             "Path": "./rust/.pixi/envs/default/Library/bin;${env:PATH}",
             "PKG_CONFIG_PATH": "./rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig",
-            "CONDA_PREFIX": "./python/.pixi/envs/default",
-          },
+            "CONDA_PREFIX": "./python/.pixi/envs/default"
+          }
         },
         "server": {
           "extraEnv": {
             "Path": "./rust/.pixi/envs/default/Library/bin;${env:PATH}",
             "PKG_CONFIG_PATH": "./rust/.pixi/envs/default/proj/x64-windows-static/lib/pkgconfig",
-            "CONDA_PREFIX": "./python/.pixi/envs/default",
-          },
-        },
-      },
-    },
-  },
+            "CONDA_PREFIX": "./python/.pixi/envs/default"
+          }
+        }
+      }
+    }
+  }
 }

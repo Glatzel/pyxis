@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.38] - 2025-12-27
+
+### Added
+
+- Add trait to derive by @Glatzel in [#686](https://github.com/Glatzel/pyxis/pull/686)
+
+### Fixed
+
+- Proj version test by @Glatzel in [#714](https://github.com/Glatzel/pyxis/pull/714)
+
+### Performance
+
+- Zero copy GeoFloat by @Glatzel in [#681](https://github.com/Glatzel/pyxis/pull/681)
+
+### Removed
+
+- Remove unused lazylock by @Glatzel in [#695](https://github.com/Glatzel/pyxis/pull/695)
+- Remove build step by @Glatzel in [#736](https://github.com/Glatzel/pyxis/pull/736)
+
 ## [0.0.37] - 2025-10-09
 
 ### Added
@@ -591,6 +610,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2025-02-05
 
+[0.0.38]: https://github.com/Glatzel/pyxis/compare/v0.0.37..v0.0.38
 [0.0.37]: https://github.com/Glatzel/pyxis/compare/v0.0.36..v0.0.37
 [0.0.36]: https://github.com/Glatzel/pyxis/compare/v0.0.35..v0.0.36
 [0.0.35]: https://github.com/Glatzel/pyxis/compare/v0.0.34..v0.0.35

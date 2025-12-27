@@ -28,7 +28,6 @@ jobs:
           - machine: macos-latest
             os: osx-arm64
     runs-on: ${{matrix.machine}}
-    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable

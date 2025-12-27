@@ -11,88 +11,13 @@ on:
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
-permissions:
-  contents: write
 jobs:
-  rattler-cli:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - machine: windows-latest
-            os: win-64
-          - machine: ubuntu-latest
-            os: linux-64
-          - machine: ubuntu-24.04-arm
-            os: linux-aarch6
-          - machine: macos-latest
-            os: osx-arm64
-    runs-on: ${{matrix.machine}}
-    steps:
-      - uses: actions/checkout@v6
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.9.3
-        with:
-          run-install: false
-      - name: build
-        run: ./rust/rattler/ci-pyxis-cli.ps1
-        shell: pwsh
-
-      - name: upload
-        uses: actions/upload-artifact@v6
-        with:
-          name: pyxis-cli-${{matrix.machine}}
-          path: |
-            ./rust/rattler/output/${{matrix.os}}/*.conda
-          if-no-files-found: error
-
-  rattler-python:
-    env:
-      PYTEST_ADDOPTS: "--color=yes"
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - machine: windows-latest
-            os: win-64
-          - machine: ubuntu-latest
-            os: linux-64
-            container: ghcr.io/glatzel/github-action-runner
-          - machine: ubuntu-24.04-arm
-            os: linux-aarch6
-            container: ghcr.io/glatzel/github-action-runner
-          - machine: macos-latest
-            os: osx-arm64
-    runs-on: ${{ matrix.machine }}
-    container: ${{ matrix.container }}
-    steps:
-      - uses: actions/checkout@v6
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@v0.9.3
-        with:
-          run-install: false
-
-      - name: build
-        run: ./python/rattler/ci-pyxis-py.ps1 -config release
-        shell: pwsh
-
-      - name: upload
-        uses: actions/upload-artifact@v6
-        with:
-          name: pyxis-python-${{matrix.machine}}
-          path: |
-            ./python/rattler/output/${{matrix.os}}/*.conda
-          if-no-files-found: error
-
   release:
     permissions:
       contents: write
-    needs: [rattler-cli, rattler-python]
     uses: Glatzel/template/.github/workflows/release.yml@main
     with:
       override: true
       tag: ${{inputs.tag}}
       have-changelog: true
-      assets: true
+      assets: false

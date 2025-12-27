@@ -6,7 +6,7 @@ on:
       tag:
         type: string
         required: true
-        description: 'Tag to release (e.g., v1.2.3)'
+        description: "Tag to release (e.g., v1.2.3)"
 
 concurrency:
   group: ${{ github.workflow }}
@@ -18,8 +18,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest,ubuntu-24.04-arm, macos-latest]
+        include:
+          - machine: windows-latest
+            os: win-64
+          - machine: ubuntu-latest
+            os: linux-64
+            container: ghcr.io/glatzel/github-action-runner
+          - machine: ubuntu-24.04-arm
+            os: linux-aarch6
+            container: ghcr.io/glatzel/github-action-runner
+          - machine: macos-latest
+            os: osx-arm64
     runs-on: ${{matrix.machine}}
+    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
@@ -36,7 +47,7 @@ jobs:
         with:
           name: pyxis-cli-${{matrix.machine}}
           path: |
-            ./rust/rattler/output/*/*.conda
+            ./rust/rattler/output/${{matrix.os}}/*.conda
           if-no-files-found: error
 
   rattler-python:
@@ -45,9 +56,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest,ubuntu-24.04-arm, macos-latest]
-
-    runs-on: ${{matrix.machine}}
+        include:
+          - machine: windows-latest
+            os: win-64
+          - machine: ubuntu-latest
+            os: linux-64
+            container: ghcr.io/glatzel/github-action-runner
+          - machine: ubuntu-24.04-arm
+            os: linux-aarch6
+            container: ghcr.io/glatzel/github-action-runner
+          - machine: macos-latest
+            os: osx-arm64
+    runs-on: ${{ matrix.machine }}
+    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
@@ -65,7 +86,7 @@ jobs:
         with:
           name: pyxis-python-${{matrix.machine}}
           path: |
-            ./python/rattler/output/*/*.conda
+            ./python/rattler/output/${{matrix.os}}/*.conda
           if-no-files-found: error
 
   release:

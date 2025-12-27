@@ -1,5 +1,5 @@
 Set-Location $PSScriptRoot/..
-$version = "0.0.37"
+$version = "0.0.38"
 
 # python
 $cargoTomlPath = "./python/Cargo.toml"

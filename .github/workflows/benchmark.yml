@@ -40,8 +40,9 @@ jobs:
         with:
           run-install: false
 
-      - run: ./python/scripts/maturin-develop.ps1 -config release
+      - run: pixi run maturin develop --profile release
         shell: pwsh
+        working-directory: ./python
 
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v4

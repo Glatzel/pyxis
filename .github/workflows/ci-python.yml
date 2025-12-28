@@ -42,8 +42,10 @@ jobs:
         with:
           run-install: false
 
-      - name: build
-        run: ${{env.PYTHON_ROOT}}/rattler/ci-pyxis-py.ps1
+      - name: build and test
+        run: |
+          ./python/scripts/maturin-develop.ps1
+          ./python/scripts/pytest.ps1
         shell: pwsh
 
       - name: Upload results to Codecov

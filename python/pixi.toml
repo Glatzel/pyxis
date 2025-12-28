@@ -8,7 +8,6 @@ python = "3.13.*"
 [feature.build.dependencies]
 maturin = "==1.10.2"
 pip = "==25.3"
-rattler-build = "==0.55.0"
 
 [feature.deps.dependencies]
 lazy-loader = "==0.4"

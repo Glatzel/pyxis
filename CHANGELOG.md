@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.39] - 2025-12-29
+
+### Changed
+
+- Build package in demon forge by @Glatzel in [#740](https://github.com/Glatzel/pyxis/pull/740)
+
+### Fixed
+
+- Build script by @Glatzel in [#741](https://github.com/Glatzel/pyxis/pull/741)
+
 ## [0.0.38] - 2025-12-27
 
 ### Added
@@ -610,6 +620,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2025-02-05
 
+[0.0.39]: https://github.com/Glatzel/pyxis/compare/v0.0.38..v0.0.39
 [0.0.38]: https://github.com/Glatzel/pyxis/compare/v0.0.37..v0.0.38
 [0.0.37]: https://github.com/Glatzel/pyxis/compare/v0.0.36..v0.0.37
 [0.0.36]: https://github.com/Glatzel/pyxis/compare/v0.0.35..v0.0.36

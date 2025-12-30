@@ -14,9 +14,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest, macos-latest,ubuntu-24.04-arm]
+        machine: [windows-latest, ubuntu-latest, macos-latest, ubuntu-24.04-arm]
     runs-on: ${{matrix.machine}}
     steps:
+      - if: ${{contains(matrix.machine,'ubuntu')}}
+        run: |
+          sudo apt-get update
+          sudo apt install -y libudev-dev libc6-dev
       - uses: actions/checkout@v6
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@v0.9.3
@@ -46,6 +50,9 @@ jobs:
     env:
       RUSTFLAGS: "-Dwarnings"
     steps:
+      - run: |
+          sudo apt update
+          sudo apt install -y libudev-dev libc6-dev
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
       - name: Set up pixi

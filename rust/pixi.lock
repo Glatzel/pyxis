@@ -2,17 +2,17 @@ version: 6
 environments:
   default:
     channels:
-    - url: https://repo.prefix.dev/glatzel/
+    - url: https://prefix.dev/glatzel/
     - url: https://conda.anaconda.org/conda-forge/
     options:
       pypi-prerelease-mode: if-necessary-or-explicit
     packages:
       linux-64:
-      - conda: https://repo.prefix.dev/glatzel/linux-64/proj-9.7.1-hb0f4dca_2.conda
+      - conda: https://prefix.dev/glatzel/linux-64/proj-9.7.1-hb0f4dca_4.conda
       linux-aarch64:
-      - conda: https://repo.prefix.dev/glatzel/linux-aarch64/proj-9.7.1-he8cfe8b_2.conda
+      - conda: https://prefix.dev/glatzel/linux-aarch64/proj-9.7.1-he8cfe8b_4.conda
       osx-arm64:
-      - conda: https://repo.prefix.dev/glatzel/osx-arm64/proj-9.7.1-h60d57d3_1.conda
+      - conda: https://prefix.dev/glatzel/osx-arm64/proj-9.7.1-h60d57d3_4.conda
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/win-64/bzip2-1.0.8-h0ad9c76_8.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/libffi-3.5.2-h52bdfb6_0.conda
@@ -22,11 +22,11 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/libzlib-1.3.1-h2466b09_2.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/pcre2-10.47-hd2b5f0e_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/pkg-config-0.29.2-h88c491f_1009.conda
-      - conda: https://repo.prefix.dev/glatzel/win-64/proj-9.7.1-h9490d1a_1.conda
+      - conda: https://prefix.dev/glatzel/win-64/proj-9.7.1-h9490d1a_4.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/ucrt-10.0.26100.0-h57928b3_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/win-64/vc-14.3-h2b53caa_33.conda
-      - conda: https://conda.anaconda.org/conda-forge/win-64/vc14_runtime-14.44.35208-h818238b_33.conda
-      - conda: https://conda.anaconda.org/conda-forge/win-64/vcomp14-14.44.35208-h818238b_33.conda
+      - conda: https://conda.anaconda.org/conda-forge/win-64/vc-14.3-h41ae7f8_34.conda
+      - conda: https://conda.anaconda.org/conda-forge/win-64/vc14_runtime-14.44.35208-h818238b_34.conda
+      - conda: https://conda.anaconda.org/conda-forge/win-64/vcomp14-14.44.35208-h818238b_34.conda
 packages:
 - conda: https://conda.anaconda.org/conda-forge/win-64/bzip2-1.0.8-h0ad9c76_8.conda
   sha256: d882712855624641f48aa9dc3f5feea2ed6b4e6004585d3616386a18186fe692
@@ -123,22 +123,22 @@ packages:
   license_family: GPL
   size: 36118
   timestamp: 1720806338740
-- conda: https://repo.prefix.dev/glatzel/linux-64/proj-9.7.1-hb0f4dca_2.conda
-  sha256: 38a54fe5b641541467aa49a738815b53c41a966d34ce00f924230724e9a6eff8
-  size: 78676538
-  timestamp: 1767006789367
-- conda: https://repo.prefix.dev/glatzel/linux-aarch64/proj-9.7.1-he8cfe8b_2.conda
-  sha256: 03520a65fbabf1597153528027699dc2b8a2d3642dfc8cb9f37c8eb2e5d1fc88
-  size: 83011644
-  timestamp: 1767006903791
-- conda: https://repo.prefix.dev/glatzel/osx-arm64/proj-9.7.1-h60d57d3_1.conda
-  sha256: ff992bd58bcf69e3a701277cc860f6b85a10da88128d25e1893f3ad34d85d4e6
-  size: 73962802
-  timestamp: 1766813937096
-- conda: https://repo.prefix.dev/glatzel/win-64/proj-9.7.1-h9490d1a_1.conda
-  sha256: d73b1534524ddf54aa0d8fc19c7726fa22c9961566ef4e3ac65778d7927095c1
-  size: 68894859
-  timestamp: 1766813679720
+- conda: https://prefix.dev/glatzel/linux-64/proj-9.7.1-hb0f4dca_4.conda
+  sha256: b064f193a77b581e17a8b7e10564011fa9ec7ba09c95b5512011a36ae179ee9e
+  size: 77409331
+  timestamp: 1767414501968
+- conda: https://prefix.dev/glatzel/linux-aarch64/proj-9.7.1-he8cfe8b_4.conda
+  sha256: 991fb84e71b95a6179693848d088fda3466c710dfa3e263d2d8b889343de80d0
+  size: 82060354
+  timestamp: 1767414440735
+- conda: https://prefix.dev/glatzel/osx-arm64/proj-9.7.1-h60d57d3_4.conda
+  sha256: 76fe7919f020e7ef1773a6cc3afd45edfd40d9d797c43f5d783a93a9a8fdb0d5
+  size: 73962554
+  timestamp: 1767370304039
+- conda: https://prefix.dev/glatzel/win-64/proj-9.7.1-h9490d1a_4.conda
+  sha256: 5e9ced06c89c5614302450178e0459d52789a146aacb49efd2c77604d1af2417
+  size: 68895090
+  timestamp: 1767370466492
 - conda: https://conda.anaconda.org/conda-forge/win-64/ucrt-10.0.26100.0-h57928b3_0.conda
   sha256: 3005729dce6f3d3f5ec91dfc49fc75a0095f9cd23bab49efb899657297ac91a5
   md5: 71b24316859acd00bdb8b38f5e2ce328
@@ -148,37 +148,37 @@ packages:
   license: LicenseRef-MicrosoftWindowsSDK10
   size: 694692
   timestamp: 1756385147981
-- conda: https://conda.anaconda.org/conda-forge/win-64/vc-14.3-h2b53caa_33.conda
-  sha256: 7036945b5fff304064108c22cbc1bb30e7536363782b0456681ee6cf209138bd
-  md5: 2d1c042360c09498891809a3765261be
+- conda: https://conda.anaconda.org/conda-forge/win-64/vc-14.3-h41ae7f8_34.conda
+  sha256: 9dc40c2610a6e6727d635c62cced5ef30b7b30123f5ef67d6139e23d21744b3a
+  md5: 1e610f2416b6acdd231c5f573d754a0f
   depends:
-  - vc14_runtime >=14.42.34433
+  - vc14_runtime >=14.44.35208
   track_features:
   - vc14
   license: BSD-3-Clause
   license_family: BSD
-  size: 19070
-  timestamp: 1765216452130
-- conda: https://conda.anaconda.org/conda-forge/win-64/vc14_runtime-14.44.35208-h818238b_33.conda
-  sha256: 7e8f7da25d7ce975bbe7d7e6d6e899bf1f253e524a3427cc135a79f3a79c457c
-  md5: fb8e4914c5ad1c71b3c519621e1df7b8
+  size: 19356
+  timestamp: 1767320221521
+- conda: https://conda.anaconda.org/conda-forge/win-64/vc14_runtime-14.44.35208-h818238b_34.conda
+  sha256: 02732f953292cce179de9b633e74928037fa3741eb5ef91c3f8bae4f761d32a5
+  md5: 37eb311485d2d8b2c419449582046a42
   depends:
   - ucrt >=10.0.20348.0
-  - vcomp14 14.44.35208 h818238b_33
+  - vcomp14 14.44.35208 h818238b_34
   constrains:
-  - vs2015_runtime 14.44.35208.* *_33
+  - vs2015_runtime 14.44.35208.* *_34
   license: LicenseRef-MicrosoftVisualCpp2015-2022Runtime
   license_family: Proprietary
-  size: 684323
-  timestamp: 1765216366832
-- conda: https://conda.anaconda.org/conda-forge/win-64/vcomp14-14.44.35208-h818238b_33.conda
-  sha256: f79edd878094e86af2b2bc1455b0a81e02839a784fb093d5996ad4cf7b810101
-  md5: 4cb6942b4bd846e51b4849f4a93c7e6d
+  size: 683233
+  timestamp: 1767320219644
+- conda: https://conda.anaconda.org/conda-forge/win-64/vcomp14-14.44.35208-h818238b_34.conda
+  sha256: 878d5d10318b119bd98ed3ed874bd467acbe21996e1d81597a1dbf8030ea0ce6
+  md5: 242d9f25d2ae60c76b38a5e42858e51d
   depends:
   - ucrt >=10.0.20348.0
   constrains:
-  - vs2015_runtime 14.44.35208.* *_33
+  - vs2015_runtime 14.44.35208.* *_34
   license: LicenseRef-MicrosoftVisualCpp2015-2022Runtime
   license_family: Proprietary
-  size: 115073
-  timestamp: 1765216325898
+  size: 115235
+  timestamp: 1767320173250

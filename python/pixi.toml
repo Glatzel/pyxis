@@ -6,7 +6,7 @@ platforms = ["win-64", "linux-64", "osx-arm64", "linux-aarch64"]
 python = "3.13.*"
 
 [feature.build.dependencies]
-maturin = "==1.10.2"
+maturin = "==1.11.5"
 pip = "==25.3"
 
 [feature.deps.dependencies]

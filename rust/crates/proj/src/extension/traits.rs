@@ -91,7 +91,7 @@ pub trait ICoord: Clone {
     fn t(&mut self) -> *mut f64;
 }
 
-// Only allow use this triat in crate.
+// Only allow use this trait in crate.
 // Prevent users from modifying the to_coord fn.
 pub(crate) trait ToCoord {
     fn to_coord(&self) -> Result<proj_sys::PJ_COORD, ProjError>;

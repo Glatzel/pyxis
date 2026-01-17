@@ -6,14 +6,8 @@ fn main() {
     // Link
     let proj_root = PathBuf::from(env::var("PROJ_ROOT").expect("PROJ_ROOT must be set"));
     let lib_dir = proj_root.join("lib");
-    let include_dir = proj_root.join("include");
     println!("cargo:rustc-link-search=native={}", lib_dir.display());
     println!("cargo:rustc-link-lib=proj");
-    #[cfg(not(windows))]
-    println!(
-        "cargo:rustc-link-arg=-Wl,--enable-new-dtags,-rpath,{}",
-        lib_dir.display()
-    );
 
     //bindgen
     if env::var("UPDATE").unwrap_or("false".to_string()) != "true"
@@ -22,6 +16,7 @@ fn main() {
         return;
     }
     // generate bindings
+    let include_dir = proj_root.join("include");
     let header = include_dir.join("proj.h").to_string_lossy().to_string();
     let bindings = bindgen::Builder::default()
         .header(header)

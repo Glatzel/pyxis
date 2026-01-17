@@ -2220,7 +2220,6 @@ version = "9.7.1"
 dependencies = [
  "bindgen",
  "libc",
- "pkg-config",
 ]
 
 [[package]]

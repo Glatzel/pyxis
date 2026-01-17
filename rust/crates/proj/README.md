@@ -30,8 +30,7 @@ This crate aims to:
    proj = { git = "https://github.com/Glatzel/pyxis", tag = "version" }
    ```
 
-* Set the `PKG_CONFIG_PATH` environment variable to the directory that contains `proj.pc`.
-    Windows users must install `pkg-config` and add the binary path to their `PATH` environment variable.
+* Set the `PROJ_ROOT` environment variable to the directory that contains `bin`, `include`, `lib`, etc.
 
 * You can use [pixi](https://github.com/prefix-dev/pixi/?tab=readme-ov-file#installation) to install all dependencies.
 

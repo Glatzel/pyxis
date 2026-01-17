@@ -17,4 +17,3 @@ if ($IsLinux -and ($(uname -m) -eq 'aarch64' )) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:Path"
     $env:PKG_CONFIG_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib/pkgconfig)`:/usr/lib/aarch64-linux-gnu/pkgconfig`:${env:PKG_CONFIG_PATH}"
 }
-

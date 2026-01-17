@@ -7,15 +7,12 @@ if ($IsWindows) {
 if ($IsMacOS) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:Path"
     $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default)"
-    $env:LD_LIBRARY_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default)`:$env:LD_LIBRARY_PATH"
 }
 if ($IsLinux -and ($(uname -m) -eq 'x86_64' )) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:Path"
     $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default)"
-    $env:LD_LIBRARY_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default)`:$env:LD_LIBRARY_PATH"
 }
 if ($IsLinux -and ($(uname -m) -eq 'aarch64' )) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:Path"
     $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default)"
-    $env:LD_LIBRARY_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default)`:$env:LD_LIBRARY_PATH"
 }

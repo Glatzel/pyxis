@@ -8,10 +8,7 @@ fn main() {
     let lib_dir = proj_root.join("lib");
     let include_dir = proj_root.join("include");
     println!("cargo:rustc-link-search=native={}", lib_dir.display());
-    #[cfg(windows)]
     println!("cargo:rustc-link-lib=proj");
-    #[cfg(not(windows))]
-    println!("cargo:rustc-link-lib=libproj");
 
     //bindgen
     if env::var("UPDATE").unwrap_or("false".to_string()) != "true"

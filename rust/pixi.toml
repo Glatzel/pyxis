@@ -2,10 +2,5 @@
 channels = ["https://prefix.dev/glatzel", "conda-forge"]
 platforms = ["win-64", "linux-64", "osx-arm64", "linux-aarch64"]
 
-[tasks]
-doc = "pwsh -f './scripts/cargo-doc.ps1'"
-test = "pwsh -f './scripts/cargo-test.ps1'"
-
 [dependencies]
-pkg-config = "==0.29.2"
 proj = "==9.7.1"

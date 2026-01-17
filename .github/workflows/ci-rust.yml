@@ -32,8 +32,8 @@ jobs:
       - name: cargo-test
         run: |
           git submodule update --init --recursive
-          pixi run test
-        working-directory: ${{env.RUST_ROOT}}
+          ${{env.RUST_ROOT}}/scripts/cargo-test.ps1
+        shell: pwsh
 
       - name: Upload results to Codecov
         if: ${{ !cancelled() }}
@@ -60,5 +60,5 @@ jobs:
         with:
           run-install: false
       - name: cargo-doc
-        run: pixi run doc
-        working-directory: ${{env.RUST_ROOT}}
+        run: ${{env.RUST_ROOT}}/scripts/cargo-doc.ps1
+        shell: pwsh

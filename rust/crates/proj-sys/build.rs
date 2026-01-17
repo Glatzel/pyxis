@@ -11,7 +11,7 @@ fn main() {
     println!("cargo:rustc-link-lib=proj");
     #[cfg(not(windows))]
     println!(
-        "cargo:rustc-link-arg-tests=-Wl,-rpath,{}",
+        "cargo:rustc-link-arg=-Wl,--enable-new-dtags,-rpath,{}",
         lib_dir.display()
     );
 

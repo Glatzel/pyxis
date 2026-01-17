@@ -21,13 +21,12 @@ pub(crate) fn new_test_ctx() -> Result<Arc<Context>, ProjError> {
             message: format!("{}", e),
         })?
     } else {
-        dunce::canonicalize(format!(
-            "{workspace_root}/.pixi/envs/default/share/proj"
-        ))
-        .map_err(|e| ProjError {
-            code: crate::data_types::ProjErrorCode::Other,
-            message: format!("{}", e),
-        })?
+        dunce::canonicalize(format!("{workspace_root}/.pixi/envs/default/share/proj")).map_err(
+            |e| ProjError {
+                code: crate::data_types::ProjErrorCode::Other,
+                message: format!("{}", e),
+            },
+        )?
     };
     ctx.set_database_path(&default_proj_data.join("proj.db"), None)?;
     ctx.set_search_paths(&[&default_proj_data])?;

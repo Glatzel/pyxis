@@ -41,3 +41,4 @@
             "CONDA_PREFIX": "${workspaceFolder}/python/.pixi/envs/default"
         }
     }
+}

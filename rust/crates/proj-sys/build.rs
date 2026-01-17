@@ -4,7 +4,8 @@ use std::path::PathBuf;
 
 fn main() {
     // Link
-    let pk_proj = link_lib("proj", "proj");
+    let pk_proj = pkg_config::Config::new().probe("proj").unwrap();
+    println!("cargo:rustc-link-lib=static=proj");
 
     //bindgen
     if env::var("UPDATE").unwrap_or("false".to_string()) != "true"
@@ -36,15 +37,5 @@ fn main() {
         bindings
             .write_to_file(PathBuf::from(env::var("OUT_DIR").unwrap()).join("bindings.rs"))
             .expect("Couldn't write bindings!");
-    }
-}
-fn link_lib(name: &str, lib: &str) -> pkg_config::Library {
-    match pkg_config::Config::new().probe(name) {
-        Ok(pklib) => {
-            println!("cargo:rustc-link-lib=static={lib}");
-            println!("Link to `{lib}`");
-            pklib
-        }
-        Err(e) => panic!("cargo:warning=Pkg-config error: {e:?}"),
     }
 }

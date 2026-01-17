@@ -3,17 +3,17 @@ pixi install
 if ($IsWindows) {
     $bin = Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin
     $env:Path = "$bin" + ";" + "$env:Path"
-    $env:PKG_CONFIG_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/lib/pkgconfig);${env:PKG_CONFIG_PATH}"
+    $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/lib)"
 }
 if ($IsMacOS) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:Path"
-    $env:PKG_CONFIG_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib/pkgconfig)`:${env:PKG_CONFIG_PATH}"
+    $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)"
 }
 if ($IsLinux -and ($(uname -m) -eq 'x86_64' )) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:Path"
-    $env:PKG_CONFIG_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib/pkgconfig)`:/usr/lib/x86_64-linux-gnu/pkgconfig`:${env:PKG_CONFIG_PATH}"
+    $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)"
 }
 if ($IsLinux -and ($(uname -m) -eq 'aarch64' )) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:Path"
-    $env:PKG_CONFIG_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib/pkgconfig)`:/usr/lib/aarch64-linux-gnu/pkgconfig`:${env:PKG_CONFIG_PATH}"
+    $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)"
 }

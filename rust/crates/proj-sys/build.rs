@@ -4,7 +4,10 @@ use std::path::PathBuf;
 
 fn main() {
     // Link
-    let pk_proj = pkg_config::Config::new().probe("proj").unwrap();
+    let proj_root = PathBuf::from(env::var("PROJ_ROOT").expect("PROJ_ROOT must be set"));
+    let lib_dir = proj_root.join("lib");
+    let include_dir = proj_root.join("include");
+    println!("cargo:rustc-link-search=native={}", lib_dir.display());
     println!("cargo:rustc-link-lib=proj");
 
     //bindgen
@@ -14,10 +17,7 @@ fn main() {
         return;
     }
     // generate bindings
-    let header = &pk_proj.include_paths[0]
-        .join("proj.h")
-        .to_string_lossy()
-        .to_string();
+    let header = include_dir.join("proj.h").to_string_lossy().to_string();
     let bindings = bindgen::Builder::default()
         .header(header)
         .size_t_is_usize(true)

@@ -6,16 +6,16 @@ if ($IsWindows) {
 }
 if ($IsMacOS) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:Path"
-    $env:LD_LIBRARY_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:LD_LIBRARY_PATH"
+    # $env:LD_LIBRARY_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:LD_LIBRARY_PATH"
     $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default)"
 }
 if ($IsLinux -and ($(uname -m) -eq 'x86_64' )) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:Path"
-    $env:LD_LIBRARY_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:LD_LIBRARY_PATH"
+    # $env:LD_LIBRARY_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:LD_LIBRARY_PATH"
     $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default)"
 }
 if ($IsLinux -and ($(uname -m) -eq 'aarch64' )) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:Path"
-    $env:LD_LIBRARY_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:LD_LIBRARY_PATH"
+    # $env:LD_LIBRARY_PATH = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/lib)`:$env:LD_LIBRARY_PATH"
     $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default)"
 }

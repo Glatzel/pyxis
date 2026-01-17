@@ -5,7 +5,7 @@ use std::path::PathBuf;
 fn main() {
     // Link
     let pk_proj = pkg_config::Config::new().probe("proj").unwrap();
-    println!("cargo:rustc-link-lib=static=proj");
+    println!("cargo:rustc-link-lib=proj");
 
     //bindgen
     if env::var("UPDATE").unwrap_or("false".to_string()) != "true"

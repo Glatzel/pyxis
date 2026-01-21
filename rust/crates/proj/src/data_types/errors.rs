@@ -1,6 +1,4 @@
-use std::ffi::NulError;
-use std::str::Utf8Error;
-
+use envoy::EnvoyError;
 use num_enum::FromPrimitive;
 use thiserror::Error;
 
@@ -78,17 +76,8 @@ pub struct ProjError {
     pub message: String,
 }
 
-impl From<NulError> for ProjError {
-    fn from(value: NulError) -> Self {
-        Self {
-            code: ProjErrorCode::Other,
-            message: value.to_string(),
-        }
-    }
-}
-
-impl From<Utf8Error> for ProjError {
-    fn from(value: Utf8Error) -> Self {
+impl From<EnvoyError> for ProjError {
+    fn from(value: EnvoyError) -> Self {
         Self {
             code: ProjErrorCode::Other,
             message: value.to_string(),

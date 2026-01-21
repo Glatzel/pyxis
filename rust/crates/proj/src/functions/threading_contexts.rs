@@ -29,7 +29,7 @@ impl Clone for crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone>
     fn clone(&self) -> Self {
         Self {
-            ptr: Arc::new(unsafe { proj_sys::proj_context_clone(*self.ptr) }),
+            ptr: self.ptr.clone(),
         }
     }
 }
@@ -52,3 +52,4 @@ mod test {
         Ok(())
     }
 }
+

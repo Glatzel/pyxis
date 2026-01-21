@@ -84,14 +84,18 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_metadata>
-    pub fn get_database_metadata(&self, key: DatabaseMetadataKey) -> Result<String, ProjError> {
+    pub fn get_database_metadata(
+        &self,
+        key: DatabaseMetadataKey,
+    ) -> Result<Option<String>, ProjError> {
         Ok(unsafe {
             proj_sys::proj_context_get_database_metadata(
                 *self.ptr,
                 key.as_ref().to_cstring()?.as_ptr(),
             )
         }
-        .to_string()?)
+        .to_string()
+        .ok())
     }
     ///Return the database structure.
     ///
@@ -576,7 +580,7 @@ mod test {
     fn test_get_database_metadata() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let data = ctx
-            .get_database_metadata(DatabaseMetadataKey::ProjVersion)
+            .get_database_metadata(DatabaseMetadataKey::ProjVersion)?
             .unwrap();
         assert_eq!(
             data,

@@ -90,7 +90,9 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_filename>
     pub fn grid_cache_set_filename(&self, fullname: &str) -> Result<&Self, ProjError> {
-        unsafe { proj_sys::proj_grid_cache_set_filename(*self.ptr, fullname.to_cstring().as_ptr()) };
+        unsafe {
+            proj_sys::proj_grid_cache_set_filename(*self.ptr, fullname.to_cstring().as_ptr())
+        };
         check_result!(self);
         Ok(self)
     }

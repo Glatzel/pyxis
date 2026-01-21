@@ -40,10 +40,6 @@ impl Drop for InsertObjectSession {
     }
 }
 impl InsertObjectSession {
-    /// # See Also
-    ///
-    /// * [crate::Context::insert_object_session_create]
-    pub fn from_context(ctx: &Context) -> InsertObjectSession { ctx.insert_object_session_create() }
     ///Returns SQL statements needed to insert the passed object into the
     /// database.
     ///
@@ -136,7 +132,7 @@ mod test {
                                ANGLEUNIT[\"degree\",0.0174532925199433]]]";
         println!("{wkt}");
         let crs = ctx.create_from_wkt(wkt, None, None)?;
-        let session = InsertObjectSession::from_context(&ctx);
+        let session = ctx.insert_object_session_create();
         let statements = session.get_insert_statements(&crs, "HOBU", "XXXX", false, None)?;
         for i in statements.iter() {
             println!("{i}");
@@ -144,3 +140,4 @@ mod test {
         Ok(())
     }
 }
+

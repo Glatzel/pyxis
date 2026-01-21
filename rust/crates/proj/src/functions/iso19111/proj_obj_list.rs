@@ -1,4 +1,3 @@
-use alloc::sync::Arc;
 use core::ptr;
 extern crate alloc;
 use envoy::ToCString;
@@ -25,7 +24,7 @@ impl ProjObjList {
     ) -> Result<Option<Proj>, ProjError> {
         let index = unsafe {
             proj_sys::proj_get_suggested_operation(
-                self.ctx.ptr,
+                *self.ctx,
                 self.ptr(),
                 direction as i32,
                 coord.to_coord()?,
@@ -34,13 +33,13 @@ impl ProjObjList {
         if index == -1 {
             return Ok(None);
         }
-        let ptr = unsafe { proj_sys::proj_list_get(self.ctx.ptr, self.ptr(), index) };
+        let ptr = unsafe { proj_sys::proj_list_get(*self.ctx, self.ptr(), index) };
 
         if self._owned_cstrings.len() > 0 {
-            Ok(Some(Proj::new(&self.ctx, ptr)?))
+            Ok(Some(Proj::new(self.ctx.clone(), ptr)?))
         } else {
             Ok(Some(Proj::new_with_owned_cstrings(
-                &self.ctx,
+                self.ctx.clone(),
                 ptr,
                 self._owned_cstrings.clone(),
             )?))
@@ -78,7 +77,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_from_name>
     pub fn create_from_name(
-        self: &Arc<Self>,
+        &self,
         auth_name: Option<&str>,
         searched_name: &str,
         types: Option<&[ProjType]>,
@@ -93,7 +92,7 @@ impl Context {
         let auth_name = auth_name.map(|s| s.to_cstring());
         let result = unsafe {
             proj_sys::proj_create_from_name(
-                self.ptr,
+                *self.ptr,
                 auth_name.map_or(ptr::null(), |s| s.as_ptr()),
                 searched_name.to_cstring().as_ptr(),
                 types.map_or(ptr::null(), |types| types.as_ptr()),
@@ -103,7 +102,7 @@ impl Context {
                 ptr::null(),
             )
         };
-        ProjObjList::new(self, result)
+        ProjObjList::new(self.ptr.clone(), result)
     }
     /// Return GeodeticCRS that use the specified datum.
     ///
@@ -118,7 +117,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_query_geodetic_crs_from_datum>
     pub fn query_geodetic_crs_from_datum(
-        self: &Arc<Self>,
+        &self,
         crs_auth_name: Option<&str>,
         datum_auth_name: &str,
         datum_code: &str,
@@ -127,14 +126,14 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(crs_auth_name),
                 datum_auth_name.to_cstring().as_ptr(),
                 datum_code.to_cstring().as_ptr(),
                 owned.push_option(crs_type),
             )
         };
-        ProjObjList::new_with_owned_cstrings(self, ptr, owned)
+        ProjObjList::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
 }
 impl Proj {
@@ -144,8 +143,8 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
     pub fn get_non_deprecated(&self) -> Result<ProjObjList, ProjError> {
-        let result = unsafe { proj_sys::proj_get_non_deprecated(self.ctx.ptr, self.ptr()) };
-        ProjObjList::new(&self.ctx, result)
+        let result = unsafe { proj_sys::proj_get_non_deprecated(*self.ctx, self.ptr()) };
+        ProjObjList::new(self.ctx.clone(), result)
     }
 
     ///Identify the CRS with reference CRSs.
@@ -198,14 +197,14 @@ impl Proj {
         let mut confidence: Vec<i32> = Vec::new();
         let result = unsafe {
             proj_sys::proj_identify(
-                self.ctx.ptr,
+                *self.ctx,
                 self.ptr(),
                 auth_name.to_cstring().as_ptr(),
                 ptr::null(),
                 &mut confidence.as_mut_ptr(),
             )
         };
-        ProjObjList::new(&self.ctx, result)
+        ProjObjList::new(self.ctx.clone(), result)
     }
 }
 #[cfg(test)]

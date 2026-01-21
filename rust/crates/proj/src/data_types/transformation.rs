@@ -13,31 +13,31 @@ use crate::{OwnedCStrings, check_result};
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Proj {
     ptr: *mut proj_sys::PJ,
-    pub(crate) ctx: Arc<Context>,
+    pub(crate) ctx: Arc<ContextPtr>,
     _owned_cstrings: OwnedCStrings,
 }
 impl Proj {
     /// Create a `Proj` object from pointer, panic if pointer is null.
     pub(crate) fn new(
-        ctx: &Arc<Context>,
+        ctx: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ,
     ) -> Result<crate::Proj, ProjError> {
         check_result!(ptr.is_null(), "Proj pointer is null.");
         Ok(crate::Proj {
-            ctx: ctx.clone(),
+            ctx: ctx,
             ptr,
             _owned_cstrings: OwnedCStrings::new(),
         })
     }
     /// Create a `Proj` object from pointer, panic if pointer is null.
     pub(crate) fn new_with_owned_cstrings(
-        ctx: &Arc<Context>,
+        ctx: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ,
         owned_cstrings: OwnedCStrings,
     ) -> Result<crate::Proj, ProjError> {
         check_result!(ptr.is_null(), "Proj pointer is null.");
         Ok(crate::Proj {
-            ctx: ctx.clone(),
+            ctx: ctx,
             ptr,
             _owned_cstrings: owned_cstrings,
         })
@@ -61,7 +61,7 @@ pub enum Direction {
     ///Perform transformation in the inverse direction.
     Inv = proj_sys::PJ_DIRECTION_PJ_INV,
 }
-
+pub(crate) type ContextPtr = *mut proj_sys::PJ_CONTEXT;
 ///Context objects enable safe multi-threaded usage of PROJ. Each PJ object is
 /// connected to a context (if not specified, the default context is used). All
 /// operations within a context should be performed in the same thread.
@@ -70,7 +70,7 @@ pub enum Direction {
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_CONTEXT>
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Context {
-    pub(crate) ptr: *mut proj_sys::PJ_CONTEXT,
+    pub(crate) ptr: Arc<ContextPtr>,
 }
 
 unsafe impl Send for Context {}
@@ -95,7 +95,7 @@ mod test {
     #[test]
     fn test_proj_new() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
-        let pj = Proj::new(&ctx, std::ptr::null_mut());
+        let pj = Proj::new(ctx.ptr.clone(), std::ptr::null_mut());
         assert!(pj.is_err());
         Ok(())
     }

@@ -1,4 +1,3 @@
-use alloc::sync::Arc;
 use core::ptr;
 
 use crate::data_types::ProjError;
@@ -20,7 +19,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cs>
     pub fn create_cs(
-        self: &Arc<Self>,
+        &self,
         coordinate_system_type: CoordinateSystemType,
         axis: &[AxisDescription],
     ) -> Result<Proj, ProjError> {
@@ -38,13 +37,13 @@ impl Context {
         }
         let ptr = unsafe {
             proj_sys::proj_create_cs(
-                self.ptr,
+                *self.ptr,
                 coordinate_system_type as u32,
                 axis_count as i32,
                 axis_vec.as_ptr(),
             )
         };
-        Proj::new(self, ptr)
+        Proj::new(self.ptr.clone(), ptr)
     }
     ///Instantiate a CartesiansCS 2D.
     ///
@@ -58,7 +57,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_cartesian_2D_cs>
     pub fn create_cartesian_2d_cs(
-        self: &Arc<Self>,
+        &self,
         ellipsoidal_cs_2d_type: CartesianCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
@@ -66,13 +65,13 @@ impl Context {
         let unit_name = unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
-                self.ptr,
+                *self.ptr,
                 ellipsoidal_cs_2d_type as u32,
                 unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 unit_conv_factor,
             )
         };
-        Proj::new(self, ptr)
+        Proj::new(self.ptr.clone(), ptr)
     }
     ///Instantiate a Ellipsoidal 2D.
     ///
@@ -87,7 +86,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_2D_cs>
     pub fn create_ellipsoidal_2d_cs(
-        self: &Arc<Self>,
+        &self,
         ellipsoidal_cs_2d_type: EllipsoidalCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
@@ -95,13 +94,13 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
-                self.ptr,
+                *self.ptr,
                 ellipsoidal_cs_2d_type as u32,
                 owned.push_option(unit_name),
                 unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a Ellipsoidal 3D.
     ///
@@ -123,7 +122,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_ellipsoidal_3D_cs>
     pub fn create_ellipsoidal_3d_cs(
-        self: &Arc<Self>,
+        &self,
         ellipsoidal_cs_3d_type: EllipsoidalCs3dType,
         horizontal_angular_unit_name: Option<&str>,
         horizontal_angular_unit_conv_factor: f64,
@@ -134,7 +133,7 @@ impl Context {
         let vertical_linear_unit_name = vertical_linear_unit_name.map(|s| s.to_cstring());
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
-                self.ptr,
+                *self.ptr,
                 ellipsoidal_cs_3d_type as u32,
                 horizontal_angular_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
                 horizontal_angular_unit_conv_factor,
@@ -142,7 +141,7 @@ impl Context {
                 vertical_linear_unit_conv_factor,
             )
         };
-        Proj::new(self, ptr)
+        Proj::new(self.ptr.clone(), ptr)
     }
 
     ///Create a GeographicCRS.
@@ -167,7 +166,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs>
     pub fn create_geographic_crs(
-        self: &Arc<Self>,
+        &self,
         crs_name: Option<&str>,
         datum_name: Option<&str>,
         ellps_name: Option<&str>,
@@ -182,7 +181,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(5);
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(crs_name),
                 owned.push_option(datum_name),
                 owned.push_option(ellps_name),
@@ -195,7 +194,7 @@ impl Context {
                 ellipsoidal_cs.ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Create a GeographicCRS.
     ///
@@ -210,7 +209,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geographic_crs_from_datum>
     pub fn create_geographic_crs_from_datum(
-        self: &Arc<Self>,
+        &self,
         crs_name: Option<&str>,
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
@@ -218,13 +217,13 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(crs_name),
                 datum_or_datum_ensemble.ptr(),
                 ellipsoidal_cs.ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Create a GeodeticCRS of geocentric type.
     ///
@@ -251,7 +250,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geocentric_crs>
     pub fn create_geocentric_crs(
-        self: &Arc<Self>,
+        &self,
         crs_name: Option<&str>,
         datum_name: Option<&str>,
         ellps_name: Option<&str>,
@@ -267,7 +266,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(6);
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(crs_name),
                 owned.push_option(datum_name),
                 owned.push_option(ellps_name),
@@ -281,7 +280,7 @@ impl Context {
                 linear_units_conv,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Create a GeodeticCRS of geocentric type.
     ///
@@ -299,7 +298,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_geocentric_crs_from_datum>
     pub fn create_geocentric_crs_from_datum(
-        self: &Arc<Self>,
+        &self,
         crs_name: Option<&str>,
         datum_or_datum_ensemble: &Proj,
         linear_units: Option<&str>,
@@ -308,14 +307,14 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(crs_name),
                 datum_or_datum_ensemble.ptr(),
                 owned.push_option(linear_units),
                 linear_units_conv,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Create a DerivedGeograhicCRS.
     ///
@@ -331,7 +330,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_derived_geographic_crs>
     pub fn create_derived_geographic_crs(
-        self: &Arc<Self>,
+        &self,
         crs_name: Option<&str>,
         base_geographic_crs: &Proj,
         conversion: &Proj,
@@ -340,14 +339,14 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(crs_name),
                 base_geographic_crs.ptr(),
                 conversion.ptr(),
                 ellipsoidal_cs.ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
 
     ///Instantiate a EngineeringCRS with just a name.
@@ -359,14 +358,12 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
-    pub fn create_engineering_crs(
-        self: &Arc<Self>,
-        crs_name: Option<&str>,
-    ) -> Result<Proj, ProjError> {
+    pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> Result<Proj, ProjError> {
         let mut owned = OwnedCStrings::with_capacity(1);
-        let ptr =
-            unsafe { proj_sys::proj_create_engineering_crs(self.ptr, owned.push_option(crs_name)) };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        let ptr = unsafe {
+            proj_sys::proj_create_engineering_crs(*self.ptr, owned.push_option(crs_name))
+        };
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a EngineeringCRS with just a name.
     ///
@@ -383,7 +380,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_vertical_crs>
     pub fn create_vertical_crs(
-        self: &Arc<Self>,
+        &self,
         crs_name: Option<&str>,
         datum_name: Option<&str>,
         linear_units: Option<&str>,
@@ -392,14 +389,14 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(crs_name),
                 owned.push_option(datum_name),
                 owned.push_option(linear_units),
                 linear_units_conv,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Create a VerticalCRS.
     ///
@@ -433,7 +430,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_vertical_crs_ex>
     pub fn create_vertical_crs_ex(
-        self: &Arc<Self>,
+        &self,
         crs_name: Option<&str>,
         datum_name: Option<&str>,
         datum_auth_name: Option<&str>,
@@ -451,7 +448,7 @@ impl Context {
         options.with_or_skip(accuracy, "ACCURACY");
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs_ex(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(crs_name),
                 owned.push_option(datum_name),
                 owned.push_option(datum_auth_name),
@@ -465,7 +462,7 @@ impl Context {
                 options.as_vec_ptr().as_ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Create a CompoundCRS.
     ///
@@ -479,7 +476,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_compound_crs>
     pub fn create_compound_crs(
-        self: &Arc<Self>,
+        &self,
         crs_name: Option<&str>,
         horiz_crs: &Proj,
         vert_crs: &Proj,
@@ -487,13 +484,13 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(crs_name),
                 horiz_crs.ptr(),
                 vert_crs.ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a Conversion.
     ///
@@ -512,7 +509,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion>
     pub fn create_conversion(
-        self: &Arc<Self>,
+        &self,
         name: Option<&str>,
         auth_name: Option<&str>,
         code: Option<&str>,
@@ -524,7 +521,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(6);
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(name),
                 owned.push_option(auth_name),
                 owned.push_option(code),
@@ -547,7 +544,7 @@ impl Context {
                     .as_ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a Transformation.
     ///
@@ -572,7 +569,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_transformation>
     pub fn create_transformation(
-        self: &Arc<Self>,
+        &self,
         name: Option<&str>,
         auth_name: Option<&str>,
         code: Option<&str>,
@@ -602,7 +599,7 @@ impl Context {
 
         let ptr = unsafe {
             proj_sys::proj_create_transformation(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(name),
                 owned.push_option(auth_name),
                 owned.push_option(code),
@@ -617,7 +614,7 @@ impl Context {
                 accuracy,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Return an equivalent projection.
     ///
@@ -632,7 +629,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_projected_crs>
     pub fn create_projected_crs(
-        self: &Arc<Self>,
+        &self,
         crs_name: Option<&str>,
         geodetic_crs: &Proj,
         conversion: &Proj,
@@ -641,14 +638,14 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
-                self.ptr,
+                *self.ptr,
                 owned.push_option(crs_name),
                 geodetic_crs.ptr(),
                 conversion.ptr(),
                 coordinate_system.ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Returns a BoundCRS.
     ///
@@ -662,20 +659,20 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_crs>
     pub fn crs_create_bound_crs(
-        self: &Arc<Self>,
+        &self,
         base_crs: &Proj,
         hub_crs: &Proj,
         transformation: &Proj,
     ) -> Result<Proj, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_crs(
-                self.ptr,
+                *self.ptr,
                 base_crs.ptr(),
                 hub_crs.ptr(),
                 transformation.ptr(),
             )
         };
-        Proj::new(self, ptr)
+        Proj::new(self.ptr.clone(), ptr)
     }
     ///Returns potentially a BoundCRS, with a transformation to `EPSG:4326`,
     /// wrapping this CRS.
@@ -690,20 +687,20 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_create_bound_vertical_crs>
     pub fn crs_create_bound_vertical_crs(
-        self: &Arc<Self>,
+        &self,
         vert_crs: &Proj,
         hub_geographic_3d_crs: &Proj,
         grid_name: &str,
     ) -> Result<Proj, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_vertical_crs(
-                self.ptr,
+                *self.ptr,
                 vert_crs.ptr(),
                 hub_geographic_3d_crs.ptr(),
                 grid_name.to_cstring().as_ptr(),
             )
         };
-        Proj::new(self, ptr)
+        Proj::new(self.ptr.clone(), ptr)
     }
     ///Instantiate a ProjectedCRS with a Universal Transverse Mercator
     /// conversion.
@@ -711,18 +708,14 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_utm>
-    pub fn create_conversion_utm(
-        self: &Arc<Self>,
-        zone: u8,
-        north: bool,
-    ) -> Result<Proj, ProjError> {
+    pub fn create_conversion_utm(&self, zone: u8, north: bool) -> Result<Proj, ProjError> {
         check_result!(
             !(1..=60).contains(&zone),
             "UTM zone number should between 1 and 60."
         );
         let ptr =
-            unsafe { proj_sys::proj_create_conversion_utm(self.ptr, zone as i32, north as i32) };
-        Proj::new(self, ptr)
+            unsafe { proj_sys::proj_create_conversion_utm(*self.ptr, zone as i32, north as i32) };
+        Proj::new(self.ptr.clone(), ptr)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Transverse
     /// Mercator projection method.
@@ -731,7 +724,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_transverse_mercator>
     pub fn create_conversion_transverse_mercator(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -745,7 +738,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 scale,
@@ -757,7 +750,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Gauss
     /// Schreiber Transverse Mercator projection method.
@@ -766,7 +759,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gauss_schreiber_transverse_mercator>
     pub fn create_conversion_gauss_schreiber_transverse_mercator(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -780,7 +773,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gauss_schreiber_transverse_mercator(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 scale,
@@ -792,7 +785,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Transverse
     /// Mercator South Orientated projection method.
@@ -804,7 +797,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_transverse_mercator_south_oriented>
     pub fn create_conversion_transverse_mercator_south_oriented(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -818,7 +811,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator_south_oriented(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 scale,
@@ -830,7 +823,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Two Point
     /// Equidistant projection method.
@@ -839,7 +832,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_two_point_equidistant>
     pub fn create_conversion_two_point_equidistant(
-        self: &Arc<Self>,
+        &self,
         latitude_first_point: f64,
         longitude_first_point: f64,
         latitude_second_point: f64,
@@ -854,7 +847,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_two_point_equidistant(
-                self.ptr,
+                *self.ptr,
                 latitude_first_point,
                 longitude_first_point,
                 latitude_second_point,
@@ -867,7 +860,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Tunisia Mining
     /// Grid projection method.
@@ -876,7 +869,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mapping_grid>
     pub fn create_conversion_tunisia_mapping_grid(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -889,7 +882,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mapping_grid(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 false_easting,
@@ -900,7 +893,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Tunisia Mining
     /// Grid projection method.
@@ -909,7 +902,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_tunisia_mining_grid>
     pub fn create_conversion_tunisia_mining_grid(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -922,7 +915,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mining_grid(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 false_easting,
@@ -933,7 +926,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Albers Conic
     /// Equal Area projection method.
@@ -942,7 +935,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_albers_equal_area>
     pub fn create_conversion_albers_equal_area(
-        self: &Arc<Self>,
+        &self,
         latitude_false_origin: f64,
         longitude_false_origin: f64,
         latitude_first_parallel: f64,
@@ -957,7 +950,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_albers_equal_area(
-                self.ptr,
+                *self.ptr,
                 latitude_false_origin,
                 longitude_false_origin,
                 latitude_first_parallel,
@@ -970,7 +963,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
     /// Conformal 1SP projection method.
@@ -979,7 +972,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp>
     pub fn create_conversion_lambert_conic_conformal_1sp(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -993,7 +986,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 scale,
@@ -1005,7 +998,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
     /// Conformal (1SP Variant B) projection method.
@@ -1014,7 +1007,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_1sp_variant_b>
     pub fn create_conversion_lambert_conic_conformal_1sp_variant_b(
-        self: &Arc<Self>,
+        &self,
         latitude_nat_origin: f64,
         scale: f64,
         latitude_false_origin: f64,
@@ -1029,7 +1022,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp_variant_b(
-                self.ptr,
+                *self.ptr,
                 latitude_nat_origin,
                 scale,
                 latitude_false_origin,
@@ -1042,7 +1035,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
     /// Conformal (2SP) projection method.
@@ -1051,7 +1044,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp>
     pub fn create_conversion_lambert_conic_conformal_2sp(
-        self: &Arc<Self>,
+        &self,
         latitude_false_origin: f64,
         longitude_false_origin: f64,
         latitude_first_parallel: f64,
@@ -1066,7 +1059,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp(
-                self.ptr,
+                *self.ptr,
                 latitude_false_origin,
                 longitude_false_origin,
                 latitude_first_parallel,
@@ -1079,7 +1072,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
     /// Conformal (2SP Michigan) projection method.
@@ -1088,7 +1081,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_michigan>
     pub fn create_conversion_lambert_conic_conformal_2sp_michigan(
-        self: &Arc<Self>,
+        &self,
         latitude_false_origin: f64,
         longitude_false_origin: f64,
         latitude_first_parallel: f64,
@@ -1104,7 +1097,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_michigan(
-                self.ptr,
+                *self.ptr,
                 latitude_false_origin,
                 longitude_false_origin,
                 latitude_first_parallel,
@@ -1118,7 +1111,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Lambert Conic
     /// Conformal (2SP Belgium) projection method.
@@ -1127,7 +1120,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_conic_conformal_2sp_belgium>
     pub fn create_conversion_lambert_conic_conformal_2sp_belgium(
-        self: &Arc<Self>,
+        &self,
         latitude_false_origin: f64,
         longitude_false_origin: f64,
         latitude_first_parallel: f64,
@@ -1142,7 +1135,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_belgium(
-                self.ptr,
+                *self.ptr,
                 latitude_false_origin,
                 longitude_false_origin,
                 latitude_first_parallel,
@@ -1155,7 +1148,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Modified
     /// Azimuthal Equidistant projection method.
@@ -1164,7 +1157,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_azimuthal_equidistant>
     pub fn create_conversion_azimuthal_equidistant(
-        self: &Arc<Self>,
+        &self,
         latitude_nat_origin: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1177,7 +1170,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_azimuthal_equidistant(
-                self.ptr,
+                *self.ptr,
                 latitude_nat_origin,
                 longitude_nat_origin,
                 false_easting,
@@ -1188,7 +1181,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Guam
     /// Projection projection method.
@@ -1197,7 +1190,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_guam_projection>
     pub fn create_conversion_guam_projection(
-        self: &Arc<Self>,
+        &self,
         latitude_nat_origin: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1210,7 +1203,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_guam_projection(
-                self.ptr,
+                *self.ptr,
                 latitude_nat_origin,
                 longitude_nat_origin,
                 false_easting,
@@ -1221,7 +1214,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Bonne
     /// projection method.
@@ -1230,7 +1223,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_bonne>
     pub fn create_conversion_bonne(
-        self: &Arc<Self>,
+        &self,
         latitude_nat_origin: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1243,7 +1236,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_bonne(
-                self.ptr,
+                *self.ptr,
                 latitude_nat_origin,
                 longitude_nat_origin,
                 false_easting,
@@ -1254,7 +1247,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Lambert
     /// Cylindrical Equal Area (Spherical) projection method.
@@ -1263,7 +1256,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area_spherical>
     pub fn create_conversion_lambert_cylindrical_equal_area_spherical(
-        self: &Arc<Self>,
+        &self,
         latitude_first_parallel: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1276,7 +1269,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area_spherical(
-                self.ptr,
+                *self.ptr,
                 latitude_first_parallel,
                 longitude_nat_origin,
                 false_easting,
@@ -1287,7 +1280,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Lambert
     /// Cylindrical Equal Area (ellipsoidal form) projection method.
@@ -1296,7 +1289,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_cylindrical_equal_area>
     pub fn create_conversion_lambert_cylindrical_equal_area(
-        self: &Arc<Self>,
+        &self,
         latitude_first_parallel: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1309,7 +1302,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area(
-                self.ptr,
+                *self.ptr,
                 latitude_first_parallel,
                 longitude_nat_origin,
                 false_easting,
@@ -1320,7 +1313,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the
     /// Cassini-Soldner projection method.
@@ -1329,7 +1322,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_cassini_soldner>
     pub fn create_conversion_cassini_soldner(
-        self: &Arc<Self>,
+        &self,
         latitude_first_parallel: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1342,7 +1335,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_cassini_soldner(
-                self.ptr,
+                *self.ptr,
                 latitude_first_parallel,
                 longitude_nat_origin,
                 false_easting,
@@ -1353,7 +1346,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Equidistant
     /// Conic projection method.
@@ -1362,7 +1355,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_conic>
     pub fn create_conversion_equidistant_conic(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         latitude_first_parallel: f64,
@@ -1377,7 +1370,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_conic(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 latitude_first_parallel,
@@ -1390,7 +1383,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Eckert I
     /// projection method.
@@ -1399,7 +1392,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_i>
     pub fn create_conversion_eckert_i(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1411,7 +1404,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_i(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -1421,14 +1414,14 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Eckert II
     /// projection method. # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_ii>
     pub fn create_conversion_eckert_ii(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1440,7 +1433,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_ii(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -1450,7 +1443,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Eckert III
     /// projection method.
@@ -1459,7 +1452,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_iii>
     pub fn create_conversion_eckert_iii(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1471,7 +1464,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iii(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -1481,7 +1474,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Eckert IV
     /// projection method.
@@ -1490,7 +1483,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_iv>
     pub fn create_conversion_eckert_iv(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1502,7 +1495,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iv(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -1512,7 +1505,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Eckert V
     /// projection method.
@@ -1521,7 +1514,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_v>
     pub fn create_conversion_eckert_v(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1533,7 +1526,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_v(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -1543,7 +1536,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Eckert VI
     /// projection method.
@@ -1552,7 +1545,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_eckert_vi>
     pub fn create_conversion_eckert_vi(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1564,7 +1557,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_vi(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -1574,7 +1567,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Equidistant
     /// Cylindrical projection method.
@@ -1583,7 +1576,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_cylindrical>
     pub fn create_conversion_equidistant_cylindrical(
-        self: &Arc<Self>,
+        &self,
         latitude_first_parallel: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1596,7 +1589,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical(
-                self.ptr,
+                *self.ptr,
                 latitude_first_parallel,
                 longitude_nat_origin,
                 false_easting,
@@ -1607,7 +1600,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Equidistant
     /// Cylindrical (Spherical) projection method.
@@ -1616,7 +1609,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equidistant_cylindrical_spherical>
     pub fn create_conversion_equidistant_cylindrical_spherical(
-        self: &Arc<Self>,
+        &self,
         latitude_first_parallel: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -1629,7 +1622,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical_spherical(
-                self.ptr,
+                *self.ptr,
                 latitude_first_parallel,
                 longitude_nat_origin,
                 false_easting,
@@ -1640,7 +1633,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Gall
     /// (Stereographic) projection method.
@@ -1649,7 +1642,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gall>
     pub fn create_conversion_gall(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1661,7 +1654,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gall(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -1671,7 +1664,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Goode
     /// Homolosine projection method.
@@ -1680,7 +1673,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_goode_homolosine>
     pub fn create_conversion_goode_homolosine(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1692,7 +1685,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_goode_homolosine(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -1702,7 +1695,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Interrupted
     /// Goode Homolosine projection method.
@@ -1711,7 +1704,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_interrupted_goode_homolosine>
     pub fn create_conversion_interrupted_goode_homolosine(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -1723,7 +1716,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_interrupted_goode_homolosine(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -1733,7 +1726,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Geostationary
     /// Satellite View projection method, with the sweep angle axis of the
@@ -1743,7 +1736,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_geostationary_satellite_sweep_x>
     pub fn create_conversion_geostationary_satellite_sweep_x(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         height: f64,
         false_easting: f64,
@@ -1756,7 +1749,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_x(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 height,
                 false_easting,
@@ -1767,7 +1760,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Geostationary
     /// Satellite View projection method, with the sweep angle axis of the
@@ -1777,7 +1770,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_geostationary_satellite_sweep_y>
     pub fn create_conversion_geostationary_satellite_sweep_y(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         height: f64,
         false_easting: f64,
@@ -1790,7 +1783,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_y(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 height,
                 false_easting,
@@ -1801,7 +1794,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Gnomonic
     /// projection method.
@@ -1810,7 +1803,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_gnomonic>
     pub fn create_conversion_gnomonic(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -1823,7 +1816,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gnomonic(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 false_easting,
@@ -1834,7 +1827,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Hotine Oblique
     /// Mercator (Variant A) projection method.
@@ -1843,7 +1836,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_variant_a>
     pub fn create_conversion_hotine_oblique_mercator_variant_a(
-        self: &Arc<Self>,
+        &self,
         latitude_projection_centre: f64,
         longitude_projection_centre: f64,
         azimuth_initial_line: f64,
@@ -1859,7 +1852,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_a(
-                self.ptr,
+                *self.ptr,
                 latitude_projection_centre,
                 longitude_projection_centre,
                 azimuth_initial_line,
@@ -1873,7 +1866,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Hotine Oblique
     /// Mercator (Variant B) projection method.
@@ -1882,7 +1875,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_variant_b>
     pub fn create_conversion_hotine_oblique_mercator_variant_b(
-        self: &Arc<Self>,
+        &self,
         latitude_projection_centre: f64,
         longitude_projection_centre: f64,
         azimuth_initial_line: f64,
@@ -1898,7 +1891,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_b(
-                self.ptr,
+                *self.ptr,
                 latitude_projection_centre,
                 longitude_projection_centre,
                 azimuth_initial_line,
@@ -1912,7 +1905,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     /// Instantiate a ProjectedCRS with a conversion based on the Hotine Oblique
     /// Mercator Two Point Natural Origin projection method.
@@ -1921,7 +1914,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin>
     pub fn create_conversion_hotine_oblique_mercator_two_point_natural_origin(
-        self: &Arc<Self>,
+        &self,
         latitude_projection_centre: f64,
         latitude_point1: f64,
         longitude_point1: f64,
@@ -1938,7 +1931,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin(
-                self.ptr,
+                *self.ptr,
                 latitude_projection_centre,
                 latitude_point1,
                 longitude_point1,
@@ -1953,7 +1946,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Laborde
     /// Oblique Mercator projection method.
@@ -1962,7 +1955,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_laborde_oblique_mercator>
     pub fn create_conversion_laborde_oblique_mercator(
-        self: &Arc<Self>,
+        &self,
         latitude_projection_centre: f64,
         longitude_projection_centre: f64,
         azimuth_initial_line: f64,
@@ -1977,7 +1970,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_laborde_oblique_mercator(
-                self.ptr,
+                *self.ptr,
                 latitude_projection_centre,
                 longitude_projection_centre,
                 azimuth_initial_line,
@@ -1990,7 +1983,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the International
     /// Map of the World Polyconic projection method.
@@ -1999,7 +1992,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_international_map_world_polyconic>
     pub fn create_conversion_international_map_world_polyconic(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         latitude_first_parallel: f64,
         latitude_second_parallel: f64,
@@ -2013,7 +2006,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_international_map_world_polyconic(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 latitude_first_parallel,
                 latitude_second_parallel,
@@ -2025,7 +2018,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Krovak (north
     /// oriented) projection method.
@@ -2034,7 +2027,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_krovak_north_oriented>
     pub fn create_conversion_krovak_north_oriented(
-        self: &Arc<Self>,
+        &self,
         latitude_projection_centre: f64,
         longitude_of_origin: f64,
         colatitude_cone_axis: f64,
@@ -2050,7 +2043,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak_north_oriented(
-                self.ptr,
+                *self.ptr,
                 latitude_projection_centre,
                 longitude_of_origin,
                 colatitude_cone_axis,
@@ -2064,7 +2057,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Krovak
     /// projection method.
@@ -2073,7 +2066,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_krovak>
     pub fn create_conversion_krovak(
-        self: &Arc<Self>,
+        &self,
         latitude_projection_centre: f64,
         longitude_of_origin: f64,
         colatitude_cone_axis: f64,
@@ -2089,7 +2082,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak(
-                self.ptr,
+                *self.ptr,
                 latitude_projection_centre,
                 longitude_of_origin,
                 colatitude_cone_axis,
@@ -2103,7 +2096,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Lambert
     /// Azimuthal Equal Area projection method.
@@ -2112,7 +2105,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_lambert_azimuthal_equal_area>
     pub fn create_conversion_lambert_azimuthal_equal_area(
-        self: &Arc<Self>,
+        &self,
         latitude_nat_origin: f64,
         longitude_nat_origin: f64,
         false_easting: f64,
@@ -2125,7 +2118,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_azimuthal_equal_area(
-                self.ptr,
+                *self.ptr,
                 latitude_nat_origin,
                 longitude_nat_origin,
                 false_easting,
@@ -2136,7 +2129,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Miller
     /// Cylindrical projection method.
@@ -2145,7 +2138,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_miller_cylindrical>
     pub fn create_conversion_miller_cylindrical(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2157,7 +2150,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_miller_cylindrical(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2167,7 +2160,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Mercator
     /// projection method.
@@ -2176,7 +2169,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mercator_variant_a>
     pub fn create_conversion_mercator_variant_a(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -2190,7 +2183,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_a(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 scale,
@@ -2202,7 +2195,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Mercator
     /// projection method.
@@ -2211,7 +2204,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mercator_variant_b>
     pub fn create_conversion_mercator_variant_b(
-        self: &Arc<Self>,
+        &self,
         latitude_first_parallel: f64,
         center_long: f64,
         false_easting: f64,
@@ -2224,7 +2217,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
-                self.ptr,
+                *self.ptr,
                 latitude_first_parallel,
                 center_long,
                 false_easting,
@@ -2235,7 +2228,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Popular
     /// Visualisation Pseudo Mercator projection method.
@@ -2244,7 +2237,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_popular_visualisation_pseudo_mercator>
     pub fn create_conversion_popular_visualisation_pseudo_mercator(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2257,7 +2250,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_popular_visualisation_pseudo_mercator(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 false_easting,
@@ -2268,7 +2261,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Mollweide
     /// projection method.
@@ -2277,7 +2270,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_mollweide>
     pub fn create_conversion_mollweide(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2289,7 +2282,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mollweide(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2299,7 +2292,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the New Zealand
     /// Map Grid projection method.
@@ -2308,7 +2301,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_new_zealand_mapping_grid>
     pub fn create_conversion_new_zealand_mapping_grid(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2321,7 +2314,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 false_easting,
@@ -2332,7 +2325,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Oblique
     /// Stereographic (Alternative) projection method.
@@ -2341,7 +2334,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_oblique_stereographic>
     pub fn create_conversion_oblique_stereographic(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2354,7 +2347,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 false_easting,
@@ -2365,7 +2358,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Orthographic
     /// projection method.
@@ -2374,7 +2367,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_orthographic>
     pub fn create_conversion_orthographic(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2387,7 +2380,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_orthographic(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 false_easting,
@@ -2398,7 +2391,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Local
     /// Orthographic projection method.
@@ -2407,7 +2400,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_local_orthographic>
     pub fn create_conversion_local_orthographic(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         azimuth: f64,
@@ -2422,7 +2415,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_local_orthographic(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 azimuth,
@@ -2435,7 +2428,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the American
     /// Polyconic projection method.
@@ -2444,7 +2437,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_american_polyconic>
     pub fn create_conversion_american_polyconic(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2457,7 +2450,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_american_polyconic(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 false_easting,
@@ -2468,7 +2461,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Polar
     /// Stereographic (Variant A) projection method.
@@ -2477,7 +2470,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_polar_stereographic_variant_a>
     pub fn create_conversion_polar_stereographic_variant_a(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -2491,7 +2484,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_polar_stereographic_variant_a(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 scale,
@@ -2503,7 +2496,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Polar
     /// Stereographic (Variant B) projection method.
@@ -2512,7 +2505,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_polar_stereographic_variant_b>
     pub fn create_conversion_polar_stereographic_variant_b(
-        self: &Arc<Self>,
+        &self,
         latitude_standard_parallel: f64,
         center_long: f64,
         false_easting: f64,
@@ -2525,7 +2518,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
-                self.ptr,
+                *self.ptr,
                 latitude_standard_parallel,
                 center_long,
                 false_easting,
@@ -2536,7 +2529,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Robinson
     /// projection method.
@@ -2545,7 +2538,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_robinson>
     pub fn create_conversion_robinson(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2557,7 +2550,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_robinson(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2567,7 +2560,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Sinusoidal
     /// projection method.
@@ -2576,7 +2569,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_sinusoidal>
     pub fn create_conversion_sinusoidal(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2588,7 +2581,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_sinusoidal(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2598,7 +2591,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Stereographic
     /// projection method.
@@ -2607,7 +2600,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_stereographic>
     pub fn create_conversion_stereographic(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         scale: f64,
@@ -2621,7 +2614,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_stereographic(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 scale,
@@ -2633,7 +2626,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Van der
     /// Grinten projection method.
@@ -2642,7 +2635,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_van_der_grinten>
     pub fn create_conversion_van_der_grinten(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2654,7 +2647,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_van_der_grinten(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2664,7 +2657,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Wagner I
     /// projection method.
@@ -2673,7 +2666,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_i>
     pub fn create_conversion_wagner_i(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2685,7 +2678,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_i(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2695,7 +2688,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Wagner II
     /// projection method.
@@ -2704,7 +2697,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_ii>
     pub fn create_conversion_wagner_ii(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2716,7 +2709,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_ii(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2726,7 +2719,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Wagner III
     /// projection method.
@@ -2735,7 +2728,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_iii>
     pub fn create_conversion_wagner_iii(
-        self: &Arc<Self>,
+        &self,
         latitude_true_scale: f64,
         center_long: f64,
         false_easting: f64,
@@ -2748,7 +2741,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iii(
-                self.ptr,
+                *self.ptr,
                 latitude_true_scale,
                 center_long,
                 false_easting,
@@ -2759,7 +2752,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Wagner IV
     /// projection method.
@@ -2768,7 +2761,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_iv>
     pub fn create_conversion_wagner_iv(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2780,7 +2773,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iv(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2790,7 +2783,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Wagner V
     /// projection method.
@@ -2799,7 +2792,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_v>
     pub fn create_conversion_wagner_v(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2811,7 +2804,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_v(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2821,7 +2814,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Wagner VI
     /// projection method.
@@ -2830,7 +2823,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_vi>
     pub fn create_conversion_wagner_vi(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2842,7 +2835,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vi(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2852,7 +2845,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Wagner VII
     /// projection method.
@@ -2861,7 +2854,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_wagner_vii>
     pub fn create_conversion_wagner_vii(
-        self: &Arc<Self>,
+        &self,
         center_long: f64,
         false_easting: f64,
         false_northing: f64,
@@ -2873,7 +2866,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vii(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2883,7 +2876,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the
     /// Quadrilateralized Spherical Cube projection method.
@@ -2892,7 +2885,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_quadrilateralized_spherical_cube>
     pub fn create_conversion_quadrilateralized_spherical_cube(
-        self: &Arc<Self>,
+        &self,
         center_lat: f64,
         center_long: f64,
         false_easting: f64,
@@ -2905,7 +2898,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_quadrilateralized_spherical_cube(
-                self.ptr,
+                *self.ptr,
                 center_lat,
                 center_long,
                 false_easting,
@@ -2916,7 +2909,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Spherical
     /// Cross-Track Height projection method.
@@ -2925,7 +2918,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_spherical_cross_track_height>
     pub fn create_conversion_spherical_cross_track_height(
-        self: &Arc<Self>,
+        &self,
         peg_point_lat: f64,
         peg_point_long: f64,
         peg_point_heading: f64,
@@ -2938,7 +2931,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_spherical_cross_track_height(
-                self.ptr,
+                *self.ptr,
                 peg_point_lat,
                 peg_point_long,
                 peg_point_heading,
@@ -2949,7 +2942,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a ProjectedCRS with a conversion based on the Equal Earth
     /// projection method.
@@ -2958,7 +2951,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_equal_earth>
     pub fn create_conversion_equal_earth(
-        self: &Arc<Self>,
+        &self,
 
         center_long: f64,
         false_easting: f64,
@@ -2971,7 +2964,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equal_earth(
-                self.ptr,
+                *self.ptr,
                 center_long,
                 false_easting,
                 false_northing,
@@ -2981,7 +2974,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a conversion based on the Vertical Perspective projection
     /// method.
@@ -2990,7 +2983,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_vertical_perspective>
     pub fn create_conversion_vertical_perspective(
-        self: &Arc<Self>,
+        &self,
         topo_origin_lat: f64,
         topo_origin_long: f64,
         topo_origin_height: f64,
@@ -3005,7 +2998,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_vertical_perspective(
-                self.ptr,
+                *self.ptr,
                 topo_origin_lat,
                 topo_origin_long,
                 topo_origin_height,
@@ -3018,7 +3011,7 @@ impl Context {
                 linear_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a conversion based on the Pole Rotation method, using the
     /// conventions of the GRIB 1 and GRIB 2 data formats.
@@ -3027,7 +3020,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_grib_convention>
     pub fn create_conversion_pole_rotation_grib_convention(
-        self: &Arc<Self>,
+        &self,
         south_pole_lat_in_unrotated_crs: f64,
         south_pole_long_in_unrotated_crs: f64,
         axis_rotation: f64,
@@ -3037,7 +3030,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_grib_convention(
-                self.ptr,
+                *self.ptr,
                 south_pole_lat_in_unrotated_crs,
                 south_pole_long_in_unrotated_crs,
                 axis_rotation,
@@ -3045,7 +3038,7 @@ impl Context {
                 ang_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
     ///Instantiate a conversion based on the Pole Rotation method, using the
     /// conventions of the netCDF CF convention for the netCDF format.
@@ -3054,7 +3047,7 @@ impl Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_pole_rotation_netcdf_cf_convention>
     pub fn create_conversion_pole_rotation_netcdf_cf_convention(
-        self: &Arc<Self>,
+        &self,
         grid_north_pole_latitude: f64,
         grid_north_pole_longitude: f64,
         north_pole_grid_longitude: f64,
@@ -3064,7 +3057,7 @@ impl Context {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_netcdf_cf_convention(
-                self.ptr,
+                *self.ptr,
                 grid_north_pole_latitude,
                 grid_north_pole_longitude,
                 north_pole_grid_longitude,
@@ -3072,7 +3065,7 @@ impl Context {
                 ang_unit_conv_factor,
             )
         };
-        Proj::new_with_owned_cstrings(self, ptr, owned)
+        Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
 }
 

@@ -17,7 +17,7 @@ impl crate::Proj {
         if ptr.is_null() {
             return None;
         }
-        Some(Proj::new(&self.ctx, ptr).unwrap())
+        Some(Proj::new(self.ctx.clone(), ptr).unwrap())
     }
     ///Transform a series of coordinates
     ///
@@ -150,7 +150,7 @@ impl crate::Context {
         let mut out_ymax = f64::default();
         let code = unsafe {
             proj_sys::proj_trans_bounds(
-                self.ptr,
+                *self.ptr,
                 p.ptr(),
                 direction as i32,
                 xmin,
@@ -230,7 +230,7 @@ impl crate::Context {
         let mut out_zmax = f64::default();
         let code = unsafe {
             proj_sys::proj_trans_bounds_3D(
-                self.ptr,
+                *self.ptr,
                 p.ptr(),
                 direction as i32,
                 xmin,

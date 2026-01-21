@@ -10,10 +10,10 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
-    pub fn new() -> Arc<Self> {
-        let ctx = Arc::new(Self {
-            ptr: unsafe { proj_sys::proj_context_create() },
-        });
+    pub fn new() -> Self {
+        let ctx = Self {
+            ptr: Arc::new(unsafe { proj_sys::proj_context_create() }),
+        };
         ctx.set_log_level(LogLevel::None).unwrap();
         ctx.set_log_fn(null_mut::<c_void>(), Some(crate::proj_clerk))
             .unwrap();
@@ -29,7 +29,7 @@ impl Clone for crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_clone>
     fn clone(&self) -> Self {
         Self {
-            ptr: unsafe { proj_sys::proj_context_clone(self.ptr) },
+            ptr: Arc::new(unsafe { proj_sys::proj_context_clone(*self.ptr) }),
         }
     }
 }
@@ -40,7 +40,7 @@ impl Drop for crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
-    fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(self.ptr) }; }
+    fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(*self.ptr) }; }
 }
 #[cfg(test)]
 mod test {

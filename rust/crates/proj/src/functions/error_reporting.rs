@@ -64,7 +64,11 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
-    pub(crate) fn errno_string(&self, err: ProjErrorCode) -> String { self.ctx.errno_string(err) }
+    pub(crate) fn errno_string(&self, err: ProjErrorCode) -> String {
+        unsafe { proj_sys::proj_errno_string(err as i32) }
+            .to_string()
+            .unwrap_or("Unknown error.".to_string())
+    }
 }
 
 ///# Error reporting
@@ -83,7 +87,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno>
     pub(crate) fn errno(&self) -> ProjErrorCode {
-        ProjErrorCode::from(unsafe { proj_sys::proj_context_errno(self.ptr) })
+        ProjErrorCode::from(unsafe { proj_sys::proj_context_errno(*self.ptr) })
     }
 
     ///Get a text representation of an error number.
@@ -96,7 +100,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
     pub(crate) fn errno_string(&self, err: ProjErrorCode) -> String {
-        unsafe { proj_sys::proj_context_errno_string(self.ptr, err as i32) }
+        unsafe { proj_sys::proj_context_errno_string(*self.ptr, err as i32) }
             .to_string()
             .unwrap_or("Unknown error.".to_string())
     }

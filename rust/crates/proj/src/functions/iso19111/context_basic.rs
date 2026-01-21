@@ -174,15 +174,13 @@ impl crate::Context {
                 &mut out_grammar_errors,
             )
         };
-        out_warnings
-            .to_vec_string()?
-            .iter()
-            .for_each(|w| clerk::warn!("{w}"));
+        let _ = out_warnings
+            .to_vec_string()
+            .map(|w| w.iter().for_each(|w| clerk::warn!("{w}")));
 
-        out_grammar_errors
-            .to_vec_string()?
-            .iter()
-            .for_each(|w| clerk::error!("{w}"));
+        let _ = out_grammar_errors
+            .to_vec_string()
+            .map(|e| e.iter().for_each(|e| clerk::warn!("{e}")));
 
         Proj::new(self.ptr.clone(), ptr)
     }
@@ -614,20 +612,17 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         //invalid
         assert!(ctx.create_from_wkt("invalid wkt", None, None).is_err());
-        //valid
-        ctx.create_from_wkt(
-            &ctx.create("EPSG:4326")?.as_wkt(
-                WktType::Wkt2_2019,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-            )?,
+        let a = ctx.create("EPSG:4326")?.as_wkt(
+            WktType::Wkt2_2019,
+            None,
+            None,
+            None,
+            None,
             None,
             None,
         )?;
+        //valid
+        ctx.create_from_wkt(&a, None, None)?;
         Ok(())
     }
     #[test]

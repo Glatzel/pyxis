@@ -24,7 +24,7 @@ impl ProjObjList {
     ) -> Result<Option<Proj>, ProjError> {
         let index = unsafe {
             proj_sys::proj_get_suggested_operation(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr(),
                 direction as i32,
                 coord.to_coord()?,
@@ -33,13 +33,13 @@ impl ProjObjList {
         if index == -1 {
             return Ok(None);
         }
-        let ptr = unsafe { proj_sys::proj_list_get(*self.ctx, self.ptr(), index) };
+        let ptr = unsafe { proj_sys::proj_list_get(*self.ctx_ptr, self.ptr(), index) };
 
         if self._owned_cstrings.len() > 0 {
-            Ok(Some(Proj::new(self.ctx.clone(), ptr)?))
+            Ok(Some(Proj::new(self.ctx_ptr.clone(), ptr)?))
         } else {
             Ok(Some(Proj::new_with_owned_cstrings(
-                self.ctx.clone(),
+                self.ctx_ptr.clone(),
                 ptr,
                 self._owned_cstrings.clone(),
             )?))
@@ -143,8 +143,8 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_non_deprecated>
     pub fn get_non_deprecated(&self) -> Result<ProjObjList, ProjError> {
-        let result = unsafe { proj_sys::proj_get_non_deprecated(*self.ctx, self.ptr()) };
-        ProjObjList::new(self.ctx.clone(), result)
+        let result = unsafe { proj_sys::proj_get_non_deprecated(*self.ctx_ptr, self.ptr()) };
+        ProjObjList::new(self.ctx_ptr.clone(), result)
     }
 
     ///Identify the CRS with reference CRSs.
@@ -197,14 +197,14 @@ impl Proj {
         let mut confidence: Vec<i32> = Vec::new();
         let result = unsafe {
             proj_sys::proj_identify(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr(),
                 auth_name.to_cstring().as_ptr(),
                 ptr::null(),
                 &mut confidence.as_mut_ptr(),
             )
         };
-        ProjObjList::new(self.ctx.clone(), result)
+        ProjObjList::new(self.ctx_ptr.clone(), result)
     }
 }
 #[cfg(test)]

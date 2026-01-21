@@ -1,4 +1,3 @@
-
 use core::ptr;
 extern crate alloc;
 use envoy::{AsVecPtr, CStrListToVecString, ToCString, VecCString};
@@ -24,7 +23,7 @@ impl Context {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_create>
     pub fn insert_object_session_create(&self) -> InsertObjectSession {
         InsertObjectSession {
-            ctx: self.ptr.clone(),
+            ctx_ptr: self.ptr.clone(),
             ptr: unsafe { proj_sys::proj_insert_object_session_create(*self.ptr) },
         }
     }
@@ -37,16 +36,14 @@ impl Drop for InsertObjectSession {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_destroy>
     fn drop(&mut self) {
-        unsafe { proj_sys::proj_insert_object_session_destroy(*self.ctx, self.ptr) };
+        unsafe { proj_sys::proj_insert_object_session_destroy(*self.ctx_ptr, self.ptr) };
     }
 }
 impl InsertObjectSession {
     /// # See Also
     ///
     /// * [crate::Context::insert_object_session_create]
-    pub fn from_context(ctx: Context) -> InsertObjectSession {
-        ctx.insert_object_session_create()
-    }
+    pub fn from_context(ctx: Context) -> InsertObjectSession { ctx.insert_object_session_create() }
     ///Returns SQL statements needed to insert the passed object into the
     /// database.
     ///
@@ -97,7 +94,7 @@ impl InsertObjectSession {
         let allowed_authorities: VecCString = allowed_authorities.into();
         let ptr = unsafe {
             proj_sys::proj_get_insert_statements(
-             *   self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 object.ptr(),
                 authority.to_cstring().as_ptr(),

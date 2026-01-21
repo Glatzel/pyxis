@@ -30,7 +30,7 @@ impl Context {
     ) -> OperationFactoryContext {
         let authority = authority.map(|s| s.to_cstring());
         OperationFactoryContext {
-            ctx: self.ptr.clone(),
+            ctx_ptr: self.ptr.clone(),
             ptr: unsafe {
                 proj_sys::proj_create_operation_factory_context(
                     *self.ptr,
@@ -58,7 +58,9 @@ impl OperationFactoryContext {
     pub fn set_desired_accuracy(&self, accuracy: f64) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_desired_accuracy(
-                *self.ctx, self.ptr, accuracy,
+                *self.ctx_ptr,
+                self.ptr,
+                accuracy,
             );
         }
         self
@@ -88,7 +90,7 @@ impl OperationFactoryContext {
     ) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_area_of_interest(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 west_lon_degree,
                 south_lat_degree,
@@ -111,7 +113,7 @@ impl OperationFactoryContext {
     pub fn set_area_of_interest_name(&self, area_name: &str) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_area_of_interest_name(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 area_name.to_cstring().as_ptr(),
             );
@@ -134,7 +136,7 @@ impl OperationFactoryContext {
     pub fn set_crs_extent_use(&self, extent_use: CrsExtentUse) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_crs_extent_use(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 extent_use as u32,
             );
@@ -157,7 +159,7 @@ impl OperationFactoryContext {
     pub fn set_spatial_criterion(&self, criterion: SpatialCriterion) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_spatial_criterion(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 criterion as u32,
             );
@@ -178,7 +180,7 @@ impl OperationFactoryContext {
     pub fn set_grid_availability_use(&self, grid_availability_use: GridAvailabilityUse) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_grid_availability_use(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 grid_availability_use as u32,
             );
@@ -200,7 +202,7 @@ impl OperationFactoryContext {
     pub fn set_use_proj_alternative_grid_names(&self, use_proj_names: bool) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_use_proj_alternative_grid_names(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 use_proj_names as i32,
             );
@@ -234,7 +236,7 @@ impl OperationFactoryContext {
     ) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_allow_use_intermediate_crs(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 proj_intermediate_crs_use as u32,
             );
@@ -257,7 +259,7 @@ impl OperationFactoryContext {
         let list_of_auth_name_codes: VecCString = list_of_auth_name_codes.into();
         unsafe {
             proj_sys::proj_operation_factory_context_set_allowed_intermediate_crs(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 list_of_auth_name_codes.as_vec_ptr().as_ptr(),
             );
@@ -277,7 +279,7 @@ impl OperationFactoryContext {
     pub fn set_discard_superseded(&self, discard: bool) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_discard_superseded(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 discard as i32,
             );
@@ -296,7 +298,7 @@ impl OperationFactoryContext {
     pub fn set_allow_ballpark_transformations(&self, allow: bool) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_allow_ballpark_transformations(
-                *self.ctx,
+                *self.ctx_ptr,
                 self.ptr,
                 allow as i32,
             );
@@ -325,13 +327,13 @@ impl OperationFactoryContext {
     ) -> Result<ProjObjList, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
-                *self.ctx,
+                *self.ctx_ptr,
                 source_crs.ptr(),
                 target_crs.ptr(),
                 self.ptr,
             )
         };
-        ProjObjList::new(self.ctx.clone(), ptr)
+        ProjObjList::new(self.ctx_ptr.clone(), ptr)
     }
 }
 impl Drop for OperationFactoryContext {

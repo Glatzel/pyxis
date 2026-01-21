@@ -13,31 +13,31 @@ use crate::{OwnedCStrings, check_result};
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Proj {
     ptr: *mut proj_sys::PJ,
-    pub(crate) ctx: Arc<ContextPtr>,
+    pub(crate) ctx_ptr: Arc<ContextPtr>,
     _owned_cstrings: OwnedCStrings,
 }
 impl Proj {
     /// Create a `Proj` object from pointer, panic if pointer is null.
     pub(crate) fn new(
-        ctx: Arc<ContextPtr>,
+        ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ,
     ) -> Result<crate::Proj, ProjError> {
         check_result!(ptr.is_null(), "Proj pointer is null.");
         Ok(crate::Proj {
-            ctx: ctx,
+            ctx_ptr,
             ptr,
             _owned_cstrings: OwnedCStrings::new(),
         })
     }
     /// Create a `Proj` object from pointer, panic if pointer is null.
     pub(crate) fn new_with_owned_cstrings(
-        ctx: Arc<ContextPtr>,
+        ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ,
         owned_cstrings: OwnedCStrings,
     ) -> Result<crate::Proj, ProjError> {
         check_result!(ptr.is_null(), "Proj pointer is null.");
         Ok(crate::Proj {
-            ctx: ctx,
+            ctx_ptr,
             ptr,
             _owned_cstrings: owned_cstrings,
         })

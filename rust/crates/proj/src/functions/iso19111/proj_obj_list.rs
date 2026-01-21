@@ -89,12 +89,12 @@ impl Context {
             let count = types.len();
             (Some(types), count)
         });
-        let auth_name = auth_name.map(|s| s.to_cstring());
+        let auth_name = auth_name.map(|s| s.to_cstring()).transpose()?;
         let result = unsafe {
             proj_sys::proj_create_from_name(
                 *self.ptr,
                 auth_name.map_or(ptr::null(), |s| s.as_ptr()),
-                searched_name.to_cstring().as_ptr(),
+                searched_name.to_cstring()?.as_ptr(),
                 types.map_or(ptr::null(), |types| types.as_ptr()),
                 count,
                 approximate_match as i32,
@@ -127,10 +127,10 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_query_geodetic_crs_from_datum(
                 *self.ptr,
-                owned.push_option(crs_auth_name),
-                datum_auth_name.to_cstring().as_ptr(),
-                datum_code.to_cstring().as_ptr(),
-                owned.push_option(crs_type),
+                owned.push_option(crs_auth_name)?,
+                datum_auth_name.to_cstring()?.as_ptr(),
+                datum_code.to_cstring()?.as_ptr(),
+                owned.push_option(crs_type)?,
             )
         };
         ProjObjList::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
@@ -199,7 +199,7 @@ impl Proj {
             proj_sys::proj_identify(
                 *self.ctx_ptr,
                 self.ptr(),
-                auth_name.to_cstring().as_ptr(),
+                auth_name.to_cstring()?.as_ptr(),
                 ptr::null(),
                 &mut confidence.as_mut_ptr(),
             )

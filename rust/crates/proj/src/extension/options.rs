@@ -13,6 +13,8 @@ use core::ffi::c_char;
 
 use envoy::ToCString;
 
+use crate::data_types::ProjError;
+
 /// String constant representing the PROJ option value for `true`.
 pub(crate) const OPTION_YES: &str = "YES";
 /// String constant representing the PROJ option value for `false`.
@@ -73,10 +75,14 @@ impl ProjOptions {
     /// # Arguments
     /// * `opt` - The value to convert and push.
     /// * `name` - The name of the option.
-    pub fn with<T: ToProjOptionString>(&mut self, opt: T, name: &str) -> &mut Self {
+    pub fn with<T: ToProjOptionString>(
+        &mut self,
+        opt: T,
+        name: &str,
+    ) -> Result<&mut Self, ProjError> {
         self.options
-            .push(format!("{name}={}", opt.to_option_string()).to_cstring());
-        self
+            .push(format!("{name}={}", opt.to_option_string()).to_cstring()?);
+        Ok(self)
     }
 
     /// Pushes an optional value. If `Some`, uses the value; if `None`, uses the
@@ -91,18 +97,18 @@ impl ProjOptions {
         opt: Option<T>,
         name: &str,
         default_value: &str,
-    ) -> &mut Self {
+    ) -> Result<&mut Self, ProjError> {
         match opt {
             Some(opt) => {
                 self.options
-                    .push(format!("{name}={}", opt.to_option_string()).to_cstring());
+                    .push(format!("{name}={}", opt.to_option_string()).to_cstring()?);
             }
             None => {
                 self.options
-                    .push(format!("{name}={default_value}").to_cstring());
+                    .push(format!("{name}={default_value}").to_cstring()?);
             }
         }
-        self
+        Ok(self)
     }
 
     /// Pushes an optional value. If `Some`, uses the value; if `None`, does
@@ -111,12 +117,16 @@ impl ProjOptions {
     /// # Arguments
     /// * `opt` - The optional value to convert and push.
     /// * `name` - The name of the option.
-    pub fn with_or_skip<T: ToProjOptionString>(&mut self, opt: Option<T>, name: &str) -> &mut Self {
-        opt.inspect(|o| {
+    pub fn with_or_skip<T: ToProjOptionString>(
+        &mut self,
+        opt: Option<T>,
+        name: &str,
+    ) -> Result<&mut Self, ProjError> {
+        if let Some(o) = opt {
             self.options
-                .push(format!("{name}={}", o.to_option_string()).to_cstring());
-        });
-        self
+                .push(format!("{name}={}", o.to_option_string()).to_cstring()?);
+        }
+        Ok(self)
     }
 }
 impl envoy::AsVecPtr for ProjOptions {

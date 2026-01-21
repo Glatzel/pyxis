@@ -1,4 +1,4 @@
-use envoy::{CStrToString, ToCString};
+use envoy::{PtrToString, ToCString};
 
 use crate::data_types::{GridInfo, Info, InitInfo, ProjError, ProjErrorCode, ProjInfo};
 
@@ -7,16 +7,16 @@ use crate::data_types::{GridInfo, Info, InitInfo, ProjError, ProjErrorCode, Proj
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_info>
-pub fn info() -> Info {
+pub fn info() -> Result<Info, ProjError> {
     let src = unsafe { proj_sys::proj_info() };
-    Info::new(
+    Ok(Info::new(
         src.major,
         src.minor,
         src.patch,
-        src.release.to_string().unwrap_or_default(),
-        src.version.to_string().unwrap_or_default(),
-        src.searchpath.to_string().unwrap_or_default(),
-    )
+        src.release.to_string()?,
+        src.version.to_string()?,
+        src.searchpath.to_string()?,
+    ))
 }
 ///# Info functions
 impl crate::Proj {
@@ -43,7 +43,7 @@ impl crate::Proj {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
 pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
-    let src = unsafe { proj_sys::proj_grid_info(grid.to_cstring().as_ptr()) };
+    let src = unsafe { proj_sys::proj_grid_info(grid.to_cstring()?.as_ptr()) };
     if src.gridname.to_string().unwrap().as_str() == ""
         && src.filename.to_string().unwrap().as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
@@ -75,7 +75,7 @@ pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
 pub fn init_info(initname: &str) -> Result<InitInfo, ProjError> {
-    let src = unsafe { proj_sys::proj_init_info(initname.to_cstring().as_ptr()) };
+    let src = unsafe { proj_sys::proj_init_info(initname.to_cstring()?.as_ptr()) };
     let info = InitInfo::new(
         src.name.to_string().unwrap_or_default(),
         src.filename.to_string().unwrap_or_default(),
@@ -112,12 +112,13 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_pj_info() {
-        let info = info();
+    fn test_pj_info() -> mischief::Result<()> {
+        let info = info()?;
         println!("{info:?}");
         assert_eq!(info.major(), &(crate::version::PROJ_VERSION_MAJOR as i32));
         assert_eq!(info.minor(), &(crate::version::PROJ_VERSION_MINOR as i32));
         assert_eq!(info.patch(), &(crate::version::PROJ_VERSION_PATCH as i32));
+        Ok(())
     }
 
     #[test]

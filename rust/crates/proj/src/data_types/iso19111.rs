@@ -404,10 +404,10 @@ impl AxisDescription {
         unit_type: UnitType,
     ) -> Result<Self, ProjError> {
         Ok(Self {
-            name: name.unwrap_or("").to_cstring(),
-            abbreviation: abbreviation.unwrap_or("").to_cstring(),
-            direction: direction.as_ref().to_cstring(),
-            unit_name: unit_name.unwrap_or("").to_cstring(),
+            name: name.unwrap_or("").to_cstring()?,
+            abbreviation: abbreviation.unwrap_or("").to_cstring()?,
+            direction: direction.as_ref().to_cstring()?,
+            unit_name: unit_name.unwrap_or("").to_cstring()?,
             unit_conv_factor,
             unit_type,
         })

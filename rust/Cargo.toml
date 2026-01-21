@@ -11,12 +11,12 @@ proj = { path = "./crates/proj" }
 proj-sys = { path = "./crates/proj-sys" }
 pyxis = { path = "./crates/pyxis" }
 
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.33" }
-envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.33" }
-mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.33" }
-rax = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.33" }
-rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.33" }
-serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.33" }
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.35" }
+envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.35" }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.35" }
+rax = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.35" }
+rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.35" }
+serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v0.0.35" }
 
 assert_cmd = "2.0"
 async-trait = "0.1"

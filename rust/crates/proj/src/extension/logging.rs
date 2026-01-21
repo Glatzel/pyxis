@@ -2,7 +2,7 @@ extern crate alloc;
 
 use core::ffi::{c_char, c_void};
 
-use envoy::CStrToString;
+use envoy::PtrToString;
 
 use crate::data_types::ProjError;
 use crate::{LogLevel, check_result};

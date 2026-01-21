@@ -1,4 +1,6 @@
 extern crate alloc;
+use std::ffi::{CString, c_char};
+
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::ProjError;
@@ -46,7 +48,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
     pub fn create(&self, definition: &str) -> Result<Proj, ProjError> {
-        let ptr = unsafe { proj_sys::proj_create(*self.ptr, definition.to_cstring().as_ptr()) };
+        let ptr = unsafe { proj_sys::proj_create(*self.ptr, definition.to_cstring()?.as_ptr()) };
         check_result!(self);
         Proj::new(self.ptr.clone(), ptr)
     }
@@ -65,15 +67,17 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
     pub fn create_argv(&self, argv: &[&str]) -> Result<Proj, ProjError> {
-        let count = argv.len();
+        let argv_cstr: Vec<CString> = argv
+            .iter()
+            .map(|s| s.to_cstring())
+            .collect::<Result<_, _>>()?;
+        let argv_ptrs: Vec<*mut c_char> = argv_cstr.iter().map(|s| s.as_ptr().cast_mut()).collect();
+
         let ptr = unsafe {
             proj_sys::proj_create_argv(
                 *self.ptr,
-                count as i32,
-                argv.iter()
-                    .map(|s| s.to_cstring().into_raw())
-                    .collect::<Vec<_>>()
-                    .as_mut_ptr(),
+                argv_ptrs.len() as i32,
+                argv_ptrs.as_ptr().cast_mut(),
             )
         };
         check_result!(self);
@@ -128,8 +132,8 @@ impl crate::Context {
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
                 *self.ptr,
-                source_crs.to_cstring().as_ptr(),
-                target_crs.to_cstring().as_ptr(),
+                source_crs.to_cstring()?.as_ptr(),
+                target_crs.to_cstring()?.as_ptr(),
                 area.ptr,
             )
         };
@@ -197,11 +201,11 @@ impl crate::Context {
     ) -> Result<Proj, ProjError> {
         let mut options = crate::ProjOptions::new(5);
         options
-            .with_or_skip(authority, "AUTHORITY")
-            .with_or_skip(accuracy, "ACCURACY")
-            .with_or_skip(allow_ballpark, "ALLOW_BALLPARK")
-            .with_or_skip(only_best, "ONLY_BEST")
-            .with_or_skip(force_over, "FORCE_OVER");
+            .with_or_skip(authority, "AUTHORITY")?
+            .with_or_skip(accuracy, "ACCURACY")?
+            .with_or_skip(allow_ballpark, "ALLOW_BALLPARK")?
+            .with_or_skip(only_best, "ONLY_BEST")?
+            .with_or_skip(force_over, "FORCE_OVER")?;
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs_from_pj(
                 *self.ptr,

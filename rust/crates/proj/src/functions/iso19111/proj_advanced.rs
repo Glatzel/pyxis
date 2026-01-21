@@ -22,7 +22,7 @@ impl Proj {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_name>
     pub fn alter_name(&self, name: &str) -> Result<Proj, ProjError> {
         let ptr = unsafe {
-            proj_sys::proj_alter_name(*self.ctx_ptr, self.ptr(), name.to_cstring().as_ptr())
+            proj_sys::proj_alter_name(*self.ctx_ptr, self.ptr(), name.to_cstring()?.as_ptr())
         };
         Proj::new(self.ctx_ptr.clone(), ptr)
     }
@@ -43,8 +43,8 @@ impl Proj {
             proj_sys::proj_alter_id(
                 *self.ctx_ptr,
                 self.ptr(),
-                auth_name.to_cstring().as_ptr(),
-                code.to_cstring().as_ptr(),
+                auth_name.to_cstring()?.as_ptr(),
+                code.to_cstring()?.as_ptr(),
             )
         };
         Proj::new(self.ctx_ptr.clone(), ptr)
@@ -97,10 +97,10 @@ impl Proj {
             proj_sys::proj_crs_alter_cs_angular_unit(
                 *self.ctx_ptr,
                 self.ptr(),
-                owned.push_option(angular_unit),
+                owned.push_option(angular_unit)?,
                 angular_units_convs,
-                owned.push_option(unit_auth_name),
-                owned.push_option(unit_code),
+                owned.push_option(unit_auth_name)?,
+                owned.push_option(unit_code)?,
             )
         };
         Proj::new_with_owned_cstrings(self.ctx_ptr.clone(), ptr, owned)
@@ -135,10 +135,10 @@ impl Proj {
             proj_sys::proj_crs_alter_cs_linear_unit(
                 *self.ctx_ptr,
                 self.ptr(),
-                owned.push_option(linear_units),
+                owned.push_option(linear_units)?,
                 linear_units_conv,
-                owned.push_option(unit_auth_name),
-                owned.push_option(unit_code),
+                owned.push_option(unit_auth_name)?,
+                owned.push_option(unit_code)?,
             )
         };
         Proj::new_with_owned_cstrings(self.ctx_ptr.clone(), ptr, owned)
@@ -176,10 +176,10 @@ impl Proj {
             proj_sys::proj_crs_alter_parameters_linear_unit(
                 *self.ctx_ptr,
                 self.ptr(),
-                owned.push_option(linear_units),
+                owned.push_option(linear_units)?,
                 linear_units_conv,
-                owned.push_option(unit_auth_name),
-                owned.push_option(unit_code),
+                owned.push_option(unit_auth_name)?,
+                owned.push_option(unit_code)?,
                 convert_to_new_unit as i32,
             )
         };
@@ -203,7 +203,7 @@ impl Proj {
         let ptr = unsafe {
             proj_sys::proj_crs_promote_to_3D(
                 *self.ctx_ptr,
-                owned.push_option(crs_3d_name),
+                owned.push_option(crs_3d_name)?,
                 self.ptr(),
             )
         };
@@ -239,7 +239,7 @@ impl Proj {
         crs_name: Option<&str>,
         geog_3d_crs: Option<&Proj>,
     ) -> Result<Proj, ProjError> {
-        let crs_name = crs_name.map(|s| s.to_cstring());
+        let crs_name = crs_name.map(|s| s.to_cstring()).transpose()?;
         let ptr = unsafe {
             proj_sys::proj_crs_create_projected_3D_crs_from_2D(
                 *self.ctx_ptr,
@@ -264,7 +264,7 @@ impl Proj {
         let ptr = unsafe {
             proj_sys::proj_crs_demote_to_2D(
                 *self.ctx_ptr,
-                owned.push_option(crs_2d_name),
+                owned.push_option(crs_2d_name)?,
                 self.ptr(),
             )
         };
@@ -312,7 +312,7 @@ impl Proj {
                 *self.ctx_ptr,
                 self.ptr(),
                 new_method_epsg_code.unwrap_or_default() as i32,
-                owned.push_option(new_method_name),
+                owned.push_option(new_method_name)?,
             )
         };
         Proj::new_with_owned_cstrings(self.ctx_ptr.clone(), ptr, owned)
@@ -334,7 +334,7 @@ impl Proj {
         allow_intermediate_crs: Option<AllowIntermediateCrs>,
     ) -> Result<Proj, ProjError> {
         let mut options = ProjOptions::new(1);
-        options.with_or_skip(allow_intermediate_crs, "ALLOW_INTERMEDIATE_CRS");
+        options.with_or_skip(allow_intermediate_crs, "ALLOW_INTERMEDIATE_CRS")?;
 
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_crs_to_WGS84(

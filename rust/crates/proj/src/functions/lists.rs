@@ -1,4 +1,6 @@
-use envoy::CStrToString;
+use envoy::PtrToString;
+
+use crate::data_types::ProjError;
 
 ///Get a pointer to an array of ellipsoids defined in PROJ. The last entry
 /// of the returned array is a NULL-entry. The array is statically
@@ -6,7 +8,7 @@ use envoy::CStrToString;
 ///
 /// # References
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_ellps>
-pub fn list_operations() -> Vec<crate::data_types::Operations> {
+pub fn list_operations() -> Result<Vec<crate::data_types::Operations>, ProjError> {
     let ptr = unsafe { proj_sys::proj_list_operations() };
     let mut out_vec = Vec::new();
     let mut offset = 0;
@@ -17,21 +19,13 @@ pub fn list_operations() -> Vec<crate::data_types::Operations> {
             break;
         } else {
             out_vec.push(crate::data_types::Operations::new(
-                current_ptr.id.to_string().unwrap_or_default(),
-                unsafe {
-                    current_ptr
-                        .descr
-                        .offset(0)
-                        .as_ref()
-                        .unwrap()
-                        .to_string()
-                        .unwrap()
-                },
+                current_ptr.id.to_string()?,
+                unsafe { current_ptr.descr.offset(0).as_ref().unwrap().to_string()? },
             ));
             offset += 1;
         }
     }
-    out_vec
+    Ok(out_vec)
 }
 
 ///Get a pointer to an array of ellipsoids defined in PROJ. The last entry of
@@ -118,13 +112,14 @@ pub fn list_prime_meridians() -> Vec<crate::data_types::PrimeMeridians> {
 mod test {
     use super::*;
     #[test]
-    fn test_list_operations() {
-        let ops = list_operations();
+    fn test_list_operations() -> mischief::Result<()> {
+        let ops = list_operations()?;
 
         for i in &ops {
             println!("{}: {}\n", i.id(), i.descr());
         }
         assert!(!ops.is_empty());
+        Ok(())
     }
     #[test]
     fn test_list_ellps() {

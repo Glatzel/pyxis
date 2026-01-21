@@ -1,6 +1,6 @@
 use core::char;
 
-use envoy::{CStrToString, ToCString};
+use envoy::{PtrToString, ToCString};
 
 use crate::data_types::{Factors, ProjError};
 use crate::{ICoord, ToCoord, check_result};
@@ -127,8 +127,8 @@ impl crate::Proj {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
 pub fn dmstor(is: &str) -> Result<f64, ProjError> {
-    let rs = "xxxdxxmxx.xxs ".to_cstring();
-    Ok(unsafe { proj_sys::proj_dmstor(is.to_cstring().as_ptr(), &mut rs.as_ptr().cast_mut()) })
+    let rs = "xxxdxxmxx.xxs ".to_cstring()?;
+    Ok(unsafe { proj_sys::proj_dmstor(is.to_cstring()?.as_ptr(), &mut rs.as_ptr().cast_mut()) })
 }
 
 ///Convert radians to string representation of degrees, minutes and seconds.
@@ -137,7 +137,7 @@ pub fn dmstor(is: &str) -> Result<f64, ProjError> {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms2>
 pub fn rtodms2(r: f64, pos: char, neg: char) -> Result<String, ProjError> {
-    let dms = "xxxdxxmxx.xxs ".to_cstring();
+    let dms = "xxxdxxmxx.xxs ".to_cstring()?;
     let ptr =
         unsafe { proj_sys::proj_rtodms2(dms.as_ptr().cast_mut(), 14, r, pos as i32, neg as i32) };
     Ok(ptr.to_string().unwrap())

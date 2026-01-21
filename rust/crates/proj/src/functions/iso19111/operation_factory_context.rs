@@ -1,6 +1,6 @@
 use core::ptr;
 extern crate alloc;
-use envoy::{AsVecPtr, ToCString, VecCString};
+use envoy::{AsVecPtr, ToCString, ToVecCString};
 
 use crate::data_types::ProjError;
 use crate::data_types::iso19111::*;
@@ -27,9 +27,9 @@ impl Context {
     pub fn create_operation_factory_context(
         &self,
         authority: Option<&str>,
-    ) -> OperationFactoryContext {
-        let authority = authority.map(|s| s.to_cstring());
-        OperationFactoryContext {
+    ) -> Result<OperationFactoryContext, ProjError> {
+        let authority = authority.map(|s| s.to_cstring()).transpose()?;
+        Ok(OperationFactoryContext {
             ctx_ptr: self.ptr.clone(),
             ptr: unsafe {
                 proj_sys::proj_create_operation_factory_context(
@@ -37,13 +37,16 @@ impl Context {
                     authority.map_or(ptr::null(), |s| s.as_ptr()),
                 )
             },
-        }
+        })
     }
 }
 impl OperationFactoryContext {
     ///# See Also
     /// * [`crate::Context::create_operation_factory_context`]
-    pub fn from_context(ctx: &Context, authority: Option<&str>) -> OperationFactoryContext {
+    pub fn from_context(
+        ctx: &Context,
+        authority: Option<&str>,
+    ) -> Result<OperationFactoryContext, ProjError> {
         ctx.create_operation_factory_context(authority)
     }
     ///Set the desired accuracy of the resulting coordinate transformations.
@@ -110,15 +113,15 @@ impl OperationFactoryContext {
     ///  # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_area_of_interest_name>
-    pub fn set_area_of_interest_name(&self, area_name: &str) -> &Self {
+    pub fn set_area_of_interest_name(&self, area_name: &str) -> Result<&Self, ProjError> {
         unsafe {
             proj_sys::proj_operation_factory_context_set_area_of_interest_name(
                 *self.ctx_ptr,
                 self.ptr,
-                area_name.to_cstring().as_ptr(),
+                area_name.to_cstring()?.as_ptr(),
             );
         }
-        self
+        Ok(self)
     }
     ///Set how source and target CRS extent should be used when considering if
     /// a transformation can be used (only takes effect if no area of interest
@@ -255,8 +258,11 @@ impl OperationFactoryContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allowed_intermediate_crs>
-    pub fn set_allowed_intermediate_crs(&self, list_of_auth_name_codes: &[&str]) -> &Self {
-        let list_of_auth_name_codes: VecCString = list_of_auth_name_codes.into();
+    pub fn set_allowed_intermediate_crs(
+        &self,
+        list_of_auth_name_codes: &[&str],
+    ) -> Result<&Self, ProjError> {
+        let list_of_auth_name_codes = list_of_auth_name_codes.to_vec_cstring()?;
         unsafe {
             proj_sys::proj_operation_factory_context_set_allowed_intermediate_crs(
                 *self.ctx_ptr,
@@ -264,7 +270,7 @@ impl OperationFactoryContext {
                 list_of_auth_name_codes.as_vec_ptr().as_ptr(),
             );
         }
-        self
+        Ok(self)
     }
     /// Set whether transformations that are superseded (but not deprecated)
     /// should be discarded.
@@ -354,11 +360,11 @@ mod test {
     #[test]
     fn test_settings() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
-        let factory = OperationFactoryContext::from_context(&ctx, None);
+        let factory = OperationFactoryContext::from_context(&ctx, None)?;
         factory
             .set_desired_accuracy(1.0)
             .set_area_of_interest(-60.0, 90.0, 60.0, 90.0)
-            .set_area_of_interest_name("area_name")
+            .set_area_of_interest_name("area_name")?
             .set_crs_extent_use(CrsExtentUse::Both)
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
             .set_use_proj_alternative_grid_names(false)
@@ -371,7 +377,7 @@ mod test {
     #[test]
     fn test_create_operations() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
-        let factory = OperationFactoryContext::from_context(&ctx, None);
+        let factory = OperationFactoryContext::from_context(&ctx, None)?;
         let source_crs = ctx.create_from_database(
             "EPSG",
             "4267",

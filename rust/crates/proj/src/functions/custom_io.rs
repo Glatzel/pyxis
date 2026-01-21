@@ -1,7 +1,7 @@
 use core::ptr;
 use std::path::Path;
 extern crate alloc;
-use envoy::{AsVecPtr, ToCString, VecCString};
+use envoy::{AsVecPtr, ToCString, ToVecCString, VecCString};
 
 use crate::check_result;
 use crate::data_types::ProjError;
@@ -28,7 +28,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
     pub fn set_sqlite3_vfs_name(&self, name: &str) -> Result<&Self, ProjError> {
         unsafe {
-            proj_sys::proj_context_set_sqlite3_vfs_name(*self.ptr, name.to_cstring().as_ptr());
+            proj_sys::proj_context_set_sqlite3_vfs_name(*self.ptr, name.to_cstring()?.as_ptr());
         };
         check_result!(self);
         Ok(self)
@@ -61,7 +61,7 @@ impl crate::Context {
             .iter()
             .map(|p| p.to_str().unwrap())
             .collect::<Vec<_>>()
-            .into();
+            .to_vec_cstring()?;
         unsafe {
             proj_sys::proj_context_set_search_paths(
                 *self.ptr,
@@ -89,7 +89,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
     pub fn set_ca_bundle_path(&self, path: Option<&Path>) -> Result<&Self, ProjError> {
-        let path = path.map(|s| s.to_str().unwrap().to_cstring());
+        let path = path.map(|s| s.to_str().unwrap().to_cstring()).transpose()?;
         unsafe {
             proj_sys::proj_context_set_ca_bundle_path(
                 *self.ptr,

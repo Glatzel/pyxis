@@ -1,6 +1,6 @@
-use envoy::CStrToString;
+use envoy::PtrToString;
 
-use crate::data_types::ProjErrorCode;
+use crate::data_types::{ProjError, ProjErrorCode};
 ///# Error reporting
 impl crate::Proj {
     /// Get a reading of the current error-state of P. An non-zero error codes
@@ -64,10 +64,8 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
-    pub(crate) fn errno_string(&self, err: ProjErrorCode) -> String {
-        unsafe { proj_sys::proj_errno_string(err as i32) }
-            .to_string()
-            .unwrap_or("Unknown error.".to_string())
+    pub(crate) fn errno_string(&self, err: ProjErrorCode) -> Result<String, ProjError> {
+        Ok(unsafe { proj_sys::proj_errno_string(err as i32) }.to_string()?)
     }
 }
 
@@ -99,9 +97,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_errno_string>
-    pub(crate) fn errno_string(&self, err: ProjErrorCode) -> String {
-        unsafe { proj_sys::proj_context_errno_string(*self.ptr, err as i32) }
-            .to_string()
-            .unwrap_or("Unknown error.".to_string())
+    pub(crate) fn errno_string(&self, err: ProjErrorCode) -> Result<String, ProjError> {
+        Ok(unsafe { proj_sys::proj_context_errno_string(*self.ptr, err as i32) }.to_string()?)
     }
 }

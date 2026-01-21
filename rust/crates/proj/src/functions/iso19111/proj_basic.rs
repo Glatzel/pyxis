@@ -1,7 +1,7 @@
 use core::ptr;
 use core::str::FromStr;
 
-use envoy::{AsVecPtr, CStrToString, ToCString};
+use envoy::{AsVecPtr, PtrToString, ToCString};
 
 use crate::data_types::ProjError;
 use crate::data_types::iso19111::*;
@@ -77,10 +77,8 @@ impl Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_name>
-    pub fn get_name(&self) -> String {
-        unsafe { proj_sys::proj_get_name(self.ptr()) }
-            .to_string()
-            .unwrap_or_default()
+    pub fn get_name(&self) -> Option<String> {
+        unsafe { proj_sys::proj_get_name(self.ptr()).to_string().ok() }
     }
     ///Get the authority name / codespace of an identifier of an object.
     ///
@@ -92,7 +90,9 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_auth_name>
     pub fn get_id_auth_name(&self, index: u16) -> Option<String> {
-        unsafe { proj_sys::proj_get_id_auth_name(self.ptr(), index as i32) }.to_string()
+        unsafe { proj_sys::proj_get_id_auth_name(self.ptr(), index as i32) }
+            .to_string()
+            .ok()
     }
     ///Get the code of an identifier of an object.
     ///
@@ -104,7 +104,9 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_id_code>
     pub fn get_id_code(&self, index: u16) -> Option<String> {
-        unsafe { proj_sys::proj_get_id_code(self.ptr(), index as i32) }.to_string()
+        unsafe { proj_sys::proj_get_id_code(self.ptr(), index as i32) }
+            .to_string()
+            .ok()
     }
     ///Get the remarks of an object.
     ///
@@ -137,7 +139,9 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope>
     pub fn get_scope(&self) -> Option<String> {
-        unsafe { proj_sys::proj_get_scope(self.ptr()) }.to_string()
+        unsafe { proj_sys::proj_get_scope(self.ptr()) }
+            .to_string()
+            .ok()
     }
     ///Get the scope of an object.
     ///
@@ -150,7 +154,9 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_scope_ex>
     pub fn get_scope_ex(&self, domain_idx: u16) -> Option<String> {
-        unsafe { proj_sys::proj_get_scope_ex(self.ptr(), domain_idx as i32) }.to_string()
+        unsafe { proj_sys::proj_get_scope_ex(self.ptr(), domain_idx as i32) }
+            .to_string()
+            .ok()
     }
 
     ///Return the area of use of an object.
@@ -279,16 +285,16 @@ impl Proj {
     ) -> Result<String, ProjError> {
         let mut options = crate::ProjOptions::new(6);
         options
-            .with_or_default(multiline, "MULTILINE", OPTION_YES)
-            .with_or_default(indentation_width, "INDENTATION_WIDTH", "4")
-            .with_or_default(output_axis, "OUTPUT_AXIS", "AUTO")
-            .with_or_default(strict, "STRICT", OPTION_YES)
+            .with_or_default(multiline, "MULTILINE", OPTION_YES)?
+            .with_or_default(indentation_width, "INDENTATION_WIDTH", "4")?
+            .with_or_default(output_axis, "OUTPUT_AXIS", "AUTO")?
+            .with_or_default(strict, "STRICT", OPTION_YES)?
             .with_or_default(
                 allow_ellipsoidal_height_as_vertical_crs,
                 "ALLOW_ELLIPSOIDAL_HEIGHT_AS_VERTICAL_CRS",
                 OPTION_NO,
-            )
-            .with_or_default(allow_linunit_node, "ALLOW_LINUNIT_NODE", OPTION_YES);
+            )?
+            .with_or_default(allow_linunit_node, "ALLOW_LINUNIT_NODE", OPTION_YES)?;
         let result = unsafe {
             proj_sys::proj_as_wkt(
                 *self.ctx_ptr,
@@ -324,12 +330,12 @@ impl Proj {
     ) -> Result<String, ProjError> {
         let mut options = crate::ProjOptions::new(6);
         if use_approx_tmerc {
-            options.with(use_approx_tmerc, "USE_APPROX_TMERC");
+            options.with(use_approx_tmerc, "USE_APPROX_TMERC")?;
         }
         options
-            .with_or_default(multiline, "MULTILINE", OPTION_NO)
-            .with_or_default(indentation_width, "INDENTATION_WIDTH", "2")
-            .with_or_default(max_line_length, "MAX_LINE_LENGTH", "80");
+            .with_or_default(multiline, "MULTILINE", OPTION_NO)?
+            .with_or_default(indentation_width, "INDENTATION_WIDTH", "2")?
+            .with_or_default(max_line_length, "MAX_LINE_LENGTH", "80")?;
 
         let result = unsafe {
             proj_sys::proj_as_proj_string(
@@ -363,9 +369,9 @@ impl Proj {
     ) -> Result<String, ProjError> {
         let mut options = crate::ProjOptions::new(6);
         options
-            .with_or_default(multiline, "MULTILINE", OPTION_YES)
-            .with_or_default(indentation_width, "INDENTATION_WIDTH", "2")
-            .with_or_default(schema, "SCHEMA", "");
+            .with_or_default(multiline, "MULTILINE", OPTION_YES)?
+            .with_or_default(indentation_width, "INDENTATION_WIDTH", "2")?
+            .with_or_default(schema, "SCHEMA", "")?;
 
         let result = unsafe {
             proj_sys::proj_as_projjson(*self.ctx_ptr, self.ptr(), options.as_vec_ptr().as_ptr())
@@ -416,17 +422,21 @@ impl Proj {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_suggests_code_for>
-    pub fn suggests_code_for(&self, authority: &str, numeric_code: bool) -> String {
+    pub fn suggests_code_for(
+        &self,
+        authority: &str,
+        numeric_code: bool,
+    ) -> Result<String, ProjError> {
         let result = unsafe {
             proj_sys::proj_suggests_code_for(
                 *self.ctx_ptr,
                 self.ptr(),
-                authority.to_cstring().as_ptr(),
+                authority.to_cstring()?.as_ptr(),
                 numeric_code as i32,
                 ptr::null(),
             )
         };
-        result.to_string().expect("Error")
+        Ok(result.to_string()?)
     }
     ///Returns whether a CRS is a derived CRS.
     ///
@@ -700,7 +710,9 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_celestial_body_name>
     pub fn get_celestial_body_name(&self) -> Option<String> {
-        unsafe { proj_sys::proj_get_celestial_body_name(*self.ctx_ptr, self.ptr()) }.to_string()
+        unsafe { proj_sys::proj_get_celestial_body_name(*self.ctx_ptr, self.ptr()) }
+            .to_string()
+            .ok()
     }
     ///Get the prime meridian of a CRS or a GeodeticReferenceFrame.
     ///
@@ -734,7 +746,7 @@ impl Proj {
         Ok(PrimeMeridianParameters::new(
             longitude,
             unit_conv_factor,
-            unit_name.to_string().unwrap_or_default(),
+            unit_name.to_string()?,
         ))
     }
     ///Return the Conversion of a DerivedCRS (such as a ProjectedCRS), or the
@@ -842,7 +854,7 @@ impl Proj {
             proj_sys::proj_coordoperation_get_param_index(
                 *self.ctx_ptr,
                 self.ptr(),
-                name.to_cstring().as_ptr(),
+                name.to_cstring()?.as_ptr(),
             )
         };
         check_result!(result == -1, "Error");
@@ -1110,7 +1122,7 @@ mod test_proj_basic {
     fn test_get_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let name = pj.get_name();
+        let name = pj.get_name().unwrap();
         println!("{name}");
         assert_eq!(name, "WGS 84");
         Ok(())
@@ -1225,7 +1237,7 @@ mod test_proj_basic {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let target = pj.get_source_crs().unwrap();
-        assert_eq!(target.get_name(), "WGS 84");
+        assert_eq!(target.get_name().unwrap(), "WGS 84");
         Ok(())
     }
     #[test]
@@ -1233,7 +1245,7 @@ mod test_proj_basic {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let target = pj.get_target_crs().unwrap();
-        assert_eq!(target.get_name(), "WGS 84 / Pseudo-Mercator");
+        assert_eq!(target.get_name().unwrap(), "WGS 84 / Pseudo-Mercator");
         Ok(())
     }
 
@@ -1255,7 +1267,7 @@ mod test_proj_basic {
                                ANGLEUNIT[\"degree\",0.0174532925199433]]]";
         println!("{wkt}");
         let crs = ctx.create_from_wkt(wkt, None, None)?;
-        let code = crs.suggests_code_for("HOBU", true);
+        let code = crs.suggests_code_for("HOBU", true)?;
         assert_eq!(code, "1");
         Ok(())
     }
@@ -1619,7 +1631,7 @@ mod test_proj_basic {
     #[test]
     fn test_concatoperation_get_step_count() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
-        let factory = ctx.create_operation_factory_context(None);
+        let factory = ctx.create_operation_factory_context(None)?;
         let source_crs = ctx
             .clone()
             .create_from_database("EPSG", "28356", Category::Crs, false)?;
@@ -1634,7 +1646,7 @@ mod test_proj_basic {
     #[test]
     fn test_concatoperation_get_step() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
-        let factory = ctx.create_operation_factory_context(None);
+        let factory = ctx.create_operation_factory_context(None)?;
         let source_crs = ctx
             .clone()
             .create_from_database("EPSG", "28356", Category::Crs, false)?;

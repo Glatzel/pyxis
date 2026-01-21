@@ -60,7 +60,7 @@ macro_rules! check_result {
                 clerk::debug!("Proj Process succeeded.");
             }
             ecode => {
-                let message = $self.errno_string(ecode.clone());
+                let message = $self.errno_string(ecode.clone())?;
                 let err = crate::data_types::ProjError {
                     code: $self.errno(),
                     message,

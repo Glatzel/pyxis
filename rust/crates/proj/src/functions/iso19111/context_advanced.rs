@@ -62,7 +62,7 @@ impl Context {
         unit_name: Option<&str>,
         unit_conv_factor: f64,
     ) -> Result<Proj, ProjError> {
-        let unit_name = unit_name.map(|s| s.to_cstring());
+        let unit_name = unit_name.map(|s| s.to_cstring()).transpose()?;
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
                 *self.ptr,
@@ -96,7 +96,7 @@ impl Context {
             proj_sys::proj_create_ellipsoidal_2D_cs(
                 *self.ptr,
                 ellipsoidal_cs_2d_type as u32,
-                owned.push_option(unit_name),
+                owned.push_option(unit_name)?,
                 unit_conv_factor,
             )
         };
@@ -129,8 +129,12 @@ impl Context {
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
     ) -> Result<Proj, ProjError> {
-        let horizontal_angular_unit_name = horizontal_angular_unit_name.map(|s| s.to_cstring());
-        let vertical_linear_unit_name = vertical_linear_unit_name.map(|s| s.to_cstring());
+        let horizontal_angular_unit_name = horizontal_angular_unit_name
+            .map(|s| s.to_cstring())
+            .transpose()?;
+        let vertical_linear_unit_name = vertical_linear_unit_name
+            .map(|s| s.to_cstring())
+            .transpose()?;
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 *self.ptr,
@@ -182,14 +186,14 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
                 *self.ptr,
-                owned.push_option(crs_name),
-                owned.push_option(datum_name),
-                owned.push_option(ellps_name),
+                owned.push_option(crs_name)?,
+                owned.push_option(datum_name)?,
+                owned.push_option(ellps_name)?,
                 semi_major_metre,
                 inv_flattening,
-                owned.push_option(prime_meridian_name),
+                owned.push_option(prime_meridian_name)?,
                 prime_meridian_offset,
-                owned.push_option(pm_angular_units),
+                owned.push_option(pm_angular_units)?,
                 pm_units_conv,
                 ellipsoidal_cs.ptr(),
             )
@@ -218,7 +222,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
                 *self.ptr,
-                owned.push_option(crs_name),
+                owned.push_option(crs_name)?,
                 datum_or_datum_ensemble.ptr(),
                 ellipsoidal_cs.ptr(),
             )
@@ -267,16 +271,16 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
                 *self.ptr,
-                owned.push_option(crs_name),
-                owned.push_option(datum_name),
-                owned.push_option(ellps_name),
+                owned.push_option(crs_name)?,
+                owned.push_option(datum_name)?,
+                owned.push_option(ellps_name)?,
                 semi_major_metre,
                 inv_flattening,
-                owned.push_option(prime_meridian_name),
+                owned.push_option(prime_meridian_name)?,
                 prime_meridian_offset,
-                owned.push_option(angular_units),
+                owned.push_option(angular_units)?,
                 angular_units_conv,
-                owned.push_option(linear_units),
+                owned.push_option(linear_units)?,
                 linear_units_conv,
             )
         };
@@ -308,9 +312,9 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
                 *self.ptr,
-                owned.push_option(crs_name),
+                owned.push_option(crs_name)?,
                 datum_or_datum_ensemble.ptr(),
-                owned.push_option(linear_units),
+                owned.push_option(linear_units)?,
                 linear_units_conv,
             )
         };
@@ -340,7 +344,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
                 *self.ptr,
-                owned.push_option(crs_name),
+                owned.push_option(crs_name)?,
                 base_geographic_crs.ptr(),
                 conversion.ptr(),
                 ellipsoidal_cs.ptr(),
@@ -361,7 +365,7 @@ impl Context {
     pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> Result<Proj, ProjError> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
-            proj_sys::proj_create_engineering_crs(*self.ptr, owned.push_option(crs_name))
+            proj_sys::proj_create_engineering_crs(*self.ptr, owned.push_option(crs_name)?)
         };
         Proj::new_with_owned_cstrings(self.ptr.clone(), ptr, owned)
     }
@@ -390,9 +394,9 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
                 *self.ptr,
-                owned.push_option(crs_name),
-                owned.push_option(datum_name),
-                owned.push_option(linear_units),
+                owned.push_option(crs_name)?,
+                owned.push_option(datum_name)?,
+                owned.push_option(linear_units)?,
                 linear_units_conv,
             )
         };
@@ -445,19 +449,19 @@ impl Context {
     ) -> Result<Proj, ProjError> {
         let mut owned = OwnedCStrings::with_capacity(8);
         let mut options = ProjOptions::new(1);
-        options.with_or_skip(accuracy, "ACCURACY");
+        options.with_or_skip(accuracy, "ACCURACY")?;
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs_ex(
                 *self.ptr,
-                owned.push_option(crs_name),
-                owned.push_option(datum_name),
-                owned.push_option(datum_auth_name),
-                owned.push_option(datum_code),
-                owned.push_option(linear_units),
+                owned.push_option(crs_name)?,
+                owned.push_option(datum_name)?,
+                owned.push_option(datum_auth_name)?,
+                owned.push_option(datum_code)?,
+                owned.push_option(linear_units)?,
                 linear_units_conv,
-                owned.push_option(geoid_model_name),
-                owned.push_option(geoid_model_auth_name),
-                owned.push_option(geoid_model_code),
+                owned.push_option(geoid_model_name)?,
+                owned.push_option(geoid_model_auth_name)?,
+                owned.push_option(geoid_model_code)?,
                 geoid_geog_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 options.as_vec_ptr().as_ptr(),
             )
@@ -485,7 +489,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
                 *self.ptr,
-                owned.push_option(crs_name),
+                owned.push_option(crs_name)?,
                 horiz_crs.ptr(),
                 vert_crs.ptr(),
             )
@@ -522,12 +526,12 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
                 *self.ptr,
-                owned.push_option(name),
-                owned.push_option(auth_name),
-                owned.push_option(code),
-                owned.push_option(method_name),
-                owned.push_option(method_auth_name),
-                owned.push_option(method_code),
+                owned.push_option(name)?,
+                owned.push_option(auth_name)?,
+                owned.push_option(code)?,
+                owned.push_option(method_name)?,
+                owned.push_option(method_auth_name)?,
+                owned.push_option(method_code)?,
                 params.len() as i32,
                 params
                     .iter()
@@ -600,15 +604,15 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_transformation(
                 *self.ptr,
-                owned.push_option(name),
-                owned.push_option(auth_name),
-                owned.push_option(code),
+                owned.push_option(name)?,
+                owned.push_option(auth_name)?,
+                owned.push_option(code)?,
                 source_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 target_crs.map_or(ptr::null(), |crs| crs.ptr()),
                 interpolation_crs.map_or(ptr::null(), |crs| crs.ptr()),
-                owned.push_option(method_name),
-                owned.push_option(method_auth_name),
-                owned.push_option(method_code),
+                owned.push_option(method_name)?,
+                owned.push_option(method_auth_name)?,
+                owned.push_option(method_code)?,
                 count as i32,
                 params.as_ptr(),
                 accuracy,
@@ -639,7 +643,7 @@ impl Context {
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
                 *self.ptr,
-                owned.push_option(crs_name),
+                owned.push_option(crs_name)?,
                 geodetic_crs.ptr(),
                 conversion.ptr(),
                 coordinate_system.ptr(),
@@ -697,7 +701,7 @@ impl Context {
                 *self.ptr,
                 vert_crs.ptr(),
                 hub_geographic_3d_crs.ptr(),
-                grid_name.to_cstring().as_ptr(),
+                grid_name.to_cstring()?.as_ptr(),
             )
         };
         Proj::new(self.ptr.clone(), ptr)
@@ -744,9 +748,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -779,9 +783,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -817,9 +821,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -854,9 +858,9 @@ impl Context {
                 longitude_second_point,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -887,9 +891,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -920,9 +924,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -957,9 +961,9 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -992,9 +996,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1029,9 +1033,9 @@ impl Context {
                 longitude_false_origin,
                 easting_false_origin,
                 northing_false_origin,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1066,9 +1070,9 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1105,9 +1109,9 @@ impl Context {
                 easting_false_origin,
                 northing_false_origin,
                 ellipsoid_scaling_factor,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1142,9 +1146,9 @@ impl Context {
                 latitude_second_parallel,
                 easting_false_origin,
                 northing_false_origin,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1175,9 +1179,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1208,9 +1212,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1241,9 +1245,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1274,9 +1278,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1307,9 +1311,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1340,9 +1344,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1377,9 +1381,9 @@ impl Context {
                 latitude_second_parallel,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1408,9 +1412,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1437,9 +1441,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1468,9 +1472,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1499,9 +1503,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1530,9 +1534,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1561,9 +1565,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1594,9 +1598,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1627,9 +1631,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1658,9 +1662,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1689,9 +1693,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1720,9 +1724,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1754,9 +1758,9 @@ impl Context {
                 height,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1788,9 +1792,9 @@ impl Context {
                 height,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1821,9 +1825,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1860,9 +1864,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1899,9 +1903,9 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1940,9 +1944,9 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -1977,9 +1981,9 @@ impl Context {
                 scale,
                 easting_projection_centre,
                 northing_projection_centre,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2012,9 +2016,9 @@ impl Context {
                 latitude_second_parallel,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2051,9 +2055,9 @@ impl Context {
                 scale_factor_pseudo_standard_parallel,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2090,9 +2094,9 @@ impl Context {
                 scale_factor_pseudo_standard_parallel,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2123,9 +2127,9 @@ impl Context {
                 longitude_nat_origin,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2154,9 +2158,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2189,9 +2193,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2222,9 +2226,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2255,9 +2259,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2286,9 +2290,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2319,9 +2323,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2352,9 +2356,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2385,9 +2389,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2422,9 +2426,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2455,9 +2459,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2490,9 +2494,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2523,9 +2527,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2554,9 +2558,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2585,9 +2589,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2620,9 +2624,9 @@ impl Context {
                 scale,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2651,9 +2655,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2682,9 +2686,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2713,9 +2717,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2746,9 +2750,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2777,9 +2781,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2808,9 +2812,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2839,9 +2843,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2870,9 +2874,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2903,9 +2907,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2936,9 +2940,9 @@ impl Context {
                 peg_point_long,
                 peg_point_heading,
                 peg_point_height,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -2968,9 +2972,9 @@ impl Context {
                 center_long,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -3005,9 +3009,9 @@ impl Context {
                 view_point_height,
                 false_easting,
                 false_northing,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
-                owned.push_option(linear_unit_name),
+                owned.push_option(linear_unit_name)?,
                 linear_unit_conv_factor,
             )
         };
@@ -3034,7 +3038,7 @@ impl Context {
                 south_pole_lat_in_unrotated_crs,
                 south_pole_long_in_unrotated_crs,
                 axis_rotation,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
             )
         };
@@ -3061,7 +3065,7 @@ impl Context {
                 grid_north_pole_latitude,
                 grid_north_pole_longitude,
                 north_pole_grid_longitude,
-                owned.push_option(ang_unit_name),
+                owned.push_option(ang_unit_name)?,
                 ang_unit_conv_factor,
             )
         };
@@ -3343,7 +3347,7 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_cstring()),
+                Some("param name".to_cstring()?),
                 None,
                 None,
                 0.99,
@@ -3397,7 +3401,7 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_cstring()),
+                Some("param name".to_cstring()?),
                 None,
                 None,
                 0.99,
@@ -3423,7 +3427,7 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_cstring()),
+                Some("param name".to_cstring()?),
                 None,
                 None,
                 0.99,

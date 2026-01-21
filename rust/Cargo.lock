@@ -406,8 +406,8 @@ checksum = "c3e64b0cc0439b12df2fa678eae89a1c56a529fd067a9115f7827f1fffd22b32"
 
 [[package]]
 name = "clerk"
-version = "0.0.36"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.36#36dd8fe99aae059568edbdf5826f6ac0aa8c07bf"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#2375b0134b4ce3736bfcf6d4b5b3409e7daf3bee"
 dependencies = [
  "chrono",
  "owo-colors",
@@ -784,8 +784,11 @@ dependencies = [
 
 [[package]]
 name = "envoy"
-version = "0.0.36"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.36#36dd8fe99aae059568edbdf5826f6ac0aa8c07bf"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#2375b0134b4ce3736bfcf6d4b5b3409e7daf3bee"
+dependencies = [
+ "thiserror 2.0.18",
+]
 
 [[package]]
 name = "equivalent"
@@ -1668,8 +1671,8 @@ dependencies = [
 
 [[package]]
 name = "mischief"
-version = "0.0.36"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.36#36dd8fe99aae059568edbdf5826f6ac0aa8c07bf"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#2375b0134b4ce3736bfcf6d4b5b3409e7daf3bee"
 dependencies = [
  "mischief-macros",
  "owo-colors",
@@ -1682,8 +1685,8 @@ dependencies = [
 
 [[package]]
 name = "mischief-macros"
-version = "0.0.36"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.36#36dd8fe99aae059568edbdf5826f6ac0aa8c07bf"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#2375b0134b4ce3736bfcf6d4b5b3409e7daf3bee"
 dependencies = [
  "quote",
  "syn 2.0.114",
@@ -2414,8 +2417,8 @@ dependencies = [
 
 [[package]]
 name = "rax"
-version = "0.0.36"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.36#36dd8fe99aae059568edbdf5826f6ac0aa8c07bf"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#2375b0134b4ce3736bfcf6d4b5b3409e7daf3bee"
 dependencies = [
  "async-trait",
  "clerk",
@@ -2426,8 +2429,8 @@ dependencies = [
 
 [[package]]
 name = "rax-nmea"
-version = "0.0.36"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.36#36dd8fe99aae059568edbdf5826f6ac0aa8c07bf"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#2375b0134b4ce3736bfcf6d4b5b3409e7daf3bee"
 dependencies = [
  "chrono",
  "clerk",
@@ -2763,8 +2766,8 @@ dependencies = [
 
 [[package]]
 name = "serialport-ext"
-version = "0.0.36"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.36#36dd8fe99aae059568edbdf5826f6ac0aa8c07bf"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#2375b0134b4ce3736bfcf6d4b5b3409e7daf3bee"
 dependencies = [
  "clerk",
  "serialport",

@@ -103,14 +103,13 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
-    pub fn new() -> Self {
+    pub fn new() -> Result<Self, ProjError> {
         let ctx = Self {
             ptr: Arc::new(ContextPtr(unsafe { proj_sys::proj_context_create() })),
         };
-        ctx.set_log_level(LogLevel::None).unwrap();
-        ctx.set_log_fn(null_mut::<c_void>(), Some(crate::proj_clerk))
-            .unwrap();
-        ctx
+        ctx.set_log_level(LogLevel::None)?;
+        ctx.set_log_fn(null_mut::<c_void>(), Some(crate::proj_clerk))?;
+        Ok(ctx)
     }
 }
 

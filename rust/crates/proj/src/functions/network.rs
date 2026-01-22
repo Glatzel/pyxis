@@ -219,7 +219,7 @@ mod test {
     fn test_get_user_writable_directory() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let dir = ctx.get_user_writable_directory(false)?;
-        assert!(dir.to_str().unwrap().contains("proj"));
+        assert!(dir.to_str().expect("no dir found").contains("proj"));
         Ok(())
     }
     #[test]

@@ -59,8 +59,11 @@ impl crate::Context {
         let len = paths.len();
         let paths: VecCString = paths
             .iter()
-            .map(|p| p.to_str().unwrap())
-            .collect::<Vec<_>>()
+            .map(|p| {
+                p.to_str()
+                    .ok_or_else(|| ProjError::new("Invalid path string.".to_string()))
+            })
+            .collect::<Result<Vec<_>, _>>()?
             .to_vec_cstring()?;
         unsafe {
             proj_sys::proj_context_set_search_paths(
@@ -89,7 +92,14 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
     pub fn set_ca_bundle_path(&self, path: Option<&Path>) -> Result<&Self, ProjError> {
-        let path = path.map(|s| s.to_str().unwrap().to_cstring()).transpose()?;
+        let path = match path {
+            Some(p) => Some(
+                p.to_str()
+                    .ok_or_else(|| ProjError::new("Invalid path string".to_string()))?
+                    .to_cstring()?,
+            ),
+            None => None,
+        };
         unsafe {
             proj_sys::proj_context_set_ca_bundle_path(
                 self.ptr(),

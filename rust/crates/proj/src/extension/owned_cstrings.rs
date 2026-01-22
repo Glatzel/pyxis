@@ -24,7 +24,11 @@ impl OwnedCStrings {
     }
     pub fn push<T: ToCString>(&mut self, value: T) -> Result<*const c_char, ProjError> {
         self._owned_cstrings.push(value.to_cstring()?);
-        Ok(self._owned_cstrings.last().unwrap().as_ptr())
+        Ok(self
+            ._owned_cstrings
+            .last()
+            .ok_or(ProjError::new("Last owned cstring is missing.".to_string()))?
+            .as_ptr())
     }
     pub fn push_option<T: ToCString>(
         &mut self,

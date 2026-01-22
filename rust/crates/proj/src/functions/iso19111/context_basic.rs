@@ -52,7 +52,11 @@ impl crate::Context {
         let result = unsafe {
             proj_sys::proj_context_set_database_path(
                 self.ptr(),
-                db_path.to_str().unwrap().to_cstring()?.as_ptr(),
+                db_path
+                    .to_str()
+                    .ok_or(ProjError::new("Invalid database path".to_string()))?
+                    .to_cstring()?
+                    .as_ptr(),
                 aux_db_paths_ptr.map_or(ptr::null(), |ptr| ptr.as_ptr()),
                 ptr::null(),
             )
@@ -399,8 +403,16 @@ impl crate::Context {
         check_result!(out_result_count < 1, "Error");
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
-            let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
-            let info_ref = unsafe { current_ptr.as_ref().unwrap() };
+            let current_ptr = unsafe {
+                ptr.offset(offset as isize).as_ref().ok_or(ProjError::new(
+                    "Invalid celestial body info pointer".to_string(),
+                ))?
+            };
+            let info_ref = unsafe {
+                current_ptr.as_ref().ok_or(ProjError::new(
+                    "Invalid celestial body info pointer".to_string(),
+                ))?
+            };
             out_vec.push(CelestialBodyInfo::new(
                 info_ref.auth_name.to_string()?,
                 info_ref.name.to_string()?,
@@ -468,8 +480,16 @@ impl crate::Context {
         check_result!(out_result_count < 1, "Error");
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
-            let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
-            let info_ref = unsafe { current_ptr.as_ref().unwrap() };
+            let current_ptr = unsafe {
+                ptr.offset(offset as isize)
+                    .as_ref()
+                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+            };
+            let info_ref = unsafe {
+                current_ptr
+                    .as_ref()
+                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+            };
             out_vec.push(CrsInfo::new(
                 info_ref.auth_name.to_string()?,
                 info_ref.code.to_string()?,
@@ -524,8 +544,16 @@ impl crate::Context {
         check_result!(out_result_count < 1, "Error");
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
-            let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
-            let info_ref = unsafe { current_ptr.as_ref().unwrap() };
+            let current_ptr = unsafe {
+                ptr.offset(offset as isize)
+                    .as_ref()
+                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+            };
+            let info_ref = unsafe {
+                current_ptr
+                    .as_ref()
+                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+            };
             out_vec.push(UnitInfo::new(
                 info_ref.auth_name.to_string()?,
                 info_ref.code.to_string()?,
@@ -564,7 +592,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)?
-            .unwrap();
+            .expect("invalid element");
         assert_eq!(
             data,
             format!("{PROJ_VERSION_MAJOR}.{PROJ_VERSION_MINOR}.{PROJ_VERSION_PATCH}")
@@ -575,9 +603,9 @@ mod test {
     fn test_get_database_structure() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let structure = ctx.get_database_structure()?;
-        println!("{}", structure.first().unwrap());
+        println!("{}", structure.first().expect("invalid element"));
         assert_eq!(
-            structure.first().unwrap(),
+            structure.first().expect("invalid element"),
             "CREATE TABLE metadata(\n    key TEXT NOT NULL PRIMARY KEY CHECK (length(key) >= 1),\n    value TEXT NOT NULL\n) WITHOUT ROWID;"
         );
         Ok(())
@@ -692,7 +720,7 @@ mod test {
     fn test_get_celestial_body_list_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_celestial_body_list_from_database("ESRI")?;
-        println!("{:?}", list.first().unwrap());
+        println!("{:?}", list.first().expect("invalid element"));
         assert!(!list.is_empty());
         Ok(())
     }
@@ -700,7 +728,7 @@ mod test {
     fn test_get_crs_info_list_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_crs_info_list_from_database(Some("EPSG"), None)?;
-        println!("{:?}", list.first().unwrap());
+        println!("{:?}", list.first().expect("invalid element"));
         assert!(!list.is_empty());
         Ok(())
     }
@@ -709,7 +737,7 @@ mod test {
     fn test_get_units_from_database() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let units = ctx.get_units_from_database("EPSG", UnitCategory::Linear, true)?;
-        println!("{:?}", units.first().unwrap());
+        println!("{:?}", units.first().expect("invalid element"));
         assert!(!units.is_empty());
         Ok(())
     }

@@ -84,9 +84,16 @@ pub enum ProjError {
     StrumParseError(#[from] strum::ParseError),
     #[error("{}",.0)]
     NumEnumTryFromPrimitiveError(String),
+    #[error("{}",.0)]
+    MiscError(String),
+    #[error(transparent)]
+    VarError(#[from] std::env::VarError),
 }
 impl<T: TryFromPrimitive> From<num_enum::TryFromPrimitiveError<T>> for ProjError {
     fn from(value: num_enum::TryFromPrimitiveError<T>) -> Self {
         Self::NumEnumTryFromPrimitiveError(value.to_string())
     }
+}
+impl ProjError {
+    pub fn new(message: String) -> Self { Self::MiscError(message) }
 }

@@ -20,7 +20,7 @@ fn main() -> mischief::Result<()> {
     Ok(())
 }
 fn convert_scalar() -> mischief::Result<()> {
-    let ctx = proj::Context::new();
+    let ctx = proj::Context::new()?;
     let pj = ctx
         .clone()
         .create_crs_to_crs("EPSG:4326", "EPSG:4496", &Area::default())?;
@@ -33,7 +33,7 @@ fn convert_scalar() -> mischief::Result<()> {
     Ok(())
 }
 fn convert_array() -> mischief::Result<()> {
-    let ctx = proj::Context::new();
+    let ctx = proj::Context::new()?;
     let pj = ctx
         .clone()
         .create_crs_to_crs("EPSG:4326", "EPSG:4496", &Area::default())?;

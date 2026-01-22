@@ -10,14 +10,14 @@ impl crate::Proj {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    pub fn get_last_used_operation(&self) -> Option<crate::Proj> {
+    pub fn get_last_used_operation(&self) -> Result<Option<crate::Proj>, ProjError> {
         use crate::Proj;
 
         let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr()) };
         if ptr.is_null() {
-            return None;
+            return Ok(None);
         }
-        Some(Proj::new(self.arc_ctx_ptr(), ptr).unwrap())
+        Some(Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     ///Transform a series of coordinates
     ///
@@ -262,16 +262,16 @@ mod test {
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
         let _ = pj.convert(&(120.0, 30.0))?;
-        let last_op = pj.get_last_used_operation();
+        let last_op = pj.get_last_used_operation()?;
         assert!(last_op.is_some());
-        println!("{:?}", last_op.unwrap().info());
+        println!("{:?}", last_op.expect("Last operation is missing").info());
         Ok(())
     }
     #[test]
     fn test_get_last_used_operation_null() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
-        let last_op = pj.get_last_used_operation();
+        let last_op = pj.get_last_used_operation()?;
         assert!(last_op.is_none());
         Ok(())
     }

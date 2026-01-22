@@ -376,9 +376,9 @@ impl Proj {
         let result = unsafe {
             proj_sys::proj_as_projjson(self.ctx_ptr(), self.ptr(), options.as_vec_ptr().as_ptr())
         }
-        .to_string();
+        .to_string()?;
         check_result!(self);
-        Ok(result.expect("Error"))
+        Ok(result)
     }
 
     ///Return the base CRS of a BoundCRS or a DerivedCRS/ProjectedCRS, or the

@@ -140,7 +140,7 @@ pub fn rtodms2(r: f64, pos: char, neg: char) -> Result<String, ProjError> {
     let dms = "xxxdxxmxx.xxs ".to_cstring()?;
     let ptr =
         unsafe { proj_sys::proj_rtodms2(dms.as_ptr().cast_mut(), 14, r, pos as i32, neg as i32) };
-    Ok(ptr.to_string().unwrap())
+    Ok(ptr.to_string()?)
 }
 
 #[cfg(test)]

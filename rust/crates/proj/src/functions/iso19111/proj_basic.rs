@@ -189,7 +189,7 @@ impl Proj {
         }
         check_result!(result != 1, "Error");
         Ok(Some(AreaOfUse::new(
-            area_name.to_string().unwrap(),
+            area_name.to_string()?,
             west_lon_degree,
             south_lat_degree,
             east_lon_degree,
@@ -233,7 +233,7 @@ impl Proj {
         }
         check_result!(result != 1, "Error");
         Ok(Some(AreaOfUse::new(
-            area_name.to_string().unwrap(),
+            area_name.to_string()?,
             west_lon_degree,
             south_lat_degree,
             east_lon_degree,
@@ -650,13 +650,13 @@ impl Proj {
         };
         check_result!(result != 1, "Error");
         Ok(AxisInfo::new(
-            name.to_string().unwrap(),
-            abbrev.to_string().unwrap(),
+            name.to_string()?,
+            abbrev.to_string()?,
             AxisDirection::from_str(&direction.to_string()?)?,
             unit_conv_factor,
-            unit_name.to_string().unwrap(),
-            unit_auth_name.to_string().unwrap(),
-            unit_code.to_string().unwrap(),
+            unit_name.to_string()?,
+            unit_auth_name.to_string()?,
+            unit_code.to_string()?,
         ))
     }
     ///Get the ellipsoid from a CRS or a GeodeticReferenceFrame.

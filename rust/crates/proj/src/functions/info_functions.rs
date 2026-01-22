@@ -44,8 +44,8 @@ impl crate::Proj {
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
 pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
     let src = unsafe { proj_sys::proj_grid_info(grid.to_cstring()?.as_ptr()) };
-    if src.gridname.to_string().unwrap().as_str() == ""
-        && src.filename.to_string().unwrap().as_str() == ""
+    if src.gridname.to_string()?.as_str() == ""
+        && src.filename.to_string()?.as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
     {
         return Err(ProjError::ProjError {
@@ -54,9 +54,9 @@ pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
         });
     }
     Ok(GridInfo::new(
-        src.gridname.to_string().unwrap(),
-        src.filename.to_string().unwrap(),
-        src.format.to_string().unwrap(),
+        src.gridname.to_string()?,
+        src.filename.to_string()?,
+        src.format.to_string()?,
         (src.lowerleft.lam, src.lowerleft.phi),
         (src.upperright.lam, src.upperright.phi),
         src.n_lon,

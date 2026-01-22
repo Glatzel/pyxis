@@ -247,7 +247,7 @@ impl crate::Context {
         check_result!(result != 1, "Error");
 
         Ok(UomInfo::new(
-            name.to_string().unwrap(),
+            name.to_string()?,
             conv_factor,
             UomCategory::from_str(&category.to_string()?)?,
         ))
@@ -282,9 +282,9 @@ impl crate::Context {
         };
         check_result!(result != 1, "Error");
         Ok(GridInfoDB::new(
-            full_name.to_string().unwrap(),
-            package_name.to_string().unwrap(),
-            url.to_string().unwrap(),
+            full_name.to_string()?,
+            package_name.to_string()?,
+            url.to_string()?,
             direct_download != 0,
             open_license != 0,
             available != 0,
@@ -402,8 +402,8 @@ impl crate::Context {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
             let info_ref = unsafe { current_ptr.as_ref().unwrap() };
             out_vec.push(CelestialBodyInfo::new(
-                info_ref.auth_name.to_string().unwrap(),
-                info_ref.name.to_string().unwrap(),
+                info_ref.auth_name.to_string()?,
+                info_ref.name.to_string()?,
             ));
         }
         unsafe { proj_sys::proj_celestial_body_list_destroy(ptr) };
@@ -471,9 +471,9 @@ impl crate::Context {
             let current_ptr = unsafe { ptr.offset(offset as isize).as_ref().unwrap() };
             let info_ref = unsafe { current_ptr.as_ref().unwrap() };
             out_vec.push(CrsInfo::new(
-                info_ref.auth_name.to_string().unwrap(),
-                info_ref.code.to_string().unwrap(),
-                info_ref.name.to_string().unwrap(),
+                info_ref.auth_name.to_string()?,
+                info_ref.code.to_string()?,
+                info_ref.name.to_string()?,
                 ProjType::try_from(info_ref.type_)?,
                 info_ref.deprecated != 0,
                 info_ref.bbox_valid != 0,

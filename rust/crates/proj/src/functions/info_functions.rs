@@ -1,6 +1,6 @@
 use envoy::{PtrToString, ToCString};
 
-use crate::data_types::{GridInfo, Info, InitInfo, ProjError, ProjErrorCode, ProjInfo};
+use crate::data_types::{GridInfo, Info, InitInfo, ProjError, ProjInfo};
 
 /// Get information about the current instance of the PROJ library.
 ///
@@ -48,10 +48,7 @@ pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
         && src.filename.to_string()?.as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
     {
-        return Err(ProjError::ProjError {
-            code: ProjErrorCode::Other,
-            message: format!("Invalid grid: {}", grid),
-        });
+        return Err(ProjError::new(format!("Invalid grid: {}", grid)));
     }
     Ok(GridInfo::new(
         src.gridname.to_string()?,
@@ -84,10 +81,9 @@ pub fn init_info(initname: &str) -> Result<InitInfo, ProjError> {
         src.lastupdate.to_string().unwrap_or_default(),
     );
     if info.version() == "" {
-        return Err(ProjError::ProjError {
-            code: ProjErrorCode::Other,
-            message: format!("Invalid proj init file or name: {initname}"),
-        });
+        return Err(ProjError::new(format!(
+            "Invalid proj init file or name: {initname}"
+        )));
     }
     Ok(InitInfo::new(
         src.name.to_string().unwrap_or_default(),
@@ -130,7 +126,7 @@ mod test {
                 workspace_dir
                     .join("external/ntv2-file-routines/samples/mne.gsb")
                     .to_str()
-                    .unwrap(),
+                    .ok_or_else(|| ProjError::new("Invalid path string".to_string()))?,
             )?;
             println!("{info:?}");
             assert_eq!(info.format(), "ntv2");

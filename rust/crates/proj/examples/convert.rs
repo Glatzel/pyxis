@@ -8,7 +8,7 @@ fn main() -> mischief::Result<()> {
     Ok(())
 }
 fn cvt_2d() -> mischief::Result<()> {
-    let ctx = proj::Context::new();
+    let ctx = proj::Context::new()?;
     let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &Area::default())?;
 
     let pj = ctx.normalize_for_visualization(&pj)?;
@@ -19,7 +19,7 @@ fn cvt_2d() -> mischief::Result<()> {
     Ok(())
 }
 fn cvt_3d() -> mischief::Result<()> {
-    let ctx = proj::Context::new();
+    let ctx = proj::Context::new()?;
     let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &Area::default())?;
     let pj = ctx.normalize_for_visualization(&pj)?;
 
@@ -31,7 +31,7 @@ fn cvt_3d() -> mischief::Result<()> {
     Ok(())
 }
 fn cvt_3d_array() -> mischief::Result<()> {
-    let ctx = proj::Context::new();
+    let ctx = proj::Context::new()?;
     let pj = ctx
         .clone()
         .create_crs_to_crs("EPSG:4326", "EPSG:4978", &Area::default())?;

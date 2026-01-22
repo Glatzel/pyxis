@@ -17,7 +17,7 @@ pub struct TabCoord {
 }
 impl Default for TabCoord {
     fn default() -> Self {
-        let ctx = Context::new();
+        let ctx = Context::new().unwrap();
         let pj = match &ctx.create_crs_to_crs(
             "EPSG:4326",
             &SETTINGS.lock().trail.tab_coord.custom_cs,

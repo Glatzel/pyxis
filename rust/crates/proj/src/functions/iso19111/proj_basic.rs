@@ -383,12 +383,12 @@ impl Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
-    pub fn get_source_crs(&self) -> Option<Proj> {
+    pub fn get_source_crs(&self) -> Result<Option<Proj>, ProjError> {
         let out_ptr = unsafe { proj_sys::proj_get_source_crs(self.ctx_ptr(), self.ptr()) };
         if out_ptr.is_null() {
-            return None;
+            return Ok(None);
         }
-        Some(Self::new(self.arc_ctx_ptr(), out_ptr).unwrap())
+        Some(Self::new(self.arc_ctx_ptr(), out_ptr)).transpose()
     }
     ///Return the hub CRS of a BoundCRS or the target CRS of a
     /// CoordinateOperation.
@@ -396,12 +396,12 @@ impl Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
-    pub fn get_target_crs(&self) -> Option<Proj> {
+    pub fn get_target_crs(&self) -> Result<Option<Proj>, ProjError> {
         let out_ptr = unsafe { proj_sys::proj_get_target_crs(self.ctx_ptr(), self.ptr()) };
         if out_ptr.is_null() {
-            return None;
+            return Ok(None);
         }
-        Some(Self::new(self.arc_ctx_ptr(), out_ptr).unwrap())
+        Some(Self::new(self.arc_ctx_ptr(), out_ptr)).transpose()
     }
 
     ///Suggests a database code for the passed object.
@@ -484,7 +484,7 @@ impl Proj {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj::new(self.arc_ctx_ptr(), ptr).unwrap()))
+        Some(crate::Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     /// Returns the datum ensemble of a SingleCRS.
     ///
@@ -499,7 +499,7 @@ impl Proj {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj::new(self.arc_ctx_ptr(), ptr).unwrap()))
+        Some(crate::Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     ///Returns a datum for a SingleCRS.
     ///
@@ -516,7 +516,7 @@ impl Proj {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj::new(self.arc_ctx_ptr(), ptr).unwrap()))
+        Some(crate::Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     ///Return whether a CRS has an associated PointMotionOperation.
     ///
@@ -565,7 +565,7 @@ impl Proj {
         if ptr.is_null() {
             return Ok(None);
         }
-        Ok(Some(crate::Proj::new(self.arc_ctx_ptr(), ptr).unwrap()))
+        Some(crate::Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     ///Returns the frame reference epoch of a dynamic geodetic or vertical
     ///
@@ -1056,7 +1056,7 @@ impl Clone for Proj {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_clone>
     fn clone(&self) -> Self {
         let ptr = unsafe { proj_sys::proj_clone(self.ctx_ptr(), self.ptr()) };
-        Proj::new(self.arc_ctx_ptr(), ptr).unwrap()
+        Proj::new(self.arc_ctx_ptr(), ptr).expect("Fail to clone Proj.")
     }
 }
 
@@ -1111,7 +1111,7 @@ mod test_proj_basic {
     fn test_get_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let name = pj.get_name().unwrap();
+        let name = pj.get_name().expect("No name");
         println!("{name}");
         assert_eq!(name, "WGS 84");
         Ok(())
@@ -1172,7 +1172,7 @@ mod test_proj_basic {
     fn test_get_area_of_use() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let area = pj.get_area_of_use()?.unwrap();
+        let area = pj.get_area_of_use()?.expect("Invalid area");
 
         assert_eq!(area.area_name(), "World.");
         assert_eq!(area.east_lon_degree(), &180.0);
@@ -1185,7 +1185,7 @@ mod test_proj_basic {
     fn test_get_area_of_use_ex() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "6316", Category::Crs, false)?;
-        let area = pj.get_area_of_use_ex(1)?.unwrap();
+        let area = pj.get_area_of_use_ex(1)?.expect("Invalid area");
 
         assert_eq!(area.area_name(), "North Macedonia.");
         assert_eq!(area.east_lon_degree(), &23.04);
@@ -1225,16 +1225,19 @@ mod test_proj_basic {
     pub fn test_get_source_crs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
-        let target = pj.get_source_crs().unwrap();
-        assert_eq!(target.get_name().unwrap(), "WGS 84");
+        let target = pj.get_source_crs()?.expect("Invalid target CRS");
+        assert_eq!(target.get_name().expect("Invalid name"), "WGS 84");
         Ok(())
     }
     #[test]
     pub fn test_get_target_crs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
-        let target = pj.get_target_crs().unwrap();
-        assert_eq!(target.get_name().unwrap(), "WGS 84 / Pseudo-Mercator");
+        let target = pj.get_target_crs()?.expect("Invalid target CRS");
+        assert_eq!(
+            target.get_name().expect("Invalid name"),
+            "WGS 84 / Pseudo-Mercator"
+        );
         Ok(())
     }
 
@@ -1357,7 +1360,7 @@ mod test_proj_basic {
     fn test_datum_ensemble_get_member_count() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
-        let datum = pj.crs_get_datum_ensemble()?.unwrap();
+        let datum = pj.crs_get_datum_ensemble()?.expect("No datum");
         let count = datum.datum_ensemble_get_member_count();
         assert_eq!(count, 12);
         Ok(())
@@ -1366,7 +1369,7 @@ mod test_proj_basic {
     fn test_datum_ensemble_get_accuracy() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
-        let datum = pj.crs_get_datum_ensemble()?.unwrap();
+        let datum = pj.crs_get_datum_ensemble()?.expect("No datum");
         let accuracy = datum.datum_ensemble_get_accuracy()?;
         assert_eq!(accuracy, 0.1);
         Ok(())
@@ -1375,8 +1378,8 @@ mod test_proj_basic {
     fn test_datum_ensemble_get_member() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
-        let datum = pj.crs_get_datum_ensemble()?.unwrap();
-        let _ = datum.datum_ensemble_get_member(2)?.unwrap();
+        let datum = pj.crs_get_datum_ensemble()?.expect("No datum");
+        let _ = datum.datum_ensemble_get_member(2)?.expect("Invalid member");
         Ok(())
     }
     #[test]
@@ -1454,7 +1457,9 @@ mod test_proj_basic {
     fn test_get_celestial_body_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
-        let name = pj.get_celestial_body_name().unwrap();
+        let name = pj
+            .get_celestial_body_name()
+            .expect("No celestial_body_name");
         assert_eq!(name, "Earth");
         Ok(())
     }

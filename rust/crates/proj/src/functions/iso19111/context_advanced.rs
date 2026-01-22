@@ -3181,7 +3181,7 @@ mod test_context_advanced {
             Some("WGS 84"),
             &ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?
                 .crs_get_datum()?
-                .unwrap(),
+                .ok_or(ProjError::new("No datum found".to_string()))?,
             &ctx.create_ellipsoidal_2d_cs(
                 EllipsoidalCs2dType::LatitudeLongitude,
                 Some("Degree"),
@@ -3238,7 +3238,8 @@ mod test_context_advanced {
         )?;
         let pj2: Proj = ctx.create_geocentric_crs_from_datum(
             Some("new crs"),
-            &pj1.crs_get_datum()?.unwrap(),
+            &pj1.crs_get_datum()?
+                .ok_or(ProjError::new("No datum found".to_string()))?,
             Some("MyMetre2"),
             1.0,
         )?;
@@ -3460,14 +3461,14 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_create_bound_crs() -> Result<(), ProjError> {
+    fn test_crs_create_bound_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let crs = ctx
             .clone()
             .create_from_database("EPSG", "4807", Category::Crs, false)?;
         let res = crs.crs_create_bound_crs_to_wgs84(None)?;
-        let base_crs = res.get_source_crs().unwrap();
-        let hub_crs = res.get_target_crs().unwrap();
+        let base_crs = res.get_source_crs()?.expect("No base crs found");
+        let hub_crs = res.get_target_crs()?.expect("No hub crs found");
         let transf = res.crs_get_coordoperation()?;
         let bound_crs = ctx.crs_create_bound_crs(&base_crs, &hub_crs, &transf)?;
         let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -3475,7 +3476,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_create_bound_vertical_crs() -> Result<(), ProjError> {
+    fn test_crs_create_bound_vertical_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let crs = ctx.create("EPSG:4979")?;
         let vert_crs =
@@ -3487,7 +3488,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_utm() -> Result<(), ProjError> {
+    fn test_create_conversion_utm() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_utm(31, true)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -3496,7 +3497,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_transverse_mercator() -> Result<(), ProjError> {
+    fn test_create_conversion_transverse_mercator() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_transverse_mercator(
             0.0,
@@ -3514,7 +3515,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_gauss_schreiber_transverse_mercator() -> Result<(), ProjError> {
+    fn test_create_conversion_gauss_schreiber_transverse_mercator() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_gauss_schreiber_transverse_mercator(
             0.0,
@@ -3532,7 +3533,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_transverse_mercator_south_oriented() -> Result<(), ProjError> {
+    fn test_create_conversion_transverse_mercator_south_oriented() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_transverse_mercator_south_oriented(
             0.0,
@@ -3550,7 +3551,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_two_point_equidistant() -> Result<(), ProjError> {
+    fn test_create_conversion_two_point_equidistant() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_two_point_equidistant(
             0.0,
@@ -3569,7 +3570,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_tunisia_mapping_grid() -> Result<(), ProjError> {
+    fn test_create_conversion_tunisia_mapping_grid() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_tunisia_mapping_grid(
             0.0,
@@ -3586,7 +3587,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_tunisia_mining_grid() -> Result<(), ProjError> {
+    fn test_create_conversion_tunisia_mining_grid() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_tunisia_mining_grid(
             0.0,
@@ -3678,7 +3679,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_conic_conformal_2sp_michigan() -> Result<(), ProjError> {
+    fn test_create_conversion_lambert_conic_conformal_2sp_michigan() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_2sp_michigan(
             1.0,
@@ -3698,7 +3699,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_conic_conformal_2sp_belgium() -> Result<(), ProjError> {
+    fn test_create_conversion_lambert_conic_conformal_2sp_belgium() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_2sp_belgium(
             1.0,
@@ -3717,7 +3718,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_azimuthal_equidistant() -> Result<(), ProjError> {
+    fn test_create_conversion_azimuthal_equidistant() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_azimuthal_equidistant(
             1.0,
@@ -3734,7 +3735,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_guam_projection() -> Result<(), ProjError> {
+    fn test_create_conversion_guam_projection() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_guam_projection(
             1.0,
@@ -3751,7 +3752,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_createconversion_bonne() -> Result<(), ProjError> {
+    fn test_createconversion_bonne() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_bonne(
             1.0,
@@ -3785,7 +3786,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_cylindrical_equal_area() -> Result<(), ProjError> {
+    fn test_create_conversion_lambert_cylindrical_equal_area() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_cylindrical_equal_area(
             1.0,
@@ -3802,7 +3803,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_cassini_soldner() -> Result<(), ProjError> {
+    fn test_create_conversion_cassini_soldner() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_cassini_soldner(
             1.0,
@@ -3819,7 +3820,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_equidistant_conic() -> Result<(), ProjError> {
+    fn test_create_conversion_equidistant_conic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_equidistant_conic(
             1.0,
@@ -3838,7 +3839,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_i() -> Result<(), ProjError> {
+    fn test_create_conversion_eckert_i() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_i(
             1.0,
@@ -3854,7 +3855,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_ii() -> Result<(), ProjError> {
+    fn test_create_conversion_eckert_ii() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_ii(
             1.0,
@@ -3870,7 +3871,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_iii() -> Result<(), ProjError> {
+    fn test_create_conversion_eckert_iii() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_iii(
             1.0,
@@ -3886,7 +3887,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_iv() -> Result<(), ProjError> {
+    fn test_create_conversion_eckert_iv() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_iv(
             1.0,
@@ -3902,7 +3903,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_v() -> Result<(), ProjError> {
+    fn test_create_conversion_eckert_v() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_v(
             1.0,
@@ -3918,7 +3919,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_eckert_vi() -> Result<(), ProjError> {
+    fn test_create_conversion_eckert_vi() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_eckert_vi(
             1.0,
@@ -3934,7 +3935,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_equidistant_cylindrical() -> Result<(), ProjError> {
+    fn test_create_conversion_equidistant_cylindrical() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_equidistant_cylindrical(
             1.0,
@@ -3951,7 +3952,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_equidistant_cylindrical_spherical() -> Result<(), ProjError> {
+    fn test_create_conversion_equidistant_cylindrical_spherical() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_equidistant_cylindrical_spherical(
             1.0,
@@ -3968,7 +3969,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_gall() -> Result<(), ProjError> {
+    fn test_create_conversion_gall() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_gall(
             1.0,
@@ -3984,7 +3985,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_goode_homolosine() -> Result<(), ProjError> {
+    fn test_create_conversion_goode_homolosine() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_goode_homolosine(
             1.0,
@@ -4000,7 +4001,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_interrupted_goode_homolosine() -> Result<(), ProjError> {
+    fn test_create_conversion_interrupted_goode_homolosine() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_interrupted_goode_homolosine(
             1.0,
@@ -4016,7 +4017,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_geostationary_satellite_sweep_x() -> Result<(), ProjError> {
+    fn test_create_conversion_geostationary_satellite_sweep_x() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_geostationary_satellite_sweep_x(
             1.0,
@@ -4033,7 +4034,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_geostationary_satellite_sweep_y() -> Result<(), ProjError> {
+    fn test_create_conversion_geostationary_satellite_sweep_y() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_geostationary_satellite_sweep_y(
             1.0,
@@ -4050,7 +4051,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_gnomonic() -> Result<(), ProjError> {
+    fn test_create_conversion_gnomonic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_gnomonic(
             1.0,
@@ -4067,7 +4068,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_hotine_oblique_mercator_variant_a() -> Result<(), ProjError> {
+    fn test_create_conversion_hotine_oblique_mercator_variant_a() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_hotine_oblique_mercator_variant_a(
             1.0,
@@ -4087,7 +4088,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_hotine_oblique_mercator_variant_b() -> Result<(), ProjError> {
+    fn test_create_conversion_hotine_oblique_mercator_variant_b() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_hotine_oblique_mercator_variant_b(
             1.0,
@@ -4108,7 +4109,7 @@ mod test_context_advanced {
     }
     #[test]
     fn test_create_conversion_hotine_oblique_mercator_two_point_natural_origin()
-    -> Result<(), ProjError> {
+    -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_hotine_oblique_mercator_two_point_natural_origin(
             1.0,
@@ -4129,7 +4130,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_laborde_oblique_mercator() -> Result<(), ProjError> {
+    fn test_create_conversion_laborde_oblique_mercator() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_laborde_oblique_mercator(
             1.0,
@@ -4148,7 +4149,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_international_map_world_polyconic() -> Result<(), ProjError> {
+    fn test_create_conversion_international_map_world_polyconic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_international_map_world_polyconic(
             1.0,
@@ -4166,7 +4167,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_krovak_north_oriented() -> Result<(), ProjError> {
+    fn test_create_conversion_krovak_north_oriented() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_krovak_north_oriented(
             1.0,
@@ -4186,7 +4187,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_krovak() -> Result<(), ProjError> {
+    fn test_create_conversion_krovak() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_krovak(
             1.0,
@@ -4206,7 +4207,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_azimuthal_equal_area() -> Result<(), ProjError> {
+    fn test_create_conversion_lambert_azimuthal_equal_area() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_azimuthal_equal_area(
             1.0,
@@ -4223,7 +4224,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_miller_cylindrical() -> Result<(), ProjError> {
+    fn test_create_conversion_miller_cylindrical() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_miller_cylindrical(
             1.0,
@@ -4239,7 +4240,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_mercator_variant_a() -> Result<(), ProjError> {
+    fn test_create_conversion_mercator_variant_a() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_mercator_variant_a(
             1.0,
@@ -4257,7 +4258,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_mercator_variant_b() -> Result<(), ProjError> {
+    fn test_create_conversion_mercator_variant_b() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_mercator_variant_b(
             1.0,
@@ -4274,7 +4275,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_popular_visualisation_pseudo_mercator() -> Result<(), ProjError> {
+    fn test_create_conversion_popular_visualisation_pseudo_mercator() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_popular_visualisation_pseudo_mercator(
             1.0,
@@ -4291,7 +4292,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_mollweide() -> Result<(), ProjError> {
+    fn test_create_conversion_mollweide() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_mollweide(
             1.0,
@@ -4307,7 +4308,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_new_zealand_mapping_grid() -> Result<(), ProjError> {
+    fn test_create_conversion_new_zealand_mapping_grid() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_new_zealand_mapping_grid(
             1.0,
@@ -4324,7 +4325,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_oblique_stereographic() -> Result<(), ProjError> {
+    fn test_create_conversion_oblique_stereographic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_oblique_stereographic(
             1.0,
@@ -4341,7 +4342,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_orthographic() -> Result<(), ProjError> {
+    fn test_create_conversion_orthographic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_orthographic(
             1.0,
@@ -4358,7 +4359,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_local_orthographic() -> Result<(), ProjError> {
+    fn test_create_conversion_local_orthographic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_local_orthographic(
             1.0,
@@ -4377,7 +4378,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_american_polyconic() -> Result<(), ProjError> {
+    fn test_create_conversion_american_polyconic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_american_polyconic(
             1.0,
@@ -4394,7 +4395,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_polar_stereographic_variant_a() -> Result<(), ProjError> {
+    fn test_create_conversion_polar_stereographic_variant_a() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_polar_stereographic_variant_a(
             1.0,
@@ -4412,7 +4413,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_polar_stereographic_variant_b() -> Result<(), ProjError> {
+    fn test_create_conversion_polar_stereographic_variant_b() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_polar_stereographic_variant_b(
             1.0,
@@ -4429,7 +4430,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_robinson() -> Result<(), ProjError> {
+    fn test_create_conversion_robinson() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_robinson(
             1.0,
@@ -4445,7 +4446,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_sinusoidal() -> Result<(), ProjError> {
+    fn test_create_conversion_sinusoidal() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_sinusoidal(
             1.0,
@@ -4461,7 +4462,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_stereographic() -> Result<(), ProjError> {
+    fn test_create_conversion_stereographic() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_stereographic(
             1.0,
@@ -4479,7 +4480,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_van_der_grinten() -> Result<(), ProjError> {
+    fn test_create_conversion_van_der_grinten() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_van_der_grinten(
             1.0,
@@ -4495,7 +4496,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_i() -> Result<(), ProjError> {
+    fn test_create_conversion_wagner_i() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_i(
             1.0,
@@ -4511,7 +4512,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_ii() -> Result<(), ProjError> {
+    fn test_create_conversion_wagner_ii() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_ii(
             1.0,
@@ -4527,7 +4528,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_iii() -> Result<(), ProjError> {
+    fn test_create_conversion_wagner_iii() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_iii(
             1.0,
@@ -4544,7 +4545,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_iv() -> Result<(), ProjError> {
+    fn test_create_conversion_wagner_iv() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_iv(
             1.0,
@@ -4560,7 +4561,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_v() -> Result<(), ProjError> {
+    fn test_create_conversion_wagner_v() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_v(
             1.0,
@@ -4576,7 +4577,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_vi() -> Result<(), ProjError> {
+    fn test_create_conversion_wagner_vi() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_vi(
             1.0,
@@ -4592,7 +4593,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_wagner_vii() -> Result<(), ProjError> {
+    fn test_create_conversion_wagner_vii() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_wagner_vii(
             1.0,
@@ -4608,7 +4609,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_quadrilateralized_spherical_cube() -> Result<(), ProjError> {
+    fn test_create_conversion_quadrilateralized_spherical_cube() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_quadrilateralized_spherical_cube(
             1.0,
@@ -4625,7 +4626,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_spherical_cross_track_height() -> Result<(), ProjError> {
+    fn test_create_conversion_spherical_cross_track_height() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_spherical_cross_track_height(
             1.0,
@@ -4643,7 +4644,7 @@ mod test_context_advanced {
     }
 
     #[test]
-    fn test_create_conversion_equal_earth() -> Result<(), ProjError> {
+    fn test_create_conversion_equal_earth() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_equal_earth(
             1.0,
@@ -4659,7 +4660,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_vertical_perspective() -> Result<(), ProjError> {
+    fn test_create_conversion_vertical_perspective() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_vertical_perspective(
             1.0,
@@ -4678,7 +4679,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_pole_rotation_grib_convention() -> Result<(), ProjError> {
+    fn test_create_conversion_pole_rotation_grib_convention() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_pole_rotation_grib_convention(
             1.0,
@@ -4692,7 +4693,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_pole_rotation_netcdf_cf_convention() -> Result<(), ProjError> {
+    fn test_create_conversion_pole_rotation_netcdf_cf_convention() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_pole_rotation_netcdf_cf_convention(
             1.0,

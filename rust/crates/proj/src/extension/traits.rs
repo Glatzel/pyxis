@@ -1,6 +1,6 @@
 use core::ptr::null_mut;
 
-use crate::data_types::{ProjError, ProjErrorCode};
+use crate::data_types::ProjError;
 const NULL_PTR: *mut f64 = null_mut();
 /// A trait representing a mutable 4D coordinate (x, y, z, t) for use with PROJ
 /// FFI bindings.
@@ -133,12 +133,9 @@ where
                     t: unsafe { *t },
                 },
             }),
-            (x, y, z, t) => Err(ProjError::ProjError {
-                code: ProjErrorCode::Other,
-                message: format!(
-                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                ),
-            }),
+            (x, y, z, t) => Err(ProjError::new(format!(
+                "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
+            ))),
         }
     }
 }

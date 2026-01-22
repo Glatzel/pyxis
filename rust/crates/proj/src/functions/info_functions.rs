@@ -48,7 +48,7 @@ pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
         && src.filename.to_string().unwrap().as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
     {
-        return Err(ProjError {
+        return Err(ProjError::ProjError {
             code: ProjErrorCode::Other,
             message: format!("Invalid grid: {}", grid),
         });
@@ -84,7 +84,7 @@ pub fn init_info(initname: &str) -> Result<InitInfo, ProjError> {
         src.lastupdate.to_string().unwrap_or_default(),
     );
     if info.version() == "" {
-        return Err(ProjError {
+        return Err(ProjError::ProjError {
             code: ProjErrorCode::Other,
             message: format!("Invalid proj init file or name: {initname}"),
         });

@@ -14,18 +14,9 @@ pub(crate) fn new_test_ctx() -> Result<Context, ProjError> {
     let default_proj_data = if cfg!(target_os = "windows") {
         dunce::canonicalize(format!(
             "{workspace_root}/.pixi/envs/default/Library/share/proj"
-        ))
-        .map_err(|e| ProjError {
-            code: crate::data_types::ProjErrorCode::Other,
-            message: format!("{}", e),
-        })?
+        ))?
     } else {
-        dunce::canonicalize(format!("{workspace_root}/.pixi/envs/default/share/proj")).map_err(
-            |e| ProjError {
-                code: crate::data_types::ProjErrorCode::Other,
-                message: format!("{}", e),
-            },
-        )?
+        dunce::canonicalize(format!("{workspace_root}/.pixi/envs/default/share/proj"))?
     };
     ctx.set_database_path(&default_proj_data.join("proj.db"), None)?;
     ctx.set_search_paths(&[&default_proj_data])?;

@@ -299,7 +299,7 @@ impl Proj {
         new_method_name: Option<&str>,
     ) -> Result<Proj, ProjError> {
         if new_method_epsg_code.is_none() && new_method_name.is_none() {
-            return Err(ProjError {
+            return Err(ProjError::ProjError {
                 code: ProjErrorCode::Other,
                 message:
                     "At least one of `new_method_epsg_code` and  `new_method_name` must be set."

@@ -39,7 +39,7 @@ impl crate::Proj {
                 self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)?
             },
             (x, y, z, t) => {
-                return Err(ProjError {
+                return Err(ProjError::ProjError {
                     code: ProjErrorCode::Other,
                     message: format!(
                         "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
@@ -81,7 +81,7 @@ impl crate::Proj {
                 self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)?
             },
             (x, y, z, t) => {
-                return Err(ProjError {
+                return Err(ProjError::ProjError {
                     code: ProjErrorCode::Other,
                     message: format!(
                         "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
@@ -139,7 +139,7 @@ impl crate::Proj {
                 )?
             },
             (x, y, z, t) => {
-                return Err(ProjError {
+                return Err(ProjError::ProjError {
                     code: ProjErrorCode::Other,
                     message: format!(
                         "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
@@ -188,7 +188,7 @@ impl crate::Proj {
                 )?
             },
             (x, y, z, t) => {
-                return Err(ProjError {
+                return Err(ProjError::ProjError {
                     code: crate::data_types::ProjErrorCode::Other,
                     message: format!(
                         "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"

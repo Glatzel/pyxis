@@ -66,8 +66,9 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_user_writable_directory>
     pub fn get_user_writable_directory(&self, create: bool) -> Result<PathBuf, ProjError> {
-        let result =
-            unsafe { proj_sys::proj_context_get_user_writable_directory(self.ptr(), create as i32) };
+        let result = unsafe {
+            proj_sys::proj_context_get_user_writable_directory(self.ptr(), create as i32)
+        };
         check_result!(self);
         Ok(PathBuf::from(result.to_string().unwrap_or_default()))
     }

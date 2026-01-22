@@ -3467,12 +3467,8 @@ mod test_context_advanced {
             .clone()
             .create_from_database("EPSG", "4807", Category::Crs, false)?;
         let res = crs.crs_create_bound_crs_to_wgs84(None)?;
-        let base_crs = res
-            .get_source_crs()?
-            .expect("No base crs found");
-        let hub_crs = res
-            .get_target_crs()?
-            .expect("No hub crs found");
+        let base_crs = res.get_source_crs()?.expect("No base crs found");
+        let hub_crs = res.get_target_crs()?.expect("No hub crs found");
         let transf = res.crs_get_coordoperation()?;
         let bound_crs = ctx.crs_create_bound_crs(&base_crs, &hub_crs, &transf)?;
         let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -3722,7 +3718,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_azimuthal_equidistant()-> mischief::Result<()> {
+    fn test_create_conversion_azimuthal_equidistant() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_azimuthal_equidistant(
             1.0,
@@ -3756,7 +3752,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_createconversion_bonne() -> mischief::Result<()>{
+    fn test_createconversion_bonne() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_bonne(
             1.0,

@@ -303,9 +303,9 @@ impl Proj {
                 options.as_vec_ptr().as_ptr(),
             )
         }
-        .to_string();
+        .to_string()?;
         check_result!(self);
-        Ok(result.expect("Error"))
+        Ok(result)
     }
     ///Get a PROJ string representation of an object.
     ///

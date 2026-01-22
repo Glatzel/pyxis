@@ -1,4 +1,5 @@
-use num_enum::FromPrimitive;
+use envoy::EnvoyError;
+use num_enum::{FromPrimitive, TryFromPrimitive};
 use thiserror::Error;
 
 ///Three classes of errors are defined below. The belonging of a given error
@@ -68,9 +69,24 @@ pub enum ProjErrorCode {
     OtherNetworkError = proj_sys::PROJ_ERR_OTHER_NETWORK_ERROR as i32,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Error)]
-#[error("ProjError {code:?} [{}]: {message}",*.code as i32 )]
-pub struct ProjError {
-    pub code: ProjErrorCode,
-    pub message: String,
+#[derive(Debug, Error)]
+pub enum ProjError {
+    #[error("ProjError {code:?} [{}]: {message}",*.code as i32 )]
+    ProjError {
+        code: ProjErrorCode,
+        message: String,
+    },
+    #[error(transparent)]
+    EnvoyError(#[from] EnvoyError),
+    #[error(transparent)]
+    IoError(#[from] std::io::Error),
+    #[error(transparent)]
+    StrumParseError(#[from] strum::ParseError),
+    #[error("{}",.0)]
+    NumEnumTryFromPrimitiveError(String),
+}
+impl<T: TryFromPrimitive> From<num_enum::TryFromPrimitiveError<T>> for ProjError {
+    fn from(value: num_enum::TryFromPrimitiveError<T>) -> Self {
+        Self::NumEnumTryFromPrimitiveError(value.to_string())
+    }
 }

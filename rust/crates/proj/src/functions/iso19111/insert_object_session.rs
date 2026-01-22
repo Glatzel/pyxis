@@ -1,7 +1,6 @@
-use alloc::sync::Arc;
 use core::ptr;
 extern crate alloc;
-use envoy::{AsVecPtr, CStrListToVecString, ToCString, VecCString};
+use envoy::{AsVecPtr, PtrListToVecString, ToCString, ToVecCString, VecCString};
 
 use crate::data_types::ProjError;
 use crate::data_types::iso19111::InsertObjectSession;
@@ -22,10 +21,10 @@ impl Context {
     /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_create>
-    pub fn insert_object_session_create(self: &Arc<Self>) -> InsertObjectSession {
+    pub fn insert_object_session_create(&self) -> InsertObjectSession {
         InsertObjectSession {
-            ctx: self.clone(),
-            ptr: unsafe { proj_sys::proj_insert_object_session_create(self.ptr) },
+            arc_ctx_ptr: self.arc_ptr(),
+            ptr: unsafe { proj_sys::proj_insert_object_session_create(self.ptr()) },
         }
     }
 }
@@ -37,16 +36,10 @@ impl Drop for InsertObjectSession {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_destroy>
     fn drop(&mut self) {
-        unsafe { proj_sys::proj_insert_object_session_destroy(self.ctx.ptr, self.ptr) };
+        unsafe { proj_sys::proj_insert_object_session_destroy(self.arc_ctx_ptr.ptr(), self.ptr) };
     }
 }
 impl InsertObjectSession {
-    /// # See Also
-    ///
-    /// * [crate::Context::insert_object_session_create]
-    pub fn from_context(ctx: Arc<Context>) -> InsertObjectSession {
-        ctx.insert_object_session_create()
-    }
     ///Returns SQL statements needed to insert the passed object into the
     /// database.
     ///
@@ -94,20 +87,23 @@ impl InsertObjectSession {
         numeric_codes: bool,
         allowed_authorities: Option<&[&str]>,
     ) -> Result<Vec<String>, ProjError> {
-        let allowed_authorities: VecCString = allowed_authorities.into();
+        let allowed_authorities: VecCString = match allowed_authorities {
+            Some(v) => v.to_vec_cstring()?,
+            None => VecCString::new(),
+        };
         let ptr = unsafe {
             proj_sys::proj_get_insert_statements(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 object.ptr(),
-                authority.to_cstring().as_ptr(),
-                code.to_cstring().as_ptr(),
+                authority.to_cstring()?.as_ptr(),
+                code.to_cstring()?.as_ptr(),
                 numeric_codes as i32,
                 allowed_authorities.as_vec_ptr().as_ptr(),
                 ptr::null(),
             )
         };
-        let result = ptr.to_vec_string();
+        let result = ptr.to_vec_string()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
         }
@@ -116,7 +112,6 @@ impl InsertObjectSession {
 }
 #[cfg(test)]
 mod test {
-    use crate::data_types::iso19111::InsertObjectSession;
 
     #[test]
     fn test_get_insert_statements() -> mischief::Result<()> {
@@ -136,7 +131,7 @@ mod test {
                                ANGLEUNIT[\"degree\",0.0174532925199433]]]";
         println!("{wkt}");
         let crs = ctx.create_from_wkt(wkt, None, None)?;
-        let session = InsertObjectSession::from_context(ctx);
+        let session = ctx.insert_object_session_create();
         let statements = session.get_insert_statements(&crs, "HOBU", "XXXX", false, None)?;
         for i in statements.iter() {
             println!("{i}");

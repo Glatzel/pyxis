@@ -133,7 +133,7 @@ where
                     t: unsafe { *t },
                 },
             }),
-            (x, y, z, t) => Err(ProjError {
+            (x, y, z, t) => Err(ProjError::ProjError {
                 code: ProjErrorCode::Other,
                 message: format!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"

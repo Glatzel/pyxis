@@ -1,11 +1,10 @@
 use std::env;
 extern crate alloc;
-use alloc::sync::Arc;
 
 use crate::Context;
 use crate::data_types::ProjError;
 
-pub(crate) fn new_test_ctx() -> Result<Arc<Context>, ProjError> {
+pub(crate) fn new_test_ctx() -> Result<Context, ProjError> {
     clerk::init_log_with_level(clerk::LogLevel::TRACE);
     let ctx = crate::Context::new();
     ctx.set_log_level(crate::LogLevel::Trace)?;
@@ -15,18 +14,9 @@ pub(crate) fn new_test_ctx() -> Result<Arc<Context>, ProjError> {
     let default_proj_data = if cfg!(target_os = "windows") {
         dunce::canonicalize(format!(
             "{workspace_root}/.pixi/envs/default/Library/share/proj"
-        ))
-        .map_err(|e| ProjError {
-            code: crate::data_types::ProjErrorCode::Other,
-            message: format!("{}", e),
-        })?
+        ))?
     } else {
-        dunce::canonicalize(format!("{workspace_root}/.pixi/envs/default/share/proj")).map_err(
-            |e| ProjError {
-                code: crate::data_types::ProjErrorCode::Other,
-                message: format!("{}", e),
-            },
-        )?
+        dunce::canonicalize(format!("{workspace_root}/.pixi/envs/default/share/proj"))?
     };
     ctx.set_database_path(&default_proj_data.join("proj.db"), None)?;
     ctx.set_search_paths(&[&default_proj_data])?;

@@ -10,8 +10,8 @@ checksum = "c08606f8c3cbf4ce6ec8e28fb0014a2c086708fe954eaa885384a6165172e7e8"
 
 [[package]]
 name = "clerk"
-version = "0.0.33"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.33#5a8571187cedd089642131ca5df2ae3fc55cdb69"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#d543e27a7f6efde25b2951347cdec91ea80df809"
 
 [[package]]
 name = "crossbeam-deque"
@@ -165,9 +165,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.105"
+version = "1.0.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "535d180e0ecab6268a3e718bb9fd44db66bbbc256257165fc699dadf70d16fe7"
+checksum = "8fd00f0bb2e90d81d1044c2b32617f68fcb9fa3bb7640c23e9c748e53fb30934"
 dependencies = [
  "unicode-ident",
 ]

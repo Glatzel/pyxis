@@ -1,5 +1,6 @@
-use alloc::sync::Arc;
 extern crate alloc;
+use std::ffi::{CString, c_char};
+
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::ProjError;
@@ -46,10 +47,10 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn create(self: &Arc<Self>, definition: &str) -> Result<Proj, ProjError> {
-        let ptr = unsafe { proj_sys::proj_create(self.ptr, definition.to_cstring().as_ptr()) };
+    pub fn create(&self, definition: &str) -> Result<Proj, ProjError> {
+        let ptr = unsafe { proj_sys::proj_create(self.ptr(), definition.to_cstring()?.as_ptr()) };
         check_result!(self);
-        Proj::new(self, ptr)
+        Proj::new(self.arc_ptr(), ptr)
     }
     ///Create a transformation object, or a CRS object, with argc/argv-style
     /// initialization. For this application each parameter in the defining
@@ -65,20 +66,22 @@ impl crate::Context {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(self: &Arc<Self>, argv: &[&str]) -> Result<Proj, ProjError> {
-        let count = argv.len();
+    pub fn create_argv(&self, argv: &[&str]) -> Result<Proj, ProjError> {
+        let argv_cstr: Vec<CString> = argv
+            .iter()
+            .map(|s| s.to_cstring())
+            .collect::<Result<_, _>>()?;
+        let argv_ptrs: Vec<*mut c_char> = argv_cstr.iter().map(|s| s.as_ptr().cast_mut()).collect();
+
         let ptr = unsafe {
             proj_sys::proj_create_argv(
-                self.ptr,
-                count as i32,
-                argv.iter()
-                    .map(|s| s.to_cstring().into_raw())
-                    .collect::<Vec<_>>()
-                    .as_mut_ptr(),
+                self.ptr(),
+                argv_ptrs.len() as i32,
+                argv_ptrs.as_ptr().cast_mut(),
             )
         };
         check_result!(self);
-        Proj::new(self, ptr)
+        Proj::new(self.arc_ptr(), ptr)
     }
     ///Create a transformation object that is a pipeline between two known
     /// coordinate reference systems.
@@ -121,21 +124,21 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs>
     pub fn create_crs_to_crs(
-        self: &Arc<Self>,
+        &self,
         source_crs: &str,
         target_crs: &str,
         area: &crate::Area,
     ) -> Result<Proj, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
-                self.ptr,
-                source_crs.to_cstring().as_ptr(),
-                target_crs.to_cstring().as_ptr(),
+                self.ptr(),
+                source_crs.to_cstring()?.as_ptr(),
+                target_crs.to_cstring()?.as_ptr(),
                 area.ptr,
             )
         };
         check_result!(self);
-        Proj::new(self, ptr)
+        Proj::new(self.arc_ptr(), ptr)
     }
     ///Added in version 6.2.0.
     ///
@@ -186,7 +189,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_crs_to_crs_from_pj>
     pub fn create_crs_to_crs_from_pj(
-        self: &Arc<Self>,
+        &self,
         source_crs: crate::Proj,
         target_crs: crate::Proj,
         area: &crate::Area,
@@ -198,14 +201,14 @@ impl crate::Context {
     ) -> Result<Proj, ProjError> {
         let mut options = crate::ProjOptions::new(5);
         options
-            .with_or_skip(authority, "AUTHORITY")
-            .with_or_skip(accuracy, "ACCURACY")
-            .with_or_skip(allow_ballpark, "ALLOW_BALLPARK")
-            .with_or_skip(only_best, "ONLY_BEST")
-            .with_or_skip(force_over, "FORCE_OVER");
+            .with_or_skip(authority, "AUTHORITY")?
+            .with_or_skip(accuracy, "ACCURACY")?
+            .with_or_skip(allow_ballpark, "ALLOW_BALLPARK")?
+            .with_or_skip(only_best, "ONLY_BEST")?
+            .with_or_skip(force_over, "FORCE_OVER")?;
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs_from_pj(
-                self.ptr,
+                self.ptr(),
                 source_crs.ptr(),
                 target_crs.ptr(),
                 area.ptr,
@@ -213,7 +216,7 @@ impl crate::Context {
             )
         };
         check_result!(self);
-        Proj::new(self, ptr)
+        Proj::new(self.arc_ptr(), ptr)
     }
     ///Returns a PJ* object whose axis order is the one expected for
     /// visualization purposes.
@@ -230,12 +233,9 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
-    pub fn normalize_for_visualization(
-        self: &Arc<Self>,
-        obj: &crate::Proj,
-    ) -> Result<Proj, ProjError> {
-        let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr, obj.ptr()) };
-        Proj::new(self, ptr)
+    pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> Result<Proj, ProjError> {
+        let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr(), obj.ptr()) };
+        Proj::new(self.arc_ptr(), ptr)
     }
 }
 

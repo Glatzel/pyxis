@@ -406,8 +406,8 @@ checksum = "c3e64b0cc0439b12df2fa678eae89a1c56a529fd067a9115f7827f1fffd22b32"
 
 [[package]]
 name = "clerk"
-version = "0.0.33"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.33#5a8571187cedd089642131ca5df2ae3fc55cdb69"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#d543e27a7f6efde25b2951347cdec91ea80df809"
 dependencies = [
  "chrono",
  "owo-colors",
@@ -419,9 +419,9 @@ dependencies = [
 
 [[package]]
 name = "codspeed"
-version = "4.2.1"
+version = "4.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5f0d98d97fd75ca4489a1a0997820a6521531085e7c8a98941bd0e1264d567dd"
+checksum = "38c2eb3388ebe26b5a0ab6bf4969d9c4840143d7f6df07caa3cc851b0606cef6"
 dependencies = [
  "anyhow",
  "cc",
@@ -437,9 +437,9 @@ dependencies = [
 
 [[package]]
 name = "codspeed-criterion-compat"
-version = "4.2.1"
+version = "4.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d16fe2db207123f7b3a3b5cfff0c22f99469f7534145f3573f57f4c8a5653c2c"
+checksum = "e1e270597a1d1e183f86d1cc9f94f0133654ee3daf201c17903ee29363555dd7"
 dependencies = [
  "clap",
  "codspeed",
@@ -450,9 +450,9 @@ dependencies = [
 
 [[package]]
 name = "codspeed-criterion-compat-walltime"
-version = "4.2.1"
+version = "4.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b035c7f9846b143aeabb3833f5b584023eb97b43ecbff3d997db74c4372df2bd"
+checksum = "e6c2613d2fac930fe34456be76f9124ee0800bb9db2e7fd2d6c65b9ebe98a292"
 dependencies = [
  "anes",
  "cast",
@@ -784,8 +784,11 @@ dependencies = [
 
 [[package]]
 name = "envoy"
-version = "0.0.33"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.33#5a8571187cedd089642131ca5df2ae3fc55cdb69"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#d543e27a7f6efde25b2951347cdec91ea80df809"
+dependencies = [
+ "thiserror 2.0.18",
+]
 
 [[package]]
 name = "equivalent"
@@ -805,9 +808,9 @@ dependencies = [
 
 [[package]]
 name = "euclid"
-version = "0.22.11"
+version = "0.22.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad9cdb4b747e485a12abb0e6566612956c7a1bafa3bdb8d682c5b6d403589e48"
+checksum = "df61bf483e837f88d5c2291dcf55c67be7e676b3a51acc48db3a7b163b91ed63"
 dependencies = [
  "num-traits",
 ]
@@ -1465,7 +1468,7 @@ checksum = "8fe90c1150662e858c7d5f945089b7517b0a80d8bf7ba4b1b5ffc984e7230a5b"
 dependencies = [
  "hashbrown",
  "portable-atomic",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -1668,8 +1671,8 @@ dependencies = [
 
 [[package]]
 name = "mischief"
-version = "0.0.33"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.33#5a8571187cedd089642131ca5df2ae3fc55cdb69"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#d543e27a7f6efde25b2951347cdec91ea80df809"
 dependencies = [
  "mischief-macros",
  "owo-colors",
@@ -1682,8 +1685,8 @@ dependencies = [
 
 [[package]]
 name = "mischief-macros"
-version = "0.0.33"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.33#5a8571187cedd089642131ca5df2ae3fc55cdb69"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#d543e27a7f6efde25b2951347cdec91ea80df809"
 dependencies = [
  "quote",
  "syn 2.0.114",
@@ -2188,9 +2191,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.105"
+version = "1.0.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "535d180e0ecab6268a3e718bb9fd44db66bbbc256257165fc699dadf70d16fe7"
+checksum = "8fd00f0bb2e90d81d1044c2b32617f68fcb9fa3bb7640c23e9c748e53fb30934"
 dependencies = [
  "unicode-ident",
 ]
@@ -2209,7 +2212,7 @@ dependencies = [
  "proj-sys",
  "serde",
  "strum",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "tracing",
  "tracing-subscriber",
 ]
@@ -2355,7 +2358,7 @@ dependencies = [
  "kasuari",
  "lru",
  "strum",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "unicode-segmentation",
  "unicode-truncate",
  "unicode-width",
@@ -2414,26 +2417,26 @@ dependencies = [
 
 [[package]]
 name = "rax"
-version = "0.0.33"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.33#5a8571187cedd089642131ca5df2ae3fc55cdb69"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#d543e27a7f6efde25b2951347cdec91ea80df809"
 dependencies = [
  "async-trait",
  "clerk",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "tokio",
  "tokio-serial",
 ]
 
 [[package]]
 name = "rax-nmea"
-version = "0.0.33"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.33#5a8571187cedd089642131ca5df2ae3fc55cdb69"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#d543e27a7f6efde25b2951347cdec91ea80df809"
 dependencies = [
  "chrono",
  "clerk",
  "hashbrown",
  "rax",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -2473,7 +2476,7 @@ checksum = "a4e608c6638b9c18977b00b475ac1f28d14e84b27d8d42f70e0bf1e3dec127ac"
 dependencies = [
  "getrandom 0.2.17",
  "libredox",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -2763,8 +2766,8 @@ dependencies = [
 
 [[package]]
 name = "serialport-ext"
-version = "0.0.33"
-source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.33#5a8571187cedd089642131ca5df2ae3fc55cdb69"
+version = "0.0.37"
+source = "git+https://github.com/Glatzel/toolbox?tag=v0.0.37#d543e27a7f6efde25b2951347cdec91ea80df809"
 dependencies = [
  "clerk",
  "serialport",
@@ -3087,11 +3090,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.17"
+version = "2.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f63587ca0f12b72a0600bcba1d40081f830876000bb46dd2337a3051618f4fc8"
+checksum = "4288b5bcbc7920c07a1149a35cf9590a2aa808e0bc1eafaade0b80947865fbc4"
 dependencies = [
- "thiserror-impl 2.0.17",
+ "thiserror-impl 2.0.18",
 ]
 
 [[package]]
@@ -3107,9 +3110,9 @@ dependencies = [
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.17"
+version = "2.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ff15c8ecd7de3849db632e14d18d2571fa09dfc5ed93479bc4485c7a517c913"
+checksum = "ebc4ee7f67670e9b64d05fa4253e753e016c6c95ff35b89b7941d6b856dec1d5"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3387,7 +3390,7 @@ version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4064ed685c487dbc25bd3f0e9548f2e34bab9d18cefc700f9ec2dba74ba1138e"
 dependencies = [
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -4063,6 +4066,6 @@ dependencies = [
 
 [[package]]
 name = "zmij"
-version = "1.0.15"
+version = "1.0.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94f63c051f4fe3c1509da62131a678643c5b6fbdc9273b2b79d4378ebda003d2"
+checksum = "dfcd145825aace48cff44a8844de64bf75feec3080e0aa5cdbde72961ae51a65"

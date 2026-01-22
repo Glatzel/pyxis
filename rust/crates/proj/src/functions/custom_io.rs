@@ -1,15 +1,14 @@
-use alloc::sync::Arc;
 use core::ptr;
 use std::path::Path;
 extern crate alloc;
-use envoy::{AsVecPtr, ToCString, VecCString};
+use envoy::{AsVecPtr, ToCString, ToVecCString, VecCString};
 
 use crate::check_result;
 use crate::data_types::ProjError;
 
 ///Setting custom I/O functions
 impl crate::Context {
-    fn _set_fileapi(self: &Arc<Self>) { todo!() }
+    fn _set_fileapi(&self) { todo!() }
 
     ///Set the name of a custom SQLite3 VFS.
     ///
@@ -27,9 +26,9 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
-    pub fn set_sqlite3_vfs_name(self: &Arc<Self>, name: &str) -> Result<&Arc<Self>, ProjError> {
+    pub fn set_sqlite3_vfs_name(&self, name: &str) -> Result<&Self, ProjError> {
         unsafe {
-            proj_sys::proj_context_set_sqlite3_vfs_name(self.ptr, name.to_cstring().as_ptr());
+            proj_sys::proj_context_set_sqlite3_vfs_name(self.ptr(), name.to_cstring()?.as_ptr());
         };
         check_result!(self);
         Ok(self)
@@ -37,7 +36,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_file_finder>
-    fn _set_file_finder(self: &Arc<Self>) { todo!() }
+    fn _set_file_finder(&self) { todo!() }
     ///Sets search paths.
     ///
     ///Those search paths will be used whenever PROJ must open one of its
@@ -55,17 +54,17 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_search_paths>
-    pub fn set_search_paths(self: &Arc<Self>, paths: &[&Path]) -> Result<&Arc<Self>, ProjError> {
+    pub fn set_search_paths(&self, paths: &[&Path]) -> Result<&Self, ProjError> {
         clerk::debug!("search_paths:{:?}", paths);
         let len = paths.len();
         let paths: VecCString = paths
             .iter()
             .map(|p| p.to_str().unwrap())
             .collect::<Vec<_>>()
-            .into();
+            .to_vec_cstring()?;
         unsafe {
             proj_sys::proj_context_set_search_paths(
-                self.ptr,
+                self.ptr(),
                 len as i32,
                 paths.as_vec_ptr().as_ptr(),
             );
@@ -89,14 +88,11 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
-    pub fn set_ca_bundle_path(
-        self: &Arc<Self>,
-        path: Option<&Path>,
-    ) -> Result<&Arc<Self>, ProjError> {
-        let path = path.map(|s| s.to_str().unwrap().to_cstring());
+    pub fn set_ca_bundle_path(&self, path: Option<&Path>) -> Result<&Self, ProjError> {
+        let path = path.map(|s| s.to_str().unwrap().to_cstring()).transpose()?;
         unsafe {
             proj_sys::proj_context_set_ca_bundle_path(
-                self.ptr,
+                self.ptr(),
                 path.map_or(ptr::null(), |p| p.as_ptr()),
             );
         };

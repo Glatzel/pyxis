@@ -1,7 +1,6 @@
-use alloc::sync::Arc;
 use core::ptr;
 extern crate alloc;
-use envoy::{AsVecPtr, ToCString, VecCString};
+use envoy::{AsVecPtr, ToCString, ToVecCString};
 
 use crate::data_types::ProjError;
 use crate::data_types::iso19111::*;
@@ -26,25 +25,28 @@ impl Context {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_operation_factory_context>
     pub fn create_operation_factory_context(
-        self: &Arc<Self>,
+        &self,
         authority: Option<&str>,
-    ) -> OperationFactoryContext {
-        let authority = authority.map(|s| s.to_cstring());
-        OperationFactoryContext {
-            ctx: self.clone(),
+    ) -> Result<OperationFactoryContext, ProjError> {
+        let authority = authority.map(|s| s.to_cstring()).transpose()?;
+        Ok(OperationFactoryContext {
+            arc_ctx_ptr: self.arc_ptr(),
             ptr: unsafe {
                 proj_sys::proj_create_operation_factory_context(
-                    self.ptr,
+                    self.ptr(),
                     authority.map_or(ptr::null(), |s| s.as_ptr()),
                 )
             },
-        }
+        })
     }
 }
 impl OperationFactoryContext {
     ///# See Also
     /// * [`crate::Context::create_operation_factory_context`]
-    pub fn from_context(ctx: &Arc<Context>, authority: Option<&str>) -> OperationFactoryContext {
+    pub fn from_context(
+        ctx: &Context,
+        authority: Option<&str>,
+    ) -> Result<OperationFactoryContext, ProjError> {
         ctx.create_operation_factory_context(authority)
     }
     ///Set the desired accuracy of the resulting coordinate transformations.
@@ -59,7 +61,7 @@ impl OperationFactoryContext {
     pub fn set_desired_accuracy(&self, accuracy: f64) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_desired_accuracy(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 accuracy,
             );
@@ -91,7 +93,7 @@ impl OperationFactoryContext {
     ) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_area_of_interest(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 west_lon_degree,
                 south_lat_degree,
@@ -111,15 +113,15 @@ impl OperationFactoryContext {
     ///  # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_area_of_interest_name>
-    pub fn set_area_of_interest_name(&self, area_name: &str) -> &Self {
+    pub fn set_area_of_interest_name(&self, area_name: &str) -> Result<&Self, ProjError> {
         unsafe {
             proj_sys::proj_operation_factory_context_set_area_of_interest_name(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
-                area_name.to_cstring().as_ptr(),
+                area_name.to_cstring()?.as_ptr(),
             );
         }
-        self
+        Ok(self)
     }
     ///Set how source and target CRS extent should be used when considering if
     /// a transformation can be used (only takes effect if no area of interest
@@ -137,7 +139,7 @@ impl OperationFactoryContext {
     pub fn set_crs_extent_use(&self, extent_use: CrsExtentUse) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_crs_extent_use(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 extent_use as u32,
             );
@@ -160,7 +162,7 @@ impl OperationFactoryContext {
     pub fn set_spatial_criterion(&self, criterion: SpatialCriterion) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_spatial_criterion(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 criterion as u32,
             );
@@ -181,7 +183,7 @@ impl OperationFactoryContext {
     pub fn set_grid_availability_use(&self, grid_availability_use: GridAvailabilityUse) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_grid_availability_use(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 grid_availability_use as u32,
             );
@@ -203,7 +205,7 @@ impl OperationFactoryContext {
     pub fn set_use_proj_alternative_grid_names(&self, use_proj_names: bool) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_use_proj_alternative_grid_names(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 use_proj_names as i32,
             );
@@ -237,7 +239,7 @@ impl OperationFactoryContext {
     ) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_allow_use_intermediate_crs(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 proj_intermediate_crs_use as u32,
             );
@@ -256,16 +258,19 @@ impl OperationFactoryContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allowed_intermediate_crs>
-    pub fn set_allowed_intermediate_crs(&self, list_of_auth_name_codes: &[&str]) -> &Self {
-        let list_of_auth_name_codes: VecCString = list_of_auth_name_codes.into();
+    pub fn set_allowed_intermediate_crs(
+        &self,
+        list_of_auth_name_codes: &[&str],
+    ) -> Result<&Self, ProjError> {
+        let list_of_auth_name_codes = list_of_auth_name_codes.to_vec_cstring()?;
         unsafe {
             proj_sys::proj_operation_factory_context_set_allowed_intermediate_crs(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 list_of_auth_name_codes.as_vec_ptr().as_ptr(),
             );
         }
-        self
+        Ok(self)
     }
     /// Set whether transformations that are superseded (but not deprecated)
     /// should be discarded.
@@ -280,7 +285,7 @@ impl OperationFactoryContext {
     pub fn set_discard_superseded(&self, discard: bool) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_discard_superseded(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 discard as i32,
             );
@@ -299,7 +304,7 @@ impl OperationFactoryContext {
     pub fn set_allow_ballpark_transformations(&self, allow: bool) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_allow_ballpark_transformations(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 allow as i32,
             );
@@ -328,13 +333,13 @@ impl OperationFactoryContext {
     ) -> Result<ProjObjList, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
-                self.ctx.ptr,
+                self.arc_ctx_ptr.ptr(),
                 source_crs.ptr(),
                 target_crs.ptr(),
                 self.ptr,
             )
         };
-        ProjObjList::new(&self.ctx, ptr)
+        ProjObjList::new(self.arc_ctx_ptr.clone(), ptr)
     }
 }
 impl Drop for OperationFactoryContext {
@@ -355,11 +360,11 @@ mod test {
     #[test]
     fn test_settings() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
-        let factory = OperationFactoryContext::from_context(&ctx, None);
+        let factory = OperationFactoryContext::from_context(&ctx, None)?;
         factory
             .set_desired_accuracy(1.0)
             .set_area_of_interest(-60.0, 90.0, 60.0, 90.0)
-            .set_area_of_interest_name("area_name")
+            .set_area_of_interest_name("area_name")?
             .set_crs_extent_use(CrsExtentUse::Both)
             .set_spatial_criterion(SpatialCriterion::PartialIntersection)
             .set_use_proj_alternative_grid_names(false)
@@ -372,7 +377,7 @@ mod test {
     #[test]
     fn test_create_operations() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
-        let factory = OperationFactoryContext::from_context(&ctx, None);
+        let factory = OperationFactoryContext::from_context(&ctx, None)?;
         let source_crs = ctx.create_from_database(
             "EPSG",
             "4267",

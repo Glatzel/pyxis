@@ -28,7 +28,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
     pub fn set_sqlite3_vfs_name(&self, name: &str) -> Result<&Self, ProjError> {
         unsafe {
-            proj_sys::proj_context_set_sqlite3_vfs_name(*self.ptr, name.to_cstring()?.as_ptr());
+            proj_sys::proj_context_set_sqlite3_vfs_name(self.ptr(), name.to_cstring()?.as_ptr());
         };
         check_result!(self);
         Ok(self)
@@ -64,7 +64,7 @@ impl crate::Context {
             .to_vec_cstring()?;
         unsafe {
             proj_sys::proj_context_set_search_paths(
-                *self.ptr,
+                self.ptr(),
                 len as i32,
                 paths.as_vec_ptr().as_ptr(),
             );
@@ -92,7 +92,7 @@ impl crate::Context {
         let path = path.map(|s| s.to_str().unwrap().to_cstring()).transpose()?;
         unsafe {
             proj_sys::proj_context_set_ca_bundle_path(
-                *self.ptr,
+                self.ptr(),
                 path.map_or(ptr::null(), |p| p.as_ptr()),
             );
         };

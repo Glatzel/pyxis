@@ -728,17 +728,17 @@ readonly_struct!(
 );
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct InsertObjectSession {
-    pub(crate) ctx_ptr: Arc<ContextPtr>,
+    pub(crate) arc_ctx_ptr: Arc<ContextPtr>,
     pub(crate) ptr: *mut proj_sys::PJ_INSERT_SESSION,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct OperationFactoryContext {
-    pub(crate) ctx_ptr: Arc<ContextPtr>,
+    pub(crate) arc_ctx_ptr: Arc<ContextPtr>,
     pub(crate) ptr: *mut proj_sys::PJ_OPERATION_FACTORY_CONTEXT,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ProjObjList {
-    pub(crate) ctx_ptr: Arc<ContextPtr>,
+    pub(crate) arc_ctx_ptr: Arc<ContextPtr>,
     ptr: *mut proj_sys::PJ_OBJ_LIST,
     count: usize,
     pub(crate) _owned_cstrings: OwnedCStrings,
@@ -753,7 +753,7 @@ impl ProjObjList {
         check_result!(count < 1, "PJ_OBJ_LIST count 0.");
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
-            ctx_ptr,
+            arc_ctx_ptr: ctx_ptr,
             ptr,
             count: count as usize,
             _owned_cstrings: OwnedCStrings::new(),
@@ -771,7 +771,7 @@ impl ProjObjList {
         check_result!(count < 1, "PJ_OBJ_LIST count 0.");
         clerk::debug!("pj_obj_list count: {count}");
         Ok(ProjObjList {
-            ctx_ptr,
+            arc_ctx_ptr: ctx_ptr,
             ptr,
             count: count as usize,
             _owned_cstrings: owned_cstrings,
@@ -786,9 +786,10 @@ impl ProjObjList {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
     pub fn get(&self, index: usize) -> Result<Proj, ProjError> {
         check_result!(index > self.count, "Error");
-        let ptr = unsafe { proj_sys::proj_list_get(*self.ctx_ptr, self.ptr, index as i32) };
+        let ptr =
+            unsafe { proj_sys::proj_list_get(self.arc_ctx_ptr.ptr(), self.ptr, index as i32) };
 
-        Proj::new_with_owned_cstrings(self.ctx_ptr.clone(), ptr, self._owned_cstrings.clone())
+        Proj::new_with_owned_cstrings(self.arc_ctx_ptr.clone(), ptr, self._owned_cstrings.clone())
     }
     ///Return the number of objects in the result set.
     ///

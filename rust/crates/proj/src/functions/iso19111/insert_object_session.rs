@@ -23,8 +23,8 @@ impl Context {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_create>
     pub fn insert_object_session_create(&self) -> InsertObjectSession {
         InsertObjectSession {
-            ctx_ptr: self.ptr.clone(),
-            ptr: unsafe { proj_sys::proj_insert_object_session_create(*self.ptr) },
+            arc_ctx_ptr: self.arc_ptr(),
+            ptr: unsafe { proj_sys::proj_insert_object_session_create(self.ptr()) },
         }
     }
 }
@@ -36,7 +36,7 @@ impl Drop for InsertObjectSession {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_destroy>
     fn drop(&mut self) {
-        unsafe { proj_sys::proj_insert_object_session_destroy(*self.ctx_ptr, self.ptr) };
+        unsafe { proj_sys::proj_insert_object_session_destroy(self.arc_ctx_ptr.ptr(), self.ptr) };
     }
 }
 impl InsertObjectSession {
@@ -93,7 +93,7 @@ impl InsertObjectSession {
         };
         let ptr = unsafe {
             proj_sys::proj_get_insert_statements(
-                *self.ctx_ptr,
+                self.arc_ctx_ptr.ptr(),
                 self.ptr,
                 object.ptr(),
                 authority.to_cstring()?.as_ptr(),
@@ -112,7 +112,6 @@ impl InsertObjectSession {
 }
 #[cfg(test)]
 mod test {
-    use crate::data_types::iso19111::InsertObjectSession;
 
     #[test]
     fn test_get_insert_statements() -> mischief::Result<()> {

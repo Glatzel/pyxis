@@ -51,7 +51,7 @@ impl crate::Context {
 
         let result = unsafe {
             proj_sys::proj_context_set_database_path(
-                *self.ptr,
+                self.ptr(),
                 db_path.to_str().unwrap().to_cstring()?.as_ptr(),
                 aux_db_paths_ptr.map_or(ptr::null(), |ptr| ptr.as_ptr()),
                 ptr::null(),
@@ -70,7 +70,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_path>
     pub fn get_database_path(&self) -> PathBuf {
         PathBuf::from(
-            unsafe { proj_sys::proj_context_get_database_path(*self.ptr) }
+            unsafe { proj_sys::proj_context_get_database_path(self.ptr()) }
                 .to_string()
                 .unwrap_or_default(),
         )
@@ -90,7 +90,7 @@ impl crate::Context {
     ) -> Result<Option<String>, ProjError> {
         Ok(unsafe {
             proj_sys::proj_context_get_database_metadata(
-                *self.ptr,
+                self.ptr(),
                 key.as_ref().to_cstring()?.as_ptr(),
             )
         }
@@ -107,7 +107,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
     pub fn get_database_structure(&self) -> Result<Vec<String>, ProjError> {
-        let ptr = unsafe { proj_sys::proj_context_get_database_structure(*self.ptr, ptr::null()) };
+        let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr(), ptr::null()) };
         let out_vec = ptr.to_vec_string()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
@@ -121,7 +121,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
     pub fn guess_wkt_dialect(&self, wkt: &str) -> Result<GuessedWktDialect, ProjError> {
         GuessedWktDialect::try_from(unsafe {
-            proj_sys::proj_context_guess_wkt_dialect(*self.ptr, wkt.to_cstring()?.as_ptr())
+            proj_sys::proj_context_guess_wkt_dialect(self.ptr(), wkt.to_cstring()?.as_ptr())
         })
         .map_err(|e| ProjError {
             code: crate::data_types::ProjErrorCode::Other,
@@ -167,7 +167,7 @@ impl crate::Context {
         let mut out_grammar_errors: *mut *mut c_char = std::ptr::null_mut();
         let ptr = unsafe {
             proj_sys::proj_create_from_wkt(
-                *self.ptr,
+                self.ptr(),
                 wkt.to_cstring()?.as_ptr(),
                 options.as_vec_ptr().as_ptr(),
                 &mut out_warnings,
@@ -182,7 +182,7 @@ impl crate::Context {
             .to_vec_string()
             .map(|e| e.iter().for_each(|e| clerk::warn!("{e}")));
 
-        Proj::new(self.ptr.clone(), ptr)
+        Proj::new(self.arc_ptr(), ptr)
     }
     ///Instantiate an object from a database lookup.
     ///
@@ -210,7 +210,7 @@ impl crate::Context {
     ) -> Result<Proj, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_create_from_database(
-                *self.ptr,
+                self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 code.to_cstring()?.as_ptr(),
                 category as u32,
@@ -218,7 +218,7 @@ impl crate::Context {
                 ptr::null(),
             )
         };
-        Proj::new(self.ptr.clone(), ptr)
+        Proj::new(self.arc_ptr(), ptr)
     }
     ///Get information for a unit of measure from a database lookup.
     ///
@@ -240,7 +240,7 @@ impl crate::Context {
         let mut category: *const std::ffi::c_char = std::ptr::null();
         let result = unsafe {
             proj_sys::proj_uom_get_info_from_database(
-                *self.ptr,
+                self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 code.to_cstring()?.as_ptr(),
                 &mut name,
@@ -277,7 +277,7 @@ impl crate::Context {
         let mut available: i32 = i32::default();
         let result = unsafe {
             proj_sys::proj_grid_get_info_from_database(
-                *self.ptr,
+                self.ptr(),
                 grid_name.to_cstring()?.as_ptr(),
                 &mut full_name,
                 &mut package_name,
@@ -319,7 +319,7 @@ impl crate::Context {
     ) -> Result<Vec<String>, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_get_geoid_models_from_database(
-                *self.ptr,
+                self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 code.to_cstring()?.as_ptr(),
                 ptr::null(),
@@ -338,7 +338,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_authorities_from_database>
     pub fn get_authorities_from_database(&self) -> Result<Vec<String>, ProjError> {
-        let ptr = unsafe { proj_sys::proj_get_authorities_from_database(*self.ptr) };
+        let ptr = unsafe { proj_sys::proj_get_authorities_from_database(self.ptr()) };
         check_result!(ptr.is_null(), "Error");
         let out_vec = ptr.to_vec_string()?;
         unsafe {
@@ -366,7 +366,7 @@ impl crate::Context {
     ) -> Result<Vec<String>, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_get_codes_from_database(
-                *self.ptr,
+                self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 proj_type as u32,
                 allow_deprecated as i32,
@@ -398,7 +398,7 @@ impl crate::Context {
         let mut out_result_count = i32::default();
         let ptr = unsafe {
             proj_sys::proj_get_celestial_body_list_from_database(
-                *self.ptr,
+                self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 &mut out_result_count,
             )
@@ -448,7 +448,7 @@ impl crate::Context {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
-                *self.ptr,
+                self.ptr(),
                 owned.push_option(auth_name)?,
                 params.map_or(ptr::null(), |p| {
                     let types: Vec<u32> = p.types().to_owned().iter().map(|f| *f as u32).collect();
@@ -524,7 +524,7 @@ impl crate::Context {
         let mut out_result_count = i32::default();
         let ptr = unsafe {
             proj_sys::proj_get_units_from_database(
-                *self.ptr,
+                self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 category.as_ref().to_cstring()?.as_ptr(),
                 allow_deprecated as i32,

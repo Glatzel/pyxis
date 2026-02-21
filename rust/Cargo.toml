@@ -47,6 +47,7 @@ tokio-serial = "5.4.5"
 toml = "1.0"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
+insta = "1.46.1"
 
 [profile.release]
 codegen-units = 1

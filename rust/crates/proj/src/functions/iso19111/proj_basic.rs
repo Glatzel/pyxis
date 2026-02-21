@@ -1113,7 +1113,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let name = pj.get_name().expect("No name");
         println!("{name}");
-        assert_eq!(name, "WGS 84");
+        insta::assert_snapshot!(name, @"");
         Ok(())
     }
     #[test]
@@ -1122,7 +1122,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let id_auth_name = pj.get_id_auth_name(0).expect("No id_auth_name");
         println!("{id_auth_name}");
-        assert_eq!(id_auth_name, "EPSG");
+        insta::assert_snapshot!(id_auth_name,@"");
         Ok(())
     }
     #[test]
@@ -1131,7 +1131,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let id = pj.get_id_code(0).expect("No id_code");
         println!("{id}");
-        assert_eq!(id, "4326");
+        insta::assert_snapshot!(id,@"");
         Ok(())
     }
     #[test]
@@ -1139,7 +1139,7 @@ mod test_proj_basic {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let remarks = pj.get_remarks();
-        println!("{remarks}");
+        insta::assert_snapshot!(remarks);
         Ok(())
     }
     #[test]
@@ -1156,7 +1156,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let scope = pj.get_scope().expect("No scope");
         println!("{scope}");
-        assert_eq!(scope, "Horizontal component of 3D system.");
+        insta::assert_snapshot!(scope);
         Ok(())
     }
     #[test]
@@ -1165,7 +1165,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let scope = pj.get_scope_ex(0).expect("No scope");
         println!("{scope}");
-        assert_eq!(scope, "Horizontal component of 3D system.");
+        insta::assert_snapshot!(scope);
         Ok(())
     }
     #[test]
@@ -1200,7 +1200,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("WGS 84"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -1280,7 +1280,7 @@ mod test_proj_basic {
         let geodetic = pj.crs_get_geodetic_crs()?;
         let wkt = geodetic.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("4326"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -1291,7 +1291,7 @@ mod test_proj_basic {
         let horizontal = pj.crs_get_horizontal_datum()?;
         let wkt = horizontal.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("6326"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -1317,7 +1317,7 @@ mod test_proj_basic {
         let pj = compound.crs_get_sub_crs(0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("NAD83"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -1397,7 +1397,7 @@ mod test_proj_basic {
         let cs = pj.crs_get_coordinate_system()?;
         let wkt = cs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("9122"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -1425,13 +1425,7 @@ mod test_proj_basic {
         let cs = pj.crs_get_coordinate_system()?;
         let info = cs.cs_get_axis_info(1)?;
         println!("{info:?}");
-        assert_eq!(info.name(), "Geodetic longitude");
-        assert_eq!(info.abbrev(), "Lon");
-        assert_eq!(info.direction(), &AxisDirection::East);
-        assert_eq!(info.unit_conv_factor(), &0.017453292519943295);
-        assert_eq!(info.unit_name(), "degree");
-        assert_eq!(info.unit_auth_name(), "EPSG");
-        assert_eq!(info.unit_code(), "9122");
+        insta::assert_debug_snapshot!(info);
         Ok(())
     }
     #[test]
@@ -1441,7 +1435,7 @@ mod test_proj_basic {
         let ellps = pj.get_ellipsoid()?;
         let wkt = ellps.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("7030"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -1470,7 +1464,7 @@ mod test_proj_basic {
         let meridian = pj.get_prime_meridian()?;
         let wkt = meridian.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("8901"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -1480,10 +1474,7 @@ mod test_proj_basic {
         let meridian = pj.get_prime_meridian()?;
         let params = meridian.prime_meridian_get_parameters()?;
         println!("{params:?}");
-        assert_eq!(
-            format!("{params:?}"),
-            "PrimeMeridianParameters { longitude: 0.0, unit_conv_factor: 0.017453292519943295, unit_name: \"degree\" }"
-        );
+        insta::assert_debug_snapshot!(params);
         Ok(())
     }
     #[test]
@@ -1493,7 +1484,7 @@ mod test_proj_basic {
         let op = pj.crs_get_coordoperation()?;
         let wkt = op.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("16031"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -1503,10 +1494,7 @@ mod test_proj_basic {
         let op = pj.crs_get_coordoperation()?;
         let info = op.coordoperation_get_method_info()?;
         println!("{info:?}");
-        assert_eq!(
-            format!("{info:?}"),
-            "CoordOperationMethodInfo { method_name: \"Transverse Mercator\", method_auth_name: \"EPSG\", method_code: \"9807\" }"
-        );
+        insta::assert_debug_snapshot!(info);
         Ok(())
     }
     #[test]
@@ -1581,7 +1569,7 @@ mod test_proj_basic {
         let pj = ctx.create_from_database("EPSG", "1312", Category::CoordinateOperation, true)?;
         let grid = pj.coordoperation_get_grid_used(0)?;
         println!("{grid:?}");
-        assert!(format!("{grid:?}").contains("ca_nrc_ntv1_can.tif"));
+        insta::assert_snapshot!(format!("{grid:?}"));
         Ok(())
     }
     #[test]
@@ -1619,7 +1607,7 @@ mod test_proj_basic {
         let inversed = op.coordoperation_create_inverse()?;
         let wkt = inversed.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("16031"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -1653,7 +1641,7 @@ mod test_proj_basic {
             .get(0)?
             .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("GDA94 to GDA2020"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -1663,7 +1651,7 @@ mod test_proj_basic {
         let new = pj.coordinate_metadata_create(123.4)?;
         let wkt = new.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}",);
-        assert!(wkt.contains("123.4"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]

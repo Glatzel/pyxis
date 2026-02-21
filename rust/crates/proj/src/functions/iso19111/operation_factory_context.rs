@@ -391,7 +391,15 @@ mod test {
             ops.get(0)?
                 .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?
         );
-
+        insta::assert_snapshot!(ops.get(0)?.as_wkt(
+            WktType::Wkt2_2019,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None
+        )?);
         Ok(())
     }
 }

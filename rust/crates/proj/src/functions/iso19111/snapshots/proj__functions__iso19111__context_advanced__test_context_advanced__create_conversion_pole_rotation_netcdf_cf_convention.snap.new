@@ -1,0 +1,16 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+assertion_line: 4707
+expression: wkt
+---
+CONVERSION["Pole rotation (netCDF CF convention)",
+    METHOD["Pole rotation (netCDF CF convention)"],
+    PARAMETER["Grid north pole latitude (netCDF CF convention)",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Grid north pole longitude (netCDF CF convention)",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["North pole grid longitude (netCDF CF convention)",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]]]

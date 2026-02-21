@@ -571,7 +571,6 @@ impl crate::Context {
 
 #[cfg(test)]
 mod test {
-    use proj_sys::{PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, PROJ_VERSION_PATCH};
     use strum::IntoEnumIterator;
 
     use super::*;
@@ -593,10 +592,7 @@ mod test {
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)?
             .expect("invalid element");
-        assert_eq!(
-            data,
-            format!("{PROJ_VERSION_MAJOR}.{PROJ_VERSION_MINOR}.{PROJ_VERSION_PATCH}")
-        );
+        insta::assert_snapshot!(data);
         Ok(())
     }
     #[test]
@@ -604,10 +600,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let structure = ctx.get_database_structure()?;
         println!("{}", structure.first().expect("invalid element"));
-        assert_eq!(
-            structure.first().expect("invalid element"),
-            "CREATE TABLE metadata(\n    key TEXT NOT NULL PRIMARY KEY CHECK (length(key) >= 1),\n    value TEXT NOT NULL\n) WITHOUT ROWID;"
-        );
+        insta::assert_snapshot!(structure.first().expect("invalid element"));
         Ok(())
     }
 
@@ -644,7 +637,7 @@ mod test {
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("32631"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -652,9 +645,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.uom_get_info_from_database("EPSG", "9102")?;
         println!("{info:?}");
-        assert_eq!(info.name(), "degree");
-        assert_eq!(info.conv_factor(), &0.017453292519943295);
-        assert_eq!(info.category(), &UomCategory::Angular);
+        insta::assert_debug_snapshot!(info,@"");
         Ok(())
     }
     #[test]

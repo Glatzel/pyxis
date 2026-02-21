@@ -28,6 +28,7 @@ crossterm = "0.29.0"
 directories = "6.0.0"
 dunce = "1.0.5"
 float-cmp = "0.10.0"
+insta = "1.46.1"
 jsonschema = "0.42"
 libc = "0.2"
 num-traits = "0.2.19"
@@ -47,7 +48,6 @@ tokio-serial = "5.4.5"
 toml = "1.0"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
-insta = "1.46.1"
 
 [profile.release]
 codegen-units = 1

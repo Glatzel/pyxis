@@ -1,0 +1,10 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+VERTCRS["myVertCRS",
+    VDATUM["myVertDatum"],
+    CS[vertical,1],
+        AXIS["gravity-related height (H)",up,
+            LENGTHUNIT["metre",1,
+                ID["EPSG",9001]]]]

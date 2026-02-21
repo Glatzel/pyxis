@@ -1,0 +1,15 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["Pole rotation (GRIB convention)",
+    METHOD["Pole rotation (GRIB convention)"],
+    PARAMETER["Latitude of the southern pole (GRIB convention)",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Longitude of the southern pole (GRIB convention)",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Axis rotation (GRIB convention)",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]]]

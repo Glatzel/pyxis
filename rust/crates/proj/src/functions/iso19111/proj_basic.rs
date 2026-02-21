@@ -1113,7 +1113,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let name = pj.get_name().expect("No name");
         println!("{name}");
-        insta::assert_snapshot!(name, @"");
+        insta::assert_snapshot!(name, @"WGS 84");
         Ok(())
     }
     #[test]
@@ -1122,7 +1122,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let id_auth_name = pj.get_id_auth_name(0).expect("No id_auth_name");
         println!("{id_auth_name}");
-        insta::assert_snapshot!(id_auth_name,@"");
+        insta::assert_snapshot!(id_auth_name,@"EPSG");
         Ok(())
     }
     #[test]
@@ -1131,7 +1131,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4326")?;
         let id = pj.get_id_code(0).expect("No id_code");
         println!("{id}");
-        insta::assert_snapshot!(id,@"");
+        insta::assert_snapshot!(id,@"4326");
         Ok(())
     }
     #[test]

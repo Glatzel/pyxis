@@ -1,0 +1,25 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["Equidistant Conic",
+    METHOD["Equidistant Conic",
+        ID["EPSG",1119]],
+    PARAMETER["Latitude of false origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8821]],
+    PARAMETER["Longitude of false origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8822]],
+    PARAMETER["Latitude of 1st standard parallel",0,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8823]],
+    PARAMETER["Latitude of 2nd standard parallel",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8824]],
+    PARAMETER["Easting at false origin",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8826]],
+    PARAMETER["Northing at false origin",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8827]]]

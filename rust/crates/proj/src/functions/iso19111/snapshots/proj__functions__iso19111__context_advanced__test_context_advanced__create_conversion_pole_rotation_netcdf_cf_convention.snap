@@ -1,6 +1,5 @@
 ---
 source: crates/proj/src/functions/iso19111/context_advanced.rs
-assertion_line: 4707
 expression: wkt
 ---
 CONVERSION["Pole rotation (netCDF CF convention)",

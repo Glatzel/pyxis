@@ -1,0 +1,19 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["Lambert Cylindrical Equal Area (Spherical)",
+    METHOD["Lambert Cylindrical Equal Area (Spherical)",
+        ID["EPSG",9834]],
+    PARAMETER["Latitude of 1st standard parallel",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8823]],
+    PARAMETER["Longitude of natural origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8802]],
+    PARAMETER["False easting",0,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8806]],
+    PARAMETER["False northing",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8807]]]

@@ -1,0 +1,11 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CS[Cartesian,2],
+    AXIS["(E)",east,
+        ORDER[1],
+        LENGTHUNIT["",1]],
+    AXIS["(N)",north,
+        ORDER[2],
+        LENGTHUNIT["",1]]

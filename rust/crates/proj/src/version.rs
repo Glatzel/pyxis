@@ -57,6 +57,6 @@ mod test {
     #[test]
     fn test_proj_version_number() {
         at_least_version(PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, 0);
-        insta::assert_snapshot!(PROJ_VERSION_NUMBER,@"")
+        insta::assert_snapshot!(PROJ_VERSION_NUMBER,@"90701")
     }
 }

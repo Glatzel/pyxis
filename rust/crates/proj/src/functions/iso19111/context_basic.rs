@@ -645,7 +645,13 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.uom_get_info_from_database("EPSG", "9102")?;
         println!("{info:?}");
-        insta::assert_debug_snapshot!(info,@"");
+        insta::assert_debug_snapshot!(info,@r#"
+        UomInfo {
+            name: "degree",
+            conv_factor: 0.017453292519943295,
+            category: Angular,
+        }
+        "#);
         Ok(())
     }
     #[test]

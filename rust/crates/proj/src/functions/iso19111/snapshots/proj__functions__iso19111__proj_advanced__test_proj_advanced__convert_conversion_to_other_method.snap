@@ -1,0 +1,19 @@
+---
+source: crates/proj/src/functions/iso19111/proj_advanced.rs
+expression: wkt
+---
+CONVERSION["Mercator (variant B)",
+    METHOD["Mercator (variant B)",
+        ID["EPSG",9805]],
+    PARAMETER["Latitude of 1st standard parallel",8.13653121977138,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8823]],
+    PARAMETER["Longitude of natural origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8802]],
+    PARAMETER["False easting",2,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8806]],
+    PARAMETER["False northing",3,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8807]]]

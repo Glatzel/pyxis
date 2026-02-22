@@ -5,7 +5,9 @@ expression: wkt
 CS[Cartesian,2],
     AXIS["(E)",east,
         ORDER[1],
-        LENGTHUNIT["",1]],
+        LENGTHUNIT["metre",1,
+            ID["EPSG",9001]]],
     AXIS["(N)",north,
         ORDER[2],
-        LENGTHUNIT["",1]]
+        LENGTHUNIT["metre",1,
+            ID["EPSG",9001]]]

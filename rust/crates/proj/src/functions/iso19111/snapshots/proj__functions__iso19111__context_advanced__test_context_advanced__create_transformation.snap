@@ -33,7 +33,7 @@ COORDINATEOPERATION["transf",
                     ANGLEUNIT["degree",0.0174532925199433]]]],
     METHOD["method",
         ID["method auth","method code"]],
-    PARAMETER["transf auth",0.99,
+    PARAMETER["conv code",0.99,
         SCALEUNIT["unnamed",1]],
     INTERPOLATIONCRS[
         GEOGCRS["WGS 84",

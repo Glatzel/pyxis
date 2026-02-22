@@ -3112,8 +3112,7 @@ mod test_context_advanced {
     #[test]
     fn test_create_cartesian_2d_cs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj =
-            ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, Some("Degree"), 1.0)?;
+        let pj: Proj = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 1.0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
         insta::assert_snapshot!(wkt);

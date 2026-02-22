@@ -450,7 +450,7 @@ impl crate::Context {
             "At least one of `auth_name` and  `params` must be set."
         );
         let mut out_result_count = i32::default();
-        let mut owned = OwnedCStrings::with_capacity(1);
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr(),
@@ -468,10 +468,7 @@ impl crate::Context {
                         east_lon_degree: *p.east_lon_degree(),
                         north_lat_degree: *p.north_lat_degree(),
                         allow_deprecated: *p.allow_deprecated() as i32,
-                        celestial_body_name: p
-                            .celestial_body_name()
-                            .clone()
-                            .map_or(ptr::null(), |s| s.as_ptr()),
+                        celestial_body_name: owned.push_option(p.celestial_body_name().to_owned()).unwrap(),
                     }
                 }),
                 &mut out_result_count,

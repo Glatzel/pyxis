@@ -25,12 +25,15 @@ impl Context {
     ) -> Result<Proj, ProjError> {
         let axis_count = axis.len();
         let mut axis_vec: Vec<proj_sys::PJ_AXIS_DESCRIPTION> = Vec::with_capacity(axis_count);
+        let mut owned_string = OwnedCStrings::new();
         for a in axis {
             axis_vec.push(proj_sys::PJ_AXIS_DESCRIPTION {
-                name: a.name.as_ptr().cast_mut(),
-                abbreviation: a.abbreviation.as_ptr().cast_mut(),
-                direction: a.direction.as_ptr().cast_mut(),
-                unit_name: a.unit_name.as_ptr().cast_mut(),
+                name: owned_string.push_option(a.name.to_owned())?.cast_mut(),
+                abbreviation: owned_string
+                    .push_option(a.abbreviation.to_owned())?
+                    .cast_mut(),
+                direction: owned_string.push(a.direction.as_ref())?.cast_mut(),
+                unit_name: owned_string.push_option(a.unit_name.to_owned())?.cast_mut(),
                 unit_conv_factor: a.unit_conv_factor,
                 unit_type: a.unit_type as u32,
             });
@@ -532,11 +535,11 @@ impl Context {
                 params
                     .iter()
                     .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                        name: p.name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
-                        auth_name: p.auth_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
-                        code: p.code().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        name: owned.push_option(p.name().to_owned()).unwrap(),
+                        auth_name: owned.push_option(p.auth_name().to_owned()).unwrap(),
+                        code: owned.push_option(p.code().to_owned()).unwrap(),
                         value: *p.value(),
-                        unit_name: p.unit_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        unit_name: owned.push_option(p.unit_name().to_owned()).unwrap(),
                         unit_conv_factor: *p.unit_conv_factor(),
                         unit_type: *p.unit_type() as u32,
                     })
@@ -587,15 +590,15 @@ impl Context {
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
             .iter()
             .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                name: p.name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
-                auth_name: p.auth_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
-                code: p.code().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                name: owned.push_option(p.name().to_owned()).unwrap(),
+                auth_name: owned.push_option(p.auth_name().to_owned()).unwrap(),
+                code: owned.push_option(p.code().to_owned()).unwrap(),
                 value: *p.value(),
-                unit_name: p.unit_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                unit_name: owned.push_option(p.unit_name().to_owned()).unwrap(),
                 unit_conv_factor: *p.unit_conv_factor(),
                 unit_type: *p.unit_type() as u32,
             })
-            .collect();
+            .collect::<Vec<_>>();
 
         let ptr = unsafe {
             proj_sys::proj_create_transformation(
@@ -3082,18 +3085,18 @@ mod test_context_advanced {
                 CoordinateSystemType::Cartesian,
                 &[
                     AxisDescription::new(
-                        Some("Longitude"),
-                        Some("lon"),
+                        Some("Longitude".to_string()),
+                        Some("lon".to_string()),
                         a,
-                        Some("Degree"),
+                        Some("unit1".to_string()),
                         1.0,
                         UnitType::Angular,
                     )?,
                     AxisDescription::new(
-                        Some("Latitude"),
-                        Some("lat"),
+                        Some("Latitude".to_string()),
+                        Some("lat".to_string()),
                         AxisDirection::North,
-                        Some("Degree"),
+                        Some("unit2".to_string()),
                         1.0,
                         UnitType::Angular,
                     )?,
@@ -3335,12 +3338,12 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_cstring()?),
-                Some("fake auth".to_cstring()?),
-                Some("degree".to_cstring()?),
+                Some("param name".to_string()),
+                Some("fake auth".to_string()),
+                Some("degree".to_string()),
                 0.99,
-                Some("degree".to_cstring()?),
-                0.0174532925199433,
+                Some("degree".to_string()),
+                0.5,
                 UnitType::Scale,
             )],
         )?;
@@ -3389,11 +3392,11 @@ mod test_context_advanced {
             Some("foobar auth"),
             Some("foobar code"),
             &[ParamDescription::new(
-                Some("foobarbar name".to_cstring()?),
-                Some("foobarbar auth".to_cstring()?),
-                Some("foobarbar code".to_cstring()?),
+                Some("foobarbar name".to_string()),
+                Some("foobarbar auth".to_string()),
+                Some("foobarbar code".to_string()),
                 0.3,
-                Some("foobarbar unit".to_cstring()?),
+                Some("foobarbar unit".to_string()),
                 2.0,
                 UnitType::Scale,
             )],
@@ -3415,8 +3418,8 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_cstring()?),
-                Some("Fake auth".to_cstring()?),
+                Some("param name".to_string()),
+                Some("Fake auth".to_string()),
                 None,
                 0.99,
                 None,

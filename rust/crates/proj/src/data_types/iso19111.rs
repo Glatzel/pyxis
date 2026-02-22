@@ -1,9 +1,7 @@
 extern crate alloc;
-use alloc::ffi::CString;
 use alloc::sync::Arc;
 use core::fmt::Display;
 
-use envoy::ToCString;
 use num_enum::TryFromPrimitive;
 use strum::{AsRefStr, EnumString};
 
@@ -281,7 +279,7 @@ CrsListParameters,
     {east_lon_degree:f64,"Eastern-most longitude of the area of use, in degrees."},
     {north_lat_degree:f64,"Northern-most latitude of the area of use, in degrees."},
     {allow_deprecated:bool,"Whether deprecated objects are allowed. Default to FALSE."},
-    {celestial_body_name:Option<CString>,"Celestial body of the CRS (e.g.` Earth`). The default value, NULL, means no restriction"}
+    {celestial_body_name:Option<String>,"Celestial body of the CRS (e.g.` Earth`). The default value, NULL, means no restriction"}
 );
 
 readonly_struct!(
@@ -387,27 +385,27 @@ pub enum EllipsoidalCs3dType {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, PartialEq)]
 pub struct AxisDescription {
-    pub(crate) name: CString,
-    pub(crate) abbreviation: CString,
-    pub(crate) direction: CString,
-    pub(crate) unit_name: CString,
+    pub(crate) name: Option<String>,
+    pub(crate) abbreviation: Option<String>,
+    pub(crate) direction: AxisDirection,
+    pub(crate) unit_name: Option<String>,
     pub(crate) unit_conv_factor: f64,
     pub(crate) unit_type: UnitType,
 }
 impl AxisDescription {
     pub fn new(
-        name: Option<&str>,
-        abbreviation: Option<&str>,
+        name: Option<String>,
+        abbreviation: Option<String>,
         direction: AxisDirection,
-        unit_name: Option<&str>,
+        unit_name: Option<String>,
         unit_conv_factor: f64,
         unit_type: UnitType,
     ) -> Result<Self, ProjError> {
         Ok(Self {
-            name: name.unwrap_or("").to_cstring()?,
-            abbreviation: abbreviation.unwrap_or("").to_cstring()?,
-            direction: direction.as_ref().to_cstring()?,
-            unit_name: unit_name.unwrap_or("").to_cstring()?,
+            name,
+            abbreviation,
+            direction: direction,
+            unit_name: unit_name,
             unit_conv_factor,
             unit_type,
         })
@@ -418,11 +416,11 @@ readonly_struct!(
     "Description of a parameter value for a Conversion."
     "# References"
     "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PARAM_DESCRIPTION>",
-    {name: Option<CString>},
-    {auth_name:  Option<CString>},
-    {code:  Option<CString>},
+    {name: Option<String>},
+    {auth_name:  Option<String>},
+    {code:  Option<String>},
     {value: f64},
-    {unit_name:  Option<CString>},
+    {unit_name:  Option<String>},
     {unit_conv_factor: f64},
     {unit_type: UnitType}
 );

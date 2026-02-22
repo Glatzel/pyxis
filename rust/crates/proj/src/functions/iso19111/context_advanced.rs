@@ -3136,10 +3136,10 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_ellipsoidal_3d_cs(
             EllipsoidalCs3dType::LatitudeLongitudeHeight,
-            Some("degree"),
-            0.0174532925199433,
-            Some("degree"),
-            0.0174532925199433,
+            Some("foo"),
+            0.5,
+            Some("bar"),
+            0.6,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");

@@ -5,10 +5,10 @@ expression: wkt
 CS[ellipsoidal,3],
     AXIS["latitude",north,
         ORDER[1],
-        ANGLEUNIT["",0.0174532925199433]],
+        ANGLEUNIT["",0.5]],
     AXIS["longitude",east,
         ORDER[2],
-        ANGLEUNIT["",0.0174532925199433]],
+        ANGLEUNIT["",0.5]],
     AXIS["ellipsoidal height",up,
         ORDER[3],
-        LENGTHUNIT["",0.0174532925199433]]
+        LENGTHUNIT["",0.6]]

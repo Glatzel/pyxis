@@ -8,3 +8,4 @@ proj.db
 
 # rattler
 rattler/output
+*.snap.new

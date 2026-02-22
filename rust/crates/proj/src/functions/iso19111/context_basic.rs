@@ -468,7 +468,9 @@ impl crate::Context {
                         east_lon_degree: *p.east_lon_degree(),
                         north_lat_degree: *p.north_lat_degree(),
                         allow_deprecated: *p.allow_deprecated() as i32,
-                        celestial_body_name: owned.push_option(p.celestial_body_name().to_owned()).unwrap(),
+                        celestial_body_name: owned
+                            .push_option(p.celestial_body_name().to_owned())
+                            .unwrap(),
                     }
                 }),
                 &mut out_result_count,

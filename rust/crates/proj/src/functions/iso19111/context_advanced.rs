@@ -3136,10 +3136,10 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_ellipsoidal_3d_cs(
             EllipsoidalCs3dType::LatitudeLongitudeHeight,
-            Some("Degree"),
-            1.0,
-            Some("Degree"),
-            1.0,
+            Some("degree"),
+            0.0174532925199433,
+            Some("degree"),
+            0.0174532925199433,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
@@ -3341,14 +3341,14 @@ mod test_context_advanced {
             &[ParamDescription::new(
                 Some("param name".to_cstring()?),
                 Some("fake auth".to_cstring()?),
-                None,
+                Some("degree".to_cstring()?),
                 0.99,
-                Some("fake unit".to_cstring()?),
-                1.0,
+                Some("degree".to_cstring()?),
+                0.0174532925199433,
                 UnitType::Scale,
             )],
         )?;
-        let wkt = pj.as_wkt(WktType::Wkt1Esri, None, None, None, None, None, None)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
         insta::assert_snapshot!(wkt);
         Ok(())

@@ -2,5 +2,8 @@
 source: crates/proj/src/functions/iso19111/context_advanced.rs
 expression: wkt
 ---
-PROJECTION["method"],
-PARAMETER["",0.99]
+CONVERSION["conv",
+    METHOD["method",
+        ID["method auth","method code"]],
+    PARAMETER["",0.99],
+    ID["conv auth","conv code"]]

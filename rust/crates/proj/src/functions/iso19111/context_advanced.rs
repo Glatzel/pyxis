@@ -3074,12 +3074,15 @@ impl Context {
 
 #[cfg(test)]
 mod test_context_advanced {
+    use std::fmt::Write;
+
     use strum::IntoEnumIterator;
 
     use super::*;
     #[test]
     fn test_create_cs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
+        let mut wkt_string = String::new();
         for a in AxisDirection::iter() {
             let pj: Proj = ctx.create_cs(
                 CoordinateSystemType::Cartesian,
@@ -3104,8 +3107,9 @@ mod test_context_advanced {
             )?;
             let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
             println!("{wkt}\n");
-            insta::assert_snapshot!(format!("test_create_cs_axis_{:?}",a),wkt);
+            wkt_string.push_str(&wkt);
         }
+        insta::assert_snapshot!(wkt_string);
         Ok(())
     }
     #[test]

@@ -129,23 +129,19 @@ impl Context {
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
     ) -> Result<Proj, ProjError> {
-        let horizontal_angular_unit_name = horizontal_angular_unit_name
-            .map(|s| s.to_cstring())
-            .transpose()?;
-        let vertical_linear_unit_name = vertical_linear_unit_name
-            .map(|s| s.to_cstring())
-            .transpose()?;
+        let mut owned_cstring = OwnedCStrings::with_capacity(2);
+
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr(),
                 ellipsoidal_cs_3d_type as u32,
-                horizontal_angular_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
+                owned_cstring.push_option(horizontal_angular_unit_name)?,
                 horizontal_angular_unit_conv_factor,
-                vertical_linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
+                owned_cstring.push_option(vertical_linear_unit_name)?,
                 vertical_linear_unit_conv_factor,
             )
         };
-        Proj::new(self.arc_ptr(), ptr)
+        Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned_cstring)
     }
 
     ///Create a GeographicCRS.
@@ -3359,26 +3355,26 @@ mod test_context_advanced {
         let geog_cs =
             ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
         let source_crs = ctx.create_geographic_crs(
-            Some("Source CRS"),
+            Some("foo crs"),
             Some("World Geodetic System 1984"),
-            Some("WGS 84"),
+            Some("foo ellips"),
             6378137.0,
             298.257223563,
             Some("Greenwich"),
             0.0,
-            Some("Degree"),
+            Some("foo units"),
             0.0174532925199433,
             &geog_cs,
         )?;
         let target_crs = ctx.create_geographic_crs(
-            Some("WGS 84"),
+            Some("bar crs"),
             Some("World Geodetic System 1984"),
-            Some("WGS 84"),
+            Some("bar ellips"),
             6378137.0,
             298.257223563,
-            Some("Greenwich"),
+            Some("foo meridian"),
             0.0,
-            Some("Degree"),
+            Some("bar unit"),
             0.0174532925199433,
             &geog_cs,
         )?;
@@ -3389,16 +3385,16 @@ mod test_context_advanced {
             Some(&source_crs),
             Some(&target_crs),
             Some(&target_crs),
-            Some("method"),
-            Some("method auth"),
-            Some("method code"),
+            Some("foobar method"),
+            Some("foobar auth"),
+            Some("foobar code"),
             &[ParamDescription::new(
-                Some("param name".to_cstring()?),
-                None,
-                None,
-                0.99,
-                None,
-                1.0,
+                Some("foobarbar name".to_cstring()?),
+                Some("foobarbar auth".to_cstring()?),
+                Some("foobarbar code".to_cstring()?),
+                0.3,
+                Some("foobarbar unit".to_cstring()?),
+                2.0,
                 UnitType::Scale,
             )],
             0.0,

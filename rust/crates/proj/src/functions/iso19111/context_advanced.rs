@@ -3340,7 +3340,7 @@ mod test_context_advanced {
             Some("method code"),
             &[ParamDescription::new(
                 Some("param name".to_cstring()?),
-                None,
+                Some("fake auth".to_cstring()?),
                 None,
                 0.99,
                 None,

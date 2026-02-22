@@ -1,0 +1,28 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["Hotine Oblique Mercator (variant A)",
+    METHOD["Hotine Oblique Mercator (variant A)",
+        ID["EPSG",9812]],
+    PARAMETER["Latitude of projection centre",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8811]],
+    PARAMETER["Longitude of projection centre",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8812]],
+    PARAMETER["Azimuth at projection centre",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8813]],
+    PARAMETER["Angle from Rectified to Skew Grid",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8814]],
+    PARAMETER["Scale factor at projection centre",1,
+        SCALEUNIT["unity",1],
+        ID["EPSG",8815]],
+    PARAMETER["False easting",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8806]],
+    PARAMETER["False northing",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8807]]]

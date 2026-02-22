@@ -372,7 +372,7 @@ mod test_proj_advanced {
         let pj = pj.alter_name("new name")?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}",);
-        assert!(wkt.contains("new name"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -424,7 +424,7 @@ mod test_proj_advanced {
             pj.crs_alter_cs_angular_unit(Some("my unit"), 2.0, Some("my auth"), Some("my code"))?;
         let wkt = pj_alterd.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("my unit"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -435,8 +435,7 @@ mod test_proj_advanced {
             pj.crs_alter_cs_linear_unit(Some("my unit"), 2.0, Some("my auth"), Some("my code"))?;
         let wkt = pj_alterd.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("my unit"));
-
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -452,8 +451,7 @@ mod test_proj_advanced {
         )?;
         let wkt = pj_alterd.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("my unit"));
-
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -463,7 +461,7 @@ mod test_proj_advanced {
         let pj_3d = pj.crs_promote_to_3d(None)?;
         let wkt = pj_3d.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("CS[ellipsoidal,3]"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -476,8 +474,7 @@ mod test_proj_advanced {
         let pj: Proj = proj_crs.crs_create_projected_3d_crs_from_2d(None, Some(&geog_3d_crs))?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("WGS 84 / UTM zone 31N"));
-        assert!(wkt.contains("CS[Cartesian,3]"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -487,7 +484,7 @@ mod test_proj_advanced {
         let pj_2d = pj.crs_demote_to_2d(None)?;
         let wkt = pj_2d.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("CS[ellipsoidal,2]"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -530,7 +527,7 @@ mod test_proj_advanced {
             let new_conv = conv_in_proj.convert_conversion_to_other_method(Some(9805), None)?;
             let wkt = new_conv.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
             println!("{wkt}");
-            assert!(wkt.contains("9805"));
+            insta::assert_snapshot!(wkt);
         }
         //both none
         {

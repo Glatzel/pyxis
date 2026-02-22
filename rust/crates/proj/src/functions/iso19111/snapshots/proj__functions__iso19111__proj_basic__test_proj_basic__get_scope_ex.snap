@@ -1,0 +1,5 @@
+---
+source: crates/proj/src/functions/iso19111/proj_basic.rs
+expression: scope
+---
+Horizontal component of 3D system.

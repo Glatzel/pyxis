@@ -1,0 +1,14 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CS[ellipsoidal,3],
+    AXIS["latitude",north,
+        ORDER[1],
+        ANGLEUNIT["foo",0.5]],
+    AXIS["longitude",east,
+        ORDER[2],
+        ANGLEUNIT["foo",0.5]],
+    AXIS["ellipsoidal height",up,
+        ORDER[3],
+        LENGTHUNIT["bar",0.6]]

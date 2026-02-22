@@ -1,0 +1,30 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["Hotine Oblique Mercator Two Point Natural Origin",
+    METHOD["Hotine Oblique Mercator Two Point Natural Origin"],
+    PARAMETER["Latitude of projection centre",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8811]],
+    PARAMETER["Latitude of 1st point",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Longitude of 1st point",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Latitude of 2nd point",2,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Longitude of 2nd point",3,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Scale factor at projection centre",1,
+        SCALEUNIT["unity",1],
+        ID["EPSG",8815]],
+    PARAMETER["Easting at projection centre",4,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8816]],
+    PARAMETER["Northing at projection centre",6,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8817]]]

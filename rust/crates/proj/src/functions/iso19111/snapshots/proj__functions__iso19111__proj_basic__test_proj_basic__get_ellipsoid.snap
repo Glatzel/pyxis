@@ -1,0 +1,7 @@
+---
+source: crates/proj/src/functions/iso19111/proj_basic.rs
+expression: wkt
+---
+ELLIPSOID["WGS 84",6378137,298.257223563,
+    LENGTHUNIT["metre",1],
+    ID["EPSG",7030]]

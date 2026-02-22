@@ -1,0 +1,25 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["Lambert Conic Conformal (1SP variant B)",
+    METHOD["Lambert Conic Conformal (1SP variant B)",
+        ID["EPSG",1102]],
+    PARAMETER["Latitude of natural origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8801]],
+    PARAMETER["Scale factor at natural origin",1,
+        SCALEUNIT["unity",1],
+        ID["EPSG",8805]],
+    PARAMETER["Latitude of false origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8821]],
+    PARAMETER["Longitude of false origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8822]],
+    PARAMETER["Easting at false origin",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8826]],
+    PARAMETER["Northing at false origin",0,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8827]]]

@@ -47,3 +47,9 @@ fn cvt_3d_array() -> mischief::Result<()> {
     assert_approx_eq!(f64, coord[1][2], -6259542.96102869);
     Ok(())
 }
+#[test]
+fn test_cvt_2d() -> mischief::Result<()> { cvt_2d() }
+#[test]
+fn test_cvt_3d() -> mischief::Result<()> { cvt_3d() }
+#[test]
+fn test_cvt_4d() -> mischief::Result<()> { cvt_4d() }

@@ -252,7 +252,15 @@ mod test_proj {
                 .get(0)?
                 .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?
         );
-
+        insta::assert_snapshot!(pj_list.get(0)?.as_wkt(
+            WktType::Wkt2_2019,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None
+        )?);
         Ok(())
     }
     #[test]
@@ -266,7 +274,15 @@ mod test_proj {
                 .get(0)?
                 .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?
         );
-
+        insta::assert_snapshot!(pj_list.get(0)?.as_wkt(
+            WktType::Wkt2_2019,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None
+        )?);
         Ok(())
     }
 }

@@ -1,0 +1,9 @@
+---
+source: crates/proj/src/functions/iso19111/proj_basic.rs
+expression: info
+---
+CoordOperationMethodInfo {
+    method_name: "Transverse Mercator",
+    method_auth_name: "EPSG",
+    method_code: "9807",
+}

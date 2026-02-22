@@ -45,3 +45,7 @@ fn convert_array() -> mischief::Result<()> {
     assert_approx_eq!(f64, coord[0].b, 3416780.562127255);
     Ok(())
 }
+#[test]
+fn test_convert_scalar() -> mischief::Result<()> { convert_scalar() }
+#[test]
+fn test_convert_array() -> mischief::Result<()> { convert_array() }

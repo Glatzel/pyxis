@@ -1,0 +1,19 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["New Zealand Map Grid",
+    METHOD["New Zealand Map Grid",
+        ID["EPSG",9811]],
+    PARAMETER["Latitude of natural origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8801]],
+    PARAMETER["Longitude of natural origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8802]],
+    PARAMETER["False easting",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8806]],
+    PARAMETER["False northing",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8807]]]

@@ -1,0 +1,11 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["conv",
+    METHOD["method",
+        ID["method auth","method code"]],
+    PARAMETER["param name",0.99,
+        SCALEUNIT["degree",0.5],
+        ID["fake auth","degree"]],
+    ID["conv auth","conv code"]]

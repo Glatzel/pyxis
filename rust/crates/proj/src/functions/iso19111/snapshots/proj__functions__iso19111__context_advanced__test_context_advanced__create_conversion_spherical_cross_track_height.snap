@@ -1,0 +1,17 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["Spherical Cross-Track Height",
+    METHOD["Spherical Cross-Track Height"],
+    PARAMETER["Peg point latitude",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Peg point longitude",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Peg point heading",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Peg point height",1,
+        LENGTHUNIT["Metre",1]]]

@@ -1,0 +1,8 @@
+---
+source: crates/proj/src/functions/iso19111/context_basic.rs
+expression: "structure.first().expect(\"invalid element\")"
+---
+CREATE TABLE metadata(
+    key TEXT NOT NULL PRIMARY KEY CHECK (length(key) >= 1),
+    value TEXT NOT NULL
+) WITHOUT ROWID;

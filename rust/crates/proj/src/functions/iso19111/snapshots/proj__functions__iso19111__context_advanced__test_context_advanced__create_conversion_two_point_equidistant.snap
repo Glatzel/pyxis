@@ -1,0 +1,24 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["Two Point Equidistant",
+    METHOD["Two Point Equidistant"],
+    PARAMETER["Latitude of 1st point",0,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Longitude of 1st point",0,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Latitude of 2nd point",0,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["Longitude of 2nd point",1,
+        ANGLEUNIT["degree",0.0174532925199433,
+            ID["EPSG",9122]]],
+    PARAMETER["False easting",0,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8806]],
+    PARAMETER["False northing",0,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8807]]]

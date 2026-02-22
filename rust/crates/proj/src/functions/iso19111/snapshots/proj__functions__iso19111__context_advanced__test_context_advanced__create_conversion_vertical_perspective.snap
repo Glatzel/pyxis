@@ -1,0 +1,25 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["Vertical Perspective",
+    METHOD["Vertical Perspective",
+        ID["EPSG",9838]],
+    PARAMETER["Latitude of topocentric origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8834]],
+    PARAMETER["Longitude of topocentric origin",1,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8835]],
+    PARAMETER["Ellipsoidal height of topocentric origin",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8836]],
+    PARAMETER["Viewpoint height",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8840]],
+    PARAMETER["False easting",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8806]],
+    PARAMETER["False northing",1,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8807]]]

@@ -1,0 +1,19 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["Tunisia Mining Grid",
+    METHOD["Tunisia Mining Grid",
+        ID["EPSG",9816]],
+    PARAMETER["Latitude of false origin",0,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8821]],
+    PARAMETER["Longitude of false origin",0,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8822]],
+    PARAMETER["Easting at false origin",0,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8826]],
+    PARAMETER["Northing at false origin",0,
+        LENGTHUNIT["Metre",1],
+        ID["EPSG",8827]]]

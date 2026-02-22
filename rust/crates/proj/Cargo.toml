@@ -4,22 +4,23 @@ name = "proj"
 version.workspace = true
 
 [dependencies]
-clerk = { workspace = true }
-envoy = { workspace = true }
-num_enum = { workspace = true }
-proj-sys = { workspace = true }
+clerk.workspace = true
+envoy.workspace = true
+num_enum.workspace = true
+proj-sys.workspace = true
 serde = { workspace = true, optional = true }
-strum = { workspace = true }
-thiserror = { workspace = true }
+strum.workspace = true
+thiserror.workspace = true
 
 [dev-dependencies]
-assert_cmd = { workspace = true }
+assert_cmd.workspace = true
 clerk = { workspace = true, features = ["tracing"] }
-dunce = { workspace = true }
-float-cmp = { workspace = true }
+dunce.workspace = true
+float-cmp.workspace = true
+insta = { workspace = true }
 mischief = { workspace = true, features = ["fancy"] }
-tracing = { workspace = true }
-tracing-subscriber = { workspace = true }
+tracing.workspace = true
+tracing-subscriber.workspace = true
 
 [features]
 serde = ["dep:serde"]

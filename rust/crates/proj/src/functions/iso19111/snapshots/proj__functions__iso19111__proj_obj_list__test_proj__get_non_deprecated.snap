@@ -1,0 +1,22 @@
+---
+source: crates/proj/src/functions/iso19111/proj_obj_list.rs
+expression: "pj_list.get(0)?.as_wkt(WktType::Wkt2_2019, None, None, None, None, None,\nNone)?"
+---
+GEOGCRS["Locodjo 1965",
+    DATUM["Locodjo 1965",
+        ELLIPSOID["Clarke 1880 (RGS)",6378249.145,293.465,
+            LENGTHUNIT["metre",1]]],
+    PRIMEM["Greenwich",0,
+        ANGLEUNIT["degree",0.0174532925199433]],
+    CS[ellipsoidal,2],
+        AXIS["geodetic latitude (Lat)",north,
+            ORDER[1],
+            ANGLEUNIT["degree",0.0174532925199433]],
+        AXIS["geodetic longitude (Lon)",east,
+            ORDER[2],
+            ANGLEUNIT["degree",0.0174532925199433]],
+    USAGE[
+        SCOPE["Geodesy."],
+        AREA["Côte d'Ivoire (Ivory Coast) - onshore and offshore."],
+        BBOX[1.02,-8.61,10.74,-2.48]],
+    ID["EPSG",4142]]

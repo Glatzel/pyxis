@@ -450,7 +450,7 @@ impl crate::Context {
             "At least one of `auth_name` and  `params` must be set."
         );
         let mut out_result_count = i32::default();
-        let mut owned = OwnedCStrings::with_capacity(1);
+        let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr(),
@@ -468,10 +468,9 @@ impl crate::Context {
                         east_lon_degree: *p.east_lon_degree(),
                         north_lat_degree: *p.north_lat_degree(),
                         allow_deprecated: *p.allow_deprecated() as i32,
-                        celestial_body_name: p
-                            .celestial_body_name()
-                            .clone()
-                            .map_or(ptr::null(), |s| s.as_ptr()),
+                        celestial_body_name: owned
+                            .push_option(p.celestial_body_name().to_owned())
+                            .unwrap(),
                     }
                 }),
                 &mut out_result_count,
@@ -571,7 +570,6 @@ impl crate::Context {
 
 #[cfg(test)]
 mod test {
-    use proj_sys::{PROJ_VERSION_MAJOR, PROJ_VERSION_MINOR, PROJ_VERSION_PATCH};
     use strum::IntoEnumIterator;
 
     use super::*;
@@ -593,10 +591,7 @@ mod test {
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)?
             .expect("invalid element");
-        assert_eq!(
-            data,
-            format!("{PROJ_VERSION_MAJOR}.{PROJ_VERSION_MINOR}.{PROJ_VERSION_PATCH}")
-        );
+        insta::assert_snapshot!(data);
         Ok(())
     }
     #[test]
@@ -604,10 +599,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let structure = ctx.get_database_structure()?;
         println!("{}", structure.first().expect("invalid element"));
-        assert_eq!(
-            structure.first().expect("invalid element"),
-            "CREATE TABLE metadata(\n    key TEXT NOT NULL PRIMARY KEY CHECK (length(key) >= 1),\n    value TEXT NOT NULL\n) WITHOUT ROWID;"
-        );
+        insta::assert_snapshot!(structure.first().expect("invalid element"));
         Ok(())
     }
 
@@ -644,7 +636,7 @@ mod test {
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("32631"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -652,9 +644,13 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.uom_get_info_from_database("EPSG", "9102")?;
         println!("{info:?}");
-        assert_eq!(info.name(), "degree");
-        assert_eq!(info.conv_factor(), &0.017453292519943295);
-        assert_eq!(info.category(), &UomCategory::Angular);
+        insta::assert_debug_snapshot!(info,@r#"
+        UomInfo {
+            name: "degree",
+            conv_factor: 0.017453292519943295,
+            category: Angular,
+        }
+        "#);
         Ok(())
     }
     #[test]

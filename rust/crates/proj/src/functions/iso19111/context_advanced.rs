@@ -25,12 +25,15 @@ impl Context {
     ) -> Result<Proj, ProjError> {
         let axis_count = axis.len();
         let mut axis_vec: Vec<proj_sys::PJ_AXIS_DESCRIPTION> = Vec::with_capacity(axis_count);
+        let mut owned_string = OwnedCStrings::new();
         for a in axis {
             axis_vec.push(proj_sys::PJ_AXIS_DESCRIPTION {
-                name: a.name.as_ptr().cast_mut(),
-                abbreviation: a.abbreviation.as_ptr().cast_mut(),
-                direction: a.direction.as_ptr().cast_mut(),
-                unit_name: a.unit_name.as_ptr().cast_mut(),
+                name: owned_string.push_option(a.name.to_owned())?.cast_mut(),
+                abbreviation: owned_string
+                    .push_option(a.abbreviation.to_owned())?
+                    .cast_mut(),
+                direction: owned_string.push(a.direction.as_ref())?.cast_mut(),
+                unit_name: owned_string.push_option(a.unit_name.to_owned())?.cast_mut(),
                 unit_conv_factor: a.unit_conv_factor,
                 unit_type: a.unit_type as u32,
             });
@@ -129,23 +132,19 @@ impl Context {
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
     ) -> Result<Proj, ProjError> {
-        let horizontal_angular_unit_name = horizontal_angular_unit_name
-            .map(|s| s.to_cstring())
-            .transpose()?;
-        let vertical_linear_unit_name = vertical_linear_unit_name
-            .map(|s| s.to_cstring())
-            .transpose()?;
+        let mut owned_cstring = OwnedCStrings::with_capacity(2);
+
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_3D_cs(
                 self.ptr(),
                 ellipsoidal_cs_3d_type as u32,
-                horizontal_angular_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
+                owned_cstring.push_option(horizontal_angular_unit_name)?,
                 horizontal_angular_unit_conv_factor,
-                vertical_linear_unit_name.map_or(ptr::null(), |s| s.as_ptr()),
+                owned_cstring.push_option(vertical_linear_unit_name)?,
                 vertical_linear_unit_conv_factor,
             )
         };
-        Proj::new(self.arc_ptr(), ptr)
+        Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned_cstring)
     }
 
     ///Create a GeographicCRS.
@@ -536,11 +535,11 @@ impl Context {
                 params
                     .iter()
                     .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                        name: p.name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
-                        auth_name: p.auth_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
-                        code: p.code().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        name: owned.push_option(p.name().to_owned()).unwrap(),
+                        auth_name: owned.push_option(p.auth_name().to_owned()).unwrap(),
+                        code: owned.push_option(p.code().to_owned()).unwrap(),
                         value: *p.value(),
-                        unit_name: p.unit_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                        unit_name: owned.push_option(p.unit_name().to_owned()).unwrap(),
                         unit_conv_factor: *p.unit_conv_factor(),
                         unit_type: *p.unit_type() as u32,
                     })
@@ -591,15 +590,15 @@ impl Context {
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
             .iter()
             .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                name: p.name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
-                auth_name: p.auth_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
-                code: p.code().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                name: owned.push_option(p.name().to_owned()).unwrap(),
+                auth_name: owned.push_option(p.auth_name().to_owned()).unwrap(),
+                code: owned.push_option(p.code().to_owned()).unwrap(),
                 value: *p.value(),
-                unit_name: p.unit_name().to_owned().map_or(ptr::null(), |p| p.as_ptr()),
+                unit_name: owned.push_option(p.unit_name().to_owned()).unwrap(),
                 unit_conv_factor: *p.unit_conv_factor(),
                 unit_type: *p.unit_type() as u32,
             })
-            .collect();
+            .collect::<Vec<_>>();
 
         let ptr = unsafe {
             proj_sys::proj_create_transformation(
@@ -3075,29 +3074,31 @@ impl Context {
 
 #[cfg(test)]
 mod test_context_advanced {
+
     use strum::IntoEnumIterator;
 
     use super::*;
     #[test]
     fn test_create_cs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
+        let mut wkt_string = String::new();
         for a in AxisDirection::iter() {
             let pj: Proj = ctx.create_cs(
                 CoordinateSystemType::Cartesian,
                 &[
                     AxisDescription::new(
-                        Some("Longitude"),
-                        Some("lon"),
+                        Some("Longitude".to_string()),
+                        Some("lon".to_string()),
                         a,
-                        Some("Degree"),
+                        Some("unit1".to_string()),
                         1.0,
                         UnitType::Angular,
                     )?,
                     AxisDescription::new(
-                        Some("Latitude"),
-                        Some("lat"),
+                        Some("Latitude".to_string()),
+                        Some("lat".to_string()),
                         AxisDirection::North,
-                        Some("Degree"),
+                        Some("unit2".to_string()),
                         1.0,
                         UnitType::Angular,
                     )?,
@@ -3105,18 +3106,18 @@ mod test_context_advanced {
             )?;
             let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
             println!("{wkt}\n");
-            assert!(wkt.contains("9122"));
+            wkt_string.push_str(&wkt);
         }
+        insta::assert_snapshot!(wkt_string);
         Ok(())
     }
     #[test]
     fn test_create_cartesian_2d_cs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
-        let pj: Proj =
-            ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, Some("Degree"), 1.0)?;
+        let pj: Proj = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 1.0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("CS[Cartesian,2]"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3129,7 +3130,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("CS[ellipsoidal,2]"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3137,14 +3138,14 @@ mod test_context_advanced {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_ellipsoidal_3d_cs(
             EllipsoidalCs3dType::LatitudeLongitudeHeight,
-            Some("Degree"),
-            1.0,
-            Some("Degree"),
-            1.0,
+            Some("foo"),
+            0.5,
+            Some("bar"),
+            0.6,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("CS[ellipsoidal,3]"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
 
@@ -3169,9 +3170,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("WGS 84"));
-        assert!(wkt.contains("World Geodetic System 1984"));
-        assert!(wkt.contains("Greenwich"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3190,7 +3189,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("GRS 1980"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3211,12 +3210,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("WGS 84"));
-        assert!(wkt.contains("World Geodetic System 1984"));
-        assert!(wkt.contains("Greenwich"));
-        assert!(wkt.contains("MyDegree"));
-        assert!(wkt.contains("World Geodetic System 1984"));
-        assert!(wkt.contains("MyMetre"));
+        insta::assert_snapshot!(wkt);
 
         Ok(())
     }
@@ -3245,8 +3239,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj2.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("new crs"));
-        assert!(wkt.contains("MyMetre2"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3267,7 +3260,7 @@ mod test_context_advanced {
             ctx.create_derived_geographic_crs(Some("my rotated CRS"), &crs_4326, &conversion, &cs)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("my rotated CRS"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
 
@@ -3278,7 +3271,7 @@ mod test_context_advanced {
         let pj: Proj = ctx.create_engineering_crs(Some("engineering crs"))?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("engineering crs"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3288,7 +3281,7 @@ mod test_context_advanced {
             ctx.create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("myVertDatum"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3309,7 +3302,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("myVertCRS (ftUS)"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3334,7 +3327,7 @@ mod test_context_advanced {
         let pj: Proj = ctx.create_compound_crs(Some("Compound"), &horiz_crs, &vert_crs)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("Compound"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3348,18 +3341,18 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_cstring()?),
-                None,
-                None,
+                Some("param name".to_string()),
+                Some("fake auth".to_string()),
+                Some("degree".to_string()),
                 0.99,
-                None,
-                1.0,
+                Some("degree".to_string()),
+                0.5,
                 UnitType::Scale,
             )],
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("conv"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3368,26 +3361,26 @@ mod test_context_advanced {
         let geog_cs =
             ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
         let source_crs = ctx.create_geographic_crs(
-            Some("Source CRS"),
+            Some("foo crs"),
             Some("World Geodetic System 1984"),
-            Some("WGS 84"),
+            Some("foo ellips"),
             6378137.0,
             298.257223563,
             Some("Greenwich"),
             0.0,
-            Some("Degree"),
+            Some("foo units"),
             0.0174532925199433,
             &geog_cs,
         )?;
         let target_crs = ctx.create_geographic_crs(
-            Some("WGS 84"),
+            Some("bar crs"),
             Some("World Geodetic System 1984"),
-            Some("WGS 84"),
+            Some("bar ellips"),
             6378137.0,
             298.257223563,
-            Some("Greenwich"),
+            Some("foo meridian"),
             0.0,
-            Some("Degree"),
+            Some("bar unit"),
             0.0174532925199433,
             &geog_cs,
         )?;
@@ -3398,23 +3391,23 @@ mod test_context_advanced {
             Some(&source_crs),
             Some(&target_crs),
             Some(&target_crs),
-            Some("method"),
-            Some("method auth"),
-            Some("method code"),
+            Some("foobar method"),
+            Some("foobar auth"),
+            Some("foobar code"),
             &[ParamDescription::new(
-                Some("param name".to_cstring()?),
-                None,
-                None,
-                0.99,
-                None,
-                1.0,
+                Some("foobarbar name".to_string()),
+                Some("foobarbar auth".to_string()),
+                Some("foobarbar code".to_string()),
+                0.3,
+                Some("foobarbar unit".to_string()),
+                2.0,
                 UnitType::Scale,
             )],
             0.0,
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("transf"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3428,8 +3421,8 @@ mod test_context_advanced {
             Some("method auth"),
             Some("method code"),
             &[ParamDescription::new(
-                Some("param name".to_cstring()?),
-                None,
+                Some("param name".to_string()),
+                Some("Fake auth".to_string()),
                 None,
                 0.99,
                 None,
@@ -3457,7 +3450,7 @@ mod test_context_advanced {
 
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("my CRS"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3473,6 +3466,7 @@ mod test_context_advanced {
         let bound_crs = ctx.crs_create_bound_crs(&base_crs, &hub_crs, &transf)?;
         let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3485,6 +3479,7 @@ mod test_context_advanced {
         let bound_crs = ctx.crs_create_bound_vertical_crs(&vert_crs, &crs, "foo.gtx")?;
         let wkt = bound_crs.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3493,7 +3488,7 @@ mod test_context_advanced {
         let pj = ctx.create_conversion_utm(31, true)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
-        assert!(wkt.contains("UTM zone 31N"));
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3512,6 +3507,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3530,6 +3526,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3548,6 +3545,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3567,6 +3565,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3584,6 +3583,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3601,6 +3601,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3620,6 +3621,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3638,6 +3640,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3657,6 +3660,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3676,6 +3680,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3696,6 +3701,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3715,6 +3721,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3732,6 +3739,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3749,6 +3757,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3766,6 +3775,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3783,6 +3793,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3800,6 +3811,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3817,6 +3829,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3836,6 +3849,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3852,6 +3866,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3868,6 +3883,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3884,6 +3900,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3900,6 +3917,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3916,6 +3934,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3932,6 +3951,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3949,6 +3969,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3966,6 +3987,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3982,6 +4004,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -3998,6 +4021,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4014,6 +4038,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4031,6 +4056,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4048,6 +4074,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4065,6 +4092,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4085,6 +4113,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4105,6 +4134,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4127,6 +4157,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4146,6 +4177,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4164,6 +4196,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4184,6 +4217,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4204,6 +4238,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4221,6 +4256,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4237,6 +4273,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4255,6 +4292,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4272,6 +4310,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4289,6 +4328,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4305,6 +4345,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4322,6 +4363,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4339,6 +4381,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4356,6 +4399,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4375,6 +4419,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4392,6 +4437,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4410,6 +4456,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4427,6 +4474,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4443,6 +4491,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4459,6 +4508,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4477,6 +4527,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4493,6 +4544,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4509,6 +4561,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4525,6 +4578,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4542,6 +4596,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4558,6 +4613,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4574,6 +4630,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4590,6 +4647,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4606,6 +4664,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4623,6 +4682,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4640,6 +4700,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
 
@@ -4657,6 +4718,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4676,6 +4738,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4690,6 +4753,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
     #[test]
@@ -4704,6 +4768,7 @@ mod test_context_advanced {
         )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
+        insta::assert_snapshot!(wkt);
         Ok(())
     }
 }

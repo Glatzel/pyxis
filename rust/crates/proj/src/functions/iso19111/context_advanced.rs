@@ -3343,12 +3343,12 @@ mod test_context_advanced {
                 Some("fake auth".to_cstring()?),
                 None,
                 0.99,
-                None,
+                Some("fake unit".to_cstring()?),
                 1.0,
                 UnitType::Scale,
             )],
         )?;
-        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        let wkt = pj.as_wkt(WktType::Wkt1Esri, None, None, None, None, None, None)?;
         println!("{wkt}");
         insta::assert_snapshot!(wkt);
         Ok(())
@@ -3420,7 +3420,7 @@ mod test_context_advanced {
             Some("method code"),
             &[ParamDescription::new(
                 Some("param name".to_cstring()?),
-                None,
+                Some("Fake auth".to_cstring()?),
                 None,
                 0.99,
                 None,

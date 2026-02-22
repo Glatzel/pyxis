@@ -3104,7 +3104,7 @@ mod test_context_advanced {
             )?;
             let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
             println!("{wkt}\n");
-            insta::assert_snapshot!(wkt);
+            insta::assert_snapshot!(format!("test_create_cs_axis_{:?}",a),wkt);
         }
         Ok(())
     }

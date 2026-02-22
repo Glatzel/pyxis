@@ -3074,7 +3074,6 @@ impl Context {
 
 #[cfg(test)]
 mod test_context_advanced {
-    use std::fmt::Write;
 
     use strum::IntoEnumIterator;
 

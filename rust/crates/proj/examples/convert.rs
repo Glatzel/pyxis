@@ -52,4 +52,4 @@ fn test_cvt_2d() -> mischief::Result<()> { cvt_2d() }
 #[test]
 fn test_cvt_3d() -> mischief::Result<()> { cvt_3d() }
 #[test]
-fn test_cvt_4d() -> mischief::Result<()> { cvt_4d() }
+fn test_cvt_3d_array() -> mischief::Result<()> { cvt_3d_array() }

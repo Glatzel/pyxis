@@ -5,15 +5,11 @@ on:
   workflow_call:
   push:
     branches: [main]
-    paths-ignore:
-      - "*.md"
   pull_request:
     types:
       - opened
       - synchronize
       - ready_for_review
-    paths-ignore:
-      - "*.md"
   schedule:
     - cron: 0 16 * * *
 
@@ -30,7 +26,7 @@ jobs:
       cache-rust: true
   changed:
     outputs:
-      changed-csharp: ${{steps.main.outputs.csharp_any_changed }}
+      changed-benchmark: ${{steps.main.outputs.benchmark_any_changed}}
       changed-python: ${{steps.main.outputs.python_any_changed}}
       changed-rust: ${{steps.main.outputs.rust_any_changed}}
 
@@ -43,6 +39,10 @@ jobs:
         if: ${{github.event_name == 'pull_request'}}
         with:
           files_yaml: |
+            benchmark:
+              - ./.github/workflows/benchmark.yml
+              - ./python/**
+              - ./rust/**
             python:
               - ./.github/workflows/ci-python.yml
               - ./python/**
@@ -59,9 +59,13 @@ jobs:
     needs: changed
     if: ${{ needs.changed.outputs.changed-rust != 'false' }}
     uses: ./.github/workflows/ci-rust.yml
+  benchmark:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-benchmark != 'false' }}
+    uses: ./.github/workflows/benchmark.yml
   check-point:
     if: ( cancelled() || failure() ) && github.event_name == 'pull_request'
-    needs: [lefthook, changed, python,rust]
+    needs: [lefthook, changed, python,rust,benchmark]
     runs-on: ubuntu-slim
     steps:
       - run: exit 1

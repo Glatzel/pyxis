@@ -1,17 +1,8 @@
 name: benchmark
 
 on:
-  pull_request:
-    types:
-      - edited
-      - synchronize
-      - ready_for_review
-
-  push:
-    branches: [main]
-
-permissions: read-all
-
+  workflow_call:
+  workflow_dispatch:
 jobs:
   cargo-bench:
     runs-on: ubuntu-latest

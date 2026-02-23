@@ -24,6 +24,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lefthook:
+    uses: ./.github/workflows/ci-lefthook.yml
   changed:
     outputs:
       changed-csharp: ${{steps.main.outputs.csharp_any_changed }}
@@ -55,3 +57,9 @@ jobs:
     needs: changed
     if: ${{ needs.changed.outputs.changed-rust != 'false' }}
     uses: ./.github/workflows/ci-rust.yml
+  check-point:
+    if: ( cancelled() || failure() ) && github.event_name == 'pull_request'
+    needs: [lefthook, changed, python,rust]
+    runs-on: ubuntu-slim
+    steps:
+      - run: exit 1

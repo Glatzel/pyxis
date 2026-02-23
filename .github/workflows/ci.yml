@@ -26,6 +26,8 @@ concurrency:
 jobs:
   lefthook:
     uses: ./.github/workflows/ci-lefthook.yml
+    with:
+      cache-rust: true
   changed:
     outputs:
       changed-csharp: ${{steps.main.outputs.csharp_any_changed }}

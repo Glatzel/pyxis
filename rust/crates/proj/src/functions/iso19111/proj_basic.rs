@@ -1175,10 +1175,10 @@ mod test_proj_basic {
         let area = pj.get_area_of_use()?.expect("Invalid area");
 
         assert_eq!(area.area_name(), "World.");
-        assert_eq!(area.east_lon_degree(), &180.0);
-        assert_eq!(area.west_lon_degree(), &-180.0);
-        assert_eq!(area.north_lat_degree(), &90.0);
-        assert_eq!(area.south_lat_degree(), &-90.0);
+        assert_eq!(area.east_lon_degree(), 180.0);
+        assert_eq!(area.west_lon_degree(), -180.0);
+        assert_eq!(area.north_lat_degree(), 90.0);
+        assert_eq!(area.south_lat_degree(), -90.0);
         Ok(())
     }
     #[test]
@@ -1188,10 +1188,10 @@ mod test_proj_basic {
         let area = pj.get_area_of_use_ex(1)?.expect("Invalid area");
 
         assert_eq!(area.area_name(), "North Macedonia.");
-        assert_eq!(area.east_lon_degree(), &23.04);
-        assert_eq!(area.west_lon_degree(), &20.45);
-        assert_eq!(area.north_lat_degree(), &42.36);
-        assert_eq!(area.south_lat_degree(), &40.85);
+        assert_eq!(area.east_lon_degree(), 23.04);
+        assert_eq!(area.west_lon_degree(), 20.45);
+        assert_eq!(area.north_lat_degree(), 42.36);
+        assert_eq!(area.south_lat_degree(), 40.85);
         Ok(())
     }
     #[test]

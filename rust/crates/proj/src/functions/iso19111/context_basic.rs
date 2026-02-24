@@ -461,13 +461,13 @@ impl crate::Context {
                     &proj_sys::PROJ_CRS_LIST_PARAMETERS {
                         types: types.as_ptr(),
                         typesCount: p.types().len(),
-                        crs_area_of_use_contains_bbox: *p.west_lon_degree() as i32,
-                        bbox_valid: *p.bbox_valid() as i32,
-                        west_lon_degree: *p.west_lon_degree(),
-                        south_lat_degree: *p.south_lat_degree(),
-                        east_lon_degree: *p.east_lon_degree(),
-                        north_lat_degree: *p.north_lat_degree(),
-                        allow_deprecated: *p.allow_deprecated() as i32,
+                        crs_area_of_use_contains_bbox: p.west_lon_degree() as i32,
+                        bbox_valid: p.bbox_valid() as i32,
+                        west_lon_degree: p.west_lon_degree(),
+                        south_lat_degree: p.south_lat_degree(),
+                        east_lon_degree: p.east_lon_degree(),
+                        north_lat_degree: p.north_lat_degree(),
+                        allow_deprecated: p.allow_deprecated() as i32,
                         celestial_body_name: owned
                             .push_option(p.celestial_body_name().to_owned())
                             .unwrap(),

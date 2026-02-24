@@ -538,9 +538,9 @@ impl Context {
                         name: owned.push_option(p.name().to_owned()).unwrap(),
                         auth_name: owned.push_option(p.auth_name().to_owned()).unwrap(),
                         code: owned.push_option(p.code().to_owned()).unwrap(),
-                        value: *p.value(),
+                        value: p.value(),
                         unit_name: owned.push_option(p.unit_name().to_owned()).unwrap(),
-                        unit_conv_factor: *p.unit_conv_factor(),
+                        unit_conv_factor: p.unit_conv_factor(),
                         unit_type: *p.unit_type() as u32,
                     })
                     .collect::<Vec<_>>()
@@ -593,9 +593,9 @@ impl Context {
                 name: owned.push_option(p.name().to_owned()).unwrap(),
                 auth_name: owned.push_option(p.auth_name().to_owned()).unwrap(),
                 code: owned.push_option(p.code().to_owned()).unwrap(),
-                value: *p.value(),
+                value: p.value(),
                 unit_name: owned.push_option(p.unit_name().to_owned()).unwrap(),
-                unit_conv_factor: *p.unit_conv_factor(),
+                unit_conv_factor: p.unit_conv_factor(),
                 unit_type: *p.unit_type() as u32,
             })
             .collect::<Vec<_>>();

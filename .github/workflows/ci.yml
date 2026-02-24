@@ -2,7 +2,6 @@ name: CI
 
 on:
   workflow_dispatch:
-  workflow_call:
   push:
     branches: [main]
   pull_request:
@@ -32,8 +31,10 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - if: ${{github.event_name == 'pull_request' || github.event_name == 'push'}}
+        uses: actions/checkout@v6
       - id: main
+        if: ${{github.event_name == 'pull_request' || github.event_name == 'push'}}
         uses: tj-actions/changed-files@v47
         with:
           files_yaml: |

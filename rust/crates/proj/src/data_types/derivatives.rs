@@ -19,19 +19,24 @@ pub struct Factors {
     angular_distortion: f64,
     ///Meridian/parallel angle, $\theta'$ , at coordinate $`(\lambda, \phi)`$.
     meridian_parallel_angle: f64,
-    ///Meridian convergence at coordinate $`(\lambda, \phi)`$. Sometimes also described as grid declination.
+    ///Meridian convergence at coordinate $`(\lambda, \phi)`$. Sometimes also
+    /// described as grid declination.
     meridian_convergence: f64,
     ///Maximum scale factor.
     tissot_semimajor: f64,
     ///Minimum scale factor.
     tissot_semiminor: f64,
-    ///Partial derivative $`\cfrac{\partial x}{\partial \lambda}`$ of coordinate $`(\lambda, \phi)`$.
+    ///Partial derivative $`\cfrac{\partial x}{\partial \lambda}`$ of
+    /// coordinate $`(\lambda, \phi)`$.
     dx_dlam: f64,
-    ///Partial derivative $`\cfrac{\partial y}{\partial \lambda}`$ of coordinate $`(\lambda, \phi)`$.
+    ///Partial derivative $`\cfrac{\partial y}{\partial \lambda}`$ of
+    /// coordinate $`(\lambda, \phi)`$.
     dx_dphi: f64,
-    ///Partial derivative $`\cfrac{\partial x}{\partial \phi}`$ of coordinate $`(\lambda, \phi)`$.
+    ///Partial derivative $`\cfrac{\partial x}{\partial \phi}`$ of coordinate
+    /// $`(\lambda, \phi)`$.
     dy_dlam: f64,
-    ///Partial derivative $`\cfrac{\partial y}{\partial \phi}`$ of coordinate $`(\lambda, \phi)`$.
+    ///Partial derivative $`\cfrac{\partial y}{\partial \phi}`$ of coordinate
+    /// $`(\lambda, \phi)`$.
     dy_dphi: f64,
 }
 impl Factors {

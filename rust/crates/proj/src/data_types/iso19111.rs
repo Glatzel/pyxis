@@ -2,12 +2,13 @@ extern crate alloc;
 use alloc::sync::Arc;
 use core::fmt::Display;
 
+use derive_getters::Getters;
 use num_enum::TryFromPrimitive;
 use strum::{AsRefStr, EnumString};
 
 use crate::data_types::ProjError;
 use crate::data_types::transformation::ContextPtr;
-use crate::{OwnedCStrings, Proj, check_result, readonly_struct};
+use crate::{OwnedCStrings, Proj, check_result};
 ///Guessed WKT "dialect".
 ///
 /// # Reference
@@ -243,70 +244,204 @@ pub enum CoordinateSystemType {
     Temporalcount = proj_sys::PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALCOUNT,
     Temporalmeasure = proj_sys::PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALMEASURE,
 }
-readonly_struct!(
-CrsInfo,
-    "Structure given overall description of a CRS."
-    "This structure may grow over time, and should not be directly allocated by client code."
-    "# References"
-    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_INFO>",
-    {auth_name:String,"Authority name."},
-    {code:String,"Object code."},
-    {name:String,"Object name."},
-    {pj_type:ProjType,"Object type."},
-    {deprecated:bool,"Whether the object is deprecated"},
-    {bbox_valid:bool,"Whereas the west_lon_degree, south_lat_degree, east_lon_degree and north_lat_degree fields are valid."},
-    {west_lon_degree:f64,"Western-most longitude of the area of use, in degrees."},
-    {south_lat_degree:f64,"Southern-most latitude of the area of use, in degrees."},
-    {east_lon_degree:f64,"Eastern-most longitude of the area of use, in degrees."},
-    {north_lat_degree:f64,"Northern-most latitude of the area of use, in degrees."},
-    {area_name:String,"Name of the area of use."},
-    {projection_method_name:String,"Name of the projection method for a projected CRS. Might be NULL even for projected CRS in some cases."},
-    {celestial_body_name:String,"Name of the celestial body of the CRS (e.g. `Earth`)."}
-);
+/// Structure given overall description of a CRS.
+///
+/// This structure may grow over time, and should not be directly allocated by
+/// client code.
+///
+/// # References
+///
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_INFO>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct CrsInfo {
+    /// Authority name.
+    auth_name: String,
+    /// Object code.
+    code: String,
+    /// Object name.
+    name: String,
+    /// Object type.
+    pj_type: ProjType,
+    /// Whether the object is deprecated
+    deprecated: bool,
+    /// Whereas the west_lon_degree, south_lat_degree, east_lon_degree and
+    bbox_valid: bool,
+    /// Western-most longitude of the area of use, in degrees.
+    west_lon_degree: f64,
+    /// Southern-most latitude of the area of use, in degrees.
+    south_lat_degree: f64,
+    /// Eastern-most longitude of the area of use, in degrees.
+    east_lon_degree: f64,
+    /// Northern-most latitude of the area of use, in degrees.
+    north_lat_degree: f64,
+    /// Name of the area of use.
+    area_name: String,
+    /// Name of the projection method for a projected CRS. Might be NULL even
+    projection_method_name: String,
+    /// Name of the celestial body of the CRS (e.g. `Earth`).
+    celestial_body_name: String,
+}
+impl CrsInfo {
+    pub fn new(
+        auth_name: String,
+        code: String,
+        name: String,
+        pj_type: ProjType,
+        deprecated: bool,
+        bbox_valid: bool,
+        west_lon_degree: f64,
+        south_lat_degree: f64,
+        east_lon_degree: f64,
+        north_lat_degree: f64,
+        area_name: String,
+        projection_method_name: String,
+        celestial_body_name: String,
+    ) -> Self {
+        CrsInfo {
+            auth_name,
+            code,
+            name,
+            pj_type,
+            deprecated,
+            bbox_valid,
+            west_lon_degree,
+            south_lat_degree,
+            east_lon_degree,
+            north_lat_degree,
+            area_name,
+            projection_method_name,
+            celestial_body_name,
+        }
+    }
+}
 
-readonly_struct!(
-CrsListParameters,
-    "Structure describing optional parameters for proj_get_crs_list();."
-    "This structure may grow over time, and should not be directly allocated by client code."
-    "# References"
-    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_LIST_PARAMETERS>",
-    {types:Vec<ProjType>,"Array of allowed object types. Should be NULL if all types are allowed"},
-    {crs_area_of_use_contains_bbox:bool,"Size of types. Should be 0 if all types are allowed"},
-    {bbox_valid:bool,"If TRUE and bbox_valid == TRUE, then only CRS whose area of use entirely contains the specified bounding box will be returned.
-     If FALSE and bbox_valid == TRUE, then only CRS whose area of use intersects the specified bounding box will be returned."},
-    {west_lon_degree:f64,"Western-most longitude of the area of use, in degrees."},
-    {south_lat_degree:f64,"Southern-most latitude of the area of use, in degrees."},
-    {east_lon_degree:f64,"Eastern-most longitude of the area of use, in degrees."},
-    {north_lat_degree:f64,"Northern-most latitude of the area of use, in degrees."},
-    {allow_deprecated:bool,"Whether deprecated objects are allowed. Default to FALSE."},
-    {celestial_body_name:Option<String>,"Celestial body of the CRS (e.g.` Earth`). The default value, NULL, means no restriction"}
-);
+///Structure describing optional parameters for proj_get_crs_list();.
+///
+///This structure may grow over time, and should not be directly allocated by
+/// client code.
+///
+///# References
+///
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CRS_LIST_PARAMETERS>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct CrsListParameters {
+    /// Array of allowed object types. Should be NULL if all types are allowed
+    types: Vec<ProjType>,
+    /// If TRUE and bbox_valid == TRUE, then only CRS whose area of use entirely
+    /// contains the specified bounding box will be returned.
+    crs_area_of_use_contains_bbox: bool,
+    /// If TRUE and bbox_valid == TRUE, then only CRS whose area of use
+    bbox_valid: bool,
+    /// Western-most longitude of the area of use, in degrees.
+    west_lon_degree: f64,
+    /// Southern-most latitude of the area of use, in degrees.
+    south_lat_degree: f64,
+    /// Eastern-most longitude of the area of use, in degrees.
+    east_lon_degree: f64,
+    /// Northern-most latitude of the area of use, in degrees.
+    north_lat_degree: f64,
+    /// Whether deprecated objects are allowed. Default to FALSE.
+    allow_deprecated: bool,
+    /// Celestial body of the CRS (e.g.` Earth`). The default value, NULL,
+    celestial_body_name: Option<String>,
+}
+impl CrsListParameters {
+    pub fn new(
+        types: Vec<ProjType>,
+        crs_area_of_use_contains_bbox: bool,
+        bbox_valid: bool,
+        west_lon_degree: f64,
+        south_lat_degree: f64,
+        east_lon_degree: f64,
+        north_lat_degree: f64,
+        allow_deprecated: bool,
+        celestial_body_name: Option<String>,
+    ) -> Self {
+        CrsListParameters {
+            types,
+            crs_area_of_use_contains_bbox,
+            bbox_valid,
+            west_lon_degree,
+            south_lat_degree,
+            east_lon_degree,
+            north_lat_degree,
+            allow_deprecated,
+            celestial_body_name,
+        }
+    }
+}
 
-readonly_struct!(
-UnitInfo ,
-    "Structure given description of a unit."
-    "This structure may grow over time, and should not be directly allocated by client code."
-    "# References"
-    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_UNIT_INFO>",
-    {auth_name: String,"Authority name."},
-    {code: String,"Object code."},
-    {name: String,"Object name. For example `metre`, `US survey foot`, etc."},
-    {category: UnitCategory,"Category of the unit: one of `linear`, `linear_per_time`, `angular`, `angular_per_time`, `scale`, `scale_per_time` or `time"},
-    {conv_factor: f64,"Conversion factor to apply to transform from that unit to the corresponding SI unit (metre for `linear`, radian for `angular`, etc.).
-    It might be 0 in some cases to indicate no known conversion factor."},
-    {proj_short_name: String,"PROJ short name, like `m`, `ft`, `us-ft`, etc... Might be NULL"},
-    {deprecated: bool,"Whether the object is deprecated"}
-);
+///Structure given description of a unit.
+///
+///This structure may grow over time, and should not be directly allocated by
+/// client code.
+///
+///# References
+///
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_UNIT_INFO>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct UnitInfo {
+    /// Authority name.
+    auth_name: String,
+    /// Object code.
+    code: String,
+    /// Object name. For example `metre`, `US survey foot`, etc.
+    name: String,
+    /// Category of the unit: one of `linear`, `linear_per_time`, `angular`,
+    /// `angular_per_time`, `scale`, `scale_per_time` or `time`
+    category: UnitCategory,
+    /// Conversion factor to apply to transform from that unit to the
+    /// corresponding SI unit (metre for `linear`, radian for `angular`, etc.).
+    conv_factor: f64,
+    /// PROJ short name, like `m`, `ft`, `us-ft`, etc... Might be NULL
+    proj_short_name: String,
+    /// Whether the object is deprecated
+    deprecated: bool,
+}
+impl UnitInfo {
+    pub fn new(
+        auth_name: String,
+        code: String,
+        name: String,
+        category: UnitCategory,
+        conv_factor: f64,
+        proj_short_name: String,
+        deprecated: bool,
+    ) -> Self {
+        UnitInfo {
+            auth_name,
+            code,
+            name,
+            category,
+            conv_factor,
+            proj_short_name,
+            deprecated,
+        }
+    }
+}
 
-readonly_struct!(
-    CelestialBodyInfo,
-    "Structure given description of a celestial body."
-    "This structure may grow over time, and should not be directly allocated by client code."
-    "# References"
-    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CELESTIAL_BODY_INFO>",
-    {auth_name:String,"Authority name."},
-    {name:String,"Object name. For example `Earth`"}
-);
+/// Structure given description of a celestial body.
+///
+/// This structure may grow over time, and should not be directly allocated by
+/// client code.
+///
+/// # References
+///
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CELESTIAL_BODY_INFO>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct CelestialBodyInfo {
+    /// Authority name.
+    auth_name: String,
+    /// Object
+    name: String,
+}
+impl CelestialBodyInfo {
+    pub fn new(auth_name: String, name: String) -> Self { CelestialBodyInfo { auth_name, name } }
+}
 ///Type of unit of measure.
 ///
 ///# References
@@ -411,19 +546,43 @@ impl AxisDescription {
         })
     }
 }
-readonly_struct!(
-    ParamDescription ,
-    "Description of a parameter value for a Conversion."
-    "# References"
-    "* <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PARAM_DESCRIPTION>",
-    {name: Option<String>},
-    {auth_name:  Option<String>},
-    {code:  Option<String>},
-    {value: f64},
-    {unit_name:  Option<String>},
-    {unit_conv_factor: f64},
-    {unit_type: UnitType}
-);
+/// Description of a parameter value for a Conversion.
+///
+/// # References
+///
+/// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_PARAM_DESCRIPTION>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct ParamDescription {
+    name: Option<String>,
+    auth_name: Option<String>,
+    code: Option<String>,
+    value: f64,
+    unit_name: Option<String>,
+    unit_conv_factor: f64,
+    unit_type: UnitType,
+}
+impl ParamDescription {
+    pub fn new(
+        name: Option<String>,
+        auth_name: Option<String>,
+        code: Option<String>,
+        value: f64,
+        unit_name: Option<String>,
+        unit_conv_factor: f64,
+        unit_type: UnitType,
+    ) -> Self {
+        ParamDescription {
+            name,
+            auth_name,
+            code,
+            value,
+            unit_name,
+            unit_conv_factor,
+            unit_type,
+        }
+    }
+}
 
 // region:internal
 /// # References
@@ -514,58 +673,148 @@ pub enum AxisDirection {
     #[strum(serialize = "unspecified")]
     Unspecified,
 }
-readonly_struct!(
-    AxisInfo,
-    "# References"
-    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>",
-    {name: String},
-    {abbrev: String},
-    {direction :AxisDirection},
-    {unit_conv_factor :f64},
-    {unit_name:String},
-    {unit_auth_name:String},
-    {unit_code:String}
-);
-readonly_struct!(
-    EllipsoidParameters,
-    "# References"
-    "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
-   {semi_major_metre: f64},
-   {semi_minor_metre: f64},
-   {is_semi_minor_computed :bool},
-   {inv_flattening :f64}
-);
-readonly_struct!(
-    PrimeMeridianParameters,
-    "# References"
-    "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
-    {longitude: f64},
-    {unit_conv_factor : f64},
-    {unit_name :String}
-);
-readonly_struct!(
-    CoordOperationMethodInfo,
-    "# References"
-     "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
-    {method_name: String},
-    {method_auth_name : String},
-    {method_code :String}
-);
-readonly_struct!(
-    CoordOperationParam,
-    "# References"
-    "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
-    {name : String},
-    {auth_name  : String},
-    {code  :String},
-    {value   :f64},
-    {value_string   :String},
-    {unit_conv_factor   :f64},
-    {unit_name   :String},
-    {unit_auth_name   :String},
-    {unit_code   :String},
-    {unit_category   :UnitCategory}
-);
+///# References
+///
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq)]
+pub struct AxisInfo {
+    name: String,
+    abbrev: String,
+    direction: AxisDirection,
+    unit_conv_factor: f64,
+    unit_name: String,
+    unit_auth_name: String,
+    unit_code: String,
+}
+impl AxisInfo {
+    pub fn new(
+        name: String,
+        abbrev: String,
+        direction: AxisDirection,
+        unit_conv_factor: f64,
+        unit_name: String,
+        unit_auth_name: String,
+        unit_code: String,
+    ) -> Self {
+        AxisInfo {
+            name,
+            abbrev,
+            direction,
+            unit_conv_factor,
+            unit_name,
+            unit_auth_name,
+            unit_code,
+        }
+    }
+}
+/// # References
+///
+/// * <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq)]
+pub struct EllipsoidParameters {
+    semi_major_metre: f64,
+    semi_minor_metre: f64,
+    is_semi_minor_computed: bool,
+    inv_flattening: f64,
+}
+impl EllipsoidParameters {
+    pub fn new(
+        semi_major_metre: f64,
+        semi_minor_metre: f64,
+        is_semi_minor_computed: bool,
+        inv_flattening: f64,
+    ) -> Self {
+        EllipsoidParameters {
+            semi_major_metre,
+            semi_minor_metre,
+            is_semi_minor_computed,
+            inv_flattening,
+        }
+    }
+}
+/// # References
+///
+/// * <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct PrimeMeridianParameters {
+    longitude: f64,
+    unit_conv_factor: f64,
+    unit_name: String,
+}
+impl PrimeMeridianParameters {
+    pub fn new(longitude: f64, unit_conv_factor: f64, unit_name: String) -> Self {
+        PrimeMeridianParameters {
+            longitude,
+            unit_conv_factor,
+            unit_name,
+        }
+    }
+}
+#[doc = "# References"]
+#[doc = "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>"]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct CoordOperationMethodInfo {
+    method_name: String,
+    method_auth_name: String,
+    method_code: String,
+}
+impl CoordOperationMethodInfo {
+    pub fn new(method_name: String, method_auth_name: String, method_code: String) -> Self {
+        CoordOperationMethodInfo {
+            method_name,
+            method_auth_name,
+            method_code,
+        }
+    }
+}
+///# References
+///
+/// * <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct CoordOperationParam {
+    name: String,
+    auth_name: String,
+    code: String,
+    value: f64,
+    value_string: String,
+    unit_conv_factor: f64,
+    unit_name: String,
+    unit_auth_name: String,
+    unit_code: String,
+    unit_category: UnitCategory,
+}
+impl CoordOperationParam {
+    pub fn new(
+        name: String,
+        auth_name: String,
+        code: String,
+        value: f64,
+        value_string: String,
+        unit_conv_factor: f64,
+        unit_name: String,
+        unit_auth_name: String,
+        unit_code: String,
+        unit_category: UnitCategory,
+    ) -> Self {
+        CoordOperationParam {
+            name,
+            auth_name,
+            code,
+            value,
+            value_string,
+            unit_conv_factor,
+            unit_name,
+            unit_auth_name,
+            unit_code,
+            unit_category,
+        }
+    }
+}
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, EnumString, AsRefStr)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UnitCategory {
@@ -592,18 +841,41 @@ pub enum UnitCategory {
     #[strum(serialize = "parametric_per_time")]
     ParametricPerTime,
 }
-readonly_struct!(
-    CoordOperationGridUsed,
-    "# References"
-    "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>",
-    {short_name   : String},
-    {full_name   :String},
-    {package_name    :String},
-    {url    :String},
-    {direct_download    :bool},
-    {open_license    :bool},
-    {available    :bool}
-);
+/// # References
+///
+/// * <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CoordOperationGridUsed {
+    short_name: String,
+    full_name: String,
+    package_name: String,
+    url: String,
+    direct_download: bool,
+    open_license: bool,
+    available: bool,
+}
+impl CoordOperationGridUsed {
+    pub fn new(
+        short_name: String,
+        full_name: String,
+        package_name: String,
+        url: String,
+        direct_download: bool,
+        open_license: bool,
+        available: bool,
+    ) -> Self {
+        CoordOperationGridUsed {
+            short_name,
+            full_name,
+            package_name,
+            url,
+            direct_download,
+            open_license,
+            available,
+        }
+    }
+}
 /// # See Also
 ///
 /// *[`crate::Context::get_database_metadata`]
@@ -668,17 +940,41 @@ impl Display for AllowIntermediateCrs {
         write!(f, "{text}")
     }
 }
-readonly_struct!(
-    AreaOfUse,
-    "# References"
-    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>"
-    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_ex>",
-    {area_name:String,"a string to receive the name of the area of use."},
-    {west_lon_degree:f64,"a double to receive the west latitude (in degrees)."},
-    {south_lat_degree:f64,"a double to receive the south latitude (in degrees)."},
-    {east_lon_degree:f64,"a double to receive the east latitude (in degrees)."},
-    {north_lat_degree:f64,"a double to receive the north latitude (in degrees)."}
-);
+///# References
+///
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_ex>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct AreaOfUse {
+    /// a string to receive the name of the area of use.
+    area_name: String,
+    /// a double to receive the west latitude (in degrees).
+    west_lon_degree: f64,
+    /// a double to receive the south latitude (in degrees).
+    south_lat_degree: f64,
+    /// a double to receive the east latitude (in degrees).
+    east_lon_degree: f64,
+    /// a double to receive the north latitude (in degrees).
+    north_lat_degree: f64,
+}
+impl AreaOfUse {
+    pub fn new(
+        area_name: String,
+        west_lon_degree: f64,
+        south_lat_degree: f64,
+        east_lon_degree: f64,
+        north_lat_degree: f64,
+    ) -> Self {
+        AreaOfUse {
+            area_name,
+            west_lon_degree,
+            south_lat_degree,
+            east_lon_degree,
+            north_lat_degree,
+        }
+    }
+}
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, EnumString)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum UomCategory {
@@ -705,25 +1001,67 @@ pub enum UomCategory {
     #[strum(serialize = "parametric_per_time")]
     ParametricPerTime,
 }
-readonly_struct!(
-    UomInfo,
-    "# References"
-    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>",
-    {name :String},
-    {conv_factor:f64,"a value to store the conversion factor of the prime meridian longitude unit to radian."},
-    {category:UomCategory}
-);
-readonly_struct!(
-    GridInfoDB,
-    "# References"
-    "* <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>",
-    {full_name :String,"a string value to store the grid full filename."},
-    {package_name:String,"a string value to store the package name where the grid might be found."},
-    {url:String,"a string value to store the grid URL or the package URL where the grid might be found."},
-    {direct_download:bool,"a boolean value to store whether *out_url can be downloaded directly."},
-    {open_license:bool,"a boolean value to store whether the grid is released with an open license."},
-    {available:bool,"a boolean value to store whether the grid is available at runtime."}
-);
+///# References
+///
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct UomInfo {
+    name: String,
+    /// a double to receive the conversion factor of the unit to the
+    /// corresponding SI unit (metre for `linear`, radian for `angular`, etc.).
+    conv_factor: f64,
+    category: UomCategory,
+}
+impl UomInfo {
+    pub fn new(name: String, conv_factor: f64, category: UomCategory) -> Self {
+        UomInfo {
+            name,
+            conv_factor,
+            category,
+        }
+    }
+}
+///# References
+///
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[derive(Debug, Clone, PartialEq, Getters)]
+pub struct GridInfoDB {
+    /// a string value to store the grid full filename.
+    full_name: String,
+    /// a string value to store the package name where the grid might be found.
+    package_name: String,
+    /// a string value to store the grid URL or the package URL where the grid
+    /// might be found.
+    url: String,
+    /// a boolean value to store whether *out_url can be downloaded directly.
+    direct_download: bool,
+    /// a boolean value to store whether the grid is released with an open
+    /// license.
+    open_license: bool,
+    /// a boolean value to store whether the grid is available at runtime.
+    available: bool,
+}
+impl GridInfoDB {
+    pub fn new(
+        full_name: String,
+        package_name: String,
+        url: String,
+        direct_download: bool,
+        open_license: bool,
+        available: bool,
+    ) -> Self {
+        GridInfoDB {
+            full_name,
+            package_name,
+            url,
+            direct_download,
+            open_license,
+            available,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct InsertObjectSession {
     pub(crate) arc_ctx_ptr: Arc<ContextPtr>,

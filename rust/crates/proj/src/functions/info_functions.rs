@@ -111,9 +111,9 @@ mod test {
     fn test_pj_info() -> mischief::Result<()> {
         let info = info()?;
         println!("{info:?}");
-        assert_eq!(info.major(), &(crate::version::PROJ_VERSION_MAJOR as i32));
-        assert_eq!(info.minor(), &(crate::version::PROJ_VERSION_MINOR as i32));
-        assert_eq!(info.patch(), &(crate::version::PROJ_VERSION_PATCH as i32));
+        assert_eq!(info.major(), crate::version::PROJ_VERSION_MAJOR as i32);
+        assert_eq!(info.minor(), crate::version::PROJ_VERSION_MINOR as i32);
+        assert_eq!(info.patch(), crate::version::PROJ_VERSION_PATCH as i32);
         Ok(())
     }
 

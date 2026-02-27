@@ -4,15 +4,7 @@
     "config:recommended",
     "github>Glatzel/template//renovate"
   ],
-  "packageRules": [
-    {
-      "groupName": "cuda",
-      "matchManagers": [
-        "pixi"
-      ],
-      "matchPackageNames": [
-        "cuda-*"
-      ]
-    }
+  "ignorePaths": [
+    "lefthook/**"
   ]
 }

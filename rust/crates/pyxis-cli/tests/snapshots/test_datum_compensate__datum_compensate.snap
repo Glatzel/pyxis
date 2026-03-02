@@ -1,5 +1,0 @@
----
-source: crates/pyxis-cli/tests/test_datum_compensate.rs
-expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
----
-x: 469706.56912942487, y: 2821763.831232311, elevation: 0

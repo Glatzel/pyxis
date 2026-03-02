@@ -1,5 +1,0 @@
----
-source: crates/pyxis-cli/tests/test_scale.rs
-expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
----
-x: 3, y: 6, z: 9

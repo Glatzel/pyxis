@@ -1,8 +1,4 @@
-mod cli;
-mod logging;
-mod settings;
+pub mod cli;
 mod utils;
-pub use settings::{SETTINGS, Settings};
 
-#[tokio::main]
-async fn main() -> mischief::Result<()> { crate::cli::execute().await }
+fn main() -> mischief::Result<()> { crate::cli::execute() }

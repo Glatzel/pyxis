@@ -31,7 +31,6 @@ pub static SETTINGS: LazyLock<Mutex<Settings>> = LazyLock::new(|| {
 });
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct Settings {
-    pub abacus: crate::cli::abacus::Settings,
     pub trail: crate::cli::trail::settings::Settings,
 }
 
@@ -39,9 +38,6 @@ impl Settings {
     pub fn overwrite_settings(args: &cli::SubCommands) -> mischief::Result<()> {
         let mut settings = SETTINGS.lock();
         match *args {
-            cli::SubCommands::Abacus { output_format, .. } => {
-                output_format.inspect(|o| settings.abacus.output_format = *o);
-            }
             cli::SubCommands::Trail {
                 ref port,
                 baud_rate,

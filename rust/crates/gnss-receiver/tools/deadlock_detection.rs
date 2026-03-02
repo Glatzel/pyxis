@@ -1,8 +1,8 @@
 #[tokio::main]
 async fn main() -> mischief::Result<()> {
-    pyxis_cli::logging::init_log(clerk::LogLevel::TRACE);
+    gnss_receiver::logging::init_log(clerk::LogLevel::TRACE);
     start_deadlock_detection();
-    pyxis_cli::cli::execute().await?;
+    gnss_receiver::cli::execute().await?;
     Ok(())
 }
 pub fn start_deadlock_detection() {

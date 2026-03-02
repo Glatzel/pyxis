@@ -7,11 +7,9 @@ use context::ContextTransform;
 pub use options::*;
 use pyxis::crypto::CryptoSpace;
 use record::Record;
-mod settings;
-pub use settings::Settings;
 
 #[derive(Bpaf, Clone, Debug)]
-pub enum AbacusArgs {
+pub enum TransformArgs {
     #[bpaf(command, adjacent)]
     /// Crypto coordinates between `BD09`, `GCJ02` and `WGS84`.
     Crypto {
@@ -132,7 +130,14 @@ pub enum AbacusArgs {
         tz: f64,
     },
 }
-pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mischief::Result<()> {
+pub fn execute(
+    name: &str,
+    x: f64,
+    y: f64,
+    z: f64,
+    output_format: OutputFormat,
+    cmds: Vec<TransformArgs>,
+) -> mischief::Result<()> {
     let mut ctx = ContextTransform { x, y, z };
     let mut records: Vec<Record> = vec![Record {
         idx: 0,
@@ -149,7 +154,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mis
         clerk::debug!("step: {i}");
         clerk::debug!("cmd: {cmd:?}");
         match cmd {
-            AbacusArgs::Crypto { from, to } => {
+            TransformArgs::Crypto { from, to } => {
                 ctx.crypto(*from, *to);
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -167,7 +172,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mis
                 };
                 records.push(record);
             }
-            AbacusArgs::DatumCompensate {
+            TransformArgs::DatumCompensate {
                 hb,
                 radius: r,
                 x0,
@@ -192,7 +197,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mis
                 };
                 records.push(record);
             }
-            AbacusArgs::Migrate2d {
+            TransformArgs::Migrate2d {
                 given,
                 another,
                 another_x,
@@ -221,7 +226,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mis
                 };
                 records.push(record);
             }
-            AbacusArgs::Normalize {} => {
+            TransformArgs::Normalize {} => {
                 ctx.normalize();
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -236,7 +241,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mis
                 };
                 records.push(record);
             }
-            AbacusArgs::Proj { from, to } => {
+            TransformArgs::Proj { from, to } => {
                 ctx.proj(from.as_str(), to.as_str()).unwrap();
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -254,7 +259,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mis
                 };
                 records.push(record);
             }
-            AbacusArgs::Rotate {
+            TransformArgs::Rotate {
                 value,
                 plane,
                 unit,
@@ -283,7 +288,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mis
                 };
                 records.push(record);
             }
-            AbacusArgs::Scale {
+            TransformArgs::Scale {
                 sx,
                 sy,
                 sz,
@@ -312,7 +317,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mis
                 };
                 records.push(record);
             }
-            AbacusArgs::Space { from, to } => {
+            TransformArgs::Space { from, to } => {
                 ctx.space(*from, *to);
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -330,7 +335,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mis
                 };
                 records.push(record);
             }
-            AbacusArgs::Translate { tx, ty, tz } => {
+            TransformArgs::Translate { tx, ty, tz } => {
                 ctx.translate(*tx, *ty, *tz);
                 let record = Record {
                     idx: (i + 1) as u8,
@@ -353,7 +358,7 @@ pub fn execute(name: &str, x: f64, y: f64, z: f64, cmds: Vec<AbacusArgs>) -> mis
         clerk::debug!("context x: {}, y: {}, z: {}", ctx.x, ctx.y, ctx.z);
     }
     // output
-    match crate::settings::SETTINGS.lock().abacus.output_format {
+    match output_format {
         OutputFormat::Simple => output::output_simple(records.last().unwrap()),
         OutputFormat::Verbose => output::output_plain(name, &records),
         OutputFormat::Json => output::output_json(name, &records),

@@ -1,23 +1,9 @@
 use assert_cmd::Command;
-use assert_cmd::assert::Assert;
-
-fn print_output(cmd: &Assert) {
-    let output = cmd.get_output();
-    let stdout = String::from_utf8_lossy(output.stdout.as_slice());
-    let stderr = String::from_utf8_lossy(output.stderr.as_slice());
-
-    // Print results
-    if output.status.success() {
-        println!("Output:\n{stdout}");
-    } else {
-        eprintln!("Error:\n{stderr}");
-    }
-}
 #[test]
 fn test_jiaxing_bump_station() -> mischief::Result<()> {
     let cmd = Command::new(assert_cmd::cargo_bin!("pyxis"))
         .args([
-            "abacus",
+            "transform",
             "-n",
             "Jiaxing bump station",
             "-x",
@@ -32,16 +18,14 @@ fn test_jiaxing_bump_station() -> mischief::Result<()> {
         .args(["crypto", "--from", "wgs84", "--to", "gcj02"])
         .assert()
         .success();
-    print_output(&cmd);
+    insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
     Ok(())
 }
 #[test]
 fn test_zhengyong_expressway_dehua_east_interchange() -> mischief::Result<()> {
     let cmd = Command::new(assert_cmd::cargo_bin!("pyxis"))
-
-    .args([
+    .args([  "transform",
             "-v",
-            "abacus",
             "-n", "Zhengyong expressway Dehua east interchange",
             "-x", "469704.6693",
             "-y", "2821940.796",
@@ -62,6 +46,6 @@ fn test_zhengyong_expressway_dehua_east_interchange() -> mischief::Result<()> {
         ])
         .assert()
         .success();
-    print_output(&cmd);
+    insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
     Ok(())
 }

@@ -3,7 +3,7 @@
   "title": "Settings",
   "type": "object",
   "properties": {
-    "abacus": {
+    "transform": {
       "$ref": "#/$defs/Settings"
     },
     "trail": {
@@ -11,7 +11,7 @@
     }
   },
   "required": [
-    "abacus",
+    "transform",
     "trail"
   ],
   "$defs": {

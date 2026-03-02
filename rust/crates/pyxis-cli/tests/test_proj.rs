@@ -1,10 +1,9 @@
 use assert_cmd::Command;
-use predicates::prelude::*;
 #[test]
 fn test_proj() {
-    Command::new(assert_cmd::cargo_bin!("pyxis"))
+    let cmd = Command::new(assert_cmd::cargo_bin!("pyxis"))
         .args([
-            "abacus",
+            "transform",
             "-x",
             "4760096.421921",
             "-y",
@@ -14,7 +13,6 @@ fn test_proj() {
         ])
         .args(["proj", "--from", "EPSG:2230", "--to", "EPSG:26946"])
         .assert()
-        .success()
-        .stdout(predicate::str::contains("x: 1450880"))
-        .stdout(predicate::str::contains("y: 1141263"));
+        .success();
+    insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
 }

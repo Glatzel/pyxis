@@ -11,7 +11,6 @@ fn test_migrate_2d(#[case] given: &str, #[case] another: &str) {
             "transform",
             "-x",
             &1.0.to_string(),
-            "-y",
             &format!("-y={}", (-2.0).to_string()),
         ])
         .args([

@@ -32,7 +32,10 @@ fn test_rotate_equals_origin(#[case] axis: &str) {
         ])
         .assert()
         .success();
-    insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
+    insta::assert_snapshot!(
+        format!("test_rotate_equals_origin-{axis}"),
+        String::from_utf8_lossy(cmd.get_output().stdout.as_slice())
+    );
 }
 #[rstest]
 #[case("xy")]
@@ -65,5 +68,8 @@ fn test_rotate(#[case] axis: &str) {
         ])
         .assert()
         .success();
-    insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
+    insta::assert_snapshot!(
+        format!("test_rotate-{axis}"),
+        String::from_utf8_lossy(cmd.get_output().stdout.as_slice())
+    );
 }

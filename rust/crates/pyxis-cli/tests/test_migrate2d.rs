@@ -30,5 +30,8 @@ fn test_migrate_2d(#[case] given: &str, #[case] another: &str) {
         ])
         .assert()
         .success();
-    insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
+    insta::assert_snapshot!(
+        format!("test_migrate_2d-{given}-{another}"),
+        String::from_utf8_lossy(cmd.get_output().stdout.as_slice())
+    );
 }

@@ -1,0 +1,5 @@
+---
+source: crates/pyxis-cli/tests/test_crypto.rs
+expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
+---
+longitude: 121.09626935518249, latitude: 30.60860433047113, elevation: 0

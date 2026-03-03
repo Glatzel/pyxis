@@ -20,5 +20,8 @@ fn test_output(#[case] output: &str) {
         .args(["proj", "--from", "EPSG:2230", "--to", "EPSG:26946"])
         .assert()
         .success();
-    insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
+    insta::assert_snapshot!(
+        format!("test_output-{output}"),
+        String::from_utf8_lossy(cmd.get_output().stdout.as_slice())
+    );
 }

@@ -1,0 +1,28 @@
+---
+source: crates/pyxis-cli/tests/test_command_chain.rs
+expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
+---
+===========================================
+Zhengyong expressway Dehua east interchange
+===========================================
+x: 469704.6693, y: 2821940.796, z: 0
+|-- step: 1
+|-- method: datum compensate
+|-- parameter:
+|       {
+|         "hb": 400.0,
+|         "r": 6378137.0,
+|         "x0": 500000.0,
+|         "y0": 0.0
+|       }
+▼
+x: 469706.56912942487, y: 2821763.831232311, elevation: 0
+|-- step: 2
+|-- method: proj
+|-- parameter:
+|       {
+|         "from": "+proj=tmerc +lat_0=0 +lon_0=118.5 +k=1 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs +type=crs",
+|         "to": "+proj=longlat +datum=WGS84 +no_defs +type=crs"
+|       }
+▼
+x: 118.19868034481004, y: 25.502591181714727, z: 0

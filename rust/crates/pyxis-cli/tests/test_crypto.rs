@@ -14,5 +14,8 @@ fn test_crypto(#[case] from: &str, #[case] to: &str, #[case] lon: f64, #[case] l
         .args(["crypto", "-f", from, "-t", to])
         .assert()
         .success();
-    insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
+    insta::assert_snapshot!(
+        format!("test_crypto-{from}-{to}"),
+        String::from_utf8_lossy(cmd.get_output().stdout.as_slice())
+    );
 }

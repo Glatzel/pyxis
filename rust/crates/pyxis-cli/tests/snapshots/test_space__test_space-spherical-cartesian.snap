@@ -1,0 +1,5 @@
+---
+source: crates/pyxis-cli/tests/test_space.rs
+expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
+---
+longitude: -0.5185448794788478, latitude: -1.3337760528968146, elevation: -5.414069878444982

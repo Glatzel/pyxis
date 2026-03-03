@@ -22,5 +22,8 @@ fn test_space(#[case] from: &str, #[case] to: &str) {
         .args(["space", "-f", from, "-t", to])
         .assert()
         .success();
-    insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
+    insta::assert_snapshot!(
+        format!("test_space-{from}-{to}"),
+        String::from_utf8_lossy(cmd.get_output().stdout.as_slice())
+    );
 }

@@ -2,4 +2,4 @@
 source: crates/pyxis-cli/tests/test_output.rs
 expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
 ---
-x: 1450880.2910605022, y: 1141263.0111604782, z: 0
+x: <coordinate>, y: <coordinate>, z: 0

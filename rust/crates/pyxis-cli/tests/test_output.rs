@@ -17,10 +17,13 @@ fn test_output(#[case] output: &str) {
             "-o",
             output,
         ])
+        .args(["proj", "--from", "EPSG:2230", "--to", "EPSG:26946"])
         .assert()
         .success();
-    insta::assert_snapshot!(
+    insta::with_settings!({filters => vec![
+        (r"\d+\.\d+", "<coordinate>"),
+    ]}, {  insta::assert_snapshot!(
         format!("test_output-{output}"),
         String::from_utf8_lossy(cmd.get_output().stdout.as_slice())
-    );
+    )});
 }

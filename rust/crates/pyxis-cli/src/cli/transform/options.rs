@@ -3,9 +3,7 @@ use std::str::FromStr;
 
 use bpaf::Bpaf;
 use serde::{Deserialize, Serialize};
-#[derive(
-    Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum OutputFormat {
     Simple,
     Verbose,

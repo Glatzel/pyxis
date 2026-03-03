@@ -150,8 +150,7 @@ CONCATENATEDOPERATION["Inverse of Map Grid of Australia zone 56 + GDA94 to GDA20
                 SCALEUNIT["parts per billion",1E-09],
                 ID["EPSG",8611]],
             OPERATIONACCURACY[0.01],
-            ID["EPSG",8048],
-            REMARK["Scale difference in ppb where 1/billion = 1E-9. See CT codes 8444-46 for NTv2 method giving equivalent results for Christmas Island, Cocos Islands and Australia respectively. See CT code 8447 for alternative including distortion model for Australia only."]]],
+            ID["EPSG",8048]]],
     STEP[
         CONVERSION["Map Grid of Australia zone 56",
             METHOD["Transverse Mercator",

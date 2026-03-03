@@ -1,0 +1,25 @@
+---
+source: crates/proj/src/functions/iso19111/context_advanced.rs
+expression: wkt
+---
+CONVERSION["unnamed",
+    METHOD["Affine parametric transformation",
+        ID["EPSG",9624]],
+    PARAMETER["A0",1.1,
+        LENGTHUNIT["metre",1],
+        ID["EPSG",8623]],
+    PARAMETER["A1",2.1,
+        SCALEUNIT["unity",1],
+        ID["EPSG",8624]],
+    PARAMETER["A2",3.1,
+        SCALEUNIT["unity",1],
+        ID["EPSG",8625]],
+    PARAMETER["B0",4.1,
+        LENGTHUNIT["metre",1],
+        ID["EPSG",8639]],
+    PARAMETER["B1",5.1,
+        SCALEUNIT["unity",1],
+        ID["EPSG",8640]],
+    PARAMETER["B2",6.1,
+        SCALEUNIT["unity",1],
+        ID["EPSG",8641]]]

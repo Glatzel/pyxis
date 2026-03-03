@@ -3452,7 +3452,43 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_linear_affine_parametric_conversion() -> mischief::Result<()> { todo!() }
+    fn test_create_linear_affine_parametric_conversion() -> mischief::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        {
+            let pj = ctx.create_linear_affine_parametric_conversion(
+                None, 1.1, None, 0.0, 2.1, None, 0.0, 3.1, None, 0.0, 4.1, None, 0.0, 5.1, None,
+                0.0, 6.1, None, 0.0,
+            )?;
+            let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            insta::assert_snapshot!(wkt);
+        }
+        {
+            let pj = ctx.create_linear_affine_parametric_conversion(
+                Some("conversion name"),
+                1.1,
+                Some("my unit1"),
+                0.11,
+                2.1,
+                Some("my unit2"),
+                0.12,
+                3.1,
+                Some("my unit3"),
+                0.13,
+                4.1,
+                Some("my unit4"),
+                0.14,
+                5.1,
+                Some("my unit5"),
+                0.15,
+                6.1,
+                Some("my unit6"),
+                0.16,
+            )?;
+            let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            insta::assert_snapshot!(wkt);
+        }
+        Ok(())
+    }
     #[test]
     fn test_create_transformation() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
@@ -3552,9 +3588,40 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_derived_projected_crs() -> mischief::Result<()> { todo!() }
+    fn test_create_derived_projected_crs() -> mischief::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let proj_crs = ctx.create("EPSG:32631")?;
+        let conv = ctx.create_linear_affine_parametric_conversion(
+            None, 1.1, None, 0.0, 2.1, None, 0.0, 3.1, None, 0.0, 4.1, None, 0.0, 5.1, None, 0.0,
+            6.1, None, 0.0,
+        )?;
+        let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+        let pj = ctx.create_derived_projected_crs(Some("my derived crs"), &proj_crs, &conv, &cs)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        insta::assert_snapshot!(wkt);
+        Ok(())
+    }
     #[test]
-    fn test_crs_add_horizontal_derived_conversions() -> mischief::Result<()> { todo!() }
+    fn test_crs_add_horizontal_derived_conversions() -> mischief::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let conv = ctx.create_linear_affine_parametric_conversion(
+            None, 1.1, None, 0.0, 2.1, None, 0.0, 3.1, None, 0.0, 4.1, None, 0.0, 5.1, None, 0.0,
+            6.1, None, 0.0,
+        )?;
+        let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+        let proj_crs = ctx.create("EPSG:32631")?;
+        let pj = ctx.crs_add_horizontal_derived_conversion(
+            Some("my derived crs"),
+            &proj_crs,
+            &conv,
+            &cs,
+        )?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        insta::assert_snapshot!(wkt);
+        Ok(())
+    }
     #[test]
     fn test_crs_create_bound_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;

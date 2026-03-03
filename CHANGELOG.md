@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.42] - 2026-03-03
+
+### Changed
+
+- Use community macro to generate read-only struct by @Glatzel in [#788](https://github.com/Glatzel/pyxis/pull/788)
+- Split cli by @Glatzel in [#795](https://github.com/Glatzel/pyxis/pull/795)
+
+### Refactor
+
+- String pointer handling by @Glatzel in [#754](https://github.com/Glatzel/pyxis/pull/754)
+- Remove unwrap by @Glatzel in [#755](https://github.com/Glatzel/pyxis/pull/755)
+
+### Removed
+
+- Remove pkg-config by @Glatzel in [#752](https://github.com/Glatzel/pyxis/pull/752)
+- Remove pkg-config by @Glatzel in [#753](https://github.com/Glatzel/pyxis/pull/753)
+
+### Testing
+
+- Init insta test by @Glatzel in [#776](https://github.com/Glatzel/pyxis/pull/776)
+
 ## [0.0.39] - 2025-12-29
 
 ### Changed
@@ -620,6 +641,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2025-02-05
 
+[0.0.42]: https://github.com/Glatzel/pyxis/compare/v0.0.41..v0.0.42
 [0.0.39]: https://github.com/Glatzel/pyxis/compare/v0.0.38..v0.0.39
 [0.0.38]: https://github.com/Glatzel/pyxis/compare/v0.0.37..v0.0.38
 [0.0.37]: https://github.com/Glatzel/pyxis/compare/v0.0.36..v0.0.37

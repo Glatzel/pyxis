@@ -1,0 +1,34 @@
+---
+source: crates/pyxis-cli/tests/test_output.rs
+expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
+---
+{
+  "name": "",
+  "record": [
+    {
+      "idx": 0,
+      "method": "input",
+      "output_x": <coordinate>,
+      "output_x_name": "x",
+      "output_y": <coordinate>,
+      "output_y_name": "y",
+      "output_z": <coordinate>,
+      "output_z_name": "z",
+      "parameter": {}
+    },
+    {
+      "idx": 1,
+      "method": "proj",
+      "output_x": <coordinate>,
+      "output_x_name": "x",
+      "output_y": <coordinate>,
+      "output_y_name": "y",
+      "output_z": <coordinate>,
+      "output_z_name": "z",
+      "parameter": {
+        "from": "EPSG:2230",
+        "to": "EPSG:26946"
+      }
+    }
+  ]
+}

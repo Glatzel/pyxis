@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Settings",
+  "type": "object",
+  "properties": {
+    "trail": {
+      "$ref": "#/$defs/Settings"
+    }
+  },
+  "required": [
+    "trail"
+  ],
+  "$defs": {
+    "Settings": {
+      "type": "object",
+      "properties": {
+        "baud_rate": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "capacity": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "port": {
+          "type": "string"
+        },
+        "tab_coord": {
+          "$ref": "#/$defs/TabCoordSettings"
+        }
+      },
+      "required": [
+        "port",
+        "baud_rate",
+        "capacity",
+        "tab_coord"
+      ]
+    },
+    "TabCoordSettings": {
+      "type": "object",
+      "properties": {
+        "custom_cs": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "custom_cs"
+      ]
+    }
+  }
+}

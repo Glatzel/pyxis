@@ -1,0 +1,5 @@
+[trail]
+baud_rate = 9600
+capacity = 1000
+port = "COM1"
+tab_coord.custom_cs = ""

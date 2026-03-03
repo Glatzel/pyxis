@@ -1,0 +1,17 @@
+---
+source: crates/pyxis-cli/tests/test_output.rs
+expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
+---
+=================
+Transform Records
+=================
+x: <coordinate>, y: <coordinate>, z: 0
+|-- step: 1
+|-- method: proj
+|-- parameter:
+|       {
+|         "from": "EPSG:2230",
+|         "to": "EPSG:26946"
+|       }
+▼
+x: <coordinate>, y: <coordinate>, z: 0

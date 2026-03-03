@@ -4,7 +4,7 @@ resolver = "2"
 
 [workspace.package]
 edition = "2024"
-version = "0.0.41"
+version = "0.0.42"
 
 [workspace.dependencies]
 proj = { path = "./crates/proj" }
@@ -35,9 +35,11 @@ libc = "0.2"
 num-traits = "0.2.19"
 num_enum = "0.7.4"
 parking_lot = { version = "0.12.4", features = ["deadlock_detection"] }
+path-slash = "0.2.1"
 predicates = "3.1"
 rand = "0.10.0"
 ratatui = "0.30.0"
+rstest = "0.26.1"
 schemars = "1.0"
 serde = { version = "1.0.226", features = ["derive"] }
 serde_json = "1.0.145"

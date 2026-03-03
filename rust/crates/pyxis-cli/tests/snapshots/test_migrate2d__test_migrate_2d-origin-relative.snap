@@ -1,0 +1,5 @@
+---
+source: crates/pyxis-cli/tests/test_migrate2d.rs
+expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
+---
+x: -0.3397459621556109, y: -24.320508075688775, z: 0

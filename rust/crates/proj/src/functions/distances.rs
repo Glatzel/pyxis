@@ -86,11 +86,13 @@ impl crate::Proj {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_geod_direct>
     pub fn geod_direct(
         &self,
-        _a: impl crate::ICoord,
-        _azimuth: f64,
-        _distance: f64,
+        a: impl crate::ICoord,
+        azimuth: f64,
+        distance: f64,
     ) -> Result<(f64, f64, f64), ProjError> {
-        todo!()
+        let coord =
+            unsafe { proj_sys::proj_geod_direct(self.ptr(), a.to_coord()?, azimuth, distance) };
+        Ok(unsafe { (coord.xyzt.x, coord.xyzt.y, coord.xyzt.z) })
     }
 }
 /// Calculate 2-dimensional euclidean between two projected coordinates.
@@ -145,6 +147,17 @@ mod test {
         )?;
         assert_approx_eq!(f64, dist, 313588.39721259556);
         assert_approx_eq!(f64, reversed_azimuth, 45.10460545587798);
+        Ok(())
+    }
+    #[test]
+    fn test_geod_direct() -> mischief::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        let (distance, forward_azimuth, reverse_azimuth) =
+            pj.geod_direct((1.0f64.to_radians(), 2.0f64.to_radians()), 0.5, 0.6)?;
+        assert_approx_eq!(f64, distance, 0.017453337647460824);
+        assert_approx_eq!(f64, forward_azimuth, 0.034906668150633896);
+        assert_approx_eq!(f64, reverse_azimuth, 0.5000000015749295);
         Ok(())
     }
     #[test]

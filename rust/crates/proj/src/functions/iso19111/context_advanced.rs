@@ -549,6 +549,58 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_linear_affine_parametric_conversion>
+    pub fn create_linear_affine_parametric_conversion(
+        &self,
+        name: Option<&str>,
+        a0: f64,
+        a0_unit_name: Option<&str>,
+        a0_unit_conv_factor: f64,
+        a1: f64,
+        a1_unit_name: Option<&str>,
+        a1_unit_conv_factor: f64,
+        a2: f64,
+        a2_unit_name: Option<&str>,
+        a2_unit_conv_factor: f64,
+        b0: f64,
+        b0_unit_name: Option<&str>,
+        b0_unit_conv_factor: f64,
+        b1: f64,
+        b1_unit_name: Option<&str>,
+        b1_unit_conv_factor: f64,
+        b2: f64,
+        b2_unit_name: Option<&str>,
+        b2_unit_conv_factor: f64,
+    ) -> Result<Proj, ProjError> {
+        let mut owned = OwnedCStrings::with_capacity(7);
+        let ptr = unsafe {
+            proj_sys::proj_create_linear_affine_parametric_conversion(
+                self.ptr(),
+                owned.push_option(name)?,
+                a0,
+                owned.push_option(a0_unit_name)?,
+                a0_unit_conv_factor,
+                a1,
+                owned.push_option(a1_unit_name)?,
+                a1_unit_conv_factor,
+                a2,
+                owned.push_option(a2_unit_name)?,
+                a2_unit_conv_factor,
+                b0,
+                owned.push_option(b0_unit_name)?,
+                b0_unit_conv_factor,
+                b1,
+                owned.push_option(b1_unit_name)?,
+                b1_unit_conv_factor,
+                b2,
+                owned.push_option(b2_unit_name)?,
+                b2_unit_conv_factor,
+            )
+        };
+        Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
+    }
     ///Instantiate a Transformation.
     ///
     /// # Arguments
@@ -645,6 +697,50 @@ impl Context {
                 owned.push_option(crs_name)?,
                 geodetic_crs.ptr(),
                 conversion.ptr(),
+                coordinate_system.ptr(),
+            )
+        };
+        Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
+    }
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_derived_projected_crs>
+    pub fn create_derived_projected_crs(
+        &self,
+        crs_name: Option<&str>,
+        base_proj_crs: &Proj,
+        deriving_conversion: &Proj,
+        coordinate_system: &Proj,
+    ) -> Result<Proj, ProjError> {
+        let mut owned = OwnedCStrings::with_capacity(1);
+        let ptr = unsafe {
+            proj_sys::proj_create_derived_projected_crs(
+                self.ptr(),
+                owned.push_option(crs_name)?,
+                base_proj_crs.ptr(),
+                deriving_conversion.ptr(),
+                coordinate_system.ptr(),
+            )
+        };
+        Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
+    }
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_add_horizontal_derived_conversion>
+    pub fn crs_add_horizontal_derived_conversion(
+        &self,
+        crs_name: Option<&str>,
+        base_crs: &Proj,
+        deriving_conversion: &Proj,
+        coordinate_system: &Proj,
+    ) -> Result<Proj, ProjError> {
+        let mut owned = OwnedCStrings::with_capacity(1);
+        let ptr = unsafe {
+            proj_sys::proj_crs_add_horizontal_derived_conversion(
+                self.ptr(),
+                owned.push_option(crs_name)?,
+                base_crs.ptr(),
+                deriving_conversion.ptr(),
                 coordinate_system.ptr(),
             )
         };
@@ -3356,6 +3452,8 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
+    fn test_create_linear_affine_parametric_conversion() -> mischief::Result<()> { todo!() }
+    #[test]
     fn test_create_transformation() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let geog_cs =
@@ -3453,6 +3551,10 @@ mod test_context_advanced {
         insta::assert_snapshot!(wkt);
         Ok(())
     }
+    #[test]
+    fn test_create_derived_projected_crs() -> mischief::Result<()> { todo!() }
+    #[test]
+    fn test_crs_add_horizontal_derived_conversions() -> mischief::Result<()> { todo!() }
     #[test]
     fn test_crs_create_bound_crs() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;

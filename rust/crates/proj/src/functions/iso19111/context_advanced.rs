@@ -549,6 +549,58 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_linear_affine_parametric_conversion>
+    pub fn create_linear_affine_parametric_conversion(
+        &self,
+        name: Option<&str>,
+        a0: f64,
+        a0_unit_name: Option<&str>,
+        a0_unit_conv_factor: f64,
+        a1: f64,
+        a1_unit_name: Option<&str>,
+        a1_unit_conv_factor: f64,
+        a2: f64,
+        a2_unit_name: Option<&str>,
+        a2_unit_conv_factor: f64,
+        b0: f64,
+        b0_unit_name: Option<&str>,
+        b0_unit_conv_factor: f64,
+        b1: f64,
+        b1_unit_name: Option<&str>,
+        b1_unit_conv_factor: f64,
+        b2: f64,
+        b2_unit_name: Option<&str>,
+        b2_unit_conv_factor: f64,
+    ) -> Result<Proj, ProjError> {
+        let mut owned = OwnedCStrings::with_capacity(7);
+        let ptr = unsafe {
+            proj_sys::proj_create_linear_affine_parametric_conversion(
+                self.ptr(),
+                owned.push_option(name)?,
+                a0,
+                owned.push_option(a0_unit_name)?,
+                a0_unit_conv_factor,
+                a1,
+                owned.push_option(a1_unit_name)?,
+                a1_unit_conv_factor,
+                a2,
+                owned.push_option(a2_unit_name)?,
+                a2_unit_conv_factor,
+                b0,
+                owned.push_option(b0_unit_name)?,
+                b0_unit_conv_factor,
+                b1,
+                owned.push_option(b1_unit_name)?,
+                b1_unit_conv_factor,
+                b2,
+                owned.push_option(b2_unit_name)?,
+                b2_unit_conv_factor,
+            )
+        };
+        Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
+    }
     ///Instantiate a Transformation.
     ///
     /// # Arguments
@@ -645,6 +697,50 @@ impl Context {
                 owned.push_option(crs_name)?,
                 geodetic_crs.ptr(),
                 conversion.ptr(),
+                coordinate_system.ptr(),
+            )
+        };
+        Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
+    }
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_derived_projected_crs>
+    pub fn create_derived_projected_crs(
+        &self,
+        crs_name: Option<&str>,
+        base_proj_crs: &Proj,
+        deriving_conversion: &Proj,
+        coordinate_system: &Proj,
+    ) -> Result<Proj, ProjError> {
+        let mut owned = OwnedCStrings::with_capacity(1);
+        let ptr = unsafe {
+            proj_sys::proj_create_derived_projected_crs(
+                self.ptr(),
+                owned.push_option(crs_name)?,
+                base_proj_crs.ptr(),
+                deriving_conversion.ptr(),
+                coordinate_system.ptr(),
+            )
+        };
+        Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
+    }
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_add_horizontal_derived_conversion>
+    pub fn crs_add_horizontal_derived_conversion(
+        &self,
+        crs_name: Option<&str>,
+        base_crs: &Proj,
+        deriving_conversion: &Proj,
+        coordinate_system: &Proj,
+    ) -> Result<Proj, ProjError> {
+        let mut owned = OwnedCStrings::with_capacity(1);
+        let ptr = unsafe {
+            proj_sys::proj_crs_add_horizontal_derived_conversion(
+                self.ptr(),
+                owned.push_option(crs_name)?,
+                base_crs.ptr(),
+                deriving_conversion.ptr(),
                 coordinate_system.ptr(),
             )
         };
@@ -3356,6 +3452,44 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
+    fn test_create_linear_affine_parametric_conversion() -> mischief::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        {
+            let pj = ctx.create_linear_affine_parametric_conversion(
+                None, 1.1, None, 0.0, 2.1, None, 0.0, 3.1, None, 0.0, 4.1, None, 0.0, 5.1, None,
+                0.0, 6.1, None, 0.0,
+            )?;
+            let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            insta::assert_snapshot!(wkt);
+        }
+        {
+            let pj = ctx.create_linear_affine_parametric_conversion(
+                Some("conversion name"),
+                1.1,
+                Some("my unit1"),
+                0.11,
+                2.1,
+                Some("my unit2"),
+                0.12,
+                3.1,
+                Some("my unit3"),
+                0.13,
+                4.1,
+                Some("my unit4"),
+                0.14,
+                5.1,
+                Some("my unit5"),
+                0.15,
+                6.1,
+                Some("my unit6"),
+                0.16,
+            )?;
+            let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+            insta::assert_snapshot!(wkt);
+        }
+        Ok(())
+    }
+    #[test]
     fn test_create_transformation() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let geog_cs =
@@ -3448,6 +3582,41 @@ mod test_context_advanced {
         let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
         let pj: Proj = ctx.create_projected_crs(Some("my CRS"), &geog_crs, &conv, &cs)?;
 
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        insta::assert_snapshot!(wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_create_derived_projected_crs() -> mischief::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let proj_crs = ctx.create("EPSG:32631")?;
+        let conv = ctx.create_linear_affine_parametric_conversion(
+            None, 1.1, None, 0.0, 2.1, None, 0.0, 3.1, None, 0.0, 4.1, None, 0.0, 5.1, None, 0.0,
+            6.1, None, 0.0,
+        )?;
+        let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+        let pj = ctx.create_derived_projected_crs(Some("my derived crs"), &proj_crs, &conv, &cs)?;
+        let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
+        println!("{wkt}");
+        insta::assert_snapshot!(wkt);
+        Ok(())
+    }
+    #[test]
+    fn test_crs_add_horizontal_derived_conversions() -> mischief::Result<()> {
+        let ctx = crate::new_test_ctx()?;
+        let conv = ctx.create_linear_affine_parametric_conversion(
+            None, 1.1, None, 0.0, 2.1, None, 0.0, 3.1, None, 0.0, 4.1, None, 0.0, 5.1, None, 0.0,
+            6.1, None, 0.0,
+        )?;
+        let cs = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 0.0)?;
+        let proj_crs = ctx.create("EPSG:32631")?;
+        let pj = ctx.crs_add_horizontal_derived_conversion(
+            Some("my derived crs"),
+            &proj_crs,
+            &conv,
+            &cs,
+        )?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
         println!("{wkt}");
         insta::assert_snapshot!(wkt);

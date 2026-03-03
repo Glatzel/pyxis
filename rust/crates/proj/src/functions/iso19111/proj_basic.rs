@@ -1362,7 +1362,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4258")?;
         let datum = pj.crs_get_datum_ensemble()?.expect("No datum");
         let count = datum.datum_ensemble_get_member_count();
-        assert_eq!(count, 12);
+        assert_eq!(count, 57);
         Ok(())
     }
     #[test]

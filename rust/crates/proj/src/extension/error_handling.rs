@@ -56,7 +56,7 @@
 macro_rules! check_result {
     ($self:ident) => {
         match $self.errno() {
-            $crate::data_types::ProjErrorCode::Success => {
+            $crate::data_types::ProjErrorKind::Success => {
                 clerk::debug!("Proj Process succeeded.");
             }
             ecode => {
@@ -87,7 +87,7 @@ macro_rules! check_result {
     ($condition:expr,$message:expr) => {
         if $condition {
             return Err($crate::data_types::ProjError::ProjError {
-                code: $crate::data_types::ProjErrorCode::Other,
+                code: $crate::data_types::ProjErrorKind::Other,
                 message: format!("{}", $message),
             });
         }

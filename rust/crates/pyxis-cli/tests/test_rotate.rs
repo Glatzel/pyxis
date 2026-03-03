@@ -61,9 +61,9 @@ fn test_rotate(#[case] axis: &str) {
             axis,
             "-u",
             "degrees",
-            &format!("--o{:?}", chars.next()),
+            &format!("--o{}", chars.next().unwrap()),
             &1.0.to_string(),
-            &format!("--o{:?}", chars.next()),
+            &format!("--o{}", chars.next().unwrap()),
             &2.0.to_string(),
         ])
         .assert()

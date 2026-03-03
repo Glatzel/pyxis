@@ -1,0 +1,5 @@
+---
+source: crates/pyxis-cli/tests/test_rotate.rs
+expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
+---
+x: 5.232050807568877, y: 4, z: 2.598076211353316

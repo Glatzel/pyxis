@@ -1,7 +1,7 @@
 use assert_cmd::Command;
 use rstest::rstest;
 #[rstest]
-#[case("plain")]
+#[case("simple")]
 #[case("verbose")]
 #[case("json")]
 fn test_output(#[case] output: &str) {

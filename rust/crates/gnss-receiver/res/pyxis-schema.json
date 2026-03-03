@@ -3,38 +3,15 @@
   "title": "Settings",
   "type": "object",
   "properties": {
-    "transform": {
-      "$ref": "#/$defs/Settings"
-    },
     "trail": {
-      "$ref": "#/$defs/Settings2"
+      "$ref": "#/$defs/Settings"
     }
   },
   "required": [
-    "transform",
     "trail"
   ],
   "$defs": {
-    "OutputFormat": {
-      "type": "string",
-      "enum": [
-        "Simple",
-        "Verbose",
-        "Json"
-      ]
-    },
     "Settings": {
-      "type": "object",
-      "properties": {
-        "output_format": {
-          "$ref": "#/$defs/OutputFormat"
-        }
-      },
-      "required": [
-        "output_format"
-      ]
-    },
-    "Settings2": {
       "type": "object",
       "properties": {
         "baud_rate": {

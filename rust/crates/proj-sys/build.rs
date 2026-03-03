@@ -2,11 +2,16 @@ use std::env::{self};
 #[allow(unused_imports)]
 use std::path::PathBuf;
 
+use path_slash::PathBufExt;
+
 fn main() {
     // Link
     let proj_root = PathBuf::from(env::var("PROJ_ROOT").expect("PROJ_ROOT must be set"));
     let lib_dir = proj_root.join("lib");
-    println!("cargo:rustc-link-search=native={}", lib_dir.display());
+    println!(
+        "cargo:rustc-link-search=native={}",
+        lib_dir.to_slash_lossy()
+    );
     println!("cargo:rustc-link-lib=proj");
 
     //bindgen
@@ -17,7 +22,7 @@ fn main() {
     }
     // generate bindings
     let include_dir = proj_root.join("include");
-    let header = include_dir.join("proj.h").to_string_lossy().to_string();
+    let header = include_dir.join("proj.h").to_slash_lossy().to_string();
     let bindings = bindgen::Builder::default()
         .header(header)
         .size_t_is_usize(true)

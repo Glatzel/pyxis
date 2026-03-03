@@ -1,6 +1,3 @@
-[abacus]
-output_format = "Simple"
-
 [trail]
 baud_rate = 9600
 capacity = 1000

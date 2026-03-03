@@ -41,7 +41,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/mdurl-0.1.2-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/ncurses-6.5-h2d0b736_3.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/nomkl-1.0-h5ca1d4c_0.tar.bz2
-      - conda: https://conda.anaconda.org/conda-forge/linux-64/numba-0.63.1-py313h5dce7c4_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/numba-0.64.0-py313h5dce7c4_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/numexpr-2.14.1-py313h24ae7f9_101.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/numpy-2.3.5-py313hf6604e3_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/openssl-3.6.0-h26f9b46_0.conda
@@ -1704,30 +1704,30 @@ packages:
   license_family: BSD
   size: 3843
   timestamp: 1582593857545
-- conda: https://conda.anaconda.org/conda-forge/linux-64/numba-0.63.1-py313h5dce7c4_0.conda
-  sha256: 3ceba93570814df69969edff3156097dc0e86ccefa2ea2bdfe08f84b2023cf04
-  md5: dbdae1a85bb346d57fae63269def955a
+- conda: https://conda.anaconda.org/conda-forge/linux-64/numba-0.64.0-py313h5dce7c4_0.conda
+  sha256: 3c6e9f28b5d1d987041011c0b5a1052e730df6c682b47e8a7fd7b6f00040d562
+  md5: 90caff1954fb5cacc0b3e75f5066ae7c
   depends:
   - __glibc >=2.17,<3.0.a0
   - _openmp_mutex >=4.5
   - libgcc >=14
   - libstdcxx >=14
   - llvmlite >=0.46.0,<0.47.0a0
-  - numpy >=1.22.3,<2.4
+  - numpy >=1.22.3,<2.5
   - numpy >=1.23,<3
   - python >=3.13,<3.14.0a0
   - python_abi 3.13.* *_cp313
   constrains:
-  - cudatoolkit >=11.2
-  - cuda-python >=11.6
-  - libopenblas !=0.3.6
-  - tbb >=2021.6.0
   - cuda-version >=11.2
   - scipy >=1.0
+  - libopenblas !=0.3.6
+  - cudatoolkit >=11.2
+  - tbb >=2021.6.0
+  - cuda-python >=11.6
   license: BSD-2-Clause
   license_family: BSD
-  size: 5761715
-  timestamp: 1765466811957
+  size: 5764718
+  timestamp: 1772481814929
 - conda: https://conda.anaconda.org/conda-forge/linux-64/numexpr-2.14.1-py313h24ae7f9_101.conda
   sha256: 26917aa008b9753ec0e4658521ee6ef144414f49db65e2ce83fbf316914f318b
   md5: b7e46fb2704458afc67fb95773528967

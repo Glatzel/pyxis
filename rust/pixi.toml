@@ -1,5 +1,5 @@
 [workspace]
-channels = ["https://prefix.dev/glatzel"]
+channels = ["https://prefix.dev/glatzel", "conda-forge"]
 platforms = ["win-64", "linux-64", "osx-arm64", "linux-aarch64"]
 [dependencies]
 proj = "==9.8.0"

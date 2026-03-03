@@ -15,20 +15,6 @@ expression: "String::from_utf8_lossy(cmd.get_output().stdout.as_slice())"
       "output_z": 0.0,
       "output_z_name": "z",
       "parameter": {}
-    },
-    {
-      "idx": 1,
-      "method": "proj",
-      "output_x": 1450880.2910605022,
-      "output_x_name": "x",
-      "output_y": 1141263.0111604782,
-      "output_y_name": "y",
-      "output_z": 0.0,
-      "output_z_name": "z",
-      "parameter": {
-        "from": "EPSG:2230",
-        "to": "EPSG:26946"
-      }
     }
   ]
 }

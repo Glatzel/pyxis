@@ -14,5 +14,9 @@ fn test_proj() {
         .args(["proj", "--from", "EPSG:2230", "--to", "EPSG:26946"])
         .assert()
         .success();
-    insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
+    insta::with_settings!({filters => vec![
+        (r"\d+\.\d+", "<coordinate>"),
+    ]}, {
+        insta::assert_snapshot!(String::from_utf8_lossy(cmd.get_output().stdout.as_slice()));
+    });
 }

@@ -4,7 +4,11 @@ use rstest::rstest;
 #[rstest]
 #[case("absolute", "origin")]
 #[case("absolute", "relative")]
+#[case("origin", "absolute")]
 #[case("origin", "relative")]
+#[case("relative", "absolute")]
+#[case("relative", "origin")]
+#[case("relative", "relative")]
 fn test_migrate_2d(#[case] given: &str, #[case] another: &str) {
     let cmd = Command::new(assert_cmd::cargo_bin!("pyxis"))
         .args([

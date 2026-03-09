@@ -10,7 +10,7 @@ maturin = "==1.12.6"
 pip = "==25.3"
 
 [feature.deps.dependencies]
-lazy-loader = "==0.4"
+lazy-loader = "==0.5"
 nomkl = "==1.0"
 numpy = "2.3.*"
 scipy = "==1.17.1"

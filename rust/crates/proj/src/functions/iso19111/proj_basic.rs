@@ -3,7 +3,7 @@ use core::str::FromStr;
 
 use envoy::{AsVecPtr, PtrToString, ToCString};
 
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 use crate::data_types::iso19111::*;
 use crate::{OPTION_NO, OPTION_YES, Proj, check_result};
 /// # ISO-19111 Base functions
@@ -13,7 +13,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_type>
-    pub fn get_type(&self) -> Result<ProjType, ProjError> {
+    pub fn get_type(&self) -> Result<ProjType, ProjErrorKind> {
         let result = unsafe { proj_sys::proj_get_type(self.ptr()) };
         Ok(ProjType::try_from(result)?)
     }
@@ -123,7 +123,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_domain_count>
-    pub fn get_domain_count(&self) -> Result<u32, ProjError> {
+    pub fn get_domain_count(&self) -> Result<u32, ProjErrorKind> {
         let count = unsafe { proj_sys::proj_get_domain_count(self.ptr()) };
         check_result!(count == 0, "get_domain_count error.");
         Ok(count as u32)
@@ -163,7 +163,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>
-    pub fn get_area_of_use(&self) -> Result<Option<AreaOfUse>, ProjError> {
+    pub fn get_area_of_use(&self) -> Result<Option<AreaOfUse>, ProjErrorKind> {
         let mut area_name: *const std::ffi::c_char = std::ptr::null();
         let mut west_lon_degree = f64::NAN;
         let mut south_lat_degree = f64::NAN;
@@ -206,7 +206,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use_ex>
-    pub fn get_area_of_use_ex(&self, domain_idx: u16) -> Result<Option<AreaOfUse>, ProjError> {
+    pub fn get_area_of_use_ex(&self, domain_idx: u16) -> Result<Option<AreaOfUse>, ProjErrorKind> {
         let mut area_name: *const std::ffi::c_char = std::ptr::null();
         let mut west_lon_degree = f64::NAN;
         let mut south_lat_degree = f64::NAN;
@@ -279,7 +279,7 @@ impl Proj {
         strict: Option<bool>,
         allow_ellipsoidal_height_as_vertical_crs: Option<bool>,
         allow_linunit_node: Option<bool>,
-    ) -> Result<String, ProjError> {
+    ) -> Result<String, ProjErrorKind> {
         let mut options = crate::ProjOptions::new(6);
         options
             .with_or_default(multiline, "MULTILINE", OPTION_YES)?
@@ -324,7 +324,7 @@ impl Proj {
         multiline: Option<bool>,
         indentation_width: Option<usize>,
         max_line_length: Option<usize>,
-    ) -> Result<String, ProjError> {
+    ) -> Result<String, ProjErrorKind> {
         let mut options = crate::ProjOptions::new(6);
         if use_approx_tmerc {
             options.with(use_approx_tmerc, "USE_APPROX_TMERC")?;
@@ -363,7 +363,7 @@ impl Proj {
         multiline: Option<bool>,
         indentation_width: Option<usize>,
         schema: Option<&str>,
-    ) -> Result<String, ProjError> {
+    ) -> Result<String, ProjErrorKind> {
         let mut options = crate::ProjOptions::new(6);
         options
             .with_or_default(multiline, "MULTILINE", OPTION_YES)?
@@ -383,7 +383,7 @@ impl Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
-    pub fn get_source_crs(&self) -> Result<Option<Proj>, ProjError> {
+    pub fn get_source_crs(&self) -> Result<Option<Proj>, ProjErrorKind> {
         let out_ptr = unsafe { proj_sys::proj_get_source_crs(self.ctx_ptr(), self.ptr()) };
         if out_ptr.is_null() {
             return Ok(None);
@@ -396,7 +396,7 @@ impl Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
-    pub fn get_target_crs(&self) -> Result<Option<Proj>, ProjError> {
+    pub fn get_target_crs(&self) -> Result<Option<Proj>, ProjErrorKind> {
         let out_ptr = unsafe { proj_sys::proj_get_target_crs(self.ctx_ptr(), self.ptr()) };
         if out_ptr.is_null() {
             return Ok(None);
@@ -423,7 +423,7 @@ impl Proj {
         &self,
         authority: &str,
         numeric_code: bool,
-    ) -> Result<String, ProjError> {
+    ) -> Result<String, ProjErrorKind> {
         let result = unsafe {
             proj_sys::proj_suggests_code_for(
                 self.ctx_ptr(),
@@ -448,7 +448,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
-    pub fn crs_get_geodetic_crs(&self) -> Result<Proj, ProjError> {
+    pub fn crs_get_geodetic_crs(&self) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_crs_get_geodetic_crs(self.ctx_ptr(), self.ptr()) };
         crate::Proj::new(self.arc_ctx_ptr(), ptr)
     }
@@ -459,7 +459,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
-    pub fn crs_get_horizontal_datum(&self) -> Result<Proj, ProjError> {
+    pub fn crs_get_horizontal_datum(&self) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_crs_get_horizontal_datum(self.ctx_ptr(), self.ptr()) };
         crate::Proj::new(self.arc_ctx_ptr(), ptr)
     }
@@ -468,7 +468,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
-    pub fn crs_get_sub_crs(&self, index: u16) -> Result<Proj, ProjError> {
+    pub fn crs_get_sub_crs(&self, index: u16) -> Result<Proj, ProjErrorKind> {
         let ptr =
             unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx_ptr(), self.ptr(), index as i32) };
         crate::Proj::new(self.arc_ctx_ptr(), ptr)
@@ -478,7 +478,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
-    pub fn crs_get_datum(&self) -> Result<Option<Proj>, ProjError> {
+    pub fn crs_get_datum(&self) -> Result<Option<Proj>, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum(self.ctx_ptr(), self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -493,7 +493,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_ensemble>
-    pub fn crs_get_datum_ensemble(&self) -> Result<Option<Proj>, ProjError> {
+    pub fn crs_get_datum_ensemble(&self) -> Result<Option<Proj>, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_ensemble(self.ctx_ptr(), self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -510,7 +510,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_forced>
-    pub fn crs_get_datum_forced(&self) -> Result<Option<Proj>, ProjError> {
+    pub fn crs_get_datum_forced(&self) -> Result<Option<Proj>, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_forced(self.ctx_ptr(), self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
@@ -538,7 +538,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_accuracy>
-    pub fn datum_ensemble_get_accuracy(&self) -> Result<f64, ProjError> {
+    pub fn datum_ensemble_get_accuracy(&self) -> Result<f64, ProjErrorKind> {
         let result =
             unsafe { proj_sys::proj_datum_ensemble_get_accuracy(self.ctx_ptr(), self.ptr()) };
         check_result!(result < 0.0, "Error");
@@ -553,7 +553,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
-    pub fn datum_ensemble_get_member(&self, member_index: u16) -> Result<Option<Proj>, ProjError> {
+    pub fn datum_ensemble_get_member(&self, member_index: u16) -> Result<Option<Proj>, ProjErrorKind> {
         let ptr = unsafe {
             proj_sys::proj_datum_ensemble_get_member(
                 self.ctx_ptr(),
@@ -574,7 +574,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dynamic_datum_get_frame_reference_epoch>
-    pub fn dynamic_datum_get_frame_reference_epoch(&self) -> Result<f64, ProjError> {
+    pub fn dynamic_datum_get_frame_reference_epoch(&self) -> Result<f64, ProjErrorKind> {
         let result = unsafe {
             proj_sys::proj_dynamic_datum_get_frame_reference_epoch(self.ctx_ptr(), self.ptr())
         };
@@ -586,7 +586,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
-    pub fn crs_get_coordinate_system(&self) -> Result<Proj, ProjError> {
+    pub fn crs_get_coordinate_system(&self) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordinate_system(self.ctx_ptr(), self.ptr()) };
         crate::Proj::new(self.arc_ctx_ptr(), ptr)
     }
@@ -595,7 +595,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_type>
-    pub fn cs_get_type(&self) -> Result<CoordinateSystemType, ProjError> {
+    pub fn cs_get_type(&self) -> Result<CoordinateSystemType, ProjErrorKind> {
         let cs_type = CoordinateSystemType::try_from(unsafe {
             proj_sys::proj_cs_get_type(self.ctx_ptr(), self.ptr())
         })?;
@@ -610,7 +610,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_count>
-    pub fn cs_get_axis_count(&self) -> Result<u16, ProjError> {
+    pub fn cs_get_axis_count(&self) -> Result<u16, ProjErrorKind> {
         let count = unsafe { proj_sys::proj_cs_get_axis_count(self.ctx_ptr(), self.ptr()) };
         check_result!(count == -1, "Error");
         Ok(count as u16)
@@ -625,7 +625,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>
-    pub fn cs_get_axis_info(&self, index: u16) -> Result<AxisInfo, ProjError> {
+    pub fn cs_get_axis_info(&self, index: u16) -> Result<AxisInfo, ProjErrorKind> {
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut abbrev: *const std::ffi::c_char = std::ptr::null();
         let mut direction: *const std::ffi::c_char = std::ptr::null();
@@ -664,7 +664,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
-    pub fn get_ellipsoid(&self) -> Result<Proj, ProjError> {
+    pub fn get_ellipsoid(&self) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_get_ellipsoid(self.ctx_ptr(), self.ptr()) };
         crate::Proj::new(self.arc_ctx_ptr(), ptr)
     }
@@ -673,7 +673,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_ellipsoid_get_parameters>
-    pub fn ellipsoid_get_parameters(&self) -> Result<EllipsoidParameters, ProjError> {
+    pub fn ellipsoid_get_parameters(&self) -> Result<EllipsoidParameters, ProjErrorKind> {
         let mut semi_major_metre = f64::NAN;
         let mut semi_minor_metre = f64::NAN;
         let mut is_semi_minor_computed = i32::default();
@@ -713,7 +713,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
-    pub fn get_prime_meridian(&self) -> Result<Proj, ProjError> {
+    pub fn get_prime_meridian(&self) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx_ptr(), self.ptr()) };
         crate::Proj::new(self.arc_ctx_ptr(), ptr)
     }
@@ -722,7 +722,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_prime_meridian_get_parameters>
-    pub fn prime_meridian_get_parameters(&self) -> Result<PrimeMeridianParameters, ProjError> {
+    pub fn prime_meridian_get_parameters(&self) -> Result<PrimeMeridianParameters, ProjErrorKind> {
         let mut longitude = f64::NAN;
         let mut unit_conv_factor = f64::NAN;
         let mut unit_name: *const std::ffi::c_char = std::ptr::null();
@@ -749,7 +749,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
-    pub fn crs_get_coordoperation(&self) -> Result<Proj, ProjError> {
+    pub fn crs_get_coordoperation(&self) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordoperation(self.ctx_ptr(), self.ptr()) };
         crate::Proj::new(self.arc_ctx_ptr(), ptr)
     }
@@ -758,7 +758,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_method_info>
-    pub fn coordoperation_get_method_info(&self) -> Result<CoordOperationMethodInfo, ProjError> {
+    pub fn coordoperation_get_method_info(&self) -> Result<CoordOperationMethodInfo, ProjErrorKind> {
         let mut method_name: *const std::ffi::c_char = std::ptr::null();
         let mut method_auth_name: *const std::ffi::c_char = std::ptr::null();
         let mut method_code: *const std::ffi::c_char = std::ptr::null();
@@ -843,7 +843,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param_index>
-    pub fn coordoperation_get_param_index(&self, name: &str) -> Result<u16, ProjError> {
+    pub fn coordoperation_get_param_index(&self, name: &str) -> Result<u16, ProjErrorKind> {
         let result = unsafe {
             proj_sys::proj_coordoperation_get_param_index(
                 self.ctx_ptr(),
@@ -863,7 +863,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param>
-    pub fn coordoperation_get_param(&self, index: u16) -> Result<CoordOperationParam, ProjError> {
+    pub fn coordoperation_get_param(&self, index: u16) -> Result<CoordOperationParam, ProjErrorKind> {
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut auth_name: *const std::ffi::c_char = std::ptr::null();
         let mut code: *const std::ffi::c_char = std::ptr::null();
@@ -928,7 +928,7 @@ impl Proj {
     pub fn coordoperation_get_grid_used(
         &self,
         index: u16,
-    ) -> Result<CoordOperationGridUsed, ProjError> {
+    ) -> Result<CoordOperationGridUsed, ProjErrorKind> {
         let mut short_name: *const std::ffi::c_char = std::ptr::null();
         let mut full_name: *const std::ffi::c_char = std::ptr::null();
         let mut package_name: *const std::ffi::c_char = std::ptr::null();
@@ -967,7 +967,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_accuracy>
-    pub fn coordoperation_get_accuracy(&self) -> Result<f64, ProjError> {
+    pub fn coordoperation_get_accuracy(&self) -> Result<f64, ProjErrorKind> {
         let result =
             unsafe { proj_sys::proj_coordoperation_get_accuracy(self.ctx_ptr(), self.ptr()) };
         check_result!(result < 0.0, "Error");
@@ -998,7 +998,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
-    pub fn coordoperation_create_inverse(&self) -> Result<Proj, ProjError> {
+    pub fn coordoperation_create_inverse(&self) -> Result<Proj, ProjErrorKind> {
         let ptr =
             unsafe { proj_sys::proj_coordoperation_create_inverse(self.ctx_ptr(), self.ptr()) };
         crate::Proj::new(self.arc_ctx_ptr(), ptr)
@@ -1010,7 +1010,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step_count>
-    pub fn concatoperation_get_step_count(&self) -> Result<u16, ProjError> {
+    pub fn concatoperation_get_step_count(&self) -> Result<u16, ProjErrorKind> {
         let result =
             unsafe { proj_sys::proj_concatoperation_get_step_count(self.ctx_ptr(), self.ptr()) };
         check_result!(result <= 0, "Error");
@@ -1023,7 +1023,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
-    pub fn concatoperation_get_step(&self, index: u16) -> Result<Proj, ProjError> {
+    pub fn concatoperation_get_step(&self, index: u16) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe {
             proj_sys::proj_concatoperation_get_step(self.ctx_ptr(), self.ptr(), index as i32)
         };
@@ -1034,7 +1034,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
-    pub fn coordinate_metadata_create(&self, epoch: f64) -> Result<Proj, ProjError> {
+    pub fn coordinate_metadata_create(&self, epoch: f64) -> Result<Proj, ProjErrorKind> {
         let ptr =
             unsafe { proj_sys::proj_coordinate_metadata_create(self.ctx_ptr(), self.ptr(), epoch) };
         crate::Proj::new(self.arc_ctx_ptr(), ptr)
@@ -1065,7 +1065,7 @@ mod test_proj_basic {
     use super::*;
 
     #[test]
-    fn test_get_type() -> Result<(), ProjError> {
+    fn test_get_type() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let t = pj.get_type()?;
@@ -1073,7 +1073,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_is_deprecated() -> Result<(), ProjError> {
+    fn test_is_deprecated() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let deprecated = pj.is_deprecated();
@@ -1082,7 +1082,7 @@ mod test_proj_basic {
     }
 
     #[test]
-    fn test_is_equivalent_to() -> Result<(), ProjError> {
+    fn test_is_equivalent_to() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4496")?;
@@ -1091,7 +1091,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_is_equivalent_to_with_ctx() -> Result<(), ProjError> {
+    fn test_is_equivalent_to_with_ctx() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj1 = ctx.create("EPSG:4326")?;
         let pj2 = ctx.create("EPSG:4496")?;
@@ -1100,7 +1100,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_is_crs() -> Result<(), ProjError> {
+    fn test_is_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let result = pj.is_crs();
@@ -1108,7 +1108,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_name() -> Result<(), ProjError> {
+    fn test_get_name() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let name = pj.get_name().expect("No name");
@@ -1117,7 +1117,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_id_auth_name() -> Result<(), ProjError> {
+    fn test_get_id_auth_name() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let id_auth_name = pj.get_id_auth_name(0).expect("No id_auth_name");
@@ -1126,7 +1126,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_id_code() -> Result<(), ProjError> {
+    fn test_get_id_code() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let id = pj.get_id_code(0).expect("No id_code");
@@ -1135,7 +1135,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_remarks() -> Result<(), ProjError> {
+    fn test_get_remarks() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let remarks = pj.get_remarks();
@@ -1143,7 +1143,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_domain_count() -> Result<(), ProjError> {
+    fn test_get_domain_count() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let count = pj.get_domain_count()?;
@@ -1151,7 +1151,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_scope() -> Result<(), ProjError> {
+    fn test_get_scope() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let scope = pj.get_scope().expect("No scope");
@@ -1160,7 +1160,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_scope_ex() -> Result<(), ProjError> {
+    fn test_get_scope_ex() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let scope = pj.get_scope_ex(0).expect("No scope");
@@ -1169,7 +1169,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_area_of_use() -> Result<(), ProjError> {
+    fn test_get_area_of_use() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let area = pj.get_area_of_use()?.expect("Invalid area");
@@ -1182,7 +1182,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_area_of_use_ex() -> Result<(), ProjError> {
+    fn test_get_area_of_use_ex() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "6316", Category::Crs, false)?;
         let area = pj.get_area_of_use_ex(1)?.expect("Invalid area");
@@ -1195,7 +1195,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    pub fn test_as_wkt() -> Result<(), ProjError> {
+    pub fn test_as_wkt() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -1204,7 +1204,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    pub fn test_as_proj_string() -> Result<(), ProjError> {
+    pub fn test_as_proj_string() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let proj_string = pj.as_proj_string(ProjStringType::Proj4, true, None, None, None)?;
@@ -1213,7 +1213,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    pub fn test_as_projjson() -> Result<(), ProjError> {
+    pub fn test_as_projjson() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let json = pj.as_projjson(None, None, None)?;
@@ -1222,7 +1222,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    pub fn test_get_source_crs() -> Result<(), ProjError> {
+    pub fn test_get_source_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let target = pj.get_source_crs()?.expect("Invalid target CRS");
@@ -1230,7 +1230,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    pub fn test_get_target_crs() -> Result<(), ProjError> {
+    pub fn test_get_target_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:3857", &crate::Area::default())?;
         let target = pj.get_target_crs()?.expect("Invalid target CRS");
@@ -1242,7 +1242,7 @@ mod test_proj_basic {
     }
 
     #[test]
-    fn test_suggests_code_for() -> Result<(), ProjError> {
+    fn test_suggests_code_for() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let wkt = "GEOGCRS[\"myGDA2020\",
                        DATUM[\"GDA2020\",
@@ -1264,7 +1264,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_is_derived() -> Result<(), ProjError> {
+    fn test_crs_is_derived() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         assert!(pj.is_crs());
@@ -1273,7 +1273,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_geodetic_crs() -> Result<(), ProjError> {
+    fn test_crs_get_geodetic_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:3857")?;
         assert!(pj.is_crs());
@@ -1284,7 +1284,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_horizontal_datum() -> Result<(), ProjError> {
+    fn test_crs_get_horizontal_datum() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:3857")?;
         assert!(pj.is_crs());
@@ -1295,7 +1295,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_sub_crs() -> Result<(), ProjError> {
+    fn test_crs_get_sub_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let horiz_crs = ctx
             .clone()
@@ -1321,7 +1321,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_datum() -> Result<(), ProjError> {
+    fn test_crs_get_datum() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;
         assert!(pj.is_crs());
@@ -1330,7 +1330,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_datum_ensemble() -> Result<(), ProjError> {
+    fn test_crs_get_datum_ensemble() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
         assert!(pj.is_crs());
@@ -1339,7 +1339,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_datum_forced() -> Result<(), ProjError> {
+    fn test_crs_get_datum_forced() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?;
         assert!(pj.is_crs());
@@ -1348,7 +1348,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_has_point_motion_operation() -> Result<(), ProjError> {
+    fn test_crs_has_point_motion_operation() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:8255")?;
         assert!(pj.is_crs());
@@ -1357,7 +1357,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_datum_ensemble_get_member_count() -> Result<(), ProjError> {
+    fn test_datum_ensemble_get_member_count() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
         let datum = pj.crs_get_datum_ensemble()?.expect("No datum");
@@ -1366,7 +1366,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_datum_ensemble_get_accuracy() -> Result<(), ProjError> {
+    fn test_datum_ensemble_get_accuracy() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
         let datum = pj.crs_get_datum_ensemble()?.expect("No datum");
@@ -1375,7 +1375,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_datum_ensemble_get_member() -> Result<(), ProjError> {
+    fn test_datum_ensemble_get_member() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4258")?;
         let datum = pj.crs_get_datum_ensemble()?.expect("No datum");
@@ -1383,7 +1383,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_dynamic_datum_get_frame_reference_epoch() -> Result<(), ProjError> {
+    fn test_dynamic_datum_get_frame_reference_epoch() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "1061", Category::Datum, false)?;
         let epoch = pj.dynamic_datum_get_frame_reference_epoch()?;
@@ -1391,7 +1391,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_coordinate_system() -> Result<(), ProjError> {
+    fn test_crs_get_coordinate_system() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
@@ -1401,7 +1401,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_cs_get_type() -> Result<(), ProjError> {
+    fn test_cs_get_type() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
@@ -1410,7 +1410,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_cs_get_axis_count() -> Result<(), ProjError> {
+    fn test_cs_get_axis_count() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
@@ -1419,7 +1419,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_cs_get_axis_info() -> Result<(), ProjError> {
+    fn test_cs_get_axis_info() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let cs = pj.crs_get_coordinate_system()?;
@@ -1429,7 +1429,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_ellipsoid() -> Result<(), ProjError> {
+    fn test_get_ellipsoid() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let ellps = pj.get_ellipsoid()?;
@@ -1439,7 +1439,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_ellipsoid_get_parameters() -> Result<(), ProjError> {
+    fn test_ellipsoid_get_parameters() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let ellps = pj.get_ellipsoid()?;
@@ -1448,7 +1448,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_celestial_body_name() -> Result<(), ProjError> {
+    fn test_get_celestial_body_name() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let name = pj
@@ -1458,7 +1458,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_get_prime_meridian() -> Result<(), ProjError> {
+    fn test_get_prime_meridian() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let meridian = pj.get_prime_meridian()?;
@@ -1468,7 +1468,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_prime_meridian_get_parameters() -> Result<(), ProjError> {
+    fn test_prime_meridian_get_parameters() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let meridian = pj.get_prime_meridian()?;
@@ -1478,7 +1478,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_crs_get_coordoperation() -> Result<(), ProjError> {
+    fn test_crs_get_coordoperation() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1488,7 +1488,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_method_info() -> Result<(), ProjError> {
+    fn test_coordoperation_get_method_info() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1498,7 +1498,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_is_instantiable() -> Result<(), ProjError> {
+    fn test_coordoperation_is_instantiable() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1507,7 +1507,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_has_ballpark_transformation() -> Result<(), ProjError> {
+    fn test_coordoperation_has_ballpark_transformation() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1516,7 +1516,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_requires_per_coordinate_input_time() -> Result<(), ProjError> {
+    fn test_coordoperation_requires_per_coordinate_input_time() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1526,7 +1526,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_param_count() -> Result<(), ProjError> {
+    fn test_coordoperation_get_param_count() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1535,7 +1535,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_param_index() -> Result<(), ProjError> {
+    fn test_coordoperation_get_param_index() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1544,7 +1544,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_param() -> Result<(), ProjError> {
+    fn test_coordoperation_get_param() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1555,7 +1555,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_grid_used_count() -> Result<(), ProjError> {
+    fn test_coordoperation_get_grid_used_count() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "1312", Category::CoordinateOperation, true)?;
         let count = pj.coordoperation_get_grid_used_count();
@@ -1564,7 +1564,7 @@ mod test_proj_basic {
     }
 
     #[test]
-    fn test_coordoperation_get_grid_used() -> Result<(), ProjError> {
+    fn test_coordoperation_get_grid_used() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "1312", Category::CoordinateOperation, true)?;
         let grid = pj.coordoperation_get_grid_used(0)?;
@@ -1573,7 +1573,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_accuracy() -> Result<(), ProjError> {
+    fn test_coordoperation_get_accuracy() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
         let accuracy = pj.coordoperation_get_accuracy()?;
@@ -1581,7 +1581,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_get_towgs84_values() -> Result<(), ProjError> {
+    fn test_coordoperation_get_towgs84_values() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "8048", Category::CoordinateOperation, false)?;
         let param = pj.coordoperation_get_towgs84_values();
@@ -1600,7 +1600,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordoperation_create_inverse() -> Result<(), ProjError> {
+    fn test_coordoperation_create_inverse() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let op = pj.crs_get_coordoperation()?;
@@ -1611,7 +1611,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_concatoperation_get_step_count() -> Result<(), ProjError> {
+    fn test_concatoperation_get_step_count() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let factory = ctx.create_operation_factory_context(None)?;
         let source_crs = ctx
@@ -1626,7 +1626,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_concatoperation_get_step() -> Result<(), ProjError> {
+    fn test_concatoperation_get_step() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let factory = ctx.create_operation_factory_context(None)?;
         let source_crs = ctx
@@ -1645,7 +1645,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordinate_metadata_create() -> Result<(), ProjError> {
+    fn test_coordinate_metadata_create() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let new = pj.coordinate_metadata_create(123.4)?;
@@ -1655,7 +1655,7 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
-    fn test_coordinate_metadata_get_epoch() -> Result<(), ProjError> {
+    fn test_coordinate_metadata_get_epoch() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let new = pj.coordinate_metadata_create(123.4)?;

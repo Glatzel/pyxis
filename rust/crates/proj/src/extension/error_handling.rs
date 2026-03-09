@@ -56,12 +56,12 @@
 macro_rules! check_result {
     ($self:ident) => {
         match $self.errno() {
-            $crate::data_types::ProjErrorKind::Success => {
+            $crate::data_types::ProjErrorCode::Success => {
                 clerk::debug!("Proj Process succeeded.");
             }
             ecode => {
                 let message = $self.errno_string(ecode.clone())?;
-                let err = crate::data_types::ProjError::ProjError {
+                let err = crate::data_types::ProjErrorKind::ProjError {
                     code: $self.errno(),
                     message,
                 };
@@ -86,8 +86,8 @@ macro_rules! check_result {
     };
     ($condition:expr,$message:expr) => {
         if $condition {
-            return Err($crate::data_types::ProjError::ProjError {
-                code: $crate::data_types::ProjErrorKind::Other,
+            return Err($crate::data_types::ProjErrorKind::ProjError {
+                code: $crate::data_types::ProjErrorCode::Other,
                 message: format!("{}", $message),
             });
         }

@@ -13,7 +13,7 @@ use core::ffi::c_char;
 
 use envoy::ToCString;
 
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 
 /// String constant representing the PROJ option value for `true`.
 pub(crate) const OPTION_YES: &str = "YES";
@@ -79,7 +79,7 @@ impl ProjOptions {
         &mut self,
         opt: T,
         name: &str,
-    ) -> Result<&mut Self, ProjError> {
+    ) -> Result<&mut Self, ProjErrorKind> {
         self.options
             .push(format!("{name}={}", opt.to_option_string()).to_cstring()?);
         Ok(self)
@@ -97,7 +97,7 @@ impl ProjOptions {
         opt: Option<T>,
         name: &str,
         default_value: &str,
-    ) -> Result<&mut Self, ProjError> {
+    ) -> Result<&mut Self, ProjErrorKind> {
         match opt {
             Some(opt) => {
                 self.options
@@ -121,7 +121,7 @@ impl ProjOptions {
         &mut self,
         opt: Option<T>,
         name: &str,
-    ) -> Result<&mut Self, ProjError> {
+    ) -> Result<&mut Self, ProjErrorKind> {
         if let Some(o) = opt {
             self.options
                 .push(format!("{name}={}", o.to_option_string()).to_cstring()?);

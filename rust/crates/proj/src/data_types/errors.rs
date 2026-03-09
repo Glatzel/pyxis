@@ -15,7 +15,7 @@ use thiserror::Error;
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#error-codes>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, FromPrimitive)]
 #[repr(i32)]
-pub enum ProjErrorKind {
+pub enum ProjErrorCode {
     Success = 0,
 
     //Errors in class PROJ_ERR_INVALID_OP
@@ -70,10 +70,10 @@ pub enum ProjErrorKind {
 }
 
 #[derive(Debug, Error)]
-pub enum ProjError {
+pub enum ProjErrorKind {
     #[error("ProjError {code:?} [{}]: {message}",*.code as i32 )]
     ProjError {
-        code: ProjErrorKind,
+        code: ProjErrorCode,
         message: String,
     },
     #[error(transparent)]
@@ -89,11 +89,11 @@ pub enum ProjError {
     #[error(transparent)]
     VarError(#[from] std::env::VarError),
 }
-impl<T: TryFromPrimitive> From<num_enum::TryFromPrimitiveError<T>> for ProjError {
+impl<T: TryFromPrimitive> From<num_enum::TryFromPrimitiveError<T>> for ProjErrorKind {
     fn from(value: num_enum::TryFromPrimitiveError<T>) -> Self {
         Self::NumEnumTryFromPrimitiveError(value.to_string())
     }
 }
-impl ProjError {
+impl ProjErrorKind {
     pub fn new(message: String) -> Self { Self::MiscError(message) }
 }

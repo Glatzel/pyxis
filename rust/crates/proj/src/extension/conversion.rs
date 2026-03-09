@@ -1,6 +1,6 @@
 use crate::Direction::{Fwd, Inv};
 use crate::ICoord;
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 
 impl crate::Proj {
     /// Projects a single coordinate using the specified direction (forward or
@@ -15,7 +15,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// The transformed coordinate.
-    pub fn project<T>(&self, inv: bool, coord: &T) -> Result<T, ProjError>
+    pub fn project<T>(&self, inv: bool, coord: &T) -> Result<T, ProjErrorKind>
     where
         T: ICoord,
     {
@@ -39,7 +39,7 @@ impl crate::Proj {
                 self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)?
             },
             (x, y, z, t) => {
-                return Err(ProjError::new(format!(
+                return Err(ProjErrorKind::new(format!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
                 )));
             }
@@ -55,7 +55,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// The transformed coordinate.
-    pub fn convert<T>(&self, coord: &T) -> Result<T, ProjError>
+    pub fn convert<T>(&self, coord: &T) -> Result<T, ProjErrorKind>
     where
         T: ICoord,
     {
@@ -78,7 +78,7 @@ impl crate::Proj {
                 self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)?
             },
             (x, y, z, t) => {
-                return Err(ProjError::new(format!(
+                return Err(ProjErrorKind::new(format!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
                 )));
             }
@@ -101,7 +101,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// A reference to self for chaining.
-    pub fn project_array<T>(&self, inv: bool, coord: &mut [T]) -> Result<&Self, ProjError>
+    pub fn project_array<T>(&self, inv: bool, coord: &mut [T]) -> Result<&Self, ProjErrorKind>
     where
         T: ICoord,
     {
@@ -133,7 +133,7 @@ impl crate::Proj {
                 )?
             },
             (x, y, z, t) => {
-                return Err(ProjError::new(format!(
+                return Err(ProjErrorKind::new(format!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
                 )));
             }
@@ -149,7 +149,7 @@ impl crate::Proj {
     /// # Returns
     ///
     /// A reference to self for chaining.
-    pub fn convert_array<T>(&self, coord: &mut [T]) -> Result<&Self, ProjError>
+    pub fn convert_array<T>(&self, coord: &mut [T]) -> Result<&Self, ProjErrorKind>
     where
         T: ICoord,
     {
@@ -179,7 +179,7 @@ impl crate::Proj {
                 )?
             },
             (x, y, z, t) => {
-                return Err(ProjError::new(format!(
+                return Err(ProjErrorKind::new(format!(
                     "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
                 )));
             }

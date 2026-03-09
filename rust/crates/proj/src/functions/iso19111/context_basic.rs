@@ -8,7 +8,7 @@ use envoy::{PtrListToVecString, PtrToString};
 extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 use crate::data_types::iso19111::*;
 use crate::{OwnedCStrings, Proj, ProjOptions, check_result};
 /// # ISO-19111 Base functions
@@ -35,7 +35,7 @@ impl crate::Context {
         &self,
         db_path: &Path,
         aux_db_paths: Option<&[&Path]>,
-    ) -> Result<&Self, ProjError> {
+    ) -> Result<&Self, ProjErrorKind> {
         let aux_db_paths: Option<Vec<CString>> = match aux_db_paths {
             Some(ps) => Some(
                 ps.iter()
@@ -54,7 +54,7 @@ impl crate::Context {
                 self.ptr(),
                 db_path
                     .to_str()
-                    .ok_or(ProjError::new("Invalid database path".to_string()))?
+                    .ok_or(ProjErrorKind::new("Invalid database path".to_string()))?
                     .to_cstring()?
                     .as_ptr(),
                 aux_db_paths_ptr.map_or(ptr::null(), |ptr| ptr.as_ptr()),
@@ -91,7 +91,7 @@ impl crate::Context {
     pub fn get_database_metadata(
         &self,
         key: DatabaseMetadataKey,
-    ) -> Result<Option<String>, ProjError> {
+    ) -> Result<Option<String>, ProjErrorKind> {
         Ok(unsafe {
             proj_sys::proj_context_get_database_metadata(
                 self.ptr(),
@@ -110,7 +110,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
-    pub fn get_database_structure(&self) -> Result<Vec<String>, ProjError> {
+    pub fn get_database_structure(&self) -> Result<Vec<String>, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr(), ptr::null()) };
         let out_vec = ptr.to_vec_string()?;
         unsafe {
@@ -123,7 +123,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_guess_wkt_dialect>
-    pub fn guess_wkt_dialect(&self, wkt: &str) -> Result<GuessedWktDialect, ProjError> {
+    pub fn guess_wkt_dialect(&self, wkt: &str) -> Result<GuessedWktDialect, ProjErrorKind> {
         Ok(GuessedWktDialect::try_from(unsafe {
             proj_sys::proj_context_guess_wkt_dialect(self.ptr(), wkt.to_cstring()?.as_ptr())
         })?)
@@ -156,7 +156,7 @@ impl crate::Context {
         wkt: &str,
         strict: Option<bool>,
         unset_identifiers_if_incompatible_def: Option<bool>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut options = ProjOptions::new(2);
         options.with_or_skip(strict, "STRICT")?;
         options.with_or_skip(
@@ -207,7 +207,7 @@ impl crate::Context {
         code: &str,
         category: Category,
         use_projalternative_grid_names: bool,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe {
             proj_sys::proj_create_from_database(
                 self.ptr(),
@@ -234,7 +234,7 @@ impl crate::Context {
         &self,
         auth_name: &str,
         code: &str,
-    ) -> Result<UomInfo, ProjError> {
+    ) -> Result<UomInfo, ProjErrorKind> {
         let mut name: *const std::ffi::c_char = std::ptr::null();
         let mut conv_factor: f64 = f64::NAN;
         let mut category: *const std::ffi::c_char = std::ptr::null();
@@ -265,7 +265,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_get_info_from_database>
-    pub fn grid_get_info_from_database(&self, grid_name: &str) -> Result<GridInfoDB, ProjError> {
+    pub fn grid_get_info_from_database(&self, grid_name: &str) -> Result<GridInfoDB, ProjErrorKind> {
         let mut full_name: *const std::ffi::c_char = std::ptr::null();
         let mut package_name: *const std::ffi::c_char = std::ptr::null();
         let mut url: *const std::ffi::c_char = std::ptr::null();
@@ -313,7 +313,7 @@ impl crate::Context {
         &self,
         auth_name: &str,
         code: &str,
-    ) -> Result<Vec<String>, ProjError> {
+    ) -> Result<Vec<String>, ProjErrorKind> {
         let ptr = unsafe {
             proj_sys::proj_get_geoid_models_from_database(
                 self.ptr(),
@@ -334,7 +334,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_authorities_from_database>
-    pub fn get_authorities_from_database(&self) -> Result<Vec<String>, ProjError> {
+    pub fn get_authorities_from_database(&self) -> Result<Vec<String>, ProjErrorKind> {
         let ptr = unsafe { proj_sys::proj_get_authorities_from_database(self.ptr()) };
         check_result!(ptr.is_null(), "Error");
         let out_vec = ptr.to_vec_string()?;
@@ -360,7 +360,7 @@ impl crate::Context {
         auth_name: &str,
         proj_type: ProjType,
         allow_deprecated: bool,
-    ) -> Result<Vec<String>, ProjError> {
+    ) -> Result<Vec<String>, ProjErrorKind> {
         let ptr = unsafe {
             proj_sys::proj_get_codes_from_database(
                 self.ptr(),
@@ -391,7 +391,7 @@ impl crate::Context {
     pub fn get_celestial_body_list_from_database(
         &self,
         auth_name: &str,
-    ) -> Result<Vec<CelestialBodyInfo>, ProjError> {
+    ) -> Result<Vec<CelestialBodyInfo>, ProjErrorKind> {
         let mut out_result_count = i32::default();
         let ptr = unsafe {
             proj_sys::proj_get_celestial_body_list_from_database(
@@ -404,12 +404,12 @@ impl crate::Context {
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
             let current_ptr = unsafe {
-                ptr.offset(offset as isize).as_ref().ok_or(ProjError::new(
+                ptr.offset(offset as isize).as_ref().ok_or(ProjErrorKind::new(
                     "Invalid celestial body info pointer".to_string(),
                 ))?
             };
             let info_ref = unsafe {
-                current_ptr.as_ref().ok_or(ProjError::new(
+                current_ptr.as_ref().ok_or(ProjErrorKind::new(
                     "Invalid celestial body info pointer".to_string(),
                 ))?
             };
@@ -444,7 +444,7 @@ impl crate::Context {
         &self,
         auth_name: Option<&str>,
         params: Option<CrsListParameters>,
-    ) -> Result<Vec<CrsInfo>, ProjError> {
+    ) -> Result<Vec<CrsInfo>, ProjErrorKind> {
         check_result!(
             auth_name.is_none() && params.is_none(),
             "At least one of `auth_name` and  `params` must be set."
@@ -482,12 +482,12 @@ impl crate::Context {
             let current_ptr = unsafe {
                 ptr.offset(offset as isize)
                     .as_ref()
-                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+                    .ok_or(ProjErrorKind::new("Invalid CRS info pointer".to_string()))?
             };
             let info_ref = unsafe {
                 current_ptr
                     .as_ref()
-                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+                    .ok_or(ProjErrorKind::new("Invalid CRS info pointer".to_string()))?
             };
             out_vec.push(CrsInfo::new(
                 info_ref.auth_name.to_string()?,
@@ -529,7 +529,7 @@ impl crate::Context {
         auth_name: &str,
         category: UnitCategory,
         allow_deprecated: bool,
-    ) -> Result<Vec<UnitInfo>, ProjError> {
+    ) -> Result<Vec<UnitInfo>, ProjErrorKind> {
         let mut out_result_count = i32::default();
         let ptr = unsafe {
             proj_sys::proj_get_units_from_database(
@@ -546,12 +546,12 @@ impl crate::Context {
             let current_ptr = unsafe {
                 ptr.offset(offset as isize)
                     .as_ref()
-                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+                    .ok_or(ProjErrorKind::new("Invalid CRS info pointer".to_string()))?
             };
             let info_ref = unsafe {
                 current_ptr
                     .as_ref()
-                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+                    .ok_or(ProjErrorKind::new("Invalid CRS info pointer".to_string()))?
             };
             out_vec.push(UnitInfo::new(
                 info_ref.auth_name.to_string()?,
@@ -574,19 +574,19 @@ mod test {
 
     use super::*;
     #[test]
-    fn test_set_database_path() -> Result<(), ProjError> {
+    fn test_set_database_path() -> Result<(), ProjErrorKind> {
         let _ = crate::new_test_ctx()?;
         Ok(())
     }
     #[test]
-    fn test_get_database_path() -> Result<(), ProjError> {
+    fn test_get_database_path() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let db_path = ctx.get_database_path();
         assert!(db_path.to_string_lossy().to_string().contains(".pixi"));
         Ok(())
     }
     #[test]
-    fn test_get_database_metadata() -> Result<(), ProjError> {
+    fn test_get_database_metadata() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)?
@@ -595,7 +595,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_database_structure() -> Result<(), ProjError> {
+    fn test_get_database_structure() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let structure = ctx.get_database_structure()?;
         println!("{}", structure.first().expect("invalid element"));
@@ -604,7 +604,7 @@ mod test {
     }
 
     #[test]
-    fn test_guess_wkt_dialect() -> Result<(), ProjError> {
+    fn test_guess_wkt_dialect() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -613,7 +613,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_create_from_wkt() -> Result<(), ProjError> {
+    fn test_create_from_wkt() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         //invalid
         assert!(ctx.create_from_wkt("invalid wkt", None, None).is_err());
@@ -631,7 +631,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_create_from_database() -> Result<(), ProjError> {
+    fn test_create_from_database() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -640,7 +640,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_uom_get_info_from_database() -> Result<(), ProjError> {
+    fn test_uom_get_info_from_database() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.uom_get_info_from_database("EPSG", "9102")?;
         println!("{info:?}");
@@ -654,7 +654,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_grid_get_info_from_database() -> Result<(), ProjError> {
+    fn test_grid_get_info_from_database() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let info = ctx.grid_get_info_from_database("au_icsm_GDA94_GDA2020_conformal.tif")?;
         println!("{info:?}");
@@ -673,7 +673,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_geoid_models_from_database() -> Result<(), ProjError> {
+    fn test_get_geoid_models_from_database() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let models = ctx.get_geoid_models_from_database("EPSG", "5703")?;
         assert_eq!(
@@ -686,7 +686,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_authorities_from_database() -> Result<(), ProjError> {
+    fn test_get_authorities_from_database() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let authorities = ctx.get_authorities_from_database()?;
         assert_eq!(
@@ -698,7 +698,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_codes_from_database() -> Result<(), ProjError> {
+    fn test_get_codes_from_database() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         for t in ProjType::iter() {
             let codes = ctx.get_codes_from_database("EPSG", t.clone(), true);
@@ -713,7 +713,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_celestial_body_list_from_database() -> Result<(), ProjError> {
+    fn test_get_celestial_body_list_from_database() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_celestial_body_list_from_database("ESRI")?;
         println!("{:?}", list.first().expect("invalid element"));
@@ -721,7 +721,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_get_crs_info_list_from_database() -> Result<(), ProjError> {
+    fn test_get_crs_info_list_from_database() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_crs_info_list_from_database(Some("EPSG"), None)?;
         println!("{:?}", list.first().expect("invalid element"));
@@ -730,7 +730,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_units_from_database() -> Result<(), ProjError> {
+    fn test_get_units_from_database() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let units = ctx.get_units_from_database("EPSG", UnitCategory::Linear, true)?;
         println!("{:?}", units.first().expect("invalid element"));

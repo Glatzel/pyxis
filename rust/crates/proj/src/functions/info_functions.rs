@@ -1,13 +1,13 @@
 use envoy::{PtrToString, ToCString};
 
-use crate::data_types::{GridInfo, Info, InitInfo, ProjError, ProjInfo};
+use crate::data_types::{GridInfo, Info, InitInfo, ProjErrorKind, ProjInfo};
 
 /// Get information about the current instance of the PROJ library.
 ///
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_info>
-pub fn info() -> Result<Info, ProjError> {
+pub fn info() -> Result<Info, ProjErrorKind> {
     let src = unsafe { proj_sys::proj_info() };
     Ok(Info::new(
         src.major,
@@ -42,13 +42,13 @@ impl crate::Proj {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_info>
-pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
+pub fn grid_info(grid: &str) -> Result<GridInfo, ProjErrorKind> {
     let src = unsafe { proj_sys::proj_grid_info(grid.to_cstring()?.as_ptr()) };
     if src.gridname.to_string()?.as_str() == ""
         && src.filename.to_string()?.as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
     {
-        return Err(ProjError::new(format!("Invalid grid: {}", grid)));
+        return Err(ProjErrorKind::new(format!("Invalid grid: {}", grid)));
     }
     Ok(GridInfo::new(
         src.gridname.to_string()?,
@@ -71,7 +71,7 @@ pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_init_info>
-pub fn init_info(initname: &str) -> Result<InitInfo, ProjError> {
+pub fn init_info(initname: &str) -> Result<InitInfo, ProjErrorKind> {
     let src = unsafe { proj_sys::proj_init_info(initname.to_cstring()?.as_ptr()) };
     let info = InitInfo::new(
         src.name.to_string().unwrap_or_default(),
@@ -81,7 +81,7 @@ pub fn init_info(initname: &str) -> Result<InitInfo, ProjError> {
         src.lastupdate.to_string().unwrap_or_default(),
     );
     if info.version() == "" {
-        return Err(ProjError::new(format!(
+        return Err(ProjErrorKind::new(format!(
             "Invalid proj init file or name: {initname}"
         )));
     }
@@ -126,7 +126,7 @@ mod test {
                 workspace_dir
                     .join("external/ntv2-file-routines/samples/mne.gsb")
                     .to_str()
-                    .ok_or_else(|| ProjError::new("Invalid path string".to_string()))?,
+                    .ok_or_else(|| ProjErrorKind::new("Invalid path string".to_string()))?,
             )?;
             println!("{info:?}");
             assert_eq!(info.format(), "ntv2");

@@ -3,7 +3,7 @@ use alloc::sync::Arc;
 use std::ffi::c_void;
 use std::ptr::null_mut;
 
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 use crate::{LogLevel, OwnedCStrings, check_result};
 
 ///Object containing everything related to a given projection or
@@ -23,7 +23,7 @@ impl Proj {
     pub(crate) fn new(
         arc_ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ,
-    ) -> Result<crate::Proj, ProjError> {
+    ) -> Result<crate::Proj, ProjErrorKind> {
         check_result!(ptr.is_null(), "Proj pointer is null.");
         Ok(crate::Proj {
             arc_ctx_ptr,
@@ -36,7 +36,7 @@ impl Proj {
         arc_ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ,
         owned_cstrings: OwnedCStrings,
-    ) -> Result<crate::Proj, ProjError> {
+    ) -> Result<crate::Proj, ProjErrorKind> {
         check_result!(ptr.is_null(), "Proj pointer is null.");
         Ok(crate::Proj {
             arc_ctx_ptr,
@@ -79,6 +79,8 @@ impl Drop for ContextPtr {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
     fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(self.0) }; }
 }
+unsafe impl Send for ContextPtr {}
+unsafe impl Sync for ContextPtr {}
 
 ///Context objects enable safe multi-threaded usage of PROJ. Each PJ object is
 /// connected to a context (if not specified, the default context is used). All
@@ -103,7 +105,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_create>
-    pub fn new() -> Result<Self, ProjError> {
+    pub fn new() -> Result<Self, ProjErrorKind> {
         let ctx = Self {
             ptr: Arc::new(ContextPtr(unsafe { proj_sys::proj_context_create() })),
         };

@@ -2,9 +2,9 @@ use std::env;
 extern crate alloc;
 
 use crate::Context;
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 
-pub(crate) fn new_test_ctx() -> Result<Context, ProjError> {
+pub(crate) fn new_test_ctx() -> Result<Context, ProjErrorKind> {
     clerk::init_log_with_level(clerk::LogLevel::TRACE);
     let ctx = crate::Context::new()?;
     ctx.set_log_level(crate::LogLevel::Trace)?;

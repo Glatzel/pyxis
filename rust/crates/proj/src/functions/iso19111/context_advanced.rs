@@ -1,6 +1,6 @@
 use core::ptr;
 
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
@@ -22,7 +22,7 @@ impl Context {
         &self,
         coordinate_system_type: CoordinateSystemType,
         axis: &[AxisDescription],
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let axis_count = axis.len();
         let mut axis_vec: Vec<proj_sys::PJ_AXIS_DESCRIPTION> = Vec::with_capacity(axis_count);
         let mut owned_string = OwnedCStrings::new();
@@ -64,7 +64,7 @@ impl Context {
         ellipsoidal_cs_2d_type: CartesianCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let unit_name = unit_name.map(|s| s.to_cstring()).transpose()?;
         let ptr = unsafe {
             proj_sys::proj_create_cartesian_2D_cs(
@@ -93,7 +93,7 @@ impl Context {
         ellipsoidal_cs_2d_type: EllipsoidalCs2dType,
         unit_name: Option<&str>,
         unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_ellipsoidal_2D_cs(
@@ -131,7 +131,7 @@ impl Context {
         horizontal_angular_unit_conv_factor: f64,
         vertical_linear_unit_name: Option<&str>,
         vertical_linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned_cstring = OwnedCStrings::with_capacity(2);
 
         let ptr = unsafe {
@@ -180,7 +180,7 @@ impl Context {
         pm_angular_units: Option<&str>,
         pm_units_conv: f64,
         ellipsoidal_cs: &Proj,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(5);
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs(
@@ -216,7 +216,7 @@ impl Context {
         crs_name: Option<&str>,
         datum_or_datum_ensemble: &Proj,
         ellipsoidal_cs: &Proj,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_geographic_crs_from_datum(
@@ -265,7 +265,7 @@ impl Context {
         angular_units_conv: f64,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(6);
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs(
@@ -306,7 +306,7 @@ impl Context {
         datum_or_datum_ensemble: &Proj,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_geocentric_crs_from_datum(
@@ -338,7 +338,7 @@ impl Context {
         base_geographic_crs: &Proj,
         conversion: &Proj,
         ellipsoidal_cs: &Proj,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_derived_geographic_crs(
@@ -361,7 +361,7 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_engineering_crs>
-    pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> Result<Proj, ProjError> {
+    pub fn create_engineering_crs(&self, crs_name: Option<&str>) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_engineering_crs(self.ptr(), owned.push_option(crs_name)?)
@@ -388,7 +388,7 @@ impl Context {
         datum_name: Option<&str>,
         linear_units: Option<&str>,
         linear_units_conv: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_create_vertical_crs(
@@ -445,7 +445,7 @@ impl Context {
         geoid_model_code: Option<&str>,
         geoid_geog_crs: Option<&Proj>,
         accuracy: Option<f64>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(8);
         let mut options = ProjOptions::new(1);
         options.with_or_skip(accuracy, "ACCURACY")?;
@@ -483,7 +483,7 @@ impl Context {
         crs_name: Option<&str>,
         horiz_crs: &Proj,
         vert_crs: &Proj,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_compound_crs(
@@ -520,7 +520,7 @@ impl Context {
         method_auth_name: Option<&str>,
         method_code: Option<&str>,
         params: &[ParamDescription],
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(6);
         let ptr = unsafe {
             proj_sys::proj_create_conversion(
@@ -573,7 +573,7 @@ impl Context {
         b2: f64,
         b2_unit_name: Option<&str>,
         b2_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(7);
         let ptr = unsafe {
             proj_sys::proj_create_linear_affine_parametric_conversion(
@@ -636,7 +636,7 @@ impl Context {
         method_code: Option<&str>,
         params: &[ParamDescription],
         accuracy: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(6);
         let count = params.len();
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
@@ -689,7 +689,7 @@ impl Context {
         geodetic_crs: &Proj,
         conversion: &Proj,
         coordinate_system: &Proj,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_projected_crs(
@@ -711,7 +711,7 @@ impl Context {
         base_proj_crs: &Proj,
         deriving_conversion: &Proj,
         coordinate_system: &Proj,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_create_derived_projected_crs(
@@ -733,7 +733,7 @@ impl Context {
         base_crs: &Proj,
         deriving_conversion: &Proj,
         coordinate_system: &Proj,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_crs_add_horizontal_derived_conversion(
@@ -762,7 +762,7 @@ impl Context {
         base_crs: &Proj,
         hub_crs: &Proj,
         transformation: &Proj,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_crs(
                 self.ptr(),
@@ -790,7 +790,7 @@ impl Context {
         vert_crs: &Proj,
         hub_geographic_3d_crs: &Proj,
         grid_name: &str,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe {
             proj_sys::proj_crs_create_bound_vertical_crs(
                 self.ptr(),
@@ -807,7 +807,7 @@ impl Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_conversion_utm>
-    pub fn create_conversion_utm(&self, zone: u8, north: bool) -> Result<Proj, ProjError> {
+    pub fn create_conversion_utm(&self, zone: u8, north: bool) -> Result<Proj, ProjErrorKind> {
         check_result!(
             !(1..=60).contains(&zone),
             "UTM zone number should between 1 and 60."
@@ -833,7 +833,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator(
@@ -868,7 +868,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gauss_schreiber_transverse_mercator(
@@ -906,7 +906,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_transverse_mercator_south_oriented(
@@ -942,7 +942,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_two_point_equidistant(
@@ -977,7 +977,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mapping_grid(
@@ -1010,7 +1010,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_tunisia_mining_grid(
@@ -1045,7 +1045,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_albers_equal_area(
@@ -1081,7 +1081,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp(
@@ -1117,7 +1117,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_1sp_variant_b(
@@ -1154,7 +1154,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp(
@@ -1192,7 +1192,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_michigan(
@@ -1230,7 +1230,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_conic_conformal_2sp_belgium(
@@ -1265,7 +1265,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_azimuthal_equidistant(
@@ -1298,7 +1298,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_guam_projection(
@@ -1331,7 +1331,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_bonne(
@@ -1364,7 +1364,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area_spherical(
@@ -1397,7 +1397,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_cylindrical_equal_area(
@@ -1430,7 +1430,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_cassini_soldner(
@@ -1465,7 +1465,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_conic(
@@ -1499,7 +1499,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_i(
@@ -1528,7 +1528,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_ii(
@@ -1559,7 +1559,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iii(
@@ -1590,7 +1590,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_iv(
@@ -1621,7 +1621,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_v(
@@ -1652,7 +1652,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_eckert_vi(
@@ -1684,7 +1684,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical(
@@ -1717,7 +1717,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equidistant_cylindrical_spherical(
@@ -1749,7 +1749,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gall(
@@ -1780,7 +1780,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_goode_homolosine(
@@ -1811,7 +1811,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_interrupted_goode_homolosine(
@@ -1844,7 +1844,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_x(
@@ -1878,7 +1878,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_geostationary_satellite_sweep_y(
@@ -1911,7 +1911,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_gnomonic(
@@ -1947,7 +1947,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_a(
@@ -1986,7 +1986,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_variant_b(
@@ -2026,7 +2026,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_hotine_oblique_mercator_two_point_natural_origin(
@@ -2065,7 +2065,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_laborde_oblique_mercator(
@@ -2101,7 +2101,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_international_map_world_polyconic(
@@ -2138,7 +2138,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak_north_oriented(
@@ -2177,7 +2177,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_krovak(
@@ -2213,7 +2213,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_lambert_azimuthal_equal_area(
@@ -2245,7 +2245,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_miller_cylindrical(
@@ -2278,7 +2278,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_a(
@@ -2312,7 +2312,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
@@ -2345,7 +2345,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_popular_visualisation_pseudo_mercator(
@@ -2377,7 +2377,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mollweide(
@@ -2409,7 +2409,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
@@ -2442,7 +2442,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_new_zealand_mapping_grid(
@@ -2475,7 +2475,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_orthographic(
@@ -2510,7 +2510,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_local_orthographic(
@@ -2545,7 +2545,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_american_polyconic(
@@ -2579,7 +2579,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_polar_stereographic_variant_a(
@@ -2613,7 +2613,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_mercator_variant_b(
@@ -2645,7 +2645,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_robinson(
@@ -2676,7 +2676,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_sinusoidal(
@@ -2709,7 +2709,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_stereographic(
@@ -2742,7 +2742,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_van_der_grinten(
@@ -2773,7 +2773,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_i(
@@ -2804,7 +2804,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_ii(
@@ -2836,7 +2836,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iii(
@@ -2868,7 +2868,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_iv(
@@ -2899,7 +2899,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_v(
@@ -2930,7 +2930,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vi(
@@ -2961,7 +2961,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_wagner_vii(
@@ -2993,7 +2993,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_quadrilateralized_spherical_cube(
@@ -3026,7 +3026,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_spherical_cross_track_height(
@@ -3059,7 +3059,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_equal_earth(
@@ -3093,7 +3093,7 @@ impl Context {
         ang_unit_conv_factor: f64,
         linear_unit_name: Option<&str>,
         linear_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_vertical_perspective(
@@ -3125,7 +3125,7 @@ impl Context {
         axis_rotation: f64,
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_grib_convention(
@@ -3152,7 +3152,7 @@ impl Context {
         north_pole_grid_longitude: f64,
         ang_unit_name: Option<&str>,
         ang_unit_conv_factor: f64,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(2);
         let ptr = unsafe {
             proj_sys::proj_create_conversion_pole_rotation_netcdf_cf_convention(
@@ -3175,7 +3175,7 @@ mod test_context_advanced {
 
     use super::*;
     #[test]
-    fn test_create_cs() -> Result<(), ProjError> {
+    fn test_create_cs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let mut wkt_string = String::new();
         for a in AxisDirection::iter() {
@@ -3208,7 +3208,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_cartesian_2d_cs() -> Result<(), ProjError> {
+    fn test_create_cartesian_2d_cs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_cartesian_2d_cs(CartesianCs2dType::EastingNorthing, None, 1.0)?;
         let wkt = pj.as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?;
@@ -3217,7 +3217,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_ellipsoidal_2d_cs() -> Result<(), ProjError> {
+    fn test_create_ellipsoidal_2d_cs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_ellipsoidal_2d_cs(
             EllipsoidalCs2dType::LatitudeLongitude,
@@ -3230,7 +3230,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_ellipsoidal_3d_cs() -> Result<(), ProjError> {
+    fn test_create_ellipsoidal_3d_cs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_ellipsoidal_3d_cs(
             EllipsoidalCs3dType::LatitudeLongitudeHeight,
@@ -3246,7 +3246,7 @@ mod test_context_advanced {
     }
 
     #[test]
-    fn test_create_geographic_crs() -> Result<(), ProjError> {
+    fn test_create_geographic_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_geographic_crs(
             Some("WGS 84"),
@@ -3270,13 +3270,13 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_geographic_crs_from_datum() -> Result<(), ProjError> {
+    fn test_create_geographic_crs_from_datum() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_geographic_crs_from_datum(
             Some("WGS 84"),
             &ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?
                 .crs_get_datum()?
-                .ok_or(ProjError::new("No datum found".to_string()))?,
+                .ok_or(ProjErrorKind::new("No datum found".to_string()))?,
             &ctx.create_ellipsoidal_2d_cs(
                 EllipsoidalCs2dType::LatitudeLongitude,
                 Some("Degree"),
@@ -3289,7 +3289,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_create_geocentric_crs() -> Result<(), ProjError> {
+    fn test_create_create_geocentric_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_geocentric_crs(
             Some("WGS 84"),
@@ -3311,7 +3311,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_geocentric_crs_from_datum() -> Result<(), ProjError> {
+    fn test_create_geocentric_crs_from_datum() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj1: Proj = ctx.create_geocentric_crs(
             Some("WGS 84"),
@@ -3329,7 +3329,7 @@ mod test_context_advanced {
         let pj2: Proj = ctx.create_geocentric_crs_from_datum(
             Some("new crs"),
             &pj1.crs_get_datum()?
-                .ok_or(ProjError::new("No datum found".to_string()))?,
+                .ok_or(ProjErrorKind::new("No datum found".to_string()))?,
             Some("MyMetre2"),
             1.0,
         )?;
@@ -3339,7 +3339,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_derived_geographic_crs() -> Result<(), ProjError> {
+    fn test_create_derived_geographic_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let crs_4326 = ctx.create("EPSG:4326")?;
         let conversion = ctx
@@ -3361,7 +3361,7 @@ mod test_context_advanced {
     }
 
     #[test]
-    fn test_create_engineering_crs() -> Result<(), ProjError> {
+    fn test_create_engineering_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
 
         let pj: Proj = ctx.create_engineering_crs(Some("engineering crs"))?;
@@ -3371,7 +3371,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_vertical_crs() -> Result<(), ProjError> {
+    fn test_create_vertical_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj =
             ctx.create_vertical_crs(Some("myVertCRS"), Some("myVertDatum"), None, 0.0)?;
@@ -3381,7 +3381,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_vertical_crs_ex() -> Result<(), ProjError> {
+    fn test_create_vertical_crs_ex() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_vertical_crs_ex(
             Some("myVertCRS (ftUS)"),
@@ -3402,7 +3402,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_compound_crs() -> Result<(), ProjError> {
+    fn test_create_compound_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let horiz_crs = ctx
             .clone()
@@ -3427,7 +3427,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion() -> Result<(), ProjError> {
+    fn test_create_conversion() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_conversion(
             Some("conv"),
@@ -3490,7 +3490,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_transformation() -> Result<(), ProjError> {
+    fn test_create_transformation() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let geog_cs =
             ctx.create_ellipsoidal_2d_cs(EllipsoidalCs2dType::LongitudeLatitude, None, 0.0)?;
@@ -3545,7 +3545,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_projected_crs() -> Result<(), ProjError> {
+    fn test_projected_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let conv = ctx.create_conversion(
             Some("conv"),
@@ -3774,7 +3774,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_albers_equal_area() -> Result<(), ProjError> {
+    fn test_create_conversion_albers_equal_area() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_albers_equal_area(
             0.0,
@@ -3794,7 +3794,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_conic_conformal_1sp() -> Result<(), ProjError> {
+    fn test_create_conversion_lambert_conic_conformal_1sp() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_1sp(
             1.0,
@@ -3813,7 +3813,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_conic_conformal_1sp_variant_b() -> Result<(), ProjError> {
+    fn test_create_conversion_lambert_conic_conformal_1sp_variant_b() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_1sp_variant_b(
             1.0,
@@ -3833,7 +3833,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_conic_conformal_2sp() -> Result<(), ProjError> {
+    fn test_create_conversion_lambert_conic_conformal_2sp() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_conic_conformal_2sp(
             1.0,
@@ -3948,7 +3948,7 @@ mod test_context_advanced {
         Ok(())
     }
     #[test]
-    fn test_create_conversion_lambert_cylindrical_equal_area_spherical() -> Result<(), ProjError> {
+    fn test_create_conversion_lambert_cylindrical_equal_area_spherical() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_conversion_lambert_cylindrical_equal_area_spherical(
             1.0,

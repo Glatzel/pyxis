@@ -5,7 +5,7 @@ use core::ptr;
 
 use envoy::ToCString;
 
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub(crate) struct OwnedCStrings {
@@ -22,18 +22,18 @@ impl OwnedCStrings {
             _owned_cstrings: Vec::with_capacity(n),
         }
     }
-    pub fn push<T: ToCString>(&mut self, value: T) -> Result<*const c_char, ProjError> {
+    pub fn push<T: ToCString>(&mut self, value: T) -> Result<*const c_char, ProjErrorKind> {
         self._owned_cstrings.push(value.to_cstring()?);
         Ok(self
             ._owned_cstrings
             .last()
-            .ok_or(ProjError::new("Last owned cstring is missing.".to_string()))?
+            .ok_or(ProjErrorKind::new("Last owned cstring is missing.".to_string()))?
             .as_ptr())
     }
     pub fn push_option<T: ToCString>(
         &mut self,
         value: Option<T>,
-    ) -> Result<*const c_char, ProjError> {
+    ) -> Result<*const c_char, ProjErrorKind> {
         match value {
             Some(v) => Ok(self.push(v)?),
             None => Ok(ptr::null()),

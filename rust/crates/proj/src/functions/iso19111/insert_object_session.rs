@@ -2,7 +2,7 @@ use core::ptr;
 extern crate alloc;
 use envoy::{AsVecPtr, PtrListToVecString, ToCString, ToVecCString, VecCString};
 
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 use crate::data_types::iso19111::InsertObjectSession;
 use crate::{Context, Proj};
 
@@ -86,7 +86,7 @@ impl InsertObjectSession {
         code: &str,
         numeric_codes: bool,
         allowed_authorities: Option<&[&str]>,
-    ) -> Result<Vec<String>, ProjError> {
+    ) -> Result<Vec<String>, ProjErrorKind> {
         let allowed_authorities: VecCString = match allowed_authorities {
             Some(v) => v.to_vec_cstring()?,
             None => VecCString::new(),

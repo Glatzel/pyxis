@@ -4,7 +4,7 @@ use core::ffi::{c_char, c_void};
 
 use envoy::PtrToString;
 
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 use crate::{LogLevel, check_result};
 
 pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const c_char) {
@@ -19,7 +19,7 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
 }
 
 impl crate::Context {
-    pub fn set_log_level(&self, level: LogLevel) -> Result<&Self, ProjError> {
+    pub fn set_log_level(&self, level: LogLevel) -> Result<&Self, ProjErrorKind> {
         unsafe { proj_sys::proj_log_level(self.ptr(), level as u32) };
         Ok(self)
     }
@@ -28,7 +28,7 @@ impl crate::Context {
         &self,
         app_data: *mut c_void,
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const c_char)>,
-    ) -> Result<&Self, ProjError> {
+    ) -> Result<&Self, ProjErrorKind> {
         unsafe {
             proj_sys::proj_log_func(self.ptr(), app_data, logf);
         };

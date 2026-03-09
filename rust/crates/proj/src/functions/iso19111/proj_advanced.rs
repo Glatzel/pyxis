@@ -2,7 +2,7 @@ use core::ptr;
 
 use envoy::{AsVecPtr, ToCString};
 
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 use crate::data_types::iso19111::*;
 use crate::{OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
@@ -20,7 +20,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_name>
-    pub fn alter_name(&self, name: &str) -> Result<Proj, ProjError> {
+    pub fn alter_name(&self, name: &str) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe {
             proj_sys::proj_alter_name(self.ctx_ptr(), self.ptr(), name.to_cstring()?.as_ptr())
         };
@@ -38,7 +38,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_id>
-    pub fn alter_id(&self, auth_name: &str, code: &str) -> Result<Proj, ProjError> {
+    pub fn alter_id(&self, auth_name: &str, code: &str) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe {
             proj_sys::proj_alter_id(
                 self.ctx_ptr(),
@@ -64,7 +64,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_alter_geodetic_crs>
-    pub fn crs_alter_geodetic_crs(&self, new_geod_crs: &Proj) -> Result<Proj, ProjError> {
+    pub fn crs_alter_geodetic_crs(&self, new_geod_crs: &Proj) -> Result<Proj, ProjErrorKind> {
         let ptr = unsafe {
             proj_sys::proj_crs_alter_geodetic_crs(self.ctx_ptr(), self.ptr(), new_geod_crs.ptr())
         };
@@ -91,7 +91,7 @@ impl Proj {
         angular_units_convs: f64,
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_crs_alter_cs_angular_unit(
@@ -129,7 +129,7 @@ impl Proj {
         linear_units_conv: f64,
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_crs_alter_cs_linear_unit(
@@ -170,7 +170,7 @@ impl Proj {
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
         convert_to_new_unit: bool,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_crs_alter_parameters_linear_unit(
@@ -198,7 +198,7 @@ impl Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
-    pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> Result<Proj, ProjError> {
+    pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_crs_promote_to_3D(
@@ -238,7 +238,7 @@ impl Proj {
         &self,
         crs_name: Option<&str>,
         geog_3d_crs: Option<&Proj>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let crs_name = crs_name.map(|s| s.to_cstring()).transpose()?;
         let ptr = unsafe {
             proj_sys::proj_crs_create_projected_3D_crs_from_2D(
@@ -259,7 +259,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_demote_to_2D>
-    pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> Result<Proj, ProjError> {
+    pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> Result<Proj, ProjErrorKind> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_crs_demote_to_2D(
@@ -297,9 +297,9 @@ impl Proj {
         &self,
         new_method_epsg_code: Option<u16>,
         new_method_name: Option<&str>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         if new_method_epsg_code.is_none() && new_method_name.is_none() {
-            return Err(ProjError::new(
+            return Err(ProjErrorKind::new(
                 "At least one of `new_method_epsg_code` and  `new_method_name` must be set."
                     .to_string(),
             ));
@@ -330,7 +330,7 @@ impl Proj {
     pub fn crs_create_bound_crs_to_wgs84(
         &self,
         allow_intermediate_crs: Option<AllowIntermediateCrs>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Proj, ProjErrorKind> {
         let mut options = ProjOptions::new(1);
         options.with_or_skip(allow_intermediate_crs, "ALLOW_INTERMEDIATE_CRS")?;
 
@@ -351,7 +351,7 @@ mod test_proj_advanced {
 
     use super::*;
     #[test]
-    fn test_alter_name() -> Result<(), ProjError> {
+    fn test_alter_name() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_geographic_crs(
             Some("WGS 84"),
@@ -376,7 +376,7 @@ mod test_proj_advanced {
         Ok(())
     }
     #[test]
-    fn test_alter_id() -> Result<(), ProjError> {
+    fn test_alter_id() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj: Proj = ctx.create_geographic_crs(
             Some("WGS 84"),
@@ -401,7 +401,7 @@ mod test_proj_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_alter_geodetic_crs() -> Result<(), ProjError> {
+    fn test_crs_alter_geodetic_crs() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx
             .clone()
@@ -417,7 +417,7 @@ mod test_proj_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_alter_cs_angular_unit() -> Result<(), ProjError> {
+    fn test_crs_alter_cs_angular_unit() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let pj_alterd =
@@ -428,7 +428,7 @@ mod test_proj_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_alter_cs_linear_unit() -> Result<(), ProjError> {
+    fn test_crs_alter_cs_linear_unit() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let pj_alterd =
@@ -439,7 +439,7 @@ mod test_proj_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_alter_parameters_linear_unit() -> Result<(), ProjError> {
+    fn test_crs_alter_parameters_linear_unit() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         let pj_alterd = pj.crs_alter_parameters_linear_unit(
@@ -455,7 +455,7 @@ mod test_proj_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_promote_to_3d() -> Result<(), ProjError> {
+    fn test_crs_promote_to_3d() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4326")?;
         let pj_3d = pj.crs_promote_to_3d(None)?;
@@ -465,7 +465,7 @@ mod test_proj_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_create_projected_3d_crs_from_2d() -> Result<(), ProjError> {
+    fn test_crs_create_projected_3d_crs_from_2d() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let proj_crs = ctx
             .clone()
@@ -478,7 +478,7 @@ mod test_proj_advanced {
         Ok(())
     }
     #[test]
-    fn test_crs_demote_to_2d() -> Result<(), ProjError> {
+    fn test_crs_demote_to_2d() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:4979")?;
         let pj_2d = pj.crs_demote_to_2d(None)?;
@@ -488,7 +488,7 @@ mod test_proj_advanced {
         Ok(())
     }
     #[test]
-    fn test_convert_conversion_to_other_method() -> Result<(), ProjError> {
+    fn test_convert_conversion_to_other_method() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
 
         let conv = ctx.create_conversion_mercator_variant_a(
@@ -539,7 +539,7 @@ mod test_proj_advanced {
     }
 
     #[test]
-    fn test_crs_create_bound_crs_to_wgs84() -> Result<(), ProjError> {
+    fn test_crs_create_bound_crs_to_wgs84() -> Result<(), ProjErrorKind> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_from_database("EPSG", "32631", Category::Crs, false)?;
         for a in AllowIntermediateCrs::iter() {

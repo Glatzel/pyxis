@@ -2,7 +2,7 @@ use core::char;
 
 use envoy::{PtrToString, ToCString};
 
-use crate::data_types::{Factors, ProjError};
+use crate::data_types::{Factors, ProjErrorKind};
 use crate::{ICoord, ToCoord, check_result};
 
 /// # Various
@@ -30,7 +30,7 @@ impl crate::Proj {
         direction: crate::Direction,
         n: i32,
         coord: &impl ICoord,
-    ) -> Result<f64, ProjError> {
+    ) -> Result<f64, ProjErrorKind> {
         let mut coord = coord.to_coord()?;
         let distance =
             unsafe { proj_sys::proj_roundtrip(self.ptr(), direction as i32, n, &mut coord) };
@@ -60,11 +60,14 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_factors>
-    pub fn factors(&self, coord: &impl ICoord) -> Result<crate::data_types::Factors, ProjError> {
+    pub fn factors(
+        &self,
+        coord: &impl ICoord,
+    ) -> Result<crate::data_types::Factors, ProjErrorKind> {
         let factor = unsafe { proj_sys::proj_factors(self.ptr(), coord.to_coord()?) };
         match self.errno() {
-            crate::data_types::ProjErrorKind::Success => (),
-            crate::data_types::ProjErrorKind::CoordTransfmOutsideProjectionDomain => (),
+            crate::data_types::ProjErrorCode::Success => (),
+            crate::data_types::ProjErrorCode::CoordTransfmOutsideProjectionDomain => (),
             _ => {
                 check_result!(self);
             }
@@ -126,7 +129,7 @@ impl crate::Proj {
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
-pub fn dmstor(is: &str) -> Result<f64, ProjError> {
+pub fn dmstor(is: &str) -> Result<f64, ProjErrorKind> {
     let rs = "xxxdxxmxx.xxs ".to_cstring()?;
     Ok(unsafe { proj_sys::proj_dmstor(is.to_cstring()?.as_ptr(), &mut rs.as_ptr().cast_mut()) })
 }
@@ -136,7 +139,7 @@ pub fn dmstor(is: &str) -> Result<f64, ProjError> {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms2>
-pub fn rtodms2(r: f64, pos: char, neg: char) -> Result<String, ProjError> {
+pub fn rtodms2(r: f64, pos: char, neg: char) -> Result<String, ProjErrorKind> {
     let dms = "xxxdxxmxx.xxs ".to_cstring()?;
     let ptr =
         unsafe { proj_sys::proj_rtodms2(dms.as_ptr().cast_mut(), 14, r, pos as i32, neg as i32) };

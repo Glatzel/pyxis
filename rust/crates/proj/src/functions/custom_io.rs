@@ -4,7 +4,7 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString, ToVecCString, VecCString};
 
 use crate::check_result;
-use crate::data_types::ProjError;
+use crate::data_types::ProjErrorKind;
 
 ///Setting custom I/O functions
 impl crate::Context {
@@ -26,7 +26,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_sqlite3_vfs_name>
-    pub fn set_sqlite3_vfs_name(&self, name: &str) -> Result<&Self, ProjError> {
+    pub fn set_sqlite3_vfs_name(&self, name: &str) -> Result<&Self, ProjErrorKind> {
         unsafe {
             proj_sys::proj_context_set_sqlite3_vfs_name(self.ptr(), name.to_cstring()?.as_ptr());
         };
@@ -54,14 +54,14 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_search_paths>
-    pub fn set_search_paths(&self, paths: &[&Path]) -> Result<&Self, ProjError> {
+    pub fn set_search_paths(&self, paths: &[&Path]) -> Result<&Self, ProjErrorKind> {
         clerk::debug!("search_paths:{:?}", paths);
         let len = paths.len();
         let paths: VecCString = paths
             .iter()
             .map(|p| {
                 p.to_str()
-                    .ok_or_else(|| ProjError::new("Invalid path string.".to_string()))
+                    .ok_or_else(|| ProjErrorKind::new("Invalid path string.".to_string()))
             })
             .collect::<Result<Vec<_>, _>>()?
             .to_vec_cstring()?;
@@ -91,11 +91,11 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_ca_bundle_path>
-    pub fn set_ca_bundle_path(&self, path: Option<&Path>) -> Result<&Self, ProjError> {
+    pub fn set_ca_bundle_path(&self, path: Option<&Path>) -> Result<&Self, ProjErrorKind> {
         let path = match path {
             Some(p) => Some(
                 p.to_str()
-                    .ok_or_else(|| ProjError::new("Invalid path string".to_string()))?
+                    .ok_or_else(|| ProjErrorKind::new("Invalid path string".to_string()))?
                     .to_cstring()?,
             ),
             None => None,

@@ -50,9 +50,6 @@ jobs:
     env:
       RUSTFLAGS: "-Dwarnings"
     steps:
-      - run: |
-          sudo apt update
-          sudo apt install -y libudev-dev libc6-dev
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
       - name: Set up pixi

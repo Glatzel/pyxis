@@ -79,6 +79,8 @@ impl Drop for ContextPtr {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_destroy>
     fn drop(&mut self) { unsafe { proj_sys::proj_context_destroy(self.0) }; }
 }
+unsafe impl Send for ContextPtr {}
+unsafe impl Sync for ContextPtr {}
 
 ///Context objects enable safe multi-threaded usage of PROJ. Each PJ object is
 /// connected to a context (if not specified, the default context is used). All

@@ -15,7 +15,7 @@ use thiserror::Error;
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#error-codes>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, FromPrimitive)]
 #[repr(i32)]
-pub enum ProjErrorKind {
+pub enum ProjErrorCode {
     Success = 0,
 
     //Errors in class PROJ_ERR_INVALID_OP
@@ -72,28 +72,28 @@ pub enum ProjErrorKind {
 #[derive(Debug, Error)]
 pub enum ProjError {
     #[error("ProjError {code:?} [{}]: {message}",*.code as i32 )]
-    ProjError {
-        code: ProjErrorKind,
+    Proj {
+        code: ProjErrorCode,
         message: String,
     },
     #[error(transparent)]
-    EnvoyError(#[from] EnvoyError),
+    Envoy(#[from] EnvoyError),
     #[error(transparent)]
-    IoError(#[from] std::io::Error),
+    Io(#[from] std::io::Error),
     #[error(transparent)]
-    StrumParseError(#[from] strum::ParseError),
+    StrumParse(#[from] strum::ParseError),
     #[error("{}",.0)]
-    NumEnumTryFromPrimitiveError(String),
+    NumEnumTryFromPrimitive(String),
     #[error("{}",.0)]
-    MiscError(String),
+    Misc(String),
     #[error(transparent)]
-    VarError(#[from] std::env::VarError),
+    Var(#[from] std::env::VarError),
 }
 impl<T: TryFromPrimitive> From<num_enum::TryFromPrimitiveError<T>> for ProjError {
     fn from(value: num_enum::TryFromPrimitiveError<T>) -> Self {
-        Self::NumEnumTryFromPrimitiveError(value.to_string())
+        Self::NumEnumTryFromPrimitive(value.to_string())
     }
 }
 impl ProjError {
-    pub fn new(message: String) -> Self { Self::MiscError(message) }
+    pub fn new(message: String) -> Self { Self::Misc(message) }
 }

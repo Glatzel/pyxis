@@ -33,7 +33,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/libzlib-1.3.1-hb9d3cd8_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/ncurses-6.5-h2d0b736_3.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/openssl-3.6.1-h35e630c_1.conda
-      - conda: https://prefix.dev/glatzel/linux-64/proj-9.8.0-hb0f4dca_1.conda
+      - conda: https://prefix.dev/glatzel/linux-64/proj-dev-9.8.0-hb0f4dca_1.conda
       - conda: https://prefix.dev/glatzel/linux-64/proj-rt-9.8.0-hb0f4dca_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.7-hb78ec9c_6.conda
       linux-aarch64:
@@ -62,7 +62,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/libzlib-1.3.1-h86ecc28_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/ncurses-6.5-ha32ae93_3.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/openssl-3.6.1-h546c87b_1.conda
-      - conda: https://prefix.dev/glatzel/linux-aarch64/proj-9.8.0-he8cfe8b_1.conda
+      - conda: https://prefix.dev/glatzel/linux-aarch64/proj-dev-9.8.0-he8cfe8b_1.conda
       - conda: https://prefix.dev/glatzel/linux-aarch64/proj-rt-9.8.0-he8cfe8b_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/zstd-1.5.7-h85ac4a6_6.conda
       osx-arm64:
@@ -86,7 +86,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/libzlib-1.3.1-h8359307_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/ncurses-6.5-h5e97a16_3.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/openssl-3.6.1-hd24854e_1.conda
-      - conda: https://prefix.dev/glatzel/osx-arm64/proj-9.8.0-ha646cdb_1.conda
+      - conda: https://prefix.dev/glatzel/osx-arm64/proj-dev-9.8.0-ha646cdb_1.conda
       - conda: https://prefix.dev/glatzel/osx-arm64/proj-rt-9.8.0-ha646cdb_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/zstd-1.5.7-hbf9d68e_6.conda
       win-64:
@@ -102,7 +102,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/libtiff-4.7.1-h8f73337_1.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/libzlib-1.3.1-h2466b09_2.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/openssl-3.6.1-hf411b9b_1.conda
-      - conda: https://prefix.dev/glatzel/win-64/proj-9.8.0-h9490d1a_1.conda
+      - conda: https://prefix.dev/glatzel/win-64/proj-dev-9.8.0-h9490d1a_1.conda
       - conda: https://prefix.dev/glatzel/win-64/proj-rt-9.8.0-h9490d1a_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/ucrt-10.0.26100.0-h57928b3_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/vc-14.3-h41ae7f8_34.conda
@@ -1004,57 +1004,57 @@ packages:
   license_family: Apache
   size: 9343023
   timestamp: 1769557547888
-- conda: https://prefix.dev/glatzel/linux-64/proj-9.8.0-hb0f4dca_1.conda
-  sha256: 736f7ae8047beec682604f0713af5d0f38acf3875cf16f79c15c22b28cb4c7c9
-  md5: c472da9bb21f15f16d883781c662c394
+- conda: https://prefix.dev/glatzel/linux-64/proj-dev-9.8.0-hb0f4dca_1.conda
+  sha256: 4b64c519b728de79b414cc60377e79123413dd6805f3e9bc02961c188183e88f
+  md5: 42c22d510cc5ae62f0e439b2d132cb31
   depends:
   - __glibc >=2.28,<3.0.a0
-  - libstdcxx >=14
   - libgcc >=14
+  - libstdcxx >=14
   - libtiff >=4.7.1,<4.8.0a0
   - libcurl >=8.18.0,<9.0a0
   - libsqlite >=3.52.0,<4.0a0
   - proj-rt >=9.8.0,<9.9.0a0
-  size: 242445
-  timestamp: 1772963776905
-- conda: https://prefix.dev/glatzel/linux-aarch64/proj-9.8.0-he8cfe8b_1.conda
-  sha256: f4e2c7e1064a499d2daad020a78fdbea7209184f31f9b77d9c3c345561b957f4
-  md5: 7bb7eb626ce28583e1151aad52d30c87
+  size: 116927
+  timestamp: 1772977045526
+- conda: https://prefix.dev/glatzel/linux-aarch64/proj-dev-9.8.0-he8cfe8b_1.conda
+  sha256: bf8a50e0f140abd67b57cd36e7faa4ac8fe8926de10389a858812e6ec76cbef0
+  md5: 6bf3d6665b8392e6c708a3c00a2645b1
   depends:
   - libstdcxx >=14
   - libgcc >=14
   - __glibc >=2.28,<3.0.a0
-  - libsqlite >=3.52.0,<4.0a0
   - libcurl >=8.18.0,<9.0a0
+  - libsqlite >=3.52.0,<4.0a0
   - libtiff >=4.7.1,<4.8.0a0
   - proj-rt >=9.8.0,<9.9.0a0
-  size: 246587
-  timestamp: 1772963760161
-- conda: https://prefix.dev/glatzel/osx-arm64/proj-9.8.0-ha646cdb_1.conda
-  sha256: 9d0848eeb0ddcab79cd9982e01076505781bf90d0a3778f6396a7a11f1a92b39
-  md5: 1c368199ff8c11a2e9911cd108a32433
+  size: 116926
+  timestamp: 1772976981067
+- conda: https://prefix.dev/glatzel/osx-arm64/proj-dev-9.8.0-ha646cdb_1.conda
+  sha256: 26c1a4588c40bb5e995176c90a5135bffb0847caad31b727e96b4272d20d9627
+  md5: d35ffb908b70c1c2dfa1ea69cc384a72
   depends:
   - libcxx >=19
   - __osx >=11.0
   - libtiff >=4.7.1,<4.8.0a0
-  - libsqlite >=3.52.0,<4.0a0
   - libcurl >=8.18.0,<9.0a0
+  - libsqlite >=3.52.0,<4.0a0
   - proj-rt >=9.8.0,<9.9.0a0
-  size: 232864
-  timestamp: 1772963692164
-- conda: https://prefix.dev/glatzel/win-64/proj-9.8.0-h9490d1a_1.conda
-  sha256: 877fc981414053e1e87ad2bcb0142810078af2c53caaf73a9219878334ef6309
-  md5: 9c8ca01d80b68293a2736b57e3f5a394
+  size: 118108
+  timestamp: 1772976959224
+- conda: https://prefix.dev/glatzel/win-64/proj-dev-9.8.0-h9490d1a_1.conda
+  sha256: ec1fe8786ed0ef61273e6bf32943ee5ce222800c81ab3e23c8b3785b95b50e7c
+  md5: f0e961bf8c5ed0845db6f004f104b1b3
   depends:
   - vc >=14.3,<15
   - vc14_runtime >=14.44.35208
   - ucrt >=10.0.20348.0
-  - libtiff >=4.7.1,<4.8.0a0
   - libsqlite >=3.52.0,<4.0a0
   - libcurl >=8.18.0,<9.0a0
+  - libtiff >=4.7.1,<4.8.0a0
   - proj-rt >=9.8.0,<9.9.0a0
-  size: 241249
-  timestamp: 1772963722059
+  size: 114459
+  timestamp: 1772976973967
 - conda: https://prefix.dev/glatzel/linux-64/proj-rt-9.8.0-hb0f4dca_0.conda
   sha256: 8aaedd10429d0c5a63d87828bf7f9f56fb4bc53627f9406b7f358ab1fbc4ad47
   md5: 8a2f16b4af727be363878f6aeb66518d

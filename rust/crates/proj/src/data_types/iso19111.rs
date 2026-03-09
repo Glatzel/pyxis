@@ -539,8 +539,8 @@ impl AxisDescription {
         Ok(Self {
             name,
             abbreviation,
-            direction: direction,
-            unit_name: unit_name,
+            direction,
+            unit_name,
             unit_conv_factor,
             unit_type,
         })

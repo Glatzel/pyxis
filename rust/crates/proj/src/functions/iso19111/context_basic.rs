@@ -36,15 +36,12 @@ impl crate::Context {
         db_path: &Path,
         aux_db_paths: Option<&[&Path]>,
     ) -> Result<&Self, ProjError> {
-        let aux_db_paths: Option<Vec<CString>> = match aux_db_paths {
-            Some(ps) => Some(
-                ps.iter()
-                    .filter_map(|p| p.to_str())
-                    .filter_map(|p| p.to_cstring().ok())
-                    .collect(),
-            ),
-            None => None,
-        };
+        let aux_db_paths: Option<Vec<CString>> = aux_db_paths.map(|ps| {
+            ps.iter()
+                .filter_map(|p| p.to_str())
+                .filter_map(|p| p.to_cstring().ok())
+                .collect()
+        });
 
         let aux_db_paths_ptr: Option<Vec<*const c_char>> =
             aux_db_paths.map(|aux_db_paths| aux_db_paths.iter().map(|f| f.as_ptr()).collect());

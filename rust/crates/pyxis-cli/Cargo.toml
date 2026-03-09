@@ -5,7 +5,6 @@ version.workspace = true
 
 [dependencies]
 bpaf.workspace = true
-chrono.workspace = true
 clerk = { workspace = true, features = ["tracing", "serde"] }
 mischief = { workspace = true, features = ["fancy"] }
 proj.workspace = true

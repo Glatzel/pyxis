@@ -1,5 +1,5 @@
 use crate::check_result;
-use crate::data_types::ProjErrorKind;
+use crate::data_types::ProjError;
 // region:Coordinate transformation
 impl crate::Proj {
     ///Return the operation used during the last invocation of
@@ -10,7 +10,7 @@ impl crate::Proj {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    pub fn get_last_used_operation(&self) -> Result<Option<crate::Proj>, ProjErrorKind> {
+    pub fn get_last_used_operation(&self) -> Result<Option<crate::Proj>, ProjError> {
         use crate::Proj;
 
         let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr()) };
@@ -70,7 +70,7 @@ impl crate::Proj {
         t: *mut f64,
         st: usize,
         nt: usize,
-    ) -> Result<usize, ProjErrorKind> {
+    ) -> Result<usize, ProjError> {
         let result = unsafe {
             proj_sys::proj_trans_generic(
                 self.ptr(),
@@ -143,7 +143,7 @@ impl crate::Context {
         xmax: f64,
         ymax: f64,
         densify_pts: i32,
-    ) -> Result<(f64, f64, f64, f64), ProjErrorKind> {
+    ) -> Result<(f64, f64, f64, f64), ProjError> {
         let mut out_xmin = f64::default();
         let mut out_ymin = f64::default();
         let mut out_xmax = f64::default();
@@ -221,7 +221,7 @@ impl crate::Context {
         ymax: f64,
         zmax: f64,
         densify_pts: i32,
-    ) -> Result<(f64, f64, f64, f64, f64, f64), ProjErrorKind> {
+    ) -> Result<(f64, f64, f64, f64, f64, f64), ProjError> {
         let mut out_xmin = f64::default();
         let mut out_ymin = f64::default();
         let mut out_zmin = f64::default();

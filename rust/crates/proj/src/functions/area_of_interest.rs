@@ -1,5 +1,5 @@
 use crate::check_result;
-use crate::data_types::ProjErrorKind;
+use crate::data_types::ProjError;
 impl Default for crate::Area {
     /// # See Also
     ///
@@ -47,7 +47,7 @@ impl crate::Area {
         south_lat_degree: f64,
         east_lon_degree: f64,
         north_lat_degree: f64,
-    ) -> Result<&Self, ProjErrorKind> {
+    ) -> Result<&Self, ProjError> {
         check_result!(
             !(-180.0..=180.0).contains(&west_lon_degree),
             "`west_lon_degree` should in [-180,180] range."

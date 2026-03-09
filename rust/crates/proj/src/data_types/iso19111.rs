@@ -6,7 +6,7 @@ use derive_getters::Getters;
 use num_enum::TryFromPrimitive;
 use strum::{AsRefStr, EnumString};
 
-use crate::data_types::ProjErrorKind;
+use crate::data_types::ProjError;
 use crate::data_types::transformation::ContextPtr;
 use crate::{OwnedCStrings, Proj, check_result};
 ///Guessed WKT "dialect".
@@ -535,7 +535,7 @@ impl AxisDescription {
         unit_name: Option<String>,
         unit_conv_factor: f64,
         unit_type: UnitType,
-    ) -> Result<Self, ProjErrorKind> {
+    ) -> Result<Self, ProjError> {
         Ok(Self {
             name,
             abbreviation,
@@ -1083,7 +1083,7 @@ impl ProjObjList {
     pub(crate) fn new(
         ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
-    ) -> Result<ProjObjList, ProjErrorKind> {
+    ) -> Result<ProjObjList, ProjError> {
         check_result!(ptr.is_null(), "PJ_OBJ_LIST pointer is null.");
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         check_result!(count < 1, "PJ_OBJ_LIST count 0.");
@@ -1101,7 +1101,7 @@ impl ProjObjList {
         ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
         owned_cstrings: OwnedCStrings,
-    ) -> Result<ProjObjList, ProjErrorKind> {
+    ) -> Result<ProjObjList, ProjError> {
         check_result!(ptr.is_null(), "PJ_OBJ_LIST pointer is null.");
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         check_result!(count < 1, "PJ_OBJ_LIST count 0.");
@@ -1120,7 +1120,7 @@ impl ProjObjList {
     /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get>
-    pub fn get(&self, index: usize) -> Result<Proj, ProjErrorKind> {
+    pub fn get(&self, index: usize) -> Result<Proj, ProjError> {
         check_result!(index > self.count, "Error");
         let ptr =
             unsafe { proj_sys::proj_list_get(self.arc_ctx_ptr.ptr(), self.ptr, index as i32) };

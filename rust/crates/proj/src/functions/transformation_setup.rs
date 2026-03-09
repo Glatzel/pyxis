@@ -3,7 +3,7 @@ use std::ffi::{CString, c_char};
 
 use envoy::{AsVecPtr, ToCString};
 
-use crate::data_types::ProjErrorKind;
+use crate::data_types::ProjError;
 use crate::{Proj, check_result};
 /// # Transformation setup
 ///
@@ -47,7 +47,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create>
-    pub fn create(&self, definition: &str) -> Result<Proj, ProjErrorKind> {
+    pub fn create(&self, definition: &str) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_create(self.ptr(), definition.to_cstring()?.as_ptr()) };
         check_result!(self);
         Proj::new(self.arc_ptr(), ptr)
@@ -66,7 +66,7 @@ impl crate::Context {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_argv>
-    pub fn create_argv(&self, argv: &[&str]) -> Result<Proj, ProjErrorKind> {
+    pub fn create_argv(&self, argv: &[&str]) -> Result<Proj, ProjError> {
         let argv_cstr: Vec<CString> = argv
             .iter()
             .map(|s| s.to_cstring())
@@ -128,7 +128,7 @@ impl crate::Context {
         source_crs: &str,
         target_crs: &str,
         area: &crate::Area,
-    ) -> Result<Proj, ProjErrorKind> {
+    ) -> Result<Proj, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_create_crs_to_crs(
                 self.ptr(),
@@ -198,7 +198,7 @@ impl crate::Context {
         allow_ballpark: Option<bool>,
         only_best: Option<bool>,
         force_over: Option<bool>,
-    ) -> Result<Proj, ProjErrorKind> {
+    ) -> Result<Proj, ProjError> {
         let mut options = crate::ProjOptions::new(5);
         options
             .with_or_skip(authority, "AUTHORITY")?
@@ -233,7 +233,7 @@ impl crate::Context {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_normalize_for_visualization>
-    pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> Result<Proj, ProjErrorKind> {
+    pub fn normalize_for_visualization(&self, obj: &crate::Proj) -> Result<Proj, ProjError> {
         let ptr = unsafe { proj_sys::proj_normalize_for_visualization(self.ptr(), obj.ptr()) };
         Proj::new(self.arc_ptr(), ptr)
     }

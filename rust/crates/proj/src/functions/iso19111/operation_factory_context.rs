@@ -2,7 +2,7 @@ use core::ptr;
 extern crate alloc;
 use envoy::{AsVecPtr, ToCString, ToVecCString};
 
-use crate::data_types::ProjErrorKind;
+use crate::data_types::ProjError;
 use crate::data_types::iso19111::*;
 use crate::{Context, Proj};
 impl Context {
@@ -27,7 +27,7 @@ impl Context {
     pub fn create_operation_factory_context(
         &self,
         authority: Option<&str>,
-    ) -> Result<OperationFactoryContext, ProjErrorKind> {
+    ) -> Result<OperationFactoryContext, ProjError> {
         let authority = authority.map(|s| s.to_cstring()).transpose()?;
         Ok(OperationFactoryContext {
             arc_ctx_ptr: self.arc_ptr(),
@@ -46,7 +46,7 @@ impl OperationFactoryContext {
     pub fn from_context(
         ctx: &Context,
         authority: Option<&str>,
-    ) -> Result<OperationFactoryContext, ProjErrorKind> {
+    ) -> Result<OperationFactoryContext, ProjError> {
         ctx.create_operation_factory_context(authority)
     }
     ///Set the desired accuracy of the resulting coordinate transformations.
@@ -113,7 +113,7 @@ impl OperationFactoryContext {
     ///  # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_area_of_interest_name>
-    pub fn set_area_of_interest_name(&self, area_name: &str) -> Result<&Self, ProjErrorKind> {
+    pub fn set_area_of_interest_name(&self, area_name: &str) -> Result<&Self, ProjError> {
         unsafe {
             proj_sys::proj_operation_factory_context_set_area_of_interest_name(
                 self.arc_ctx_ptr.ptr(),
@@ -261,7 +261,7 @@ impl OperationFactoryContext {
     pub fn set_allowed_intermediate_crs(
         &self,
         list_of_auth_name_codes: &[&str],
-    ) -> Result<&Self, ProjErrorKind> {
+    ) -> Result<&Self, ProjError> {
         let list_of_auth_name_codes = list_of_auth_name_codes.to_vec_cstring()?;
         unsafe {
             proj_sys::proj_operation_factory_context_set_allowed_intermediate_crs(
@@ -330,7 +330,7 @@ impl OperationFactoryContext {
         &self,
         source_crs: &Proj,
         target_crs: &Proj,
-    ) -> Result<ProjObjList, ProjErrorKind> {
+    ) -> Result<ProjObjList, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_create_operations(
                 self.arc_ctx_ptr.ptr(),
@@ -358,7 +358,7 @@ impl Drop for OperationFactoryContext {
 mod test {
     use super::*;
     #[test]
-    fn test_settings() -> Result<(), ProjErrorKind> {
+    fn test_settings() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let factory = OperationFactoryContext::from_context(&ctx, None)?;
         factory
@@ -375,7 +375,7 @@ mod test {
         Ok(())
     }
     #[test]
-    fn test_create_operations() -> Result<(), ProjErrorKind> {
+    fn test_create_operations() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let factory = OperationFactoryContext::from_context(&ctx, None)?;
         let source_crs = ctx.create_from_database(

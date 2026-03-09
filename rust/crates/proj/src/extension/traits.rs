@@ -1,6 +1,6 @@
 use core::ptr::null_mut;
 
-use crate::data_types::ProjErrorKind;
+use crate::data_types::ProjError;
 const NULL_PTR: *mut f64 = null_mut();
 /// A trait representing a mutable 4D coordinate (x, y, z, t) for use with PROJ
 /// FFI bindings.
@@ -94,14 +94,14 @@ pub trait ICoord: Clone {
 // Only allow use this trait in crate.
 // Prevent users from modifying the to_coord fn.
 pub(crate) trait ToCoord {
-    fn to_coord(&self) -> Result<proj_sys::PJ_COORD, ProjErrorKind>;
+    fn to_coord(&self) -> Result<proj_sys::PJ_COORD, ProjError>;
 }
 
 impl<T> ToCoord for T
 where
     T: ICoord,
 {
-    fn to_coord(&self) -> Result<proj_sys::PJ_COORD, ProjErrorKind> {
+    fn to_coord(&self) -> Result<proj_sys::PJ_COORD, ProjError> {
         let mut src = self.clone();
         let x = src.x();
         let y = src.y();
@@ -133,7 +133,7 @@ where
                     t: unsafe { *t },
                 },
             }),
-            (x, y, z, t) => Err(ProjErrorKind::new(format!(
+            (x, y, z, t) => Err(ProjError::new(format!(
                 "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
             ))),
         }

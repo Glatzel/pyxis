@@ -70,7 +70,7 @@ pub enum ProjErrorCode {
 }
 
 #[derive(Debug, Error)]
-pub enum ProjErrorKind {
+pub enum ProjError {
     #[error("ProjError {code:?} [{}]: {message}",*.code as i32 )]
     ProjError {
         code: ProjErrorCode,
@@ -89,11 +89,11 @@ pub enum ProjErrorKind {
     #[error(transparent)]
     VarError(#[from] std::env::VarError),
 }
-impl<T: TryFromPrimitive> From<num_enum::TryFromPrimitiveError<T>> for ProjErrorKind {
+impl<T: TryFromPrimitive> From<num_enum::TryFromPrimitiveError<T>> for ProjError {
     fn from(value: num_enum::TryFromPrimitiveError<T>) -> Self {
         Self::NumEnumTryFromPrimitiveError(value.to_string())
     }
 }
-impl ProjErrorKind {
+impl ProjError {
     pub fn new(message: String) -> Self { Self::MiscError(message) }
 }

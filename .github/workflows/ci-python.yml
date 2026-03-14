@@ -22,8 +22,6 @@ jobs:
         shell: pwsh
 
   rattler-build:
-    env:
-      PYTEST_ADDOPTS: "--color=yes"
     strategy:
       fail-fast: false
       matrix:

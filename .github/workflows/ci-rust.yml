@@ -25,8 +25,6 @@ jobs:
         with:
           run-install: false
       - uses: dtolnay/rust-toolchain@nightly
-      - run: ./scripts/setup.ps1
-        shell: pwsh
       - uses: ./.github/actions/cargo-test
         with:
           working-directory: ${{env.WORKDIR}}
@@ -40,8 +38,6 @@ jobs:
         with:
           run-install: false
       - uses: dtolnay/rust-toolchain@nightly
-      - run: ./scripts/setup.ps1
-        shell: pwsh
       - uses: ./.github/actions/cargo-doc
         with:
           working-directory: ${{env.WORKDIR}}
@@ -54,8 +50,6 @@ jobs:
         with:
           run-install: false
       - uses: dtolnay/rust-toolchain@nightly
-      - run: ./scripts/setup.ps1
-        shell: pwsh
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy

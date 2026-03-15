@@ -20,7 +20,9 @@ runs:
       shell: pwsh
     - name: Build the benchmark target(s)
       working-directory: ${{ inputs.working-directory }}
-      run: cargo codspeed build ${{inputs.args}}
+      run: |
+        if (Test-Path ./scripts/setup.ps1) { . ./scripts/setup.ps1 }
+        cargo codspeed build ${{inputs.args}}
       shell: pwsh
     - name: Run the benchmarks
       uses: CodSpeedHQ/action@v4

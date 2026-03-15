@@ -20,4 +20,5 @@ runs:
       run: |
         $ErrorActionPreference = "Stop"
         $PSNativeCommandUseErrorActionPreference = $true
+        if (Test-Path ./scripts/setup.ps1) { . ./scripts/setup.ps1 }
         cargo +nightly miri test ${{inputs.miri-args}}

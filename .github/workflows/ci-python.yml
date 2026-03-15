@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   workflow_call:
 permissions: read-all
+env:
+  WORKDIR: ./python
 defaults:
   run:
     working-directory: ./python
@@ -64,3 +66,5 @@ jobs:
         with:
           components: clippy
       - uses: ./.github/actions/cargo-clippy
+        with:
+          working-directory: ${{env.WORKDIR}}

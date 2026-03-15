@@ -9,29 +9,10 @@ on:
         type: string
         default: "."
         required: false
-      clippy-args:
-        type: string
-        default: "--all-features"
-        required: false
-  workflow_call:
-    inputs:
-      working-directory:
-        type: string
-        default: "."
-        required: false
-
-      bench:
-        type: boolean
-        default: false
-        required: false
-      bench-args:
-        type: string
-        default: "--all-features"
-        required: false
 
       clippy:
         type: boolean
-        default: false
+        default: true
         required: false
       clippy-args:
         type: string
@@ -64,28 +45,56 @@ on:
         type: string
         default: "--all-features"
         required: false
+      test-machine:
+        type: string
+        required: true
+  workflow_call:
+    inputs:
+      working-directory:
+        type: string
+        default: "."
+        required: false
+
+      clippy:
+        type: boolean
+        default: true
+        required: false
+      clippy-args:
+        type: string
+        default: "--all-features"
+        required: false
+
+      doc:
+        type: boolean
+        default: false
+        required: false
+      doc-args:
+        type: string
+        default: "--all-features --no-deps"
+        required: false
+
+      miri:
+        type: boolean
+        default: false
+        required: false
+      miri-args:
+        type: string
+        default: ""
+        required: false
+
+      test:
+        type: boolean
+        default: false
+        required: false
+      test-args:
+        type: string
+        default: "--all-features"
+        required: false
+      test-machine:
+        type: string
+        required: true
 
 jobs:
-  cargo-bench:
-    if: inputs.bench
-    defaults:
-      run:
-        working-directory: ${{inputs.working-directory}}
-    runs-on: ubuntu-slim
-    steps:
-      - uses: actions/checkout@v6
-      - uses: dtolnay/rust-toolchain@stable
-      - run: cargo install cargo-codspeed --locked
-      - run: if (Test-Path ./scripts/setup.ps1) { . ./scripts/setup.ps1}
-        shell: pwsh
-      - name: Build the benchmark target(s)
-        run: cargo codspeed build ${{inputs.bench-args}}
-      - name: Run the benchmarks
-        uses: CodSpeedHQ/action@v4
-        with:
-          run: cargo codspeed run
-          mode: simulation
-
   cargo-clippy:
     if: inputs.clippy
     defaults:
@@ -143,7 +152,7 @@ jobs:
     defaults:
       run:
         working-directory: ${{inputs.working-directory}}
-    runs-on: ubuntu-slim
+    runs-on: ${{fromJson(inputs.test-machine)}}
     steps:
       - uses: actions/checkout@v6
       - name: Set up pixi

@@ -15,7 +15,7 @@ if ($IsLinux) {
     sudo apt install -y libudev-dev libc6-dev
 }
 if ($IsLinux -and ($(uname -m) -eq 'x86_64' )) {
-    if (env:CI) {
+    if ($env:CI) {
         sudo apt-get update
         sudo apt install -y libudev-dev libc6-dev
     }
@@ -24,7 +24,7 @@ if ($IsLinux -and ($(uname -m) -eq 'x86_64' )) {
     $env:PROJ_ROOT = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default)"
 }
 if ($IsLinux -and ($(uname -m) -eq 'aarch64' )) {
-    if (env:CI) {
+    if ($env:CI) {
         sudo apt-get update
         sudo apt install -y libudev-dev libc6-dev
     }

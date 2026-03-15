@@ -1,0 +1,38 @@
+name: rust
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions: read-all
+
+env:
+  RUST_ROOT: ./rust
+
+jobs:
+  cargo-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest, ubuntu-latest, macos-latest, ubuntu-24.04-arm]
+    runs-on: ${{matrix.machine}}
+    steps:
+      - if: ${{contains(matrix.machine,'ubuntu')}}
+        run: |
+          sudo apt-get update
+          sudo apt install -y libudev-dev libc6-dev
+      - uses: actions/checkout@v6
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.9.4
+        with:
+          run-install: false
+      - uses: dtolnay/rust-toolchain@nightly
+      - run: ./scripts/setup.ps1
+        shell: pwsh
+      - uses: ./.github/actions/cargo-test
+  cargo-doc:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/cargo-test

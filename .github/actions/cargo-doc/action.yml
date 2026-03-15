@@ -1,0 +1,17 @@
+name: cargo doc
+description: cargo doc
+
+inputs:
+  args:
+    description: "args"
+    required: false
+    default: --all-features --no-deps
+
+runs:
+  using: "composite"
+  steps:
+    - shell: pwsh
+      run: |
+        $ErrorActionPreference = "Stop"
+        $PSNativeCommandUseErrorActionPreference = $true
+        cargo +stable doc ${{inputs.args}}

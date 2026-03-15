@@ -5,23 +5,17 @@ on:
   workflow_dispatch:
 jobs:
   cargo-bench:
+    defaults:
+      run:
+        working-directory: ./rust
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo install cargo-codspeed --locked
-
-      - name: Build the benchmark target(s)
-        run: cargo codspeed build -p pyxis
-        working-directory: ./rust
-
-      - name: Run the benchmarks
-        uses: CodSpeedHQ/action@v4
+      - uses: ./.github/actions/cargo-bench
         with:
-          run: cargo codspeed run
-          mode: simulation
-          token: ${{ secrets.CODSPEED_TOKEN }}
-          working-directory: ./rust
+          args: -p pyxis
+
   pytest-benchmark:
     runs-on: ubuntu-latest
     steps:

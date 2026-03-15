@@ -1,0 +1,17 @@
+name: cargo miri
+description: cargo miri
+
+inputs:
+  args:
+    description: "args"
+    required: false
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - shell: pwsh
+      run: |
+        $ErrorActionPreference = "Stop"
+        $PSNativeCommandUseErrorActionPreference = $true
+        cargo +nightly miri test ${{inputs.miri-args}}

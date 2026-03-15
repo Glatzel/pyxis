@@ -1,0 +1,17 @@
+name: cargo clippy
+description: cargo clippy
+
+inputs:
+  args:
+    description: "args"
+    required: false
+    default: --all-features
+
+runs:
+  using: "composite"
+  steps:
+    - shell: pwsh
+      run: |
+        $ErrorActionPreference = "Stop"
+        $PSNativeCommandUseErrorActionPreference = $true
+        cargo +stable clippy ${{inputs.args}}

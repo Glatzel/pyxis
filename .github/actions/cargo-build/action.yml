@@ -1,0 +1,17 @@
+name: cargo build
+description: cargo build
+
+inputs:
+  args:
+    description: "args"
+    required: false
+    default: --all-features
+
+runs:
+  using: "composite"
+  steps:
+    - shell: pwsh
+      run: |
+        $ErrorActionPreference = "Stop"
+        $PSNativeCommandUseErrorActionPreference = $true
+        cargo +stable build ${{inputs.args}}

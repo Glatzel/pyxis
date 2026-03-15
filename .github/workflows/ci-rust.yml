@@ -36,6 +36,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.9.4
+        with:
+          run-install: false
+      - uses: dtolnay/rust-toolchain@nightly
+      - run: ./scripts/setup.ps1
       - uses: ./.github/actions/cargo-doc
         with:
           working-directory: ${{env.WORKDIR}}
@@ -43,6 +49,12 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.9.4
+        with:
+          run-install: false
+      - uses: dtolnay/rust-toolchain@nightly
+      - run: ./scripts/setup.ps1
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy

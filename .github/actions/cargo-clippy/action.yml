@@ -2,6 +2,9 @@ name: cargo clippy
 description: cargo clippy
 
 inputs:
+  working-directory:
+    description: "working-directory"
+    default: .
   args:
     description: "args"
     required: false
@@ -11,6 +14,7 @@ runs:
   using: "composite"
   steps:
     - shell: pwsh
+      working-directory: ${{ inputs.working-directory }}
       run: |
         $ErrorActionPreference = "Stop"
         $PSNativeCommandUseErrorActionPreference = $true

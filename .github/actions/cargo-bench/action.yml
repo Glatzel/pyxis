@@ -2,6 +2,9 @@ name: cargo miri
 description: cargo miri
 
 inputs:
+  working-directory:
+    description: "working-directory"
+    default: .
   args:
     description: "args"
     required: false
@@ -11,8 +14,10 @@ runs:
   using: "composite"
   steps:
     - run: cargo install cargo-codspeed --locked
+      working-directory: ${{ inputs.working-directory }}
       shell: pwsh
     - name: Build the benchmark target(s)
+      working-directory: ${{ inputs.working-directory }}
       run: cargo codspeed build ${{inputs.args}}
       shell: pwsh
     - name: Run the benchmarks
@@ -20,3 +25,4 @@ runs:
       with:
         run: cargo codspeed run
         mode: simulation
+        working-directory: ${{ inputs.working-directory }}

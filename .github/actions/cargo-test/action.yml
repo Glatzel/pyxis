@@ -2,6 +2,9 @@ name: cargo test
 description: cargo test
 
 inputs:
+  working-directory:
+    description: "working-directory"
+    default: .
   args:
     description: "args"
     required: false
@@ -11,6 +14,7 @@ runs:
   using: "composite"
   steps:
     - shell: pwsh
+      working-directory: ${{ inputs.working-directory }}
       run: |
         if (Test-Path ./scripts/setup.ps1) { . ./scripts/setup.ps1 }
           pixi global install -c https://prefix.dev/glatzel cargo-llvm-cov cargo-nextest

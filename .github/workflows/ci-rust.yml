@@ -25,7 +25,7 @@ jobs:
         with:
           run-install: false
       - uses: dtolnay/rust-toolchain@nightly
-      - uses: ./.github/actions/cargo-test
+      - uses: ./.github/actions/rust/cargo-test
         with:
           working-directory: ${{env.WORKDIR}}
   cargo-doc:
@@ -38,7 +38,7 @@ jobs:
         with:
           run-install: false
       - uses: dtolnay/rust-toolchain@nightly
-      - uses: ./.github/actions/cargo-doc
+      - uses: ./.github/actions/rust/cargo-doc
         with:
           working-directory: ${{env.WORKDIR}}
   cargo-clippy:
@@ -53,6 +53,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
-      - uses: ./.github/actions/cargo-clippy
+      - uses: ./.github/actions/rust/cargo-clippy
         with:
           working-directory: ${{env.WORKDIR}}

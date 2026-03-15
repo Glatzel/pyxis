@@ -13,7 +13,7 @@ jobs:
         uses: prefix-dev/setup-pixi@v0.9.4
         with:
           run-install: false
-      - uses: ./.github/actions/cargo-bench
+      - uses: ./.github/actions/rust/cargo-bench
         with:
           working-directory: ./rust
           args: -p pyxis

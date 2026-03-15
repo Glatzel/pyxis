@@ -152,7 +152,11 @@ jobs:
     defaults:
       run:
         working-directory: ${{inputs.working-directory}}
-    runs-on: ${{fromJson(inputs.test-machine)}}
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: ${{ fromJSON(inputs.test-machine) }}
+    runs-on: ${{fromJson(matrix.machine)}}
     steps:
       - uses: actions/checkout@v6
       - name: Set up pixi

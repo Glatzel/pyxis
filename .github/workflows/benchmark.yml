@@ -14,6 +14,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/cargo-bench
         with:
+          working-directory: ./python
           args: -p pyxis
 
   pytest-benchmark:

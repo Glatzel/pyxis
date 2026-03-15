@@ -179,7 +179,7 @@ jobs:
       fail-fast: false
       matrix:
         machine: ${{ fromJSON(inputs.test-machine) }}
-    runs-on: matrix.machine
+    runs-on: ${{matrix.machine}}
     steps:
       - uses: actions/checkout@v6
       - name: Set up pixi

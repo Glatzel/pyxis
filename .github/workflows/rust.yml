@@ -92,7 +92,7 @@ on:
         required: false
       test-machine:
         type: string
-        required: true
+        required: false
 
 jobs:
   cargo-clippy:

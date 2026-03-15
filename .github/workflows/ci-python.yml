@@ -6,7 +6,7 @@ on:
 permissions: read-all
 defaults:
   run:
-    working-directory: ./rust
+    working-directory: ./python
 jobs:
   sphinx:
     runs-on: ubuntu-latest

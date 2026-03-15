@@ -43,8 +43,8 @@ jobs:
 
       - name: build and test
         run: |
-          ./python/scripts/maturin-develop.ps1
-          ./python/scripts/pytest.ps1
+          ./scripts/maturin-develop.ps1
+          ./scripts/pytest.ps1
         shell: pwsh
 
       - name: Upload results to Codecov

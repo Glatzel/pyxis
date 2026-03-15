@@ -9,6 +9,10 @@ on:
         type: string
         default: "."
         required: false
+      setup-pixi:
+        type: boolean
+        default: true
+        required: false
 
       clippy:
         type: boolean
@@ -53,6 +57,10 @@ on:
       working-directory:
         type: string
         default: "."
+        required: false
+      setup-pixi:
+        type: boolean
+        default: true
         required: false
 
       clippy:
@@ -120,6 +128,9 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6
+      - name: Set up pixi
+        if: inputs.setup-pixi
+        uses: prefix-dev/setup-pixi@v0.9.4
       - uses: dtolnay/rust-toolchain@stable
       - run: |
           $ErrorActionPreference = "Stop"
@@ -136,6 +147,11 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6
+      - name: Set up pixi
+        if: inputs.setup-pixi
+        uses: prefix-dev/setup-pixi@v0.9.4
+        with:
+          run-install: false
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: "miri"

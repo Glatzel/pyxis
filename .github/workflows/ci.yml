@@ -59,6 +59,7 @@ jobs:
     uses: ./.github/workflows/rust.yml
     with:
       working-directory: "./rust"
+      setup-pixi: true
       doc: true
       test: true
       test-machine: "['windows-latest', 'ubuntu-latest', 'macos-latest', 'ubuntu-24.04-arm']"

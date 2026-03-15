@@ -58,10 +58,10 @@ jobs:
     if: ${{ needs.changed.outputs.changed-rust != 'false' }}
     uses: ./.github/workflows/rust.yml
     with:
-      working-directory: './rust'
+      working-directory: "./rust"
       doc: true
       test: true
-      test-machine: '["windows-latest", "ubuntu-latest", "macos-latest", "ubuntu-24.04-arm"]'
+      test-machine: "['windows-latest', 'ubuntu-latest', 'macos-latest', 'ubuntu-24.04-arm']"
   benchmark:
     needs: changed
     if: ${{ needs.changed.outputs.changed-benchmark != 'false' }}

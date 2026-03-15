@@ -60,6 +60,7 @@ jobs:
     with:
       working-directory: "./rust"
       setup-pixi: true
+      clippy: true
       doc: true
       test: true
       test-machine: "['windows-latest', 'ubuntu-latest', 'macos-latest', 'ubuntu-24.04-arm']"

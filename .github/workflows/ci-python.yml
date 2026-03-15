@@ -61,4 +61,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
       - uses: ./.github/actions/cargo-clippy

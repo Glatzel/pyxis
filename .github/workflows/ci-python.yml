@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest,ubuntu-24.04-arm]
+        machine: [windows-latest, ubuntu-latest, ubuntu-24.04-arm]
         include:
           - machine: windows-latest
           - machine: ubuntu-latest
@@ -55,3 +55,9 @@ jobs:
         with:
           report_type: test_results
           fail_ci_if_error: true
+  cargo-clippy:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ./.github/actions/cargo-clippy

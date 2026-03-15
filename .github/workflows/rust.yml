@@ -112,6 +112,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: "clippy"
       - uses: Swatinem/rust-cache@v2
       - name: Set up pixi
         if: inputs.setup-pixi
@@ -139,8 +141,6 @@ jobs:
         with:
           run-install: false
       - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: "clippy"
       - run: |
           $ErrorActionPreference = "Stop"
           $PSNativeCommandUseErrorActionPreference = $true

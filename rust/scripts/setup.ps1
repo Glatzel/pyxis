@@ -4,6 +4,7 @@ if ($IsWindows) {
     Invoke-WebRequest -useb https://pixi.sh/install.ps1 | Invoke-Expression
 }
 else {
+    Remove-Item Alias:curl -Force -ErrorAction SilentlyContinue
     curl -fsSL https://pixi.sh/install.sh | sh
 }
 pixi install

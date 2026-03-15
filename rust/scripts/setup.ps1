@@ -1,5 +1,11 @@
 Set-Location $PSScriptRoot/..
 git submodule update --init --recursive
+if ($IsWindows) {
+    Invoke-WebRequest -useb https://pixi.sh/install.ps1 | Invoke-Expression
+}
+else {
+    curl -fsSL https://pixi.sh/install.sh | sh
+}
 pixi install
 if ($IsWindows) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin);$env:Path"

@@ -5,7 +5,10 @@ on:
   workflow_call:
 permissions: read-all
 env:
-  PYTHON_ROOT: ${{github.workspace}}/python
+  WORKDIR: ./python
+defaults:
+  run:
+    working-directory: ./python
 jobs:
   sphinx:
     runs-on: ubuntu-latest
@@ -18,14 +21,14 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
 
       - name: sphinx build
-        run: ${{env.PYTHON_ROOT}}/scripts/sphinx.ps1
+        run: ./scripts/sphinx.ps1
         shell: pwsh
 
   rattler-build:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest,ubuntu-24.04-arm]
+        machine: [windows-latest, ubuntu-latest, ubuntu-24.04-arm]
         include:
           - machine: windows-latest
           - machine: ubuntu-latest
@@ -42,8 +45,8 @@ jobs:
 
       - name: build and test
         run: |
-          ./python/scripts/maturin-develop.ps1
-          ./python/scripts/pytest.ps1
+          ./scripts/maturin-develop.ps1
+          ./scripts/pytest.ps1
         shell: pwsh
 
       - name: Upload results to Codecov
@@ -55,3 +58,13 @@ jobs:
         with:
           report_type: test_results
           fail_ci_if_error: true
+  cargo-clippy:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: ./.github/actions/cargo-clippy
+        with:
+          working-directory: ${{env.WORKDIR}}

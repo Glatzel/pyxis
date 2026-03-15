@@ -9,19 +9,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo install cargo-codspeed --locked
-
-      - name: Build the benchmark target(s)
-        run: cargo codspeed build -p pyxis
-        working-directory: ./rust
-
-      - name: Run the benchmarks
-        uses: CodSpeedHQ/action@v4
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.9.4
         with:
-          run: cargo codspeed run
-          mode: simulation
-          token: ${{ secrets.CODSPEED_TOKEN }}
+          run-install: false
+      - uses: ./.github/actions/cargo-bench
+        with:
           working-directory: ./rust
+          args: -p pyxis
+
   pytest-benchmark:
     runs-on: ubuntu-latest
     steps:

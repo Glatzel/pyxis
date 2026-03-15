@@ -56,14 +56,7 @@ jobs:
   rust:
     needs: changed
     if: ${{ needs.changed.outputs.changed-rust != 'false' }}
-    uses: ./.github/workflows/rust.yml
-    with:
-      working-directory: "./rust"
-      setup-pixi: true
-      clippy: true
-      doc: true
-      test: true
-      test-machine: "['windows-latest', 'ubuntu-latest', 'macos-latest', 'ubuntu-24.04-arm']"
+    uses: ./.github/workflows/ci-rust.yml
   benchmark:
     needs: changed
     if: ${{ needs.changed.outputs.changed-benchmark != 'false' }}

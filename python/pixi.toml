@@ -17,7 +17,7 @@ scipy = "==1.17.1"
 
 [feature.test.dependencies]
 pytest = "==9.0.2"
-pytest-cov = "==7.0.0"
+pytest-cov = "==7.1.0"
 
 [feature.doc.dependencies]
 autodocsumm = "==0.2.14"

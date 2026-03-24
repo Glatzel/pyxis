@@ -44,9 +44,11 @@ jobs:
               - ./python/**
               - ./rust/**
             python:
+              - ./.github/actions/rust/**
               - ./.github/workflows/ci-python.yml
               - ./python/**
             rust:
+              - ./.github/actions/rust/**
               - ./.github/workflows/ci-rust.yml
               - ./rust/**
 

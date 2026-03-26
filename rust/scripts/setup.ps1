@@ -1,5 +1,4 @@
 Set-Location $PSScriptRoot/..
-git submodule update --init --recursive
 pixi install
 if ($IsWindows) {
     $env:Path = "$(Resolve-Path $PSScriptRoot/../.pixi/envs/default/Library/bin);$env:Path"

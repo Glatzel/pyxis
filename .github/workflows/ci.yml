@@ -76,11 +76,11 @@ jobs:
         with:
           components: ${{ matrix.machine == 'ubuntu-latest' && 'clippy' || null }}
       - uses: ./.github/actions/rust/cargo-clippy
-        if: ${{ matrix.machine != 'ubuntu-latest' }}
+        if: ${{ matrix.machine == 'ubuntu-latest' }}
         with:
           working-directory: ${{env.WORKDIR}}
       - name: sphinx build
-        if: ${{ matrix.machine != 'ubuntu-latest' }}
+        if: ${{ matrix.machine == 'ubuntu-latest' }}
         run: ./scripts/sphinx.ps1
         shell: pwsh
       - name: build and test

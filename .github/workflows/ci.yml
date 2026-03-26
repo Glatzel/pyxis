@@ -60,7 +60,39 @@ jobs:
   rust:
     needs: changed
     if: ${{ needs.changed.outputs.changed-rust != 'false' }}
-    uses: ./.github/workflows/ci-rust.yml
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [windows-latest, ubuntu-latest, macos-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.machine }}
+    env:
+      WORKDIR: ./rust
+    defaults:
+      run:
+        working-directory: ${{env.WORKDIR}}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          submodules: true
+      - uses: ./.github/actions/rust/setup-rust
+        with:
+          toolchain: nightly
+          components: ${{ matrix.machine == 'ubuntu-latest' && 'clippy' || null }}
+      - uses: ./.github/actions/rust/cargo-clippy
+        if: ${{ matrix.machine == 'ubuntu-latest' }}
+        with:
+          working-directory: ${{env.WORKDIR}}
+      - uses: ./.github/actions/rust/cargo-doc
+        if: ${{ matrix.machine == 'ubuntu-latest' }}
+        with:
+          working-directory: ${{env.WORKDIR}}
+      - uses: ./.github/actions/rust/cargo-test
+        with:
+          working-directory: ${{env.WORKDIR}}
+          global-args: --workspace --all-features
+      - uses: ./.github/actions/common/codecov
+        if: ${{!cancelled()}}
+
   benchmark:
     needs: changed
     if: ${{ needs.changed.outputs.changed-benchmark != 'false' }}

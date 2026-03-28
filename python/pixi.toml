@@ -20,7 +20,7 @@ pytest = "==9.0.2"
 pytest-cov = "==7.1.0"
 
 [feature.doc.dependencies]
-autodocsumm = "==0.2.14"
+autodocsumm = "==0.2.15"
 pydata-sphinx-theme = "==0.16.1"
 sphinx = "==8.2.3"
 sphinx-autosummary-accessors = "==2025.3.1"

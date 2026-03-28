@@ -28,4 +28,4 @@ pytest-codspeed = "==4.3.0"
 
 [environments]
 bench = ["py313", "build", "test", "deps", "bench"]
-default = ["py313", "build", "deps", "test" ]
+default = ["py313", "build", "deps", "test"]

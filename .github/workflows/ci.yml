@@ -79,10 +79,6 @@ jobs:
         if: ${{ matrix.machine == 'ubuntu-latest' }}
         with:
           working-directory: ${{env.WORKDIR}}
-      - name: sphinx build
-        if: ${{ matrix.machine == 'ubuntu-latest' }}
-        run: ./scripts/sphinx.ps1
-        shell: pwsh
       - name: build and test
         run: |
           ./scripts/maturin-develop.ps1

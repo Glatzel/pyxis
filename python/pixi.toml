@@ -19,13 +19,6 @@ scipy = "==1.17.1"
 pytest = "==9.0.2"
 pytest-cov = "==7.1.0"
 
-[feature.doc.dependencies]
-autodocsumm = "==0.2.15"
-pydata-sphinx-theme = "==0.16.1"
-sphinx = "==8.2.3"
-sphinx-autosummary-accessors = "==2025.3.1"
-sphinx-copybutton = "==0.5.2"
-
 [feature.bench]
 platforms = ["linux-64"]
 [feature.bench.dependencies]
@@ -35,4 +28,4 @@ pytest-codspeed = "==4.3.0"
 
 [environments]
 bench = ["py313", "build", "test", "deps", "bench"]
-default = ["py313", "build", "deps", "test", "doc"]
+default = ["py313", "build", "deps", "test"]

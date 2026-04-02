@@ -87,8 +87,6 @@ jobs:
       - uses: ./.github/actions/python/pytest
         with:
           working-directory: ./python
-        env:
-          
       - uses: ./.github/actions/common/codecov
         if: ${{!cancelled()}}
 

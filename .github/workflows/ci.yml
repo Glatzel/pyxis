@@ -80,12 +80,15 @@ jobs:
         if: ${{ matrix.machine == 'ubuntu-latest' }}
         with:
           working-directory: ${{env.WORKDIR}}
-      - name: build and test
+      - name: build
         run: |
           ./scripts/maturin-develop.ps1
-          ./scripts/pytest.ps1
         shell: pwsh
-
+      - uses: ./.github/actions/python/pytest
+        with:
+          working-directory: ./python
+        env:
+          
       - uses: ./.github/actions/common/codecov
         if: ${{!cancelled()}}
 

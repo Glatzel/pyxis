@@ -145,7 +145,7 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = bd09_to_gcj02(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, GCJ02_LON, epsilon = 1e-6);
@@ -183,7 +183,7 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (GCJ02_LON, GCJ02_LAT);
 /// let p = gcj02_to_wgs84(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-5);
@@ -215,7 +215,7 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = bd09_to_wgs84(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, WGS84_LON, epsilon = 1e-5);
@@ -247,7 +247,7 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (GCJ02_LON, GCJ02_LAT);
 /// let p = gcj02_to_bd09(p.0, p.1);
 /// assert_approx_eq!(f64, p.0, BD09_LON, epsilon = 1e-17);
@@ -284,7 +284,7 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (WGS84_LON, WGS84_LAT);
 /// let p = wgs84_to_gcj02(p.0, p.1);
 /// println!("{},{}", p.0, p.1);
@@ -317,7 +317,7 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (WGS84_LON, WGS84_LAT);
 /// let p = wgs84_to_bd09(p.0, p.1);
 /// println!("{:.60},{:.60}", p.0, p.1);
@@ -336,7 +336,7 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = crypto_exact(
 ///     p.0,
@@ -354,7 +354,7 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LogLevel::TRACE);
+/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (BD09_LON, BD09_LAT);
 /// let p = crypto_exact(
 ///     p.0,
@@ -442,7 +442,7 @@ mod test {
     use core::f64;
     use std::println;
 
-    use clerk::LogLevel;
+    use clerk::LevelFilter;
     use float_cmp::assert_approx_eq;
     use rand::prelude::*;
 
@@ -452,7 +452,7 @@ mod test {
         std::sync::LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257222101));
     #[test]
     fn test_exact() {
-        clerk::init_log_with_level(LogLevel::TRACE);
+        clerk::init_log_with_level(LevelFilter::TRACE);
         let is_ci = std::env::var("CI").is_ok();
         let mut rng = rand::rng();
         let threshold = 1e-13;

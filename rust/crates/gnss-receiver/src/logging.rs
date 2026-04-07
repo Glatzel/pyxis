@@ -2,21 +2,22 @@ use std::path::PathBuf;
 use std::sync::OnceLock;
 
 use chrono::Local;
-use clerk::LogLevel;
+use clerk::LevelFilter;
 use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::registry;
 use tracing_subscriber::util::SubscriberInitExt;
+use tracing_subscriber::{Layer, registry};
 
 // Global guard to ensure init runs once
 static LOG_INIT: OnceLock<()> = OnceLock::new();
 
-pub fn init_log(verbosity: LogLevel) {
+pub fn init_log(verbosity: LevelFilter) {
     LOG_INIT.get_or_init(|| {
         // Generate log file path with datetime
         let log_file_path = generate_log_filename();
 
         // Create your custom file layer (assumed here as `clerk::file_layer`)
-        let file_layer = clerk::layer::file_layer(verbosity, log_file_path, true);
+        let file_layer =
+            clerk::file_layer(log_file_path, true).with_filter(clerk::level_filter(verbosity));
 
         // Register once
         registry().with(file_layer).init();

@@ -1,6 +1,6 @@
 #[tokio::main]
 async fn main() -> mischief::Result<()> {
-    gnss_receiver::logging::init_log(clerk::LogLevel::TRACE);
+    gnss_receiver::logging::init_log(clerk::LevelFilter::TRACE);
     start_deadlock_detection();
     gnss_receiver::cli::execute().await?;
     Ok(())

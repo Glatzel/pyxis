@@ -1,7 +1,8 @@
 use bpaf::{Bpaf, batteries};
 pub mod transform;
 use bpaf::Parser;
-use clerk::LogLevel;
+use clerk::LevelFilter;
+use tracing_subscriber::Layer;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 use transform::transform_args;
@@ -10,7 +11,7 @@ use transform::transform_args;
 #[bpaf(options, version)]
 pub struct Args {
     #[bpaf(external(verbose))]
-    verbose: LogLevel,
+    verbose: LevelFilter,
     #[bpaf(external)]
     sub_commands: SubCommands,
 }
@@ -51,16 +52,16 @@ pub enum SubCommands {
     },
 }
 
-fn verbose() -> impl Parser<LogLevel> {
+fn verbose() -> impl Parser<LevelFilter> {
     batteries::verbose_by_slice(
         2,
         [
-            LogLevel::OFF,
-            LogLevel::ERROR,
-            LogLevel::WARN,
-            LogLevel::INFO,
-            LogLevel::DEBUG,
-            LogLevel::TRACE,
+            LevelFilter::OFF,
+            LevelFilter::ERROR,
+            LevelFilter::WARN,
+            LevelFilter::INFO,
+            LevelFilter::DEBUG,
+            LevelFilter::TRACE,
         ],
     )
 }
@@ -76,7 +77,7 @@ pub fn execute() -> mischief::Result<()> {
 
     // Initialize logging system with the specified verbosity level
     tracing_subscriber::registry()
-        .with(clerk::layer::terminal_layer(args.verbose, true))
+        .with(clerk::terminal_layer(true).with_filter(clerk::level_filter(args.verbose)))
         .init();
 
     // Print parsed arguments at debug level

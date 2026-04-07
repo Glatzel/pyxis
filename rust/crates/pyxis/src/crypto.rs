@@ -442,7 +442,7 @@ mod test {
     use core::f64;
     use std::println;
 
-    use clerk::LogLevel;
+    use clerk::LevelFilter;
     use float_cmp::assert_approx_eq;
     use rand::prelude::*;
 
@@ -452,7 +452,7 @@ mod test {
         std::sync::LazyLock::new(|| Ellipsoid::from_semi_major_and_invf(6378137.0, 298.257222101));
     #[test]
     fn test_exact() {
-        clerk::init_log_with_level(LogLevel::TRACE);
+        clerk::init_log_with_level(LevelFilter::TRACE);
         let is_ci = std::env::var("CI").is_ok();
         let mut rng = rand::rng();
         let threshold = 1e-13;

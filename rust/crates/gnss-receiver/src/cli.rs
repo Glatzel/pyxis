@@ -1,13 +1,13 @@
 use bpaf::{Bpaf, batteries};
 pub mod trail;
 use bpaf::Parser;
-use clerk::LogLevel;
+use clerk::LevelFilter;
 
 #[derive(Clone, Debug, Bpaf)]
 #[bpaf(options, version)]
 struct Args {
     #[bpaf(external(verbose))]
-    verbose: LogLevel,
+    verbose: LevelFilter,
     #[bpaf(external)]
     sub_commands: SubCommands,
 }
@@ -29,16 +29,16 @@ pub enum SubCommands {
     },
 }
 
-fn verbose() -> impl Parser<LogLevel> {
+fn verbose() -> impl Parser<LevelFilter> {
     batteries::verbose_by_slice(
         2,
         [
-            LogLevel::OFF,
-            LogLevel::ERROR,
-            LogLevel::WARN,
-            LogLevel::INFO,
-            LogLevel::DEBUG,
-            LogLevel::TRACE,
+            LevelFilter::OFF,
+            LevelFilter::ERROR,
+            LevelFilter::WARN,
+            LevelFilter::INFO,
+            LevelFilter::DEBUG,
+            LevelFilter::TRACE,
         ],
     )
 }

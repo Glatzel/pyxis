@@ -5,7 +5,7 @@ version.workspace = true
 
 [dependencies]
 bpaf.workspace = true
-clerk = { workspace = true, features = ["tracing", "serde"] }
+clerk = { workspace = true, features = ["tracing"] }
 mischief = { workspace = true, features = ["fancy"] }
 proj.workspace = true
 pyxis = { workspace = true, features = ["serde"] }

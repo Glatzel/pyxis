@@ -6,7 +6,7 @@ use path_slash::PathBufExt;
 
 fn main() {
     // 1. Explicit override wins
-    let proj_root = env::var("PROJ_ROOT").map(PathBuf::from);
+    let proj_root = env::var("PROJ_ROOT").map(PathBuf::from).unwrap_or_default();
 
     // 2. CMAKE_PREFIX_PATH entries (colon-separated on Unix, semicolon on Windows)
     let cmake_prefixes: Vec<PathBuf> = env::var("CMAKE_PREFIX_PATH")

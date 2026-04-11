@@ -1,6 +1,6 @@
 # proj
 
-![PROJ](https://img.shields.io/badge/Proj-9.8.0-blue?logo=rust)
+![PROJ](https://img.shields.io/badge/Proj-9.8.1-blue?logo=rust)
 
 **Safe Rust bindings for [PROJ](https://proj.org/)** – the definitive library for cartographic projections and coordinate transformations.
 

@@ -62,6 +62,6 @@ fn generate_bindings(proj_root: &PathBuf) {
         .generate()
         .unwrap();
     bindings
-        .write_to_file("./src/bindings.rs")
-        .expect(format!("Couldn't write bindings to './src/bindings.rs' !").as_str());
+        .write_to_file("./temp/bindings.rs")
+        .expect(format!("Couldn't write bindings to './temp/bindings.rs' !").as_str());
 }

@@ -7,7 +7,4 @@
     dead_code
 )]
 
-#[cfg(not(feature = "bindgen"))]
 include!("./bindings.rs");
-#[cfg(feature = "bindgen")]
-include!(concat!(env!("OUT_DIR"), "/bindings.rs"));

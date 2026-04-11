@@ -7,6 +7,7 @@ $cargoTomlPath = "./rust/Cargo.toml"
 Write-Host "Updated rust version to $version"
 Set-Location rust
 cargo update
+pixi update
 Set-Location $PSScriptRoot/..
 
 # python
@@ -15,4 +16,5 @@ $cargoTomlPath = "./python/Cargo.toml"
 Write-Host "Updated python version to $version"
 Set-Location python
 cargo update
+pixi update
 Set-Location $PSScriptRoot/..

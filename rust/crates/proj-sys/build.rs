@@ -58,6 +58,9 @@ fn generate_bindings(proj_root: &PathBuf) {
         .size_t_is_usize(true)
         .blocklist_type("max_align_t")
         .ctypes_prefix("libc")
+        .default_enum_style(bindgen::EnumVariation::Rust {
+            non_exhaustive: false,
+        })
         .use_core()
         .generate()
         .unwrap();
@@ -66,8 +69,11 @@ fn generate_bindings(proj_root: &PathBuf) {
         .expect(format!("Couldn't write bindings to './src/bindings.rs' !").as_str());
     bindings
         .write_to_file(PathBuf::from(env::var("OUT_DIR").unwrap()).join("bindings.rs"))
-        .expect(format!(
-            "Couldn't write bindings to {}",
-            env::var("OUT_DIR").unwrap()
-        ).as_str());
+        .expect(
+            format!(
+                "Couldn't write bindings to {}",
+                env::var("OUT_DIR").unwrap()
+            )
+            .as_str(),
+        );
 }

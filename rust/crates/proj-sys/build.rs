@@ -21,7 +21,7 @@ fn main() {
 
     // Build ordered search list: PROJ_ROOT first, then CMAKE_PREFIX_PATH, then
     // system
-    let search_roots: Vec<PathBuf> = vec![proj_root]
+    let search_roots: Vec<PathBuf> = vec![proj_root.clone()]
         .into_iter()
         .chain(cmake_prefixes)
         .chain(system_roots)

@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.43] - 2026-04-11
+
+### Refactor
+
+- Build script by @Glatzel in [#852](https://github.com/Glatzel/pyxis/pull/852)
+
+### Removed
+
+- Delete cargo-clean.ps1 by @Glatzel in [#811](https://github.com/Glatzel/pyxis/pull/811)
+- Delete python doc by @Glatzel in [#840](https://github.com/Glatzel/pyxis/pull/840)
+
+### Testing
+
+- Enhance test_migrate_2d with new cases by @Glatzel in [#799](https://github.com/Glatzel/pyxis/pull/799)
+
 ## [0.0.42] - 2026-03-03
 
 ### Changed
@@ -641,6 +656,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2025-02-05
 
+[0.0.43]: https://github.com/Glatzel/pyxis/compare/v0.0.42..v0.0.43
 [0.0.42]: https://github.com/Glatzel/pyxis/compare/v0.0.41..v0.0.42
 [0.0.39]: https://github.com/Glatzel/pyxis/compare/v0.0.38..v0.0.39
 [0.0.38]: https://github.com/Glatzel/pyxis/compare/v0.0.37..v0.0.38

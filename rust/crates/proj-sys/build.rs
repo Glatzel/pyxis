@@ -1,4 +1,4 @@
-use std::env::{self};
+use std::env;
 #[allow(unused_imports)]
 use std::path::PathBuf;
 
@@ -39,29 +39,20 @@ fn main() {
 
     println!("cargo:rustc-link-lib=proj");
 
-    // Feature-gated: use generated (bindgen at build time) vs vendored (checked-in
-    // src/bindings.rs)
-    #[cfg(feature = "bindgen")]
-    {
-        generate_bindings(&proj_root);
-        println!("cargo:rustc-cfg=feature=\"bindgen\"");
+    if env::var("UPDATE_PROJ_BINDGEN").is_ok() {
+        let include_dir = proj_root.join("include");
+        let header = include_dir.join("proj.h").to_slash_lossy().to_string();
+
+        let bindings = bindgen::Builder::default()
+            .header(header)
+            .size_t_is_usize(true)
+            .blocklist_type("max_align_t")
+            .ctypes_prefix("libc")
+            .use_core()
+            .generate()
+            .unwrap();
+        bindings
+            .write_to_file("./src/bindings.rs")
+            .expect(format!("Couldn't write bindings to './src/bindings.rs' !").as_str());
     }
-}
-
-#[cfg(feature = "bindgen")]
-fn generate_bindings(proj_root: &PathBuf) {
-    let include_dir = proj_root.join("include");
-    let header = include_dir.join("proj.h").to_slash_lossy().to_string();
-
-    let bindings = bindgen::Builder::default()
-        .header(header)
-        .size_t_is_usize(true)
-        .blocklist_type("max_align_t")
-        .ctypes_prefix("libc")
-        .use_core()
-        .generate()
-        .unwrap();
-    bindings
-        .write_to_file("./temp/bindings.rs")
-        .expect(format!("Couldn't write bindings to './temp/bindings.rs' !").as_str());
 }

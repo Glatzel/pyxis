@@ -7,9 +7,5 @@ edition.workspace = true
 libc.workspace = true
 
 [build-dependencies]
-bindgen = { workspace = true, optional = true }
+bindgen.workspace = true
 path-slash.workspace = true
-
-[features]
-default = []
-bindgen = ["dep:bindgen"]

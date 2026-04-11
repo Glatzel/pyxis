@@ -21,5 +21,5 @@ jobs:
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: proj-bindings
-          path: rust/crates/proj-sys/temp/bindings.rs
+          path: rust/crates/proj-sys/src/bindings.rs
           if-no-files-found: error

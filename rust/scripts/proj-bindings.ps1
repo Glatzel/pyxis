@@ -2,7 +2,5 @@ $ROOT = git rev-parse --show-toplevel
 & $PSScriptRoot/setup.ps1
 Set-Location $PSScriptRoot/..
 $env:RUSTFLAGS = "-Dwarnings"
-$env:UPDATE = "true"
-cargo build -p proj-sys
-$env:UPDATE = "false"
+cargo build -p proj-sys --features bindgen
 Set-Location $ROOT

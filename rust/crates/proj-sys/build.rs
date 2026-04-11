@@ -58,9 +58,6 @@ fn generate_bindings(proj_root: &PathBuf) {
         .size_t_is_usize(true)
         .blocklist_type("max_align_t")
         .ctypes_prefix("libc")
-        .default_enum_style(bindgen::EnumVariation::Rust {
-            non_exhaustive: false,
-        })
         .use_core()
         .generate()
         .unwrap();

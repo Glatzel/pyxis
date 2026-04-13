@@ -19,7 +19,6 @@ rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7" }
 serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7" }
 
 bindgen = "0.72"
-bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
 criterion = { package = "codspeed-criterion-compat", version = "4.0.0" }
 derive-getters = { version = "0.5.0", features = ["auto_copy_getters"] }
 dunce = "1.0.5"
@@ -28,7 +27,6 @@ insta = "1.46.1"
 libc = "0.2"
 num-traits = "0.2.19"
 num_enum = "0.7.4"
-parking_lot = { version = "0.12.4", features = ["deadlock_detection"] }
 path-slash = "0.2.1"
 rand = "0.10.0"
 rstest = "0.26.1"

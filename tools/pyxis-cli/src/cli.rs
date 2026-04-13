@@ -1,10 +1,10 @@
 use bpaf::{Bpaf, batteries};
 pub mod transform;
 use bpaf::Parser;
-use clerk::LevelFilter;
-use tracing_subscriber::Layer;
-use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::util::SubscriberInitExt;
+use clerk::tracing_subscriber::Layer;
+use clerk::tracing_subscriber::layer::SubscriberExt;
+use clerk::tracing_subscriber::util::SubscriberInitExt;
+use clerk::{LevelFilter, tracing_subscriber};
 use transform::transform_args;
 
 #[derive(Clone, Debug, Bpaf)]
@@ -77,11 +77,11 @@ pub fn execute() -> mischief::Result<()> {
 
     // Initialize logging system with the specified verbosity level
     tracing_subscriber::registry()
-        .with(clerk::terminal_layer(true).with_filter(clerk::level_filter(args.verbose)))
+        .with(clerk::terminal_layer(true).with_filter(args.verbose))
         .init();
 
     // Print parsed arguments at debug level
-    tracing::debug!("{:?}", args);
+    clerk::debug!("{:?}", args);
 
     // Match and execute the selected subcommand
     match args.sub_commands {

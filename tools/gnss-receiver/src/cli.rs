@@ -55,7 +55,7 @@ pub async fn execute() -> mischief::Result<()> {
     crate::logging::init_log(args.verbose);
 
     // Print parsed arguments at debug level
-    tracing::debug!("{:?}", args);
+    clerk::debug!("{:?}", args);
 
     // Overwrite global SETTINGS with command-line arguments, if applicable
     crate::Settings::overwrite_settings(&args.sub_commands)?;

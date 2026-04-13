@@ -3,9 +3,9 @@ use std::sync::OnceLock;
 
 use chrono::Local;
 use clerk::LevelFilter;
-use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::util::SubscriberInitExt;
-use tracing_subscriber::{Layer, registry};
+use clerk::tracing_subscriber::layer::SubscriberExt;
+use clerk::tracing_subscriber::util::SubscriberInitExt;
+use clerk::tracing_subscriber::{Layer, registry};
 
 // Global guard to ensure init runs once
 static LOG_INIT: OnceLock<()> = OnceLock::new();

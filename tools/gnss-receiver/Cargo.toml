@@ -6,11 +6,12 @@ version = "0.0.43"
 [dependencies]
 clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = ["tracing"] }
 mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = ["fancy"] }
-proj = { path = "../../rust/crates/proj" }
-pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }
 rax = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = ["async"] }
 rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7"}
 serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7" }
+
+proj = { path = "../../rust/crates/proj" }
+pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }
 
 bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
 chrono = "0.4.42"
@@ -22,8 +23,8 @@ ratatui = "0.30.0"
 schemars = "1.2.1"
 serde = { version = "1.0.226", features = ["derive"] }
 serde_json = "1.0.145"
-tokio = { workspace = true, features = ["macros", "rt-multi-thread", "sync"] }
-tokio-serial.workspace = true
+tokio = { version = "1.51.1", features = ["macros", "rt-multi-thread", "sync"] }
+tokio-serial = "5.4.5"
 toml = "1.1.2"
 
 [dev-dependencies]

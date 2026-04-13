@@ -18,3 +18,21 @@ Set-Location python
 cargo update
 pixi update
 Set-Location $PSScriptRoot/..
+
+# rust
+$cargoTomlPath = "./tools/gnss-receiver/Cargo.toml"
+(Get-Content -Path $cargoTomlPath) -replace '^version = .*', "version = `"$version`"" | Set-Content -Path $cargoTomlPath
+Write-Host "Updated gnss-receiver version to $version"
+Set-Location rust
+cargo update
+pixi update
+Set-Location $PSScriptRoot/..
+
+# rust
+$cargoTomlPath = "./tools/pyxis-cli/Cargo.toml"
+(Get-Content -Path $cargoTomlPath) -replace '^version = .*', "version = `"$version`"" | Set-Content -Path $cargoTomlPath
+Write-Host "Updated pyxis-cli version to $version"
+Set-Location rust
+cargo update
+pixi update
+Set-Location $PSScriptRoot/..

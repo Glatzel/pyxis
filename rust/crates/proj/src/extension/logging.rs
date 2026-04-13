@@ -11,9 +11,15 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
     let _message = info.to_string().unwrap_or_default();
 
     match level {
-        1 => clerk::error!("{}", _message),
-        2 => clerk::debug!("{}", _message),
-        3 => clerk::trace!("{}", _message),
+        1 => {
+            clerk::error!("{}", _message);
+        }
+        2 => {
+            clerk::debug!("{}", _message);
+        }
+        3 => {
+            clerk::trace!("{}", _message);
+        }
         _ => (),
     };
 }

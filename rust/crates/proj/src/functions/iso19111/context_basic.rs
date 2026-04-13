@@ -171,13 +171,17 @@ impl crate::Context {
                 &mut out_grammar_errors,
             )
         };
-        let _ = out_warnings
-            .to_vec_string()
-            .map(|w| w.iter().for_each(|w| clerk::warn!("{w}")));
+        let _ = out_warnings.to_vec_string().map(|w| {
+            w.iter().for_each(|_w| {
+                clerk::warn!("{_w}");
+            })
+        });
 
-        let _ = out_grammar_errors
-            .to_vec_string()
-            .map(|e| e.iter().for_each(|e| clerk::warn!("{e}")));
+        let _ = out_grammar_errors.to_vec_string().map(|e| {
+            e.iter().for_each(|_e| {
+                clerk::warn!("{_e}");
+            })
+        });
 
         Proj::new(self.arc_ptr(), ptr)
     }

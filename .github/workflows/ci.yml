@@ -30,6 +30,8 @@ jobs:
       changed-benchmark: ${{steps.main.outputs.benchmark_any_changed}}
       changed-python: ${{steps.main.outputs.python_any_changed}}
       changed-rust: ${{steps.main.outputs.rust_any_changed}}
+      changed-tool-gnss-receiver: ${{steps.main.outputs.tool_gnss_receiver_any_changed}}
+      changed-tool-pyxis-cli: ${{steps.main.outputs.tool_pyxis_cli_any_changed}}
 
     runs-on: ubuntu-latest
     steps:
@@ -52,6 +54,12 @@ jobs:
             rust:
               - ./.github/actions/rust/**
               - ./.github/workflows/ci-rust.yml
+              - ./rust/**
+            tool-gnss-receiver:
+              - ./tools/gnss-receiver/**
+              - ./rust/**
+            tool-pyxis-cli:
+              - ./tools/pyxis-cli/**
               - ./rust/**
 
   python:
@@ -127,6 +135,44 @@ jobs:
       - uses: ./.github/actions/common/codecov
         if: ${{!cancelled()}}
 
+  tool-gnss-receiver:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-tool-gnss-receiver != 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./.github/actions/rust/setup-rust
+        with:
+          toolchain: nightly
+          components: clippy
+      - uses: ./.github/actions/rust/cargo-clippy
+        with:
+          working-directory: ./tools/gnss-receiver
+      - uses: ./.github/actions/rust/cargo-test
+        with:
+          working-directory: ./tools/gnss-receiver
+      - uses: ./.github/actions/common/codecov
+        if: ${{!cancelled()}}
+
+  tool-pyxis-cli:
+    needs: changed
+    if: ${{ needs.changed.outputs.changed-tool-pyxis-cli != 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./.github/actions/rust/setup-rust
+        with:
+          toolchain: nightly
+          components: clippy
+      - uses: ./.github/actions/rust/cargo-clippy
+        with:
+          working-directory: ./tools/pyxis-cli
+      - uses: ./.github/actions/rust/cargo-test
+        with:
+          working-directory: ./tools/pyxis-cli
+      - uses: ./.github/actions/common/codecov
+        if: ${{!cancelled()}}
+
   benchmark:
     needs: changed
     if: ${{ needs.changed.outputs.changed-benchmark != 'false' }}
@@ -153,7 +199,16 @@ jobs:
           working-directory: ./python
   check-point:
     if: ( cancelled() || failure() ) && github.event_name == 'pull_request'
-    needs: [lefthook, changed, python, rust, benchmark]
+    needs:
+      [
+        benchmark,
+        changed,
+        lefthook,
+        python,
+        rust,
+        tool-gnss-receiver,
+        tool-pyxis-cli,
+      ]
     runs-on: ubuntu-slim
     steps:
       - run: exit 1

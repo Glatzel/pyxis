@@ -1,0 +1,50 @@
+[package]
+edition.workspace = true
+name = "gnss-receiver"
+version.workspace = true
+
+[dependencies]
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = ["tracing"] }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = ["fancy"] }
+proj = { path = "../../rust/crates/proj" }
+pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }
+rax = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = ["async"] }
+rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7"}
+serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7" }
+
+bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
+chrono = "0.4.42"
+crossterm = "0.29.0"
+directories = "6.0.0"
+jsonschema = "0.46"
+parking_lot = { version = "0.12.4", features = ["deadlock_detection"] }
+ratatui = "0.30.0"
+schemars = "1.2.1"
+serde = { version = "1.0.226", features = ["derive"] }
+serde_json = "1.0.145"
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "sync"] }
+tokio-serial.workspace = true
+toml = "1.1.2"
+
+[dev-dependencies]
+assert_cmd = "2.2.0"
+async-trait = "0.1.89"
+float-cmp = "0.10.0"
+predicates = "3.1.4"
+tempfile = "3.21.0"
+
+[[bin]]
+name = "gnss-receiver"
+path = "src/main.rs"
+
+[[bin]]
+name = "deadlock_detection"
+path = "tools/deadlock_detection.rs"
+
+[[bin]]
+name = "export-schema"
+path = "tools/export_schema.rs"
+
+[[bin]]
+name = "list-devices"
+path = "tools/list_devices.rs"

@@ -18,39 +18,23 @@ rax = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7" }
 rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7" }
 serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7" }
 
-assert_cmd = "2.0"
-async-trait = "0.1"
 bindgen = "0.72"
 bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
-chrono = "0.4.42"
 criterion = { package = "codspeed-criterion-compat", version = "4.0.0" }
-crossterm = "0.29.0"
 derive-getters = { version = "0.5.0", features = ["auto_copy_getters"] }
-directories = "6.0.0"
 dunce = "1.0.5"
 float-cmp = "0.10.0"
 insta = "1.46.1"
-jsonschema = "0.46"
 libc = "0.2"
 num-traits = "0.2.19"
 num_enum = "0.7.4"
 parking_lot = { version = "0.12.4", features = ["deadlock_detection"] }
 path-slash = "0.2.1"
-predicates = "3.1"
 rand = "0.10.0"
-ratatui = "0.30.0"
 rstest = "0.26.1"
-schemars = "1.0"
 serde = { version = "1.0.226", features = ["derive"] }
-serde_json = "1.0.145"
 strum = { version = "0.28", features = ["derive"] }
-tempfile = "3.21.0"
 thiserror = "2.0.16"
-tokio = { version = "1", default-features = false }
-tokio-serial = "5.4.5"
-toml = "1.0"
-tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
 
 [profile.dev.package]
 insta.opt-level = 3

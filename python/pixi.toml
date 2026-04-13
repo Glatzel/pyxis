@@ -6,7 +6,7 @@ platforms = ["win-64", "linux-64", "osx-arm64", "linux-aarch64"]
 python = "3.13.*"
 
 [feature.build.dependencies]
-maturin = "==1.12.6"
+maturin = "==1.13.1"
 pip = "==26.0.1"
 
 [feature.deps.dependencies]
@@ -16,7 +16,7 @@ numpy = "2.3.*"
 scipy = "==1.17.1"
 
 [feature.test.dependencies]
-pytest = "==9.0.2"
+pytest = "==9.0.3"
 pytest-cov = "==7.1.0"
 
 [feature.bench]

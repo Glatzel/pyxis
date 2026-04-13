@@ -1,4 +1,5 @@
 files.extend-exclude = ["CHANGELOG.md", "lcov.info", "*.junit.xml"]
+
 [default.extend-identifiers]
 consts = "consts"
 ratatui = "ratatui"

@@ -1,19 +1,41 @@
 [package]
-edition = "2024"
 name = "gnss-receiver"
 version = "0.0.43"
+edition = "2024"
+
+[[bin]]
+name = "gnss-receiver"
+path = "src/main.rs"
+
+[[bin]]
+name = "deadlock_detection"
+path = "tools/deadlock_detection.rs"
+
+[[bin]]
+name = "export-schema"
+path = "tools/export_schema.rs"
+
+[[bin]]
+name = "list-devices"
+path = "tools/list_devices.rs"
 
 [dependencies]
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = ["tracing"] }
-mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = ["fancy"] }
-rax = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = ["async"] }
-rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7"}
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = [
+  "tracing"
+] }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = [
+  "fancy"
+] }
+rax = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7", features = [
+  "async"
+] }
+rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7" }
 serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.4.7" }
 
 proj = { path = "../../rust/crates/proj" }
 pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }
 
-bpaf = { version = "0.9.20", features = ["derive", "batteries"] }
+bpaf = { version = "0.9.20", features = ["batteries", "derive"] }
 chrono = "0.4.42"
 crossterm = "0.29.0"
 directories = "6.0.0"
@@ -33,19 +55,3 @@ async-trait = "0.1.89"
 float-cmp = "0.10.0"
 predicates = "3.1.4"
 tempfile = "3.21.0"
-
-[[bin]]
-name = "gnss-receiver"
-path = "src/main.rs"
-
-[[bin]]
-name = "deadlock_detection"
-path = "tools/deadlock_detection.rs"
-
-[[bin]]
-name = "export-schema"
-path = "tools/export_schema.rs"
-
-[[bin]]
-name = "list-devices"
-path = "tools/list_devices.rs"

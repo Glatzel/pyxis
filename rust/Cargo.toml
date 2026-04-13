@@ -1,10 +1,10 @@
 [workspace]
-members = ["./crates/*"]
 resolver = "2"
+members = ["./crates/*"]
 
 [workspace.package]
-edition = "2024"
 version = "0.0.43"
+edition = "2024"
 
 [workspace.dependencies]
 proj = { path = "./crates/proj" }
@@ -25,8 +25,8 @@ dunce = "1.0.5"
 float-cmp = "0.10.0"
 insta = "1.46.1"
 libc = "0.2"
-num-traits = "0.2.19"
 num_enum = "0.7.4"
+num-traits = "0.2.19"
 path-slash = "0.2.1"
 rand = "0.10.0"
 rstest = "0.26.1"

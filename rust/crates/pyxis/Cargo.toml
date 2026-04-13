@@ -1,7 +1,15 @@
 [package]
-edition.workspace = true
 name = "pyxis"
 version.workspace = true
+edition.workspace = true
+
+[[bench]]
+harness = false
+name = "crypto"
+
+[[bench]]
+harness = false
+name = "datum_compensate"
 
 [dependencies]
 clerk.workspace = true
@@ -16,11 +24,3 @@ rand.workspace = true
 
 [features]
 serde = ["dep:serde"]
-
-[[bench]]
-harness = false
-name = "crypto"
-
-[[bench]]
-harness = false
-name = "datum_compensate"

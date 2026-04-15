@@ -51,11 +51,9 @@ pub async fn execute() -> mischief::Result<()> {
             maybe_evt = poll_event(Duration::from_millis(10)) => {
                 if let Ok(Some(evt)) = maybe_evt {
                     match evt {
-                        Event::Key(key) => {
+                        Event::Key(key)  if app.handle_key(key)=> {
                             // Handle keyboard input; break loop on exit signal
-                            if app.handle_key(key) {
-                                break;
-                            }
+                            break;
                         }
                         Event::Mouse(mouse_evt) => {
                             // Handle mouse input

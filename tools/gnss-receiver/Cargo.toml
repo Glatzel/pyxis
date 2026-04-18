@@ -39,7 +39,6 @@ bpaf = { version = "0.9.20", features = ["batteries", "derive"] }
 chrono = "0.4.42"
 crossterm = "0.29.0"
 directories = "6.0.0"
-jsonschema = "0.46"
 parking_lot = { version = "0.12.4", features = ["deadlock_detection"] }
 ratatui = "0.30.0"
 schemars = "1.2.1"

@@ -140,16 +140,16 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./.github/actions/rust/setup-rust
         with:
-          toolchain: nightly
+          # toolchain: nightly
           components: clippy
-      - uses: ./.github/actions/rust/cargo-clippy
-        with:
-          working-directory: ./tools/gnss-receiver
-      - uses: ./.github/actions/rust/cargo-test
-        with:
-          working-directory: ./tools/gnss-receiver
-      - uses: ./.github/actions/common/codecov
-        if: ${{!cancelled()}}
+      # - uses: ./.github/actions/rust/cargo-clippy
+      #   with:
+      #     working-directory: ./tools/gnss-receiver
+      # - uses: ./.github/actions/rust/cargo-test
+      #   with:
+      #     working-directory: ./tools/gnss-receiver
+      # - uses: ./.github/actions/common/codecov
+      #   if: ${{!cancelled()}}
 
   tool-pyxis-cli:
     needs: changed

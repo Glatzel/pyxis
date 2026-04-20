@@ -55,8 +55,8 @@ checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
 
 [[package]]
 name = "arbor"
-version = "2026.4.7"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.7#db2fba9d900e08b46065473833aee769fc2ee823"
+version = "2026.4.16"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
 dependencies = [
  "textwrap",
 ]
@@ -294,8 +294,8 @@ dependencies = [
 
 [[package]]
 name = "clerk"
-version = "2026.4.7"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.7#db2fba9d900e08b46065473833aee769fc2ee823"
+version = "2026.4.16"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
 dependencies = [
  "chrono",
  "owo-colors",
@@ -541,8 +541,8 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
 name = "envoy"
-version = "2026.4.7"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.7#db2fba9d900e08b46065473833aee769fc2ee823"
+version = "2026.4.16"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
 dependencies = [
  "thiserror 2.0.18",
 ]
@@ -845,6 +845,11 @@ name = "hashbrown"
 version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4f467dd6dccf739c208452f8014c75c18bb8301b050ad1cfb27153803edb0f51"
+dependencies = [
+ "allocator-api2",
+ "equivalent",
+ "foldhash 0.2.0",
+]
 
 [[package]]
 name = "heck"
@@ -1188,8 +1193,8 @@ dependencies = [
 
 [[package]]
 name = "mischief"
-version = "2026.4.7"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.7#db2fba9d900e08b46065473833aee769fc2ee823"
+version = "2026.4.16"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
 dependencies = [
  "arbor",
  "mischief-macros",
@@ -1202,8 +1207,8 @@ dependencies = [
 
 [[package]]
 name = "mischief-macros"
-version = "2026.4.7"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.7#db2fba9d900e08b46065473833aee769fc2ee823"
+version = "2026.4.16"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
 dependencies = [
  "quote",
  "syn 2.0.117",
@@ -1723,8 +1728,8 @@ dependencies = [
 
 [[package]]
 name = "rax"
-version = "2026.4.7"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.7#db2fba9d900e08b46065473833aee769fc2ee823"
+version = "2026.4.16"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
 dependencies = [
  "async-trait",
  "clerk",
@@ -1734,13 +1739,13 @@ dependencies = [
 
 [[package]]
 name = "rax-nmea"
-version = "2026.4.7"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.7#db2fba9d900e08b46065473833aee769fc2ee823"
+version = "2026.4.16"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
 dependencies = [
  "chrono",
  "clerk",
  "derive-getters",
- "hashbrown 0.16.1",
+ "hashbrown 0.17.0",
  "rax",
  "thiserror 2.0.18",
 ]
@@ -1981,8 +1986,8 @@ dependencies = [
 
 [[package]]
 name = "serialport-ext"
-version = "2026.4.7"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.7#db2fba9d900e08b46065473833aee769fc2ee823"
+version = "2026.4.16"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
 dependencies = [
  "clerk",
  "serialport",

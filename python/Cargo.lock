@@ -10,8 +10,8 @@ checksum = "c08606f8c3cbf4ce6ec8e28fb0014a2c086708fe954eaa885384a6165172e7e8"
 
 [[package]]
 name = "clerk"
-version = "2026.4.7"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.7#db2fba9d900e08b46065473833aee769fc2ee823"
+version = "2026.4.16"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
 
 [[package]]
 name = "crossbeam-deque"
@@ -247,9 +247,9 @@ checksum = "60a357793950651c4ed0f3f52338f53b2f809f32d83a07f72909fa13e4c6c1e3"
 
 [[package]]
 name = "rayon"
-version = "1.11.0"
+version = "1.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "368f01d005bf8fd9b1206fb6fa653e6c4a81ceb1466406b81792d87c5677a58f"
+checksum = "fb39b166781f92d482534ef4b4b1b2568f42613b53e5b6c160e24cfbfa30926d"
 dependencies = [
  "either",
  "rayon-core",

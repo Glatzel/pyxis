@@ -30,8 +30,8 @@ jobs:
       changed-benchmark: ${{steps.main.outputs.benchmark_any_changed}}
       changed-python: ${{steps.main.outputs.python_any_changed}}
       changed-rust: ${{steps.main.outputs.rust_any_changed}}
-      changed-tool-gnss-receiver: ${{steps.main.outputs.tool_gnss_receiver_any_changed}}
-      changed-tool-pyxis-cli: ${{steps.main.outputs.tool_pyxis_cli_any_changed}}
+      changed-tool-gnss-receiver: ${{steps.main.outputs.tool-gnss-receiver_any_changed}}
+      changed-tool-pyxis-cli: ${{steps.main.outputs.tool-pyxis-cli_any_changed}}
 
     runs-on: ubuntu-latest
     steps:
@@ -145,9 +145,9 @@ jobs:
         with:
           # toolchain: nightly
           components: clippy
-      # - uses: ./.github/actions/rust/cargo-clippy
-      #   with:
-      #     working-directory: ./tools/gnss-receiver
+      - uses: ./.github/actions/rust/cargo-clippy
+        with:
+          working-directory: ./tools/gnss-receiver
       # - uses: ./.github/actions/rust/cargo-test
       #   with:
       #     working-directory: ./tools/gnss-receiver

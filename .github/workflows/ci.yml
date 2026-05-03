@@ -145,9 +145,9 @@ jobs:
         with:
           # toolchain: nightly
           components: clippy
-      # - uses: ./.github/actions/rust/cargo-clippy
-      #   with:
-      #     working-directory: ./tools/gnss-receiver
+      - uses: ./.github/actions/rust/cargo-clippy
+        with:
+          working-directory: ./tools/gnss-receiver
       # - uses: ./.github/actions/rust/cargo-test
       #   with:
       #     working-directory: ./tools/gnss-receiver

@@ -49,8 +49,8 @@ dependencies = [
 
 [[package]]
 name = "arbor"
-version = "2026.4.16"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
+version = "2026.5.1"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.1#443e7962f066f2dcbf65dfa107663c668d9fd807"
 dependencies = [
  "textwrap",
 ]
@@ -217,8 +217,8 @@ checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
 name = "clerk"
-version = "2026.4.16"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
+version = "2026.5.1"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.1#443e7962f066f2dcbf65dfa107663c668d9fd807"
 dependencies = [
  "chrono",
  "owo-colors",
@@ -393,8 +393,8 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "envoy"
-version = "2026.4.16"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
+version = "2026.5.1"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.1#443e7962f066f2dcbf65dfa107663c668d9fd807"
 dependencies = [
  "thiserror",
 ]
@@ -679,8 +679,8 @@ checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
 
 [[package]]
 name = "mischief"
-version = "2026.4.16"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
+version = "2026.5.1"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.1#443e7962f066f2dcbf65dfa107663c668d9fd807"
 dependencies = [
  "arbor",
  "mischief-macros",
@@ -693,8 +693,8 @@ dependencies = [
 
 [[package]]
 name = "mischief-macros"
-version = "2026.4.16"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.4.16#882a085bd04e9696a931806b584aaf85a319f925"
+version = "2026.5.1"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.1#443e7962f066f2dcbf65dfa107663c668d9fd807"
 dependencies = [
  "quote",
  "syn",

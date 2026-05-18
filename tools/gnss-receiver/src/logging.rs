@@ -16,7 +16,9 @@ pub fn init_log(verbosity: LevelFilter) {
         let log_file_path = generate_log_filename();
 
         // Create your custom file layer (assumed here as `clerk::file_layer`)
-        let file_layer = clerk::file_layer(log_file_path, true).unwrap().with_filter(verbosity);
+        let file_layer = clerk::file_layer(log_file_path, true)
+            .unwrap()
+            .with_filter(verbosity);
 
         // Register once
         registry().with(file_layer).init();

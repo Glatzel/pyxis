@@ -10,17 +10,18 @@ use clerk::tracing_subscriber::{Layer, registry};
 // Global guard to ensure init runs once
 static LOG_INIT: OnceLock<()> = OnceLock::new();
 
-pub fn init_log(verbosity: LevelFilter) {
+pub fn init_log(verbosity: LevelFilter) -> mischief::Result<()>{
     LOG_INIT.get_or_init(|| {
         // Generate log file path with datetime
         let log_file_path = generate_log_filename();
 
         // Create your custom file layer (assumed here as `clerk::file_layer`)
-        let file_layer = clerk::file_layer(log_file_path, true).with_filter(verbosity);
+        let file_layer = clerk::file_layer(log_file_path, true)?.with_filter(verbosity);
 
         // Register once
         registry().with(file_layer).init();
     });
+    Ok(())
 }
 fn generate_log_filename() -> PathBuf {
     let now = Local::now();

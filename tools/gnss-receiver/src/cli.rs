@@ -52,7 +52,7 @@ pub async fn execute() -> mischief::Result<()> {
     let args = args().run();
 
     // Initialize logging system with the specified verbosity level
-    crate::logging::init_log(args.verbose);
+    crate::logging::init_log(args.verbose)?;
 
     // Print parsed arguments at debug level
     clerk::debug!("{:?}", args);

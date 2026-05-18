@@ -34,8 +34,8 @@ checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
 
 [[package]]
 name = "arbor"
-version = "2026.5.1"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.1#443e7962f066f2dcbf65dfa107663c668d9fd807"
+version = "2026.5.14"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.14#de42481a817bc689545e734d4a40952137520e1d"
 dependencies = [
  "textwrap",
 ]
@@ -173,11 +173,12 @@ dependencies = [
 
 [[package]]
 name = "clerk"
-version = "2026.5.1"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.1#443e7962f066f2dcbf65dfa107663c668d9fd807"
+version = "2026.5.14"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.14#de42481a817bc689545e734d4a40952137520e1d"
 dependencies = [
  "chrono",
  "owo-colors",
+ "thiserror",
  "tracing",
  "tracing-core",
  "tracing-subscriber",
@@ -231,8 +232,8 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "envoy"
-version = "2026.5.1"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.1#443e7962f066f2dcbf65dfa107663c668d9fd807"
+version = "2026.5.14"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.14#de42481a817bc689545e734d4a40952137520e1d"
 dependencies = [
  "thiserror",
 ]
@@ -502,8 +503,8 @@ checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
 
 [[package]]
 name = "mischief"
-version = "2026.5.1"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.1#443e7962f066f2dcbf65dfa107663c668d9fd807"
+version = "2026.5.14"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.14#de42481a817bc689545e734d4a40952137520e1d"
 dependencies = [
  "arbor",
  "mischief-macros",
@@ -516,8 +517,8 @@ dependencies = [
 
 [[package]]
 name = "mischief-macros"
-version = "2026.5.1"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.1#443e7962f066f2dcbf65dfa107663c668d9fd807"
+version = "2026.5.14"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.14#de42481a817bc689545e734d4a40952137520e1d"
 dependencies = [
  "quote",
  "syn",

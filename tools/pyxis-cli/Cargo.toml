@@ -8,16 +8,12 @@ name = "pyxis"
 path = "src/main.rs"
 
 [dependencies]
-clerk = {
-  git = "https://github.com/Glatzel/toolbox",
-  tag = "v2026.5.18",
-  features = ["tracing"]
-}
-mischief = {
-  git = "https://github.com/Glatzel/toolbox",
-  tag = "v2026.5.18",
-  features = ["fancy"]
-}
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.5.18", features = [
+  "tracing"
+] }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.5.18", features = [
+  "fancy"
+] }
 
 proj = { path = "../../rust/crates/proj" }
 pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }

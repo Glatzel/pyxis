@@ -370,10 +370,9 @@ impl Proj {
             .with_or_default(indentation_width, "INDENTATION_WIDTH", "2")?
             .with_or_default(schema, "SCHEMA", "")?;
 
-        let result = unsafe {
-            proj_sys::proj_as_projjson(self.ctx_ptr(), self.ptr(), options.as_ptr())
-        }
-        .to_string()?;
+        let result =
+            unsafe { proj_sys::proj_as_projjson(self.ctx_ptr(), self.ptr(), options.as_ptr()) }
+                .to_string()?;
         check_result!(self);
         Ok(result)
     }

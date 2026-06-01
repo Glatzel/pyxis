@@ -66,11 +66,7 @@ impl crate::Context {
             .collect::<Result<Vec<_>, _>>()?
             .to_vec_cstring()?;
         unsafe {
-            proj_sys::proj_context_set_search_paths(
-                self.ptr(),
-                len as i32,
-                paths.as_ptr(),
-            );
+            proj_sys::proj_context_set_search_paths(self.ptr(), len as i32, paths.as_ptr());
         };
         check_result!(self);
         Ok(self)

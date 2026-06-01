@@ -462,7 +462,7 @@ impl Context {
                 owned.push_option(geoid_model_auth_name)?,
                 owned.push_option(geoid_model_code)?,
                 geoid_geog_crs.map_or(ptr::null(), |crs| crs.ptr()),
-                options.as_vec_ptr().as_ptr(),
+                options.as_ptr(),
             )
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)

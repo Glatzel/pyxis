@@ -8,10 +8,10 @@
 //! - The `ProjOptions` struct for building and managing PROJ options as
 //!   CStrings.
 extern crate alloc;
-use alloc::ffi::CString;
+
 use core::ffi::c_char;
 
-use envoy::ToCString;
+use envoy::{ToCString, VecCString};
 
 use crate::data_types::ProjError;
 
@@ -58,14 +58,14 @@ impl_to_option_string!(crate::data_types::iso19111::AllowIntermediateCrs);
 /// strings.
 pub(crate) struct ProjOptions {
     /// The list of options as CStrings, suitable for passing to C APIs.
-    options: Vec<CString>,
+    options: VecCString,
 }
 
 impl ProjOptions {
     /// Creates a new `ProjOptions` with a specified capacity.
     pub fn new(capacity: usize) -> ProjOptions {
         Self {
-            options: Vec::with_capacity(capacity),
+            options: VecCString::with_capacity(capacity),
         }
     }
 
@@ -130,13 +130,7 @@ impl ProjOptions {
     }
 }
 impl envoy::AsVecPtr for ProjOptions {
-    fn as_vec_ptr(&self) -> Vec<*const c_char> {
-        let mut vec_ptr = self
-            .options
-            .iter()
-            .map(|s| s.as_ptr())
-            .collect::<Vec<*const c_char>>();
-        vec_ptr.push(std::ptr::null());
-        vec_ptr
-    }
+    fn as_ptr(&mut self) -> *const *const c_char { self.options.as_ptr() }
+
+    fn as_mut_ptr(&mut self) -> *mut *mut c_char { self.options.as_mut_ptr() }
 }

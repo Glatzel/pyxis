@@ -338,7 +338,7 @@ impl Proj {
             proj_sys::proj_crs_create_bound_crs_to_WGS84(
                 self.ctx_ptr(),
                 self.ptr(),
-                options.as_vec_ptr().as_ptr(),
+                options.as_ptr(),
             )
         };
         crate::Proj::new(self.arc_ctx_ptr(), ptr)

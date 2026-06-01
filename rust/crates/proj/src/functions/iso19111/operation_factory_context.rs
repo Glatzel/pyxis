@@ -262,12 +262,12 @@ impl OperationFactoryContext {
         &self,
         list_of_auth_name_codes: &[&str],
     ) -> Result<&Self, ProjError> {
-        let list_of_auth_name_codes = list_of_auth_name_codes.to_vec_cstring()?;
+        let mut list_of_auth_name_codes = list_of_auth_name_codes.to_vec_cstring()?;
         unsafe {
             proj_sys::proj_operation_factory_context_set_allowed_intermediate_crs(
                 self.arc_ctx_ptr.ptr(),
                 self.ptr,
-                list_of_auth_name_codes.as_vec_ptr().as_ptr(),
+                list_of_auth_name_codes.as_ptr(),
             );
         }
         Ok(self)

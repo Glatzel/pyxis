@@ -212,7 +212,7 @@ impl crate::Context {
                 source_crs.ptr(),
                 target_crs.ptr(),
                 area.ptr,
-                options.as_vec_ptr().as_ptr(),
+                options.as_ptr(),
             )
         };
         check_result!(self);

@@ -87,7 +87,7 @@ impl InsertObjectSession {
         numeric_codes: bool,
         allowed_authorities: Option<&[&str]>,
     ) -> Result<Vec<String>, ProjError> {
-        let allowed_authorities: VecCString = match allowed_authorities {
+        let mut allowed_authorities: VecCString = match allowed_authorities {
             Some(v) => v.to_vec_cstring()?,
             None => VecCString::new(),
         };
@@ -99,7 +99,7 @@ impl InsertObjectSession {
                 authority.to_cstring()?.as_ptr(),
                 code.to_cstring()?.as_ptr(),
                 numeric_codes as i32,
-                allowed_authorities.as_vec_ptr().as_ptr(),
+                allowed_authorities.as_ptr(),
                 ptr::null(),
             )
         };

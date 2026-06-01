@@ -166,7 +166,7 @@ impl crate::Context {
             proj_sys::proj_create_from_wkt(
                 self.ptr(),
                 wkt.to_cstring()?.as_ptr(),
-                options.as_vec_ptr().as_ptr(),
+                options.as_ptr(),
                 &mut out_warnings,
                 &mut out_grammar_errors,
             )

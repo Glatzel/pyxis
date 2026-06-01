@@ -297,7 +297,7 @@ impl Proj {
                 self.ctx_ptr(),
                 self.ptr(),
                 wkt_type as u32,
-                options.as_vec_ptr().as_ptr(),
+                options.as_ptr(),
             )
         }
         .to_string()?;
@@ -339,7 +339,7 @@ impl Proj {
                 self.ctx_ptr(),
                 self.ptr(),
                 string_type as u32,
-                options.as_vec_ptr().as_ptr(),
+                options.as_ptr(),
             )
         }
         .to_string()?;
@@ -371,7 +371,7 @@ impl Proj {
             .with_or_default(schema, "SCHEMA", "")?;
 
         let result = unsafe {
-            proj_sys::proj_as_projjson(self.ctx_ptr(), self.ptr(), options.as_vec_ptr().as_ptr())
+            proj_sys::proj_as_projjson(self.ctx_ptr(), self.ptr(), options.as_ptr())
         }
         .to_string()?;
         check_result!(self);

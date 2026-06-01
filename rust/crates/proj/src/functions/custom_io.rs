@@ -57,7 +57,7 @@ impl crate::Context {
     pub fn set_search_paths(&self, paths: &[&Path]) -> Result<&Self, ProjError> {
         clerk::debug!("search_paths:{:?}", paths);
         let len = paths.len();
-        let paths: VecCString = paths
+        let mut paths: VecCString = paths
             .iter()
             .map(|p| {
                 p.to_str()
@@ -69,7 +69,7 @@ impl crate::Context {
             proj_sys::proj_context_set_search_paths(
                 self.ptr(),
                 len as i32,
-                paths.as_vec_ptr().as_ptr(),
+                paths.as_ptr(),
             );
         };
         check_result!(self);

@@ -185,6 +185,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "clerk"
+version = "2026.5.29"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.29#4244c1ef007e34d240512ea2f7fdc26d11cbcf99"
+dependencies = [
+ "thiserror",
+]
+
+[[package]]
 name = "console"
 version = "0.16.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -252,8 +260,8 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "envoy"
-version = "2026.5.18"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.18#43a9c4c6ebca3ec832be961ba217d9e254a3f606"
+version = "2026.5.29"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.29#4244c1ef007e34d240512ea2f7fdc26d11cbcf99"
 dependencies = [
  "thiserror",
 ]
@@ -765,7 +773,7 @@ dependencies = [
 name = "proj"
 version = "0.0.43"
 dependencies = [
- "clerk",
+ "clerk 2026.5.29",
  "derive-getters",
  "envoy",
  "num_enum",
@@ -787,7 +795,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.43"
 dependencies = [
- "clerk",
+ "clerk 2026.5.29",
  "num-traits",
  "serde",
 ]
@@ -798,7 +806,7 @@ version = "0.0.43"
 dependencies = [
  "assert_cmd",
  "bpaf",
- "clerk",
+ "clerk 2026.5.18",
  "insta",
  "mischief",
  "proj",

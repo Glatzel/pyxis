@@ -306,6 +306,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "clerk"
+version = "2026.5.29"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.29#4244c1ef007e34d240512ea2f7fdc26d11cbcf99"
+dependencies = [
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "compact_str"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -562,8 +570,8 @@ checksum = "91622ff5e7162018101f2fea40d6ebf4a78bbe5a49736a2020649edf9693679e"
 
 [[package]]
 name = "envoy"
-version = "2026.5.18"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.18#43a9c4c6ebca3ec832be961ba217d9e254a3f606"
+version = "2026.5.29"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.29#4244c1ef007e34d240512ea2f7fdc26d11cbcf99"
 dependencies = [
  "thiserror 2.0.18",
 ]
@@ -819,7 +827,7 @@ dependencies = [
  "async-trait",
  "bpaf",
  "chrono",
- "clerk",
+ "clerk 2026.5.18",
  "crossterm",
  "directories",
  "float-cmp",
@@ -1687,7 +1695,7 @@ dependencies = [
 name = "proj"
 version = "0.0.43"
 dependencies = [
- "clerk",
+ "clerk 2026.5.29",
  "derive-getters",
  "envoy",
  "num_enum",
@@ -1709,7 +1717,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.43"
 dependencies = [
- "clerk",
+ "clerk 2026.5.29",
  "num-traits",
  "serde",
 ]
@@ -1841,7 +1849,7 @@ version = "2026.5.18"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.18#43a9c4c6ebca3ec832be961ba217d9e254a3f606"
 dependencies = [
  "async-trait",
- "clerk",
+ "clerk 2026.5.18",
  "thiserror 2.0.18",
  "tokio",
 ]
@@ -1852,7 +1860,7 @@ version = "2026.5.18"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.18#43a9c4c6ebca3ec832be961ba217d9e254a3f606"
 dependencies = [
  "chrono",
- "clerk",
+ "clerk 2026.5.18",
  "derive-getters",
  "hashbrown 0.17.1",
  "rax",
@@ -2098,7 +2106,7 @@ name = "serialport-ext"
 version = "2026.5.18"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.18#43a9c4c6ebca3ec832be961ba217d9e254a3f606"
 dependencies = [
- "clerk",
+ "clerk 2026.5.18",
  "serialport",
 ]
 

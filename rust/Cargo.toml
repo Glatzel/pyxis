@@ -13,20 +13,20 @@ clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.5.29" }
 envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.5.29" }
 mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.5.29" }
 
-bindgen = "0.72"
-criterion = { package = "codspeed-criterion-compat", version = "4.0.0" }
+bindgen = "0.72.1"
+criterion = { package = "codspeed-criterion-compat", version = "4.7.0" }
 derive-getters = { version = "0.5.0", features = ["auto_copy_getters"] }
 dunce = "1.0.5"
 float-cmp = "0.10.0"
-insta = "1.46.1"
-libc = "0.2"
-num_enum = "0.7.4"
+insta = "1.48.0"
+libc = "0.2.186"
+num_enum = "0.7.6"
 num-traits = "0.2.19"
 path-slash = "0.2.1"
-rand = "0.10.0"
-serde = { version = "1.0.226", features = ["derive"] }
+rand = "0.10.1"
+serde = { version = "1.0.228", features = ["derive"] }
 strum = { version = "0.28", features = ["derive"] }
-thiserror = "2.0.16"
+thiserror = "2.0.18"
 
 [profile.dev.package]
 insta.opt-level = 3

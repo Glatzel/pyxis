@@ -8,10 +8,10 @@ crate-type = ["cdylib"]
 name = "pyxis_py"
 
 [dependencies]
-numpy = "0.28.0"
-pyo3 = { version = "0.28.2", features = ["abi3-py313", "extension-module"] }
+numpy = "0.29.0"
+pyo3 = { version = "0.29.0", features = ["abi3-py313", "extension-module"] }
 pyxis = { path = "./../rust/crates/pyxis/" }
-rayon = "1.11.0"
+rayon = "1.12.0"
 
 [profile.release]
 opt-level = 3

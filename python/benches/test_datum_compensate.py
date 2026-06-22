@@ -69,7 +69,7 @@ def test_numpy(benchmark, sample_coords):
 def test_numexpr(benchmark, sample_coords):
     ne = pytest.importorskip("numexpr")
 
-    def vector(x, y, h, r=6378_137.0, x0=0.0, y0=500000.0):
+    def vector(x, y, h, r=6378_137.0):
         q = h / r
         factor = q / (1 + q)  # noqa: F841
         ne.evaluate("x - factor * (x - 500000)", out=x)

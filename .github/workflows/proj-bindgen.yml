@@ -7,7 +7,19 @@ permissions:
   contents: read
 jobs:
   proj-bindings:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - machine: windows-latest
+            os: win
+          - machine: ubuntu-latest
+            os: linux
+          - machine: macos-latest
+            os: macos
+          - machine: ubuntu-24.04-arm
+            os: linux-aarch64
+    runs-on: ${{matrix.machine}}
     env:
       RUSTFLAGS: "-Dwarnings"
     steps:
@@ -20,6 +32,6 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: proj-bindings
-          path: rust/crates/proj-sys/src/bindings.rs
+          name: proj-bindings-${{matrix.os}}
+          path: rust/crates/proj-sys/src/bindings-${{matrix.os}}.rs
           if-no-files-found: error

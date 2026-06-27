@@ -39,7 +39,7 @@ fn main() {
 
     println!("cargo:rustc-link-lib=proj");
 
-    if env::var("UPDATE_PROJ_BINDGEN").is_ok() {
+    if env::var("UPDATE_PROJ_BINDINGS").is_ok() {
         let include_dir = proj_root.join("include");
         let header = include_dir.join("proj.h").to_slash_lossy().to_string();
 
@@ -51,8 +51,35 @@ fn main() {
             .use_core()
             .generate()
             .unwrap();
-        bindings
-            .write_to_file("./src/bindings.rs")
-            .expect("Couldn't write bindings to './src/bindings.rs' !");
+        match env::var("CARGO_CFG_TARGET_OS").unwrap().as_str() {
+            "windows" => {
+                bindings
+                    .write_to_file("./src/bindings-win.rs")
+                    .expect("Couldn't write bindings!");
+            }
+            "linux" => match env::var("CARGO_CFG_TARGET_ARCH").unwrap().as_str() {
+                "x86_64" => {
+                    bindings
+                        .write_to_file("./src/bindings-linux.rs")
+                        .expect("Couldn't write bindings!");
+                }
+                "aarch64" => {
+                    bindings
+                        .write_to_file("./src/bindings-linux-aarch64.rs")
+                        .expect("Couldn't write bindings!");
+                }
+                other => {
+                    panic!("Unsupported OS: {other}")
+                }
+            },
+            "macos" => {
+                bindings
+                    .write_to_file("./src/bindings-macos.rs")
+                    .expect("Couldn't write bindings!");
+            }
+            other => {
+                panic!("Unsupported OS: {other}")
+            }
+        }
     }
 }

@@ -121,7 +121,6 @@ jobs:
           toolchain: nightly
           components: ${{ matrix.machine == 'ubuntu-latest' && 'clippy' || null }}
       - uses: ./.github/actions/rust/cargo-clippy
-        if: ${{ matrix.machine == 'ubuntu-latest' }}
         with:
           working-directory: ${{env.WORKDIR}}
       - uses: ./.github/actions/rust/cargo-doc

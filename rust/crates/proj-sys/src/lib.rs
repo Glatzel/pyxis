@@ -7,4 +7,4 @@
     dead_code
 )]
 
-include!("./bindings.rs");
+include!("bindings.rs");

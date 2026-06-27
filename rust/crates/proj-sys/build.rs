@@ -39,7 +39,7 @@ fn main() {
 
     println!("cargo:rustc-link-lib=proj");
 
-    if env::var("UPDATE_PROJ_BINDGEN").is_ok() {
+    if env::var("UPDATE_PROJ_BINDINGS").is_ok() {
         let include_dir = proj_root.join("include");
         let header = include_dir.join("proj.h").to_slash_lossy().to_string();
 

@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - if: ${{github.event_name == 'pull_request' }}
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - id: main
         if: ${{github.event_name == 'pull_request'}}
         uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
@@ -81,7 +81,7 @@ jobs:
 
     runs-on: ${{matrix.machine}}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/rust/setup-rust
         with:
           components: ${{ matrix.machine == 'ubuntu-latest' && 'clippy' || null }}
@@ -113,7 +113,7 @@ jobs:
       run:
         working-directory: ${{env.WORKDIR}}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           submodules: true
       - uses: ./.github/actions/rust/setup-rust
@@ -140,7 +140,7 @@ jobs:
     if: ${{ needs.changed.outputs.changed-tool-gnss-receiver != 'false' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/rust/setup-rust
         with:
           # toolchain: nightly
@@ -159,7 +159,7 @@ jobs:
     if: ${{ needs.changed.outputs.changed-tool-pyxis-cli != 'false' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/rust/setup-rust
         with:
           toolchain: nightly
@@ -178,7 +178,7 @@ jobs:
     if: ${{ needs.changed.outputs.changed-benchmark != 'false' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/rust/setup-rust
       #rust
       - uses: ./.github/actions/rust/cargo-bench

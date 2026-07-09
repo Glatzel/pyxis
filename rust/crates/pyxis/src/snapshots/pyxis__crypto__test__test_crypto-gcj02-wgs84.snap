@@ -1,0 +1,8 @@
+---
+source: crates/pyxis/src/crypto.rs
+expression: p
+---
+(
+    119.99533947604732,
+    30.002465711546083,
+)

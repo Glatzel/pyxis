@@ -23,7 +23,9 @@ libc = "0.2.186"
 num_enum = "0.7.6"
 num-traits = "0.2.19"
 path-slash = "0.2.1"
+proptest = "1.11.0"
 rand = "0.10.1"
+rstest = "0.26.1"
 serde = { version = "1.0.228", features = ["derive"] }
 strum = { version = "0.28", features = ["derive"] }
 thiserror = "2.0.18"

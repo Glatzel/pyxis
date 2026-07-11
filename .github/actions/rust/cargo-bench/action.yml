@@ -25,7 +25,7 @@ runs:
     - name: Build benchmark targets
       run: |
         if (Test-Path ./scripts/setup.ps1) { . ./scripts/setup.ps1 }
-        cargo codspeed build ${{ inputs.options }} -- ${{ inputs.args }}
+        cargo codspeed build ${{ inputs.options }}
       working-directory: ${{ inputs.working-directory }}
       shell: pwsh
 

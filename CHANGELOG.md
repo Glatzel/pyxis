@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.44] - 2026-07-11
+
+### Changed
+
+- Split tools by @Glatzel in [#857](https://github.com/Glatzel/pyxis/pull/857)
+- Update envoy by @Glatzel in [#904](https://github.com/Glatzel/pyxis/pull/904)
+
+### Fixed
+
+- **(gnss-receiver)** Logging by @Glatzel in [#879](https://github.com/Glatzel/pyxis/pull/879)
+
+### Removed
+
+- Remove useless  dep by @Glatzel in [#866](https://github.com/Glatzel/pyxis/pull/866)
+
+### Testing
+
+- Add prop test by @Glatzel in [#928](https://github.com/Glatzel/pyxis/pull/928)
+
 ## [0.0.43] - 2026-04-11
 
 ### Refactor
@@ -656,6 +675,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1] - 2025-02-05
 
+[0.0.44]: https://github.com/Glatzel/pyxis/compare/v0.0.43..v0.0.44
 [0.0.43]: https://github.com/Glatzel/pyxis/compare/v0.0.42..v0.0.43
 [0.0.42]: https://github.com/Glatzel/pyxis/compare/v0.0.41..v0.0.42
 [0.0.39]: https://github.com/Glatzel/pyxis/compare/v0.0.38..v0.0.39

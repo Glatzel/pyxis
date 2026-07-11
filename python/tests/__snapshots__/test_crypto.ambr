@@ -1,0 +1,145 @@
+# serializer version: 1
+# name: test_convert[False-BD09-GCJ02][COORD_CRYPTO_SPACE.BD09-COORD_CRYPTO_SPACE.GCJ02-False]
+  tuple(
+    119.9935908161529,
+    29.99366216605467,
+  )
+# ---
+# name: test_convert[False-BD09-WGS84][COORD_CRYPTO_SPACE.BD09-COORD_CRYPTO_SPACE.WGS84-False]
+  tuple(
+    119.98894740039006,
+    29.996147375193637,
+  )
+# ---
+# name: test_convert[False-GCJ02-BD09][COORD_CRYPTO_SPACE.GCJ02-COORD_CRYPTO_SPACE.BD09-False]
+  tuple(
+    120.00640999946,
+    30.006359999864998,
+  )
+# ---
+# name: test_convert[False-GCJ02-WGS84][COORD_CRYPTO_SPACE.GCJ02-COORD_CRYPTO_SPACE.WGS84-False]
+  tuple(
+    119.99533947604732,
+    30.002465711546083,
+  )
+# ---
+# name: test_convert[False-WGS84-BD09][COORD_CRYPTO_SPACE.WGS84-COORD_CRYPTO_SPACE.BD09-False]
+  tuple(
+    120.01107069895308,
+    30.003883011903074,
+  )
+# ---
+# name: test_convert[False-WGS84-GCJ02][COORD_CRYPTO_SPACE.WGS84-COORD_CRYPTO_SPACE.GCJ02-False]
+  tuple(
+    120.00466052395268,
+    29.997534288453917,
+  )
+# ---
+# name: test_convert[True-BD09-GCJ02][COORD_CRYPTO_SPACE.BD09-COORD_CRYPTO_SPACE.GCJ02-True]
+  tuple(
+    120.00641036625308,
+    30.006360087351922,
+  )
+# ---
+# name: test_convert[True-BD09-WGS84][COORD_CRYPTO_SPACE.BD09-COORD_CRYPTO_SPACE.WGS84-True]
+  tuple(
+    120.01108287854399,
+    30.003897602175986,
+  )
+# ---
+# name: test_convert[True-GCJ02-BD09][COORD_CRYPTO_SPACE.GCJ02-COORD_CRYPTO_SPACE.BD09-True]
+  tuple(
+    120.00640999946,
+    30.006359999864998,
+  )
+# ---
+# name: test_convert[True-GCJ02-WGS84][COORD_CRYPTO_SPACE.GCJ02-COORD_CRYPTO_SPACE.WGS84-True]
+  tuple(
+    120.00467242479846,
+    29.997548436345706,
+  )
+# ---
+# name: test_convert[True-WGS84-BD09][COORD_CRYPTO_SPACE.WGS84-COORD_CRYPTO_SPACE.BD09-True]
+  tuple(
+    120.01107069895308,
+    30.003883011903074,
+  )
+# ---
+# name: test_convert[True-WGS84-GCJ02][COORD_CRYPTO_SPACE.WGS84-COORD_CRYPTO_SPACE.GCJ02-True]
+  tuple(
+    120.00466052395268,
+    29.997534288453917,
+  )
+# ---
+# name: test_convert_array[False-BD09-GCJ02][COORD_CRYPTO_SPACE.BD09-COORD_CRYPTO_SPACE.GCJ02-False]
+  tuple(
+    array([119.99359082, 120.9934641 ]),
+    array([29.99366217, 30.99406129]),
+  )
+# ---
+# name: test_convert_array[False-BD09-WGS84][COORD_CRYPTO_SPACE.BD09-COORD_CRYPTO_SPACE.WGS84-False]
+  tuple(
+    array([119.9889474 , 120.98912432]),
+    array([29.99614738, 30.99623536]),
+  )
+# ---
+# name: test_convert_array[False-GCJ02-BD09][COORD_CRYPTO_SPACE.GCJ02-COORD_CRYPTO_SPACE.BD09-False]
+  tuple(
+    array([120.00641   , 121.00656328]),
+    array([30.00636  , 31.0058228]),
+  )
+# ---
+# name: test_convert_array[False-GCJ02-WGS84][COORD_CRYPTO_SPACE.GCJ02-COORD_CRYPTO_SPACE.WGS84-False]
+  tuple(
+    array([119.99533948, 120.99563571]),
+    array([30.00246571, 31.00215075]),
+  )
+# ---
+# name: test_convert_array[False-WGS84-BD09][COORD_CRYPTO_SPACE.WGS84-COORD_CRYPTO_SPACE.BD09-False]
+  tuple(
+    array([120.0110707 , 121.01094558]),
+    array([30.00388301, 31.0036058 ]),
+  )
+# ---
+# name: test_convert_array[False-WGS84-GCJ02][COORD_CRYPTO_SPACE.WGS84-COORD_CRYPTO_SPACE.GCJ02-False]
+  tuple(
+    array([120.00466052, 121.00436429]),
+    array([29.99753429, 30.99784925]),
+  )
+# ---
+# name: test_convert_array[True-BD09-GCJ02][COORD_CRYPTO_SPACE.BD09-COORD_CRYPTO_SPACE.GCJ02-True]
+  tuple(
+    array([120.00641037, 121.00656364]),
+    array([30.00636009, 31.00582178]),
+  )
+# ---
+# name: test_convert_array[True-BD09-WGS84][COORD_CRYPTO_SPACE.BD09-COORD_CRYPTO_SPACE.WGS84-True]
+  tuple(
+    array([120.01108288, 121.01096195]),
+    array([30.0038976, 31.0036165]),
+  )
+# ---
+# name: test_convert_array[True-GCJ02-BD09][COORD_CRYPTO_SPACE.GCJ02-COORD_CRYPTO_SPACE.BD09-True]
+  tuple(
+    array([120.00641   , 121.00656328]),
+    array([30.00636  , 31.0058228]),
+  )
+# ---
+# name: test_convert_array[True-GCJ02-WGS84][COORD_CRYPTO_SPACE.GCJ02-COORD_CRYPTO_SPACE.WGS84-True]
+  tuple(
+    array([120.00467242, 121.00438022]),
+    array([29.99754844, 30.99786128]),
+  )
+# ---
+# name: test_convert_array[True-WGS84-BD09][COORD_CRYPTO_SPACE.WGS84-COORD_CRYPTO_SPACE.BD09-True]
+  tuple(
+    array([120.0110707 , 121.01094558]),
+    array([30.00388301, 31.0036058 ]),
+  )
+# ---
+# name: test_convert_array[True-WGS84-GCJ02][COORD_CRYPTO_SPACE.WGS84-COORD_CRYPTO_SPACE.GCJ02-True]
+  tuple(
+    array([120.00466052, 121.00436429]),
+    array([29.99753429, 30.99784925]),
+  )
+# ---

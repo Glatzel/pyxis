@@ -184,7 +184,7 @@ jobs:
       - uses: ./.github/actions/rust/cargo-bench
         with:
           working-directory: ./rust
-          args: -p pyxis
+          options: -p pyxis
       # python
       - run: pixi run maturin develop --profile release
         shell: pwsh

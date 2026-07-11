@@ -18,7 +18,7 @@ scipy = "==1.18.0"
 [feature.test.dependencies]
 pytest = "==9.1.1"
 pytest-cov = "==7.1.0"
-syrupy = "==5.1.0"
+syrupy = "==5.5.2"
 
 [feature.bench]
 platforms = ["linux-64"]

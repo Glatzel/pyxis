@@ -109,7 +109,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_structure>
     pub fn get_database_structure(&self) -> Result<Vec<String>, ProjError> {
         let ptr = unsafe { proj_sys::proj_context_get_database_structure(self.ptr(), ptr::null()) };
-        let out_vec = ptr.to_vec_string()?;
+        let out_vec = ptr.to_vec_string_null_terminated()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
         }
@@ -171,13 +171,13 @@ impl crate::Context {
                 &mut out_grammar_errors,
             )
         };
-        let _ = out_warnings.to_vec_string().map(|w| {
+        let _ = out_warnings.to_vec_string_null_terminated().map(|w| {
             w.iter().for_each(|_w| {
                 clerk::warn!("{_w}");
             })
         });
 
-        let _ = out_grammar_errors.to_vec_string().map(|e| {
+        let _ = out_grammar_errors.to_vec_string_null_terminated().map(|e| {
             e.iter().for_each(|_e| {
                 clerk::warn!("{_e}");
             })
@@ -324,7 +324,7 @@ impl crate::Context {
             )
         };
         check_result!(ptr.is_null(), "Error");
-        let out_vec = ptr.to_vec_string()?;
+        let out_vec = ptr.to_vec_string_null_terminated()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
         }
@@ -338,7 +338,7 @@ impl crate::Context {
     pub fn get_authorities_from_database(&self) -> Result<Vec<String>, ProjError> {
         let ptr = unsafe { proj_sys::proj_get_authorities_from_database(self.ptr()) };
         check_result!(ptr.is_null(), "Error");
-        let out_vec = ptr.to_vec_string()?;
+        let out_vec = ptr.to_vec_string_null_terminated()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
         }
@@ -371,7 +371,7 @@ impl crate::Context {
             )
         };
         check_result!(ptr.is_null(), "Error");
-        let out_vec = ptr.to_vec_string()?;
+        let out_vec = ptr.to_vec_string_null_terminated()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
         }

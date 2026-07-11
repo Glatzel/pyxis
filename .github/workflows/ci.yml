@@ -131,7 +131,7 @@ jobs:
       - uses: ./.github/actions/rust/cargo-test
         with:
           working-directory: ${{env.WORKDIR}}
-          global-args: --workspace --all-features
+          global-options: --workspace --all-features
       - uses: ./.github/actions/common/codecov
         if: ${{!cancelled()}}
 

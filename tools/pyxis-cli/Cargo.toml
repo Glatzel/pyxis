@@ -11,9 +11,7 @@ path = "src/main.rs"
 clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.7.6", features = [
   "tracing"
 ] }
-mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.7.6", features = [
-  "fancy"
-] }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.7.6" }
 
 proj = { path = "../../rust/crates/proj" }
 pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }

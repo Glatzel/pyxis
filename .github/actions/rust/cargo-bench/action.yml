@@ -11,10 +11,6 @@ inputs:
     description: Options passed to cargo fuzz test
     required: false
     default: --all-features
-  args:
-    description: Additional arguments passed to cargo codspeed
-    required: false
-    default: -D warnings
 
 runs:
   using: composite

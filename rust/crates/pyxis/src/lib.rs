@@ -10,7 +10,6 @@ mod space;
 pub use datum_compensate::*;
 pub use ellipsoid::*;
 pub use linear::*;
-use primitive::GeoCast;
 pub use primitive::GeoFloat;
 pub use space::*;
 mod gauss_projection;

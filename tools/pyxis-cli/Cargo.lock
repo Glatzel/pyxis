@@ -186,8 +186,8 @@ dependencies = [
 
 [[package]]
 name = "clerk"
-version = "2026.5.29"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.29#4244c1ef007e34d240512ea2f7fdc26d11cbcf99"
+version = "2026.7.6"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.6#28ff5e0a8ef9266859a82c0fdc31ed5e319f4da6"
 dependencies = [
  "thiserror",
 ]
@@ -260,8 +260,8 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "envoy"
-version = "2026.5.29"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.29#4244c1ef007e34d240512ea2f7fdc26d11cbcf99"
+version = "2026.7.6"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.6#28ff5e0a8ef9266859a82c0fdc31ed5e319f4da6"
 dependencies = [
  "thiserror",
 ]
@@ -773,7 +773,7 @@ dependencies = [
 name = "proj"
 version = "0.0.44"
 dependencies = [
- "clerk 2026.5.29",
+ "clerk 2026.7.6",
  "derive-getters",
  "envoy",
  "num_enum",
@@ -795,7 +795,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.44"
 dependencies = [
- "clerk 2026.5.29",
+ "clerk 2026.7.6",
  "num-traits",
  "serde",
 ]

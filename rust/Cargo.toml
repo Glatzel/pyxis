@@ -9,9 +9,9 @@ edition = "2024"
 [workspace.dependencies]
 proj-sys = { path = "./crates/proj-sys" }
 
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.7.6" }
-envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.7.6" }
-mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.7.6" }
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.7.19" }
+envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.7.19" }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.7.19" }
 
 bindgen = "0.72.1"
 criterion = { package = "codspeed-criterion-compat", version = "5.0.1" }
@@ -25,9 +25,9 @@ num-traits = "0.2.19"
 path-slash = "0.2.1"
 proptest = "1.11.0"
 rstest = "0.26.1"
-serde = { version = "1.0.228", features = ["derive"] }
+serde = { version = "1.0.229", features = ["derive"] }
 strum = { version = "0.28", features = ["derive"] }
-thiserror = "2.0.18"
+thiserror = "2.0.19"
 
 [profile.dev.package]
 insta.opt-level = 3

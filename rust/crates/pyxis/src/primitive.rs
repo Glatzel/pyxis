@@ -2,46 +2,13 @@ use core::fmt::{Debug, Display, LowerExp};
 
 use num_traits::{ConstOne, Float, FloatConst, NumAssign};
 
-pub trait GeoFloat:
-    Float
-    + FloatConst
-    + ConstOne
-    + NumAssign
-    + Debug
-    + Display
-    + LowerExp
-    + GeoCast<f32>
-    + GeoCast<f64>
-    + GeoCast<Self>
-    + PartialEq
-{
+pub trait GeoFloat: Float + FloatConst + ConstOne + NumAssign + Debug + LowerExp + Display {
     const TWO: Self;
-}
-pub trait GeoCast<Src>: Sized {
-    fn from(src: Src) -> Self;
-}
-
-impl GeoCast<f32> for f32 {
-    #[inline(always)]
-    fn from(v: f32) -> Self { v }
-}
-impl GeoCast<f64> for f64 {
-    #[inline(always)]
-    fn from(v: f64) -> Self { v }
-}
-
-impl GeoCast<f32> for f64 {
-    #[inline(always)]
-    fn from(v: f32) -> Self { v as f64 }
-}
-impl GeoCast<f64> for f32 {
-    #[inline(always)]
-    fn from(v: f64) -> Self { v as f32 }
 }
 
 macro_rules! num {
     ($value:expr) => {
-        <T as $crate::GeoCast<_>>::from($value)
+        <T>::from($value).unwrap()
     };
 }
 pub(crate) use num;

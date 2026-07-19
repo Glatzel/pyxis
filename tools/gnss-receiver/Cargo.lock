@@ -275,8 +275,8 @@ dependencies = [
 
 [[package]]
 name = "clerk"
-version = "2026.5.29"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.29#4244c1ef007e34d240512ea2f7fdc26d11cbcf99"
+version = "2026.7.6"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.6#28ff5e0a8ef9266859a82c0fdc31ed5e319f4da6"
 dependencies = [
  "thiserror 2.0.18",
 ]
@@ -532,8 +532,8 @@ checksum = "91622ff5e7162018101f2fea40d6ebf4a78bbe5a49736a2020649edf9693679e"
 
 [[package]]
 name = "envoy"
-version = "2026.5.29"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.29#4244c1ef007e34d240512ea2f7fdc26d11cbcf99"
+version = "2026.7.6"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.6#28ff5e0a8ef9266859a82c0fdc31ed5e319f4da6"
 dependencies = [
  "thiserror 2.0.18",
 ]
@@ -768,7 +768,7 @@ checksum = "0cc23270f6e1808e30a928bdc84dea0b9b4136a8bc82338574f23baf47bbd280"
 
 [[package]]
 name = "gnss-receiver"
-version = "0.0.43"
+version = "0.0.44"
 dependencies = [
  "bpaf",
  "chrono",
@@ -1599,9 +1599,9 @@ dependencies = [
 
 [[package]]
 name = "proj"
-version = "0.0.43"
+version = "0.0.44"
 dependencies = [
- "clerk 2026.5.29",
+ "clerk 2026.7.6",
  "derive-getters",
  "envoy",
  "num_enum",
@@ -1621,9 +1621,9 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.43"
+version = "0.0.44"
 dependencies = [
- "clerk 2026.5.29",
+ "clerk 2026.7.6",
  "num-traits",
  "serde",
 ]

@@ -73,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest, ubuntu-24.04-arm]
+        machine: [windows-latest, ubuntu-latest, ubuntu-26.04-arm]
         include:
           - machine: windows-latest
           - machine: ubuntu-latest
@@ -105,7 +105,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [windows-latest, ubuntu-latest, macos-latest, ubuntu-24.04-arm]
+        machine: [windows-latest, ubuntu-latest, macos-latest, ubuntu-26.04-arm]
     runs-on: ${{ matrix.machine }}
     env:
       WORKDIR: ./rust

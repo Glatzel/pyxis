@@ -203,14 +203,6 @@ dependencies = [
 
 [[package]]
 name = "clerk"
-version = "2026.7.6"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.6#28ff5e0a8ef9266859a82c0fdc31ed5e319f4da6"
-dependencies = [
- "thiserror",
-]
-
-[[package]]
-name = "clerk"
 version = "2026.7.19"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.19#cefed1f40200aec0954979673b1f42e2a1970b97"
 dependencies = [
@@ -290,8 +282,8 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "envoy"
-version = "2026.7.6"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.6#28ff5e0a8ef9266859a82c0fdc31ed5e319f4da6"
+version = "2026.7.19"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.19#cefed1f40200aec0954979673b1f42e2a1970b97"
 dependencies = [
  "thiserror",
 ]
@@ -829,7 +821,7 @@ dependencies = [
 name = "proj"
 version = "0.0.44"
 dependencies = [
- "clerk 2026.7.6",
+ "clerk",
  "derive-getters",
  "envoy",
  "num_enum",
@@ -851,7 +843,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.44"
 dependencies = [
- "clerk 2026.7.6",
+ "clerk",
  "num-traits",
  "serde",
 ]
@@ -862,7 +854,7 @@ version = "0.0.44"
 dependencies = [
  "assert_cmd",
  "bpaf",
- "clerk 2026.7.19",
+ "clerk",
  "insta",
  "mischief",
  "proj",

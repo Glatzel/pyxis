@@ -152,5 +152,5 @@ where
         latitude = new_latitude;
     }
     clerk::warn!("Exceed max iteration number: {max_iter}");
-    return (longitude.to_degrees(), latitude.to_degrees(), height);
+    (longitude.to_degrees(), latitude.to_degrees(), height)
 }

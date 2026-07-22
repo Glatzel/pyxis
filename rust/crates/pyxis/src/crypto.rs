@@ -349,31 +349,29 @@ where
 
         let tmp_lon = dst_lon + d_lon;
         let tmp_lat = dst_lat + d_lat;
-
-        clerk::trace!("iteration: {_i}");
-        clerk::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
-        clerk::trace!("d_lon: {:.2e}, d_lat: {:.2e}", d_lon, d_lat);
-
-        if _i == max_iter - 1 {
-            clerk::warn!("Exceed max iteration num!ber: {max_iter}");
+        #[cfg(debug_assertions)]
+        {
+            clerk::trace!("iteration: {_i}");
+            clerk::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
+            clerk::trace!("d_lon: {:.2e}, d_lat: {:.2e}", d_lon, d_lat);
         }
-
         match threshold_mode {
             CryptoThresholdMode::Distance { semi_major_axis }
                 if haversine_distance(tmp_lon, tmp_lat, dst_lon, dst_lat, *semi_major_axis)
                     < threshold =>
             {
-                break;
+                return (dst_lon, dst_lat);
             }
             CryptoThresholdMode::LonLat
                 if (d_lon).abs() < threshold && (d_lat).abs() < threshold =>
             {
-                break;
+                return (dst_lon, dst_lat);
             }
             _ => (),
         }
         (dst_lon, dst_lat) = (tmp_lon, tmp_lat);
     }
+    clerk::warn!("Exceed max iteration num!ber: {max_iter}");
     (dst_lon, dst_lat)
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b,

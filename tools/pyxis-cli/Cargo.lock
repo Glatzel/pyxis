@@ -49,8 +49,8 @@ checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
 
 [[package]]
 name = "arbor"
-version = "2026.7.19"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.19#cefed1f40200aec0954979673b1f42e2a1970b97"
+version = "2026.7.27"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.27#e551d8418ff3a69cac64446c029f0e17a62b4449"
 dependencies = [
  "textwrap",
 ]
@@ -119,9 +119,9 @@ checksum = "c4512299f36f043ab09a583e57bceb5a5aab7a73db1805848e8fef3c9e8c78b3"
 
 [[package]]
 name = "bpaf"
-version = "0.9.26"
+version = "0.9.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b86829876e7e200161a5aa6ea688d46c32d64d70ee3100127790dde84688d6e"
+checksum = "c670d65eea33846872d5ccf668c00a94c5c67dbdcc0289ea1c362671ce1ddb82"
 dependencies = [
  "bpaf_derive",
 ]
@@ -205,6 +205,14 @@ dependencies = [
 name = "clerk"
 version = "2026.7.19"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.19#cefed1f40200aec0954979673b1f42e2a1970b97"
+dependencies = [
+ "thiserror",
+]
+
+[[package]]
+name = "clerk"
+version = "2026.7.27"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.27#e551d8418ff3a69cac64446c029f0e17a62b4449"
 dependencies = [
  "chrono",
  "owo-colors",
@@ -657,8 +665,8 @@ dependencies = [
 
 [[package]]
 name = "mischief"
-version = "2026.7.19"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.19#cefed1f40200aec0954979673b1f42e2a1970b97"
+version = "2026.7.27"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.27#e551d8418ff3a69cac64446c029f0e17a62b4449"
 dependencies = [
  "arbor",
  "backtrace",
@@ -672,11 +680,11 @@ dependencies = [
 
 [[package]]
 name = "mischief-macros"
-version = "2026.7.19"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.19#cefed1f40200aec0954979673b1f42e2a1970b97"
+version = "2026.7.27"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.27#e551d8418ff3a69cac64446c029f0e17a62b4449"
 dependencies = [
  "quote",
- "syn 3.0.0",
+ "syn 3.0.3",
 ]
 
 [[package]]
@@ -821,7 +829,7 @@ dependencies = [
 name = "proj"
 version = "0.0.44"
 dependencies = [
- "clerk",
+ "clerk 2026.7.19",
  "derive-getters",
  "envoy",
  "num_enum",
@@ -843,7 +851,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.44"
 dependencies = [
- "clerk",
+ "clerk 2026.7.19",
  "num-traits",
  "serde",
 ]
@@ -854,7 +862,7 @@ version = "0.0.44"
 dependencies = [
  "assert_cmd",
  "bpaf",
- "clerk",
+ "clerk 2026.7.27",
  "insta",
  "mischief",
  "proj",
@@ -1016,14 +1024,14 @@ checksum = "e7a5d71263a5a7d47b41f6b3f06ba276f10cc18b0931f1799f710578e2309348"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 3.0.0",
+ "syn 3.0.3",
 ]
 
 [[package]]
 name = "serde_json"
-version = "1.0.150"
+version = "1.0.151"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8014e44b4736ed0538adeecded0fce2a272f22dc9578a7eb6b2d9993c74cfb9"
+checksum = "c841b55ecdae098c80dcae9cf767f6f8a0c2cdb3416bbef72181df4d0fe73f14"
 dependencies = [
  "itoa",
  "memchr",
@@ -1141,9 +1149,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "3.0.0"
+version = "3.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f2fac314a64dc9a36e61a9eb4261a5e9bbfbc922b27e518af97bc32b926cf967"
+checksum = "53e9bae58849f64dfa4f5d5ae372c8341f7305f82a3868709269343628b659a3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1217,7 +1225,7 @@ checksum = "43cbfe0cf76104d42a574802844187e84a305e531ed54455f11fbde0f10541cd"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 3.0.0",
+ "syn 3.0.3",
 ]
 
 [[package]]

@@ -8,4 +8,3 @@ pub use data_types::logging::LogLevel;
 pub use data_types::transformation::{Area, Context, Direction, Proj};
 pub use extension::ICoord;
 pub(crate) use extension::*;
-

@@ -177,13 +177,13 @@ impl crate::Context {
             )
         };
         let _ = out_warnings.to_vec_string_null_terminated().map(|w| {
-            for _w in w.iter() {
+            for _w in &w {
                 clerk::warn!("{_w}");
             }
         });
 
         let _ = out_grammar_errors.to_vec_string_null_terminated().map(|e| {
-            for _e in e.iter() {
+            for _e in &e {
                 clerk::warn!("{_e}");
             }
         });

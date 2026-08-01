@@ -458,26 +458,23 @@ impl crate::Context {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr(),
                 owned.push_option(auth_name)?,
-                params.map_or(
-                    ptr::null(),
-                    |p| -> Result<&proj_sys::PROJ_CRS_LIST_PARAMETERS, ProjError> {
-                        let types: Vec<u32> =
-                            p.types().to_owned().iter().map(|f| *f as u32).collect();
-                        Ok(&proj_sys::PROJ_CRS_LIST_PARAMETERS {
-                            types: types.as_ptr(),
-                            typesCount: p.types().len(),
-                            crs_area_of_use_contains_bbox: p.west_lon_degree() as i32,
-                            bbox_valid: p.bbox_valid() as i32,
-                            west_lon_degree: p.west_lon_degree(),
-                            south_lat_degree: p.south_lat_degree(),
-                            east_lon_degree: p.east_lon_degree(),
-                            north_lat_degree: p.north_lat_degree(),
-                            allow_deprecated: p.allow_deprecated() as i32,
-                            celestial_body_name: owned
-                                .push_option(p.celestial_body_name().to_owned())?,
-                        })
-                    },
-                ),
+                params.map_or(ptr::null(), |p| {
+                    let types: Vec<u32> = p.types().to_owned().iter().map(|f| *f as u32).collect();
+                    &proj_sys::PROJ_CRS_LIST_PARAMETERS {
+                        types: types.as_ptr(),
+                        typesCount: p.types().len(),
+                        crs_area_of_use_contains_bbox: p.west_lon_degree() as i32,
+                        bbox_valid: p.bbox_valid() as i32,
+                        west_lon_degree: p.west_lon_degree(),
+                        south_lat_degree: p.south_lat_degree(),
+                        east_lon_degree: p.east_lon_degree(),
+                        north_lat_degree: p.north_lat_degree(),
+                        allow_deprecated: p.allow_deprecated() as i32,
+                        celestial_body_name: owned
+                            .push_option(p.celestial_body_name().to_owned())
+                            .unwrap(),
+                    }
+                }),
                 &mut out_result_count,
             )
         };

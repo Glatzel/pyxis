@@ -20,7 +20,7 @@ pub struct App {
 }
 
 impl App {
-    pub fn new() -> mischief::Result<Self> {
+    pub const fn new() -> mischief::Result<Self> {
         // let raw_nmea = VecDeque::with_capacity(SETTINGS.lock().trail.capacity);
         Ok(Self {
             status: 0,

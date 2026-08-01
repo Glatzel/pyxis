@@ -27,7 +27,7 @@ impl OwnedCStrings {
         Ok(self
             ._owned_cstrings
             .last()
-            .ok_or_else(||ProjError::new("Last owned cstring is missing.".to_string()))?
+            .ok_or_else(|| ProjError::new("Last owned cstring is missing.".to_string()))?
             .as_ptr())
     }
     pub fn push_option<T: ToCString>(

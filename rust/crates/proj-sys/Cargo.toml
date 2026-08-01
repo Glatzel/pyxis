@@ -8,5 +8,5 @@ libc.workspace = true
 
 [build-dependencies]
 bindgen.workspace = true
-path-slash.workspace = true
 mischief.workspace = true
+path-slash.workspace = true

@@ -19,7 +19,7 @@ pub fn draw(f: &mut Frame, app: &mut App) -> mischief::Result<()> {
     //header
     let header = ["Info", "Coord", "NMEA", "Settings"]
         .iter()
-        .cloned()
+        .copied()
         .map(Span::from)
         .collect::<Vec<_>>();
     let tabs = Tabs::new(header)

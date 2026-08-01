@@ -41,7 +41,7 @@ impl TabCoord {
             .iter()
             .rev()
             .find(|f| f.1 == Identifier::GGA)
-            .and_then(|f| Gga::new(self.parser.init(f.2.to_string()), f.0).ok());
+            .and_then(|f| Gga::new(self.parser.init(f.2.clone()), f.0).ok());
         if let Some(gga) = gga
             && let (Some(wgs84_lon), Some(wgs84_lat)) = (gga.lon(), gga.lat())
         {

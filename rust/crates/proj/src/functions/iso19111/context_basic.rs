@@ -452,33 +452,51 @@ impl crate::Context {
             auth_name.is_none() && params.is_none(),
             "At least one of `auth_name` and  `params` must be set."
         );
+
         let mut out_result_count = i32::default();
         let mut owned = OwnedCStrings::with_capacity(2);
+
+        let auth_name_ptr = owned.push_option(auth_name)?;
+
+        // Keep these alive in the outer scope (not inside a closure) so the
+        // pointers we hand to FFI stay valid for the duration of the call.
+
+        let params_c = match params.as_ref() {
+            Some(p) => {
+                let types: Vec<u32> = p.types().iter().map(|f| *f as u32).collect();
+                let celestial_body_name_ptr =
+                    owned.push_option(p.celestial_body_name().to_owned())?;
+                Some(proj_sys::PROJ_CRS_LIST_PARAMETERS {
+                    types: types.as_ptr(),
+                    typesCount: types.len(),
+                    crs_area_of_use_contains_bbox: p.west_lon_degree() as i32,
+                    bbox_valid: p.bbox_valid() as i32,
+                    west_lon_degree: p.west_lon_degree(),
+                    south_lat_degree: p.south_lat_degree(),
+                    east_lon_degree: p.east_lon_degree(),
+                    north_lat_degree: p.north_lat_degree(),
+                    allow_deprecated: p.allow_deprecated() as i32,
+                    celestial_body_name: celestial_body_name_ptr,
+                })
+            }
+            None => None,
+        };
+
+        let params_ptr = params_c.as_ref().map_or(ptr::null(), |p| {
+            p as *const proj_sys::PROJ_CRS_LIST_PARAMETERS
+        });
+
         let ptr = unsafe {
             proj_sys::proj_get_crs_info_list_from_database(
                 self.ptr(),
-                owned.push_option(auth_name)?,
-                params.map_or(ptr::null(), |p| {
-                    let types: Vec<u32> = p.types().to_owned().iter().map(|f| *f as u32).collect();
-                    &proj_sys::PROJ_CRS_LIST_PARAMETERS {
-                        types: types.as_ptr(),
-                        typesCount: p.types().len(),
-                        crs_area_of_use_contains_bbox: p.west_lon_degree() as i32,
-                        bbox_valid: p.bbox_valid() as i32,
-                        west_lon_degree: p.west_lon_degree(),
-                        south_lat_degree: p.south_lat_degree(),
-                        east_lon_degree: p.east_lon_degree(),
-                        north_lat_degree: p.north_lat_degree(),
-                        allow_deprecated: p.allow_deprecated() as i32,
-                        celestial_body_name: owned
-                            .push_option(p.celestial_body_name().to_owned())
-                            .unwrap(),
-                    }
-                }),
+                auth_name_ptr,
+                params_ptr,
                 &mut out_result_count,
             )
         };
+
         check_result!(out_result_count < 1, "Error");
+
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
             let current_ptr = unsafe {
@@ -510,6 +528,7 @@ impl crate::Context {
                 info_ref.celestial_body_name.to_string().unwrap_or_default(),
             ));
         }
+
         unsafe { proj_sys::proj_crs_info_list_destroy(ptr) };
         Ok(out_vec)
     }
@@ -572,6 +591,7 @@ impl crate::Context {
 
 #[cfg(test)]
 mod test {
+    use insta::assert_debug_snapshot;
     use strum::IntoEnumIterator;
 
     use super::*;
@@ -709,7 +729,7 @@ mod test {
             } else {
                 let result = codes?;
                 println!("{:?}:{}", t, result.len());
-                assert!(!result.is_empty());
+                assert_debug_snapshot!(result);
             }
         }
         Ok(())
@@ -719,7 +739,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_celestial_body_list_from_database("ESRI")?;
         println!("{:?}", list.first().expect("invalid element"));
-        assert!(!list.is_empty());
+        assert_debug_snapshot!(list);
         Ok(())
     }
     #[test]
@@ -727,7 +747,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_crs_info_list_from_database(Some("EPSG"), None)?;
         println!("{:?}", list.first().expect("invalid element"));
-        assert!(!list.is_empty());
+        assert_debug_snapshot!(&list.len());
         Ok(())
     }
 
@@ -736,7 +756,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let units = ctx.get_units_from_database("EPSG", UnitCategory::Linear, true)?;
         println!("{:?}", units.first().expect("invalid element"));
-        assert!(!units.is_empty());
+        assert_debug_snapshot!(units);
         Ok(())
     }
 }

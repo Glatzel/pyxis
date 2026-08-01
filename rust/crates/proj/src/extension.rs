@@ -7,7 +7,7 @@ mod owned_cstrings;
 mod test_utils;
 mod traits;
 
-pub(crate) use error_handling::*;
+pub use error_handling::*;
 pub use logging::*;
 pub use options::*;
 pub use owned_cstrings::*;

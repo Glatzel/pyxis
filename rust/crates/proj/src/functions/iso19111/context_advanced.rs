@@ -4,7 +4,10 @@ use crate::data_types::ProjError;
 extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
-use crate::data_types::iso19111::*;
+use crate::data_types::iso19111::{
+    AxisDescription, CartesianCs2dType, CoordinateSystemType, EllipsoidalCs2dType,
+    EllipsoidalCs3dType, ParamDescription,
+};
 use crate::error_handling::check_result;
 use crate::{Context, OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
@@ -29,12 +32,10 @@ impl Context {
         let mut owned_string = OwnedCStrings::new();
         for a in axis {
             axis_vec.push(proj_sys::PJ_AXIS_DESCRIPTION {
-                name: owned_string.push_option(a.name.to_owned())?.cast_mut(),
-                abbreviation: owned_string
-                    .push_option(a.abbreviation.to_owned())?
-                    .cast_mut(),
+                name: owned_string.push_option(a.name.clone())?.cast_mut(),
+                abbreviation: owned_string.push_option(a.abbreviation.clone())?.cast_mut(),
                 direction: owned_string.push(a.direction.as_ref())?.cast_mut(),
-                unit_name: owned_string.push_option(a.unit_name.to_owned())?.cast_mut(),
+                unit_name: owned_string.push_option(a.unit_name.clone())?.cast_mut(),
                 unit_conv_factor: a.unit_conv_factor,
                 unit_type: a.unit_type as u32,
             });
@@ -3179,9 +3180,11 @@ mod test_context_advanced {
     use strum::IntoEnumIterator;
 
     use super::*;
+    use crate::data_types::iso19111::{AxisDirection, Category, UnitType, WktType};
+    use crate::new_test_ctx;
     #[test]
     fn test_create_cs() -> Result<(), ProjError> {
-        let ctx = crate::new_test_ctx()?;
+        let ctx = new_test_ctx()?;
         let mut wkt_string = String::new();
         for a in AxisDirection::iter() {
             let pj: Proj = ctx.create_cs(

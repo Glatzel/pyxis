@@ -11,5 +11,5 @@ pub use logging::*;
 pub use options::*;
 pub use owned_cstrings::*;
 #[cfg(test)]
-pub(crate) use test_utils::*;
+pub(crate) use test_utils::new_test_ctx;
 pub use traits::*;

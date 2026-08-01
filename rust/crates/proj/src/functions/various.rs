@@ -34,7 +34,7 @@ impl crate::Proj {
     ) -> Result<f64, ProjError> {
         let mut coord = coord.to_coord()?;
         let distance =
-            unsafe { proj_sys::proj_roundtrip(self.ptr(), direction as i32, n, &mut coord) };
+            unsafe { proj_sys::proj_roundtrip(self.ptr(), direction as i32, n, &raw mut coord) };
         check_result!(self);
         Ok(distance)
     }
@@ -69,7 +69,7 @@ impl crate::Proj {
             _ => {
                 check_result!(self);
             }
-        };
+        }
 
         let factor = Factors::new(
             factor.meridional_scale,

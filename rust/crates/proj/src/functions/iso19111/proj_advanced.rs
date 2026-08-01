@@ -3,7 +3,7 @@ use core::ptr;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::ProjError;
-use crate::data_types::iso19111::*;
+use crate::data_types::iso19111::AllowIntermediateCrs;
 use crate::{OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
 ///
@@ -350,6 +350,7 @@ mod test_proj_advanced {
     use strum::IntoEnumIterator;
 
     use super::*;
+    use crate::data_types::iso19111::{CartesianCs2dType, Category, EllipsoidalCs2dType, WktType};
     #[test]
     fn test_alter_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;

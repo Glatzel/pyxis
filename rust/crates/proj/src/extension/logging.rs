@@ -22,7 +22,7 @@ pub unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const c_c
             clerk::trace!("{}", _message);
         }
         _ => (),
-    };
+    }
 }
 
 impl crate::Context {

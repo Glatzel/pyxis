@@ -14,7 +14,7 @@ pub struct Operations {
     descr: String,
 }
 impl Operations {
-    pub fn new(id: String, descr: String) -> Self { Self { id, descr } }
+    pub const fn new(id: String, descr: String) -> Self { Self { id, descr } }
 }
 ///Description of ellipsoids defined in PROJ
 ///
@@ -61,7 +61,7 @@ pub struct Units {
     factor: f64,
 }
 impl Units {
-    pub fn new(id: String, to_meter: String, name: String, factor: f64) -> Self {
+    pub const fn new(id: String, to_meter: String, name: String, factor: f64) -> Self {
         Self {
             id,
             to_meter,

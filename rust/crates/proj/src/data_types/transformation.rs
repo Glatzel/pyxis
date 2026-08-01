@@ -67,7 +67,7 @@ pub enum Direction {
 }
 #[derive(Debug, PartialEq, Eq, Hash)]
 #[repr(transparent)]
-pub(crate) struct ContextPtr(pub(crate) *mut proj_sys::PJ_CONTEXT);
+pub struct ContextPtr(pub(crate) *mut proj_sys::PJ_CONTEXT);
 impl ContextPtr {
     pub(crate) const fn ptr(&self) -> *mut proj_sys::PJ_CONTEXT { self.0 }
 }

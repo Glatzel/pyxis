@@ -8,7 +8,7 @@ use envoy::ToCString;
 use crate::data_types::ProjError;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub(crate) struct OwnedCStrings {
+pub struct OwnedCStrings {
     _owned_cstrings: Vec<CString>,
 }
 impl OwnedCStrings {

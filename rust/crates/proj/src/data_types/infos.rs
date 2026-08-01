@@ -27,7 +27,7 @@ pub struct Info {
     search_path: String,
 }
 impl Info {
-    pub fn new(
+    pub const fn new(
         major: i32,
         minor: i32,
         patch: i32,
@@ -73,7 +73,7 @@ pub struct ProjInfo {
     accuracy: f64,
 }
 impl ProjInfo {
-    pub fn new(
+    pub const fn new(
         id: String,
         description: String,
         definition: String,
@@ -119,7 +119,7 @@ pub struct GridInfo {
     cs_lat: f64,
 }
 impl GridInfo {
-    pub fn new(
+    pub const fn new(
         gridname: String,
         filename: String,
         format: String,
@@ -164,7 +164,7 @@ pub struct InitInfo {
     last_update: String,
 }
 impl InitInfo {
-    pub fn new(
+    pub const fn new(
         name: String,
         filename: String,
         version: String,

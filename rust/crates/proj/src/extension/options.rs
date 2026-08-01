@@ -16,12 +16,12 @@ use envoy::{ToCString, VecCString};
 use crate::data_types::ProjError;
 
 /// String constant representing the PROJ option value for `true`.
-pub(crate) const OPTION_YES: &str = "YES";
+pub const OPTION_YES: &str = "YES";
 /// String constant representing the PROJ option value for `false`.
-pub(crate) const OPTION_NO: &str = "NO";
+pub const OPTION_NO: &str = "NO";
 
 /// Trait for converting a value to a PROJ-compatible option string.
-pub(crate) trait ToProjOptionString {
+pub trait ToProjOptionString {
     /// Converts the value to a string suitable for use as a PROJ option value.
     fn to_option_string(&self) -> String;
 }
@@ -56,7 +56,7 @@ impl_to_option_string!(crate::data_types::iso19111::AllowIntermediateCrs);
 
 /// Struct for building and managing a list of PROJ options as C-compatible
 /// strings.
-pub(crate) struct ProjOptions {
+pub struct ProjOptions {
     /// The list of options as CStrings, suitable for passing to C APIs.
     options: VecCString,
 }

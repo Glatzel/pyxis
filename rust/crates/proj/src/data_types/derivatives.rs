@@ -40,7 +40,7 @@ pub struct Factors {
     dy_dphi: f64,
 }
 impl Factors {
-    pub fn new(
+    pub const fn new(
         meridional_scale: f64,
         parallel_scale: f64,
         areal_scale: f64,

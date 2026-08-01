@@ -283,7 +283,7 @@ pub struct CrsInfo {
     celestial_body_name: String,
 }
 impl CrsInfo {
-    pub fn new(
+    pub const fn new(
         auth_name: String,
         code: String,
         name: String,
@@ -348,7 +348,7 @@ pub struct CrsListParameters {
     celestial_body_name: Option<String>,
 }
 impl CrsListParameters {
-    pub fn new(
+    pub const fn new(
         types: Vec<ProjType>,
         crs_area_of_use_contains_bbox: bool,
         bbox_valid: bool,
@@ -402,7 +402,7 @@ pub struct UnitInfo {
     deprecated: bool,
 }
 impl UnitInfo {
-    pub fn new(
+    pub const fn new(
         auth_name: String,
         code: String,
         name: String,
@@ -440,7 +440,7 @@ pub struct CelestialBodyInfo {
     name: String,
 }
 impl CelestialBodyInfo {
-    pub fn new(auth_name: String, name: String) -> Self { Self { auth_name, name } }
+    pub const fn new(auth_name: String, name: String) -> Self { Self { auth_name, name } }
 }
 ///Type of unit of measure.
 ///
@@ -528,7 +528,7 @@ pub struct AxisDescription {
     pub(crate) unit_type: UnitType,
 }
 impl AxisDescription {
-    pub fn new(
+    pub const fn new(
         name: Option<String>,
         abbreviation: Option<String>,
         direction: AxisDirection,
@@ -563,7 +563,7 @@ pub struct ParamDescription {
     unit_type: UnitType,
 }
 impl ParamDescription {
-    pub fn new(
+    pub const fn new(
         name: Option<String>,
         auth_name: Option<String>,
         code: Option<String>,
@@ -688,7 +688,7 @@ pub struct AxisInfo {
     unit_code: String,
 }
 impl AxisInfo {
-    pub fn new(
+    pub const fn new(
         name: String,
         abbrev: String,
         direction: AxisDirection,
@@ -720,7 +720,7 @@ pub struct EllipsoidParameters {
     inv_flattening: f64,
 }
 impl EllipsoidParameters {
-    pub fn new(
+    pub const fn new(
         semi_major_metre: f64,
         semi_minor_metre: f64,
         is_semi_minor_computed: bool,
@@ -745,7 +745,7 @@ pub struct PrimeMeridianParameters {
     unit_name: String,
 }
 impl PrimeMeridianParameters {
-    pub fn new(longitude: f64, unit_conv_factor: f64, unit_name: String) -> Self {
+    pub const fn new(longitude: f64, unit_conv_factor: f64, unit_name: String) -> Self {
         Self {
             longitude,
             unit_conv_factor,
@@ -763,7 +763,7 @@ pub struct CoordOperationMethodInfo {
     method_code: String,
 }
 impl CoordOperationMethodInfo {
-    pub fn new(method_name: String, method_auth_name: String, method_code: String) -> Self {
+    pub const fn new(method_name: String, method_auth_name: String, method_code: String) -> Self {
         Self {
             method_name,
             method_auth_name,
@@ -789,7 +789,7 @@ pub struct CoordOperationParam {
     unit_category: UnitCategory,
 }
 impl CoordOperationParam {
-    pub fn new(
+    pub const fn new(
         name: String,
         auth_name: String,
         code: String,
@@ -856,7 +856,7 @@ pub struct CoordOperationGridUsed {
     available: bool,
 }
 impl CoordOperationGridUsed {
-    pub fn new(
+    pub const fn new(
         short_name: String,
         full_name: String,
         package_name: String,
@@ -959,7 +959,7 @@ pub struct AreaOfUse {
     north_lat_degree: f64,
 }
 impl AreaOfUse {
-    pub fn new(
+    pub const fn new(
         area_name: String,
         west_lon_degree: f64,
         south_lat_degree: f64,
@@ -1014,7 +1014,7 @@ pub struct UomInfo {
     category: UomCategory,
 }
 impl UomInfo {
-    pub fn new(name: String, conv_factor: f64, category: UomCategory) -> Self {
+    pub const fn new(name: String, conv_factor: f64, category: UomCategory) -> Self {
         Self {
             name,
             conv_factor,
@@ -1044,7 +1044,7 @@ pub struct GridInfoDB {
     available: bool,
 }
 impl GridInfoDB {
-    pub fn new(
+    pub const fn new(
         full_name: String,
         package_name: String,
         url: String,
@@ -1114,7 +1114,7 @@ impl ProjObjList {
         })
     }
 
-    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ_OBJ_LIST { self.ptr }
+    pub(crate) const fn ptr(&self) -> *mut proj_sys::PJ_OBJ_LIST { self.ptr }
     ///Return an object from the result set.
     ///
     /// # References
@@ -1132,5 +1132,5 @@ impl ProjObjList {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
-    pub fn get_count(&self) -> usize { self.count }
+    pub const fn get_count(&self) -> usize { self.count }
 }

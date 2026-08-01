@@ -1,5 +1,5 @@
 mod conversion;
-pub mod error_handling;
+pub(crate) mod error_handling;
 mod logging;
 mod options;
 mod owned_cstrings;

@@ -81,9 +81,9 @@ impl FromStr for RotatePlane {
 impl fmt::Display for RotatePlane {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            RotatePlane::Xy => write!(f, "XY"),
-            RotatePlane::Zx => write!(f, "XZ"),
-            RotatePlane::Yz => write!(f, "YZ"),
+            Self::Xy => write!(f, "XY"),
+            Self::Zx => write!(f, "XZ"),
+            Self::Yz => write!(f, "YZ"),
         }
     }
 }

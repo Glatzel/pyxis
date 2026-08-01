@@ -85,7 +85,7 @@ impl<T: GeoFloat> Ellipsoid<T> {
         let eccentricity2: T = T::TWO * flattening - flattening * flattening;
         let eccentricity = eccentricity2.sqrt();
 
-        Ellipsoid {
+        Self {
             semi_major_axis,
             semi_minor_axis,
             eccentricity,
@@ -155,30 +155,30 @@ impl<T: GeoFloat> Ellipsoid<T> {
         // Calculate eccentricity
         let eccentricity = eccentricity2.sqrt();
 
-        Ellipsoid {
+        Self {
             semi_major_axis,
             semi_minor_axis,
-            flattening,
-            inverse_flattening,
             eccentricity,
             eccentricity2,
+            flattening,
+            inverse_flattening,
         }
     }
     /// Returns the semi-major axis of the ellipsoid.
-    pub fn semi_major_axis(&self) -> T { self.semi_major_axis }
+    pub const fn semi_major_axis(&self) -> T { self.semi_major_axis }
 
     /// Returns the semi-minor axis of the ellipsoid.
-    pub fn semi_minor_axis(&self) -> T { self.semi_minor_axis }
+    pub const fn semi_minor_axis(&self) -> T { self.semi_minor_axis }
 
     /// Returns the eccentricity (`e`) of the ellipsoid.
-    pub fn eccentricity(&self) -> T { self.eccentricity }
+    pub const fn eccentricity(&self) -> T { self.eccentricity }
 
     /// Returns the squared eccentricity (`e²`) of the ellipsoid.
-    pub fn eccentricity2(&self) -> T { self.eccentricity2 }
+    pub const fn eccentricity2(&self) -> T { self.eccentricity2 }
 
     /// Returns the flattening (`f`) of the ellipsoid.
-    pub fn flattening(&self) -> T { self.flattening }
+    pub const fn flattening(&self) -> T { self.flattening }
 
     /// Returns the inverse flattening (`1/f`) of the ellipsoid.
-    pub fn inverse_flattening(&self) -> T { self.inverse_flattening }
+    pub const fn inverse_flattening(&self) -> T { self.inverse_flattening }
 }

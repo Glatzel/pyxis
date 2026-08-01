@@ -3,7 +3,7 @@ use crate::data_types::ProjError;
 impl Default for crate::Area {
     /// # See Also
     ///
-    /// * [Self::new]
+    /// * [`Self::new`]
     fn default() -> Self { Self::new() }
 }
 ///# Area of interest
@@ -17,6 +17,7 @@ impl crate::Area {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_area_create>
+    #[must_use]
     pub fn new() -> Self {
         Self {
             ptr: unsafe { proj_sys::proj_area_create() },
@@ -29,7 +30,7 @@ impl crate::Area {
     /// choice of relevant coordinate operations.
     ///
     /// In the case of an area of use crossing the antimeridian (longitude +/-
-    /// 180 degrees), west_lon_degree will be greater than east_lon_degree.
+    /// 180 degrees), `west_lon_degree` will be greater than `east_lon_degree`.
     ///
     /// # Arguments
     ///
@@ -71,14 +72,14 @@ impl crate::Area {
                 south_lat_degree,
                 east_lon_degree,
                 north_lat_degree,
-            )
+            );
         };
         Ok(self)
     }
 }
 
 impl Drop for crate::Area {
-    ///Deallocate a PJ_AREA object.
+    ///Deallocate a `PJ_AREA` object.
     ///
     /// # References
     ///

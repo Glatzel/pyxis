@@ -10,14 +10,14 @@ impl crate::Proj {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    pub fn get_last_used_operation(&self) -> Result<Option<crate::Proj>, ProjError> {
-        use crate::Proj;
+    pub fn get_last_used_operation(&self) -> Result<Option<Self>, ProjError> {
+        
 
         let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr()) };
         if ptr.is_null() {
             return Ok(None);
         }
-        Some(Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
+        Some(Self::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     ///Transform a series of coordinates
     ///
@@ -101,17 +101,17 @@ impl crate::Context {
     /// transformations along these edges and extracting the outermost bounds.
     ///
     ///If the destination CRS is geographic, the first axis is longitude, and
-    /// *out_xmax < *out_xmin then the bounds crossed the antimeridian. In this
+    /// *`out_xmax` < *`out_xmin` then the bounds crossed the antimeridian. In this
     /// scenario there are two polygons, one on each side of the antimeridian.
-    /// The first polygon should be constructed with (*out_xmin, *out_ymin, 180,
-    /// ymax) and the second with (-180, *out_ymin, *out_xmax, *out_ymax).
+    /// The first polygon should be constructed with (*`out_xmin`, *`out_ymin`, 180,
+    /// ymax) and the second with (-180, *`out_ymin`, *`out_xmax`, *`out_ymax`).
     ///
     ///If the destination CRS is geographic, the first axis is latitude, and
-    /// *out_ymax < *out_ymin then the bounds crossed the antimeridian. In this
+    /// *`out_ymax` < *`out_ymin` then the bounds crossed the antimeridian. In this
     /// scenario there are two polygons, one on each side of the antimeridian.
-    /// The first polygon should be constructed with (*out_ymin, *out_xmin,
-    /// *out_ymax, 180) and the second with (*out_ymin, -180, *out_ymax,
-    /// *out_xmax).
+    /// The first polygon should be constructed with (*`out_ymin`, *`out_xmin`,
+    /// *`out_ymax`, 180) and the second with (*`out_ymin`, -180, *`out_ymax`,
+    /// *`out_xmax`).
     ///
     /// # Arguments
     ///
@@ -128,7 +128,7 @@ impl crate::Context {
     ///
     /// # Returns
     ///
-    /// * (out_xmin, out_ymin, out_xmax, out_ymax): bounding coordinate target
+    /// * (`out_xmin`, `out_ymin`, `out_xmax`, `out_ymax)`: bounding coordinate target
     ///   CRS.(source CRS if direction is inverse).
     ///
     /// # References
@@ -157,10 +157,10 @@ impl crate::Context {
                 ymin,
                 xmax,
                 ymax,
-                &mut out_xmin,
-                &mut out_ymin,
-                &mut out_xmax,
-                &mut out_ymax,
+                &raw mut out_xmin,
+                &raw mut out_ymin,
+                &raw mut out_xmax,
+                &raw mut out_ymax,
                 densify_pts,
             )
         };
@@ -179,7 +179,7 @@ impl crate::Context {
     /// discontinuity will not be returned.
     ///
     ///If one of the source or target CRS of the transformation is not 3D, the
-    /// values of *out_zmin / *out_zmax may not be significant.
+    /// values of *`out_zmin` / *`out_zmax` may not be significant.
     ///
     ///For 2D or "2.5D" transformation (that is planar component is
     /// geographic/coordinates and 3D axis is elevation), the documentation of
@@ -204,7 +204,7 @@ impl crate::Context {
     ///
     /// # Returns
     ///
-    /// * (out_xmin, out_ymin, out_zmin, out_xmax, out_ymax, out_zmax): bounding
+    /// * (`out_xmin`, `out_ymin`, `out_zmin`, `out_xmax`, `out_ymax`, `out_zmax)`: bounding
     ///   coordinate target CRS.(source CRS if direction is inverse).
     ///
     /// # References
@@ -239,12 +239,12 @@ impl crate::Context {
                 xmax,
                 ymax,
                 zmax,
-                &mut out_xmin,
-                &mut out_ymin,
-                &mut out_zmin,
-                &mut out_xmax,
-                &mut out_ymax,
-                &mut out_zmax,
+                &raw mut out_xmin,
+                &raw mut out_ymin,
+                &raw mut out_zmin,
+                &raw mut out_xmax,
+                &raw mut out_ymax,
+                &raw mut out_zmax,
                 densify_pts,
             )
         };

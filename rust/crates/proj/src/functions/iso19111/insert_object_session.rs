@@ -21,6 +21,7 @@ impl Context {
     /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_insert_object_session_create>
+    #[must_use]
     pub fn insert_object_session_create(&self) -> InsertObjectSession {
         InsertObjectSession {
             arc_ctx_ptr: self.arc_ptr(),
@@ -58,8 +59,8 @@ impl InsertObjectSession {
     /// # Arguments
     ///
     /// * `object`: The object to insert into the database. Currently only
-    ///   PrimeMeridian, Ellipsoid, Datum, GeodeticCRS, ProjectedCRS,
-    ///   VerticalCRS, CompoundCRS or BoundCRS are supported.
+    ///   `PrimeMeridian`, Ellipsoid, Datum, `GeodeticCRS`, `ProjectedCRS`,
+    ///   `VerticalCRS`, `CompoundCRS` or `BoundCRS` are supported.
     /// * `authority`: Authority name into which the object will be inserted.
     ///   Must not be NULL.
     /// * `code`: Code with which the object will be inserted.Must not be NULL.
@@ -69,8 +70,8 @@ impl InsertObjectSession {
     ///   NULL. Authorities to which intermediate objects are allowed to refer
     ///   to. "authority" will be implicitly added to it. Note that unit,
     ///   coordinate systems, projection methods and parameters will in any case
-    ///   be allowed to refer to EPSG. If NULL, allowed_authorities defaults to
-    ///   {"EPSG", "PROJ", nullptr}
+    ///   be allowed to refer to EPSG. If NULL, `allowed_authorities` defaults
+    ///   to {"EPSG", "PROJ", nullptr}
     ///
     /// # Returns
     ///
@@ -98,7 +99,7 @@ impl InsertObjectSession {
                 object.ptr(),
                 authority.to_cstring()?.as_ptr(),
                 code.to_cstring()?.as_ptr(),
-                numeric_codes as i32,
+                i32::from(numeric_codes),
                 allowed_authorities.as_ptr(),
                 ptr::null(),
             )

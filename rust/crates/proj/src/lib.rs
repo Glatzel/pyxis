@@ -7,4 +7,6 @@ pub mod version;
 pub use data_types::logging::LogLevel;
 pub use data_types::transformation::{Area, Context, Direction, Proj};
 pub use extension::ICoord;
-pub(crate) use extension::*;
+pub(crate) use extension::{
+    OPTION_NO, OPTION_YES, OwnedCStrings, ProjOptions, ToCoord, check_result, proj_clerk,
+};

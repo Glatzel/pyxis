@@ -6,7 +6,7 @@ use derive_getters::Getters;
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPERATIONS>
 #[cfg_attr(feature = "serde", derive(serde::Serialize))]
-#[derive(Debug, Clone, PartialEq, Getters)]
+#[derive(Debug, Clone, PartialEq, Eq, Getters)]
 pub struct Operations {
     /// Operation keyword.
     id: String,
@@ -14,7 +14,8 @@ pub struct Operations {
     descr: String,
 }
 impl Operations {
-    pub fn new(id: String, descr: String) -> Self { Operations { id, descr } }
+    #[must_use]
+    pub const fn new(id: String, descr: String) -> Self { Self { id, descr } }
 }
 ///Description of ellipsoids defined in PROJ
 ///
@@ -22,7 +23,7 @@ impl Operations {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPERATIONS>
 #[cfg_attr(feature = "serde", derive(serde::Serialize))]
-#[derive(Debug, Clone, PartialEq, Getters)]
+#[derive(Debug, Clone, PartialEq, Eq, Getters)]
 pub struct Ellps {
     /// Keyword for the ellipsoid.
     id: String,
@@ -34,8 +35,9 @@ pub struct Ellps {
     name: String,
 }
 impl Ellps {
-    pub fn new(id: String, major: String, ell: String, name: String) -> Self {
-        Ellps {
+    #[must_use]
+    pub const fn new(id: String, major: String, ell: String, name: String) -> Self {
+        Self {
             id,
             major,
             ell,
@@ -61,8 +63,9 @@ pub struct Units {
     factor: f64,
 }
 impl Units {
-    pub fn new(id: String, to_meter: String, name: String, factor: f64) -> Self {
-        Units {
+    #[must_use]
+    pub const fn new(id: String, to_meter: String, name: String, factor: f64) -> Self {
+        Self {
             id,
             to_meter,
             name,
@@ -78,7 +81,7 @@ impl Units {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_OPERATIONS>
 #[cfg_attr(feature = "serde", derive(serde::Serialize))]
-#[derive(Debug, Clone, PartialEq, Getters)]
+#[derive(Debug, Clone, PartialEq, Eq, Getters)]
 pub struct PrimeMeridians {
     /// Keyword for the prime meridian
     id: String,
@@ -86,5 +89,6 @@ pub struct PrimeMeridians {
     defn: String,
 }
 impl PrimeMeridians {
-    pub fn new(id: String, defn: String) -> Self { PrimeMeridians { id, defn } }
+    #[must_use]
+    pub const fn new(id: String, defn: String) -> Self { Self { id, defn } }
 }

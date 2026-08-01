@@ -1,15 +1,15 @@
 use core::fmt;
 use core::str::FromStr;
 extern crate alloc;
-use alloc::string::{String, ToString};
+use alloc::string::{String};
 
 /// # References
-/// - https://github.com/googollee/eviltransform/blob/master/rust/src/lib.rs
-/// - https://github.com/billtian/wgtochina_lb-php/tree/master
-/// - https://github.com/Leask/EvilTransform
-/// - https://github.com/wandergis/coordtransform
-/// - https://blog.csdn.net/coolypf/article/details/8569813
-/// - https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js
+/// - <https://github.com/googollee/eviltransform/blob/master/rust/src/lib.rs>
+/// - <https://github.com/billtian/wgtochina_lb-php/tree/master>
+/// - <https://github.com/Leask/EvilTransform>
+/// - <https://github.com/wandergis/coordtransform>
+/// - <https://blog.csdn.net/coolypf/article/details/8569813>
+/// - <https://github.com/Artoria2e5/PRCoords/blob/master/js/PRCoords.js>
 use crate::primitive::{GeoFloat, num};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -27,7 +27,7 @@ impl FromStr for CryptoSpace {
             "BD09" => Ok(Self::BD09),
             "GCJ02" => Ok(Self::GCJ02),
             "WGS84" => Ok(Self::WGS84),
-            _ => Err("".to_string()),
+            _ => Err(String::new()),
         }
     }
 }
@@ -40,7 +40,7 @@ impl fmt::Display for CryptoSpace {
         }
     }
 }
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CryptoThresholdMode<T>
 where
     T: GeoFloat + 'static,
@@ -56,7 +56,7 @@ where
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Distance { semi_major_axis } => {
-                write!(f, "Distance{{semi_major_axis: {}}}", semi_major_axis)
+                write!(f, "Distance{{semi_major_axis: {semi_major_axis}}}")
             }
             Self::LonLat => write!(f, "LonLat"),
         }
@@ -374,8 +374,8 @@ where
     clerk::warn!("Exceed max iteration num!ber: {max_iter}");
     (dst_lon, dst_lat)
 }
-/// distance calculate the distance between point(lat_a, lon_a) and point(lat_b,
-/// lon_b), unit in meter.
+/// distance calculate the distance between `point(lat_a`, `lon_a`) and
+/// `point(lat_b`, `lon_b`), unit in meter.
 pub fn haversine_distance<T>(lon_a: T, lat_a: T, lon_b: T, lat_b: T, semi_major_axis: T) -> T
 where
     T: GeoFloat + 'static,

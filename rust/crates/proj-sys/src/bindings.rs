@@ -525,7 +525,7 @@ unsafe extern "C" {
     pub fn proj_context_set_ca_bundle_path(ctx: *mut PJ_CONTEXT, path: *const libc::c_char);
 }
 unsafe extern "C" {
-    #[doc = " @cond Doxygen_Suppress"]
+    #[doc = " @cond `Doxygen_Suppress`"]
     pub fn proj_context_use_proj4_init_rules(ctx: *mut PJ_CONTEXT, enable: libc::c_int);
 }
 unsafe extern "C" {
@@ -582,7 +582,7 @@ pub struct PROJ_FILE_API {
             user_data: *mut libc::c_void,
         ) -> usize,
     >,
-    #[doc = " Seek to offset using whence=SEEK_SET/SEEK_CUR/SEEK_END. Return TRUE in\n case of success"]
+    #[doc = " Seek to offset using `whence=SEEK_SET/SEEK_CUR/SEEK_END`. Return TRUE in\n case of success"]
     pub seek_cbk: ::core::option::Option<
         unsafe extern "C" fn(
             ctx: *mut PJ_CONTEXT,
@@ -684,7 +684,7 @@ unsafe extern "C" {
 pub struct PROJ_NETWORK_HANDLE {
     _unused: [u8; 0],
 }
-#[doc = " Network access: open callback\n\n Should try to read the size_to_read first bytes at the specified offset of\n the file given by URL url,\n and write them to buffer. *out_size_read should be updated with the actual\n amount of bytes read (== size_to_read if the file is larger than\n size_to_read). During this read, the implementation should make sure to store\n the HTTP headers from the server response to be able to respond to\n proj_network_get_header_value_cbk_type callback.\n\n error_string_max_size should be the maximum size that can be written into\n the out_error_string buffer (including terminating nul character).\n\n @return a non-NULL opaque handle in case of success."]
+#[doc = " Network access: open callback\n\n Should try to read the `size_to_read` first bytes at the specified offset of\n the file given by URL url,\n and write them to buffer. *`out_size_read` should be updated with the actual\n amount of bytes read (== `size_to_read` if the file is larger than\n `size_to_read`). During this read, the implementation should make sure to store\n the HTTP headers from the server response to be able to respond to\n `proj_network_get_header_value_cbk_type` callback.\n\n `error_string_max_size` should be the maximum size that can be written into\n the `out_error_string` buffer (including terminating nul character).\n\n @return a non-NULL opaque handle in case of success."]
 pub type proj_network_open_cbk_type = ::core::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
@@ -715,7 +715,7 @@ pub type proj_network_get_header_value_cbk_type = ::core::option::Option<
         user_data: *mut libc::c_void,
     ) -> *const libc::c_char,
 >;
-#[doc = " Network access: read range\n\n Read size_to_read bytes from handle, starting at offset, into\n buffer.\n During this read, the implementation should make sure to store the HTTP\n headers from the server response to be able to respond to\n proj_network_get_header_value_cbk_type callback.\n\n error_string_max_size should be the maximum size that can be written into\n the out_error_string buffer (including terminating nul character).\n\n @return the number of bytes actually read (0 in case of error)"]
+#[doc = " Network access: read range\n\n Read `size_to_read` bytes from handle, starting at offset, into\n buffer.\n During this read, the implementation should make sure to store the HTTP\n headers from the server response to be able to respond to\n `proj_network_get_header_value_cbk_type` callback.\n\n `error_string_max_size` should be the maximum size that can be written into\n the `out_error_string` buffer (including terminating nul character).\n\n @return the number of bytes actually read (0 in case of error)"]
 pub type proj_network_read_range_type = ::core::option::Option<
     unsafe extern "C" fn(
         ctx: *mut PJ_CONTEXT,
@@ -804,7 +804,7 @@ unsafe extern "C" {
     ) -> libc::c_int;
 }
 unsafe extern "C" {
-    #[doc = " @cond Doxygen_Suppress"]
+    #[doc = " @cond `Doxygen_Suppress`"]
     pub fn proj_create(ctx: *mut PJ_CONTEXT, definition: *const libc::c_char) -> *mut PJ;
 }
 unsafe extern "C" {
@@ -836,7 +836,7 @@ unsafe extern "C" {
     pub fn proj_normalize_for_visualization(ctx: *mut PJ_CONTEXT, obj: *const PJ) -> *mut PJ;
 }
 unsafe extern "C" {
-    #[doc = " @cond Doxygen_Suppress"]
+    #[doc = " @cond `Doxygen_Suppress`"]
     pub fn proj_assign_context(pj: *mut PJ, ctx: *mut PJ_CONTEXT);
 }
 unsafe extern "C" {
@@ -946,7 +946,7 @@ unsafe extern "C" {
     ) -> libc::c_int;
 }
 unsafe extern "C" {
-    #[doc = " @cond Doxygen_Suppress"]
+    #[doc = " @cond `Doxygen_Suppress`"]
     pub fn proj_coord(x: f64, y: f64, z: f64, t: f64) -> PJ_COORD;
 }
 unsafe extern "C" {
@@ -973,7 +973,7 @@ unsafe extern "C" {
     pub fn proj_geod(P: *const PJ, a: PJ_COORD, b: PJ_COORD) -> PJ_COORD;
 }
 unsafe extern "C" {
-    #[doc = " @brief Solves the direct geodesic problem for given projection ellipsoid\n\n @param P\n      Transformation or CRS object\n\n @param a\n      Coordinate of first point. The coordinates needs to be given as\n longitude and latitude in radians. Note that the axis order of the `P` object\n is not taken into account in this function, so even though a CRS object comes\n with axis ordering latitude/longitude coordinates used in this function\n should be reordered as longitude latitude.\n\n @param azimuth\n      Initial azimuth from first point to second point in radians, measured\n      clockwise from true north\n\n @param distance\n      Geodesic distance from the starting point to the destination, in meters\n\n @return\n      `PJ_COORD` where the first value is the longitude in radians, second\n value is latitude in radians and third value is forward azimuth at second\n point in radians. The fourth coordinate value is unused.\n\n @see proj_geod() for solving the inverse geodesic problem."]
+    #[doc = " @brief Solves the direct geodesic problem for given projection ellipsoid\n\n @param P\n      Transformation or CRS object\n\n @param a\n      Coordinate of first point. The coordinates needs to be given as\n longitude and latitude in radians. Note that the axis order of the `P` object\n is not taken into account in this function, so even though a CRS object comes\n with axis ordering latitude/longitude coordinates used in this function\n should be reordered as longitude latitude.\n\n @param azimuth\n      Initial azimuth from first point to second point in radians, measured\n      clockwise from true north\n\n @param distance\n      Geodesic distance from the starting point to the destination, in meters\n\n @return\n      `PJ_COORD` where the first value is the longitude in radians, second\n value is latitude in radians and third value is forward azimuth at second\n point in radians. The fourth coordinate value is unused.\n\n @see `proj_geod()` for solving the inverse geodesic problem."]
     pub fn proj_geod_direct(P: *const PJ, a: PJ_COORD, azimuth: f64, distance: f64) -> PJ_COORD;
 }
 unsafe extern "C" {
@@ -1065,11 +1065,11 @@ unsafe extern "C" {
 }
 #[doc = " \\brief Type representing a NULL terminated list of NULL-terminate strings."]
 pub type PROJ_STRING_LIST = *mut *mut libc::c_char;
-#[doc = " \\ref WKT2_2019"]
+#[doc = " \\ref `WKT2_2019`"]
 pub const PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2019: PJ_GUESSED_WKT_DIALECT = 0;
-#[doc = " Deprecated alias for PJ_GUESSED_WKT2_2019"]
+#[doc = " Deprecated alias for `PJ_GUESSED_WKT2_2019`"]
 pub const PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2018: PJ_GUESSED_WKT_DIALECT = 0;
-#[doc = " \\ref WKT2_2015"]
+#[doc = " \\ref `WKT2_2015`"]
 pub const PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2015: PJ_GUESSED_WKT_DIALECT = 1;
 #[doc = " \\ref WKT1"]
 pub const PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT1_GDAL: PJ_GUESSED_WKT_DIALECT = 2;
@@ -1095,49 +1095,49 @@ pub const PJ_TYPE_PJ_TYPE_DYNAMIC_GEODETIC_REFERENCE_FRAME: PJ_TYPE = 4;
 pub const PJ_TYPE_PJ_TYPE_VERTICAL_REFERENCE_FRAME: PJ_TYPE = 5;
 pub const PJ_TYPE_PJ_TYPE_DYNAMIC_VERTICAL_REFERENCE_FRAME: PJ_TYPE = 6;
 pub const PJ_TYPE_PJ_TYPE_DATUM_ENSEMBLE: PJ_TYPE = 7;
-#[doc = " Abstract type, not returned by proj_get_type()"]
+#[doc = " Abstract type, not returned by `proj_get_type()`"]
 pub const PJ_TYPE_PJ_TYPE_CRS: PJ_TYPE = 8;
-#[doc = " Abstract type, not returned by proj_get_type()"]
+#[doc = " Abstract type, not returned by `proj_get_type()`"]
 pub const PJ_TYPE_PJ_TYPE_GEODETIC_CRS: PJ_TYPE = 9;
-#[doc = " Abstract type, not returned by proj_get_type()"]
+#[doc = " Abstract type, not returned by `proj_get_type()`"]
 pub const PJ_TYPE_PJ_TYPE_GEOCENTRIC_CRS: PJ_TYPE = 10;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_GEOGRAPHIC_CRS: PJ_TYPE = 11;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_GEOGRAPHIC_2D_CRS: PJ_TYPE = 12;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_GEOGRAPHIC_3D_CRS: PJ_TYPE = 13;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_VERTICAL_CRS: PJ_TYPE = 14;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_PROJECTED_CRS: PJ_TYPE = 15;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_COMPOUND_CRS: PJ_TYPE = 16;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_TEMPORAL_CRS: PJ_TYPE = 17;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_ENGINEERING_CRS: PJ_TYPE = 18;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_BOUND_CRS: PJ_TYPE = 19;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_OTHER_CRS: PJ_TYPE = 20;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_CONVERSION: PJ_TYPE = 21;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_TRANSFORMATION: PJ_TYPE = 22;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_CONCATENATED_OPERATION: PJ_TYPE = 23;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_OTHER_COORDINATE_OPERATION: PJ_TYPE = 24;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_TEMPORAL_DATUM: PJ_TYPE = 25;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_ENGINEERING_DATUM: PJ_TYPE = 26;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_PARAMETRIC_DATUM: PJ_TYPE = 27;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_DERIVED_PROJECTED_CRS: PJ_TYPE = 28;
-#[doc = " proj_get_type() will never return that type, but\n PJ_TYPE_GEOGRAPHIC_2D_CRS or PJ_TYPE_GEOGRAPHIC_3D_CRS."]
+#[doc = " `proj_get_type()` will never return that type, but\n `PJ_TYPE_GEOGRAPHIC_2D_CRS` or `PJ_TYPE_GEOGRAPHIC_3D_CRS`."]
 pub const PJ_TYPE_PJ_TYPE_COORDINATE_METADATA: PJ_TYPE = 29;
 #[doc = " \\brief Object type."]
 pub type PJ_TYPE = libc::c_uint;
@@ -1145,26 +1145,26 @@ pub type PJ_TYPE = libc::c_uint;
 pub const PJ_COMPARISON_CRITERION_PJ_COMP_STRICT: PJ_COMPARISON_CRITERION = 0;
 #[doc = " The objects are equivalent for the purpose of coordinate\n operations. They can differ by the name of their objects,\n identifiers, other metadata.\n Parameters may be expressed in different units, provided that the\n value is (with some tolerance) the same once expressed in a\n common unit."]
 pub const PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT: PJ_COMPARISON_CRITERION = 1;
-#[doc = " Same as EQUIVALENT, relaxed with an exception that the axis order\n of the base CRS of a DerivedCRS/ProjectedCRS or the axis order of\n a GeographicCRS is ignored. Only to be used\n with DerivedCRS/ProjectedCRS/GeographicCRS"]
+#[doc = " Same as EQUIVALENT, relaxed with an exception that the axis order\n of the base CRS of a DerivedCRS/ProjectedCRS or the axis order of\n a `GeographicCRS` is ignored. Only to be used\n with DerivedCRS/ProjectedCRS/GeographicCRS"]
 pub const PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS:
     PJ_COMPARISON_CRITERION = 2;
 #[doc = " Comparison criterion."]
 pub type PJ_COMPARISON_CRITERION = libc::c_uint;
-#[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT2"]
+#[doc = " cf `osgeo::proj::io::WKTFormatter::Convention::WKT2`"]
 pub const PJ_WKT_TYPE_PJ_WKT2_2015: PJ_WKT_TYPE = 0;
-#[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT2_SIMPLIFIED"]
+#[doc = " cf `osgeo::proj::io::WKTFormatter::Convention::WKT2_SIMPLIFIED`"]
 pub const PJ_WKT_TYPE_PJ_WKT2_2015_SIMPLIFIED: PJ_WKT_TYPE = 1;
-#[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT2_2019"]
+#[doc = " cf `osgeo::proj::io::WKTFormatter::Convention::WKT2_2019`"]
 pub const PJ_WKT_TYPE_PJ_WKT2_2019: PJ_WKT_TYPE = 2;
-#[doc = " Deprecated alias for PJ_WKT2_2019"]
+#[doc = " Deprecated alias for `PJ_WKT2_2019`"]
 pub const PJ_WKT_TYPE_PJ_WKT2_2018: PJ_WKT_TYPE = 2;
-#[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT2_2019_SIMPLIFIED"]
+#[doc = " cf `osgeo::proj::io::WKTFormatter::Convention::WKT2_2019_SIMPLIFIED`"]
 pub const PJ_WKT_TYPE_PJ_WKT2_2019_SIMPLIFIED: PJ_WKT_TYPE = 3;
-#[doc = " Deprecated alias for PJ_WKT2_2019"]
+#[doc = " Deprecated alias for `PJ_WKT2_2019`"]
 pub const PJ_WKT_TYPE_PJ_WKT2_2018_SIMPLIFIED: PJ_WKT_TYPE = 3;
-#[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT1_GDAL"]
+#[doc = " cf `osgeo::proj::io::WKTFormatter::Convention::WKT1_GDAL`"]
 pub const PJ_WKT_TYPE_PJ_WKT1_GDAL: PJ_WKT_TYPE = 4;
-#[doc = " cf osgeo::proj::io::WKTFormatter::Convention::WKT1_ESRI"]
+#[doc = " cf `osgeo::proj::io::WKTFormatter::Convention::WKT1_ESRI`"]
 pub const PJ_WKT_TYPE_PJ_WKT1_ESRI: PJ_WKT_TYPE = 5;
 #[doc = " \\brief WKT version."]
 pub type PJ_WKT_TYPE = libc::c_uint;
@@ -1186,14 +1186,14 @@ pub const PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_DISCARD_OPERATION_IF
     PROJ_GRID_AVAILABILITY_USE = 1;
 #[doc = " Ignore grid availability at all. Results will be presented as if\n all grids were available."]
 pub const PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_IGNORED: PROJ_GRID_AVAILABILITY_USE = 2;
-#[doc = " Results will be presented as if grids known to PROJ (that is\n registered in the grid_alternatives table of its database) were\n available. Used typically when networking is enabled."]
+#[doc = " Results will be presented as if grids known to PROJ (that is\n registered in the `grid_alternatives` table of its database) were\n available. Used typically when networking is enabled."]
 pub const PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_KNOWN_AVAILABLE:
     PROJ_GRID_AVAILABILITY_USE = 3;
 #[doc = " Describe how grid availability is used."]
 pub type PROJ_GRID_AVAILABILITY_USE = libc::c_uint;
-#[doc = " cf osgeo::proj::io::PROJStringFormatter::Convention::PROJ_5"]
+#[doc = " cf `osgeo::proj::io::PROJStringFormatter::Convention::PROJ_5`"]
 pub const PJ_PROJ_STRING_TYPE_PJ_PROJ_5: PJ_PROJ_STRING_TYPE = 0;
-#[doc = " cf osgeo::proj::io::PROJStringFormatter::Convention::PROJ_4"]
+#[doc = " cf `osgeo::proj::io::PROJStringFormatter::Convention::PROJ_4`"]
 pub const PJ_PROJ_STRING_TYPE_PJ_PROJ_4: PJ_PROJ_STRING_TYPE = 1;
 #[doc = " \\brief PROJ string version."]
 pub type PJ_PROJ_STRING_TYPE = libc::c_uint;
@@ -1240,7 +1240,7 @@ pub struct PROJ_CRS_INFO {
     pub type_: PJ_TYPE,
     #[doc = " Whether the object is deprecated"]
     pub deprecated: libc::c_int,
-    #[doc = " Whereas the west_lon_degree, south_lat_degree, east_lon_degree and\n north_lat_degree fields are valid."]
+    #[doc = " Whereas the `west_lon_degree`, `south_lat_degree`, `east_lon_degree` and\n `north_lat_degree` fields are valid."]
     pub bbox_valid: libc::c_int,
     #[doc = " Western-most longitude of the area of use, in degrees."]
     pub west_lon_degree: f64,
@@ -1287,7 +1287,7 @@ const _: () = {
     ["Offset of field: PROJ_CRS_INFO::celestial_body_name"]
         [::core::mem::offset_of!(PROJ_CRS_INFO, celestial_body_name) - 88usize];
 };
-#[doc = " \\brief Structure describing optional parameters for proj_get_crs_list();\n\n This structure may grow over time, and should not be directly allocated by\n client code."]
+#[doc = " \\brief Structure describing optional parameters for `proj_get_crs_list()`;\n\n This structure may grow over time, and should not be directly allocated by\n client code."]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PROJ_CRS_LIST_PARAMETERS {
@@ -1295,9 +1295,9 @@ pub struct PROJ_CRS_LIST_PARAMETERS {
     pub types: *const PJ_TYPE,
     #[doc = " Size of types. Should be 0 if all types are allowed"]
     pub typesCount: usize,
-    #[doc = " If TRUE and bbox_valid == TRUE, then only CRS whose area of use\n entirely contains the specified bounding box will be returned.\n If FALSE and bbox_valid == TRUE, then only CRS whose area of use\n intersects the specified bounding box will be returned."]
+    #[doc = " If TRUE and `bbox_valid` == TRUE, then only CRS whose area of use\n entirely contains the specified bounding box will be returned.\n If FALSE and `bbox_valid` == TRUE, then only CRS whose area of use\n intersects the specified bounding box will be returned."]
     pub crs_area_of_use_contains_bbox: libc::c_int,
-    #[doc = " To set to TRUE so that west_lon_degree, south_lat_degree,\n east_lon_degree and north_lat_degree fields are taken into account."]
+    #[doc = " To set to TRUE so that `west_lon_degree`, `south_lat_degree`,\n `east_lon_degree` and `north_lat_degree` fields are taken into account."]
     pub bbox_valid: libc::c_int,
     #[doc = " Western-most longitude of the area of use, in degrees."]
     pub west_lon_degree: f64,
@@ -2166,7 +2166,7 @@ const _: () = {
         [::core::mem::offset_of!(PJ_PARAM_DESCRIPTION, unit_type) - 48usize];
 };
 unsafe extern "C" {
-    #[doc = " \\defgroup iso19111_advanced_functions Binding in C of advanced methods from\n the C++ API\n @{"]
+    #[doc = " \\defgroup `iso19111_advanced_functions` Binding in C of advanced methods from\n the C++ API\n @{"]
     pub fn proj_create_cs(
         ctx: *mut PJ_CONTEXT,
         type_: PJ_COORDINATE_SYSTEM_TYPE,

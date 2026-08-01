@@ -12,14 +12,15 @@ impl crate::Context {
     ///Enable or disable network access.
     ///
     ///This overrides the default endpoint in the PROJ configuration file or
-    /// with the PROJ_NETWORK environment variable.
+    /// with the `PROJ_NETWORK` environment variable.
     ///
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_enable_network>
     pub fn set_enable_network(&self, enabled: bool) -> Result<&Self, ProjError> {
         let result =
-            unsafe { proj_sys::proj_context_set_enable_network(self.ptr(), enabled as i32) } != 0;
+            unsafe { proj_sys::proj_context_set_enable_network(self.ptr(), i32::from(enabled)) }
+                != 0;
         check_result!(enabled ^ result, "Network interface is not available.");
         check_result!(self);
         Ok(self)
@@ -37,7 +38,7 @@ impl crate::Context {
     ///Define the URL endpoint to query for remote grids.
     ///
     ///This overrides the default endpoint in the PROJ configuration file or
-    /// with the PROJ_NETWORK_ENDPOINT environment variable.
+    /// with the `PROJ_NETWORK_ENDPOINT` environment variable.
     ///
     /// # References
     ///
@@ -67,7 +68,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_user_writable_directory>
     pub fn get_user_writable_directory(&self, create: bool) -> Result<PathBuf, ProjError> {
         let result = unsafe {
-            proj_sys::proj_context_get_user_writable_directory(self.ptr(), create as i32)
+            proj_sys::proj_context_get_user_writable_directory(self.ptr(), i32::from(create))
         };
         check_result!(self);
         Ok(PathBuf::from(result.to_string().unwrap_or_default()))
@@ -80,7 +81,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_enable>
     pub fn grid_cache_set_enable(&self, enabled: bool) -> Result<&Self, ProjError> {
-        unsafe { proj_sys::proj_grid_cache_set_enable(self.ptr(), enabled as i32) };
+        unsafe { proj_sys::proj_grid_cache_set_enable(self.ptr(), i32::from(enabled)) };
         check_result!(self);
         Ok(self)
     }
@@ -92,7 +93,7 @@ impl crate::Context {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_filename>
     pub fn grid_cache_set_filename(&self, fullname: &str) -> Result<&Self, ProjError> {
         unsafe {
-            proj_sys::proj_grid_cache_set_filename(self.ptr(), fullname.to_cstring()?.as_ptr())
+            proj_sys::proj_grid_cache_set_filename(self.ptr(), fullname.to_cstring()?.as_ptr());
         };
         check_result!(self);
         Ok(self)
@@ -104,7 +105,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_max_size>
     pub fn grid_cache_set_max_size(&self, max_size_mbyte: u16) -> Result<&Self, ProjError> {
-        unsafe { proj_sys::proj_grid_cache_set_max_size(self.ptr(), max_size_mbyte as i32) };
+        unsafe { proj_sys::proj_grid_cache_set_max_size(self.ptr(), i32::from(max_size_mbyte)) };
         check_result!(self);
         Ok(self)
     }
@@ -112,7 +113,7 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_cache_set_ttl>
     pub fn grid_cache_set_ttl(&self, ttl_seconds: u16) -> Result<&Self, ProjError> {
-        unsafe { proj_sys::proj_grid_cache_set_ttl(self.ptr(), ttl_seconds as i32) };
+        unsafe { proj_sys::proj_grid_cache_set_ttl(self.ptr(), i32::from(ttl_seconds)) };
         check_result!(self);
         Ok(self)
     }
@@ -131,10 +132,11 @@ impl crate::Context {
     ///The file will be determinted to have to be downloaded if it does not
     /// exist yet in the user-writable directory, or if it is determined that a
     /// more recent version exists. To determine if a more recent version
-    /// exists, PROJ will use the "downloaded_file_properties" table of its grid
-    /// cache database. Consequently files manually placed in the user-writable
-    /// directory without using this function would be considered as
-    /// non-existing/obsolete and would be unconditionally downloaded again.
+    /// exists, PROJ will use the "`downloaded_file_properties`" table of its
+    /// grid cache database. Consequently files manually placed in the
+    /// user-writable directory without using this function would be
+    /// considered as non-existing/obsolete and would be unconditionally
+    /// downloaded again.
     ///
     ///This function can only be used if networking is enabled, and either the
     /// default curl network API or a custom one have been installed.
@@ -151,7 +153,7 @@ impl crate::Context {
             proj_sys::proj_is_download_needed(
                 self.ptr(),
                 url_or_filename.to_cstring()?.as_ptr(),
-                ignore_ttl_setting as i32,
+                i32::from(ignore_ttl_setting),
             )
         } != 0;
         check_result!(self);
@@ -162,7 +164,7 @@ impl crate::Context {
     ///The file will only be downloaded if it does not exist yet in the
     /// user-writable directory, or if it is determined that a more recent
     /// version exists. To determine if a more recent version exists, PROJ will
-    /// use the "downloaded_file_properties" table of its grid cache database.
+    /// use the "`downloaded_file_properties`" table of its grid cache database.
     /// Consequently files manually placed in the user-writable directory
     /// without using this function would be considered as non-existing/obsolete
     /// and would be unconditionally downloaded again.
@@ -182,7 +184,7 @@ impl crate::Context {
             proj_sys::proj_download_file(
                 self.ptr(),
                 url_or_filename.to_cstring()?.as_ptr(),
-                ignore_ttl_setting as i32,
+                i32::from(ignore_ttl_setting),
                 None,
                 std::ptr::null_mut(),
             )

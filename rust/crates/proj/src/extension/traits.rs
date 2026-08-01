@@ -93,7 +93,7 @@ pub trait ICoord: Clone {
 
 // Only allow use this trait in crate.
 // Prevent users from modifying the to_coord fn.
-pub(crate) trait ToCoord {
+pub trait ToCoord {
     fn to_coord(&self) -> Result<proj_sys::PJ_COORD, ProjError>;
 }
 
@@ -140,38 +140,38 @@ where
     }
 }
 impl ICoord for (f64, f64) {
-    fn x(&mut self) -> *mut f64 { &mut self.0 }
-    fn y(&mut self) -> *mut f64 { &mut self.1 }
+    fn x(&mut self) -> *mut f64 { &raw mut self.0 }
+    fn y(&mut self) -> *mut f64 { &raw mut self.1 }
     fn z(&mut self) -> *mut f64 { NULL_PTR }
     fn t(&mut self) -> *mut f64 { NULL_PTR }
 }
 impl ICoord for [f64; 2] {
-    fn x(&mut self) -> *mut f64 { &mut self[0] }
-    fn y(&mut self) -> *mut f64 { &mut self[1] }
+    fn x(&mut self) -> *mut f64 { &raw mut self[0] }
+    fn y(&mut self) -> *mut f64 { &raw mut self[1] }
     fn z(&mut self) -> *mut f64 { NULL_PTR }
     fn t(&mut self) -> *mut f64 { NULL_PTR }
 }
 impl ICoord for (f64, f64, f64) {
-    fn x(&mut self) -> *mut f64 { &mut self.0 }
-    fn y(&mut self) -> *mut f64 { &mut self.1 }
-    fn z(&mut self) -> *mut f64 { &mut self.2 }
+    fn x(&mut self) -> *mut f64 { &raw mut self.0 }
+    fn y(&mut self) -> *mut f64 { &raw mut self.1 }
+    fn z(&mut self) -> *mut f64 { &raw mut self.2 }
     fn t(&mut self) -> *mut f64 { NULL_PTR }
 }
 impl ICoord for [f64; 3] {
-    fn x(&mut self) -> *mut f64 { &mut self[0] }
-    fn y(&mut self) -> *mut f64 { &mut self[1] }
-    fn z(&mut self) -> *mut f64 { &mut self[2] }
+    fn x(&mut self) -> *mut f64 { &raw mut self[0] }
+    fn y(&mut self) -> *mut f64 { &raw mut self[1] }
+    fn z(&mut self) -> *mut f64 { &raw mut self[2] }
     fn t(&mut self) -> *mut f64 { NULL_PTR }
 }
 impl ICoord for (f64, f64, f64, f64) {
-    fn x(&mut self) -> *mut f64 { &mut self.0 }
-    fn y(&mut self) -> *mut f64 { &mut self.1 }
-    fn z(&mut self) -> *mut f64 { &mut self.2 }
-    fn t(&mut self) -> *mut f64 { &mut self.3 }
+    fn x(&mut self) -> *mut f64 { &raw mut self.0 }
+    fn y(&mut self) -> *mut f64 { &raw mut self.1 }
+    fn z(&mut self) -> *mut f64 { &raw mut self.2 }
+    fn t(&mut self) -> *mut f64 { &raw mut self.3 }
 }
 impl ICoord for [f64; 4] {
-    fn x(&mut self) -> *mut f64 { &mut self[0] }
-    fn y(&mut self) -> *mut f64 { &mut self[1] }
-    fn z(&mut self) -> *mut f64 { &mut self[2] }
-    fn t(&mut self) -> *mut f64 { &mut self[3] }
+    fn x(&mut self) -> *mut f64 { &raw mut self[0] }
+    fn y(&mut self) -> *mut f64 { &raw mut self[1] }
+    fn z(&mut self) -> *mut f64 { &raw mut self[2] }
+    fn t(&mut self) -> *mut f64 { &raw mut self[3] }
 }

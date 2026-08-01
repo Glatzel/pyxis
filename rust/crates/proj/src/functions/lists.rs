@@ -21,20 +21,18 @@ pub fn list_operations() -> Result<Vec<crate::data_types::Operations>, ProjError
         };
         if current_ptr.id.is_null() {
             break;
-        } else {
-            out_vec.push(crate::data_types::Operations::new(
-                current_ptr.id.to_string()?,
-                unsafe {
-                    current_ptr
-                        .descr
-                        .offset(0)
-                        .as_ref()
-                        .ok_or_else(|| ProjError::new("Invalid pointer".to_string()))?
-                        .to_string()?
-                },
-            ));
-            offset += 1;
         }
+        out_vec.push(crate::data_types::Operations::new(
+            current_ptr.id.to_string()?,
+            unsafe {
+                current_ptr
+                    .descr
+                    .as_ref()
+                    .ok_or_else(|| ProjError::new("Invalid pointer".to_string()))?
+                    .to_string()?
+            },
+        ));
+        offset += 1;
     }
     Ok(out_vec)
 }
@@ -58,15 +56,14 @@ pub fn list_ellps() -> Result<Vec<crate::data_types::Ellps>, ProjError> {
         };
         if current_ptr.id.is_null() {
             break;
-        } else {
-            out_vec.push(crate::data_types::Ellps::new(
-                current_ptr.id.to_string().unwrap_or_default(),
-                current_ptr.major.to_string().unwrap_or_default(),
-                current_ptr.ell.to_string().unwrap_or_default(),
-                current_ptr.name.to_string().unwrap_or_default(),
-            ));
-            offset += 1;
         }
+        out_vec.push(crate::data_types::Ellps::new(
+            current_ptr.id.to_string().unwrap_or_default(),
+            current_ptr.major.to_string().unwrap_or_default(),
+            current_ptr.ell.to_string().unwrap_or_default(),
+            current_ptr.name.to_string().unwrap_or_default(),
+        ));
+        offset += 1;
     }
     Ok(out_vec)
 }
@@ -88,19 +85,19 @@ pub fn list_units() -> Result<Vec<crate::data_types::Units>, ProjError> {
         };
         if current_ptr.id.is_null() {
             break;
-        } else {
-            out_vec.push(crate::data_types::Units::new(
-                current_ptr.id.to_string().unwrap_or_default(),
-                current_ptr.to_meter.to_string().unwrap_or_default(),
-                current_ptr.name.to_string().unwrap_or_default(),
-                current_ptr.factor,
-            ));
-            offset += 1;
         }
+        out_vec.push(crate::data_types::Units::new(
+            current_ptr.id.to_string().unwrap_or_default(),
+            current_ptr.to_meter.to_string().unwrap_or_default(),
+            current_ptr.name.to_string().unwrap_or_default(),
+            current_ptr.factor,
+        ));
+        offset += 1;
     }
     Ok(out_vec)
 }
 ///Get a pointer to an array of hard-coded prime meridians defined in PROJ.
+///
 /// Note that this list is no longer updated. The last entry of the returned
 /// array is a NULL-entry. The array is statically allocated and does not need
 /// to be freed after use.
@@ -119,13 +116,12 @@ pub fn list_prime_meridians() -> Result<Vec<crate::data_types::PrimeMeridians>, 
         };
         if current_ptr.id.is_null() {
             break;
-        } else {
-            out_vec.push(crate::data_types::PrimeMeridians::new(
-                current_ptr.id.to_string().unwrap_or_default(),
-                current_ptr.defn.to_string().unwrap_or_default(),
-            ));
-            offset += 1;
         }
+        out_vec.push(crate::data_types::PrimeMeridians::new(
+            current_ptr.id.to_string().unwrap_or_default(),
+            current_ptr.defn.to_string().unwrap_or_default(),
+        ));
+        offset += 1;
     }
     Ok(out_vec)
 }

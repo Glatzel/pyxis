@@ -23,9 +23,9 @@ impl Proj {
     pub(crate) fn new(
         arc_ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ,
-    ) -> Result<crate::Proj, ProjError> {
+    ) -> Result<Self, ProjError> {
         check_result!(ptr.is_null(), "Proj pointer is null.");
-        Ok(crate::Proj {
+        Ok(Self {
             arc_ctx_ptr,
             ptr,
             _owned_cstrings: OwnedCStrings::new(),
@@ -36,15 +36,15 @@ impl Proj {
         arc_ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ,
         owned_cstrings: OwnedCStrings,
-    ) -> Result<crate::Proj, ProjError> {
+    ) -> Result<Self, ProjError> {
         check_result!(ptr.is_null(), "Proj pointer is null.");
-        Ok(crate::Proj {
+        Ok(Self {
             arc_ctx_ptr,
             ptr,
             _owned_cstrings: owned_cstrings,
         })
     }
-    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ { self.ptr }
+    pub(crate) const fn ptr(&self) -> *mut proj_sys::PJ { self.ptr }
     pub(crate) fn ctx_ptr(&self) -> *mut proj_sys::PJ_CONTEXT { self.arc_ctx_ptr.ptr() }
     pub(crate) fn arc_ctx_ptr(&self) -> Arc<ContextPtr> { self.arc_ctx_ptr.clone() }
 }
@@ -67,9 +67,9 @@ pub enum Direction {
 }
 #[derive(Debug, PartialEq, Eq, Hash)]
 #[repr(transparent)]
-pub(crate) struct ContextPtr(pub(crate) *mut proj_sys::PJ_CONTEXT);
+pub struct ContextPtr(pub(crate) *mut proj_sys::PJ_CONTEXT);
 impl ContextPtr {
-    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ_CONTEXT { self.0 }
+    pub(crate) const fn ptr(&self) -> *mut proj_sys::PJ_CONTEXT { self.0 }
 }
 impl Drop for ContextPtr {
     ///Deallocate a threading-context.
@@ -130,7 +130,7 @@ impl Clone for crate::Context {
 
 ///Opaque object describing an area in which a transformation is performed.
 ///
-///It is used with proj_create_crs_to_crs() to select the best transformation
+///It is used with `proj_create_crs_to_crs()` to select the best transformation
 /// between the two input coordinate reference systems.
 ///
 /// # References

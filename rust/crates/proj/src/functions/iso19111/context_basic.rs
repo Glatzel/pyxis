@@ -9,7 +9,7 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::ProjError;
-use crate::data_types::iso19111::*;
+use crate::data_types::iso19111::{DatabaseMetadataKey, GuessedWktDialect, Category, UomInfo, UomCategory, GridInfoDB, ProjType, CelestialBodyInfo, CrsListParameters, CrsInfo, UnitCategory, UnitInfo};
 use crate::{OwnedCStrings, Proj, ProjOptions, check_result};
 /// # ISO-19111 Base functions
 impl crate::Context {
@@ -18,7 +18,7 @@ impl crate::Context {
     /// with same structure.
     ///
     ///Starting with PROJ 8.1, if the auxDbPaths parameter is an empty array,
-    /// the PROJ_AUX_DB environment variable will be used, if set. It must
+    /// the `PROJ_AUX_DB` environment variable will be used, if set. It must
     /// contain one or several paths. If several paths are provided, they must
     /// be separated by the colon (:) character on Unix, and on Windows, by the
     /// semi-colon (;) character.
@@ -69,6 +69,7 @@ impl crate::Context {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_get_database_path>
+    #[must_use]
     pub fn get_database_path(&self) -> PathBuf {
         PathBuf::from(
             unsafe { proj_sys::proj_context_get_database_path(self.ptr()) }
@@ -127,7 +128,7 @@ impl crate::Context {
     }
     ///Instantiate an object from a WKT string.
     ///
-    /// The returned object must be unreferenced with proj_destroy() after use.
+    /// The returned object must be unreferenced with `proj_destroy()` after use.
     /// It should be used by at most one thread at a time.
     ///
     ///The distinction between warnings and grammar errors is somewhat
@@ -167,27 +168,27 @@ impl crate::Context {
                 self.ptr(),
                 wkt.to_cstring()?.as_ptr(),
                 options.as_ptr(),
-                &mut out_warnings,
-                &mut out_grammar_errors,
+                &raw mut out_warnings,
+                &raw mut out_grammar_errors,
             )
         };
         let _ = out_warnings.to_vec_string_null_terminated().map(|w| {
             w.iter().for_each(|_w| {
                 clerk::warn!("{_w}");
-            })
+            });
         });
 
         let _ = out_grammar_errors.to_vec_string_null_terminated().map(|e| {
             e.iter().for_each(|_e| {
                 clerk::warn!("{_e}");
-            })
+            });
         });
 
         Proj::new(self.arc_ptr(), ptr)
     }
     ///Instantiate an object from a database lookup.
     ///
-    /// The returned object must be unreferenced with proj_destroy() after use.
+    /// The returned object must be unreferenced with `proj_destroy()` after use.
     /// It should be used by at most one thread at a time.
     ///
     /// # Arguments
@@ -215,7 +216,7 @@ impl crate::Context {
                 auth_name.to_cstring()?.as_ptr(),
                 code.to_cstring()?.as_ptr(),
                 category as u32,
-                use_projalternative_grid_names as i32,
+                i32::from(use_projalternative_grid_names),
                 ptr::null(),
             )
         };
@@ -244,9 +245,9 @@ impl crate::Context {
                 self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 code.to_cstring()?.as_ptr(),
-                &mut name,
-                &mut conv_factor,
-                &mut category,
+                &raw mut name,
+                &raw mut conv_factor,
+                &raw mut category,
             )
         };
         check_result!(result != 1, "Error");
@@ -277,12 +278,12 @@ impl crate::Context {
             proj_sys::proj_grid_get_info_from_database(
                 self.ptr(),
                 grid_name.to_cstring()?.as_ptr(),
-                &mut full_name,
-                &mut package_name,
-                &mut url,
-                &mut direct_download,
-                &mut open_license,
-                &mut available,
+                &raw mut full_name,
+                &raw mut package_name,
+                &raw mut url,
+                &raw mut direct_download,
+                &raw mut open_license,
+                &raw mut available,
             )
         };
         check_result!(result != 1, "Error");
@@ -304,7 +305,7 @@ impl crate::Context {
     ///
     /// # Arguments
     ///
-    /// * auth_name: Authority name
+    /// * `auth_name`: Authority name
     /// * code: Object code
     ///
     ///# References
@@ -367,7 +368,7 @@ impl crate::Context {
                 self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 proj_type as u32,
-                allow_deprecated as i32,
+                i32::from(allow_deprecated),
             )
         };
         check_result!(ptr.is_null(), "Error");
@@ -398,7 +399,7 @@ impl crate::Context {
             proj_sys::proj_get_celestial_body_list_from_database(
                 self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
-                &mut out_result_count,
+                &raw mut out_result_count,
             )
         };
         check_result!(out_result_count < 1, "Error");
@@ -426,17 +427,17 @@ impl crate::Context {
     /// criteria.
     ///
     /// When no filter parameters are set, this is functionally equivalent to
-    /// proj_get_codes_from_database(), instantiating a PJ* object for each of
-    /// the codes with proj_create_from_database() and retrieving information
+    /// `proj_get_codes_from_database()`, instantiating a PJ* object for each of
+    /// the codes with `proj_create_from_database()` and retrieving information
     /// with the various getters. However this function will be much faster.
     ///
     /// # Arguments
     ///
-    /// * auth_name: Authority name, used to restrict the search. Or `None` for
+    /// * `auth_name`: Authority name, used to restrict the search. Or `None` for
     ///   all authorities.
     /// * params: Additional criteria, or `None`. If not-None, params SHOULD
-    ///   have been allocated by proj_get_crs_list_parameters_create(), as the
-    ///   PROJ_CRS_LIST_PARAMETERS structure might grow over time.
+    ///   have been allocated by `proj_get_crs_list_parameters_create()`, as the
+    ///   `PROJ_CRS_LIST_PARAMETERS` structure might grow over time.
     ///
     ///# References
     ///
@@ -463,18 +464,18 @@ impl crate::Context {
                         types: types.as_ptr(),
                         typesCount: p.types().len(),
                         crs_area_of_use_contains_bbox: p.west_lon_degree() as i32,
-                        bbox_valid: p.bbox_valid() as i32,
+                        bbox_valid: i32::from(p.bbox_valid()),
                         west_lon_degree: p.west_lon_degree(),
                         south_lat_degree: p.south_lat_degree(),
                         east_lon_degree: p.east_lon_degree(),
                         north_lat_degree: p.north_lat_degree(),
-                        allow_deprecated: p.allow_deprecated() as i32,
+                        allow_deprecated: i32::from(p.allow_deprecated()),
                         celestial_body_name: owned
                             .push_option(p.celestial_body_name().to_owned())
                             .unwrap(),
                     }
                 }),
-                &mut out_result_count,
+                &raw mut out_result_count,
             )
         };
         check_result!(out_result_count < 1, "Error");
@@ -537,8 +538,8 @@ impl crate::Context {
                 self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 category.as_ref().to_cstring()?.as_ptr(),
-                allow_deprecated as i32,
-                &mut out_result_count,
+                i32::from(allow_deprecated),
+                &raw mut out_result_count,
             )
         };
         check_result!(out_result_count < 1, "Error");

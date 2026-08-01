@@ -7,7 +7,7 @@ use derive_getters::Getters;
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_INFO>
 #[cfg_attr(feature = "serde", derive(serde::Serialize))]
-#[derive(Debug, Clone, PartialEq, Getters)]
+#[derive(Debug, Clone, PartialEq, Eq, Getters)]
 pub struct Info {
     /// Release info. Version number and release date, e.g. `Rel. 4.9.3, 15
     /// August 2016`.
@@ -27,7 +27,8 @@ pub struct Info {
     search_path: String,
 }
 impl Info {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         major: i32,
         minor: i32,
         patch: i32,
@@ -35,7 +36,7 @@ impl Info {
         version: String,
         search_path: String,
     ) -> Self {
-        Info {
+        Self {
             major,
             minor,
             patch,
@@ -47,7 +48,7 @@ impl Info {
 }
 
 ///Struct holding information about a [`crate::Proj`] object. Populated by
-/// [`crate::Proj::info()`]. The PJ_PROJ_INFO object provides a view into the
+/// [`crate::Proj::info()`]. The `PJ_PROJ_INFO` object provides a view into the
 /// internals of a [`crate::Proj`], so once the `Proj` is destroyed or otherwise
 /// becomes invalid, so does the [`ProjInfo`].
 ///
@@ -73,14 +74,15 @@ pub struct ProjInfo {
     accuracy: f64,
 }
 impl ProjInfo {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         id: String,
         description: String,
         definition: String,
         has_inverse: bool,
         accuracy: f64,
     ) -> Self {
-        ProjInfo {
+        Self {
             id,
             description,
             definition,
@@ -119,7 +121,8 @@ pub struct GridInfo {
     cs_lat: f64,
 }
 impl GridInfo {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         gridname: String,
         filename: String,
         format: String,
@@ -130,7 +133,7 @@ impl GridInfo {
         cs_lon: f64,
         cs_lat: f64,
     ) -> Self {
-        GridInfo {
+        Self {
             gridname,
             filename,
             format,
@@ -150,7 +153,7 @@ impl GridInfo {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_INIT_INFO>
 #[cfg_attr(feature = "serde", derive(serde::Serialize))]
-#[derive(Debug, Clone, PartialEq, Getters)]
+#[derive(Debug, Clone, PartialEq, Eq, Getters)]
 pub struct InitInfo {
     /// Name of init file, e.g. `epsg`.
     name: String,
@@ -164,14 +167,15 @@ pub struct InitInfo {
     last_update: String,
 }
 impl InitInfo {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         name: String,
         filename: String,
         version: String,
         origin: String,
         lastupdate: String,
     ) -> Self {
-        InitInfo {
+        Self {
             name,
             filename,
             version,

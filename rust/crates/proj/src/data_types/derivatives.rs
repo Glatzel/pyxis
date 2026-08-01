@@ -40,7 +40,8 @@ pub struct Factors {
     dy_dphi: f64,
 }
 impl Factors {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         meridional_scale: f64,
         parallel_scale: f64,
         areal_scale: f64,
@@ -54,7 +55,7 @@ impl Factors {
         dy_dlam: f64,
         dy_dphi: f64,
     ) -> Self {
-        Factors {
+        Self {
             meridional_scale,
             parallel_scale,
             areal_scale,

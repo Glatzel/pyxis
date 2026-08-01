@@ -25,6 +25,7 @@ impl crate::Proj {
     /// References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_pj_info>
+    #[must_use]
     pub fn info(&self) -> ProjInfo {
         let src = unsafe { proj_sys::proj_pj_info(self.ptr()) };
         ProjInfo::new(
@@ -48,7 +49,7 @@ pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
         && src.filename.to_string()?.as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
     {
-        return Err(ProjError::new(format!("Invalid grid: {}", grid)));
+        return Err(ProjError::new(format!("Invalid grid: {grid}")));
     }
     Ok(GridInfo::new(
         src.gridname.to_string()?,

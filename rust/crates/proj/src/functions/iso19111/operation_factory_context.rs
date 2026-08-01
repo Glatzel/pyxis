@@ -3,7 +3,10 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString, ToVecCString};
 
 use crate::data_types::ProjError;
-use crate::data_types::iso19111::*;
+use crate::data_types::iso19111::{
+    CrsExtentUse, GridAvailabilityUse, IntermediateCrsUse, OperationFactoryContext, ProjObjList,
+    SpatialCriterion,
+};
 use crate::{Context, Proj};
 impl Context {
     ///Instantiate a context for building coordinate operations between two
@@ -11,10 +14,11 @@ impl Context {
     ///
     /// If authority is NULL or the empty string, then coordinate operations
     /// from any authority will be searched, with the restrictions set in the
-    /// authority_to_authority_preference database table. If authority is set to
-    /// "any", then coordinate operations from any authority will be searched If
-    /// authority is a non-empty string different of "any", then coordinate
-    /// operations will be searched only in that authority namespace.
+    /// `authority_to_authority_preference` database table. If authority is set
+    /// to "any", then coordinate operations from any authority will be
+    /// searched If authority is a non-empty string different of "any", then
+    /// coordinate operations will be searched only in that authority
+    /// namespace.
     ///
     /// # Arguments
     ///
@@ -43,10 +47,7 @@ impl Context {
 impl OperationFactoryContext {
     ///# See Also
     /// * [`crate::Context::create_operation_factory_context`]
-    pub fn from_context(
-        ctx: &Context,
-        authority: Option<&str>,
-    ) -> Result<OperationFactoryContext, ProjError> {
+    pub fn from_context(ctx: &Context, authority: Option<&str>) -> Result<Self, ProjError> {
         ctx.create_operation_factory_context(authority)
     }
     ///Set the desired accuracy of the resulting coordinate transformations.
@@ -58,6 +59,7 @@ impl OperationFactoryContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_desired_accuracy>
+    #[must_use]
     pub fn set_desired_accuracy(&self, accuracy: f64) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_desired_accuracy(
@@ -71,8 +73,8 @@ impl OperationFactoryContext {
     ///Set the desired area of interest for the resulting coordinate
     /// transformations.
     ///
-    ///For an area of interest crossing the anti-meridian, west_lon_degree will
-    /// be greater than east_lon_degree.
+    ///For an area of interest crossing the anti-meridian, `west_lon_degree`
+    /// will be greater than `east_lon_degree`.
     ///
     /// # Arguments
     ///
@@ -84,6 +86,7 @@ impl OperationFactoryContext {
     /// # References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_area_of_interest>
+    #[must_use]
     pub fn set_area_of_interest(
         &self,
         west_lon_degree: f64,
@@ -136,6 +139,7 @@ impl OperationFactoryContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_crs_extent_use>
+    #[must_use]
     pub fn set_crs_extent_use(&self, extent_use: CrsExtentUse) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_crs_extent_use(
@@ -159,6 +163,7 @@ impl OperationFactoryContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_spatial_criterion>
+    #[must_use]
     pub fn set_spatial_criterion(&self, criterion: SpatialCriterion) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_spatial_criterion(
@@ -180,6 +185,7 @@ impl OperationFactoryContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_grid_availability_use>
+    #[must_use]
     pub fn set_grid_availability_use(&self, grid_availability_use: GridAvailabilityUse) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_grid_availability_use(
@@ -202,12 +208,13 @@ impl OperationFactoryContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_use_proj_alternative_grid_names>
+    #[must_use]
     pub fn set_use_proj_alternative_grid_names(&self, use_proj_names: bool) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_use_proj_alternative_grid_names(
                 self.arc_ctx_ptr.ptr(),
                 self.ptr,
-                use_proj_names as i32,
+                i32::from(use_proj_names),
             );
         }
         self
@@ -223,8 +230,9 @@ impl OperationFactoryContext {
     ///The current implementation is limited to researching one intermediate
     /// step.
     ///
-    ///By default, with the IF_NO_DIRECT_TRANSFORMATION strategy, all potential
-    /// C candidates will be used if there is no direct transformation.
+    ///By default, with the `IF_NO_DIRECT_TRANSFORMATION` strategy, all
+    /// potential C candidates will be used if there is no direct
+    /// transformation.
     ///
     /// # Arguments
     ///
@@ -233,6 +241,7 @@ impl OperationFactoryContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allow_use_intermediate_crs>
+    #[must_use]
     pub fn set_allow_use_intermediate_crs(
         &self,
         proj_intermediate_crs_use: IntermediateCrsUse,
@@ -253,7 +262,8 @@ impl OperationFactoryContext {
     /// # Arguments
     ///
     /// * `list_of_auth_name_codes`: an array of strings NLL terminated, with
-    ///   the format { "auth_name1", "code1", "auth_name2", "code2", ... NULL }
+    ///   the format { "`auth_name1`", "code1", "`auth_name2`", "code2", ...
+    ///   NULL }
     ///
     ///# References
     ///
@@ -282,12 +292,13 @@ impl OperationFactoryContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_discard_superseded>
+    #[must_use]
     pub fn set_discard_superseded(&self, discard: bool) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_discard_superseded(
                 self.arc_ctx_ptr.ptr(),
                 self.ptr,
-                discard as i32,
+                i32::from(discard),
             );
         }
         self
@@ -301,17 +312,18 @@ impl OperationFactoryContext {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_operation_factory_context_set_allow_ballpark_transformations>
+    #[must_use]
     pub fn set_allow_ballpark_transformations(&self, allow: bool) -> &Self {
         unsafe {
             proj_sys::proj_operation_factory_context_set_allow_ballpark_transformations(
                 self.arc_ctx_ptr.ptr(),
                 self.ptr,
-                allow as i32,
+                i32::from(allow),
             );
         }
         self
     }
-    ///Find a list of CoordinateOperation from source_crs to target_crs.
+    ///Find a list of `CoordinateOperation` from `source_crs` to `target_crs`.
     ///
     ///The operations are sorted with the most relevant ones first: by
     /// descending area (intersection of the transformation area with the area

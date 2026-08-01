@@ -10,18 +10,18 @@ use crate::data_types::ProjError;
 impl crate::Context {
     fn _set_fileapi(&self) { todo!() }
 
-    ///Set the name of a custom SQLite3 VFS.
+    ///Set the name of a custom `SQLite3` VFS.
     ///
-    ///This should be a valid SQLite3 VFS name, such as the one passed to the
-    /// sqlite3_vfs_register(). See * <https://www.sqlite.org/vfs.html>
+    ///This should be a valid `SQLite3` VFS name, such as the one passed to the
+    /// `sqlite3_vfs_register()`. See * <https://www.sqlite.org/vfs.html>
     ///
     ///It will be used to read proj.db or create&access the cache.db file in
     /// the PROJ user writable directory.
     ///
     /// # Arguments
     ///
-    /// * `name`: SQLite3 VFS name. If NULL is passed, default implementation by
-    ///   SQLite will be used.
+    /// * `name`: `SQLite3` VFS name. If NULL is passed, default implementation
+    ///   by `SQLite` will be used.
     ///
     ///# References
     ///
@@ -74,8 +74,8 @@ impl crate::Context {
 
     ///Sets CA Bundle path.
     ///
-    ///Those CA Bundle path will be used by PROJ when curl and PROJ_NETWORK are
-    /// enabled.
+    ///Those CA Bundle path will be used by PROJ when curl and `PROJ_NETWORK`
+    /// are enabled.
     ///
     ///If set on the default context, they will be inherited by contexts
     /// created later.

@@ -7,7 +7,7 @@ use envoy::PtrToString;
 use crate::data_types::ProjError;
 use crate::{LogLevel, check_result};
 
-pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const c_char) {
+pub unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const c_char) {
     let _message = info.to_string().unwrap_or_default();
 
     match level {
@@ -21,7 +21,7 @@ pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *co
             clerk::trace!("{}", _message);
         }
         _ => (),
-    };
+    }
 }
 
 impl crate::Context {

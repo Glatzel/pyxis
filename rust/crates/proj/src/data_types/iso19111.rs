@@ -107,7 +107,7 @@ pub enum ComparisonCriterion {
     Equivalent = proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT,
     ///Same as EQUIVALENT, relaxed with an exception that the axis order of the
     /// base CRS of a DerivedCRS/ProjectedCRS or the axis order of a
-    /// GeographicCRS is ignored. Only to be used with
+    /// `GeographicCRS` is ignored. Only to be used with
     /// DerivedCRS/ProjectedCRS/GeographicCRS
     EquivalentExceptAxisOrderGeogcrs =
         proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS,
@@ -173,7 +173,7 @@ pub enum GridAvailabilityUse {
     /// grids were available.
     Ignored = proj_sys::PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_IGNORED,
     ///Results will be presented as if grids known to PROJ (that is registered
-    /// in the grid_alternatives table of its database) were available. Used
+    /// in the `grid_alternatives` table of its database) were available. Used
     /// typically when networking is enabled.
     KnownAvailable = proj_sys::PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_KNOWN_AVAILABLE,
 }
@@ -265,7 +265,7 @@ pub struct CrsInfo {
     pj_type: ProjType,
     /// Whether the object is deprecated
     deprecated: bool,
-    /// Whereas the west_lon_degree, south_lat_degree, east_lon_degree and
+    /// Whereas the `west_lon_degree`, `south_lat_degree`, `east_lon_degree` and
     bbox_valid: bool,
     /// Western-most longitude of the area of use, in degrees.
     west_lon_degree: f64,
@@ -283,7 +283,8 @@ pub struct CrsInfo {
     celestial_body_name: String,
 }
 impl CrsInfo {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         auth_name: String,
         code: String,
         name: String,
@@ -298,7 +299,7 @@ impl CrsInfo {
         projection_method_name: String,
         celestial_body_name: String,
     ) -> Self {
-        CrsInfo {
+        Self {
             auth_name,
             code,
             name,
@@ -316,7 +317,7 @@ impl CrsInfo {
     }
 }
 
-///Structure describing optional parameters for proj_get_crs_list();.
+///Structure describing optional parameters for `proj_get_crs_list()`;.
 ///
 ///This structure may grow over time, and should not be directly allocated by
 /// client code.
@@ -329,10 +330,10 @@ impl CrsInfo {
 pub struct CrsListParameters {
     /// Array of allowed object types. Should be NULL if all types are allowed
     types: Vec<ProjType>,
-    /// If TRUE and bbox_valid == TRUE, then only CRS whose area of use entirely
-    /// contains the specified bounding box will be returned.
+    /// If TRUE and `bbox_valid` == TRUE, then only CRS whose area of use
+    /// entirely contains the specified bounding box will be returned.
     crs_area_of_use_contains_bbox: bool,
-    /// If TRUE and bbox_valid == TRUE, then only CRS whose area of use
+    /// If TRUE and `bbox_valid` == TRUE, then only CRS whose area of use
     bbox_valid: bool,
     /// Western-most longitude of the area of use, in degrees.
     west_lon_degree: f64,
@@ -348,7 +349,8 @@ pub struct CrsListParameters {
     celestial_body_name: Option<String>,
 }
 impl CrsListParameters {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         types: Vec<ProjType>,
         crs_area_of_use_contains_bbox: bool,
         bbox_valid: bool,
@@ -359,7 +361,7 @@ impl CrsListParameters {
         allow_deprecated: bool,
         celestial_body_name: Option<String>,
     ) -> Self {
-        CrsListParameters {
+        Self {
             types,
             crs_area_of_use_contains_bbox,
             bbox_valid,
@@ -402,7 +404,8 @@ pub struct UnitInfo {
     deprecated: bool,
 }
 impl UnitInfo {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         auth_name: String,
         code: String,
         name: String,
@@ -411,7 +414,7 @@ impl UnitInfo {
         proj_short_name: String,
         deprecated: bool,
     ) -> Self {
-        UnitInfo {
+        Self {
             auth_name,
             code,
             name,
@@ -432,7 +435,7 @@ impl UnitInfo {
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PROJ_CELESTIAL_BODY_INFO>
 #[cfg_attr(feature = "serde", derive(serde::Serialize))]
-#[derive(Debug, Clone, PartialEq, Getters)]
+#[derive(Debug, Clone, PartialEq, Eq, Getters)]
 pub struct CelestialBodyInfo {
     /// Authority name.
     auth_name: String,
@@ -440,7 +443,8 @@ pub struct CelestialBodyInfo {
     name: String,
 }
 impl CelestialBodyInfo {
-    pub fn new(auth_name: String, name: String) -> Self { CelestialBodyInfo { auth_name, name } }
+    #[must_use]
+    pub const fn new(auth_name: String, name: String) -> Self { Self { auth_name, name } }
 }
 ///Type of unit of measure.
 ///
@@ -528,7 +532,7 @@ pub struct AxisDescription {
     pub(crate) unit_type: UnitType,
 }
 impl AxisDescription {
-    pub fn new(
+    pub const fn new(
         name: Option<String>,
         abbreviation: Option<String>,
         direction: AxisDirection,
@@ -563,7 +567,8 @@ pub struct ParamDescription {
     unit_type: UnitType,
 }
 impl ParamDescription {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         name: Option<String>,
         auth_name: Option<String>,
         code: Option<String>,
@@ -572,7 +577,7 @@ impl ParamDescription {
         unit_conv_factor: f64,
         unit_type: UnitType,
     ) -> Self {
-        ParamDescription {
+        Self {
             name,
             auth_name,
             code,
@@ -688,7 +693,8 @@ pub struct AxisInfo {
     unit_code: String,
 }
 impl AxisInfo {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         name: String,
         abbrev: String,
         direction: AxisDirection,
@@ -697,7 +703,7 @@ impl AxisInfo {
         unit_auth_name: String,
         unit_code: String,
     ) -> Self {
-        AxisInfo {
+        Self {
             name,
             abbrev,
             direction,
@@ -720,13 +726,14 @@ pub struct EllipsoidParameters {
     inv_flattening: f64,
 }
 impl EllipsoidParameters {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         semi_major_metre: f64,
         semi_minor_metre: f64,
         is_semi_minor_computed: bool,
         inv_flattening: f64,
     ) -> Self {
-        EllipsoidParameters {
+        Self {
             semi_major_metre,
             semi_minor_metre,
             is_semi_minor_computed,
@@ -745,8 +752,9 @@ pub struct PrimeMeridianParameters {
     unit_name: String,
 }
 impl PrimeMeridianParameters {
-    pub fn new(longitude: f64, unit_conv_factor: f64, unit_name: String) -> Self {
-        PrimeMeridianParameters {
+    #[must_use]
+    pub const fn new(longitude: f64, unit_conv_factor: f64, unit_name: String) -> Self {
+        Self {
             longitude,
             unit_conv_factor,
             unit_name,
@@ -756,15 +764,16 @@ impl PrimeMeridianParameters {
 #[doc = "# References"]
 #[doc = "* <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>"]
 #[cfg_attr(feature = "serde", derive(serde::Serialize))]
-#[derive(Debug, Clone, PartialEq, Getters)]
+#[derive(Debug, Clone, PartialEq, Eq, Getters)]
 pub struct CoordOperationMethodInfo {
     method_name: String,
     method_auth_name: String,
     method_code: String,
 }
 impl CoordOperationMethodInfo {
-    pub fn new(method_name: String, method_auth_name: String, method_code: String) -> Self {
-        CoordOperationMethodInfo {
+    #[must_use]
+    pub const fn new(method_name: String, method_auth_name: String, method_code: String) -> Self {
+        Self {
             method_name,
             method_auth_name,
             method_code,
@@ -789,7 +798,8 @@ pub struct CoordOperationParam {
     unit_category: UnitCategory,
 }
 impl CoordOperationParam {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         name: String,
         auth_name: String,
         code: String,
@@ -801,7 +811,7 @@ impl CoordOperationParam {
         unit_code: String,
         unit_category: UnitCategory,
     ) -> Self {
-        CoordOperationParam {
+        Self {
             name,
             auth_name,
             code,
@@ -845,7 +855,7 @@ pub enum UnitCategory {
 ///
 /// * <https://github.com/OSGeo/PROJ/blob/master/src/proj.h>
 #[cfg_attr(feature = "serde", derive(serde::Serialize))]
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CoordOperationGridUsed {
     short_name: String,
     full_name: String,
@@ -856,7 +866,8 @@ pub struct CoordOperationGridUsed {
     available: bool,
 }
 impl CoordOperationGridUsed {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         short_name: String,
         full_name: String,
         package_name: String,
@@ -865,7 +876,7 @@ impl CoordOperationGridUsed {
         open_license: bool,
         available: bool,
     ) -> Self {
-        CoordOperationGridUsed {
+        Self {
             short_name,
             full_name,
             package_name,
@@ -933,9 +944,9 @@ pub enum AllowIntermediateCrs {
 impl Display for AllowIntermediateCrs {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let text = match self {
-            AllowIntermediateCrs::Always => "ALWAYS",
-            AllowIntermediateCrs::IfNoDirectTransformation => "IF_NO_DIRECT_TRANSFORMATION",
-            AllowIntermediateCrs::Never => "NEVER",
+            Self::Always => "ALWAYS",
+            Self::IfNoDirectTransformation => "IF_NO_DIRECT_TRANSFORMATION",
+            Self::Never => "NEVER",
         };
         write!(f, "{text}")
     }
@@ -959,14 +970,15 @@ pub struct AreaOfUse {
     north_lat_degree: f64,
 }
 impl AreaOfUse {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         area_name: String,
         west_lon_degree: f64,
         south_lat_degree: f64,
         east_lon_degree: f64,
         north_lat_degree: f64,
     ) -> Self {
-        AreaOfUse {
+        Self {
             area_name,
             west_lon_degree,
             south_lat_degree,
@@ -1014,8 +1026,9 @@ pub struct UomInfo {
     category: UomCategory,
 }
 impl UomInfo {
-    pub fn new(name: String, conv_factor: f64, category: UomCategory) -> Self {
-        UomInfo {
+    #[must_use]
+    pub const fn new(name: String, conv_factor: f64, category: UomCategory) -> Self {
+        Self {
             name,
             conv_factor,
             category,
@@ -1026,7 +1039,7 @@ impl UomInfo {
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_uom_get_info_from_database>
 #[cfg_attr(feature = "serde", derive(serde::Serialize))]
-#[derive(Debug, Clone, PartialEq, Getters)]
+#[derive(Debug, Clone, PartialEq, Eq, Getters)]
 pub struct GridInfoDB {
     /// a string value to store the grid full filename.
     full_name: String,
@@ -1035,7 +1048,7 @@ pub struct GridInfoDB {
     /// a string value to store the grid URL or the package URL where the grid
     /// might be found.
     url: String,
-    /// a boolean value to store whether *out_url can be downloaded directly.
+    /// a boolean value to store whether *`out_url` can be downloaded directly.
     direct_download: bool,
     /// a boolean value to store whether the grid is released with an open
     /// license.
@@ -1044,7 +1057,8 @@ pub struct GridInfoDB {
     available: bool,
 }
 impl GridInfoDB {
-    pub fn new(
+    #[must_use]
+    pub const fn new(
         full_name: String,
         package_name: String,
         url: String,
@@ -1052,7 +1066,7 @@ impl GridInfoDB {
         open_license: bool,
         available: bool,
     ) -> Self {
-        GridInfoDB {
+        Self {
             full_name,
             package_name,
             url,
@@ -1083,12 +1097,12 @@ impl ProjObjList {
     pub(crate) fn new(
         ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
-    ) -> Result<ProjObjList, ProjError> {
+    ) -> Result<Self, ProjError> {
         check_result!(ptr.is_null(), "PJ_OBJ_LIST pointer is null.");
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         check_result!(count < 1, "PJ_OBJ_LIST count 0.");
         clerk::debug!("pj_obj_list count: {count}");
-        Ok(ProjObjList {
+        Ok(Self {
             arc_ctx_ptr: ctx_ptr,
             ptr,
             count: count as usize,
@@ -1101,12 +1115,12 @@ impl ProjObjList {
         ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
         owned_cstrings: OwnedCStrings,
-    ) -> Result<ProjObjList, ProjError> {
+    ) -> Result<Self, ProjError> {
         check_result!(ptr.is_null(), "PJ_OBJ_LIST pointer is null.");
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         check_result!(count < 1, "PJ_OBJ_LIST count 0.");
         clerk::debug!("pj_obj_list count: {count}");
-        Ok(ProjObjList {
+        Ok(Self {
             arc_ctx_ptr: ctx_ptr,
             ptr,
             count: count as usize,
@@ -1114,7 +1128,7 @@ impl ProjObjList {
         })
     }
 
-    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ_OBJ_LIST { self.ptr }
+    pub(crate) const fn ptr(&self) -> *mut proj_sys::PJ_OBJ_LIST { self.ptr }
     ///Return an object from the result set.
     ///
     /// # References
@@ -1132,5 +1146,6 @@ impl ProjObjList {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
-    pub fn get_count(&self) -> usize { self.count }
+    #[must_use]
+    pub const fn get_count(&self) -> usize { self.count }
 }

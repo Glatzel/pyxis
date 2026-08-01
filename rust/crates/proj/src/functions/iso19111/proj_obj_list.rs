@@ -3,7 +3,7 @@ extern crate alloc;
 use envoy::ToCString;
 
 use crate::data_types::ProjError;
-use crate::data_types::iso19111::*;
+use crate::data_types::iso19111::{ProjObjList, ProjType};
 use crate::{Context, OwnedCStrings, Proj, ToCoord};
 impl ProjObjList {
     ///Return the index of the operation that would be the most appropriate to
@@ -97,14 +97,14 @@ impl Context {
                 searched_name.to_cstring()?.as_ptr(),
                 types.map_or(ptr::null(), |types| types.as_ptr()),
                 count,
-                approximate_match as i32,
+                i32::from(approximate_match),
                 limit_result_count,
                 ptr::null(),
             )
         };
         ProjObjList::new(self.arc_ptr(), result)
     }
-    /// Return GeodeticCRS that use the specified datum.
+    /// Return `GeodeticCRS` that use the specified datum.
     ///
     /// # Arguments
     ///
@@ -162,17 +162,18 @@ impl Proj {
     ///
     /// * 100% means that the name of the reference entry perfectly matches the
     ///   CRS name, and both are equivalent. In which case a single result is
-    ///   returned. Note: in the case of a GeographicCRS whose axis order is
+    ///   returned. Note: in the case of a `GeographicCRS` whose axis order is
     ///   implicit in the input definition (for example ESRI WKT), then axis
     ///   order is ignored for the purpose of identification. That is the CRS
     ///   built from
-    ///   GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.
-    ///   0, 298.257223563]],
+    ///   GEOGCS["`GCS_WGS_1984",DATUM`["`D_WGS_1984",SPHEROID`["`WGS_1984",
+    ///   6378137`. 0, 298.257223563]],
     ///   PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]] will be
-    ///   identified to EPSG:4326, but will not pass a isEquivalentTo(EPSG_4326,
-    ///   util::IComparable::Criterion::EQUIVALENT) test, but rather
-    ///   isEquivalentTo(EPSG_4326,
-    ///   util::IComparable::Criterion::EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS)
+    ///   identified to EPSG:4326, but will not pass a
+    ///   `isEquivalentTo(EPSG_4326`,
+    ///   `util::IComparable::Criterion::EQUIVALENT`) test, but rather
+    ///   `isEquivalentTo(EPSG_4326`,
+    ///   `util::IComparable::Criterion::EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS`)
     /// * 90% means that CRS are equivalent, but the names are not exactly the
     ///   same.
     /// * 70% means that CRS are equivalent, but the names are not equivalent.
@@ -182,9 +183,9 @@ impl Proj {
     ///Other confidence values may be returned by some specialized
     /// implementations.
     ///
-    /// This is implemented for GeodeticCRS, ProjectedCRS,
-    /// VerticalCRS and CompoundCRS. Return the hub CRS of a BoundCRS or the
-    /// target CRS of a CoordinateOperation.
+    /// This is implemented for `GeodeticCRS`, `ProjectedCRS`,
+    /// `VerticalCRS` and `CompoundCRS`. Return the hub CRS of a `BoundCRS` or
+    /// the target CRS of a `CoordinateOperation`.
     ///
     /// # Arguments
     ///

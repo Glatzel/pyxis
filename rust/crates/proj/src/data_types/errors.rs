@@ -8,7 +8,7 @@ use thiserror::Error;
 /// not fit into a more precise error value.
 ///
 ///Those error codes are still quite generic for a number of them. Details on
-/// the actual errors will be typically logged with the PJ_LOG_ERROR level.
+/// the actual errors will be typically logged with the `PJ_LOG_ERROR` level.
 ///
 /// # References
 ///
@@ -32,7 +32,7 @@ pub enum ProjErrorCode {
     ///Mutually exclusive arguments
     InvalidOpMutuallyExclusiveArgs = proj_sys::PROJ_ERR_INVALID_OP_MUTUALLY_EXCLUSIVE_ARGS,
     ///File not found or with invalid content (particular case of
-    /// PROJ_ERR_INVALID_OP_ILLEGAL_ARG_VALUE)
+    /// `PROJ_ERR_INVALID_OP_ILLEGAL_ARG_VALUE`)
     InvalidOpFileNotFoundOrInvalid = proj_sys::PROJ_ERR_INVALID_OP_FILE_NOT_FOUND_OR_INVALID,
 
     //Errors in class PROJ_ERR_COORD_TRANSFM
@@ -41,7 +41,7 @@ pub enum ProjErrorCode {
     ///Invalid input coordinate. e.g. a latitude > 90°.
     CoordTransfmInvalidCoord = proj_sys::PROJ_ERR_COORD_TRANSFM_INVALID_COORD,
     ///Coordinate is outside of the projection domain. e.g. approximate
-    /// mercator with |longitude - lon_0| > 90°, or iterative convergence method
+    /// mercator with |longitude - `lon_0`| > 90°, or iterative convergence method
     /// failed.
     CoordTransfmOutsideProjectionDomain =
         proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_PROJECTION_DOMAIN,
@@ -95,5 +95,5 @@ impl<T: TryFromPrimitive> From<num_enum::TryFromPrimitiveError<T>> for ProjError
     }
 }
 impl ProjError {
-    pub fn new(message: String) -> Self { Self::Misc(message) }
+    pub const fn new(message: String) -> Self { Self::Misc(message) }
 }

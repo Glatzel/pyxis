@@ -33,7 +33,7 @@ impl crate::Proj {
     ) -> Result<f64, ProjError> {
         let mut coord = coord.to_coord()?;
         let distance =
-            unsafe { proj_sys::proj_roundtrip(self.ptr(), direction as i32, n, &mut coord) };
+            unsafe { proj_sys::proj_roundtrip(self.ptr(), direction as i32, n, &raw mut coord) };
         check_result!(self);
         Ok(distance)
     }
@@ -68,7 +68,7 @@ impl crate::Proj {
             _ => {
                 check_result!(self);
             }
-        };
+        }
 
         let factor = Factors::new(
             factor.meridional_scale,
@@ -92,6 +92,7 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_input>
+    #[must_use]
     pub fn angular_input(&self, dir: crate::Direction) -> bool {
         (unsafe { proj_sys::proj_angular_input(self.ptr(), dir as i32) } != 0)
     }
@@ -100,6 +101,7 @@ impl crate::Proj {
     ///
     /// # References
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_angular_output>
+    #[must_use]
     pub fn angular_output(&self, dir: crate::Direction) -> bool {
         (unsafe { proj_sys::proj_angular_output(self.ptr(), dir as i32) } != 0)
     }
@@ -109,6 +111,7 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_input>
+    #[must_use]
     pub fn degree_input(&self, dir: crate::Direction) -> bool {
         (unsafe { proj_sys::proj_degree_input(self.ptr(), dir as i32) } != 0)
     }
@@ -118,6 +121,7 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_degree_output>
+    #[must_use]
     pub fn degree_output(&self, dir: crate::Direction) -> bool {
         (unsafe { proj_sys::proj_degree_output(self.ptr(), dir as i32) } != 0)
     }

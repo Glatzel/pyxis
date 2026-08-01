@@ -44,7 +44,7 @@ impl Proj {
             _owned_cstrings: owned_cstrings,
         })
     }
-    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ { self.ptr }
+    pub(crate) const fn ptr(&self) -> *mut proj_sys::PJ { self.ptr }
     pub(crate) fn ctx_ptr(&self) -> *mut proj_sys::PJ_CONTEXT { self.arc_ctx_ptr.ptr() }
     pub(crate) fn arc_ctx_ptr(&self) -> Arc<ContextPtr> { self.arc_ctx_ptr.clone() }
 }
@@ -69,7 +69,7 @@ pub enum Direction {
 #[repr(transparent)]
 pub(crate) struct ContextPtr(pub(crate) *mut proj_sys::PJ_CONTEXT);
 impl ContextPtr {
-    pub(crate) fn ptr(&self) -> *mut proj_sys::PJ_CONTEXT { self.0 }
+    pub(crate) const fn ptr(&self) -> *mut proj_sys::PJ_CONTEXT { self.0 }
 }
 impl Drop for ContextPtr {
     ///Deallocate a threading-context.

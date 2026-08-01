@@ -34,7 +34,7 @@ pub struct Ellps {
     name: String,
 }
 impl Ellps {
-    pub fn new(id: String, major: String, ell: String, name: String) -> Self {
+    pub const fn new(id: String, major: String, ell: String, name: String) -> Self {
         Self {
             id,
             major,
@@ -86,5 +86,5 @@ pub struct PrimeMeridians {
     defn: String,
 }
 impl PrimeMeridians {
-    pub fn new(id: String, defn: String) -> Self { Self { id, defn } }
+    pub const fn new(id: String, defn: String) -> Self { Self { id, defn } }
 }

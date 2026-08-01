@@ -39,5 +39,5 @@ impl OwnedCStrings {
             None => Ok(ptr::null()),
         }
     }
-    pub fn len(&self) -> usize { self._owned_cstrings.len() }
+    pub const fn len(&self) -> usize { self._owned_cstrings.len() }
 }

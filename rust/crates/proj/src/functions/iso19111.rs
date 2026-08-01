@@ -5,9 +5,9 @@
 //! error or default/nonsensical values). The exception is for ISO19111 objects
 //! of type `CoordinateOperation` that can be exported as a valid PROJ pipeline.
 //! In this case, objects will work for example with `proj_trans_generic()`.
-//! Conversely, objects returned by `proj_create()` and `proj_create_argv()`, which
-//! are not of type CRS (can be tested with `proj_is_crs()`), will return an error
-//! when used with functions of this section.
+//! Conversely, objects returned by `proj_create()` and `proj_create_argv()`,
+//! which are not of type CRS (can be tested with `proj_is_crs()`), will return
+//! an error when used with functions of this section.
 //!
 //! # References
 //!

@@ -41,8 +41,8 @@ pub enum ProjErrorCode {
     ///Invalid input coordinate. e.g. a latitude > 90°.
     CoordTransfmInvalidCoord = proj_sys::PROJ_ERR_COORD_TRANSFM_INVALID_COORD,
     ///Coordinate is outside of the projection domain. e.g. approximate
-    /// mercator with |longitude - `lon_0`| > 90°, or iterative convergence method
-    /// failed.
+    /// mercator with |longitude - `lon_0`| > 90°, or iterative convergence
+    /// method failed.
     CoordTransfmOutsideProjectionDomain =
         proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_PROJECTION_DOMAIN,
     ///No operation found, e.g. if no match the required accuracy, or if

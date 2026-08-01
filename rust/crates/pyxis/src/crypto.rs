@@ -1,7 +1,7 @@
 use core::fmt;
 use core::str::FromStr;
 extern crate alloc;
-use alloc::string::{String};
+use alloc::string::String;
 
 /// # References
 /// - <https://github.com/googollee/eviltransform/blob/master/rust/src/lib.rs>

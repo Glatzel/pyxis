@@ -4,7 +4,10 @@ use crate::data_types::ProjError;
 extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
-use crate::data_types::iso19111::{CoordinateSystemType, AxisDescription, CartesianCs2dType, EllipsoidalCs2dType, EllipsoidalCs3dType, ParamDescription};
+use crate::data_types::iso19111::{
+    AxisDescription, CartesianCs2dType, CoordinateSystemType, EllipsoidalCs2dType,
+    EllipsoidalCs3dType, ParamDescription,
+};
 use crate::{Context, OwnedCStrings, Proj, ProjOptions, check_result};
 /// # ISO-19111 Advanced functions
 impl Context {
@@ -29,9 +32,7 @@ impl Context {
         for a in axis {
             axis_vec.push(proj_sys::PJ_AXIS_DESCRIPTION {
                 name: owned_string.push_option(a.name.clone())?.cast_mut(),
-                abbreviation: owned_string
-                    .push_option(a.abbreviation.clone())?
-                    .cast_mut(),
+                abbreviation: owned_string.push_option(a.abbreviation.clone())?.cast_mut(),
                 direction: owned_string.push(a.direction.as_ref())?.cast_mut(),
                 unit_name: owned_string.push_option(a.unit_name.clone())?.cast_mut(),
                 unit_conv_factor: a.unit_conv_factor,
@@ -83,7 +84,8 @@ impl Context {
     /// * `type`: Coordinate system type.
     /// * `unit_name`: Name of the angular units. Or `None` for Degree
     /// * `unit_conv_factor`: Conversion factor from the angular unit to radian.
-    ///   Or 0 for Degree if `unit_name` == `None`. Otherwise should be not `None`
+    ///   Or 0 for Degree if `unit_name` == `None`. Otherwise should be not
+    ///   `None`
     ///
     ///# References
     ///
@@ -114,7 +116,8 @@ impl Context {
     ///   for Degree.
     /// * `horizontal_angular_unit_conv_factor`: Conversion factor from the
     ///   angular unit to radian. Or 0 for Degree if
-    ///   `horizontal_angular_unit_name` == `None`. Otherwise should be not `None`
+    ///   `horizontal_angular_unit_name` == `None`. Otherwise should be not
+    ///   `None`
     /// * `vertical_linear_unit_name`: Vertical linear unit name. Or `None` for
     ///   Metre.
     /// * `vertical_linear_unit_conv_factor`: Vertical linear unit conversion
@@ -812,8 +815,9 @@ impl Context {
             !(1..=60).contains(&zone),
             "UTM zone number should between 1 and 60."
         );
-        let ptr =
-            unsafe { proj_sys::proj_create_conversion_utm(self.ptr(), i32::from(zone), i32::from(north)) };
+        let ptr = unsafe {
+            proj_sys::proj_create_conversion_utm(self.ptr(), i32::from(zone), i32::from(north))
+        };
         Proj::new(self.arc_ptr(), ptr)
     }
     ///Instantiate a `ProjectedCRS` with a conversion based on the Transverse
@@ -961,8 +965,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Tunisia Mining
-    /// Grid projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the Tunisia
+    /// Mining Grid projection method.
     ///
     ///# References
     ///
@@ -994,8 +998,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Tunisia Mining
-    /// Grid projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the Tunisia
+    /// Mining Grid projection method.
     ///
     ///# References
     ///
@@ -1064,8 +1068,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Lambert Conic
-    /// Conformal 1SP projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the Lambert
+    /// Conic Conformal 1SP projection method.
     ///
     ///# References
     ///
@@ -1099,8 +1103,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Lambert Conic
-    /// Conformal (1SP Variant B) projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the Lambert
+    /// Conic Conformal (1SP Variant B) projection method.
     ///
     ///# References
     ///
@@ -1136,8 +1140,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Lambert Conic
-    /// Conformal (2SP) projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the Lambert
+    /// Conic Conformal (2SP) projection method.
     ///
     ///# References
     ///
@@ -1173,8 +1177,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Lambert Conic
-    /// Conformal (2SP Michigan) projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the Lambert
+    /// Conic Conformal (2SP Michigan) projection method.
     ///
     ///# References
     ///
@@ -1212,8 +1216,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Lambert Conic
-    /// Conformal (2SP Belgium) projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the Lambert
+    /// Conic Conformal (2SP Belgium) projection method.
     ///
     ///# References
     ///
@@ -1827,9 +1831,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Geostationary
-    /// Satellite View projection method, with the sweep angle axis of the
-    /// viewing instrument being x.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the
+    /// Geostationary Satellite View projection method, with the sweep angle
+    /// axis of the viewing instrument being x.
     ///
     ///# References
     ///
@@ -1861,9 +1865,9 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Geostationary
-    /// Satellite View projection method, with the sweep angle axis of the
-    /// viewing instrument being y.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the
+    /// Geostationary Satellite View projection method, with the sweep angle
+    /// axis of the viewing instrument being y.
     ///
     ///# References
     ///
@@ -1928,8 +1932,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Hotine Oblique
-    /// Mercator (Variant A) projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the Hotine
+    /// Oblique Mercator (Variant A) projection method.
     ///
     ///# References
     ///
@@ -1967,8 +1971,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Hotine Oblique
-    /// Mercator (Variant B) projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the Hotine
+    /// Oblique Mercator (Variant B) projection method.
     ///
     ///# References
     ///
@@ -2006,8 +2010,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    /// Instantiate a `ProjectedCRS` with a conversion based on the Hotine Oblique
-    /// Mercator Two Point Natural Origin projection method.
+    /// Instantiate a `ProjectedCRS` with a conversion based on the Hotine
+    /// Oblique Mercator Two Point Natural Origin projection method.
     ///
     ///# References
     ///
@@ -2084,8 +2088,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the International
-    /// Map of the World Polyconic projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the
+    /// International Map of the World Polyconic projection method.
     ///
     ///# References
     ///
@@ -2119,8 +2123,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Krovak (north
-    /// oriented) projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the Krovak
+    /// (north oriented) projection method.
     ///
     ///# References
     ///
@@ -2692,8 +2696,8 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
-    ///Instantiate a `ProjectedCRS` with a conversion based on the Stereographic
-    /// projection method.
+    ///Instantiate a `ProjectedCRS` with a conversion based on the
+    /// Stereographic projection method.
     ///
     ///# References
     ///

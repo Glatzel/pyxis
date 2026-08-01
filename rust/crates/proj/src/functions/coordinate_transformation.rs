@@ -11,8 +11,6 @@ impl crate::Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     pub fn get_last_used_operation(&self) -> Result<Option<Self>, ProjError> {
-        
-
         let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr()) };
         if ptr.is_null() {
             return Ok(None);
@@ -101,17 +99,18 @@ impl crate::Context {
     /// transformations along these edges and extracting the outermost bounds.
     ///
     ///If the destination CRS is geographic, the first axis is longitude, and
-    /// *`out_xmax` < *`out_xmin` then the bounds crossed the antimeridian. In this
-    /// scenario there are two polygons, one on each side of the antimeridian.
-    /// The first polygon should be constructed with (*`out_xmin`, *`out_ymin`, 180,
-    /// ymax) and the second with (-180, *`out_ymin`, *`out_xmax`, *`out_ymax`).
+    /// *`out_xmax` < *`out_xmin` then the bounds crossed the antimeridian. In
+    /// this scenario there are two polygons, one on each side of the
+    /// antimeridian. The first polygon should be constructed with
+    /// (*`out_xmin`, *`out_ymin`, 180, ymax) and the second with (-180,
+    /// *`out_ymin`, *`out_xmax`, *`out_ymax`).
     ///
     ///If the destination CRS is geographic, the first axis is latitude, and
-    /// *`out_ymax` < *`out_ymin` then the bounds crossed the antimeridian. In this
-    /// scenario there are two polygons, one on each side of the antimeridian.
-    /// The first polygon should be constructed with (*`out_ymin`, *`out_xmin`,
-    /// *`out_ymax`, 180) and the second with (*`out_ymin`, -180, *`out_ymax`,
-    /// *`out_xmax`).
+    /// *`out_ymax` < *`out_ymin` then the bounds crossed the antimeridian. In
+    /// this scenario there are two polygons, one on each side of the
+    /// antimeridian. The first polygon should be constructed with
+    /// (*`out_ymin`, *`out_xmin`, *`out_ymax`, 180) and the second with
+    /// (*`out_ymin`, -180, *`out_ymax`, *`out_xmax`).
     ///
     /// # Arguments
     ///
@@ -128,8 +127,8 @@ impl crate::Context {
     ///
     /// # Returns
     ///
-    /// * (`out_xmin`, `out_ymin`, `out_xmax`, `out_ymax)`: bounding coordinate target
-    ///   CRS.(source CRS if direction is inverse).
+    /// * (`out_xmin`, `out_ymin`, `out_xmax`, `out_ymax)`: bounding coordinate
+    ///   target CRS.(source CRS if direction is inverse).
     ///
     /// # References
     ///
@@ -204,8 +203,9 @@ impl crate::Context {
     ///
     /// # Returns
     ///
-    /// * (`out_xmin`, `out_ymin`, `out_zmin`, `out_xmax`, `out_ymax`, `out_zmax)`: bounding
-    ///   coordinate target CRS.(source CRS if direction is inverse).
+    /// * (`out_xmin`, `out_ymin`, `out_zmin`, `out_xmax`, `out_ymax`,
+    ///   `out_zmax)`: bounding coordinate target CRS.(source CRS if direction
+    ///   is inverse).
     ///
     /// # References
     ///

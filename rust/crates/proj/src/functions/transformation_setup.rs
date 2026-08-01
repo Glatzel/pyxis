@@ -25,8 +25,8 @@ impl crate::Context {
     ///   uniqueness is not guaranteed, heuristics are applied to determine the
     ///   appropriate best match.
     /// * a OGC URN combining references for compound coordinate reference
-    ///   systems (e.g "`urn:ogc:def:crs,crs:EPSG::2393,crs:EPSG::5717`" or custom
-    ///   abbreviated syntax "EPSG:2393+5717"),
+    ///   systems (e.g "`urn:ogc:def:crs,crs:EPSG::2393,crs:EPSG::5717`" or
+    ///   custom abbreviated syntax "EPSG:2393+5717"),
     /// * a OGC URN combining references for concatenated operations (e.g.
     ///   `urn:ogc:def:coordinateOperation,coordinateOperation:EPSG::3895,
     ///   coordinateOperation:EPSG::1618`)
@@ -100,10 +100,11 @@ impl crate::Context {
     ///   latitude, and the unit degrees.
     /// * the name of a CRS as found in the PROJ database, e.g "WGS84", "NAD27",
     ///   etc.
-    /// * more generally any string accepted by `proj_create()` representing a CRS
+    /// * more generally any string accepted by `proj_create()` representing a
+    ///   CRS
     ///
-    /// Starting with PROJ 9.2, `source_crs` (exclusively) or `target_crs` can be a
-    /// `CoordinateMetadata` with an associated coordinate epoch.
+    /// Starting with PROJ 9.2, `source_crs` (exclusively) or `target_crs` can
+    /// be a `CoordinateMetadata` with an associated coordinate epoch.
     ///
     ///Starting with PROJ 9.4, both `source_crs` and `target_crs` can be a
     /// `CoordinateMetadata` with an associated coordinate epoch, to perform
@@ -145,11 +146,12 @@ impl crate::Context {
     ///Create a transformation object that is a pipeline between two known
     /// coordinate reference systems.
     ///
-    ///This is the same as `proj_create_crs_to_crs()` except that the source and
-    /// target CRS are passed as PJ* objects which must be of the CRS variety.
+    ///This is the same as `proj_create_crs_to_crs()` except that the source
+    /// and target CRS are passed as PJ* objects which must be of the CRS
+    /// variety.
     ///
-    ///Starting with PROJ 9.2, `source_crs` (exclusively) or `target_crs` can be a
-    /// `CoordinateMetadata` with an associated coordinate epoch.
+    ///Starting with PROJ 9.2, `source_crs` (exclusively) or `target_crs` can
+    /// be a `CoordinateMetadata` with an associated coordinate epoch.
     ///
     ///Starting with PROJ 9.4, both `source_crs` and `target_crs` can be a
     /// `CoordinateMetadata` with an associated coordinate epoch, to perform

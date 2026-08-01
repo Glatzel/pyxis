@@ -51,11 +51,11 @@ impl Proj {
     }
     ///Return a copy of the CRS with its geodetic CRS changed.
     ///
-    ///Currently, when obj is a `GeodeticCRS`, it returns a clone of `new_geod_crs`
-    /// When obj is a `ProjectedCRS`, it replaces its base CRS with `new_geod_crs`.
-    /// When obj is a `CompoundCRS`, it replaces the `GeodeticCRS` part of the
-    /// horizontal CRS with `new_geod_crs`. In other cases, it returns a clone of
-    /// obj.
+    ///Currently, when obj is a `GeodeticCRS`, it returns a clone of
+    /// `new_geod_crs` When obj is a `ProjectedCRS`, it replaces its base
+    /// CRS with `new_geod_crs`. When obj is a `CompoundCRS`, it replaces
+    /// the `GeodeticCRS` part of the horizontal CRS with `new_geod_crs`. In
+    /// other cases, it returns a clone of obj.
     ///
     /// # Arguments
     ///
@@ -321,8 +321,8 @@ impl Proj {
     ///# Arguments
     ///
     /// * `allow_intermediate_crs`: Defaults to NEVER. When set to
-    ///   `ALWAYS/IF_NO_DIRECT_TRANSFORMATION`, intermediate CRS may be considered
-    ///   when computing the possible transformations. Slower.
+    ///   `ALWAYS/IF_NO_DIRECT_TRANSFORMATION`, intermediate CRS may be
+    ///   considered when computing the possible transformations. Slower.
     ///
     ///# References
     ///

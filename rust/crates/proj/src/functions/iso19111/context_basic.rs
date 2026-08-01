@@ -9,7 +9,10 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::ProjError;
-use crate::data_types::iso19111::{DatabaseMetadataKey, GuessedWktDialect, Category, UomInfo, UomCategory, GridInfoDB, ProjType, CelestialBodyInfo, CrsListParameters, CrsInfo, UnitCategory, UnitInfo};
+use crate::data_types::iso19111::{
+    Category, CelestialBodyInfo, CrsInfo, CrsListParameters, DatabaseMetadataKey, GridInfoDB,
+    GuessedWktDialect, ProjType, UnitCategory, UnitInfo, UomCategory, UomInfo,
+};
 use crate::{OwnedCStrings, Proj, ProjOptions, check_result};
 /// # ISO-19111 Base functions
 impl crate::Context {
@@ -128,8 +131,8 @@ impl crate::Context {
     }
     ///Instantiate an object from a WKT string.
     ///
-    /// The returned object must be unreferenced with `proj_destroy()` after use.
-    /// It should be used by at most one thread at a time.
+    /// The returned object must be unreferenced with `proj_destroy()` after
+    /// use. It should be used by at most one thread at a time.
     ///
     ///The distinction between warnings and grammar errors is somewhat
     /// artificial and does not tell much about the real criticity of the
@@ -188,8 +191,8 @@ impl crate::Context {
     }
     ///Instantiate an object from a database lookup.
     ///
-    /// The returned object must be unreferenced with `proj_destroy()` after use.
-    /// It should be used by at most one thread at a time.
+    /// The returned object must be unreferenced with `proj_destroy()` after
+    /// use. It should be used by at most one thread at a time.
     ///
     /// # Arguments
     ///
@@ -433,8 +436,8 @@ impl crate::Context {
     ///
     /// # Arguments
     ///
-    /// * `auth_name`: Authority name, used to restrict the search. Or `None` for
-    ///   all authorities.
+    /// * `auth_name`: Authority name, used to restrict the search. Or `None`
+    ///   for all authorities.
     /// * params: Additional criteria, or `None`. If not-None, params SHOULD
     ///   have been allocated by `proj_get_crs_list_parameters_create()`, as the
     ///   `PROJ_CRS_LIST_PARAMETERS` structure might grow over time.

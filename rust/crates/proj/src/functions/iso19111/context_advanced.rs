@@ -537,7 +537,7 @@ impl Context {
                     .iter()
                     .map(|p| {
                         Ok(proj_sys::PJ_PARAM_DESCRIPTION {
-                            name: owned.push_option(p.name().to_owned()).unwrap(),
+                            name: owned.push_option(p.name().to_owned())?,
                             auth_name: owned.push_option(p.auth_name().to_owned())?,
                             code: owned.push_option(p.code().to_owned())?,
                             value: p.value(),

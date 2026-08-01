@@ -4,7 +4,11 @@ use core::str::FromStr;
 use envoy::{AsVecPtr, PtrToString, ToCString};
 
 use crate::data_types::ProjError;
-use crate::data_types::iso19111::{ProjType, ComparisonCriterion, AreaOfUse, WktType, ProjStringType, CoordinateSystemType, AxisInfo, AxisDirection, EllipsoidParameters, PrimeMeridianParameters, CoordOperationMethodInfo, CoordOperationParam, UnitCategory, CoordOperationGridUsed};
+use crate::data_types::iso19111::{
+    AreaOfUse, AxisDirection, AxisInfo, ComparisonCriterion, CoordOperationGridUsed,
+    CoordOperationMethodInfo, CoordOperationParam, CoordinateSystemType, EllipsoidParameters,
+    PrimeMeridianParameters, ProjStringType, ProjType, UnitCategory, WktType,
+};
 use crate::error_handling::check_result;
 use crate::{OPTION_NO, OPTION_YES, Proj};
 /// # ISO-19111 Base functions
@@ -1062,9 +1066,8 @@ impl Clone for Proj {
 
 #[cfg(test)]
 mod test_proj_basic {
+    use super::*;
     use crate::data_types::iso19111::{Category, GridAvailabilityUse, SpatialCriterion};
-
-use super::*;
 
     #[test]
     fn test_get_type() -> Result<(), ProjError> {

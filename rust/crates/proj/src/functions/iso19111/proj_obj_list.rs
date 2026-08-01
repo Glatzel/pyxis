@@ -209,9 +209,8 @@ impl Proj {
 }
 #[cfg(test)]
 mod test_context {
+    use super::*;
     use crate::data_types::iso19111::WktType;
-
-use super::*;
     #[test]
     fn test_create_from_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
@@ -242,9 +241,8 @@ use super::*;
 }
 #[cfg(test)]
 mod test_proj {
+    use super::*;
     use crate::data_types::iso19111::WktType;
-
-use super::*;
     #[test]
     fn test_get_non_deprecated() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;

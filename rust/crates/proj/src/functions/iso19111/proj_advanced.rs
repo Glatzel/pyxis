@@ -349,9 +349,8 @@ impl Proj {
 mod test_proj_advanced {
     use strum::IntoEnumIterator;
 
+    use super::*;
     use crate::data_types::iso19111::{CartesianCs2dType, Category, EllipsoidalCs2dType, WktType};
-
-use super::*;
     #[test]
     fn test_alter_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;

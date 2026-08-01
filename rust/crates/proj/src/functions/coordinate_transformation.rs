@@ -1,5 +1,5 @@
-use crate::check_result;
 use crate::data_types::ProjError;
+use crate::error_handling::check_result;
 // region:Coordinate transformation
 impl crate::Proj {
     ///Return the operation used during the last invocation of
@@ -10,14 +10,12 @@ impl crate::Proj {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    pub fn get_last_used_operation(&self) -> Result<Option<crate::Proj>, ProjError> {
-        use crate::Proj;
-
+    pub fn get_last_used_operation(&self) -> Result<Option<Self>, ProjError> {
         let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr()) };
         if ptr.is_null() {
             return Ok(None);
         }
-        Some(Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
+        Some(Self::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     ///Transform a series of coordinates
     ///

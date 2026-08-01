@@ -1,5 +1,6 @@
+use crate::ToCoord;
 use crate::data_types::ProjError;
-use crate::{ToCoord, check_result};
+use crate::error_handling::check_result;
 ///# Distances
 impl crate::Proj {
     ///Calculate geodesic distance between two points in geodetic coordinates.

@@ -95,5 +95,5 @@ impl<T: TryFromPrimitive> From<num_enum::TryFromPrimitiveError<T>> for ProjError
     }
 }
 impl ProjError {
-    pub fn new(message: String) -> Self { Self::Misc(message) }
+    pub const fn new(message: String) -> Self { Self::Misc(message) }
 }

@@ -3,8 +3,8 @@ use std::path::Path;
 extern crate alloc;
 use envoy::{AsVecPtr, ToCString, ToVecCString, VecCString};
 
-use crate::check_result;
 use crate::data_types::ProjError;
+use crate::error_handling::check_result;
 
 ///Setting custom I/O functions
 impl crate::Context {

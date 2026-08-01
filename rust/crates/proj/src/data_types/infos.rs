@@ -27,7 +27,7 @@ pub struct Info {
     search_path: String,
 }
 impl Info {
-    pub fn new(
+    pub const fn new(
         major: i32,
         minor: i32,
         patch: i32,
@@ -35,7 +35,7 @@ impl Info {
         version: String,
         search_path: String,
     ) -> Self {
-        Info {
+        Self {
             major,
             minor,
             patch,
@@ -73,14 +73,14 @@ pub struct ProjInfo {
     accuracy: f64,
 }
 impl ProjInfo {
-    pub fn new(
+    pub const fn new(
         id: String,
         description: String,
         definition: String,
         has_inverse: bool,
         accuracy: f64,
     ) -> Self {
-        ProjInfo {
+        Self {
             id,
             description,
             definition,
@@ -119,7 +119,7 @@ pub struct GridInfo {
     cs_lat: f64,
 }
 impl GridInfo {
-    pub fn new(
+    pub const fn new(
         gridname: String,
         filename: String,
         format: String,
@@ -130,7 +130,7 @@ impl GridInfo {
         cs_lon: f64,
         cs_lat: f64,
     ) -> Self {
-        GridInfo {
+        Self {
             gridname,
             filename,
             format,
@@ -164,14 +164,14 @@ pub struct InitInfo {
     last_update: String,
 }
 impl InitInfo {
-    pub fn new(
+    pub const fn new(
         name: String,
         filename: String,
         version: String,
         origin: String,
         lastupdate: String,
     ) -> Self {
-        InitInfo {
+        Self {
             name,
             filename,
             version,

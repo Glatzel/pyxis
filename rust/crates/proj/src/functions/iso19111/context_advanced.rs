@@ -5,7 +5,8 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
-use crate::{Context, OwnedCStrings, Proj, ProjOptions, check_result};
+use crate::error_handling::check_result;
+use crate::{Context, OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
 impl Context {
     ///Instantiate a CoordinateSystem.
@@ -534,16 +535,18 @@ impl Context {
                 params.len() as i32,
                 params
                     .iter()
-                    .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                        name: owned.push_option(p.name().to_owned()).unwrap(),
-                        auth_name: owned.push_option(p.auth_name().to_owned()).unwrap(),
-                        code: owned.push_option(p.code().to_owned()).unwrap(),
-                        value: p.value(),
-                        unit_name: owned.push_option(p.unit_name().to_owned()).unwrap(),
-                        unit_conv_factor: p.unit_conv_factor(),
-                        unit_type: *p.unit_type() as u32,
+                    .map(|p| {
+                        Ok(proj_sys::PJ_PARAM_DESCRIPTION {
+                            name: owned.push_option(p.name().to_owned())?,
+                            auth_name: owned.push_option(p.auth_name().to_owned())?,
+                            code: owned.push_option(p.code().to_owned())?,
+                            value: p.value(),
+                            unit_name: owned.push_option(p.unit_name().to_owned())?,
+                            unit_conv_factor: p.unit_conv_factor(),
+                            unit_type: *p.unit_type() as u32,
+                        })
                     })
-                    .collect::<Vec<_>>()
+                    .collect::<Result<Vec<_>, ProjError>>()?
                     .as_ptr(),
             )
         };
@@ -641,16 +644,18 @@ impl Context {
         let count = params.len();
         let params: Vec<proj_sys::PJ_PARAM_DESCRIPTION> = params
             .iter()
-            .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                name: owned.push_option(p.name().to_owned()).unwrap(),
-                auth_name: owned.push_option(p.auth_name().to_owned()).unwrap(),
-                code: owned.push_option(p.code().to_owned()).unwrap(),
-                value: p.value(),
-                unit_name: owned.push_option(p.unit_name().to_owned()).unwrap(),
-                unit_conv_factor: p.unit_conv_factor(),
-                unit_type: *p.unit_type() as u32,
+            .map(|p| {
+                Ok(proj_sys::PJ_PARAM_DESCRIPTION {
+                    name: owned.push_option(p.name().to_owned())?,
+                    auth_name: owned.push_option(p.auth_name().to_owned())?,
+                    code: owned.push_option(p.code().to_owned())?,
+                    value: p.value(),
+                    unit_name: owned.push_option(p.unit_name().to_owned())?,
+                    unit_conv_factor: p.unit_conv_factor(),
+                    unit_type: *p.unit_type() as u32,
+                })
             })
-            .collect::<Vec<_>>();
+            .collect::<Result<Vec<_>, ProjError>>()?;
 
         let ptr = unsafe {
             proj_sys::proj_create_transformation(
@@ -3276,7 +3281,7 @@ mod test_context_advanced {
             Some("WGS 84"),
             &ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?
                 .crs_get_datum()?
-                .ok_or(ProjError::new("No datum found".to_string()))?,
+                .ok_or_else(|| ProjError::new("No datum found".to_string()))?,
             &ctx.create_ellipsoidal_2d_cs(
                 EllipsoidalCs2dType::LatitudeLongitude,
                 Some("Degree"),
@@ -3329,7 +3334,7 @@ mod test_context_advanced {
         let pj2: Proj = ctx.create_geocentric_crs_from_datum(
             Some("new crs"),
             &pj1.crs_get_datum()?
-                .ok_or(ProjError::new("No datum found".to_string()))?,
+                .ok_or_else(|| ProjError::new("No datum found".to_string()))?,
             Some("MyMetre2"),
             1.0,
         )?;

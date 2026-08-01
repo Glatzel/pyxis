@@ -1,0 +1,318 @@
+---
+source: crates/proj/src/functions/iso19111/context_basic.rs
+expression: list
+---
+[
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "1_Ceres",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "4_Vesta",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Adrastea",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Aegaeon",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Amalthea",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Ananke",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Anthe",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Ariel",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Atlas",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Belinda",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Bianca",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Callisto",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Calypso",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Carme",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Charon",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Cordelia",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Cressida",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Daphnis",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Deimos",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Desdemona",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Despina",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Dione",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Elara",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Enceladus",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Epimetheus",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Europa",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Galatea",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Ganymede",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Helene",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Himalia",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Hyperion",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Iapetus",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Io",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Janus",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Juliet",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Jupiter",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Larissa",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Leda",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Lysithea",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Mars",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Mercury",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Methone",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Metis",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Mimas",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Miranda",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Moon",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Naiad",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Neptune",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Nereid",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Oberon",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Ophelia",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Pallene",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Pan",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Pandora",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Pasiphae",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Phobos",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Phoebe",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Pluto",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Polydeuces",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Portia",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Prometheus",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Proteus",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Puck",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Rhea",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Rosalind",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Saturn",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Sinope",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Sun",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Telesto",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Tethys",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Thalassa",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Thebe",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Titan",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Titania",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Triton",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Umbriel",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Uranus",
+    },
+    CelestialBodyInfo {
+        auth_name: "ESRI",
+        name: "Venus",
+    },
+]

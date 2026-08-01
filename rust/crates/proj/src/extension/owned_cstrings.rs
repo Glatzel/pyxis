@@ -8,7 +8,7 @@ use envoy::ToCString;
 use crate::data_types::ProjError;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub(crate) struct OwnedCStrings {
+pub struct OwnedCStrings {
     _owned_cstrings: Vec<CString>,
 }
 impl OwnedCStrings {
@@ -27,7 +27,7 @@ impl OwnedCStrings {
         Ok(self
             ._owned_cstrings
             .last()
-            .ok_or(ProjError::new("Last owned cstring is missing.".to_string()))?
+            .ok_or_else(|| ProjError::new("Last owned cstring is missing.".to_string()))?
             .as_ptr())
     }
     pub fn push_option<T: ToCString>(
@@ -39,5 +39,5 @@ impl OwnedCStrings {
             None => Ok(ptr::null()),
         }
     }
-    pub fn len(&self) -> usize { self._owned_cstrings.len() }
+    pub const fn len(&self) -> usize { self._owned_cstrings.len() }
 }

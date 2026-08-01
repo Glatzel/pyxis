@@ -3,7 +3,8 @@ use core::char;
 use envoy::{PtrToString, ToCString};
 
 use crate::data_types::{Factors, ProjError};
-use crate::{ICoord, ToCoord, check_result};
+use crate::error_handling::check_result;
+use crate::{ICoord, ToCoord};
 
 /// # Various
 impl crate::Proj {

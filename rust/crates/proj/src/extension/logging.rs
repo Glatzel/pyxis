@@ -4,10 +4,11 @@ use core::ffi::{c_char, c_void};
 
 use envoy::PtrToString;
 
+use crate::LogLevel;
 use crate::data_types::ProjError;
-use crate::{LogLevel, check_result};
+use crate::error_handling::check_result;
 
-pub(crate) unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const c_char) {
+pub unsafe extern "C" fn proj_clerk(_: *mut c_void, level: i32, info: *const c_char) {
     let _message = info.to_string().unwrap_or_default();
 
     match level {

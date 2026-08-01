@@ -51,7 +51,7 @@ impl crate::Context {
                 self.ptr(),
                 db_path
                     .to_str()
-                    .ok_or(ProjError::new("Invalid database path".to_string()))?
+                    .ok_or_else(||ProjError::new("Invalid database path".to_string()))?
                     .to_cstring()?
                     .as_ptr(),
                 aux_db_paths_ptr.map_or(ptr::null(), |ptr| ptr.as_ptr()),
@@ -405,12 +405,12 @@ impl crate::Context {
         let mut out_vec = Vec::new();
         for offset in 0..out_result_count {
             let current_ptr = unsafe {
-                ptr.offset(offset as isize).as_ref().ok_or(ProjError::new(
+                ptr.offset(offset as isize).as_ref().ok_or_else(||ProjError::new(
                     "Invalid celestial body info pointer".to_string(),
                 ))?
             };
             let info_ref = unsafe {
-                current_ptr.as_ref().ok_or(ProjError::new(
+                current_ptr.as_ref().ok_or_else(||ProjError::new(
                     "Invalid celestial body info pointer".to_string(),
                 ))?
             };
@@ -483,12 +483,12 @@ impl crate::Context {
             let current_ptr = unsafe {
                 ptr.offset(offset as isize)
                     .as_ref()
-                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+                    .ok_or_else(||ProjError::new("Invalid CRS info pointer".to_string()))?
             };
             let info_ref = unsafe {
                 current_ptr
                     .as_ref()
-                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+                    .ok_or_else(||ProjError::new("Invalid CRS info pointer".to_string()))?
             };
             out_vec.push(CrsInfo::new(
                 info_ref.auth_name.to_string()?,
@@ -547,12 +547,12 @@ impl crate::Context {
             let current_ptr = unsafe {
                 ptr.offset(offset as isize)
                     .as_ref()
-                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+                    .ok_or_else(||ProjError::new("Invalid CRS info pointer".to_string()))?
             };
             let info_ref = unsafe {
                 current_ptr
                     .as_ref()
-                    .ok_or(ProjError::new("Invalid CRS info pointer".to_string()))?
+                    .ok_or_else(||ProjError::new("Invalid CRS info pointer".to_string()))?
             };
             out_vec.push(UnitInfo::new(
                 info_ref.auth_name.to_string()?,

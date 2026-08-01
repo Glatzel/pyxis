@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use path_slash::PathBufExt;
 
-fn main() {
+fn main() -> mischief::Result<()> {
     // 1. Explicit override wins
     let proj_root = env::var("PROJ_ROOT").map(PathBuf::from).unwrap_or_default();
 
@@ -48,10 +48,10 @@ fn main() {
             .blocklist_type("max_align_t")
             .ctypes_prefix("libc")
             .use_core()
-            .generate()
-            .unwrap();
+            .generate()?;
         bindings
             .write_to_file("./src/bindings.rs")
             .expect("Couldn't write bindings to './src/bindings.rs' !");
     }
+    Ok(())
 }

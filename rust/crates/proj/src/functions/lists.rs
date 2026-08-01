@@ -17,7 +17,7 @@ pub fn list_operations() -> Result<Vec<crate::data_types::Operations>, ProjError
         let current_ptr = unsafe {
             ptr.offset(offset)
                 .as_ref()
-                .ok_or(ProjError::new("Invalid pointer".to_string()))?
+                .ok_or_else(||ProjError::new("Invalid pointer".to_string()))?
         };
         if current_ptr.id.is_null() {
             break;
@@ -54,7 +54,7 @@ pub fn list_ellps() -> Result<Vec<crate::data_types::Ellps>, ProjError> {
         let current_ptr = unsafe {
             ptr.offset(offset)
                 .as_ref()
-                .ok_or(ProjError::new("Invalid pointer".to_string()))?
+                .ok_or_else(||ProjError::new("Invalid pointer".to_string()))?
         };
         if current_ptr.id.is_null() {
             break;
@@ -84,7 +84,7 @@ pub fn list_units() -> Result<Vec<crate::data_types::Units>, ProjError> {
         let current_ptr = unsafe {
             ptr.offset(offset)
                 .as_ref()
-                .ok_or(ProjError::new("Invalid pointer".to_string()))?
+                .ok_or_else(||ProjError::new("Invalid pointer".to_string()))?
         };
         if current_ptr.id.is_null() {
             break;
@@ -115,7 +115,7 @@ pub fn list_prime_meridians() -> Result<Vec<crate::data_types::PrimeMeridians>, 
         let current_ptr = unsafe {
             ptr.offset(offset)
                 .as_ref()
-                .ok_or(ProjError::new("Invalid pointer".to_string()))?
+                .ok_or_else(||ProjError::new("Invalid pointer".to_string()))?
         };
         if current_ptr.id.is_null() {
             break;

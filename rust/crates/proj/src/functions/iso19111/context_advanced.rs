@@ -3276,7 +3276,7 @@ mod test_context_advanced {
             Some("WGS 84"),
             &ctx.create("+proj=geocent +ellps=GRS80 +units=m +no_defs +type=crs")?
                 .crs_get_datum()?
-                .ok_or(ProjError::new("No datum found".to_string()))?,
+                .ok_or_else(||ProjError::new("No datum found".to_string()))?,
             &ctx.create_ellipsoidal_2d_cs(
                 EllipsoidalCs2dType::LatitudeLongitude,
                 Some("Degree"),
@@ -3329,7 +3329,7 @@ mod test_context_advanced {
         let pj2: Proj = ctx.create_geocentric_crs_from_datum(
             Some("new crs"),
             &pj1.crs_get_datum()?
-                .ok_or(ProjError::new("No datum found".to_string()))?,
+                .ok_or_else(||ProjError::new("No datum found".to_string()))?,
             Some("MyMetre2"),
             1.0,
         )?;

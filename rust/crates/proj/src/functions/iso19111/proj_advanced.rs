@@ -20,11 +20,11 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_name>
-    pub fn alter_name(&self, name: &str) -> Result<Proj, ProjError> {
+    pub fn alter_name(&self, name: &str) -> Result<Self, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_alter_name(self.ctx_ptr(), self.ptr(), name.to_cstring()?.as_ptr())
         };
-        Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Return a copy of the object with its identifier changed/set.
     ///
@@ -38,7 +38,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_alter_id>
-    pub fn alter_id(&self, auth_name: &str, code: &str) -> Result<Proj, ProjError> {
+    pub fn alter_id(&self, auth_name: &str, code: &str) -> Result<Self, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_alter_id(
                 self.ctx_ptr(),
@@ -47,7 +47,7 @@ impl Proj {
                 code.to_cstring()?.as_ptr(),
             )
         };
-        Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Return a copy of the CRS with its geodetic CRS changed.
     ///
@@ -64,11 +64,11 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_alter_geodetic_crs>
-    pub fn crs_alter_geodetic_crs(&self, new_geod_crs: &Proj) -> Result<Proj, ProjError> {
+    pub fn crs_alter_geodetic_crs(&self, new_geod_crs: &Self) -> Result<Self, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_crs_alter_geodetic_crs(self.ctx_ptr(), self.ptr(), new_geod_crs.ptr())
         };
-        Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Return a copy of the CRS with its angular units changed.
     ///
@@ -91,7 +91,7 @@ impl Proj {
         angular_units_convs: f64,
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Self, ProjError> {
         let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_crs_alter_cs_angular_unit(
@@ -103,7 +103,7 @@ impl Proj {
                 owned.push_option(unit_code)?,
             )
         };
-        Proj::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
+        Self::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
     }
     ///Return a copy of the CRS with the linear units of its coordinate system
     /// changed.
@@ -129,7 +129,7 @@ impl Proj {
         linear_units_conv: f64,
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Self, ProjError> {
         let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_crs_alter_cs_linear_unit(
@@ -141,7 +141,7 @@ impl Proj {
                 owned.push_option(unit_code)?,
             )
         };
-        Proj::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
+        Self::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
     }
     ///Return a copy of the CRS with the linear units of the parameters of its
     /// conversion modified.
@@ -170,7 +170,7 @@ impl Proj {
         unit_auth_name: Option<&str>,
         unit_code: Option<&str>,
         convert_to_new_unit: bool,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Self, ProjError> {
         let mut owned = OwnedCStrings::with_capacity(3);
         let ptr = unsafe {
             proj_sys::proj_crs_alter_parameters_linear_unit(
@@ -183,7 +183,7 @@ impl Proj {
                 convert_to_new_unit as i32,
             )
         };
-        Proj::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
+        Self::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
     }
     ///Create a 3D CRS from an existing 2D CRS.
     ///
@@ -198,7 +198,7 @@ impl Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_promote_to_3D>
-    pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> Result<Proj, ProjError> {
+    pub fn crs_promote_to_3d(&self, crs_3d_name: Option<&str>) -> Result<Self, ProjError> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_crs_promote_to_3D(
@@ -207,7 +207,7 @@ impl Proj {
                 self.ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
+        Self::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
     }
     ///Create a projected 3D CRS from an existing projected 2D CRS.
     ///
@@ -237,8 +237,8 @@ impl Proj {
     pub fn crs_create_projected_3d_crs_from_2d(
         &self,
         crs_name: Option<&str>,
-        geog_3d_crs: Option<&Proj>,
-    ) -> Result<Proj, ProjError> {
+        geog_3d_crs: Option<&Self>,
+    ) -> Result<Self, ProjError> {
         let crs_name = crs_name.map(|s| s.to_cstring()).transpose()?;
         let ptr = unsafe {
             proj_sys::proj_crs_create_projected_3D_crs_from_2D(
@@ -248,7 +248,7 @@ impl Proj {
                 geog_3d_crs.map_or(ptr::null(), |crs| crs.ptr()),
             )
         };
-        Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Create a 2D CRS from an existing 3D CRS.
     ///
@@ -259,7 +259,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_demote_to_2D>
-    pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> Result<Proj, ProjError> {
+    pub fn crs_demote_to_2d(&self, crs_2d_name: Option<&str>) -> Result<Self, ProjError> {
         let mut owned = OwnedCStrings::with_capacity(1);
         let ptr = unsafe {
             proj_sys::proj_crs_demote_to_2D(
@@ -268,7 +268,7 @@ impl Proj {
                 self.ptr(),
             )
         };
-        Proj::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
+        Self::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
     }
     ///Return an equivalent projection.
     ///
@@ -297,7 +297,7 @@ impl Proj {
         &self,
         new_method_epsg_code: Option<u16>,
         new_method_name: Option<&str>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Self, ProjError> {
         if new_method_epsg_code.is_none() && new_method_name.is_none() {
             return Err(ProjError::new(
                 "At least one of `new_method_epsg_code` and  `new_method_name` must be set."
@@ -313,7 +313,7 @@ impl Proj {
                 owned.push_option(new_method_name)?,
             )
         };
-        Proj::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
+        Self::new_with_owned_cstrings(self.arc_ctx_ptr(), ptr, owned)
     }
     ///Returns potentially a BoundCRS, with a transformation to EPSG:4326,
     /// wrapping this CRS.
@@ -330,7 +330,7 @@ impl Proj {
     pub fn crs_create_bound_crs_to_wgs84(
         &self,
         allow_intermediate_crs: Option<AllowIntermediateCrs>,
-    ) -> Result<Proj, ProjError> {
+    ) -> Result<Self, ProjError> {
         let mut options = ProjOptions::new(1);
         options.with_or_skip(allow_intermediate_crs, "ALLOW_INTERMEDIATE_CRS")?;
 
@@ -341,7 +341,7 @@ impl Proj {
                 options.as_ptr(),
             )
         };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
 }
 

@@ -14,7 +14,7 @@ pub struct Operations {
     descr: String,
 }
 impl Operations {
-    pub fn new(id: String, descr: String) -> Self { Operations { id, descr } }
+    pub fn new(id: String, descr: String) -> Self { Self { id, descr } }
 }
 ///Description of ellipsoids defined in PROJ
 ///
@@ -35,7 +35,7 @@ pub struct Ellps {
 }
 impl Ellps {
     pub fn new(id: String, major: String, ell: String, name: String) -> Self {
-        Ellps {
+        Self {
             id,
             major,
             ell,
@@ -62,7 +62,7 @@ pub struct Units {
 }
 impl Units {
     pub fn new(id: String, to_meter: String, name: String, factor: f64) -> Self {
-        Units {
+        Self {
             id,
             to_meter,
             name,
@@ -86,5 +86,5 @@ pub struct PrimeMeridians {
     defn: String,
 }
 impl PrimeMeridians {
-    pub fn new(id: String, defn: String) -> Self { PrimeMeridians { id, defn } }
+    pub fn new(id: String, defn: String) -> Self { Self { id, defn } }
 }

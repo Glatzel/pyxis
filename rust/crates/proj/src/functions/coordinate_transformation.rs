@@ -10,14 +10,14 @@ impl crate::Proj {
     ///  # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
-    pub fn get_last_used_operation(&self) -> Result<Option<crate::Proj>, ProjError> {
+    pub fn get_last_used_operation(&self) -> Result<Option<Self>, ProjError> {
         use crate::Proj;
 
         let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr()) };
         if ptr.is_null() {
             return Ok(None);
         }
-        Some(Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
+        Some(Self::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     ///Transform a series of coordinates
     ///

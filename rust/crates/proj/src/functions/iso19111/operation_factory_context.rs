@@ -46,7 +46,7 @@ impl OperationFactoryContext {
     pub fn from_context(
         ctx: &Context,
         authority: Option<&str>,
-    ) -> Result<OperationFactoryContext, ProjError> {
+    ) -> Result<Self, ProjError> {
         ctx.create_operation_factory_context(authority)
     }
     ///Set the desired accuracy of the resulting coordinate transformations.

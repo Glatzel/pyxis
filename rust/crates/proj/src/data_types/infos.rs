@@ -35,7 +35,7 @@ impl Info {
         version: String,
         search_path: String,
     ) -> Self {
-        Info {
+        Self {
             major,
             minor,
             patch,
@@ -80,7 +80,7 @@ impl ProjInfo {
         has_inverse: bool,
         accuracy: f64,
     ) -> Self {
-        ProjInfo {
+        Self {
             id,
             description,
             definition,
@@ -130,7 +130,7 @@ impl GridInfo {
         cs_lon: f64,
         cs_lat: f64,
     ) -> Self {
-        GridInfo {
+        Self {
             gridname,
             filename,
             format,
@@ -171,7 +171,7 @@ impl InitInfo {
         origin: String,
         lastupdate: String,
     ) -> Self {
-        InitInfo {
+        Self {
             name,
             filename,
             version,

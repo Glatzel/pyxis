@@ -34,7 +34,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to>
-    pub fn is_equivalent_to(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
+    pub fn is_equivalent_to(&self, other: &Self, criterion: ComparisonCriterion) -> bool {
         unsafe { proj_sys::proj_is_equivalent_to(self.ptr(), other.ptr(), criterion as u32) != 0 }
     }
 
@@ -50,7 +50,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_is_equivalent_to_with_ctx>
-    pub fn is_equivalent_to_with_ctx(&self, other: &Proj, criterion: ComparisonCriterion) -> bool {
+    pub fn is_equivalent_to_with_ctx(&self, other: &Self, criterion: ComparisonCriterion) -> bool {
         unsafe {
             proj_sys::proj_is_equivalent_to_with_ctx(
                 self.ctx_ptr(),
@@ -382,7 +382,7 @@ impl Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_source_crs>
-    pub fn get_source_crs(&self) -> Result<Option<Proj>, ProjError> {
+    pub fn get_source_crs(&self) -> Result<Option<Self>, ProjError> {
         let out_ptr = unsafe { proj_sys::proj_get_source_crs(self.ctx_ptr(), self.ptr()) };
         if out_ptr.is_null() {
             return Ok(None);
@@ -395,7 +395,7 @@ impl Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_target_crs>
-    pub fn get_target_crs(&self) -> Result<Option<Proj>, ProjError> {
+    pub fn get_target_crs(&self) -> Result<Option<Self>, ProjError> {
         let out_ptr = unsafe { proj_sys::proj_get_target_crs(self.ctx_ptr(), self.ptr()) };
         if out_ptr.is_null() {
             return Ok(None);
@@ -447,9 +447,9 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_geodetic_crs>
-    pub fn crs_get_geodetic_crs(&self) -> Result<Proj, ProjError> {
+    pub fn crs_get_geodetic_crs(&self) -> Result<Self, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_geodetic_crs(self.ctx_ptr(), self.ptr()) };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     /// Get the horizontal datum from a CRS.
     ///
@@ -458,32 +458,32 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_horizontal_datum>
-    pub fn crs_get_horizontal_datum(&self) -> Result<Proj, ProjError> {
+    pub fn crs_get_horizontal_datum(&self) -> Result<Self, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_horizontal_datum(self.ctx_ptr(), self.ptr()) };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Get a CRS component from a CompoundCRS.
     ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_sub_crs>
-    pub fn crs_get_sub_crs(&self, index: u16) -> Result<Proj, ProjError> {
+    pub fn crs_get_sub_crs(&self, index: u16) -> Result<Self, ProjError> {
         let ptr =
             unsafe { proj_sys::proj_crs_get_sub_crs(self.ctx_ptr(), self.ptr(), index as i32) };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Returns the datum of a SingleCRS.
     ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum>
-    pub fn crs_get_datum(&self) -> Result<Option<Proj>, ProjError> {
+    pub fn crs_get_datum(&self) -> Result<Option<Self>, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum(self.ctx_ptr(), self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
             return Ok(None);
         }
-        Some(crate::Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
+        Some(Self::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     /// Returns the datum ensemble of a SingleCRS.
     ///
@@ -492,13 +492,13 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_ensemble>
-    pub fn crs_get_datum_ensemble(&self) -> Result<Option<Proj>, ProjError> {
+    pub fn crs_get_datum_ensemble(&self) -> Result<Option<Self>, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_ensemble(self.ctx_ptr(), self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
             return Ok(None);
         }
-        Some(crate::Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
+        Some(Self::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     ///Returns a datum for a SingleCRS.
     ///
@@ -509,13 +509,13 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_datum_forced>
-    pub fn crs_get_datum_forced(&self) -> Result<Option<Proj>, ProjError> {
+    pub fn crs_get_datum_forced(&self) -> Result<Option<Self>, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_datum_forced(self.ctx_ptr(), self.ptr()) };
         check_result!(self);
         if ptr.is_null() {
             return Ok(None);
         }
-        Some(crate::Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
+        Some(Self::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     ///Return whether a CRS has an associated PointMotionOperation.
     ///
@@ -552,7 +552,7 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_datum_ensemble_get_member>
-    pub fn datum_ensemble_get_member(&self, member_index: u16) -> Result<Option<Proj>, ProjError> {
+    pub fn datum_ensemble_get_member(&self, member_index: u16) -> Result<Option<Self>, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_datum_ensemble_get_member(
                 self.ctx_ptr(),
@@ -564,7 +564,7 @@ impl Proj {
         if ptr.is_null() {
             return Ok(None);
         }
-        Some(crate::Proj::new(self.arc_ctx_ptr(), ptr)).transpose()
+        Some(Self::new(self.arc_ctx_ptr(), ptr)).transpose()
     }
     ///Returns the frame reference epoch of a dynamic geodetic or vertical
     ///
@@ -585,9 +585,9 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordinate_system>
-    pub fn crs_get_coordinate_system(&self) -> Result<Proj, ProjError> {
+    pub fn crs_get_coordinate_system(&self) -> Result<Self, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordinate_system(self.ctx_ptr(), self.ptr()) };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Returns the type of the coordinate system.
     ///
@@ -663,9 +663,9 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_ellipsoid>
-    pub fn get_ellipsoid(&self) -> Result<Proj, ProjError> {
+    pub fn get_ellipsoid(&self) -> Result<Self, ProjError> {
         let ptr = unsafe { proj_sys::proj_get_ellipsoid(self.ctx_ptr(), self.ptr()) };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Return ellipsoid parameters.
     ///
@@ -712,9 +712,9 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_prime_meridian>
-    pub fn get_prime_meridian(&self) -> Result<Proj, ProjError> {
+    pub fn get_prime_meridian(&self) -> Result<Self, ProjError> {
         let ptr = unsafe { proj_sys::proj_get_prime_meridian(self.ctx_ptr(), self.ptr()) };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Return prime meridian parameters.
     ///
@@ -748,9 +748,9 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_get_coordoperation>
-    pub fn crs_get_coordoperation(&self) -> Result<Proj, ProjError> {
+    pub fn crs_get_coordoperation(&self) -> Result<Self, ProjError> {
         let ptr = unsafe { proj_sys::proj_crs_get_coordoperation(self.ctx_ptr(), self.ptr()) };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Return information on the operation method of the SingleOperation.
     ///
@@ -997,10 +997,10 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_create_inverse>
-    pub fn coordoperation_create_inverse(&self) -> Result<Proj, ProjError> {
+    pub fn coordoperation_create_inverse(&self) -> Result<Self, ProjError> {
         let ptr =
             unsafe { proj_sys::proj_coordoperation_create_inverse(self.ctx_ptr(), self.ptr()) };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Returns the number of steps of a concatenated operation.
     ///
@@ -1022,21 +1022,21 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_concatoperation_get_step>
-    pub fn concatoperation_get_step(&self, index: u16) -> Result<Proj, ProjError> {
+    pub fn concatoperation_get_step(&self, index: u16) -> Result<Self, ProjError> {
         let ptr = unsafe {
             proj_sys::proj_concatoperation_get_step(self.ctx_ptr(), self.ptr(), index as i32)
         };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Instantiate a CoordinateMetadata object.
     ///
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordinate_metadata_create>
-    pub fn coordinate_metadata_create(&self, epoch: f64) -> Result<Proj, ProjError> {
+    pub fn coordinate_metadata_create(&self, epoch: f64) -> Result<Self, ProjError> {
         let ptr =
             unsafe { proj_sys::proj_coordinate_metadata_create(self.ctx_ptr(), self.ptr(), epoch) };
-        crate::Proj::new(self.arc_ctx_ptr(), ptr)
+        Self::new(self.arc_ctx_ptr(), ptr)
     }
     ///Return the coordinate epoch associated with a CoordinateMetadata.
     ///
@@ -1055,7 +1055,7 @@ impl Clone for Proj {
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_clone>
     fn clone(&self) -> Self {
         let ptr = unsafe { proj_sys::proj_clone(self.ctx_ptr(), self.ptr()) };
-        Proj::new(self.arc_ctx_ptr(), ptr).expect("Fail to clone Proj.")
+        Self::new(self.arc_ctx_ptr(), ptr).expect("Fail to clone Proj.")
     }
 }
 

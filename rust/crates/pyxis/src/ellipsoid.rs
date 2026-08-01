@@ -85,7 +85,7 @@ impl<T: GeoFloat> Ellipsoid<T> {
         let eccentricity2: T = T::TWO * flattening - flattening * flattening;
         let eccentricity = eccentricity2.sqrt();
 
-        Ellipsoid {
+        Self {
             semi_major_axis,
             semi_minor_axis,
             eccentricity,
@@ -155,7 +155,7 @@ impl<T: GeoFloat> Ellipsoid<T> {
         // Calculate eccentricity
         let eccentricity = eccentricity2.sqrt();
 
-        Ellipsoid {
+        Self {
             semi_major_axis,
             semi_minor_axis,
             flattening,

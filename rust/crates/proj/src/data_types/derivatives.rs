@@ -54,7 +54,7 @@ impl Factors {
         dy_dlam: f64,
         dy_dphi: f64,
     ) -> Self {
-        Factors {
+        Self {
             meridional_scale,
             parallel_scale,
             areal_scale,

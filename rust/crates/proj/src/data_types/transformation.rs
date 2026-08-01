@@ -23,9 +23,9 @@ impl Proj {
     pub(crate) fn new(
         arc_ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ,
-    ) -> Result<crate::Proj, ProjError> {
+    ) -> Result<Self, ProjError> {
         check_result!(ptr.is_null(), "Proj pointer is null.");
-        Ok(crate::Proj {
+        Ok(Self {
             arc_ctx_ptr,
             ptr,
             _owned_cstrings: OwnedCStrings::new(),
@@ -36,9 +36,9 @@ impl Proj {
         arc_ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ,
         owned_cstrings: OwnedCStrings,
-    ) -> Result<crate::Proj, ProjError> {
+    ) -> Result<Self, ProjError> {
         check_result!(ptr.is_null(), "Proj pointer is null.");
-        Ok(crate::Proj {
+        Ok(Self {
             arc_ctx_ptr,
             ptr,
             _owned_cstrings: owned_cstrings,

@@ -63,7 +63,7 @@ pub(crate) struct ProjOptions {
 
 impl ProjOptions {
     /// Creates a new `ProjOptions` with a specified capacity.
-    pub fn new(capacity: usize) -> ProjOptions {
+    pub fn new(capacity: usize) -> Self {
         Self {
             options: VecCString::with_capacity(capacity),
         }

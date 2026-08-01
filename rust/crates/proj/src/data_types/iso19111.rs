@@ -298,7 +298,7 @@ impl CrsInfo {
         projection_method_name: String,
         celestial_body_name: String,
     ) -> Self {
-        CrsInfo {
+        Self {
             auth_name,
             code,
             name,
@@ -359,7 +359,7 @@ impl CrsListParameters {
         allow_deprecated: bool,
         celestial_body_name: Option<String>,
     ) -> Self {
-        CrsListParameters {
+        Self {
             types,
             crs_area_of_use_contains_bbox,
             bbox_valid,
@@ -411,7 +411,7 @@ impl UnitInfo {
         proj_short_name: String,
         deprecated: bool,
     ) -> Self {
-        UnitInfo {
+        Self {
             auth_name,
             code,
             name,
@@ -440,7 +440,7 @@ pub struct CelestialBodyInfo {
     name: String,
 }
 impl CelestialBodyInfo {
-    pub fn new(auth_name: String, name: String) -> Self { CelestialBodyInfo { auth_name, name } }
+    pub fn new(auth_name: String, name: String) -> Self { Self { auth_name, name } }
 }
 ///Type of unit of measure.
 ///
@@ -572,7 +572,7 @@ impl ParamDescription {
         unit_conv_factor: f64,
         unit_type: UnitType,
     ) -> Self {
-        ParamDescription {
+        Self {
             name,
             auth_name,
             code,
@@ -697,7 +697,7 @@ impl AxisInfo {
         unit_auth_name: String,
         unit_code: String,
     ) -> Self {
-        AxisInfo {
+        Self {
             name,
             abbrev,
             direction,
@@ -726,7 +726,7 @@ impl EllipsoidParameters {
         is_semi_minor_computed: bool,
         inv_flattening: f64,
     ) -> Self {
-        EllipsoidParameters {
+        Self {
             semi_major_metre,
             semi_minor_metre,
             is_semi_minor_computed,
@@ -746,7 +746,7 @@ pub struct PrimeMeridianParameters {
 }
 impl PrimeMeridianParameters {
     pub fn new(longitude: f64, unit_conv_factor: f64, unit_name: String) -> Self {
-        PrimeMeridianParameters {
+        Self {
             longitude,
             unit_conv_factor,
             unit_name,
@@ -764,7 +764,7 @@ pub struct CoordOperationMethodInfo {
 }
 impl CoordOperationMethodInfo {
     pub fn new(method_name: String, method_auth_name: String, method_code: String) -> Self {
-        CoordOperationMethodInfo {
+        Self {
             method_name,
             method_auth_name,
             method_code,
@@ -801,7 +801,7 @@ impl CoordOperationParam {
         unit_code: String,
         unit_category: UnitCategory,
     ) -> Self {
-        CoordOperationParam {
+        Self {
             name,
             auth_name,
             code,
@@ -865,7 +865,7 @@ impl CoordOperationGridUsed {
         open_license: bool,
         available: bool,
     ) -> Self {
-        CoordOperationGridUsed {
+        Self {
             short_name,
             full_name,
             package_name,
@@ -966,7 +966,7 @@ impl AreaOfUse {
         east_lon_degree: f64,
         north_lat_degree: f64,
     ) -> Self {
-        AreaOfUse {
+        Self {
             area_name,
             west_lon_degree,
             south_lat_degree,
@@ -1015,7 +1015,7 @@ pub struct UomInfo {
 }
 impl UomInfo {
     pub fn new(name: String, conv_factor: f64, category: UomCategory) -> Self {
-        UomInfo {
+        Self {
             name,
             conv_factor,
             category,
@@ -1052,7 +1052,7 @@ impl GridInfoDB {
         open_license: bool,
         available: bool,
     ) -> Self {
-        GridInfoDB {
+        Self {
             full_name,
             package_name,
             url,
@@ -1083,12 +1083,12 @@ impl ProjObjList {
     pub(crate) fn new(
         ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
-    ) -> Result<ProjObjList, ProjError> {
+    ) -> Result<Self, ProjError> {
         check_result!(ptr.is_null(), "PJ_OBJ_LIST pointer is null.");
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         check_result!(count < 1, "PJ_OBJ_LIST count 0.");
         clerk::debug!("pj_obj_list count: {count}");
-        Ok(ProjObjList {
+        Ok(Self {
             arc_ctx_ptr: ctx_ptr,
             ptr,
             count: count as usize,
@@ -1101,12 +1101,12 @@ impl ProjObjList {
         ctx_ptr: Arc<ContextPtr>,
         ptr: *mut proj_sys::PJ_OBJ_LIST,
         owned_cstrings: OwnedCStrings,
-    ) -> Result<ProjObjList, ProjError> {
+    ) -> Result<Self, ProjError> {
         check_result!(ptr.is_null(), "PJ_OBJ_LIST pointer is null.");
         let count = unsafe { proj_sys::proj_list_get_count(ptr) };
         check_result!(count < 1, "PJ_OBJ_LIST count 0.");
         clerk::debug!("pj_obj_list count: {count}");
-        Ok(ProjObjList {
+        Ok(Self {
             arc_ctx_ptr: ctx_ptr,
             ptr,
             count: count as usize,

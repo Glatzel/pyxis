@@ -591,7 +591,7 @@ impl crate::Context {
 
 #[cfg(test)]
 mod test {
-    use insta::assert_debug_snapshot;
+    use insta::{assert_debug_snapshot, assert_snapshot};
     use strum::IntoEnumIterator;
 
     use super::*;
@@ -613,7 +613,7 @@ mod test {
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)?
             .expect("invalid element");
-        insta::assert_snapshot!(data);
+        insta::assert_snapshot!(data,@"9.8.1");
         Ok(())
     }
     #[test]
@@ -729,7 +729,7 @@ mod test {
             } else {
                 let result = codes?;
                 println!("{:?}:{}", t, result.len());
-                assert_debug_snapshot!(result);
+                assert_snapshot!(result.len(),@"55");
             }
         }
         Ok(())
@@ -747,7 +747,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_crs_info_list_from_database(Some("EPSG"), None)?;
         println!("{:?}", list.first().expect("invalid element"));
-        assert_debug_snapshot!(&list.len());
+        assert_snapshot!(list.len(),@"7741");
         Ok(())
     }
 

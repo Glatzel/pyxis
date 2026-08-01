@@ -1,5 +1,5 @@
-use crate::check_result;
 use crate::data_types::ProjError;
+use crate::error_handling::check_result;
 // region:Coordinate transformation
 impl crate::Proj {
     ///Return the operation used during the last invocation of

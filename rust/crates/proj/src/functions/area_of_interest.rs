@@ -1,4 +1,4 @@
-use crate::check_result;
+use crate::error_handling::check_result;
 use crate::data_types::ProjError;
 impl Default for crate::Area {
     /// # See Also

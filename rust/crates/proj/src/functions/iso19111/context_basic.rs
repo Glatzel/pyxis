@@ -10,7 +10,9 @@ use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::ProjError;
 use crate::data_types::iso19111::*;
-use crate::{OwnedCStrings, Proj, ProjOptions, check_result};
+use crate::error_handling::check_result;
+use crate::{OwnedCStrings, Proj, ProjOptions};
+
 /// # ISO-19111 Base functions
 impl crate::Context {
     ///Explicitly point to the main PROJ CRS and coordinate operation

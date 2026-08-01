@@ -3,8 +3,9 @@ use std::ffi::{CString, c_char};
 
 use envoy::{AsVecPtr, ToCString};
 
+use crate::Proj;
 use crate::data_types::ProjError;
-use crate::{Proj, check_result};
+use crate::error_handling::check_result;
 /// # Transformation setup
 ///
 ///The objects returned by the functions defined in this section have minimal

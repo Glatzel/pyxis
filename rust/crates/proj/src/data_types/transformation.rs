@@ -4,7 +4,8 @@ use std::ffi::c_void;
 use std::ptr::null_mut;
 
 use crate::data_types::ProjError;
-use crate::{LogLevel, OwnedCStrings, check_result};
+use crate::error_handling::check_result;
+use crate::{LogLevel, OwnedCStrings};
 
 ///Object containing everything related to a given projection or
 /// transformation. As a user of the PROJ library you are only exposed to

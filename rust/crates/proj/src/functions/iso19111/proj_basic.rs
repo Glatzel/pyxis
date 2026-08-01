@@ -5,7 +5,8 @@ use envoy::{AsVecPtr, PtrToString, ToCString};
 
 use crate::data_types::ProjError;
 use crate::data_types::iso19111::*;
-use crate::{OPTION_NO, OPTION_YES, Proj, check_result};
+use crate::error_handling::check_result;
+use crate::{OPTION_NO, OPTION_YES, Proj};
 /// # ISO-19111 Base functions
 impl Proj {
     ///Return the type of an object.

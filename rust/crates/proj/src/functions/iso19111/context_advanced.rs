@@ -5,7 +5,8 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::iso19111::*;
-use crate::{Context, OwnedCStrings, Proj, ProjOptions, check_result};
+use crate::error_handling::check_result;
+use crate::{Context, OwnedCStrings, Proj, ProjOptions};
 /// # ISO-19111 Advanced functions
 impl Context {
     ///Instantiate a CoordinateSystem.

@@ -8,7 +8,7 @@ use strum::{AsRefStr, EnumString};
 
 use crate::data_types::ProjError;
 use crate::data_types::transformation::ContextPtr;
-use crate::{OwnedCStrings, Proj, check_result};
+use crate::{OwnedCStrings, Proj, };use crate::error_handling::check_result;
 ///Guessed WKT "dialect".
 ///
 /// # Reference

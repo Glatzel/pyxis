@@ -535,16 +535,18 @@ impl Context {
                 params.len() as i32,
                 params
                     .iter()
-                    .map(|p| proj_sys::PJ_PARAM_DESCRIPTION {
-                        name: owned.push_option(p.name().to_owned()).unwrap(),
-                        auth_name: owned.push_option(p.auth_name().to_owned()).unwrap(),
-                        code: owned.push_option(p.code().to_owned()).unwrap(),
-                        value: p.value(),
-                        unit_name: owned.push_option(p.unit_name().to_owned()).unwrap(),
-                        unit_conv_factor: p.unit_conv_factor(),
-                        unit_type: *p.unit_type() as u32,
+                    .map(|p| {
+                        Ok(proj_sys::PJ_PARAM_DESCRIPTION {
+                            name: owned.push_option(p.name().to_owned()).unwrap(),
+                            auth_name: owned.push_option(p.auth_name().to_owned())?,
+                            code: owned.push_option(p.code().to_owned())?,
+                            value: p.value(),
+                            unit_name: owned.push_option(p.unit_name().to_owned())?,
+                            unit_conv_factor: p.unit_conv_factor(),
+                            unit_type: *p.unit_type() as u32,
+                        })
                     })
-                    .collect::<Vec<_>>()
+                    .collect::<Result<Vec<_>, ProjError>>()?
                     .as_ptr(),
             )
         };

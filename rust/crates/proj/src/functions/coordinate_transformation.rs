@@ -11,8 +11,6 @@ impl crate::Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_get_last_used_operation>
     pub fn get_last_used_operation(&self) -> Result<Option<Self>, ProjError> {
-        use crate::Proj;
-
         let ptr = unsafe { proj_sys::proj_trans_get_last_used_operation(self.ptr()) };
         if ptr.is_null() {
             return Ok(None);

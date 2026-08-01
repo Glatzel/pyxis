@@ -3,7 +3,7 @@ extern crate alloc;
 use envoy::ToCString;
 
 use crate::data_types::ProjError;
-use crate::data_types::iso19111::*;
+use crate::data_types::iso19111::{ProjObjList, ProjType};
 use crate::{Context, OwnedCStrings, Proj, ToCoord};
 impl ProjObjList {
     ///Return the index of the operation that would be the most appropriate to
@@ -209,7 +209,9 @@ impl Proj {
 }
 #[cfg(test)]
 mod test_context {
-    use super::*;
+    use crate::data_types::iso19111::WktType;
+
+use super::*;
     #[test]
     fn test_create_from_name() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
@@ -240,7 +242,9 @@ mod test_context {
 }
 #[cfg(test)]
 mod test_proj {
-    use super::*;
+    use crate::data_types::iso19111::WktType;
+
+use super::*;
     #[test]
     fn test_get_non_deprecated() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;

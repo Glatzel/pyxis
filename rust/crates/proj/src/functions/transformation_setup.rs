@@ -70,7 +70,7 @@ impl crate::Context {
     pub fn create_argv(&self, argv: &[&str]) -> Result<Proj, ProjError> {
         let argv_cstr: Vec<CString> = argv
             .iter()
-            .map(|s| s.to_cstring())
+            .map(envoy::ToCString::to_cstring)
             .collect::<Result<_, _>>()?;
         let argv_ptrs: Vec<*mut c_char> = argv_cstr.iter().map(|s| s.as_ptr().cast_mut()).collect();
 

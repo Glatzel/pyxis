@@ -48,7 +48,7 @@ pub fn grid_info(grid: &str) -> Result<GridInfo, ProjError> {
         && src.filename.to_string()?.as_str() == ""
         && src.format.to_string().unwrap_or_default() == "missing"
     {
-        return Err(ProjError::new(format!("Invalid grid: {}", grid)));
+        return Err(ProjError::new(format!("Invalid grid: {grid}")));
     }
     Ok(GridInfo::new(
         src.gridname.to_string()?,

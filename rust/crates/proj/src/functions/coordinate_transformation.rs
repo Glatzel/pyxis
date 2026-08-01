@@ -155,10 +155,10 @@ impl crate::Context {
                 ymin,
                 xmax,
                 ymax,
-                &mut out_xmin,
-                &mut out_ymin,
-                &mut out_xmax,
-                &mut out_ymax,
+                &raw mut out_xmin,
+                &raw mut out_ymin,
+                &raw mut out_xmax,
+                &raw mut out_ymax,
                 densify_pts,
             )
         };
@@ -237,12 +237,12 @@ impl crate::Context {
                 xmax,
                 ymax,
                 zmax,
-                &mut out_xmin,
-                &mut out_ymin,
-                &mut out_zmin,
-                &mut out_xmax,
-                &mut out_ymax,
-                &mut out_zmax,
+                &raw mut out_xmin,
+                &raw mut out_ymin,
+                &raw mut out_zmin,
+                &raw mut out_xmax,
+                &raw mut out_ymax,
+                &raw mut out_zmax,
                 densify_pts,
             )
         };

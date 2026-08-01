@@ -3,7 +3,7 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString, ToVecCString};
 
 use crate::data_types::ProjError;
-use crate::data_types::iso19111::*;
+use crate::data_types::iso19111::{OperationFactoryContext, CrsExtentUse, SpatialCriterion, GridAvailabilityUse, IntermediateCrsUse, ProjObjList};
 use crate::{Context, Proj};
 impl Context {
     ///Instantiate a context for building coordinate operations between two
@@ -353,7 +353,9 @@ impl Drop for OperationFactoryContext {
 }
 #[cfg(test)]
 mod test {
-    use super::*;
+    use crate::data_types::iso19111::{Category, WktType};
+
+use super::*;
     #[test]
     fn test_settings() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;

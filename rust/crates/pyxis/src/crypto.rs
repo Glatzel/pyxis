@@ -1,7 +1,7 @@
 use core::fmt;
 use core::str::FromStr;
 extern crate alloc;
-use alloc::string::{String, ToString};
+use alloc::string::String;
 
 /// # References
 /// - https://github.com/googollee/eviltransform/blob/master/rust/src/lib.rs
@@ -27,7 +27,7 @@ impl FromStr for CryptoSpace {
             "BD09" => Ok(Self::BD09),
             "GCJ02" => Ok(Self::GCJ02),
             "WGS84" => Ok(Self::WGS84),
-            _ => Err("".to_string()),
+            _ => Err(String::new()),
         }
     }
 }
@@ -56,7 +56,7 @@ where
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Distance { semi_major_axis } => {
-                write!(f, "Distance{{semi_major_axis: {}}}", semi_major_axis)
+                write!(f, "Distance{{semi_major_axis: {semi_major_axis}}}")
             }
             Self::LonLat => write!(f, "LonLat"),
         }

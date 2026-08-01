@@ -9,7 +9,10 @@ extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::ProjError;
-use crate::data_types::iso19111::*;
+use crate::data_types::iso19111::{
+    Category, CelestialBodyInfo, CrsInfo, CrsListParameters, DatabaseMetadataKey, GridInfoDB,
+    GuessedWktDialect, ProjType, UnitCategory, UnitInfo, UomCategory, UomInfo,
+};
 use crate::error_handling::check_result;
 use crate::{OwnedCStrings, Proj, ProjOptions};
 
@@ -169,20 +172,20 @@ impl crate::Context {
                 self.ptr(),
                 wkt.to_cstring()?.as_ptr(),
                 options.as_ptr(),
-                &mut out_warnings,
-                &mut out_grammar_errors,
+                &raw mut out_warnings,
+                &raw mut out_grammar_errors,
             )
         };
         let _ = out_warnings.to_vec_string_null_terminated().map(|w| {
-            w.iter().for_each(|_w| {
+            for _w in w.iter() {
                 clerk::warn!("{_w}");
-            })
+            }
         });
 
         let _ = out_grammar_errors.to_vec_string_null_terminated().map(|e| {
-            e.iter().for_each(|_e| {
+            for _e in e.iter() {
                 clerk::warn!("{_e}");
-            })
+            }
         });
 
         Proj::new(self.arc_ptr(), ptr)
@@ -246,9 +249,9 @@ impl crate::Context {
                 self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 code.to_cstring()?.as_ptr(),
-                &mut name,
-                &mut conv_factor,
-                &mut category,
+                &raw mut name,
+                &raw mut conv_factor,
+                &raw mut category,
             )
         };
         check_result!(result != 1, "Error");
@@ -279,12 +282,12 @@ impl crate::Context {
             proj_sys::proj_grid_get_info_from_database(
                 self.ptr(),
                 grid_name.to_cstring()?.as_ptr(),
-                &mut full_name,
-                &mut package_name,
-                &mut url,
-                &mut direct_download,
-                &mut open_license,
-                &mut available,
+                &raw mut full_name,
+                &raw mut package_name,
+                &raw mut url,
+                &raw mut direct_download,
+                &raw mut open_license,
+                &raw mut available,
             )
         };
         check_result!(result != 1, "Error");
@@ -400,7 +403,7 @@ impl crate::Context {
             proj_sys::proj_get_celestial_body_list_from_database(
                 self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
-                &mut out_result_count,
+                &raw mut out_result_count,
             )
         };
         check_result!(out_result_count < 1, "Error");
@@ -483,7 +486,7 @@ impl crate::Context {
         };
 
         let params_ptr = params_c.as_ref().map_or(ptr::null(), |p| {
-            p as *const proj_sys::PROJ_CRS_LIST_PARAMETERS
+            std::ptr::from_ref::<proj_sys::PROJ_CRS_LIST_PARAMETERS>(p)
         });
 
         let ptr = unsafe {
@@ -491,7 +494,7 @@ impl crate::Context {
                 self.ptr(),
                 auth_name_ptr,
                 params_ptr,
-                &mut out_result_count,
+                &raw mut out_result_count,
             )
         };
 
@@ -558,7 +561,7 @@ impl crate::Context {
                 auth_name.to_cstring()?.as_ptr(),
                 category.as_ref().to_cstring()?.as_ptr(),
                 allow_deprecated as i32,
-                &mut out_result_count,
+                &raw mut out_result_count,
             )
         };
         check_result!(out_result_count < 1, "Error");
@@ -595,6 +598,7 @@ mod test {
     use strum::IntoEnumIterator;
 
     use super::*;
+    use crate::data_types::iso19111::WktType;
     #[test]
     fn test_set_database_path() -> Result<(), ProjError> {
         let _ = crate::new_test_ctx()?;

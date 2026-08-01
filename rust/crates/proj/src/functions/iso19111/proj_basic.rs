@@ -4,7 +4,7 @@ use core::str::FromStr;
 use envoy::{AsVecPtr, PtrToString, ToCString};
 
 use crate::data_types::ProjError;
-use crate::data_types::iso19111::*;
+use crate::data_types::iso19111::{ProjType, ComparisonCriterion, AreaOfUse, WktType, ProjStringType, CoordinateSystemType, AxisInfo, AxisDirection, EllipsoidParameters, PrimeMeridianParameters, CoordOperationMethodInfo, CoordOperationParam, UnitCategory, CoordOperationGridUsed};
 use crate::error_handling::check_result;
 use crate::{OPTION_NO, OPTION_YES, Proj};
 /// # ISO-19111 Base functions
@@ -174,11 +174,11 @@ impl Proj {
             proj_sys::proj_get_area_of_use(
                 self.ctx_ptr(),
                 self.ptr(),
-                &mut west_lon_degree,
-                &mut south_lat_degree,
-                &mut east_lon_degree,
-                &mut north_lat_degree,
-                &mut area_name,
+                &raw mut west_lon_degree,
+                &raw mut south_lat_degree,
+                &raw mut east_lon_degree,
+                &raw mut north_lat_degree,
+                &raw mut area_name,
             )
         };
         if west_lon_degree == -1000.0
@@ -218,11 +218,11 @@ impl Proj {
                 self.ctx_ptr(),
                 self.ptr(),
                 domain_idx as i32,
-                &mut west_lon_degree,
-                &mut south_lat_degree,
-                &mut east_lon_degree,
-                &mut north_lat_degree,
-                &mut area_name,
+                &raw mut west_lon_degree,
+                &raw mut south_lat_degree,
+                &raw mut east_lon_degree,
+                &raw mut north_lat_degree,
+                &raw mut area_name,
             )
         };
         if west_lon_degree == -1000.0
@@ -639,13 +639,13 @@ impl Proj {
                 self.ctx_ptr(),
                 self.ptr(),
                 index as i32,
-                &mut name,
-                &mut abbrev,
-                &mut direction,
-                &mut unit_conv_factor,
-                &mut unit_name,
-                &mut unit_auth_name,
-                &mut unit_code,
+                &raw mut name,
+                &raw mut abbrev,
+                &raw mut direction,
+                &raw mut unit_conv_factor,
+                &raw mut unit_name,
+                &raw mut unit_auth_name,
+                &raw mut unit_code,
             )
         };
         check_result!(result != 1, "Error");
@@ -682,10 +682,10 @@ impl Proj {
             proj_sys::proj_ellipsoid_get_parameters(
                 self.ctx_ptr(),
                 self.ptr(),
-                &mut semi_major_metre,
-                &mut semi_minor_metre,
-                &mut is_semi_minor_computed,
-                &mut inv_flattening,
+                &raw mut semi_major_metre,
+                &raw mut semi_minor_metre,
+                &raw mut is_semi_minor_computed,
+                &raw mut inv_flattening,
             )
         };
         check_result!(result != 1, "Error");
@@ -731,9 +731,9 @@ impl Proj {
             proj_sys::proj_prime_meridian_get_parameters(
                 self.ctx_ptr(),
                 self.ptr(),
-                &mut longitude,
-                &mut unit_conv_factor,
-                &mut unit_name,
+                &raw mut longitude,
+                &raw mut unit_conv_factor,
+                &raw mut unit_name,
             )
         };
         check_result!(result != 1, "Error");
@@ -767,9 +767,9 @@ impl Proj {
             proj_sys::proj_coordoperation_get_method_info(
                 self.ctx_ptr(),
                 self.ptr(),
-                &mut method_name,
-                &mut method_auth_name,
-                &mut method_code,
+                &raw mut method_name,
+                &raw mut method_auth_name,
+                &raw mut method_code,
             )
         };
         check_result!(result != 1, "Error");
@@ -879,16 +879,16 @@ impl Proj {
                 self.ctx_ptr(),
                 self.ptr(),
                 index as i32,
-                &mut name,
-                &mut auth_name,
-                &mut code,
-                &mut value,
-                &mut value_string,
-                &mut unit_conv_factor,
-                &mut unit_name,
-                &mut unit_auth_name,
-                &mut unit_code,
-                &mut unit_category,
+                &raw mut name,
+                &raw mut auth_name,
+                &raw mut code,
+                &raw mut value,
+                &raw mut value_string,
+                &raw mut unit_conv_factor,
+                &raw mut unit_name,
+                &raw mut unit_auth_name,
+                &raw mut unit_code,
+                &raw mut unit_category,
             )
         };
         check_result!(result != 1, "Error");
@@ -942,13 +942,13 @@ impl Proj {
                 self.ctx_ptr(),
                 self.ptr(),
                 index as i32,
-                &mut short_name,
-                &mut full_name,
-                &mut package_name,
-                &mut url,
-                &mut direct_download,
-                &mut open_license,
-                &mut available,
+                &raw mut short_name,
+                &raw mut full_name,
+                &raw mut package_name,
+                &raw mut url,
+                &raw mut direct_download,
+                &raw mut open_license,
+                &raw mut available,
             )
         };
         check_result!(result != 1, "Error");
@@ -1062,7 +1062,9 @@ impl Clone for Proj {
 
 #[cfg(test)]
 mod test_proj_basic {
-    use super::*;
+    use crate::data_types::iso19111::{Category, GridAvailabilityUse, SpatialCriterion};
+
+use super::*;
 
     #[test]
     fn test_get_type() -> Result<(), ProjError> {

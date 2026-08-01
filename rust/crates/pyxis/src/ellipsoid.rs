@@ -158,10 +158,10 @@ impl<T: GeoFloat> Ellipsoid<T> {
         Self {
             semi_major_axis,
             semi_minor_axis,
-            flattening,
-            inverse_flattening,
             eccentricity,
             eccentricity2,
+            flattening,
+            inverse_flattening,
         }
     }
     /// Returns the semi-major axis of the ellipsoid.

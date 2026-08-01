@@ -71,7 +71,7 @@ impl crate::Area {
                 south_lat_degree,
                 east_lon_degree,
                 north_lat_degree,
-            )
+            );
         };
         Ok(self)
     }

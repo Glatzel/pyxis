@@ -43,9 +43,6 @@ fn main() -> mischief::Result<()> {
         let header = include_dir.join("proj.h").to_slash_lossy().to_string();
 
         let bindings = bindgen::Builder::default()
-            .blocklist_type("max_align_t")
-            .ctypes_prefix("libc")
-            .header(header)
             .raw_line("#![allow(clippy::nursery)]")
             .raw_line("#![allow(clippy::pedantic)]")
             .raw_line("#![allow(clippy::restriction)]")
@@ -54,6 +51,9 @@ fn main() -> mischief::Result<()> {
             .raw_line("#![allow(non_snake_case)]")
             .raw_line("#![allow(non_upper_case_globals)]")
             .raw_line("#![allow(unexpected_cfgs)]")
+            .blocklist_type("max_align_t")
+            .ctypes_prefix("libc")
+            .header(header)
             .size_t_is_usize(true)
             .use_core().raw_line("#![allow(clippy::all)]")
             .generate()?;

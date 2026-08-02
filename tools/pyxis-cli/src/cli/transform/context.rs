@@ -95,9 +95,12 @@ impl ContextTransform {
     }
     pub fn normalize(&mut self) {
         if self.x == 0.0f64 && self.y == 0.0f64 && self.z == 0.0f64 {
-            clerk::warn!("Length of coordinate vector is 0.")
+            clerk::warn!("Length of coordinate vector is 0.");
         } else {
-            let length = (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt();
+            let length = self
+                .z
+                .mul_add(self.z, self.y.mul_add(self.y, self.x.powi(2)))
+                .sqrt();
             self.x /= length;
             self.y /= length;
             self.z /= length;
@@ -105,9 +108,7 @@ impl ContextTransform {
     }
     pub fn proj(&mut self, from: &str, to: &str) -> mischief::Result<()> {
         let ctx = crate::utils::init_proj_builder()?;
-        let pj = ctx
-            .clone()
-            .create_crs_to_crs(from, to, &proj::Area::default())?;
+        let pj = ctx.create_crs_to_crs(from, to, &proj::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj).unwrap();
         (self.x, self.y) = pj.convert(&(self.x, self.y))?;
         Ok(())
@@ -157,7 +158,7 @@ impl ContextTransform {
                 self.y += oy;
                 self.z += oz;
             }
-        };
+        }
     }
     pub fn scale(&mut self, sx: f64, sy: f64, sz: f64, ox: f64, oy: f64, oz: f64) {
         if sx == 1.0f64 && sy == 1.0f64 && sz == 1.0f64 {
@@ -166,9 +167,9 @@ impl ContextTransform {
         if sx == self.x && sy == self.x && sz == self.x {
             clerk::warn!("Scale origin is equal to coordinate.");
         }
-        self.x = ox + (self.x - ox) * sx;
-        self.y = oy + (self.y - oy) * sy;
-        self.z = oz + (self.z - oz) * sz;
+        self.x = (self.x - ox).mul_add(sx, ox);
+        self.y = (self.y - oy).mul_add(sy, oy);
+        self.z = (self.z - oz).mul_add(sz, oz);
     }
     pub fn space(&mut self, from: CoordSpace, to: CoordSpace) {
         (self.x, self.y, self.z) = match (from, to) {
@@ -200,7 +201,7 @@ impl ContextTransform {
         if tx == 0.0f64 && ty == 0.0f64 && tz == 0.0f64 {
             clerk::warn!(
                 "Translation parameters are all 0. The Coordinate is not modified after translation."
-            )
+            );
         }
         self.x += tx;
         self.y += ty;

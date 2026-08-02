@@ -247,8 +247,8 @@ pub fn execute(
                     idx: (i + 1) as u8,
                     method: "proj".to_string(),
                     parameter: serde_json::json!({
-                        "from": from.to_string(),
-                        "to": to.to_string()
+                        "from": from.clone(),
+                        "to": to.clone()
                     }),
                     output_x: ctx.x,
                     output_y: ctx.y,

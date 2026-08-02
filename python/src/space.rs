@@ -2,7 +2,10 @@ use numpy::{PyArrayDyn, PyArrayMethods};
 use pyo3::prelude::*;
 use pyo3::pyfunction;
 use pyo3::types::PyTuple;
-use pyxis::*;
+use pyxis::{
+    cartesian_to_cylindrical, cartesian_to_spherical, cylindrical_to_cartesian,
+    cylindrical_to_spherical, spherical_to_cartesian, spherical_to_cylindrical,
+};
 use rayon::prelude::*;
 fn get_space_fn(from: &str, to: &str) -> Result<impl Fn(f64, f64, f64) -> (f64, f64, f64), PyErr> {
     match (from.to_lowercase().as_str(), to.to_lowercase().as_str()) {

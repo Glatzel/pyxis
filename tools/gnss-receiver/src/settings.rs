@@ -48,12 +48,13 @@ impl Settings {
     }
 
     pub fn path() -> PathBuf {
-        if let Some(proj_dirs) = ProjectDirs::from("", "", "pyxis") {
-            proj_dirs.config_dir().join("pyxis.toml")
-        } else {
-            clerk::warn!("Cannot determine config directory. Using local file.");
-            PathBuf::from("pyxis.toml")
-        }
+        ProjectDirs::from("", "", "pyxis").map_or_else(
+            || {
+                clerk::warn!("Cannot determine config directory. Using local file.");
+                PathBuf::from("pyxis.toml")
+            },
+            |proj_dirs| proj_dirs.config_dir().join("pyxis.toml"),
+        )
     }
 
     pub fn save(&self) -> mischief::Result<()> {

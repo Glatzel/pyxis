@@ -35,13 +35,13 @@ impl ProjObjList {
         }
         let ptr = unsafe { proj_sys::proj_list_get(self.arc_ctx_ptr.ptr(), self.ptr(), index) };
 
-        if self._owned_cstrings.len() > 0 {
+        if self.owned_cstrings.len() > 0 {
             Ok(Some(Proj::new(self.arc_ctx_ptr.clone(), ptr)?))
         } else {
             Ok(Some(Proj::new_with_owned_cstrings(
                 self.arc_ctx_ptr.clone(),
                 ptr,
-                self._owned_cstrings.clone(),
+                self.owned_cstrings.clone(),
             )?))
         }
     }

@@ -1078,7 +1078,7 @@ pub struct ProjObjList {
     pub(crate) arc_ctx_ptr: Arc<ContextPtr>,
     ptr: *mut proj_sys::PJ_OBJ_LIST,
     count: usize,
-    pub(crate) _owned_cstrings: OwnedCStrings,
+    pub(crate) owned_cstrings: OwnedCStrings,
 }
 impl ProjObjList {
     pub(crate) fn new(
@@ -1093,7 +1093,7 @@ impl ProjObjList {
             arc_ctx_ptr: ctx_ptr,
             ptr,
             count: count as usize,
-            _owned_cstrings: OwnedCStrings::new(),
+            owned_cstrings: OwnedCStrings::new(),
         })
     }
 
@@ -1111,7 +1111,7 @@ impl ProjObjList {
             arc_ctx_ptr: ctx_ptr,
             ptr,
             count: count as usize,
-            _owned_cstrings: owned_cstrings,
+            owned_cstrings,
         })
     }
 
@@ -1126,7 +1126,7 @@ impl ProjObjList {
         let ptr =
             unsafe { proj_sys::proj_list_get(self.arc_ctx_ptr.ptr(), self.ptr, index as i32) };
 
-        Proj::new_with_owned_cstrings(self.arc_ctx_ptr.clone(), ptr, self._owned_cstrings.clone())
+        Proj::new_with_owned_cstrings(self.arc_ctx_ptr.clone(), ptr, self.owned_cstrings.clone())
     }
     ///Return the number of objects in the result set.
     ///

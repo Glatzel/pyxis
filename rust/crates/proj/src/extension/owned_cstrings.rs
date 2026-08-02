@@ -22,7 +22,10 @@ impl OwnedCStrings {
             _owned_cstrings: Vec::with_capacity(n),
         }
     }
-    pub fn push<T>(&mut self, value: T) -> Result<*const c_char, ProjError> where T: ToCString {
+    pub fn push<T>(&mut self, value: T) -> Result<*const c_char, ProjError>
+    where
+        T: ToCString,
+    {
         self._owned_cstrings.push(value.to_cstring()?);
         Ok(self
             ._owned_cstrings
@@ -30,10 +33,10 @@ impl OwnedCStrings {
             .ok_or_else(|| ProjError::new("Last owned cstring is missing.".to_string()))?
             .as_ptr())
     }
-    pub fn push_option<T>(
-        &mut self,
-        value: Option<T>,
-    ) -> Result<*const c_char, ProjError> where T: ToCString {
+    pub fn push_option<T>(&mut self, value: Option<T>) -> Result<*const c_char, ProjError>
+    where
+        T: ToCString,
+    {
         match value {
             Some(v) => Ok(self.push(v)?),
             None => Ok(ptr::null()),

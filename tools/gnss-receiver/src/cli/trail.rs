@@ -1,9 +1,11 @@
-use std::io::stdout;
 use core::time::Duration;
+use std::io::stdout;
 
 use crossterm::event::Event;
 use crossterm::execute;
-use crossterm::terminal::{enable_raw_mode, EnterAlternateScreen, disable_raw_mode, LeaveAlternateScreen};
+use crossterm::terminal::{
+    EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode,
+};
 use ratatui::Terminal;
 use ratatui::backend::CrosstermBackend;
 use tokio::sync::mpsc;

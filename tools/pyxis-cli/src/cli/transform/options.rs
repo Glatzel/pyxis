@@ -1,5 +1,5 @@
-use std::fmt;
 use core::str::FromStr;
+use std::fmt;
 
 use bpaf::Bpaf;
 use serde::{Deserialize, Serialize};

@@ -75,11 +75,10 @@ impl ProjOptions {
     /// # Arguments
     /// * `opt` - The value to convert and push.
     /// * `name` - The name of the option.
-    pub fn with<T>(
-        &mut self,
-        opt: T,
-        name: &str,
-    ) -> Result<&mut Self, ProjError> where T: ToProjOptionString {
+    pub fn with<T>(&mut self, opt: T, name: &str) -> Result<&mut Self, ProjError>
+    where
+        T: ToProjOptionString,
+    {
         self.options
             .push(format!("{name}={}", opt.to_option_string()).to_cstring()?);
         Ok(self)
@@ -97,7 +96,10 @@ impl ProjOptions {
         opt: Option<T>,
         name: &str,
         default_value: &str,
-    ) -> Result<&mut Self, ProjError> where T: ToProjOptionString {
+    ) -> Result<&mut Self, ProjError>
+    where
+        T: ToProjOptionString,
+    {
         match opt {
             Some(opt) => {
                 self.options
@@ -117,11 +119,10 @@ impl ProjOptions {
     /// # Arguments
     /// * `opt` - The optional value to convert and push.
     /// * `name` - The name of the option.
-    pub fn with_or_skip<T>(
-        &mut self,
-        opt: Option<T>,
-        name: &str,
-    ) -> Result<&mut Self, ProjError> where T: ToProjOptionString {
+    pub fn with_or_skip<T>(&mut self, opt: Option<T>, name: &str) -> Result<&mut Self, ProjError>
+    where
+        T: ToProjOptionString,
+    {
         if let Some(o) = opt {
             self.options
                 .push(format!("{name}={}", o.to_option_string()).to_cstring()?);

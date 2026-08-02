@@ -19,7 +19,7 @@ pub struct Args {
 pub enum SubCommands {
     #[bpaf(command)]
     Transform {
-        #[bpaf(short, long,fallback(String::new()),)]
+        #[bpaf(short, long, fallback(String::new()))]
         /// Transform task name.
         name: String,
         #[bpaf(short, long, fallback(0.0), display_fallback)]

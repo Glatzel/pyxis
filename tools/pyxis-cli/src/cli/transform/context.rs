@@ -97,7 +97,10 @@ impl ContextTransform {
         if self.x == 0.0f64 && self.y == 0.0f64 && self.z == 0.0f64 {
             clerk::warn!("Length of coordinate vector is 0.");
         } else {
-            let length = self.z.mul_add(self.z, self.y.mul_add(self.y, self.x.powi(2))).sqrt();
+            let length = self
+                .z
+                .mul_add(self.z, self.y.mul_add(self.y, self.x.powi(2)))
+                .sqrt();
             self.x /= length;
             self.y /= length;
             self.z /= length;
@@ -105,9 +108,7 @@ impl ContextTransform {
     }
     pub fn proj(&mut self, from: &str, to: &str) -> mischief::Result<()> {
         let ctx = crate::utils::init_proj_builder()?;
-        let pj = ctx
-            
-            .create_crs_to_crs(from, to, &proj::Area::default())?;
+        let pj = ctx.create_crs_to_crs(from, to, &proj::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj).unwrap();
         (self.x, self.y) = pj.convert(&(self.x, self.y))?;
         Ok(())

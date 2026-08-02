@@ -1,5 +1,5 @@
 extern crate alloc;
-use std::ffi::{CString, c_char};
+use core::ffi::{CString, c_char};
 
 use envoy::{AsVecPtr, ToCString};
 

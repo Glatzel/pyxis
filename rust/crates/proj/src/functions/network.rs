@@ -184,7 +184,7 @@ impl crate::Context {
                 url_or_filename.to_cstring()?.as_ptr(),
                 ignore_ttl_setting as i32,
                 None,
-                std::ptr::null_mut(),
+                core::ptr::null_mut(),
             )
         } != 0;
         check_result!(!result, "Download failed.");

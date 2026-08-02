@@ -106,7 +106,7 @@ impl InsertObjectSession {
         let result = ptr.to_vec_string_null_terminated()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
-        }
+        };
         Ok(result)
     }
 }

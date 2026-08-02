@@ -4,7 +4,7 @@ on:
 env:
   RUST_ROOT: ./rust
 permissions:
-  contents: read
+  contents: write
 jobs:
   proj-bindings:
     runs-on: ubuntu-latest
@@ -14,12 +14,18 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/rust/setup-rust
       - name: proj-bindings
-        run: |
-          ${{env.RUST_ROOT}}/scripts/proj-bindings.ps1
+        run: ${{env.RUST_ROOT}}/scripts/proj-bindings.ps1
         shell: pwsh
-      - name: upload
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: proj-bindings
-          path: rust/crates/proj-sys/src/bindings.rs
-          if-no-files-found: error
+      - name: commit
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin ${{ github.ref_name }}
+          git add rust/crates/proj-sys/src/bindings.rs
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Update proj bindings"
+          git push
+        shell: bash

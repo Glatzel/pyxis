@@ -31,12 +31,12 @@ pub enum Tab {
     Settings,
 }
 impl Tab {
-    pub fn index(&self) -> usize {
+    pub const fn index(&self) -> usize {
         match self {
-            Tab::Info => 0,
-            Tab::Coord => 1,
-            Tab::Nmea => 2,
-            Tab::Settings => 3,
+            Self::Info => 0,
+            Self::Coord => 1,
+            Self::Nmea => 2,
+            Self::Settings => 3,
         }
     }
 }

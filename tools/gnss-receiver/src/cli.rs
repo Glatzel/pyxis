@@ -64,7 +64,7 @@ pub async fn execute() -> mischief::Result<()> {
     match args.sub_commands {
         // Run the interactive TUI trail subcommand
         SubCommands::Trail { .. } => trail::execute().await?,
-    };
+    }
 
     Ok(())
 }

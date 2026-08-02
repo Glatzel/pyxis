@@ -81,7 +81,7 @@ impl App {
         }
         false
     }
-    fn current_tab_name(&self) -> &'static str {
+    const fn current_tab_name(&self) -> &'static str {
         match self.tab {
             Tab::Info => "Info",
             Tab::Coord => "Coord",
@@ -125,7 +125,7 @@ impl App {
             self.raw_nmea.pop_front();
         }
         self.raw_nmea.push_back((talker, identifier, sentence));
-        self.status = (self.status + 1) % 4
+        self.status = (self.status + 1) % 4;
     }
     pub fn hint(&mut self) -> String {
         const GLOBAL_HINT: [&str; 2] = ["`←/→` Tab", "`esc` Quit"];

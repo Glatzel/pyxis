@@ -1,9 +1,9 @@
 use std::io::stdout;
-use std::time::Duration;
+use core::time::Duration;
 
 use crossterm::event::Event;
 use crossterm::execute;
-use crossterm::terminal::{enable_raw_mode, *};
+use crossterm::terminal::{enable_raw_mode, EnterAlternateScreen, disable_raw_mode, LeaveAlternateScreen};
 use ratatui::Terminal;
 use ratatui::backend::CrosstermBackend;
 use tokio::sync::mpsc;
@@ -41,7 +41,7 @@ pub async fn execute() -> mischief::Result<()> {
     loop {
         // Redraw the UI
         terminal.draw(|f| match ui::draw(f, &mut app) {
-            Ok(_) => (),
+            Ok(()) => (),
             Err(e) => clerk::error!("{e}"),
         })?;
 

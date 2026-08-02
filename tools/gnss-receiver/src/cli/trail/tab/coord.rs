@@ -18,14 +18,14 @@ pub struct TabCoord {
 impl Default for TabCoord {
     fn default() -> Self {
         let ctx = Context::new().unwrap();
-        let pj = match &ctx.create_crs_to_crs(
-            "EPSG:4326",
-            &SETTINGS.lock().trail.tab_coord.custom_cs,
-            &Area::default(),
-        ) {
-            Ok(pj) => ctx.normalize_for_visualization(pj).ok(),
-            Err(_) => None,
-        };
+        let pj = ctx
+            .create_crs_to_crs(
+                "EPSG:4326",
+                &SETTINGS.lock().trail.tab_coord.custom_cs,
+                &Area::default(),
+            )
+            .as_ref()
+            .map_or_else(|_| None, |pj| ctx.normalize_for_visualization(pj).ok());
         let parser = StrParserContext::default();
         Self { parser, pj }
     }
@@ -41,7 +41,7 @@ impl TabCoord {
             .iter()
             .rev()
             .find(|f| f.1 == Identifier::GGA)
-            .and_then(|f| Gga::new(self.parser.init(f.2.to_string()), f.0).ok());
+            .and_then(|f| Gga::new(self.parser.init(f.2.clone()), f.0).ok());
         if let Some(gga) = gga
             && let (Some(wgs84_lon), Some(wgs84_lat)) = (gga.lon(), gga.lat())
         {

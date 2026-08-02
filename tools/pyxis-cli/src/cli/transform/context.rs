@@ -94,7 +94,7 @@ impl ContextTransform {
         }
     }
     pub fn normalize(&mut self) {
-        if self.x == 0.0f64 && self.y == 0.0f64 && self.z == 0.0f64 {
+        if self.x == 0.0_f64 && self.y == 0.0_f64 && self.z == 0.0_f64 {
             clerk::warn!("Length of coordinate vector is 0.");
         } else {
             let length = self
@@ -161,7 +161,7 @@ impl ContextTransform {
         }
     }
     pub fn scale(&mut self, sx: f64, sy: f64, sz: f64, ox: f64, oy: f64, oz: f64) {
-        if sx == 1.0f64 && sy == 1.0f64 && sz == 1.0f64 {
+        if sx == 1.0_f64 && sy == 1.0_f64 && sz == 1.0_f64 {
             clerk::warn!("Scale parameters are all 1.");
         }
         if sx == self.x && sy == self.x && sz == self.x {
@@ -198,7 +198,7 @@ impl ContextTransform {
         };
     }
     pub fn translate(&mut self, tx: f64, ty: f64, tz: f64) {
-        if tx == 0.0f64 && ty == 0.0f64 && tz == 0.0f64 {
+        if tx == 0.0_f64 && ty == 0.0_f64 && tz == 0.0_f64 {
             clerk::warn!(
                 "Translation parameters are all 0. The Coordinate is not modified after translation."
             );

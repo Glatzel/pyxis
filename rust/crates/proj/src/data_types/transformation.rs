@@ -1,7 +1,7 @@
 extern crate alloc;
 use alloc::sync::Arc;
-use std::ffi::c_void;
-use std::ptr::null_mut;
+use core::ffi::c_void;
+use core::ptr::null_mut;
 
 use crate::data_types::ProjError;
 use crate::error_handling::check_result;

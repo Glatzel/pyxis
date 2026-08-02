@@ -117,7 +117,7 @@ impl crate::Context {
         let out_vec = ptr.to_vec_string_null_terminated()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
-        }
+        };
         Ok(out_vec)
     }
     ///Guess the "dialect" of the WKT string.
@@ -165,8 +165,8 @@ impl crate::Context {
             unset_identifiers_if_incompatible_def,
             "UNSET_IDENTIFIERS_IF_INCOMPATIBLE_DEF",
         )?;
-        let mut out_warnings: *mut *mut c_char = std::ptr::null_mut();
-        let mut out_grammar_errors: *mut *mut c_char = std::ptr::null_mut();
+        let mut out_warnings: *mut *mut c_char = core::ptr::null_mut();
+        let mut out_grammar_errors: *mut *mut c_char = core::ptr::null_mut();
         let ptr = unsafe {
             proj_sys::proj_create_from_wkt(
                 self.ptr(),
@@ -241,9 +241,9 @@ impl crate::Context {
         auth_name: &str,
         code: &str,
     ) -> Result<UomInfo, ProjError> {
-        let mut name: *const std::ffi::c_char = std::ptr::null();
+        let mut name: *const core::ffi::c_char = core::ptr::null();
         let mut conv_factor: f64 = f64::NAN;
-        let mut category: *const std::ffi::c_char = std::ptr::null();
+        let mut category: *const core::ffi::c_char = core::ptr::null();
         let result = unsafe {
             proj_sys::proj_uom_get_info_from_database(
                 self.ptr(),
@@ -272,9 +272,9 @@ impl crate::Context {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_grid_get_info_from_database>
     pub fn grid_get_info_from_database(&self, grid_name: &str) -> Result<GridInfoDB, ProjError> {
-        let mut full_name: *const std::ffi::c_char = std::ptr::null();
-        let mut package_name: *const std::ffi::c_char = std::ptr::null();
-        let mut url: *const std::ffi::c_char = std::ptr::null();
+        let mut full_name: *const core::ffi::c_char = core::ptr::null();
+        let mut package_name: *const core::ffi::c_char = core::ptr::null();
+        let mut url: *const core::ffi::c_char = core::ptr::null();
         let mut direct_download: i32 = i32::default();
         let mut open_license: i32 = i32::default();
         let mut available: i32 = i32::default();
@@ -332,7 +332,7 @@ impl crate::Context {
         let out_vec = ptr.to_vec_string_null_terminated()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
-        }
+        };
         Ok(out_vec)
     }
     ///  Return the list of authorities used in the database.
@@ -346,7 +346,7 @@ impl crate::Context {
         let out_vec = ptr.to_vec_string_null_terminated()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
-        }
+        };
         Ok(out_vec)
     }
     /// Returns the set of authority codes of the given object type.
@@ -379,7 +379,7 @@ impl crate::Context {
         let out_vec = ptr.to_vec_string_null_terminated()?;
         unsafe {
             proj_sys::proj_string_list_destroy(ptr);
-        }
+        };
         Ok(out_vec)
     }
     ///Enumerate celestial bodies from the database.
@@ -486,7 +486,7 @@ impl crate::Context {
         };
 
         let params_ptr = params_c.as_ref().map_or(ptr::null(), |p| {
-            std::ptr::from_ref::<proj_sys::PROJ_CRS_LIST_PARAMETERS>(p)
+            core::ptr::from_ref::<proj_sys::PROJ_CRS_LIST_PARAMETERS>(p)
         });
 
         let ptr = unsafe {

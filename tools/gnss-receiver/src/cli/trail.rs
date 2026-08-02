@@ -1,5 +1,5 @@
+use core::time::Duration;
 use std::io::stdout;
-use std::time::Duration;
 
 use crossterm::event::Event;
 use crossterm::execute;

@@ -169,7 +169,7 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use>
     pub fn get_area_of_use(&self) -> Result<Option<AreaOfUse>, ProjError> {
-        let mut area_name: *const std::ffi::c_char = std::ptr::null();
+        let mut area_name: *const core::ffi::c_char = core::ptr::null();
         let mut west_lon_degree = f64::NAN;
         let mut south_lat_degree = f64::NAN;
         let mut east_lon_degree = f64::NAN;
@@ -212,7 +212,7 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_area_of_use_ex>
     pub fn get_area_of_use_ex(&self, domain_idx: u16) -> Result<Option<AreaOfUse>, ProjError> {
-        let mut area_name: *const std::ffi::c_char = std::ptr::null();
+        let mut area_name: *const core::ffi::c_char = core::ptr::null();
         let mut west_lon_degree = f64::NAN;
         let mut south_lat_degree = f64::NAN;
         let mut east_lon_degree = f64::NAN;
@@ -630,14 +630,14 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_cs_get_axis_info>
     pub fn cs_get_axis_info(&self, index: u16) -> Result<AxisInfo, ProjError> {
-        let mut name: *const std::ffi::c_char = std::ptr::null();
-        let mut abbrev: *const std::ffi::c_char = std::ptr::null();
-        let mut direction: *const std::ffi::c_char = std::ptr::null();
+        let mut name: *const core::ffi::c_char = core::ptr::null();
+        let mut abbrev: *const core::ffi::c_char = core::ptr::null();
+        let mut direction: *const core::ffi::c_char = core::ptr::null();
 
         let mut unit_conv_factor = f64::NAN;
-        let mut unit_name: *const std::ffi::c_char = std::ptr::null();
-        let mut unit_auth_name: *const std::ffi::c_char = std::ptr::null();
-        let mut unit_code: *const std::ffi::c_char = std::ptr::null();
+        let mut unit_name: *const core::ffi::c_char = core::ptr::null();
+        let mut unit_auth_name: *const core::ffi::c_char = core::ptr::null();
+        let mut unit_code: *const core::ffi::c_char = core::ptr::null();
         let result = unsafe {
             proj_sys::proj_cs_get_axis_info(
                 self.ctx_ptr(),
@@ -729,7 +729,7 @@ impl Proj {
     pub fn prime_meridian_get_parameters(&self) -> Result<PrimeMeridianParameters, ProjError> {
         let mut longitude = f64::NAN;
         let mut unit_conv_factor = f64::NAN;
-        let mut unit_name: *const std::ffi::c_char = std::ptr::null();
+        let mut unit_name: *const core::ffi::c_char = core::ptr::null();
 
         let result = unsafe {
             proj_sys::proj_prime_meridian_get_parameters(
@@ -763,9 +763,9 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_method_info>
     pub fn coordoperation_get_method_info(&self) -> Result<CoordOperationMethodInfo, ProjError> {
-        let mut method_name: *const std::ffi::c_char = std::ptr::null();
-        let mut method_auth_name: *const std::ffi::c_char = std::ptr::null();
-        let mut method_code: *const std::ffi::c_char = std::ptr::null();
+        let mut method_name: *const core::ffi::c_char = core::ptr::null();
+        let mut method_auth_name: *const core::ffi::c_char = core::ptr::null();
+        let mut method_code: *const core::ffi::c_char = core::ptr::null();
 
         let result = unsafe {
             proj_sys::proj_coordoperation_get_method_info(
@@ -868,16 +868,16 @@ impl Proj {
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_coordoperation_get_param>
     pub fn coordoperation_get_param(&self, index: u16) -> Result<CoordOperationParam, ProjError> {
-        let mut name: *const std::ffi::c_char = std::ptr::null();
-        let mut auth_name: *const std::ffi::c_char = std::ptr::null();
-        let mut code: *const std::ffi::c_char = std::ptr::null();
+        let mut name: *const core::ffi::c_char = core::ptr::null();
+        let mut auth_name: *const core::ffi::c_char = core::ptr::null();
+        let mut code: *const core::ffi::c_char = core::ptr::null();
         let mut value = f64::NAN;
-        let mut value_string: *const std::ffi::c_char = std::ptr::null();
+        let mut value_string: *const core::ffi::c_char = core::ptr::null();
         let mut unit_conv_factor = f64::NAN;
-        let mut unit_name: *const std::ffi::c_char = std::ptr::null();
-        let mut unit_auth_name: *const std::ffi::c_char = std::ptr::null();
-        let mut unit_code: *const std::ffi::c_char = std::ptr::null();
-        let mut unit_category: *const std::ffi::c_char = std::ptr::null();
+        let mut unit_name: *const core::ffi::c_char = core::ptr::null();
+        let mut unit_auth_name: *const core::ffi::c_char = core::ptr::null();
+        let mut unit_code: *const core::ffi::c_char = core::ptr::null();
+        let mut unit_category: *const core::ffi::c_char = core::ptr::null();
         let result = unsafe {
             proj_sys::proj_coordoperation_get_param(
                 self.ctx_ptr(),
@@ -933,10 +933,10 @@ impl Proj {
         &self,
         index: u16,
     ) -> Result<CoordOperationGridUsed, ProjError> {
-        let mut short_name: *const std::ffi::c_char = std::ptr::null();
-        let mut full_name: *const std::ffi::c_char = std::ptr::null();
-        let mut package_name: *const std::ffi::c_char = std::ptr::null();
-        let mut url: *const std::ffi::c_char = std::ptr::null();
+        let mut short_name: *const core::ffi::c_char = core::ptr::null();
+        let mut full_name: *const core::ffi::c_char = core::ptr::null();
+        let mut package_name: *const core::ffi::c_char = core::ptr::null();
+        let mut url: *const core::ffi::c_char = core::ptr::null();
         let mut direct_download = i32::default();
         let mut open_license = i32::default();
         let mut available = i32::default();

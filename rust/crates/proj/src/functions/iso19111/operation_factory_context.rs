@@ -65,7 +65,7 @@ impl OperationFactoryContext {
                 self.ptr,
                 accuracy,
             );
-        }
+        };
         self
     }
     ///Set the desired area of interest for the resulting coordinate
@@ -100,7 +100,7 @@ impl OperationFactoryContext {
                 east_lon_degree,
                 north_lat_degree,
             );
-        }
+        };
         self
     }
     ///Set the name of the desired area of interest for the resulting
@@ -120,7 +120,7 @@ impl OperationFactoryContext {
                 self.ptr,
                 area_name.to_cstring()?.as_ptr(),
             );
-        }
+        };
         Ok(self)
     }
     ///Set how source and target CRS extent should be used when considering if
@@ -143,7 +143,7 @@ impl OperationFactoryContext {
                 self.ptr,
                 extent_use as u32,
             );
-        }
+        };
         self
     }
     ///Set the spatial criterion to use when comparing the area of validity of
@@ -166,7 +166,7 @@ impl OperationFactoryContext {
                 self.ptr,
                 criterion as u32,
             );
-        }
+        };
         self
     }
     ///Set how grid availability is used.
@@ -187,7 +187,7 @@ impl OperationFactoryContext {
                 self.ptr,
                 grid_availability_use as u32,
             );
-        }
+        };
         self
     }
     /// Set whether PROJ alternative grid names should be substituted to the
@@ -209,7 +209,7 @@ impl OperationFactoryContext {
                 self.ptr,
                 use_proj_names as i32,
             );
-        }
+        };
         self
     }
     ///Set whether an intermediate pivot CRS can be used for researching
@@ -243,7 +243,7 @@ impl OperationFactoryContext {
                 self.ptr,
                 proj_intermediate_crs_use as u32,
             );
-        }
+        };
         self
     }
 
@@ -269,7 +269,7 @@ impl OperationFactoryContext {
                 self.ptr,
                 list_of_auth_name_codes.as_ptr(),
             );
-        }
+        };
         Ok(self)
     }
     /// Set whether transformations that are superseded (but not deprecated)
@@ -289,7 +289,7 @@ impl OperationFactoryContext {
                 self.ptr,
                 discard as i32,
             );
-        }
+        };
         self
     }
     ///Set whether ballpark transformations are allowed.
@@ -308,7 +308,7 @@ impl OperationFactoryContext {
                 self.ptr,
                 allow as i32,
             );
-        }
+        };
         self
     }
     ///Find a list of CoordinateOperation from source_crs to target_crs.

@@ -932,7 +932,7 @@ pub enum AllowIntermediateCrs {
     Never,
 }
 impl Display for AllowIntermediateCrs {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let text = match self {
             Self::Always => "ALWAYS",
             Self::IfNoDirectTransformation => "IF_NO_DIRECT_TRANSFORMATION",

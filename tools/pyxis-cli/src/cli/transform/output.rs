@@ -35,11 +35,11 @@ pub fn output_plain(name: &str, records: &[Record]) {
     }
     for record in records.iter().skip(1) {
         println!(
-            r"|-- step: {}
+            "|-- step: {}
 |-- method: {}
 |-- parameter:
 {}
-{}
+\u{25BC}
 {}: {}, {}: {}, {}: {}",
             record.idx,
             record.method,
@@ -49,7 +49,6 @@ pub fn output_plain(name: &str, records: &[Record]) {
                 .map(|line| format!("|       {line}"))
                 .collect::<Vec<String>>()
                 .join("\n"),
-            "\u{25BC}",
             record.output_x_name,
             record.output_x,
             record.output_y_name,

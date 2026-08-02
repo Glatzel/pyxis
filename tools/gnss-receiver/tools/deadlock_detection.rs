@@ -8,7 +8,7 @@ async fn main() -> mischief::Result<()> {
 pub fn start_deadlock_detection() {
     tokio::task::spawn_blocking(|| {
         loop {
-            std::thread::sleep(std::time::Duration::from_secs(3));
+            std::thread::sleep(core::time::Duration::from_secs(3));
             let deadlocks = parking_lot::deadlock::check_deadlock();
             if deadlocks.is_empty() {
                 continue;

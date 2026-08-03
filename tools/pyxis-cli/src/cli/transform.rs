@@ -10,8 +10,8 @@ use record::Record;
 
 #[derive(Bpaf, Clone, Debug)]
 pub enum TransformArgs {
-    #[bpaf(command, adjacent)]
     /// Crypto coordinates between `BD09`, `GCJ02` and `WGS84`.
+    #[bpaf(command, adjacent)]
     Crypto {
         #[bpaf(short, long)]
         from: CryptoSpace,
@@ -19,9 +19,9 @@ pub enum TransformArgs {
         to: CryptoSpace,
     },
 
-    #[bpaf(command, adjacent)]
     /// Converts projected XY coordinates from the height compensation plane to
     /// the sea level plane.
+    #[bpaf(command, adjacent)]
     DatumCompensate {
         #[bpaf(short, long)]
         /// Elevation of the height compensation plane (in meters).
@@ -37,8 +37,8 @@ pub enum TransformArgs {
         y0: f64,
     },
 
-    #[bpaf(command, adjacent)]
     /// Migrate2d.
+    #[bpaf(command, adjacent)]
     Migrate2d {
         #[bpaf(short, long)]
         given: MigrateOption2d,
@@ -54,11 +54,10 @@ pub enum TransformArgs {
         unit: options::RotateUnit,
     },
 
-    #[bpaf(command, adjacent)]
     /// Normalize.
-    Normalize {},
-
     #[bpaf(command, adjacent)]
+    Normalize,
+
     /// Transform coordinate from one known coordinate reference systems to
     /// another.
     ///
@@ -68,6 +67,7 @@ pub enum TransformArgs {
     ///    syntax, the unit is expected to be degrees.
     ///  - the name of a CRS as found in the PROJ database, e.g "WGS84",
     ///    "NAD27", etc.
+    #[bpaf(command, adjacent)]
     Proj {
         #[bpaf(short, long, argument("PROJ"))]
         from: String,
@@ -75,8 +75,8 @@ pub enum TransformArgs {
         to: String,
     },
 
-    #[bpaf(command, adjacent)]
     /// Rotate Coordinate.
+    #[bpaf(command, adjacent)]
     Rotate {
         #[bpaf(short, long)]
         value: f64,
@@ -92,8 +92,8 @@ pub enum TransformArgs {
         oz: f64,
     },
 
-    #[bpaf(command, adjacent)]
     /// Scale Coordinate.
+    #[bpaf(command, adjacent)]
     Scale {
         #[bpaf(long, fallback(1.0))]
         sx: f64,
@@ -109,9 +109,9 @@ pub enum TransformArgs {
         oz: f64,
     },
 
-    #[bpaf(command, adjacent)]
     /// Transforms coordinates between Cartesian, cylindrical, and spherical
     /// coordinate systems.
+    #[bpaf(command, adjacent)]
     Space {
         #[bpaf(short, long)]
         from: CoordSpace,
@@ -119,8 +119,8 @@ pub enum TransformArgs {
         to: CoordSpace,
     },
 
-    #[bpaf(command, adjacent)]
     /// Translate Coordinate.
+    #[bpaf(command, adjacent)]
     Translate {
         #[bpaf(short, long, fallback(0.0))]
         tx: f64,
@@ -226,7 +226,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformArgs::Normalize {} => {
+            TransformArgs::Normalize => {
                 ctx.normalize();
                 let record = Record {
                     idx: (i + 1) as u8,

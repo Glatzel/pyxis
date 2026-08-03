@@ -101,7 +101,7 @@ impl crate::Proj {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
-pub fn xy_dist(a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, ProjError> {
+pub fn xy_dist<T>(a: T, b: T) -> Result<f64, ProjError> where T: crate::ICoord {
     Ok(unsafe { proj_sys::proj_xy_dist(a.to_coord()?, b.to_coord()?) })
 }
 /// Calculate 3-dimensional euclidean between two projected coordinates.
@@ -109,7 +109,7 @@ pub fn xy_dist(a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, Proj
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xyz_dist>
-pub fn xyz_dist(a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, ProjError> {
+pub fn xyz_dist<T>(a: T, b: T) -> Result<f64, ProjError> where T: crate::ICoord {
     Ok(unsafe { proj_sys::proj_xyz_dist(a.to_coord()?, b.to_coord()?) })
 }
 #[cfg(test)]

@@ -16,7 +16,7 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
-    pub fn lp_dist(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, ProjError> {
+    pub fn lp_dist<T>(&self, a: T, b: T) -> Result<f64, ProjError> where T: crate::ICoord {
         let dist = unsafe { proj_sys::proj_lp_dist(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         check_result!(
@@ -85,12 +85,12 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_geod_direct>
-    pub fn geod_direct(
+    pub fn geod_direct<T>(
         &self,
-        a: impl crate::ICoord,
+        a: T,
         azimuth: f64,
         distance: f64,
-    ) -> Result<(f64, f64, f64), ProjError> {
+    ) -> Result<(f64, f64, f64), ProjError> where T: crate::ICoord {
         let coord =
             unsafe { proj_sys::proj_geod_direct(self.ptr(), a.to_coord()?, azimuth, distance) };
         Ok(unsafe { (coord.xyzt.x, coord.xyzt.y, coord.xyzt.z) })

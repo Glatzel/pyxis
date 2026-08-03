@@ -10,8 +10,8 @@ use record::Record;
 
 #[derive(Bpaf, Clone, Debug)]
 pub enum TransformArgs {
-    #[bpaf(command, adjacent)]
     /// Crypto coordinates between `BD09`, `GCJ02` and `WGS84`.
+    #[bpaf(command, adjacent)]
     Crypto {
         #[bpaf(short, long)]
         from: CryptoSpace,
@@ -19,9 +19,9 @@ pub enum TransformArgs {
         to: CryptoSpace,
     },
 
-    #[bpaf(command, adjacent)]
     /// Converts projected XY coordinates from the height compensation plane to
     /// the sea level plane.
+    #[bpaf(command, adjacent)]
     DatumCompensate {
         #[bpaf(short, long)]
         /// Elevation of the height compensation plane (in meters).
@@ -37,8 +37,8 @@ pub enum TransformArgs {
         y0: f64,
     },
 
-    #[bpaf(command, adjacent)]
     /// Migrate2d.
+    #[bpaf(command, adjacent)]
     Migrate2d {
         #[bpaf(short, long)]
         given: MigrateOption2d,
@@ -54,11 +54,10 @@ pub enum TransformArgs {
         unit: options::RotateUnit,
     },
 
-    #[bpaf(command, adjacent)]
     /// Normalize.
+    #[bpaf(command, adjacent)]
     Normalize,
 
-    #[bpaf(command, adjacent)]
     /// Transform coordinate from one known coordinate reference systems to
     /// another.
     ///
@@ -68,6 +67,7 @@ pub enum TransformArgs {
     ///    syntax, the unit is expected to be degrees.
     ///  - the name of a CRS as found in the PROJ database, e.g "WGS84",
     ///    "NAD27", etc.
+    #[bpaf(command, adjacent)]
     Proj {
         #[bpaf(short, long, argument("PROJ"))]
         from: String,

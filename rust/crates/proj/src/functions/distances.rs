@@ -16,7 +16,10 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_lp_dist>
-    pub fn lp_dist<T>(&self, a: T, b: T) -> Result<f64, ProjError> where T: crate::ICoord {
+    pub fn lp_dist<T>(&self, a: T, b: T) -> Result<f64, ProjError>
+    where
+        T: crate::ICoord,
+    {
         let dist = unsafe { proj_sys::proj_lp_dist(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         check_result!(
@@ -38,7 +41,10 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_lpz_dist>
-    pub fn lpz_dist<T>(&self, a: T, b: T) -> Result<f64, ProjError> where T: crate::ICoord {
+    pub fn lpz_dist<T>(&self, a: T, b: T) -> Result<f64, ProjError>
+    where
+        T: crate::ICoord,
+    {
         let dist = unsafe { proj_sys::proj_lpz_dist(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         check_result!(
@@ -59,11 +65,10 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
-    pub fn geod<T>(
-        &self,
-        a: T,
-        b: T,
-    ) -> Result<(f64, f64), ProjError> where T: crate::ICoord {
+    pub fn geod<T>(&self, a: T, b: T) -> Result<(f64, f64), ProjError>
+    where
+        T: crate::ICoord,
+    {
         let dist = unsafe { proj_sys::proj_geod(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };
@@ -90,7 +95,10 @@ impl crate::Proj {
         a: T,
         azimuth: f64,
         distance: f64,
-    ) -> Result<(f64, f64, f64), ProjError> where T: crate::ICoord {
+    ) -> Result<(f64, f64, f64), ProjError>
+    where
+        T: crate::ICoord,
+    {
         let coord =
             unsafe { proj_sys::proj_geod_direct(self.ptr(), a.to_coord()?, azimuth, distance) };
         Ok(unsafe { (coord.xyzt.x, coord.xyzt.y, coord.xyzt.z) })
@@ -101,7 +109,10 @@ impl crate::Proj {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
-pub fn xy_dist<T>(a: T, b: T) -> Result<f64, ProjError> where T: crate::ICoord {
+pub fn xy_dist<T>(a: T, b: T) -> Result<f64, ProjError>
+where
+    T: crate::ICoord,
+{
     Ok(unsafe { proj_sys::proj_xy_dist(a.to_coord()?, b.to_coord()?) })
 }
 /// Calculate 3-dimensional euclidean between two projected coordinates.
@@ -109,7 +120,10 @@ pub fn xy_dist<T>(a: T, b: T) -> Result<f64, ProjError> where T: crate::ICoord {
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xyz_dist>
-pub fn xyz_dist<T>(a: T, b: T) -> Result<f64, ProjError> where T: crate::ICoord {
+pub fn xyz_dist<T>(a: T, b: T) -> Result<f64, ProjError>
+where
+    T: crate::ICoord,
+{
     Ok(unsafe { proj_sys::proj_xyz_dist(a.to_coord()?, b.to_coord()?) })
 }
 #[cfg(test)]

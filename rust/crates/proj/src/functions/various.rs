@@ -155,7 +155,7 @@ mod test {
     use core::f64::consts::{FRAC_PI_2, PI};
 
     use float_cmp::assert_approx_eq;
- 
+
     #[test]
     fn test_roundtrip() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;

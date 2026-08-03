@@ -21,7 +21,10 @@ impl ProjObjList {
         &self,
         direction: crate::Direction,
         coord: T,
-    ) -> Result<Option<Proj>, ProjError> where T: crate::ICoord {
+    ) -> Result<Option<Proj>, ProjError>
+    where
+        T: crate::ICoord,
+    {
         let index = unsafe {
             proj_sys::proj_get_suggested_operation(
                 self.arc_ctx_ptr.ptr(),

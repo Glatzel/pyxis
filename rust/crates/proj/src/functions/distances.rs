@@ -59,11 +59,11 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_xy_dist>
-    pub fn geod<T: crate::ICoord>(
+    pub fn geod<T>(
         &self,
         a: T,
         b: T,
-    ) -> Result<(f64, f64), ProjError> {
+    ) -> Result<(f64, f64), ProjError> where T: crate::ICoord {
         let dist = unsafe { proj_sys::proj_geod(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         let (dist, reversed_azimuth) = unsafe { (dist.lp.lam, dist.lp.phi) };

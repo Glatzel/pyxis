@@ -32,8 +32,8 @@ pub fn draw(f: &mut Frame, app: &mut App) -> mischief::Result<()> {
         );
 
     //content
-    f.render_widget(tabs, unsafe { chunks.get_unchecked(0) });
-    app.draw(f, unsafe { chunks.get_unchecked(1) })?;
+    f.render_widget(tabs, unsafe { *chunks.get_unchecked(0) });
+    app.draw(f, unsafe { *chunks.get_unchecked(1) })?;
 
     //footer
     let footer = Paragraph::new(format!(
@@ -45,7 +45,7 @@ pub fn draw(f: &mut Frame, app: &mut App) -> mischief::Result<()> {
     .style(Style::default().fg(Color::Gray));
     f.render_widget(
         footer,
-        unsafe { chunks.get_unchecked(2) },
+        unsafe { *chunks.get_unchecked(2) },
     );
     Ok(())
 }

@@ -17,11 +17,11 @@ impl ProjObjList {
     ///# References
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_get_suggested_operation>
-    pub fn get_suggested_operation(
+    pub fn get_suggested_operation<T>(
         &self,
         direction: crate::Direction,
-        coord: impl crate::ICoord,
-    ) -> Result<Option<Proj>, ProjError> {
+        coord: T,
+    ) -> Result<Option<Proj>, ProjError> where T: crate::ICoord {
         let index = unsafe {
             proj_sys::proj_get_suggested_operation(
                 self.arc_ctx_ptr.ptr(),

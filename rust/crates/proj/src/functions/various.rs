@@ -64,7 +64,7 @@ impl crate::Proj {
     pub fn factors(&self, coord: &impl ICoord) -> Result<crate::data_types::Factors, ProjError> {
         let factor = unsafe { proj_sys::proj_factors(self.ptr(), coord.to_coord()?) };
         match self.errno() {
-            crate::data_types::ProjErrorCode::Success => (),
+            crate::data_types::ProjErrorCode::Success |
             crate::data_types::ProjErrorCode::CoordTransfmOutsideProjectionDomain => (),
             _ => {
                 check_result!(self);

@@ -38,7 +38,7 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_lpz_dist>
-    pub fn lpz_dist(&self, a: impl crate::ICoord, b: impl crate::ICoord) -> Result<f64, ProjError> {
+    pub fn lpz_dist<T>(&self, a: T, b: T) -> Result<f64, ProjError> where T: crate::ICoord {
         let dist = unsafe { proj_sys::proj_lpz_dist(self.ptr(), a.to_coord()?, b.to_coord()?) };
         check_result!(self);
         check_result!(

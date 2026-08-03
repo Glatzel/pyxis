@@ -330,17 +330,17 @@ where
 /// );
 /// println!("{},{}", p.0, p.1);
 /// ```
-pub fn crypto_exact<T>(
+pub fn crypto_exact<T,F>(
     src_lon: T,
     src_lat: T,
-    crypto_fn: &impl Fn(T, T) -> (T, T),
-    inv_crypto_fn: &impl Fn(T, T) -> (T, T),
+    crypto_fn: F,
+    inv_crypto_fn: F,
     threshold: T,
     threshold_mode: &CryptoThresholdMode<T>,
     max_iter: usize,
 ) -> (T, T)
 where
-    T: GeoFloat + 'static,
+    T: GeoFloat + 'static, F: Fn(T, T) -> (T, T),
 {
     let (mut dst_lon, mut dst_lat) = inv_crypto_fn(src_lon, src_lat);
     for _i in 0..max_iter {

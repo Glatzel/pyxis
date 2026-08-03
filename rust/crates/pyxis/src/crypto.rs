@@ -322,25 +322,27 @@ where
 /// let p = crypto_exact(
 ///     p.0,
 ///     p.1,
-///     &bd09_to_wgs84,
-///     &wgs84_to_bd09,
+///     bd09_to_wgs84,
+///     wgs84_to_bd09,
 ///     1e-17,
 ///     &CryptoThresholdMode::LonLat,
 ///     100,
 /// );
 /// println!("{},{}", p.0, p.1);
 /// ```
-pub fn crypto_exact<T,F>(
+pub fn crypto_exact<T, F, FI>(
     src_lon: T,
     src_lat: T,
     crypto_fn: F,
-    inv_crypto_fn: F,
+    inv_crypto_fn: FI,
     threshold: T,
     threshold_mode: &CryptoThresholdMode<T>,
     max_iter: usize,
 ) -> (T, T)
 where
-    T: GeoFloat + 'static, F: Fn(T, T) -> (T, T),
+    T: GeoFloat + 'static,
+    F: Fn(T, T) -> (T, T),
+    FI: Fn(T, T) -> (T, T),
 {
     let (mut dst_lon, mut dst_lat) = inv_crypto_fn(src_lon, src_lat);
     for _i in 0..max_iter {
@@ -424,21 +426,21 @@ mod test {
         #[test]
         fn test_wgs84_gcj02(lon in 72.004..137.8347f64,lat in 0.8293..55.8271f64) {
             let gcj = wgs84_to_gcj02(lon, lat);
-            let out = crypto_exact(gcj.0, gcj.1, &wgs84_to_gcj02, &gcj02_to_wgs84, 1e-20, &CryptoThresholdMode::LonLat, 100);
+            let out = crypto_exact(gcj.0, gcj.1, wgs84_to_gcj02, gcj02_to_wgs84, 1e-20, &CryptoThresholdMode::LonLat, 100);
             assert_approx_eq!(f64,out.0, lon, epsilon = 1e-13);
             assert_approx_eq!(f64,out.1, lat, epsilon = 1e-13);
         }
         #[test]
         fn test_wgs84_bd09(lon in 72.004..137.8347f64,lat in 0.8293..55.8271f64) {
             let bd = wgs84_to_bd09(lon, lat);
-            let out = crypto_exact(bd.0, bd.1, &wgs84_to_bd09, &bd09_to_wgs84, 1e-20, &CryptoThresholdMode::LonLat, 100);
+            let out = crypto_exact(bd.0, bd.1, wgs84_to_bd09, bd09_to_wgs84, 1e-20, &CryptoThresholdMode::LonLat, 100);
             assert_approx_eq!(f64,out.0, lon, epsilon = 1e-13);
             assert_approx_eq!(f64,out.1, lat, epsilon = 1e-13);
         }
         #[test]
         fn test_gcj02_bd09(lon in 72.004..137.8347f64,lat in 0.8293..55.8271f64) {
             let bd = gcj02_to_bd09(lon, lat);
-            let out = crypto_exact(bd.0, bd.1, &gcj02_to_bd09, &bd09_to_gcj02, 1e-20, &CryptoThresholdMode::LonLat, 100);
+            let out = crypto_exact(bd.0, bd.1, gcj02_to_bd09, bd09_to_gcj02, 1e-20, &CryptoThresholdMode::LonLat, 100);
             assert_approx_eq!(f64,out.0, lon, epsilon = 1e-13);
             assert_approx_eq!(f64,out.1, lat, epsilon = 1e-13);
         }

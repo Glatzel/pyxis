@@ -30,8 +30,11 @@ impl crate::Proj {
         &self,
         direction: crate::Direction,
         n: i32,
-        coord: T,
-    ) -> Result<f64, ProjError> where T: ICoord {
+        coord: &T,
+    ) -> Result<f64, ProjError>
+    where
+        T: ICoord,
+    {
         let mut coord = coord.to_coord()?;
         let distance =
             unsafe { proj_sys::proj_roundtrip(self.ptr(), direction as i32, n, &raw mut coord) };
@@ -61,11 +64,14 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_factors>
-    pub fn factors<T>(&self, coord: T) -> Result<crate::data_types::Factors, ProjError> where T: ICoord {
+    pub fn factors<T>(&self, coord: &T) -> Result<crate::data_types::Factors, ProjError>
+    where
+        T: ICoord,
+    {
         let factor = unsafe { proj_sys::proj_factors(self.ptr(), coord.to_coord()?) };
         match self.errno() {
-            crate::data_types::ProjErrorCode::Success |
-            crate::data_types::ProjErrorCode::CoordTransfmOutsideProjectionDomain => (),
+            crate::data_types::ProjErrorCode::Success
+            | crate::data_types::ProjErrorCode::CoordTransfmOutsideProjectionDomain => (),
             _ => {
                 check_result!(self);
             }

@@ -56,7 +56,7 @@ pub enum TransformArgs {
 
     #[bpaf(command, adjacent)]
     /// Normalize.
-    Normalize {},
+    Normalize,
 
     #[bpaf(command, adjacent)]
     /// Transform coordinate from one known coordinate reference systems to
@@ -226,7 +226,7 @@ pub fn execute(
                 };
                 records.push(record);
             }
-            TransformArgs::Normalize {} => {
+            TransformArgs::Normalize => {
                 ctx.normalize();
                 let record = Record {
                     idx: (i + 1) as u8,

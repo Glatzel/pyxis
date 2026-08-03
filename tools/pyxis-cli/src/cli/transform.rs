@@ -75,8 +75,8 @@ pub enum TransformArgs {
         to: String,
     },
 
-    #[bpaf(command, adjacent)]
     /// Rotate Coordinate.
+    #[bpaf(command, adjacent)]
     Rotate {
         #[bpaf(short, long)]
         value: f64,
@@ -92,8 +92,8 @@ pub enum TransformArgs {
         oz: f64,
     },
 
-    #[bpaf(command, adjacent)]
     /// Scale Coordinate.
+    #[bpaf(command, adjacent)]
     Scale {
         #[bpaf(long, fallback(1.0))]
         sx: f64,
@@ -109,9 +109,9 @@ pub enum TransformArgs {
         oz: f64,
     },
 
-    #[bpaf(command, adjacent)]
     /// Transforms coordinates between Cartesian, cylindrical, and spherical
     /// coordinate systems.
+    #[bpaf(command, adjacent)]
     Space {
         #[bpaf(short, long)]
         from: CoordSpace,
@@ -119,8 +119,8 @@ pub enum TransformArgs {
         to: CoordSpace,
     },
 
-    #[bpaf(command, adjacent)]
     /// Translate Coordinate.
+    #[bpaf(command, adjacent)]
     Translate {
         #[bpaf(short, long, fallback(0.0))]
         tx: f64,

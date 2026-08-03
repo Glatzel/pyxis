@@ -108,10 +108,10 @@ impl crate::Proj {
         let direction = if inv { Inv } else { Fwd };
         let length = coord.len();
         let size = size_of::<T>();
-        let x = coord[0].x();
-        let y = coord[0].y();
-        let z = coord[0].z();
-        let t = coord[0].t();
+        let x = unsafe { coord.get_unchecked_mut(0) }.x();
+        let y = unsafe { coord.get_unchecked_mut(0) }.y();
+        let z = unsafe { coord.get_unchecked_mut(0) }.z();
+        let t = unsafe { coord.get_unchecked_mut(0) }.t();
 
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d
@@ -155,10 +155,10 @@ impl crate::Proj {
     {
         let length = coord.len();
         let size = size_of::<T>();
-        let x = coord[0].x();
-        let y = coord[0].y();
-        let z = coord[0].z();
-        let t = coord[0].t();
+        let x = unsafe { coord.get_unchecked_mut(0) }.x();
+        let y = unsafe { coord.get_unchecked_mut(0) }.y();
+        let z = unsafe { coord.get_unchecked_mut(0) }.z();
+        let t = unsafe { coord.get_unchecked_mut(0) }.t();
 
         match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
             //2d

@@ -1,3 +1,7 @@
 # rust
 target
 proptest-regressions
+
+# python
+__pycache__
+*.pyd

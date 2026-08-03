@@ -136,8 +136,8 @@ impl super::ITab for TabCoord {
                 Constraint::Min(4),
             ])
             .split(area);
-        self.draw_table(f, chunks[0], raw_nmea)?;
-        self.draw_projected_cs(f, chunks[2])?;
+        self.draw_table(f, unsafe { *chunks.get_unchecked(0) }, raw_nmea)?;
+        self.draw_projected_cs(f, unsafe { *chunks.get_unchecked(2) })?;
         Ok(())
     }
     fn hint(&mut self) -> &'static [&'static str] { &[] }

@@ -109,7 +109,11 @@ impl super::ITab for TabInfo {
             } else {
                 Color::Gray
             };
-            Row::new(vec![Cell::from(r[0]), Cell::from(r[1])]).style(Style::default().bg(bg))
+            Row::new(vec![
+                Cell::from(unsafe { *r.get_unchecked(0) }),
+                Cell::from(unsafe { *r.get_unchecked(1) }),
+            ])
+            .style(Style::default().bg(bg))
         });
 
         let table = Table::new(table_rows, &[Constraint::Length(20), Constraint::Min(10)])

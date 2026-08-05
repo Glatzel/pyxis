@@ -33,7 +33,7 @@ impl Default for TabCoord {
 impl TabCoord {
     fn draw_table(
         &mut self,
-        f: &mut ratatui::Frame,
+        f: &mut ratatui::Frame<'_>,
         area: ratatui::layout::Rect,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> mischief::Result<()> {
@@ -103,7 +103,7 @@ impl TabCoord {
     }
     fn draw_projected_cs(
         &mut self,
-        f: &mut ratatui::Frame,
+        f: &mut ratatui::Frame<'_>,
         area: ratatui::layout::Rect,
     ) -> mischief::Result<()> {
         let input = Paragraph::new(SETTINGS.lock().trail.tab_coord.custom_cs.clone())
@@ -124,7 +124,7 @@ impl super::ITab for TabCoord {
     fn handle_mouse(&mut self, _mouse: crossterm::event::MouseEvent) {}
     fn draw(
         &mut self,
-        f: &mut ratatui::Frame,
+        f: &mut ratatui::Frame<'_>,
         area: ratatui::layout::Rect,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> mischief::Result<()> {

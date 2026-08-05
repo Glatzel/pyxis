@@ -110,7 +110,7 @@ impl App {
     }
     pub fn draw(
         &mut self,
-        f: &mut ratatui::Frame,
+        f: &mut ratatui::Frame<'_>,
         area: ratatui::layout::Rect,
     ) -> mischief::Result<()> {
         match self.tab {

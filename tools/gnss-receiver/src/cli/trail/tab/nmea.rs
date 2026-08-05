@@ -13,7 +13,7 @@ impl super::ITab for TabNmea {
     fn handle_mouse(&mut self, _mouse: crossterm::event::MouseEvent) {}
     fn draw(
         &mut self,
-        f: &mut ratatui::Frame,
+        f: &mut ratatui::Frame<'_>,
         area: ratatui::layout::Rect,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> mischief::Result<()> {
@@ -26,7 +26,7 @@ impl super::ITab for TabNmea {
                 .iter()
                 .skip(count.saturating_sub(visible_lines))
                 .map(|f| Line::from(f.2.as_str()))
-                .collect::<Vec<Line>>(),
+                .collect::<Vec<Line<'_>>>(),
         );
 
         f.render_widget(p, area);

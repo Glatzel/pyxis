@@ -1,6 +1,6 @@
 use core::ptr;
 use std::path::Path;
-extern crate alloc;
+
 use envoy::{AsVecPtr, ToCString, ToVecCString, VecCString};
 
 use crate::data_types::ProjError;

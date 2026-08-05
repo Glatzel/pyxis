@@ -17,7 +17,7 @@ pub trait ITab: Default {
     fn handle_mouse(&mut self, mouse: MouseEvent);
     fn draw(
         &mut self,
-        f: &mut Frame,
+        f: &mut Frame<'_>,
         area: ratatui::layout::Rect,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> mischief::Result<()>;

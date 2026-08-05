@@ -1,4 +1,3 @@
-extern crate alloc;
 use core::ffi::c_char;
 use std::ffi::CString;
 

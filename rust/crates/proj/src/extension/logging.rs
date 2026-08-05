@@ -1,4 +1,3 @@
-
 use core::ffi::{c_char, c_void};
 
 use envoy::PtrToString;

@@ -12,7 +12,7 @@ impl super::ITab for TabSettings {
     fn handle_mouse(&mut self, _mouse: crossterm::event::MouseEvent) {}
     fn draw(
         &mut self,
-        f: &mut ratatui::Frame,
+        f: &mut ratatui::Frame<'_>,
         area: ratatui::layout::Rect,
         _raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> mischief::Result<()> {

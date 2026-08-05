@@ -7,7 +7,6 @@
 //! - A macro for implementing the trait for types that use `to_string()`.
 //! - The `ProjOptions` struct for building and managing PROJ options as
 //!   CStrings.
-extern crate alloc;
 
 use core::ffi::c_char;
 

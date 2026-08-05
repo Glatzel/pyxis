@@ -5,7 +5,6 @@ use std::ffi::CString;
 use std::path::{Path, PathBuf};
 
 use envoy::{PtrListToVecString, PtrToString};
-extern crate alloc;
 use envoy::{AsVecPtr, ToCString};
 
 use crate::data_types::ProjError;

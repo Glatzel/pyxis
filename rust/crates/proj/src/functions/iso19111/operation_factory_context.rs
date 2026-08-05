@@ -1,5 +1,4 @@
 use core::ptr;
-extern crate alloc;
 use envoy::{AsVecPtr, ToCString, ToVecCString};
 
 use crate::data_types::ProjError;

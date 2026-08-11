@@ -66,8 +66,8 @@ dependencies = [
 
 [[package]]
 name = "arbor"
-version = "2026.7.27"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.27#e551d8418ff3a69cac64446c029f0e17a62b4449"
+version = "2026.8.4"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
 dependencies = [
  "textwrap",
 ]
@@ -290,7 +290,7 @@ source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.18#43a9c4c6ebca3ec8
 dependencies = [
  "chrono",
  "owo-colors",
- "thiserror 2.0.19",
+ "thiserror 2.0.20",
  "tracing",
  "tracing-core",
  "tracing-subscriber",
@@ -298,10 +298,10 @@ dependencies = [
 
 [[package]]
 name = "clerk"
-version = "2026.7.27"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.27#e551d8418ff3a69cac64446c029f0e17a62b4449"
+version = "2026.8.4"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
 dependencies = [
- "thiserror 2.0.19",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -558,10 +558,10 @@ checksum = "9e5e8f6c15a24b9a3ee5efec809ccd006d3b30e8b3bb63c39af737c7f87daa1d"
 
 [[package]]
 name = "envoy"
-version = "2026.7.27"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.27#e551d8418ff3a69cac64446c029f0e17a62b4449"
+version = "2026.8.4"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
 dependencies = [
- "thiserror 2.0.19",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -986,7 +986,7 @@ checksum = "bde5057d6143cc94e861d90f591b9303d6716c6b9602309150bd068853c10899"
 dependencies = [
  "hashbrown 0.16.1",
  "portable-atomic",
- "thiserror 2.0.19",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -1208,16 +1208,13 @@ dependencies = [
 
 [[package]]
 name = "mischief"
-version = "2026.7.27"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.27#e551d8418ff3a69cac64446c029f0e17a62b4449"
+version = "2026.8.4"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
 dependencies = [
- "arbor 2026.7.27",
+ "arbor 2026.8.4",
  "backtrace",
- "mischief-macros 2026.7.27",
+ "mischief-macros 2026.8.4",
  "owo-colors",
- "supports-color",
- "supports-hyperlinks",
- "supports-unicode",
  "terminal_size",
 ]
 
@@ -1232,8 +1229,8 @@ dependencies = [
 
 [[package]]
 name = "mischief-macros"
-version = "2026.7.27"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.7.27#e551d8418ff3a69cac64446c029f0e17a62b4449"
+version = "2026.8.4"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
 dependencies = [
  "quote",
  "syn 3.0.3",
@@ -1602,13 +1599,13 @@ dependencies = [
 name = "proj"
 version = "0.0.44"
 dependencies = [
- "clerk 2026.7.27",
+ "clerk 2026.8.4",
  "derive-getters",
  "envoy",
  "num_enum",
  "proj-sys",
  "strum",
- "thiserror 2.0.19",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -1617,7 +1614,7 @@ version = "9.8.0"
 dependencies = [
  "bindgen",
  "libc",
- "mischief 2026.7.27",
+ "mischief 2026.8.4",
  "path-slash",
 ]
 
@@ -1625,7 +1622,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.44"
 dependencies = [
- "clerk 2026.7.27",
+ "clerk 2026.8.4",
  "num-traits",
  "serde",
 ]
@@ -1698,7 +1695,7 @@ dependencies = [
  "palette",
  "serde",
  "strum",
- "thiserror 2.0.19",
+ "thiserror 2.0.20",
  "unicode-segmentation",
  "unicode-truncate",
  "unicode-width",
@@ -1774,7 +1771,7 @@ source = "git+https://github.com/Glatzel/toolbox?tag=v2026.5.18#43a9c4c6ebca3ec8
 dependencies = [
  "async-trait",
  "clerk 2026.5.18",
- "thiserror 2.0.19",
+ "thiserror 2.0.20",
  "tokio",
 ]
 
@@ -1788,7 +1785,7 @@ dependencies = [
  "derive-getters",
  "hashbrown 0.17.1",
  "rax",
- "thiserror 2.0.19",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -1808,7 +1805,7 @@ checksum = "a4e608c6638b9c18977b00b475ac1f28d14e84b27d8d42f70e0bf1e3dec127ac"
 dependencies = [
  "getrandom 0.2.17",
  "libredox",
- "thiserror 2.0.19",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -2342,11 +2339,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.19"
+version = "2.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "09a43598840e33d5b0331f38c5e30d13bb11c11210a4b58f0d9b18a5a5eefcd9"
+checksum = "ec86235f5fcc2a73650310756d2ac5b138a5780bbbdfae3eeccec992c435ba4f"
 dependencies = [
- "thiserror-impl 2.0.19",
+ "thiserror-impl 2.0.20",
 ]
 
 [[package]]
@@ -2362,9 +2359,9 @@ dependencies = [
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.19"
+version = "2.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "43cbfe0cf76104d42a574802844187e84a305e531ed54455f11fbde0f10541cd"
+checksum = "bc04cd3e1236dd4a98afca4569f2deb3f120e5422a4023be2cb683f8486292af"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2581,7 +2578,7 @@ version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7285e83a80ce76f5e7bce79fa41f68d78ba62d1003cf27bf748ab24413808cf4"
 dependencies = [
- "thiserror 2.0.19",
+ "thiserror 2.0.20",
 ]
 
 [[package]]

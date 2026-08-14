@@ -79,10 +79,10 @@ jobs:
     steps:
       - parallel:
           - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-          - uses: Glatzel/template/.github/actions/rust/setup-rust@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+          - uses: Glatzel/template/.github/actions/rust/setup-rust@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
             with:
               components: ${{ matrix.machine == 'ubuntu-latest' && 'clippy' || null }}
-      - uses: Glatzel/template/.github/actions/rust/cargo-clippy@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/rust/cargo-clippy@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         if: ${{ matrix.machine == 'ubuntu-latest' }}
         with:
           working-directory: ${{env.WORKDIR}}
@@ -90,10 +90,10 @@ jobs:
         run: |
           ./scripts/maturin-develop.ps1
         shell: pwsh
-      - uses: Glatzel/template/.github/actions/python/pytest@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/python/pytest@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         with:
           working-directory: ./python
-      - uses: Glatzel/template/.github/actions/common/codecov@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/common/codecov@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         if: ${{!cancelled()}}
 
   rust:
@@ -114,23 +114,23 @@ jobs:
           - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
             with:
               submodules: true
-          - uses: Glatzel/template/.github/actions/rust/setup-rust@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+          - uses: Glatzel/template/.github/actions/rust/setup-rust@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
             with:
               toolchain: nightly
               components: ${{ matrix.machine == 'ubuntu-latest' && 'clippy' || null }}
-      - uses: Glatzel/template/.github/actions/rust/cargo-clippy@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/rust/cargo-clippy@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         if: ${{ matrix.machine == 'ubuntu-latest' }}
         with:
           working-directory: ${{env.WORKDIR}}
-      - uses: Glatzel/template/.github/actions/rust/cargo-doc@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/rust/cargo-doc@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         if: ${{ matrix.machine == 'ubuntu-latest' }}
         with:
           working-directory: ${{env.WORKDIR}}
-      - uses: Glatzel/template/.github/actions/rust/cargo-test@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/rust/cargo-test@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         with:
           working-directory: ${{env.WORKDIR}}
           global-options: --workspace --all-features
-      - uses: Glatzel/template/.github/actions/common/codecov@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/common/codecov@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         if: ${{!cancelled()}}
 
   tool-gnss-receiver:
@@ -140,11 +140,11 @@ jobs:
     steps:
       - parallel:
           - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-          - uses: Glatzel/template/.github/actions/rust/setup-rust@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+          - uses: Glatzel/template/.github/actions/rust/setup-rust@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
             with:
               # toolchain: nightly
               components: clippy
-      - uses: Glatzel/template/.github/actions/rust/cargo-clippy@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/rust/cargo-clippy@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         with:
           working-directory: ./tools/gnss-receiver
       # - uses: Glatzel/template/.github/actions/rust/cargo-test
@@ -160,17 +160,17 @@ jobs:
     steps:
       - parallel:
           - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-          - uses: Glatzel/template/.github/actions/rust/setup-rust@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+          - uses: Glatzel/template/.github/actions/rust/setup-rust@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
             with:
               toolchain: nightly
               components: clippy
-      - uses: Glatzel/template/.github/actions/rust/cargo-clippy@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/rust/cargo-clippy@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         with:
           working-directory: ./tools/pyxis-cli
-      - uses: Glatzel/template/.github/actions/rust/cargo-test@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/rust/cargo-test@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         with:
           working-directory: ./tools/pyxis-cli
-      - uses: Glatzel/template/.github/actions/common/codecov@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/common/codecov@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         if: ${{!cancelled()}}
 
   benchmark:
@@ -180,9 +180,9 @@ jobs:
     steps:
       - parallel:
         - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        - uses: Glatzel/template/.github/actions/rust/setup-rust@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+        - uses: Glatzel/template/.github/actions/rust/setup-rust@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
       #rust
-      - uses: Glatzel/template/.github/actions/rust/cargo-bench@e99cfd79d24aeb304968de9978752503b6ef1a2d # v2026.8.16
+      - uses: Glatzel/template/.github/actions/rust/cargo-bench@12f2e09e2f6e0eb8a65962709e52ab596e672732 # v2026.8.28
         with:
           working-directory: ./rust
           options: -p pyxis

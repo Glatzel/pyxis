@@ -66,8 +66,8 @@ dependencies = [
 
 [[package]]
 name = "arbor"
-version = "2026.8.4"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
+version = "2026.8.22"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.22#a6b2e274f19b50cb31926c050d60e704789802d2"
 dependencies = [
  "textwrap",
 ]
@@ -298,8 +298,8 @@ dependencies = [
 
 [[package]]
 name = "clerk"
-version = "2026.8.4"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
+version = "2026.8.22"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.22#a6b2e274f19b50cb31926c050d60e704789802d2"
 dependencies = [
  "thiserror 2.0.20",
 ]
@@ -558,8 +558,8 @@ checksum = "9e5e8f6c15a24b9a3ee5efec809ccd006d3b30e8b3bb63c39af737c7f87daa1d"
 
 [[package]]
 name = "envoy"
-version = "2026.8.4"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
+version = "2026.8.22"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.22#a6b2e274f19b50cb31926c050d60e704789802d2"
 dependencies = [
  "thiserror 2.0.20",
 ]
@@ -1208,12 +1208,12 @@ dependencies = [
 
 [[package]]
 name = "mischief"
-version = "2026.8.4"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
+version = "2026.8.22"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.22#a6b2e274f19b50cb31926c050d60e704789802d2"
 dependencies = [
- "arbor 2026.8.4",
+ "arbor 2026.8.22",
  "backtrace",
- "mischief-macros 2026.8.4",
+ "mischief-macros 2026.8.22",
  "owo-colors",
  "terminal_size",
 ]
@@ -1229,8 +1229,8 @@ dependencies = [
 
 [[package]]
 name = "mischief-macros"
-version = "2026.8.4"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
+version = "2026.8.22"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.22#a6b2e274f19b50cb31926c050d60e704789802d2"
 dependencies = [
  "quote",
  "syn 3.0.3",
@@ -1599,7 +1599,7 @@ dependencies = [
 name = "proj"
 version = "0.0.44"
 dependencies = [
- "clerk 2026.8.4",
+ "clerk 2026.8.22",
  "derive-getters",
  "envoy",
  "num_enum",
@@ -1614,7 +1614,7 @@ version = "9.8.0"
 dependencies = [
  "bindgen",
  "libc",
- "mischief 2026.8.4",
+ "mischief 2026.8.22",
  "path-slash",
 ]
 
@@ -1622,7 +1622,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.44"
 dependencies = [
- "clerk 2026.8.4",
+ "clerk 2026.8.22",
  "num-traits",
  "serde",
 ]

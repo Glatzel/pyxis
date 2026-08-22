@@ -34,14 +34,6 @@ checksum = "940b3a0ca603d1eade50a4846a2afffd5ef57a9feac2c0e2ec2e14f9ead76000"
 
 [[package]]
 name = "arbor"
-version = "2026.8.4"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
-dependencies = [
- "textwrap",
-]
-
-[[package]]
-name = "arbor"
 version = "2026.8.22"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.22#a6b2e274f19b50cb31926c050d60e704789802d2"
 dependencies = [
@@ -175,14 +167,6 @@ dependencies = [
 
 [[package]]
 name = "clerk"
-version = "2026.8.4"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
-dependencies = [
- "thiserror",
-]
-
-[[package]]
-name = "clerk"
 version = "2026.8.22"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.22#a6b2e274f19b50cb31926c050d60e704789802d2"
 dependencies = [
@@ -287,8 +271,8 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "envoy"
-version = "2026.8.4"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
+version = "2026.8.22"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.22#a6b2e274f19b50cb31926c050d60e704789802d2"
 dependencies = [
  "thiserror",
 ]
@@ -620,35 +604,14 @@ dependencies = [
 
 [[package]]
 name = "mischief"
-version = "2026.8.4"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
-dependencies = [
- "arbor 2026.8.4",
- "backtrace",
- "mischief-macros 2026.8.4",
- "owo-colors",
- "terminal_size",
-]
-
-[[package]]
-name = "mischief"
 version = "2026.8.22"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.22#a6b2e274f19b50cb31926c050d60e704789802d2"
 dependencies = [
- "arbor 2026.8.22",
+ "arbor",
  "backtrace",
- "mischief-macros 2026.8.22",
+ "mischief-macros",
  "owo-colors",
  "terminal_size",
-]
-
-[[package]]
-name = "mischief-macros"
-version = "2026.8.4"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.8.4#ad7214a251e3cd31f6d9e951dc8086662c953b92"
-dependencies = [
- "quote",
- "syn 3.0.3",
 ]
 
 [[package]]
@@ -817,7 +780,7 @@ dependencies = [
 name = "proj"
 version = "0.0.44"
 dependencies = [
- "clerk 2026.8.4",
+ "clerk",
  "derive-getters",
  "envoy",
  "num_enum",
@@ -832,7 +795,7 @@ version = "9.8.0"
 dependencies = [
  "bindgen",
  "libc",
- "mischief 2026.8.4",
+ "mischief",
  "path-slash",
 ]
 
@@ -840,7 +803,7 @@ dependencies = [
 name = "pyxis"
 version = "0.0.44"
 dependencies = [
- "clerk 2026.8.4",
+ "clerk",
  "num-traits",
  "serde",
 ]
@@ -851,9 +814,9 @@ version = "0.0.44"
 dependencies = [
  "assert_cmd",
  "bpaf",
- "clerk 2026.8.22",
+ "clerk",
  "insta",
- "mischief 2026.8.22",
+ "mischief",
  "proj",
  "pyxis",
  "rstest",

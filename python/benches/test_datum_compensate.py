@@ -9,10 +9,7 @@ group = "datum compensate vector"
 
 
 def data_figures():
-    if os.getenv("CI"):
-        return [5]
-    else:  # pragma: nocover
-        return [5]
+    return [5, 6, 7]
 
 
 @pytest.fixture(params=data_figures(), scope="module")

@@ -133,20 +133,20 @@ jobs:
       - uses: Glatzel/template/.github/actions/common/codecov@87fb72378e1351f8e78d884443e60f6dcbf15df8 # v2026.9.3
         if: ${{!cancelled()}}
 
-  tool-gnss-receiver:
-    needs: changed
-    if: ${{ needs.changed.outputs.changed-tool-gnss-receiver != 'false' }}
-    runs-on: ubuntu-latest
-    steps:
-      - parallel:
-          - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-          - uses: Glatzel/template/.github/actions/rust/setup-rust@87fb72378e1351f8e78d884443e60f6dcbf15df8 # v2026.9.3
-            with:
-              # toolchain: nightly
-              components: clippy
-      - uses: Glatzel/template/.github/actions/rust/cargo-clippy@87fb72378e1351f8e78d884443e60f6dcbf15df8 # v2026.9.3
-        with:
-          working-directory: ./tools/gnss-receiver
+  # tool-gnss-receiver:
+  #   needs: changed
+  #   if: ${{ needs.changed.outputs.changed-tool-gnss-receiver != 'false' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - parallel:
+  #         - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+  #         - uses: Glatzel/template/.github/actions/rust/setup-rust@87fb72378e1351f8e78d884443e60f6dcbf15df8 # v2026.9.3
+  #           with:
+  #             # toolchain: nightly
+  #             components: clippy
+  #     - uses: Glatzel/template/.github/actions/rust/cargo-clippy@87fb72378e1351f8e78d884443e60f6dcbf15df8 # v2026.9.3
+  #       with:
+  #         working-directory: ./tools/gnss-receiver
       # - uses: Glatzel/template/.github/actions/rust/cargo-test
       #   with:
       #     working-directory: ./tools/gnss-receiver

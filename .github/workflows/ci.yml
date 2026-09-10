@@ -207,7 +207,6 @@ jobs:
         changed,
         python,
         rust,
-        tool-gnss-receiver,
         tool-pyxis-cli,
       ]
     runs-on: ubuntu-slim

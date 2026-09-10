@@ -20,11 +20,11 @@ name = "list-devices"
 path = "tools/list_devices.rs"
 
 [dependencies]
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.5.18", features = ["tracing"] }
-mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.5.18", features = ["fancy"] }
-rax = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.5.18", features = ["async"] }
-rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.5.18" }
-serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.5.18" }
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.10", features = ["tracing"] }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.10", features = ["fancy"] }
+rax = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.10", features = ["async"] }
+rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.10" }
+serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.10" }
 
 proj = { path = "../../rust/crates/proj" }
 pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }
@@ -40,4 +40,4 @@ serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.151"
 tokio = { version = "1.53.1", features = ["macros", "rt-multi-thread", "sync"] }
 tokio-serial = "5.5.0"
-toml = "1.1.4"
+toml = "1.1.5"

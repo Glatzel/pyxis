@@ -759,7 +759,7 @@ dependencies = [
 
 [[package]]
 name = "proj"
-version = "0.0.44"
+version = "0.0.45"
 dependencies = [
  "clerk",
  "derive-getters",
@@ -782,7 +782,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.44"
+version = "0.0.45"
 dependencies = [
  "clerk",
  "num-traits",
@@ -791,7 +791,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cli"
-version = "0.0.44"
+version = "0.0.45"
 dependencies = [
  "assert_cmd",
  "bpaf",

@@ -722,7 +722,7 @@ checksum = "e4eba85ea1d0a966a983acd07deee566e67395d2d96b6fb39e62b5a833f1eb0b"
 
 [[package]]
 name = "gnss-receiver"
-version = "0.0.44"
+version = "0.0.45"
 dependencies = [
  "bpaf",
  "chrono",
@@ -1627,7 +1627,7 @@ dependencies = [
 
 [[package]]
 name = "proj"
-version = "0.0.44"
+version = "0.0.45"
 dependencies = [
  "clerk",
  "derive-getters",
@@ -1650,7 +1650,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.44"
+version = "0.0.45"
 dependencies = [
  "clerk",
  "num-traits",

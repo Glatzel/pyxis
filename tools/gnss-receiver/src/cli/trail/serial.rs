@@ -1,7 +1,7 @@
-use rax::io::{AsyncIRaxReader, AsyncRaxReader};
-use rax_nmea::Dispatcher;
-use rax_nmea::data::{Identifier, Talker};
-use tokio::io::BufReader;
+use rax::text::Decoder;
+use rax_nmea::common::{Identifier, Talker};
+use rax_nmea::rules::{NmeaGsvLineCount, NmeaIdentifier, NmeaTalker, NmeaTxtLineCount};
+use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::sync::mpsc::Sender;
 use tokio_serial::SerialPortBuilderExt;
 pub fn check_port() -> mischief::Result<()> {
@@ -30,15 +30,55 @@ pub async fn start_serial_reader(tx: Sender<(Talker, Identifier, String)>) -> mi
     let serial = tokio_serial::new(port.clone(), baud_rate)
         .open_native_async()
         .map_err(|_| mischief::mischief!("Failed to open serial port: {port}"))?;
-    let mut reader = AsyncRaxReader::new(BufReader::new(serial));
-    let mut dispatcher = Dispatcher::new();
+    let mut reader = BufReader::new(serial);
+    let mut buf = String::new();
+
     loop {
-        if let Some(msg) = reader
-            .read_line()
-            .await?
-            .and_then(|l| dispatcher.dispatch(l))
-        {
-            let _ = tx.send(msg).await;
+        buf.clear();
+        match reader.read_line(&mut buf).await {
+            Ok(_) => {
+                let mut probe = Decoder::new(&buf);
+                let talker = probe.global(&NmeaTalker)?;
+                let identifier = probe.global(&NmeaIdentifier)?;
+                match identifier {
+                    Identifier::GSV => {
+                        let count = probe.global(&NmeaGsvLineCount)?;
+                        for _ in 0..count - 1 {
+                            match reader.read_line(&mut buf).await {
+                                Ok(_) => {}
+                                Err(e) => {
+                                    clerk::error!("{e}");
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                    Identifier::TXT => {
+                        let count = probe.global(&NmeaTxtLineCount)?;
+                        for _ in 0..count - 1 {
+                            match reader.read_line(&mut buf).await {
+                                Ok(_) => {}
+                                Err(e) => {
+                                    clerk::error!("{e}");
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+                match tx.send((talker, identifier, buf.clone())).await {
+                    Ok(_) => {}
+                    Err(e) => {
+                        clerk::error!("{e}");
+                        continue;
+                    }
+                }
+            }
+            Err(e) => {
+                clerk::error!("{e}");
+                continue;
+            }
         }
     }
 }

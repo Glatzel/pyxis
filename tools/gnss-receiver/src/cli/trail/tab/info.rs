@@ -3,13 +3,12 @@ use std::collections::VecDeque;
 use ratatui::layout::Constraint;
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::widgets::{Cell, Row, Table};
-use rax::str_parser::StrParserContext;
-use rax_nmea::data::{Gga, Gsa, Gst, INmeaData, Identifier, Rmc, Talker};
+use rax::text::{Decoder, IDecode};
+use rax_nmea::common::{Identifier, Talker};
+use rax_nmea::sentence::{Gga, Gsa, Gst, Rmc};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
-pub struct TabInfo {
-    ctx: StrParserContext,
-}
+pub struct TabInfo;
 impl super::ITab for TabInfo {
     fn handle_key(&mut self, _key: crossterm::event::KeyEvent) {}
     fn handle_mouse(&mut self, _mouse: crossterm::event::MouseEvent) {}
@@ -20,7 +19,7 @@ impl super::ITab for TabInfo {
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> mischief::Result<()> {
         // Get last sentences
-        let (gga, rmc, gsa, gst) = Self::find_last_sentence(&mut self.ctx, raw_nmea);
+        let (gga, rmc, gsa, gst) = Self::find_last_sentence(raw_nmea);
         let lon = gga
             .as_ref()
             .and_then(|f| f.lon().map(|v| v.to_string()))
@@ -48,11 +47,11 @@ impl super::ITab for TabInfo {
             .unwrap_or_default();
         let quality = gga
             .as_ref()
-            .and_then(|f| f.quality().map(|v| v.to_string()))
+            .and_then(|f| f.quality().map(|v| v.as_ref().to_string()))
             .unwrap_or_default();
         let pos_mode = rmc
             .as_ref()
-            .and_then(|f| f.pos_mode().map(|v| v.to_string()))
+            .and_then(|f| f.pos_mode().map(|v| v.as_ref().to_string()))
             .unwrap_or_default();
         let pdop = gsa
             .as_ref()
@@ -134,7 +133,6 @@ impl super::ITab for TabInfo {
 }
 impl TabInfo {
     fn find_last_sentence(
-        ctx: &mut StrParserContext,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> (Option<Gga>, Option<Rmc>, Option<Gsa>, Option<Gst>) {
         let mut last_gga = None;
@@ -156,14 +154,19 @@ impl TabInfo {
                 break; // found all, early exit
             }
         }
-        let last_gga = last_gga
-            .and_then(|(talker, _identityer, sentence)| Gga::new(ctx.init(sentence), talker).ok());
-        let last_rmc = last_rmc
-            .and_then(|(talker, _identityer, sentence)| Rmc::new(ctx.init(sentence), talker).ok());
-        let last_gsa = last_gsa
-            .and_then(|(talker, _identityer, sentence)| Gsa::new(ctx.init(sentence), talker).ok());
-        let last_gst = last_gst
-            .and_then(|(talker, _identityer, sentence)| Gst::new(ctx.init(sentence), talker).ok());
+
+        let last_gga = last_gga.and_then(|(_talker, _identityer, sentence)| {
+            Gga::decode(&mut Decoder::new(&sentence)).ok()
+        });
+        let last_rmc = last_rmc.and_then(|(_talker, _identityer, sentence)| {
+            Rmc::decode(&mut Decoder::new(&sentence)).ok()
+        });
+        let last_gsa = last_gsa.and_then(|(_talker, _identityer, sentence)| {
+            Gsa::decode(&mut Decoder::new(&sentence)).ok()
+        });
+        let last_gst = last_gst.and_then(|(_talker, _identityer, sentence)| {
+            Gst::decode(&mut Decoder::new(&sentence)).ok()
+        });
         (last_gga, last_rmc, last_gsa, last_gst)
     }
 }

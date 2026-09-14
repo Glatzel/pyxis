@@ -6,13 +6,13 @@ use pyxis::crypto;
 use ratatui::layout::{Constraint, Direction, Layout};
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::widgets::{Block, Borders, Cell, Paragraph, Row, Table, Wrap};
-use rax::str_parser::StrParserContext;
-use rax_nmea::data::{Gga, INmeaData, Identifier, Talker};
+use rax::text::{Decoder, IDecode};
+use rax_nmea::common::{Identifier, Talker};
+use rax_nmea::sentence::Gga;
 
 use crate::SETTINGS;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TabCoord {
-    parser: StrParserContext,
     pj: Option<Proj>,
 }
 impl Default for TabCoord {
@@ -26,8 +26,7 @@ impl Default for TabCoord {
             )
             .as_ref()
             .map_or_else(|_| None, |pj| ctx.normalize_for_visualization(pj).ok());
-        let parser = StrParserContext::default();
-        Self { parser, pj }
+        Self { pj }
     }
 }
 impl TabCoord {
@@ -41,7 +40,7 @@ impl TabCoord {
             .iter()
             .rev()
             .find(|f| f.1 == Identifier::GGA)
-            .and_then(|f| Gga::new(self.parser.init(f.2.clone()), f.0).ok());
+            .and_then(|f| Gga::decode(&mut Decoder::new(&f.2)).ok());
         if let Some(gga) = gga
             && let (Some(wgs84_lon), Some(wgs84_lat)) = (gga.lon(), gga.lat())
         {

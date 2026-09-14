@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, MouseEvent};
-use rax_nmea::data::{Identifier, Talker};
+use rax_nmea::common::{Identifier, Talker};
 mod status;
 pub use super::app::status::STATUS;
 use super::tab::{ITab, Tab, TabCoord, TabInfo, TabNmea, TabSettings};

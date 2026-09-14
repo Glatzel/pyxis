@@ -29,7 +29,7 @@ impl App {
             raw_nmea: VecDeque::with_capacity(SETTINGS.lock().trail.capacity),
 
             tab: Tab::Info,
-            tab_info: TabInfo::default(),
+            tab_info: TabInfo,
             tab_coord: TabCoord::default(),
             tab_nmea: TabNmea,
             tab_settings: TabSettings::default(),

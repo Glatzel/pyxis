@@ -68,7 +68,7 @@ pub async fn start_serial_reader(tx: Sender<(Talker, Identifier, String)>) -> mi
                     _ => {}
                 }
                 match tx.send((talker, identifier, buf.clone())).await {
-                    Ok(_) => {}
+                    Ok(()) => {}
                     Err(e) => {
                         clerk::error!("{e}");
                         continue;

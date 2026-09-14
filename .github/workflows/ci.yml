@@ -204,6 +204,7 @@ jobs:
       [
         lefthook,
         benchmark,
+        tool-gnss-receiver,
         changed,
         python,
         rust,

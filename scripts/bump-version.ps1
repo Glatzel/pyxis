@@ -1,5 +1,5 @@
 Set-Location $PSScriptRoot/..
-$version = "0.0.44"
+$version = "0.0.45"
 
 # rust
 $cargoTomlPath = "./rust/Cargo.toml"

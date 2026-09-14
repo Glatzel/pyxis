@@ -1051,7 +1051,7 @@ dependencies = [
 
 [[package]]
 name = "proj"
-version = "0.0.44"
+version = "0.0.45"
 dependencies = [
  "clerk",
  "derive-getters",
@@ -1098,7 +1098,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis"
-version = "0.0.44"
+version = "0.0.45"
 dependencies = [
  "clerk",
  "codspeed-criterion-compat",

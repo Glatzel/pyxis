@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, MouseEvent};
-use rax_nmea::data::{Identifier, Talker};
+use rax_nmea::common::{Identifier, Talker};
 mod status;
 pub use super::app::status::STATUS;
 use super::tab::{ITab, Tab, TabCoord, TabInfo, TabNmea, TabSettings};
@@ -29,7 +29,7 @@ impl App {
             raw_nmea: VecDeque::with_capacity(SETTINGS.lock().trail.capacity),
 
             tab: Tab::Info,
-            tab_info: TabInfo::default(),
+            tab_info: TabInfo,
             tab_coord: TabCoord::default(),
             tab_nmea: TabNmea,
             tab_settings: TabSettings::default(),

@@ -5,7 +5,7 @@ use crossterm::event::{KeyEvent, MouseEvent};
 pub use info::TabInfo;
 pub use nmea::TabNmea;
 use ratatui::Frame;
-use rax_nmea::data::{Identifier, Talker};
+use rax_nmea::common::{Identifier, Talker};
 pub use settings::TabSettings;
 
 mod coord;

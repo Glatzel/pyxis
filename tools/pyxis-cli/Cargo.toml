@@ -1,6 +1,6 @@
 [package]
 name = "pyxis-cli"
-version = "0.0.44"
+version = "0.0.45"
 edition = "2024"
 
 [[bin]]
@@ -8,8 +8,8 @@ name = "pyxis"
 path = "src/main.rs"
 
 [dependencies]
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.10", features = ["tracing"] }
-mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.10" }
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.14", features = ["tracing"] }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.14" }
 
 proj = { path = "../../rust/crates/proj" }
 pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }

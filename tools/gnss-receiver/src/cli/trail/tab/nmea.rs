@@ -3,7 +3,7 @@ use std::collections::VecDeque;
 use crossterm::event::KeyEvent;
 use ratatui::text::Line;
 use ratatui::widgets::Paragraph;
-use rax_nmea::data::{Identifier, Talker};
+use rax_nmea::common::{Identifier, Talker};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub struct TabNmea;

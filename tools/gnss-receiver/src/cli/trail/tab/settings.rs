@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 
 use crossterm::event::KeyEvent;
 use ratatui::widgets::{Block, Paragraph, Wrap};
-use rax_nmea::data::{Identifier, Talker};
+use rax_nmea::common::{Identifier, Talker};
 
 use crate::settings::SETTINGS;
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]

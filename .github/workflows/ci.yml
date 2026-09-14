@@ -147,10 +147,10 @@ jobs:
       - uses: Glatzel/template/.github/actions/rust/cargo-clippy@87fb72378e1351f8e78d884443e60f6dcbf15df8 # v2026.9.3
         with:
           working-directory: ./tools/gnss-receiver
-      - uses: Glatzel/template/.github/actions/rust/cargo-test
+      - uses: Glatzel/template/.github/actions/rust/cargo-test@87fb72378e1351f8e78d884443e60f6dcbf15df8 # v2026.9.3
         with:
           working-directory: ./tools/gnss-receiver
-      - uses: Glatzel/template/.github/actions/common/codecov
+      - uses: Glatzel/template/.github/actions/common/codecov@87fb72378e1351f8e78d884443e60f6dcbf15df8 # v2026.9.3
         if: ${{!cancelled()}}
 
   tool-pyxis-cli:

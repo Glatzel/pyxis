@@ -22,12 +22,12 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin ${{ github.ref_name }}
           git add rust/crates/proj-sys/src/bindings.rs
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "Update libraw bindings"
+          git commit -m "Update proj bindings"
+          git pull --rebase origin ${{ github.ref_name }}
           git push
         shell: bash

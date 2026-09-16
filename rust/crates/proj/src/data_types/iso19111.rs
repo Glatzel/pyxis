@@ -419,6 +419,7 @@ impl CrsListParameters {
 pub struct UnitInfo {
     /// Authority name.
     auth_name: String,
+
     /// Object code.
     code: String,
     /// Object name. For example `metre`, `US survey foot`, etc.
@@ -429,8 +430,10 @@ pub struct UnitInfo {
     /// Conversion factor to apply to transform from that unit to the
     /// corresponding SI unit (metre for `linear`, radian for `angular`, etc.).
     conv_factor: f64,
+
     /// PROJ short name, like `m`, `ft`, `us-ft`, etc... Might be NULL
     proj_short_name: String,
+
     /// Whether the object is deprecated
     deprecated: bool,
 }

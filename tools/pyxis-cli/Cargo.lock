@@ -791,7 +791,7 @@ dependencies = [
 
 [[package]]
 name = "pyxis-cli"
-version = "0.0.45"
+version = "0.0.46"
 dependencies = [
  "assert_cmd",
  "bpaf",

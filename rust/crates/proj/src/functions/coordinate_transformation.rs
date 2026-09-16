@@ -16,8 +16,8 @@ impl crate::Proj {
     fn _proj_trans(&self) -> Result<usize, ProjError> {
         unimplemented!("Use `Proj::convert` or `Proj::project` to instead.")
     }
-    
-    fn _proj_trans_array(){
+
+    fn _proj_trans_array() {
         unimplemented!("Use `Proj::convert_array` or `Proj::project_array` to instead.")
     }
     ///Return the operation used during the last invocation of

@@ -6,6 +6,7 @@ use envoy::{AsVecPtr, ToCString};
 use crate::Proj;
 use crate::data_types::ProjError;
 use crate::error_handling::check_result;
+
 /// # Transformation setup
 ///
 ///The objects returned by the functions defined in this section have minimal
@@ -53,6 +54,7 @@ impl crate::Context {
         check_result!(self);
         Proj::new(self.arc_ptr(), ptr)
     }
+
     ///Create a transformation object, or a CRS object, with argc/argv-style
     /// initialization. For this application each parameter in the defining
     /// proj-string is an entry in argv.
@@ -84,6 +86,7 @@ impl crate::Context {
         check_result!(self);
         Proj::new(self.arc_ptr(), ptr)
     }
+
     ///Create a transformation object that is a pipeline between two known
     /// coordinate reference systems.
     ///
@@ -141,6 +144,7 @@ impl crate::Context {
         check_result!(self);
         Proj::new(self.arc_ptr(), ptr)
     }
+
     ///Added in version 6.2.0.
     ///
     ///Create a transformation object that is a pipeline between two known
@@ -219,6 +223,7 @@ impl crate::Context {
         check_result!(self);
         Proj::new(self.arc_ptr(), ptr)
     }
+
     ///Returns a PJ* object whose axis order is the one expected for
     /// visualization purposes.
     ///
@@ -248,6 +253,7 @@ impl Drop for crate::Proj {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_destroy>
     fn drop(&mut self) { unsafe { proj_sys::proj_destroy(self.ptr()) }; }
 }
+
 #[cfg(test)]
 mod test {
     use crate::data_types::iso19111::WktType;

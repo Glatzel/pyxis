@@ -4,9 +4,8 @@ use crate::LogLevel;
 use crate::data_types::ProjError;
 use crate::error_handling::check_result;
 impl crate::Context {
-    pub fn log_level(&self, level: LogLevel) -> Result<&Self, ProjError> {
-        unsafe { proj_sys::proj_log_level(self.ptr(), level as u32) };
-        Ok(self)
+    pub fn log_level(&self, level: LogLevel) -> LogLevel {
+        LogLevel::from(unsafe { proj_sys::proj_log_level(self.ptr(), level as u32) })
     }
 
     ///Override the internal log function of PROJ.

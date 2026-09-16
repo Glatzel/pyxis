@@ -110,16 +110,9 @@ impl crate::Context {
         let ctx = Self {
             ptr: Arc::new(ContextPtr(unsafe { proj_sys::proj_context_create() })),
         };
-        Ok(ctx)
-    }
-}
-impl Default for crate::Context {
-    fn default() -> Self {
-        let ctx = Self::new().unwrap();
         ctx.log_level(LogLevel::None);
-        (unsafe { ctx.log_func(&mut null_mut::<c_void>().as_mut(), Some(crate::proj_clerk)) })
-            .unwrap();
-        ctx
+        (unsafe { ctx.log_func(&mut null_mut::<c_void>().as_mut(), Some(crate::proj_clerk)) })?;
+        Ok(ctx)
     }
 }
 

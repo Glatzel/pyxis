@@ -6,7 +6,7 @@ use crate::data_types::ProjError;
 
 pub(crate) fn new_test_ctx() -> Result<Context, ProjError> {
     clerk::init_log_with_level(clerk::LevelFilter::TRACE);
-    let ctx = crate::Context::default();
+    let ctx = crate::Context::new()?;
     ctx.log_level(crate::LogLevel::Trace);
     ctx.set_enable_network(true)?;
     // PROJ_DATA

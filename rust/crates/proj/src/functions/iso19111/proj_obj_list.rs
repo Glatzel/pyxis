@@ -202,7 +202,7 @@ impl Proj {
                 std::slice::from_raw_parts(confidence_ptr, proj_obj_list.get_count())
                     .to_vec()
                     .into_iter()
-                    .map(|c| c as i32)
+                    .map(|c| c as c_int)
                     .collect()
             };
 

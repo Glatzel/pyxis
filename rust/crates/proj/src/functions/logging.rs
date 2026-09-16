@@ -13,7 +13,7 @@ impl crate::Context {
     /// # Reference
     ///
     /// * <https://proj.org/development/reference/functions.html#proj_log_func>
-    pub unsafe fn log_func<T>(
+    pub(crate) unsafe fn log_func<T>(
         &self,
         app_data: &mut T,
         logf: Option<unsafe extern "C" fn(*mut c_void, i32, *const c_char)>,

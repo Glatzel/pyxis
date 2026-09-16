@@ -8,6 +8,7 @@ use crate::{ICoord, ToCoord};
 
 /// # Various
 impl crate::Proj {
+    fn _coord() { unimplemented!("Use `impl ICoord` to instead.") }
     ///Measure internal consistency of a given transformation. The function
     /// performs n round trip transformations starting in either the forward or
     /// reverse direction. Returns the euclidean distance of the starting point
@@ -130,6 +131,12 @@ impl crate::Proj {
     }
 }
 
+///Convert radians to degrees.
+fn _torad() { unimplemented!("Use `f64::to_degrees` to instead.") }
+
+///Convert degrees to radians.
+fn _todeg() { unimplemented!("Use `f64::to_radians` to instead.") }
+
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_dmstor>
@@ -137,6 +144,15 @@ pub fn dmstor(is: &str) -> Result<f64, ProjError> {
     let rs = "xxxdxxmxx.xxs ".to_cstring()?;
     Ok(unsafe { proj_sys::proj_dmstor(is.to_cstring()?.as_ptr(), &mut rs.as_ptr().cast_mut()) })
 }
+
+///Convert radians to string representation of degrees, minutes and seconds.
+///
+///Deprecated since version 9.2: Use [`rtodms2()`] instead.
+///
+/// # References
+///
+/// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_rtodms>
+fn _rtodms() { unimplemented!("deprecated") }
 
 ///Convert radians to string representation of degrees, minutes and seconds.
 ///

@@ -552,9 +552,10 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
+
     ///# References
     ///
-    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_linear_affine_parametric_conversion>
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_linear_3D_affine_parametric_conversion>
     pub fn create_linear_affine_parametric_conversion(
         &self,
         name: Option<&str>,
@@ -604,6 +605,96 @@ impl Context {
         };
         Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
     }
+
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_create_linear_affine_parametric_conversion>
+    pub fn create_linear_3d_affine_parametric_conversion(
+        &self,
+        name: Option<&str>,
+        a0: f64,
+        a0_unit_name: Option<&str>,
+        a0_unit_conv_factor: f64,
+        a1: f64,
+        a1_unit_name: Option<&str>,
+        a1_unit_conv_factor: f64,
+        a2: f64,
+        a2_unit_name: Option<&str>,
+        a2_unit_conv_factor: f64,
+        a3: f64,
+        a3_unit_name: Option<&str>,
+        a3_unit_conv_factor: f64,
+        b0: f64,
+        b0_unit_name: Option<&str>,
+        b0_unit_conv_factor: f64,
+        b1: f64,
+        b1_unit_name: Option<&str>,
+        b1_unit_conv_factor: f64,
+        b2: f64,
+        b2_unit_name: Option<&str>,
+        b2_unit_conv_factor: f64,
+        b3: f64,
+        b3_unit_name: Option<&str>,
+        b3_unit_conv_factor: f64,
+        c0: f64,
+        c0_unit_name: Option<&str>,
+        c0_unit_conv_factor: f64,
+        c1: f64,
+        c1_unit_name: Option<&str>,
+        c1_unit_conv_factor: f64,
+        c2: f64,
+        c2_unit_name: Option<&str>,
+        c2_unit_conv_factor: f64,
+        c3: f64,
+        c3_unit_name: Option<&str>,
+        c3_unit_conv_factor: f64,
+    ) -> Result<Proj, ProjError> {
+        let mut owned = OwnedCStrings::with_capacity(7);
+        let ptr = unsafe {
+            proj_sys::proj_create_linear_3D_affine_parametric_conversion(
+                self.ptr(),
+                owned.push_option(name)?,
+                a0,
+                owned.push_option(a0_unit_name)?,
+                a0_unit_conv_factor,
+                a1,
+                owned.push_option(a1_unit_name)?,
+                a1_unit_conv_factor,
+                a2,
+                owned.push_option(a2_unit_name)?,
+                a2_unit_conv_factor,
+                a3,
+                owned.push_option(a3_unit_name)?,
+                a3_unit_conv_factor,
+                b0,
+                owned.push_option(b0_unit_name)?,
+                b0_unit_conv_factor,
+                b1,
+                owned.push_option(b1_unit_name)?,
+                b1_unit_conv_factor,
+                b2,
+                owned.push_option(b2_unit_name)?,
+                b2_unit_conv_factor,
+                b3,
+                owned.push_option(b3_unit_name)?,
+                b3_unit_conv_factor,
+                c0,
+                owned.push_option(c0_unit_name)?,
+                c0_unit_conv_factor,
+                c1,
+                owned.push_option(c1_unit_name)?,
+                c1_unit_conv_factor,
+                c2,
+                owned.push_option(c2_unit_name)?,
+                c2_unit_conv_factor,
+                c3,
+                owned.push_option(c3_unit_name)?,
+                c3_unit_conv_factor,
+            )
+        };
+        Proj::new_with_owned_cstrings(self.arc_ptr(), ptr, owned)
+    }
+
     ///Instantiate a Transformation.
     ///
     /// # Arguments
@@ -3201,7 +3292,7 @@ mod test_context_advanced {
                         Some("Latitude".to_string()),
                         Some("lat".to_string()),
                         AxisDirection::North,
-                        Some("unit2".to_string()),
+                        Some("unit1".to_string()),
                         1.0,
                         UnitType::Angular,
                     )?,

@@ -16,6 +16,16 @@ use crate::{OwnedCStrings, Proj, ProjOptions};
 
 /// # ISO-19111 Base functions
 impl crate::Context {
+    ///Starting with PROJ 8.1, this function does nothing.
+    ///
+    ///If you want to take into account changes to the PROJ database, you need
+    /// to re-create a new context.
+    ///
+    /// # References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_context_set_autoclose_database>
+    fn _set_autoclose_database(&self) { unimplemented!("deprecated") }
+
     ///Explicitly point to the main PROJ CRS and coordinate operation
     /// definition database ("proj.db"), and potentially auxiliary databases
     /// with same structure.
@@ -185,6 +195,8 @@ impl crate::Context {
                 clerk::warn!("{_e}");
             }
         });
+        unsafe { proj_sys::proj_string_list_destroy(out_warnings) };
+        unsafe { proj_sys::proj_string_list_destroy(out_grammar_errors) };
 
         Proj::new(self.arc_ptr(), ptr)
     }
@@ -615,7 +627,7 @@ mod test {
         let data = ctx
             .get_database_metadata(DatabaseMetadataKey::ProjVersion)?
             .expect("invalid element");
-        insta::assert_snapshot!(data,@"9.8.1");
+        insta::assert_snapshot!(data,@"9.9.0");
         Ok(())
     }
     #[test]
@@ -749,7 +761,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let list = ctx.get_crs_info_list_from_database(Some("EPSG"), None)?;
         println!("{:?}", list.first().expect("invalid element"));
-        assert_snapshot!(list.len(),@"7741");
+        assert_snapshot!(list.len(),@"8021");
         Ok(())
     }
 

@@ -12,14 +12,19 @@ pub struct Info {
     /// Release info. Version number and release date, e.g. `Rel. 4.9.3, 15
     /// August 2016`.
     major: i32,
+
     /// Text representation of the full version number, e.g. `4.9.3`.
     minor: i32,
+
     /// Major version number.
     patch: i32,
+
     /// Minor version number.
     release: String,
+
     /// Patch level of release.
     version: String,
+
     /// Search path for PROJ. List of directories separated by semicolons
     /// (Windows) or colons (non-Windows), e.g.
     /// `C:\\Users\\doctorwho;C:\\OSGeo4W64\\share\\proj.` Grids and init files

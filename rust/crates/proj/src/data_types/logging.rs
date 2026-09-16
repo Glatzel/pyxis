@@ -1,13 +1,16 @@
+use num_enum::FromPrimitive;
+
 ///Enum of logging levels in PROJ. Used to set the logging level in PROJ.
-/// Usually using [`crate::Context::set_log_level`].
+/// Usually using [`crate::Context::log_level`].
 ///
 /// # References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_LOG_LEVEL>
-#[derive(Debug)]
+#[derive(Debug, FromPrimitive)]
 #[repr(u32)]
 pub enum LogLevel {
     ///Don't log anything.
+    #[default]
     None = proj_sys::PJ_LOG_LEVEL_PJ_LOG_NONE,
     ///Log only errors.
     Error = proj_sys::PJ_LOG_LEVEL_PJ_LOG_ERROR,

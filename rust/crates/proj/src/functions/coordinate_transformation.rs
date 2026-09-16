@@ -2,6 +2,24 @@ use crate::data_types::ProjError;
 use crate::error_handling::check_result;
 // region:Coordinate transformation
 impl crate::Proj {
+    ///Transform a single PJ_COORD coordinate.
+    ///
+    ///If the input coordinate contains any NaNs you are guaranteed to get a
+    /// coordinate with all NaNs as a result.
+    ///
+    ///Changed in version 9.2.0: Define NaN handling. Prior NaN handling
+    /// behavior was undefined.
+    ///
+    ///  # References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans>
+    fn _proj_trans(&self) -> Result<usize, ProjError> {
+        unimplemented!("Use `Proj::convert` or `Proj::project` to instead.")
+    }
+
+    fn _proj_trans_array() {
+        unimplemented!("Use `Proj::convert_array` or `Proj::project_array` to instead.")
+    }
     ///Return the operation used during the last invocation of
     /// [`Self::project`] or [`Self::convert`]. This is especially useful
     /// when P has been created with [`crate::Context::create_crs_to_crs()`]

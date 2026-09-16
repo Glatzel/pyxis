@@ -10,6 +10,7 @@ use crate::data_types::ProjError;
 use crate::data_types::transformation::ContextPtr;
 use crate::error_handling::check_result;
 use crate::{OwnedCStrings, Proj};
+
 ///Guessed WKT "dialect".
 ///
 /// # Reference
@@ -21,17 +22,22 @@ use crate::{OwnedCStrings, Proj};
 pub enum GuessedWktDialect {
     ///<https://proj.org/en/stable/development/reference/cpp/cpp_general.html#general_doc_1WKT2_2019>
     Wkt2_2019 = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2019,
+
     // Deprecated alias for PJ_GUESSED_WKT2_2019
     // Wkt2_2018 = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2018,
     ///<https://proj.org/en/stable/development/reference/cpp/cpp_general.html#general_doc_1WKT2_2015>
     Wkt2_2015 = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT2_2015,
+
     ///<https://proj.org/en/stable/development/reference/cpp/cpp_general.html#general_doc_1WKT1>
     Wkt1Gdal = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT1_GDAL,
+
     ///ESRI variant of WKT1
     Wkt1Esri = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_WKT1_ESRI,
+
     ///Not WKT / unrecognized
     NotWkt = proj_sys::PJ_GUESSED_WKT_DIALECT_PJ_GUESSED_NOT_WKT,
 }
+
 ///Object category.
 ///
 /// # References
@@ -48,6 +54,7 @@ pub enum Category {
     CoordinateOperation = proj_sys::PJ_CATEGORY_PJ_CATEGORY_COORDINATE_OPERATION,
     DatumEnsemble = proj_sys::PJ_CATEGORY_PJ_CATEGORY_DATUM_ENSEMBLE,
 }
+
 ///Object type.
 ///
 ///# References
@@ -89,6 +96,7 @@ pub enum ProjType {
     DerivedProjectedCrs = proj_sys::PJ_TYPE_PJ_TYPE_DERIVED_PROJECTED_CRS,
     CoordinateMetadata = proj_sys::PJ_TYPE_PJ_TYPE_COORDINATE_METADATA,
 }
+
 ///Comparison criterion.
 ///
 ///# References
@@ -100,12 +108,14 @@ pub enum ProjType {
 pub enum ComparisonCriterion {
     ///All properties are identical.
     Strict = proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_STRICT,
+
     ///The objects are equivalent for the purpose of coordinate operations.
     /// They can differ by the name of their objects, identifiers, other
     /// metadata. Parameters may be expressed in different units, provided that
     /// the value is (with some tolerance) the same once expressed in a common
     /// unit.
     Equivalent = proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT,
+
     ///Same as EQUIVALENT, relaxed with an exception that the axis order of the
     /// base CRS of a DerivedCRS/ProjectedCRS or the axis order of a
     /// GeographicCRS is ignored. Only to be used with
@@ -113,6 +123,7 @@ pub enum ComparisonCriterion {
     EquivalentExceptAxisOrderGeogcrs =
         proj_sys::PJ_COMPARISON_CRITERION_PJ_COMP_EQUIVALENT_EXCEPT_AXIS_ORDER_GEOGCRS,
 }
+
 ///# References
 ///
 /// * <https://proj.org/en/stable/development/reference/datatypes.html#c.PJ_WKT_TYPE>
@@ -122,21 +133,27 @@ pub enum ComparisonCriterion {
 pub enum WktType {
     ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42acbbf33e2fa1d0e7754df8c2ab40bf7a2>
     Wkt2_2015 = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015,
+
     ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42a8a4e61323a3ab9204ff3ac3cd8b23c39>
     Wkt2_2015Simplified = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2015_SIMPLIFIED,
+
     ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42ac634e196cf84127855e2ff4569674d0d>
     Wkt2_2019 = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019,
+
     //Deprecated alias for PJ_WKT2_2019
     // Wkt2_2018=proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018,
     ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42a1a237b13d56f5b895c4e3abf9749783e>
     Wkt2_2019Simplified = proj_sys::PJ_WKT_TYPE_PJ_WKT2_2019_SIMPLIFIED,
+
     //Deprecated alias for PJ_WKT2_2019
     // Wkt2_2018Simplified=proj_sys::PJ_WKT_TYPE_PJ_WKT2_2018_SIMPLIFIED,
     ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42a85c43e48faba72b30e6501b41536afe5>
     Wkt1Gdal = proj_sys::PJ_WKT_TYPE_PJ_WKT1_GDAL,
+
     ///<https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1WKTFormatter_1ae94f4401c1eeae3808dce1aaa8d25f42a8da08577d1e0b736b2259c71c40f0e38>
     Wkt1Esri = proj_sys::PJ_WKT_TYPE_PJ_WKT1_ESRI,
 }
+
 /// Specify how source and target CRS extent should be used to restrict
 /// candidate operations (only taken into account if no explicit area of
 /// interest is specified. # References
@@ -148,14 +165,18 @@ pub enum WktType {
 pub enum CrsExtentUse {
     ///Ignore CRS extent
     None = proj_sys::PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_NONE,
+
     ///Test coordinate operation extent against both CRS extent.
     Both = proj_sys::PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_BOTH,
+
     ///Test coordinate operation extent against the intersection of both CRS
     /// extent.
     Intersection = proj_sys::PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_INTERSECTION,
+
     ///Test coordinate operation against the smallest of both CRS extent.
     Smallest = proj_sys::PROJ_CRS_EXTENT_USE_PJ_CRS_EXTENT_SMALLEST,
 }
+
 ///Describe how grid availability is used.
 ///
 ///# References
@@ -168,16 +189,20 @@ pub enum GridAvailabilityUse {
     ///Grid availability is only used for sorting results. Operations where
     /// some grids are missing will be sorted last.
     UsedForSorting = proj_sys::PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_USED_FOR_SORTING,
+
     ///Completely discard an operation if a required grid is missing.
     DiscardOperationIfMissingGrid = proj_sys::PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_DISCARD_OPERATION_IF_MISSING_GRID,
+
     ///Ignore grid availability at all. Results will be presented as if all
     /// grids were available.
     Ignored = proj_sys::PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_IGNORED,
+
     ///Results will be presented as if grids known to PROJ (that is registered
     /// in the grid_alternatives table of its database) were available. Used
     /// typically when networking is enabled.
     KnownAvailable = proj_sys::PROJ_GRID_AVAILABILITY_USE_PROJ_GRID_AVAILABILITY_KNOWN_AVAILABLE,
 }
+
 ///PROJ string version.
 ///
 ///# References
@@ -189,9 +214,11 @@ pub enum GridAvailabilityUse {
 pub enum ProjStringType {
     ///cf [osgeo::proj::io::PROJStringFormatter::Convention::PROJ_5](https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1PROJStringFormatter_1a797997db6984aa2bad279abb0010ff13a475fc81228e34a4715d2d28f4d7f2851)
     Proj5 = proj_sys::PJ_PROJ_STRING_TYPE_PJ_PROJ_5,
+
     ///cf [osgeo::proj::io::PROJStringFormatter::Convention::PROJ_4](https://proj.org/en/stable/development/reference/cpp/io.html#classosgeo_1_1proj_1_1io_1_1PROJStringFormatter_1a797997db6984aa2bad279abb0010ff13ae3bec874928ae377030a07a550bdc7eb)
     Proj4 = proj_sys::PJ_PROJ_STRING_TYPE_PJ_PROJ_4,
 }
+
 ///Spatial criterion to restrict candidate operations.
 ///
 ///# References
@@ -209,6 +236,7 @@ pub enum SpatialCriterion {
     PartialIntersection =
         proj_sys::PROJ_SPATIAL_CRITERION_PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION,
 }
+
 ///Describe if and how intermediate CRS should be used
 ///# References
 ///
@@ -219,12 +247,15 @@ pub enum SpatialCriterion {
 pub enum IntermediateCrsUse {
     ///Always search for intermediate CRS.
     Always = proj_sys::PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_ALWAYS,
+
     ///Only attempt looking for intermediate CRS if there is no direct
     /// transformation available.
     IfNoDirectTransformation =
         proj_sys::PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_IF_NO_DIRECT_TRANSFORMATION,
+
     Never = proj_sys::PROJ_INTERMEDIATE_CRS_USE_PROJ_INTERMEDIATE_CRS_USE_NEVER,
 }
+
 ///Type of coordinate system.
 ///
 ///# References
@@ -245,6 +276,7 @@ pub enum CoordinateSystemType {
     Temporalcount = proj_sys::PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALCOUNT,
     Temporalmeasure = proj_sys::PJ_COORDINATE_SYSTEM_TYPE_PJ_CS_TYPE_TEMPORALMEASURE,
 }
+
 /// Structure given overall description of a CRS.
 ///
 /// This structure may grow over time, and should not be directly allocated by
@@ -387,18 +419,24 @@ impl CrsListParameters {
 pub struct UnitInfo {
     /// Authority name.
     auth_name: String,
+
     /// Object code.
     code: String,
+
     /// Object name. For example `metre`, `US survey foot`, etc.
     name: String,
+
     /// Category of the unit: one of `linear`, `linear_per_time`, `angular`,
     /// `angular_per_time`, `scale`, `scale_per_time` or `time`
     category: UnitCategory,
+
     /// Conversion factor to apply to transform from that unit to the
     /// corresponding SI unit (metre for `linear`, radian for `angular`, etc.).
     conv_factor: f64,
+
     /// PROJ short name, like `m`, `ft`, `us-ft`, etc... Might be NULL
     proj_short_name: String,
+
     /// Whether the object is deprecated
     deprecated: bool,
 }
@@ -443,6 +481,7 @@ pub struct CelestialBodyInfo {
 impl CelestialBodyInfo {
     pub const fn new(auth_name: String, name: String) -> Self { Self { auth_name, name } }
 }
+
 ///Type of unit of measure.
 ///
 ///# References
@@ -1134,4 +1173,8 @@ impl ProjObjList {
     ///
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
     pub const fn get_count(&self) -> usize { self.count }
+}
+
+impl Drop for ProjObjList {
+    fn drop(&mut self) { unsafe { proj_sys::proj_list_destroy(self.ptr) }; }
 }

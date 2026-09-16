@@ -36,7 +36,6 @@ pub fn list_operations() -> Result<Vec<crate::data_types::Operations>, ProjError
     }
     Ok(out_vec)
 }
-
 ///Get a pointer to an array of ellipsoids defined in PROJ. The last entry of
 /// the returned array is a NULL-entry. The array is statically allocated and
 /// does not need to be freed after use.

@@ -1,4 +1,5 @@
 use core::ptr;
+use std::ffi::c_int;
 
 use envoy::ToCString;
 
@@ -46,18 +47,6 @@ impl ProjObjList {
                 ptr,
                 self.owned_cstrings.clone(),
             )?))
-        }
-    }
-}
-impl Drop for ProjObjList {
-    ///Drops a reference on the result set.
-    ///
-    /// # References
-    ///
-    /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_destroy>
-    fn drop(&mut self) {
-        unsafe {
-            proj_sys::proj_list_destroy(self.ptr());
         }
     }
 }
@@ -196,18 +185,31 @@ impl Proj {
     ///# References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_identify>
-    pub fn identify(&self, auth_name: &str) -> Result<ProjObjList, ProjError> {
-        let mut confidence: Vec<i32> = Vec::new();
+    pub fn identify(&self, auth_name: &str) -> Result<(ProjObjList, Vec<i32>), ProjError> {
+        let mut confidence_ptr: *mut c_int = std::ptr::null_mut();
         let result = unsafe {
             proj_sys::proj_identify(
                 self.ctx_ptr(),
                 self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 ptr::null(),
-                &mut confidence.as_mut_ptr(),
+                &raw mut confidence_ptr,
             )
         };
-        ProjObjList::new(self.arc_ctx_ptr(), result)
+        if confidence_ptr.is_null() {
+            Err(ProjError::Misc("confidence_ptr is null".to_string()))
+        } else {
+            let proj_obj_list = ProjObjList::new(self.arc_ctx_ptr(), result)?;
+            let confidence: Vec<i32> = unsafe {
+                std::slice::from_raw_parts(confidence_ptr, proj_obj_list.get_count())
+                    .to_vec()
+                    .into_iter()
+                    .map(|c| c as c_int)
+                    .collect()
+            };
+
+            Ok((proj_obj_list, confidence))
+        }
     }
 }
 #[cfg(test)]
@@ -276,10 +278,12 @@ mod test_proj {
         println!(
             "{}",
             pj_list
+                .0
                 .get(0)?
                 .as_wkt(WktType::Wkt2_2019, None, None, None, None, None, None)?
         );
-        insta::assert_snapshot!(pj_list.get(0)?.as_wkt(
+        println!("{:?}", pj_list);
+        insta::assert_snapshot!(pj_list.0.get(0)?.as_wkt(
             WktType::Wkt2_2019,
             None,
             None,

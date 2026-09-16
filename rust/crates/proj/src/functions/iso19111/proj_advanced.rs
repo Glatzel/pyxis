@@ -9,6 +9,15 @@ use crate::{OwnedCStrings, Proj, ProjOptions};
 ///
 /// * <https://proj.org/en/stable/development/reference/functions.html#advanced-functions>
 impl Proj {
+    ///Returns whether a CRS is a derived CRS.
+    ///
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_derived>
+    pub fn is_derived_crs(&self) -> bool {
+        unsafe { proj_sys::proj_is_derived_crs(self.ctx_ptr(), self.ptr()) != 0 }
+    }
+
     ///Return a copy of the object with its name changed.
     ///
     ///Currently, only implemented on CRS objects.

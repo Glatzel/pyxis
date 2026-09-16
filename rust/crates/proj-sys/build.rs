@@ -49,6 +49,7 @@ fn main() -> mischief::Result<()> {
             .blocklist_type("max_align_t")
             .ctypes_prefix("libc")
             .use_core()
+            .derive_debug(true)
             .generate()?;
         bindings
             .write_to_file("./src/bindings.rs")

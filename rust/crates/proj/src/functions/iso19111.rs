@@ -20,3 +20,25 @@ mod operation_factory_context;
 mod proj_advanced;
 mod proj_basic;
 mod proj_obj_list;
+
+/// use [`crate::data_types::iso19111::CrsListParameters::new`] instead
+fn _get_crs_list_parameters_create() { unimplemented!() }
+
+/// rust automatically drops the
+/// [`crate::data_types::iso19111::CrsListParameters`] when it goes out of scope
+fn _get_crs_list_parameters_destroy() { unimplemented!() }
+
+/// directly called in related functions
+fn _int_list_destroy() { unimplemented!() }
+
+/// directly called in related functions
+fn _list_destroy() { unimplemented!() }
+
+/// directly called in related functions
+fn _string_destroy() { unimplemented!() }
+
+/// directly called in related functions
+fn _string_list_destroy() { unimplemented!() }
+
+/// directly called in related functions
+fn _unit_list_destroy() { unimplemented!() }

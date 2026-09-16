@@ -1135,3 +1135,7 @@ impl ProjObjList {
     /// <https://proj.org/en/stable/development/reference/functions.html#c.proj_list_get_count>
     pub const fn get_count(&self) -> usize { self.count }
 }
+
+impl Drop for ProjObjList {
+    fn drop(&mut self) { unsafe { proj_sys::proj_list_destroy(self.ptr) }; }
+}

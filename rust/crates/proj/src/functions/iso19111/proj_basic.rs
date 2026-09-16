@@ -428,7 +428,7 @@ impl Proj {
         authority: &str,
         numeric_code: bool,
     ) -> Result<String, ProjError> {
-        let result = unsafe {
+        let ptr = unsafe {
             proj_sys::proj_suggests_code_for(
                 self.ctx_ptr(),
                 self.ptr(),
@@ -437,8 +437,11 @@ impl Proj {
                 ptr::null(),
             )
         };
-        Ok(result.to_string()?)
+        let result = ptr.to_string()?;
+        unsafe { proj_sys::proj_string_destroy(ptr) };
+        Ok(result)
     }
+
     ///Returns whether a CRS is a derived CRS.
     ///
     ///# References
@@ -447,6 +450,17 @@ impl Proj {
     pub fn crs_is_derived(&self) -> bool {
         unsafe { proj_sys::proj_crs_is_derived(self.ctx_ptr(), self.ptr()) != 0 }
     }
+
+    ///Returns whether (at least one component of a) CRS has a dynamic
+    /// reference frame.
+    ///
+    ///# References
+    ///
+    /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_crs_is_dynamic>
+    pub fn crs_is_dynamic(&self) -> bool {
+        unsafe { proj_sys::proj_crs_is_dynamic(self.ctx_ptr(), self.ptr()) != 0 }
+    }
+
     ///Get the geodeticCRS / geographicCRS from a CRS.
     ///
     ///# References
@@ -1278,6 +1292,15 @@ mod test_proj_basic {
         Ok(())
     }
     #[test]
+    fn test_crs_is_dynamic() -> Result<(), ProjError> {
+        let ctx = crate::new_test_ctx()?;
+        let pj = ctx.create("EPSG:4326")?;
+        assert!(pj.is_crs());
+        let dynamic = pj.crs_is_dynamic();
+        assert!(!dynamic);
+        Ok(())
+    }
+    #[test]
     fn test_crs_get_geodetic_crs() -> Result<(), ProjError> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create("EPSG:3857")?;
@@ -1367,7 +1390,7 @@ mod test_proj_basic {
         let pj = ctx.create("EPSG:4258")?;
         let datum = pj.crs_get_datum_ensemble()?.expect("No datum");
         let count = datum.datum_ensemble_get_member_count();
-        assert_eq!(count, 12);
+        assert_eq!(count, 60);
         Ok(())
     }
     #[test]

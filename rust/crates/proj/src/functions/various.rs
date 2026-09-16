@@ -146,7 +146,7 @@ pub fn dmstor(is: &str) -> Result<f64, ProjError> {
 }
 
 ///Convert radians to string representation of degrees, minutes and seconds.
-
+///
 ///Deprecated since version 9.2: Use [`rtodms2()`] instead.
 ///
 /// # References

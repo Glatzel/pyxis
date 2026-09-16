@@ -111,11 +111,10 @@ impl crate::Context {
             ptr: Arc::new(ContextPtr(unsafe { proj_sys::proj_context_create() })),
         };
         ctx.log_level(LogLevel::None);
-        ctx.log_func(null_mut::<c_void>(), Some(crate::proj_clerk))?;
+        (unsafe { ctx.log_func(&mut null_mut::<c_void>().as_mut(), Some(crate::proj_clerk)) })?;
         Ok(ctx)
     }
 }
-
 
 impl Clone for crate::Context {
     ///Create a new threading-context based on an existing context.

@@ -193,10 +193,12 @@ impl Proj {
                 self.ptr(),
                 auth_name.to_cstring()?.as_ptr(),
                 ptr::null(),
-                &mut confidence_ptr,
+                &raw mut confidence_ptr,
             )
         };
-        if !confidence_ptr.is_null() {
+        if confidence_ptr.is_null() {
+            Err(ProjError::Misc("confidence_ptr is null".to_string()))
+        } else {
             let proj_obj_list = ProjObjList::new(self.arc_ctx_ptr(), result)?;
             let confidence: Vec<i32> = unsafe {
                 std::slice::from_raw_parts(confidence_ptr, proj_obj_list.get_count())
@@ -207,8 +209,6 @@ impl Proj {
             };
 
             Ok((proj_obj_list, confidence))
-        } else {
-            Err(ProjError::Misc("confidence_ptr is null".to_string()))
         }
     }
 }

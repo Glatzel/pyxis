@@ -422,11 +422,14 @@ pub struct UnitInfo {
 
     /// Object code.
     code: String,
+
     /// Object name. For example `metre`, `US survey foot`, etc.
     name: String,
+
     /// Category of the unit: one of `linear`, `linear_per_time`, `angular`,
     /// `angular_per_time`, `scale`, `scale_per_time` or `time`
     category: UnitCategory,
+
     /// Conversion factor to apply to transform from that unit to the
     /// corresponding SI unit (metre for `linear`, radian for `angular`, etc.).
     conv_factor: f64,

@@ -28,6 +28,6 @@ jobs:
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "Update libraw bindings for ${{ matrix.os }}"
+          git commit -m "Update libraw bindings"
           git push
         shell: bash

@@ -481,6 +481,7 @@ pub struct CelestialBodyInfo {
 impl CelestialBodyInfo {
     pub const fn new(auth_name: String, name: String) -> Self { Self { auth_name, name } }
 }
+
 ///Type of unit of measure.
 ///
 ///# References

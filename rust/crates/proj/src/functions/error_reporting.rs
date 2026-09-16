@@ -22,7 +22,7 @@ impl crate::Proj {
     pub(crate) fn errno(&self) -> ProjErrorCode {
         ProjErrorCode::from(unsafe { proj_sys::proj_errno(self.ptr()) as u32 })
     }
-    
+
     ///Change the error-state of Proj to err.
     ///
     /// # References
@@ -32,7 +32,7 @@ impl crate::Proj {
         unsafe { proj_sys::proj_errno_set(self.ptr(), err as c_int) };
         self
     }
-    
+
     ///Clears the error number in P, and bubbles it up to the context.
     ///
     /// # References
@@ -41,7 +41,7 @@ impl crate::Proj {
     pub(crate) fn _errno_reset(&self) -> ProjErrorCode {
         ProjErrorCode::from(unsafe { proj_sys::proj_errno_reset(self.ptr()) as u32 })
     }
-    
+
     ///Reduce some mental impedance in the canonical reset/restore use case:
     /// Basically, [`Self::_errno_restore()`] is a synonym for
     /// [`Self::_errno_set()`], but the use cases are very different: set
@@ -58,7 +58,7 @@ impl crate::Proj {
         unsafe { proj_sys::proj_errno_restore(self.ptr(), err as c_int) };
         self
     }
-    
+
     ///Get a text representation of an error number.
     ///
     /// Since the original function is potentially thread-unsafe, use

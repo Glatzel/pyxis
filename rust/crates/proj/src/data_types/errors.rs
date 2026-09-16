@@ -43,27 +43,27 @@ pub enum ProjErrorCode {
     //Errors in class PROJ_ERR_COORD_TRANSFM
     ///Class of error codes related to transformation on a specific coordinate.
     CoordTransfm = proj_sys::PROJ_ERR_COORD_TRANSFM,
-    
+
     ///Invalid input coordinate. e.g. a latitude > 90°.
     CoordTransfmInvalidCoord = proj_sys::PROJ_ERR_COORD_TRANSFM_INVALID_COORD,
-    
+
     ///Coordinate is outside of the projection domain. e.g. approximate
     /// mercator with |longitude - lon_0| > 90°, or iterative convergence method
     /// failed.
     CoordTransfmOutsideProjectionDomain =
         proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_PROJECTION_DOMAIN,
-        
+
     ///No operation found, e.g. if no match the required accuracy, or if
     /// ballpark transformations were asked to not be used and they would be
     /// only such candidate.
     CoordTransfmNoOperation = proj_sys::PROJ_ERR_COORD_TRANSFM_NO_OPERATION,
-    
+
     ///Point to transform falls outside grid/subgrid/TIN.
     CoordTransfmOutsideGrid = proj_sys::PROJ_ERR_COORD_TRANSFM_OUTSIDE_GRID,
-    
+
     ///Point to transform falls in a grid cell that evaluates to nodata.
     CoordTransfmGridAtNodata = proj_sys::PROJ_ERR_COORD_TRANSFM_GRID_AT_NODATA,
-    
+
     ///Point to transform falls in a grid cell that evaluates to nodata.
     CoordTransfmNoConvergence = proj_sys::PROJ_ERR_COORD_TRANSFM_NO_CONVERGENCE,
 
@@ -73,13 +73,13 @@ pub enum ProjErrorCode {
     ///Class of error codes that do not fit into one of the above class.
     #[num_enum(default)]
     Other = proj_sys::PROJ_ERR_OTHER,
-    
+
     ///Error related to a misuse of PROJ API.
     OtherApiMisuse = proj_sys::PROJ_ERR_OTHER_API_MISUSE,
-    
+
     ///No inverse method available
     OtherNoInverseOp = proj_sys::PROJ_ERR_OTHER_NO_INVERSE_OP,
-    
+
     ///Failure when accessing a network resource.
     OtherNetworkError = proj_sys::PROJ_ERR_OTHER_NETWORK_ERROR,
 }

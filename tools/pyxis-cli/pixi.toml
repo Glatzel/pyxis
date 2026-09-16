@@ -3,4 +3,4 @@ channels = ["https://prefix.dev/glatzel", "conda-forge"]
 platforms = ["win-64", "linux-64", "osx-arm64", "linux-aarch64"]
 
 [dependencies]
-proj-dev = "==9.8.1"
+proj-dev = "==9.9.0"

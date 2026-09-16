@@ -10,6 +10,15 @@ impl crate::Context {
 
     ///Override the internal log function of PROJ.
     ///
+    /// # Safety
+    ///
+    /// The caller must ensure that `app_data` remains valid and properly
+    /// aligned for as long as PROJ may invoke `logf`. The caller must also
+    /// ensure that `logf`, when provided, is a valid `unsafe extern "C"`
+    /// function pointer and is safe to call with the supplied `app_data`.
+    ///
+    /// The callback must not outlive the data referenced by `app_data`.
+    ///
     /// # Reference
     ///
     /// * <https://proj.org/development/reference/functions.html#proj_log_func>

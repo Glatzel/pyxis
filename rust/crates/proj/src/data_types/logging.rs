@@ -1,7 +1,7 @@
 use num_enum::FromPrimitive;
 
 ///Enum of logging levels in PROJ. Used to set the logging level in PROJ.
-/// Usually using [`crate::Context::set_log_level`].
+/// Usually using [`crate::Context::log_level`].
 ///
 /// # References
 ///

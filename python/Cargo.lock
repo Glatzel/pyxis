@@ -11,7 +11,7 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 [[package]]
 name = "clerk"
 version = "2026.9.14"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.9.14#5c0c40799005eebb9b26c3b24ff677c53594f16f"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.9.14#3ac9ab937ea0b078a9d9aa06ddd7bf22b2b94bb8"
 dependencies = [
  "thiserror",
 ]

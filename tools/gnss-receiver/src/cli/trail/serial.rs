@@ -1,4 +1,4 @@
-use rax::text::Decoder;
+use rax::text::StrParser;
 use rax_nmea::common::{Identifier, Talker};
 use rax_nmea::rules::{NmeaGsvLineCount, NmeaIdentifier, NmeaTalker, NmeaTxtLineCount};
 use tokio::io::{AsyncBufReadExt, BufReader};
@@ -37,7 +37,7 @@ pub async fn start_serial_reader(tx: Sender<(Talker, Identifier, String)>) -> mi
         buf.clear();
         match reader.read_line(&mut buf).await {
             Ok(_) => {
-                let mut probe = Decoder::new(&buf);
+                let mut probe = StrParser::new(&buf);
                 let talker = probe.global(&NmeaTalker)?;
                 let identifier = probe.global(&NmeaIdentifier)?;
                 match identifier {

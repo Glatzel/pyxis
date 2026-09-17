@@ -6,7 +6,7 @@ use pyxis::crypto;
 use ratatui::layout::{Constraint, Direction, Layout};
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::widgets::{Block, Borders, Cell, Paragraph, Row, Table, Wrap};
-use rax::text::{Decoder, IDecode};
+use rax::text::{IParseStr, StrParser};
 use rax_nmea::common::{Identifier, Talker};
 use rax_nmea::sentence::Gga;
 
@@ -40,7 +40,7 @@ impl TabCoord {
             .iter()
             .rev()
             .find(|f| f.1 == Identifier::GGA)
-            .and_then(|f| Gga::decode(&mut Decoder::new(&f.2)).ok());
+            .and_then(|f| Gga::parse_str(&mut StrParser::new(&f.2)).ok());
         if let Some(gga) = gga
             && let (Some(wgs84_lon), Some(wgs84_lat)) = (gga.lon(), gga.lat())
         {

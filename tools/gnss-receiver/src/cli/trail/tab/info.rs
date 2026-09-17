@@ -3,7 +3,7 @@ use std::collections::VecDeque;
 use ratatui::layout::Constraint;
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::widgets::{Cell, Row, Table};
-use rax::text::{IParseStr, StrParser};
+use rax::text::IParseStr;
 use rax_nmea::common::{Identifier, Talker};
 use rax_nmea::sentence::{Gga, Gsa, Gst, Rmc};
 
@@ -155,18 +155,14 @@ impl TabInfo {
             }
         }
 
-        let last_gga = last_gga.and_then(|(_talker, _identityer, sentence)| {
-            Gga::parse_str(&mut StrParser::new(&sentence)).ok()
-        });
-        let last_rmc = last_rmc.and_then(|(_talker, _identityer, sentence)| {
-            Rmc::parse_str(&mut StrParser::new(&sentence)).ok()
-        });
-        let last_gsa = last_gsa.and_then(|(_talker, _identityer, sentence)| {
-            Gsa::parse_str(&mut StrParser::new(&sentence)).ok()
-        });
-        let last_gst = last_gst.and_then(|(_talker, _identityer, sentence)| {
-            Gst::parse_str(&mut StrParser::new(&sentence)).ok()
-        });
+        let last_gga =
+            last_gga.and_then(|(_talker, _identityer, sentence)| Gga::parse_str(&sentence).ok());
+        let last_rmc =
+            last_rmc.and_then(|(_talker, _identityer, sentence)| Rmc::parse_str(&sentence).ok());
+        let last_gsa =
+            last_gsa.and_then(|(_talker, _identityer, sentence)| Gsa::parse_str(&sentence).ok());
+        let last_gst =
+            last_gst.and_then(|(_talker, _identityer, sentence)| Gst::parse_str(&sentence).ok());
         (last_gga, last_rmc, last_gsa, last_gst)
     }
 }

@@ -3,7 +3,7 @@ use std::collections::VecDeque;
 use ratatui::layout::Constraint;
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::widgets::{Cell, Row, Table};
-use rax::text::{Decoder, IDecode};
+use rax::text::{IParseStr, StrParser};
 use rax_nmea::common::{Identifier, Talker};
 use rax_nmea::sentence::{Gga, Gsa, Gst, Rmc};
 
@@ -156,16 +156,16 @@ impl TabInfo {
         }
 
         let last_gga = last_gga.and_then(|(_talker, _identityer, sentence)| {
-            Gga::decode(&mut Decoder::new(&sentence)).ok()
+            Gga::parse_str(&mut StrParser::new(&sentence)).ok()
         });
         let last_rmc = last_rmc.and_then(|(_talker, _identityer, sentence)| {
-            Rmc::decode(&mut Decoder::new(&sentence)).ok()
+            Rmc::parse_str(&mut StrParser::new(&sentence)).ok()
         });
         let last_gsa = last_gsa.and_then(|(_talker, _identityer, sentence)| {
-            Gsa::decode(&mut Decoder::new(&sentence)).ok()
+            Gsa::parse_str(&mut StrParser::new(&sentence)).ok()
         });
         let last_gst = last_gst.and_then(|(_talker, _identityer, sentence)| {
-            Gst::decode(&mut Decoder::new(&sentence)).ok()
+            Gst::parse_str(&mut StrParser::new(&sentence)).ok()
         });
         (last_gga, last_rmc, last_gsa, last_gst)
     }

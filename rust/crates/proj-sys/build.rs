@@ -5,7 +5,7 @@ use path_slash::PathBufExt;
 
 fn main() -> mischief::Result<()> {
     // 1. Explicit override wins
-    let proj_root = env::var("PROJ_ROOT").map(PathBuf::from).unwrap_or_default();
+    let proj_root = env::var("PROJ_ROOT").map_or_default(PathBuf::from);
 
     // 2. CMAKE_PREFIX_PATH entries (colon-separated on Unix, semicolon on
     //    Windows)

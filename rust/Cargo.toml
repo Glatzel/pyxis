@@ -14,7 +14,7 @@ envoy = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.14" }
 mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.14" }
 
 bindgen = "0.73.2"
-criterion = { package = "codspeed-criterion-compat", version = "5.0.1" }
+criterion = { package = "codspeed-criterion-compat", version = "5.0.2" }
 derive-getters = { version = "0.5.0", features = ["auto_copy_getters"] }
 dunce = "1.0.5"
 float-cmp = "0.10.0"

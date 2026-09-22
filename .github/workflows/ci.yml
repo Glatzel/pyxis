@@ -175,7 +175,7 @@ jobs:
 
   benchmark:
     needs: changed
-    if: ${{ needs.changed.outputs.changed-benchmark != 'false' }}
+    if: ${{ needs.changed.outputs.changed-benchmark != 'false' && (github.event_name != 'pull_request' || contains(join(github.event.pull_request.labels.*.name, ','), 'perf'))}}
     runs-on: ubuntu-latest
     steps:
       - parallel:

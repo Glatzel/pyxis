@@ -29,7 +29,7 @@ serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.9.14
 proj = { path = "../../rust/crates/proj" }
 pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }
 
-bpaf = { version = "0.9.27", features = ["batteries", "derive"] }
+bpaf = { version = "0.9.28", features = ["batteries", "derive"] }
 chrono = "0.4.45"
 crossterm = "0.29.0"
 directories = "6.0.0"

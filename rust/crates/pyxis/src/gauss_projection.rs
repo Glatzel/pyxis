@@ -136,21 +136,12 @@ where
         n = a / (T::ONE - e2 * sin_lat.powi(2)).sqrt();
         let new_latitude = z.atan2(p * (T::ONE - e2 * n / (n + height)));
         height = p / new_latitude.cos() - n;
-        #[cfg(debug_assertions)]
-        {
-            clerk::trace!("iteration: {_i}");
-            clerk::trace!("latitude: {}", latitude.to_degrees());
-            clerk::trace!("new_latitude: {}", new_latitude.to_degrees());
-            clerk::trace!(
-                "delta: {}",
-                (new_latitude.to_degrees() - latitude.to_degrees()).abs()
-            );
-        }
+
         if (new_latitude.to_degrees() - latitude.to_degrees()).abs() < threshold {
             return (longitude.to_degrees(), latitude.to_degrees(), height);
         }
         latitude = new_latitude;
     }
-    clerk::warn!("Exceed max iteration number: {max_iter}");
+
     (longitude.to_degrees(), latitude.to_degrees(), height)
 }

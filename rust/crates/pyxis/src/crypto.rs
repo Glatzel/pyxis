@@ -134,7 +134,6 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (120.0, 30.0);
 /// let p = bd09_to_gcj02(p.0, p.1);
 /// println!("{},{}", p.0, p.1);
@@ -171,7 +170,6 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (120.0, 30.0);
 /// let p = gcj02_to_wgs84(p.0, p.1);
 /// println!("{},{}", p.0, p.1);
@@ -202,7 +200,6 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (120.0, 30.0);
 /// let p = bd09_to_wgs84(p.0, p.1);
 /// println!("{},{}", p.0, p.1);
@@ -233,7 +230,6 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (120.0, 30.0);
 /// let p = gcj02_to_bd09(p.0, p.1);
 /// println!("{},{}", p.0, p.1);
@@ -269,7 +265,6 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (120.0, 30.0);
 /// let p = wgs84_to_gcj02(p.0, p.1);
 /// println!("{},{}", p.0, p.1);
@@ -300,7 +295,6 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (120.0, 30.0);
 /// let p = wgs84_to_bd09(p.0, p.1);
 /// println!("{},{}", p.0, p.1);
@@ -317,7 +311,6 @@ where
 /// ```
 /// use float_cmp::assert_approx_eq;
 /// use pyxis::crypto::*;
-/// clerk::init_log_with_level(clerk::LevelFilter::TRACE);
 /// let p = (120.0, 30.0);
 /// let p = crypto_exact(
 ///     p.0,
@@ -351,12 +344,6 @@ where
 
         let tmp_lon = dst_lon + d_lon;
         let tmp_lat = dst_lat + d_lat;
-        #[cfg(debug_assertions)]
-        {
-            clerk::trace!("iteration: {_i}");
-            clerk::trace!("dst_lon: {dst_lon}, dst_lat: {dst_lat}");
-            clerk::trace!("d_lon: {:.2e}, d_lat: {:.2e}", d_lon, d_lat);
-        }
         match threshold_mode {
             CryptoThresholdMode::Distance { semi_major_axis }
                 if haversine_distance(tmp_lon, tmp_lat, dst_lon, dst_lat, *semi_major_axis)
@@ -373,7 +360,6 @@ where
         }
         (dst_lon, dst_lat) = (tmp_lon, tmp_lat);
     }
-    clerk::warn!("Exceed max iteration num!ber: {max_iter}");
     (dst_lon, dst_lat)
 }
 /// distance calculate the distance between point(lat_a, lon_a) and point(lat_b,

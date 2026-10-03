@@ -1100,7 +1100,6 @@ dependencies = [
 name = "pyxis"
 version = "0.0.46"
 dependencies = [
- "clerk",
  "codspeed-criterion-compat",
  "float-cmp",
  "insta",

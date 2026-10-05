@@ -39,7 +39,7 @@ fn main() -> mischief::Result<()> {
 
     if env::var("UPDATE_PROJ_BINDINGS").is_ok() {
         let include_dir = proj_root.join("include");
-        let header = include_dir.join("proj.h").to_slash_lossy().to_string();
+        let header = include_dir.join("proj.h").into_string().unwrap();
 
         let bindings = bindgen::Builder::default()
             .header(header)

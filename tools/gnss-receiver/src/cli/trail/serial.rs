@@ -37,12 +37,11 @@ pub async fn start_serial_reader(tx: Sender<(Talker, Identifier, String)>) -> mi
         buf.clear();
         match reader.read_line(&mut buf).await {
             Ok(_) => {
-                let mut probe = StrParser::new(&buf);
-                let talker = probe.global(&NmeaTalker)?;
-                let identifier = probe.global(&NmeaIdentifier)?;
+                let talker = StrParser::global(&buf, &NmeaTalker)?;
+                let identifier = StrParser::global(&buf, &NmeaIdentifier)?;
                 match identifier {
                     Identifier::GSV => {
-                        let count = probe.global(&NmeaGsvLineCount)?;
+                        let count = StrParser::global(&buf, &NmeaGsvLineCount)?;
                         for _ in 0..count - 1 {
                             match reader.read_line(&mut buf).await {
                                 Ok(_) => {}
@@ -54,7 +53,7 @@ pub async fn start_serial_reader(tx: Sender<(Talker, Identifier, String)>) -> mi
                         }
                     }
                     Identifier::TXT => {
-                        let count = probe.global(&NmeaTxtLineCount)?;
+                        let count = StrParser::global(&buf, &NmeaTxtLineCount)?;
                         for _ in 0..count - 1 {
                             match reader.read_line(&mut buf).await {
                                 Ok(_) => {}

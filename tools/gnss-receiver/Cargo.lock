@@ -65,6 +65,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "arbor"
+version = "2026.10.5"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.10.5#fac5d540dc8edcb65f4f4eb28c98b48333c3e1a8"
+dependencies = [
+ "textwrap",
+]
+
+[[package]]
 name = "atomic"
 version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -274,6 +282,14 @@ dependencies = [
  "tracing",
  "tracing-core",
  "tracing-subscriber",
+]
+
+[[package]]
+name = "clerk"
+version = "2026.10.5"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.10.5#fac5d540dc8edcb65f4f4eb28c98b48333c3e1a8"
+dependencies = [
+ "thiserror 2.0.21",
 ]
 
 [[package]]
@@ -552,8 +568,8 @@ checksum = "252afb9ae5eaa683babdc6a068b3f5726eb19e05070c731f9b2a23a7c3e8ed34"
 
 [[package]]
 name = "envoy"
-version = "2026.9.14"
-source = "git+https://github.com/Glatzel/toolbox?tag=v2026.9.14#3ac9ab937ea0b078a9d9aa06ddd7bf22b2b94bb8"
+version = "2026.10.5"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.10.5#fac5d540dc8edcb65f4f4eb28c98b48333c3e1a8"
 dependencies = [
  "thiserror 2.0.21",
 ]
@@ -715,10 +731,10 @@ version = "0.0.46"
 dependencies = [
  "bpaf",
  "chrono",
- "clerk",
+ "clerk 2026.9.14",
  "crossterm",
  "directories",
- "mischief",
+ "mischief 2026.9.14",
  "parking_lot",
  "proj",
  "pyxis",
@@ -1016,9 +1032,9 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "libc"
-version = "0.2.189"
+version = "0.2.190"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2"
+checksum = "ce5d3ddc6d3fa000eb1536d85e147bfe31aacaba692ed6a876f95cb7c855be78"
 
 [[package]]
 name = "libloading"
@@ -1210,9 +1226,21 @@ name = "mischief"
 version = "2026.9.14"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.9.14#3ac9ab937ea0b078a9d9aa06ddd7bf22b2b94bb8"
 dependencies = [
- "arbor",
+ "arbor 2026.9.14",
  "backtrace",
- "mischief-macros",
+ "mischief-macros 2026.9.14",
+ "owo-colors",
+ "terminal_size",
+]
+
+[[package]]
+name = "mischief"
+version = "2026.10.5"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.10.5#fac5d540dc8edcb65f4f4eb28c98b48333c3e1a8"
+dependencies = [
+ "arbor 2026.10.5",
+ "backtrace",
+ "mischief-macros 2026.10.5",
  "owo-colors",
  "terminal_size",
 ]
@@ -1221,6 +1249,15 @@ dependencies = [
 name = "mischief-macros"
 version = "2026.9.14"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.9.14#3ac9ab937ea0b078a9d9aa06ddd7bf22b2b94bb8"
+dependencies = [
+ "quote",
+ "syn 3.0.6",
+]
+
+[[package]]
+name = "mischief-macros"
+version = "2026.10.5"
+source = "git+https://github.com/Glatzel/toolbox?tag=v2026.10.5#fac5d540dc8edcb65f4f4eb28c98b48333c3e1a8"
 dependencies = [
  "quote",
  "syn 3.0.6",
@@ -1612,7 +1649,7 @@ dependencies = [
 name = "proj"
 version = "0.0.46"
 dependencies = [
- "clerk",
+ "clerk 2026.10.5",
  "derive-getters",
  "envoy",
  "num_enum",
@@ -1627,7 +1664,7 @@ version = "9.9.0"
 dependencies = [
  "bindgen",
  "libc",
- "mischief",
+ "mischief 2026.10.5",
 ]
 
 [[package]]
@@ -1780,7 +1817,7 @@ name = "rax"
 version = "2026.9.14"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.9.14#3ac9ab937ea0b078a9d9aa06ddd7bf22b2b94bb8"
 dependencies = [
- "clerk",
+ "clerk 2026.9.14",
  "strum",
  "thiserror 2.0.21",
 ]
@@ -1790,7 +1827,7 @@ name = "rax-nmea"
 version = "2026.9.14"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.9.14#3ac9ab937ea0b078a9d9aa06ddd7bf22b2b94bb8"
 dependencies = [
- "clerk",
+ "clerk 2026.9.14",
  "derive-getters",
  "jiff",
  "rax",
@@ -2036,7 +2073,7 @@ name = "serialport-ext"
 version = "2026.9.14"
 source = "git+https://github.com/Glatzel/toolbox?tag=v2026.9.14#3ac9ab937ea0b078a9d9aa06ddd7bf22b2b94bb8"
 dependencies = [
- "clerk",
+ "clerk 2026.9.14",
  "serialport",
 ]
 

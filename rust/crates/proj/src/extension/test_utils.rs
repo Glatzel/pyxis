@@ -12,11 +12,11 @@ pub(crate) fn new_test_ctx() -> Result<Context, ProjError> {
     // PROJ_DATA
     let workspace_root = env::var("CARGO_WORKSPACE_DIR")?;
     let default_proj_data = if cfg!(target_os = "windows") {
-        dunce::canonicalize(format!(
+        std::path::absolute(format!(
             "{workspace_root}/.pixi/envs/default/Library/share/proj"
         ))?
     } else {
-        dunce::canonicalize(format!("{workspace_root}/.pixi/envs/default/share/proj"))?
+        std::path::absolute(format!("{workspace_root}/.pixi/envs/default/share/proj"))?
     };
     ctx.set_database_path(&default_proj_data.join("proj.db"), None)?;
     ctx.set_search_paths(&[&default_proj_data])?;

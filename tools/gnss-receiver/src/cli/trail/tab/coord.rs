@@ -35,7 +35,7 @@ impl TabCoord {
         area: ratatui::layout::Rect,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> mischief::Result<()> {
-        let gga:Option<Gga> = raw_nmea
+        let gga: Option<Gga> = raw_nmea
             .iter()
             .rev()
             .find(|f| f.1 == Identifier::GGA)

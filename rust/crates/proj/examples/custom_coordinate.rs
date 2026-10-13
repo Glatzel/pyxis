@@ -64,7 +64,7 @@ fn convert_array() -> mischief::Result<()> {
     };
     let coord = pj.convert_array(coord)?;
     assert_approx_eq!(f64, coord.x[0], 19955590.73888901);
-    assert_approx_eq!(f64, coord.x[0], 3416780.562127255);
+    assert_approx_eq!(f64, coord.y[0], 3416780.562127255);
     Ok(())
 }
 #[test]

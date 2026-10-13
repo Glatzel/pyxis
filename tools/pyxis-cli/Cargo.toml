@@ -8,15 +8,15 @@ name = "pyxis"
 path = "src/main.rs"
 
 [dependencies]
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.5", features = ["tracing"] }
-mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.5" }
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11", features = ["tracing"] }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11" }
 
 proj = { path = "../../rust/crates/proj" }
 pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }
 
 bpaf = { version = "0.9.28", features = ["batteries", "derive"] }
 serde = { version = "1.0.229", features = ["derive"] }
-serde_json = "1.0.151"
+serde_json = "1.0.154"
 
 [dev-dependencies]
 assert_cmd = "2.2.2"

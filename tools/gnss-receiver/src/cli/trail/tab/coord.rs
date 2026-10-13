@@ -51,7 +51,7 @@ impl TabCoord {
             let (projected_x, projected_y) = self
                 .pj
                 .clone()
-                .and_then(|f| f.convert(&(wgs84_lon, wgs84_lat)).ok())
+                .and_then(|f| f.convert((wgs84_lon, wgs84_lat)).ok())
                 .unwrap_or_else(|| {
                     clerk::warn!("Proj projection failed.");
                     (f64::NAN, f64::NAN)

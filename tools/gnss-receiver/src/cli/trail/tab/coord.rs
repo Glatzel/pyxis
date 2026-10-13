@@ -6,7 +6,6 @@ use pyxis::crypto;
 use ratatui::layout::{Constraint, Direction, Layout};
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::widgets::{Block, Borders, Cell, Paragraph, Row, Table, Wrap};
-use rax::text::IParseStr;
 use rax_nmea::common::{Identifier, Talker};
 use rax_nmea::sentence::Gga;
 
@@ -36,11 +35,11 @@ impl TabCoord {
         area: ratatui::layout::Rect,
         raw_nmea: &VecDeque<(Talker, Identifier, String)>,
     ) -> mischief::Result<()> {
-        let gga = raw_nmea
+        let gga:Option<Gga> = raw_nmea
             .iter()
             .rev()
             .find(|f| f.1 == Identifier::GGA)
-            .and_then(|f| Gga::parse_str(&f.2).ok());
+            .and_then(|f| f.2.parse().ok());
         if let Some(gga) = gga
             && let (Some(wgs84_lon), Some(wgs84_lat)) = (gga.lon(), gga.lat())
         {

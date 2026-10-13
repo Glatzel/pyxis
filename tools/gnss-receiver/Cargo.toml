@@ -20,11 +20,11 @@ name = "list-devices"
 path = "tools/list_devices.rs"
 
 [dependencies]
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.5", features = ["tracing"] }
-mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.5" }
-rax = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.5" }
-rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.5" }
-serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.5" }
+clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11", features = ["tracing"] }
+mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11" }
+rax = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11" }
+rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11" }
+serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11" }
 
 proj = { path = "../../rust/crates/proj" }
 pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }
@@ -35,9 +35,9 @@ crossterm = "0.29.0"
 directories = "6.0.0"
 parking_lot = { version = "0.12.5", features = ["deadlock_detection"] }
 ratatui = "0.30.2"
-schemars = "1.2.2"
+schemars = "1.2.3"
 serde = { version = "1.0.229", features = ["derive"] }
-serde_json = "1.0.151"
+serde_json = "1.0.154"
 tokio = { version = "1.53.2", features = ["full"] }
 tokio-serial = "5.5.0"
-toml = "1.1.6"
+toml = "1.1.8"

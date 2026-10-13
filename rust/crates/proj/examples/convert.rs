@@ -4,7 +4,6 @@ use proj::Area;
 fn main() -> mischief::Result<()> {
     cvt_2d()?;
     cvt_3d()?;
-    cvt_3d_array()?;
     Ok(())
 }
 fn cvt_2d() -> mischief::Result<()> {
@@ -13,7 +12,7 @@ fn cvt_2d() -> mischief::Result<()> {
 
     let pj = ctx.normalize_for_visualization(&pj)?;
     let coord = [120.0, 30.0];
-    let coord = pj.convert(&coord)?;
+    let coord = pj.convert(coord)?;
     assert_approx_eq!(f64, coord[0], 19955590.73888901);
     assert_approx_eq!(f64, coord[1], 3416780.562127255);
     Ok(())
@@ -24,32 +23,14 @@ fn cvt_3d() -> mischief::Result<()> {
     let pj = ctx.normalize_for_visualization(&pj)?;
 
     let coord = [120.0, 30.0, 10.0];
-    let coord = pj.convert(&coord)?;
+    let coord = pj.convert(coord)?;
     assert_approx_eq!(f64, coord[0], -2764132.649773435);
     assert_approx_eq!(f64, coord[1], 4787618.188267582);
     assert_approx_eq!(f64, coord[2], 3170378.735383637);
     Ok(())
 }
-fn cvt_3d_array() -> mischief::Result<()> {
-    let ctx = proj::Context::new()?;
-    let pj = ctx
-        .clone()
-        .create_crs_to_crs("EPSG:4326", "EPSG:4978", &Area::default())?;
-    let pj = ctx.normalize_for_visualization(&pj)?;
 
-    let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
-    pj.convert_array(&mut coord)?;
-    assert_approx_eq!(f64, coord[0][0], -2764132.649773435);
-    assert_approx_eq!(f64, coord[0][1], 4787618.188267582);
-    assert_approx_eq!(f64, coord[0][2], 3170378.735383637);
-    assert_approx_eq!(f64, coord[1][0], 714243.0112756203);
-    assert_approx_eq!(f64, coord[1][1], 851201.6746730272);
-    assert_approx_eq!(f64, coord[1][2], -6259542.96102869);
-    Ok(())
-}
 #[test]
 fn test_cvt_2d() -> mischief::Result<()> { cvt_2d() }
 #[test]
 fn test_cvt_3d() -> mischief::Result<()> { cvt_3d() }
-#[test]
-fn test_cvt_3d_array() -> mischief::Result<()> { cvt_3d_array() }

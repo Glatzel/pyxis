@@ -71,7 +71,7 @@ impl crate::Proj {
     /// # References
     ///
     /// * <https://proj.org/en/stable/development/reference/functions.html#c.proj_trans_generic>
-    pub unsafe fn trans_generic(
+    pub(crate) fn trans_generic(
         &self,
         direction: crate::Direction,
         x: *mut f64,
@@ -277,7 +277,7 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let _ = pj.convert(&(120.0, 30.0))?;
+        let _ = pj.convert((120.0, 30.0))?;
         let last_op = pj.get_last_used_operation()?;
         assert!(last_op.is_some());
         println!("{:?}", last_op.expect("Last operation is missing").info());

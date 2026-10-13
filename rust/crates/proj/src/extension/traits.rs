@@ -91,6 +91,23 @@ pub trait ICoord: Clone {
     fn t(&mut self) -> *mut f64;
 }
 
+pub trait ICoords {
+    fn x(&mut self) -> *mut f64;
+    fn y(&mut self) -> *mut f64;
+    fn z(&mut self) -> *mut f64;
+    fn t(&mut self) -> *mut f64;
+
+    fn x_len(&mut self) -> usize;
+    fn y_len(&mut self) -> usize;
+    fn z_len(&mut self) -> usize;
+    fn t_len(&mut self) -> usize;
+
+    fn x_step(&mut self) -> usize;
+    fn y_step(&mut self) -> usize;
+    fn z_step(&mut self) -> usize;
+    fn t_step(&mut self) -> usize;
+}
+
 // Only allow use this trait in crate.
 // Prevent users from modifying the to_coord fn.
 pub trait ToCoord {
@@ -139,6 +156,7 @@ where
         }
     }
 }
+
 impl ICoord for (f64, f64) {
     fn x(&mut self) -> *mut f64 { &raw mut self.0 }
     fn y(&mut self) -> *mut f64 { &raw mut self.1 }

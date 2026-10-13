@@ -7,7 +7,7 @@ mod owned_cstrings;
 mod test_utils;
 mod traits;
 
-pub use logging::*;
+pub use logging::proj_clerk;
 pub use options::*;
 pub use owned_cstrings::*;
 #[cfg(test)]

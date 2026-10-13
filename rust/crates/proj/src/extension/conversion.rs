@@ -1,6 +1,6 @@
 use crate::Direction::{Fwd, Inv};
-use crate::ICoord;
 use crate::data_types::ProjError;
+use crate::{ICoord, ICoords};
 
 impl crate::Proj {
     /// Projects a single coordinate using the specified direction (forward or
@@ -15,35 +15,26 @@ impl crate::Proj {
     /// # Returns
     ///
     /// The transformed coordinate.
-    pub fn project<T>(&self, inv: bool, coord: &T) -> Result<T, ProjError>
+    pub fn project<T>(&self, inv: bool, mut coord: T) -> Result<T, ProjError>
     where
         T: ICoord,
     {
         let direction = if inv { Inv } else { Fwd };
-        let mut coord = coord.clone();
-        let x = coord.x();
-        let y = coord.y();
-        let z = coord.z();
-        let t = coord.t();
-        match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
-            //2d
-            (false, false, true, true) => unsafe {
-                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0)?
-            },
-            //3d
-            (false, false, false, true) => unsafe {
-                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0)?
-            },
-            //4d
-            (false, false, false, false) => unsafe {
-                self.trans_generic(direction, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)?
-            },
-            (x, y, z, t) => {
-                return Err(ProjError::new(format!(
-                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                )));
-            }
-        };
+        self.trans_generic(
+            direction,
+            coord.x(),
+            1,
+            1,
+            coord.y(),
+            1,
+            1,
+            coord.z(),
+            1,
+            1,
+            coord.t(),
+            1,
+            1,
+        )?;
         Ok(coord)
     }
     /// Projects a single coordinate using the forward direction.
@@ -55,40 +46,13 @@ impl crate::Proj {
     /// # Returns
     ///
     /// The transformed coordinate.
-    pub fn convert<T>(&self, coord: &T) -> Result<T, ProjError>
+    pub fn convert<T>(&self, coord: T) -> Result<T, ProjError>
     where
         T: ICoord,
     {
-        let mut coord = coord.clone();
-        let x = coord.x();
-        let y = coord.y();
-        let z = coord.z();
-        let t = coord.t();
-        match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
-            //2d
-            (false, false, true, true) => unsafe {
-                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 0, 0, t, 0, 0)?
-            },
-            //3d
-            (false, false, false, true) => unsafe {
-                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 0, 0)?
-            },
-            //4d
-            (false, false, false, false) => unsafe {
-                self.trans_generic(Fwd, x, 1, 1, y, 1, 1, z, 1, 1, t, 1, 1)?
-            },
-            (x, y, z, t) => {
-                return Err(ProjError::new(format!(
-                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                )));
-            }
-        };
-
-        Ok(coord)
+        self.project(false, coord)
     }
-}
 
-impl crate::Proj {
     /// Projects an array of coordinates using the specified direction (forward
     /// or inverse).
     ///
@@ -101,44 +65,29 @@ impl crate::Proj {
     /// # Returns
     ///
     /// A reference to self for chaining.
-    pub fn project_array<T>(&self, inv: bool, coord: &mut [T]) -> Result<&Self, ProjError>
+    pub fn project_array<T>(&self, inv: bool, mut coord: T) -> Result<T, ProjError>
     where
-        T: ICoord,
+        T: ICoords,
     {
         let direction = if inv { Inv } else { Fwd };
-        let length = coord.len();
-        let size = size_of::<T>();
-        let x = unsafe { coord.get_unchecked_mut(0) }.x();
-        let y = unsafe { coord.get_unchecked_mut(0) }.y();
-        let z = unsafe { coord.get_unchecked_mut(0) }.z();
-        let t = unsafe { coord.get_unchecked_mut(0) }.t();
 
-        match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
-            //2d
-            (false, false, true, true) => unsafe {
-                self.trans_generic(
-                    direction, x, size, length, y, size, length, z, 0, 0, t, 0, 0,
-                )?
-            },
-            //3d
-            (false, false, false, true) => unsafe {
-                self.trans_generic(
-                    direction, x, size, length, y, size, length, z, size, length, t, 0, 0,
-                )?
-            },
-            //4d
-            (false, false, false, false) => unsafe {
-                self.trans_generic(
-                    direction, x, size, length, y, size, length, z, size, length, t, size, length,
-                )?
-            },
-            (x, y, z, t) => {
-                return Err(ProjError::new(format!(
-                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                )));
-            }
-        };
-        Ok(self)
+        self.trans_generic(
+            direction,
+            coord.x(),
+            coord.x_step(),
+            coord.x_len(),
+            coord.y(),
+            coord.y_step(),
+            coord.y_len(),
+            coord.z(),
+            coord.z_step(),
+            coord.z_len(),
+            coord.t(),
+            coord.t_step(),
+            coord.t_len(),
+        )?;
+
+        Ok(coord)
     }
     /// Projects an array of coordinates using the forward direction.
     ///
@@ -149,119 +98,42 @@ impl crate::Proj {
     /// # Returns
     ///
     /// A reference to self for chaining.
-    pub fn convert_array<T>(&self, coord: &mut [T]) -> Result<&Self, ProjError>
+    pub fn convert_array<T>(&self, coord: T) -> Result<T, ProjError>
     where
-        T: ICoord,
+        T: ICoords,
     {
-        let length = coord.len();
-        let size = size_of::<T>();
-        let x = unsafe { coord.get_unchecked_mut(0) }.x();
-        let y = unsafe { coord.get_unchecked_mut(0) }.y();
-        let z = unsafe { coord.get_unchecked_mut(0) }.z();
-        let t = unsafe { coord.get_unchecked_mut(0) }.t();
-
-        match (x.is_null(), y.is_null(), z.is_null(), t.is_null()) {
-            //2d
-            (false, false, true, true) => unsafe {
-                self.trans_generic(Fwd, x, size, length, y, size, length, z, 0, 0, t, 0, 0)?
-            },
-
-            //3d
-            (false, false, false, true) => unsafe {
-                self.trans_generic(
-                    Fwd, x, size, length, y, size, length, z, size, length, t, 0, 0,
-                )?
-            },
-            //4d
-            (false, false, false, false) => unsafe {
-                self.trans_generic(
-                    Fwd, x, size, length, y, size, length, z, size, length, t, size, length,
-                )?
-            },
-            (x, y, z, t) => {
-                return Err(ProjError::new(format!(
-                    "Input data is not correct.x.is_null: {x},t.is_null: {y},z.is_null: {z},t.is_null: {t}"
-                )));
-            }
-        };
-
-        Ok(self)
+        self.project_array(false, coord)
     }
 }
 #[cfg(test)]
 mod test {
+    use std::vec;
+
     use float_cmp::assert_approx_eq;
-    #[test]
-    fn test_project_2d() -> mischief::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
-        // array
-        {
-            let pj = ctx.normalize_for_visualization(&pj)?;
-            let coord = [120.0, 30.0];
-            let coord = pj.project(false, &coord)?;
-            assert_approx_eq!(f64, coord[0], 19955590.73888901);
-            assert_approx_eq!(f64, coord[1], 3416780.562127255);
-        }
-        // tuple
-        {
-            let pj = ctx.normalize_for_visualization(&pj)?;
-            let coord = (120.0, 30.0);
-            let coord = pj.project(false, &coord)?;
-            assert_approx_eq!(f64, coord.0, 19955590.73888901);
-            assert_approx_eq!(f64, coord.1, 3416780.562127255);
-        }
-        Ok(())
+
+    use crate::ICoords;
+    #[derive(Debug)]
+    struct TestCoord {
+        x: Vec<f64>,
+        y: Vec<f64>,
+        z: Vec<f64>,
+        t: Vec<f64>,
     }
-    #[test]
-    fn test_project_3d() -> mischief::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
-        let pj = ctx.normalize_for_visualization(&pj)?;
-        // array
-        {
-            let coord = [120.0, 30.0, 10.0];
-            let coord = pj.project(false, &coord)?;
-            assert_approx_eq!(f64, coord[0], -2764132.649773435);
-            assert_approx_eq!(f64, coord[1], 4787618.188267582);
-            assert_approx_eq!(f64, coord[2], 3170378.735383637);
-        }
-        // tuple
-        {
-            let coord = (120.0, 30.0, 10.0);
-            let coord = pj.project(false, &coord)?;
-            assert_approx_eq!(f64, coord.0, -2764132.649773435);
-            assert_approx_eq!(f64, coord.1, 4787618.188267582);
-            assert_approx_eq!(f64, coord.2, 3170378.735383637);
-        }
-        Ok(())
+    impl ICoords for TestCoord {
+        fn x(&mut self) -> *mut f64 { self.x.as_mut_ptr() }
+        fn y(&mut self) -> *mut f64 { self.y.as_mut_ptr() }
+        fn z(&mut self) -> *mut f64 { self.z.as_mut_ptr() }
+        fn t(&mut self) -> *mut f64 { self.t.as_mut_ptr() }
+        fn x_len(&mut self) -> usize { self.x.len() }
+        fn y_len(&mut self) -> usize { self.y.len() }
+        fn z_len(&mut self) -> usize { self.z.len() }
+        fn t_len(&mut self) -> usize { self.t.len() }
+        fn x_step(&mut self) -> usize { size_of::<f64>() }
+        fn y_step(&mut self) -> usize { size_of::<f64>() }
+        fn z_step(&mut self) -> usize { size_of::<f64>() }
+        fn t_step(&mut self) -> usize { size_of::<f64>() }
     }
-    #[test]
-    fn test_project_4d() -> mischief::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
-        // array
-        {
-            let coord = [3879000.0, 1160000.0, 5000000.0, 2024.0];
-            let coord = pj.project(false, &coord)?;
-            println!("{coord:?}");
-            assert_approx_eq!(f64, coord[0], 1935504.4269929447);
-            assert_approx_eq!(f64, coord[1], -5521772.777432425);
-            assert_approx_eq!(f64, coord[2], 5296676.095833973);
-            assert_approx_eq!(f64, coord[3], 2024.0);
-        }
-        // tuple
-        {
-            let coord = (3879000.0, 1160000.0, 5000000.0, 2024.0);
-            let coord = pj.project(false, &coord)?;
-            println!("{coord:?}");
-            assert_approx_eq!(f64, coord.0, 1935504.4269929447);
-            assert_approx_eq!(f64, coord.1, -5521772.777432425);
-            assert_approx_eq!(f64, coord.2, 5296676.095833973);
-            assert_approx_eq!(f64, coord.3, 2024.0);
-        }
-        Ok(())
-    }
+
     #[test]
     fn test_convert_2d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
@@ -270,7 +142,7 @@ mod test {
         {
             let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = [120.0, 30.0];
-            let coord = pj.convert(&coord)?;
+            let coord = pj.convert(coord)?;
             println!("{coord:?}");
             assert_approx_eq!(f64, coord[0], 19955590.73888901);
             assert_approx_eq!(f64, coord[1], 3416780.562127255);
@@ -279,7 +151,7 @@ mod test {
         {
             let pj = ctx.normalize_for_visualization(&pj)?;
             let coord = (120.0, 30.0);
-            let coord = pj.convert(&coord)?;
+            let coord = pj.convert(coord)?;
             println!("{coord:?}");
             assert_approx_eq!(f64, coord.0, 19955590.73888901);
             assert_approx_eq!(f64, coord.1, 3416780.562127255);
@@ -294,7 +166,7 @@ mod test {
         // array
         {
             let coord = [120.0, 30.0, 10.0];
-            let coord = pj.convert(&coord)?;
+            let coord = pj.convert(coord)?;
             println!("{coord:?}");
             assert_approx_eq!(f64, coord[0], -2764132.649773435);
             assert_approx_eq!(f64, coord[1], 4787618.188267582);
@@ -303,7 +175,7 @@ mod test {
         // tuple
         {
             let coord = (120.0, 30.0, 10.0);
-            let coord = pj.convert(&coord)?;
+            let coord = pj.convert(coord)?;
             println!("{coord:?}");
             assert_approx_eq!(f64, coord.0, -2764132.649773435);
             assert_approx_eq!(f64, coord.1, 4787618.188267582);
@@ -318,7 +190,7 @@ mod test {
         // array
         {
             let coord = [3879000.0, 1160000.0, 5000000.0, 2024.0];
-            let coord = pj.convert(&coord)?;
+            let coord = pj.convert(coord)?;
             println!("{coord:?}");
             assert_approx_eq!(f64, coord[0], 1935504.4269929447);
             assert_approx_eq!(f64, coord[1], -5521772.777432425);
@@ -328,7 +200,7 @@ mod test {
         // tuple
         {
             let coord = (3879000.0, 1160000.0, 5000000.0, 2024.0);
-            let coord = pj.convert(&coord)?;
+            let coord = pj.convert(coord)?;
             println!("{coord:?}");
             assert_approx_eq!(f64, coord.0, 1935504.4269929447);
             assert_approx_eq!(f64, coord.1, -5521772.777432425);
@@ -337,68 +209,24 @@ mod test {
         }
         Ok(())
     }
-    #[test]
-    fn test_project_array_2d() -> mischief::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
-        let pj = ctx.normalize_for_visualization(&pj)?;
-        let mut coord = [[120.0, 30.0], [50.0, -80.0]];
 
-        pj.project_array(false, coord.as_mut_slice())?;
-        println!("{coord:?}");
-        assert_approx_eq!(f64, coord[0][0], 19955590.73888901);
-        assert_approx_eq!(f64, coord[0][1], 3416780.562127255);
-        assert_approx_eq!(f64, coord[1][0], 17583572.872089125);
-        assert_approx_eq!(f64, coord[1][1], -9356989.97994042);
-        Ok(())
-    }
-    #[test]
-    fn test_project_array_3d() -> mischief::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
-        let pj = ctx.normalize_for_visualization(&pj)?;
-        let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
-
-        pj.project_array(false, coord.as_mut_slice())?;
-        println!("{coord:?}");
-        assert_approx_eq!(f64, coord[0][0], -2764132.649773435);
-        assert_approx_eq!(f64, coord[0][1], 4787618.188267582);
-        assert_approx_eq!(f64, coord[0][2], 3170378.735383637);
-        assert_approx_eq!(f64, coord[1][0], 714243.0112756203);
-        assert_approx_eq!(f64, coord[1][1], 851201.6746730272);
-        assert_approx_eq!(f64, coord[1][2], -6259542.96102869);
-
-        Ok(())
-    }
-    #[test]
-    fn test_project_array_4d() -> mischief::Result<()> {
-        let ctx = crate::new_test_ctx()?;
-        let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
-        let mut coord = [
-            [3879000.0, 1160000.0, 5000000.0, 2024.0],
-            [3879000.0, 1160000.0, 5000000.0, 2024.0],
-        ];
-
-        pj.project_array(false, coord.as_mut_slice())?;
-        println!("{coord:?}");
-        assert_approx_eq!(f64, coord[0][0], 1935504.4269929447);
-        assert_approx_eq!(f64, coord[0][1], -5521772.777432425);
-        assert_approx_eq!(f64, coord[0][2], 5296676.095833973);
-
-        Ok(())
-    }
     #[test]
     fn test_convert_array_2d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4496", &crate::Area::default())?;
-        let mut coord = [[120.0, 30.0], [50.0, -80.0]];
+        let coord = TestCoord {
+            x: vec![120.0, 50.0],
+            y: vec![30.0, -80.0],
+            z: vec![],
+            t: vec![],
+        };
         let pj = ctx.normalize_for_visualization(&pj)?;
-        pj.convert_array(coord.as_mut_slice())?;
+        let coord = pj.convert_array(coord)?;
         println!("{coord:?}");
-        assert_approx_eq!(f64, coord[0][0], 19955590.73888901);
-        assert_approx_eq!(f64, coord[0][1], 3416780.562127255);
-        assert_approx_eq!(f64, coord[1][0], 17583572.872089125);
-        assert_approx_eq!(f64, coord[1][1], -9356989.97994042);
+        assert_approx_eq!(f64, coord.x[0], 19955590.73888901);
+        assert_approx_eq!(f64, coord.y[0], 3416780.562127255);
+        assert_approx_eq!(f64, coord.x[1], 17583572.872089125);
+        assert_approx_eq!(f64, coord.y[1], -9356989.97994042);
         Ok(())
     }
     #[test]
@@ -406,33 +234,42 @@ mod test {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:4326", "EPSG:4978", &crate::Area::default())?;
         let pj = ctx.normalize_for_visualization(&pj)?;
-        let mut coord = [[120.0, 30.0, 10.0], [50.0, -80.0, 0.0]];
+        let coord = TestCoord {
+            x: vec![120.0, 50.0],
+            y: vec![30.0, -80.0],
+            z: vec![10.0, 0.0],
+            t: vec![],
+        };
 
-        pj.convert_array(coord.as_mut_slice())?;
+        let coord = pj.convert_array(coord)?;
         println!("{coord:?}");
-        assert_approx_eq!(f64, coord[0][0], -2764132.649773435);
-        assert_approx_eq!(f64, coord[0][1], 4787618.188267582);
-        assert_approx_eq!(f64, coord[0][2], 3170378.735383637);
-        assert_approx_eq!(f64, coord[1][0], 714243.0112756203);
-        assert_approx_eq!(f64, coord[1][1], 851201.6746730272);
-        assert_approx_eq!(f64, coord[1][2], -6259542.96102869);
+        assert_approx_eq!(f64, coord.x[0], -2764132.649773435);
+        assert_approx_eq!(f64, coord.y[0], 4787618.188267582);
+        assert_approx_eq!(f64, coord.z[0], 3170378.735383637);
+        assert_approx_eq!(f64, coord.x[1], 714243.0112756203);
+        assert_approx_eq!(f64, coord.y[1], 851201.6746730272);
+        assert_approx_eq!(f64, coord.z[1], -6259542.96102869);
         Ok(())
     }
     #[test]
     fn test_convert_array_4d() -> mischief::Result<()> {
         let ctx = crate::new_test_ctx()?;
         let pj = ctx.create_crs_to_crs("EPSG:8774", "EPSG:7789", &crate::Area::default())?;
-        let mut coord = [
-            [3879000.0, 1160000.0, 5000000.0, 2024.0],
-            [3879000.0, 1160000.0, 5000000.0, 2024.0],
-        ];
+        let coord = TestCoord {
+            x: vec![3879000.0, 3879000.0],
+            y: vec![1160000.0, 1160000.0],
+            z: vec![5000000.0, 5000000.0],
+            t: vec![2024.0, 2025.0],
+        };
 
-        pj.convert_array(coord.as_mut_slice())?;
+        let coord = pj.convert_array(coord)?;
         println!("{coord:?}");
-        assert_approx_eq!(f64, coord[0][0], 1935504.4269929447);
-        assert_approx_eq!(f64, coord[0][1], -5521772.777432425);
-        assert_approx_eq!(f64, coord[0][2], 5296676.095833973);
-
+        assert_approx_eq!(f64, coord.x[0], 1935504.4269929447);
+        assert_approx_eq!(f64, coord.y[0], -5521772.777432425);
+        assert_approx_eq!(f64, coord.z[0], 5296676.095833973);
+        assert_approx_eq!(f64, coord.x[1], 1935504.4055178885);
+        assert_approx_eq!(f64, coord.y[1], -5521772.779423727);
+        assert_approx_eq!(f64, coord.z[1], 5296676.102978117);
         Ok(())
     }
 }

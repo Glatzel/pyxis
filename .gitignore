@@ -5,3 +5,7 @@ proptest-regressions
 # python
 __pycache__
 *.pyd
+*.pdb
+.coverage
+junit.xml
+tests_report

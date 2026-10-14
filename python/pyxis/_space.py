@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import StrEnum
 from typing import overload
 
 import numpy as np
@@ -7,7 +7,7 @@ from numpy.typing import NDArray
 from ._utils import TCoordArray, TCoordScalar, coord_util
 
 
-class COORD_SPACE(str, Enum):
+class COORD_SPACE(StrEnum):
     """COORD_SPACE."""
 
     CARTESIAN = "CARTESIAN"

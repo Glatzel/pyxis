@@ -21,7 +21,7 @@ serde_json = "1.0.154"
 [dev-dependencies]
 assert_cmd = "2.2.2"
 insta = { version = "1.49.0", features = ["filters"] }
-rstest = "0.27.0"
+rstest = "0.28.0"
 
 [profile.dev.package]
 insta.opt-level = 3

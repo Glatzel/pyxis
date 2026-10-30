@@ -20,11 +20,18 @@ name = "list-devices"
 path = "tools/list_devices.rs"
 
 [dependencies]
-clerk = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11", features = ["tracing"] }
+clerk = {
+  git = "https://github.com/Glatzel/toolbox",
+  tag = "v2026.10.11",
+  features = ["tracing"]
+}
 mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11" }
 rax = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11" }
 rax-nmea = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11" }
-serialport-ext = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11" }
+serialport-ext = {
+  git = "https://github.com/Glatzel/toolbox",
+  tag = "v2026.10.11"
+}
 
 proj = { path = "../../rust/crates/proj" }
 pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }

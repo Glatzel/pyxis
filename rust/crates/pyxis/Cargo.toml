@@ -3,6 +3,9 @@ name = "pyxis"
 version.workspace = true
 edition.workspace = true
 
+[features]
+serde = ["dep:serde"]
+
 [[bench]]
 harness = false
 name = "crypto"
@@ -21,6 +24,3 @@ float-cmp.workspace = true
 insta.workspace = true
 proptest.workspace = true
 rstest.workspace = true
-
-[features]
-serde = ["dep:serde"]

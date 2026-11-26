@@ -14,7 +14,7 @@ jobs:
     steps:
       - parallel:
         - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        - uses: Glatzel/template/.github/actions/rust/setup-rust@7c77db8d35c45b3b88b01e0dafc5b5e931cf5a8a # v2026.11.2
+        - uses: Glatzel/template/.github/actions/rust/setup-rust@6851c894419045fb3731d2643deba6b8faef3e82 # v2026.11.6
       - name: proj-bindings
         run: ./rust/scripts/proj-bindings.ps1
         shell: pwsh

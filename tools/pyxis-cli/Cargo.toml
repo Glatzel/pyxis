@@ -14,14 +14,14 @@ mischief = { git = "https://github.com/Glatzel/toolbox", tag = "v2026.10.11" }
 proj = { path = "../../rust/crates/proj" }
 pyxis = { path = "../../rust/crates/pyxis", features = ["serde"] }
 
-bpaf = { version = "0.9.28", features = ["batteries", "derive"] }
+bpaf = { version = "0.9.29", features = ["batteries", "derive"] }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"
 
 [dev-dependencies]
 assert_cmd = "2.2.2"
 insta = { version = "1.49.0", features = ["filters"] }
-rstest = "0.28.0"
+rstest = "0.29.0"
 
 [profile.dev.package]
 insta.opt-level = 3
